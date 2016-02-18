@@ -8,10 +8,11 @@ fn main() {
 author: Lizzie Crowdagger
 title: Boum!
 lang: fr
-numbering: false
-autoclean: ok
+numbering: true
+autoclean: false
 cover: cover.png
 
+toto: tutu
 - preface.md
 -    intro.md
 16. chapitre_16.md
@@ -34,6 +35,10 @@ Bar";
 
     println!("");
     let mut book = Book::new();
-    book.set_from_config(config).unwrap();
+    let res = book.set_from_config(config);
+    match res {
+        Ok(_) => println!("Book configured succesfully"),
+        Err(err) => println!("{}", err)
+    }
     println!("{:?}", &book);
 }

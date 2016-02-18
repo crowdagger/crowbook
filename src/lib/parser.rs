@@ -64,8 +64,8 @@ impl Parser {
                 },
                 Event::SoftBreak => v.push(Token::SoftBreak),
                 Event::HardBreak => v.push(Token::HardBreak),
-                Event::Html(_) | Event::InlineHtml(_) => return Err(Error::Parser("No support for HTML code inside of Markdown, sorry.")),
-                Event::FootnoteReference(_) => return Err(Error::Parser("No support for footnotes yet."))
+                Event::Html(_) | Event::InlineHtml(_) => return Err(Error::Parser("no support for HTML code inside of Markdown, sorry.")),
+                Event::FootnoteReference(_) => return Err(Error::Parser("no support for footnotes yet."))
             }
         }
         Ok(())
@@ -101,8 +101,8 @@ impl Parser {
             Tag::Item => Token::Item(res),
             Tag::BlockQuote => Token::BlockQuote(res),
             Tag::CodeBlock(language) => Token::CodeBlock(language, res),
-            Tag::Table(_) | Tag::TableHead | Tag::TableRow | Tag::TableCell => return Err(Error::Parser("No support for tables yet")),
-            Tag::FootnoteDefinition(_) => return Err(Error::Parser("No support for footnotes")),
+            Tag::Table(_) | Tag::TableHead | Tag::TableRow | Tag::TableCell => return Err(Error::Parser("no support for tables yet")),
+            Tag::FootnoteDefinition(_) => return Err(Error::Parser("no support for footnotes")),
         };
         v.push(token);
         Ok(())

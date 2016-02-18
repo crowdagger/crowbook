@@ -47,15 +47,16 @@ impl Book {
         fn get_filename(s: &str) -> Result<&str> {
             let words:Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
-                return Err(Error::ConfigParser("chapter filenames must not contain whitespace"));
+                return Err(Error::ConfigParser("chapter filenames must not contain whitespace", String::from(s)));
             } else if words.len() < 1 {
-                return Err(Error::ConfigParser("no chapter name specified"));
+                return Err(Error::ConfigParser("no chapter name specified", String::from(s)));
             }
             Ok(words[0])
         }
         
         for line in s.lines() {
             let line = line.trim();
+            let bool_error = |_| Error::ConfigParser("could not parse bool", String::from(line));
             if line.is_empty() {
                 continue;
             }
@@ -71,28 +72,28 @@ impl Book {
                 // chapter with specific number
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
                 if parts.len() != 2 {
-                    return Err(Error::ConfigParser("ill-formatted line specifying chapter number"));
+                    return Err(Error::ConfigParser("ill-formatted line specifying chapter number", String::from(line)));
                 } else {
                     let file = try!(get_filename(parts[1]));
-                    let number = try!(parts[0].parse::<i32>());
+                    let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser("Error parsing integer", String::from(line))));
                     self.add_chapter(Number::Specified(number), String::from(file));
                 }
             } else {
                 // standard case: "option: value"
                 let parts:Vec<_> = line.splitn(2, ':').collect();
                 if parts.len() != 2 {
-                    return Err(Error::ConfigParser("option setting must be of the form option: value"));
+                    return Err(Error::ConfigParser("option setting must be of the form option: value", String::from(line)));
                 }
                 let option = parts[0].trim();
                 let value = parts[1].trim();
                 match option {
-                    "numbering" => self.set_numbering(try!(value.parse::<bool>())),
-                    "autoclean" => self.set_autoclean(try!(value.parse::<bool>())),
+                    "numbering" => self.set_numbering(try!(value.parse::<bool>().map_err(bool_error))),
+                    "autoclean" => self.set_autoclean(try!(value.parse::<bool>().map_err(bool_error))),
                     "author" => self.set_author(String::from(value)),
                     "title" => self.set_title(String::from(value)),
                     "cover" => self.set_cover(Some(String::from(value))),
                     "lang" => self.set_lang(String::from(value)),
-                    _ => return Err(Error::ConfigParser("unrecognized option")),
+                    _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
                 }
             }
         }
