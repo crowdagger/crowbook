@@ -5,7 +5,6 @@ use error::{Result,Error};
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 pub struct Parser {
-    numbering: Option<String>, // None for no numbering, or a String with the name you want
     cleaner: Option<Box<Cleaner>>, // An optional parameter to clean source code
 
     verbatim: bool, // set to true when in e.g. a code block
@@ -16,7 +15,6 @@ impl Parser {
     pub fn new() -> Parser {
         Parser {
             verbatim: false,
-            numbering: None,
             cleaner: Some(Box::new(())),
         }
     }
@@ -46,7 +44,15 @@ impl Parser {
                             cleaner.clean(&mut text);
                         }
                     }
-                    v.push(Token::Str(text));
+                    if let Some(&Token::Str(_)) = v.last() {
+                        if let &mut Token::Str(ref mut s) = v.last_mut().unwrap() {
+                            s.to_mut().push_str(&text);
+                        } else {
+                            unreachable!();
+                        }
+                    } else {
+                        v.push(Token::Str(text));
+                    }
                 },
                 Event::Start(tag) => try!(self.parse_tag(p, v, tag)),
                 Event::End(tag) => {
