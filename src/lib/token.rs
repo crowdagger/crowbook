@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     Str(String), 

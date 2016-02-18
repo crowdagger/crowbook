@@ -5,7 +5,6 @@ use parser::Parser;
 use error::{Error,Result};
 
 use mustache;
-use mustache::MapBuilder;
 
 /// Renderer for HTML.
 ///

@@ -1,5 +1,4 @@
 use token::Token;
-use std::borrow::Cow;
 
 fn parse_token(token: Token) -> String {
     match token {

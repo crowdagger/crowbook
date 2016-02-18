@@ -3,6 +3,8 @@ use cleaner::{Cleaner, French};
 
 use std::fs::File;
 use std::io::Read;
+use std::env;
+use std::path::Path;
 
 use mustache::MapBuilder;
 
@@ -44,8 +46,21 @@ impl Book {
     }
 
     /// Creates a new book from a file
+    ///
+    /// This method also changes the current directory to the one of this file
     pub fn new_from_file(filename: &str) -> Result<Book> {
-        let mut f = try!(File::open(filename).map_err(|_| Error::FileNotFound(String::from(filename))));
+        let path = Path::new(filename);
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
+
+        // change current directory
+        if let Some(parent) = path.parent() {
+            if !env::set_current_dir(&parent).is_ok() {
+                return Err(Error::ConfigParser("could not change current directory to the one of the config file",
+                                               format!("{}", parent.display())));
+            }
+        }
+
+        
         let mut s = String::new();
 
         try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
@@ -109,7 +124,7 @@ impl Book {
         for line in s.lines() {
             let line = line.trim();
             let bool_error = |_| Error::ConfigParser("could not parse bool", String::from(line));
-            if line.is_empty() {
+            if line.is_empty() || line.starts_with('#') {
                 continue;
             }
             if line.starts_with('-') {

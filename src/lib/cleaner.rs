@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 /// Custom function because we don't really want to touch \t or \n
 fn is_whitespace(c: char) -> bool {
     c == ' ' || c == ' ' || c == ' '
