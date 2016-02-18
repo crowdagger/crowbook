@@ -44,8 +44,8 @@ impl Book {
     pub fn get_mapbuilder(&self) -> MapBuilder {
         MapBuilder::new()
             .insert_str("author", self.author.clone())
-            .insert_str("title", self.author.clone())
-            .insert_str("lang", self.author.clone())
+            .insert_str("title", self.title.clone())
+            .insert_str("lang", self.lang.clone())
     }
 
     /// Return a Box<Cleaner> corresponding to the appropriate cleaning method, or None

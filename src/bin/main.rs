@@ -9,10 +9,9 @@ fn main() {
 author: Lizzie Crowdagger
 title: Pas tout à fait des hommes
 lang: fr
-numbering: true
+numbering: false
 autoclean: true
 cover: book-example/cover.png
-nb_char: '~'
 
 + book_example/chapitre_01.md
 + book_example/chapitre_02.md
