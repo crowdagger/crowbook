@@ -1,27 +1,29 @@
 use error::{Error,Result};
+use cleaner::{Cleaner, French};
+
+use mustache::MapBuilder;
 
 // Numbering for a given chapter
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Number {
     Unnumbered, // chapter is not numbered
     Default, // chapter follows books numbering, number is given automatically
     Specified(i32), //chapter number set to specified number
 }
     
-
 // Configuration of the book
 #[derive(Debug)]
 pub struct Book {
     // Generic options
-    numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
-    autoclean: bool, 
-    chapters: Vec<(Number, String)>,  // list of the markdown files to process
-    lang: String,
-    author: String,
-    title: String,
-    cover: Option<String>,
+    pub numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
+    pub autoclean: bool, 
+    pub chapters: Vec<(Number, String)>,  // list of the markdown files to process
+    pub lang: String,
+    pub author: String,
+    pub title: String,
+    pub cover: Option<String>,
+    pub nb_char: char,
 }
-
 
 impl Book {
     // Creates a new Book with default options
@@ -34,6 +36,29 @@ impl Book {
             author: String::from("Anonymous"),
             title: String::from("Untitled"),
             cover: None,
+            nb_char: ' ',
+        }
+    }
+
+    /// Returns a MapBuilder, to be used (and completed) for templating
+    pub fn get_mapbuilder(&self) -> MapBuilder {
+        MapBuilder::new()
+            .insert_str("author", self.author.clone())
+            .insert_str("title", self.author.clone())
+            .insert_str("lang", self.author.clone())
+    }
+
+    /// Return a Box<Cleaner> corresponding to the appropriate cleaning method, or None
+    pub fn get_cleaner(&self) -> Option<Box<Cleaner>> {
+        if self.autoclean {
+            let lang = self.lang.to_lowercase();
+            if lang.starts_with("fr") {
+                Some(Box::new(French::new(self.nb_char)))
+            } else {
+                Some(Box::new(()))
+            }
+        } else {
+            None
         }
     }
 
@@ -44,6 +69,18 @@ impl Book {
     /// - chapter_name.md adds the (unnumbered) chapter
     /// 3. chapter_name.md adds the (custom numbered) chapter
     pub fn set_from_config(&mut self, s: &str) -> Result<()> {
+        fn get_char(s: &str) -> Result<char> {
+            let words: Vec<_> = s.trim().split('\'').collect();
+            if words.len() != 3 {
+                return Err(Error::ConfigParser("could not parse char", String::from(s)));
+            }
+            let chars: Vec<_> = words[1].chars().collect();
+            if chars.len() != 1 {
+                return Err(Error::ConfigParser("could not parse char", String::from(s)));
+            }
+            Ok(chars[0])
+        }
+        
         fn get_filename(s: &str) -> Result<&str> {
             let words:Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
@@ -87,6 +124,7 @@ impl Book {
                 let option = parts[0].trim();
                 let value = parts[1].trim();
                 match option {
+                    "nb-char" | "nb_char" => self.set_nb_char(try!(get_char(value))),
                     "numbering" => self.set_numbering(try!(value.parse::<bool>().map_err(bool_error))),
                     "autoclean" => self.set_autoclean(try!(value.parse::<bool>().map_err(bool_error))),
                     "author" => self.set_author(String::from(value)),
@@ -99,6 +137,13 @@ impl Book {
         }
 
         Ok(())
+    }
+
+    /// Sets non-breaking character
+    ///
+    /// Currently only used if autoclean = true and lang = fr
+    pub fn set_nb_char(&mut self, nb_char: char) {
+        self.nb_char = nb_char;
     }
 
     /// Sets numbering of chapters

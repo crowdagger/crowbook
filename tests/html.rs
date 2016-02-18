@@ -1,6 +1,12 @@
 extern crate crowbook;
 
-use self::crowbook::{Parser, ast_to_html};
+use self::crowbook::{Parser, HtmlRenderer, Book, Token};
+
+fn ast_to_html(v: Vec<Token>) -> String {
+    let book = Book::new();
+    let mut html = HtmlRenderer::new(&book);
+    html.render_vec(v)
+}
 
 
 #[test]

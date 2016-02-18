@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     Str(String), 
     Paragraph(Vec<Token>), 

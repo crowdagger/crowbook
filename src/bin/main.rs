@@ -1,44 +1,26 @@
 extern crate crowbook;
 
-use crowbook::{ast_to_html, Parser, French, Book};
+use crowbook::{HtmlRenderer, Parser, French, Book};
+
 
 
 fn main() {
     let config = "
 author: Lizzie Crowdagger
-title: Boum!
+title: Pas tout à fait des hommes
 lang: fr
 numbering: true
-autoclean: false
-cover: cover.png
+autoclean: true
+cover: book-example/cover.png
+nb_char: '~'
 
-toto: tutu
-- preface.md
--    intro.md
-16. chapitre_16.md
-1. chapitre_1.md
-+ chapitre_2.md
++ book_example/chapitre_01.md
++ book_example/chapitre_02.md
++ book_example/chapitre_03.md
 ";
 
-    let doc = "
-Foo
-===
-
-Bar";
-
-    let french = French::new('~');
-    let mut parser = Parser::new().with_cleaner(Box::new(french));
-    let v = parser.parse(doc).unwrap();
-    println!("{:?}", &v);
-
-    println!("{}", ast_to_html(v));
-
-    println!("");
     let mut book = Book::new();
-    let res = book.set_from_config(config);
-    match res {
-        Ok(_) => println!("Book configured succesfully"),
-        Err(err) => println!("{}", err)
-    }
-    println!("{:?}", &book);
+    book.set_from_config(config).unwrap();
+    let mut html = HtmlRenderer::new(&book);
+    println!("{}", html.render_book().unwrap());
 }

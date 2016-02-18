@@ -8,6 +8,7 @@ pub enum Error {
     Parser(&'static str),
     ConfigParser(&'static str, String), //error, line
     FileNotFound(String), //file
+    Render(&'static str),
 }
 
 impl error::Error for Error {
@@ -16,6 +17,7 @@ impl error::Error for Error {
             &Error::Parser(ref s) => s,
             &Error::ConfigParser(ref s, _) => s,
             &Error::FileNotFound(_) => "File not found",
+            &Error::Render(ref s) => s,
         }
     }
 }
@@ -36,7 +38,11 @@ impl fmt::Display for Error {
             &Error::FileNotFound(ref file) => {
                 try!(f.write_str("File not found: "));
                 f.write_str(file)
-            }
+            },
+            &Error::Render(ref s) => {
+                try!(f.write_str("Error during rendering: "));
+                f.write_str(s)
+            },
         }
     }
 }

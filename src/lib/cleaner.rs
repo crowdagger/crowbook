@@ -10,17 +10,14 @@ fn is_whitespace(c: char) -> bool {
 /// NOT for code blocks, hyperlikns and so on!
 pub trait Cleaner {
     /// Cleans a string, removing multiple whitespaces
-    fn clean<'a>(&self, s: &mut Cow<'a, str>) {
+    fn clean<'a>(&self, s: &mut String) {
         if s.contains(is_whitespace) { // if not, no need to do anything
             let mut new_s = String::with_capacity(s.len());
             let mut previous_space = false;
-            let mut modified = false;
             for c in s.chars() {
                 if is_whitespace(c) {
                     if previous_space {
                         // previous char already a space, don't copy it
-                        // but signal the new string is different
-                        modified = true;
                     } else {
                         new_s.push(c);
                         previous_space = true;
@@ -31,12 +28,7 @@ pub trait Cleaner {
                 }
             }
 
-            if modified {
-                // only copy new string if it is modified
-                // (if it is not we just wasted our time in this function call)
-                let old_s = s.to_mut();
-                *old_s = new_s
-            } 
+            *s = new_s
         }
     }
 }
@@ -58,10 +50,10 @@ impl French {
 
 impl Cleaner for French {
     // puts non breaking spaces between :, ;, ?, !, «, »
-    fn clean<'a>(&self, s: &mut Cow<'a, str>) {
+    fn clean<'a>(&self, s: &mut String) {
         fn is_trouble(c: char) -> bool {
             match c {
-                '?'|'!'|';'|':'|'»'|'«' => true,
+                '?'|'!'|';'|':'|'»'|'«'|'—' => true,
                 _ => false
             }
         }
@@ -78,19 +70,24 @@ impl Cleaner for French {
                 while let  Some(next) = chars.next() {
                     if is_whitespace(current) {
                         match next {
+                            // handle nb space before char
                             '?' | '»' | '!' | ';' | ':' => new_s.push(self.nb_char),
                             _ => new_s.push(current)
                         }
                     } else {
                         new_s.push(current);
-                        if current == '«' {
-                            if is_whitespace(next) {
-                                new_s.push(self.nb_char);
-                                if let Some(next) = chars.next() {
-                                    current = next;
-                                    continue;
+                        match current {
+                            // handle nb space after char
+                            '«'|'—' => {
+                                if is_whitespace(next) {
+                                    new_s.push(self.nb_char);
+                                    if let Some(next) = chars.next() {
+                                        current = next;
+                                        continue;
+                                    }
                                 }
-                            }
+                            },
+                            _ => (),
                         }
                     }
                     current = next;
@@ -99,8 +96,7 @@ impl Cleaner for French {
             }
         }
             
-        let old_s = s.to_mut();
-        *old_s = new_s
+        *s = new_s
     }
 }
             

@@ -52,20 +52,26 @@ impl Parser {
     fn parse_events<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, current_tag: Option<&Tag>) -> Result<()> {
         while let Some(event) = p.next() {
             match event {
-                Event::Text(mut text) => {
-                    if let Some(ref cleaner) = self.cleaner {
-                        if !self.verbatim {
-                            cleaner.clean(&mut text);
-                        }
-                    }
+                Event::Text(text) => {
+                    let mut text = text.into_owned();
                     if let Some(&Token::Str(_)) = v.last() {
                         if let &mut Token::Str(ref mut s) = v.last_mut().unwrap() {
                             s.push_str(&text);
+                            if let Some(ref cleaner) = self.cleaner {
+                                if !self.verbatim {
+                                    cleaner.clean(s);
+                                }
+                            }
                         } else {
                             unreachable!();
                         }
                     } else {
-                        v.push(Token::Str(text.into_owned()));
+                        if let Some(ref cleaner) = self.cleaner {
+                            if !self.verbatim {
+                                cleaner.clean(&mut text);
+                            }
+                        }
+                        v.push(Token::Str(text));
                     }
                 },
                 Event::Start(tag) => try!(self.parse_tag(p, v, tag)),

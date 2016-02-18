@@ -14,3 +14,5 @@ doc = false
 
 [dependencies]
 pulldown-cmark = "0.0.7"
+mustache = "0.6"
+rustc-serialize = "0.3"
