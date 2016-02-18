@@ -3,7 +3,7 @@ extern crate crowbook;
 use self::crowbook::{Parser, Token};
 use std::borrow::Cow;
 
-fn parse_from_str<'a>(doc: &'a str) -> Vec<Token<'a>> {
+fn parse_from_str(doc: &str) -> Vec<Token> {
     let mut parser = Parser::new();
     parser.parse(doc).unwrap()
 }
@@ -21,12 +21,12 @@ some *emphasis* required
     
     assert_eq!(res, vec!(
         Token::Header(1, vec!(
-            Token::Str(Cow::Borrowed("Test")))),
+            Token::Str(String::from("Test")))),
         Token::Paragraph(vec!(
-            Token::Str(Cow::Borrowed("some ")),
+            Token::Str(String::from("some ")),
             Token::Emphasis(vec!(
-                Token::Str(Cow::Borrowed("emphasis")))),
-            Token::Str(Cow::Borrowed(" required"))))));
+                Token::Str(String::from("emphasis")))),
+            Token::Str(String::from(" required"))))));
 }
 
 #[test]
@@ -38,10 +38,10 @@ fn link_inline() {
     assert_eq!(res,
                vec!(
                    Token::Paragraph(vec!(
-                       Token::Link(Cow::Borrowed("http://foo.bar"),
-                                   Cow::Borrowed(""),
+                       Token::Link(String::from("http://foo.bar"),
+                                   String::from(""),
                                    vec!(
-                                       Token::Str(Cow::Borrowed("a link"))))))));
+                                       Token::Str(String::from("a link"))))))));
 }
 
 #[test]

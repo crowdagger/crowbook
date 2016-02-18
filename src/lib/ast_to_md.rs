@@ -1,13 +1,13 @@
 use token::Token;
 use std::borrow::Cow;
 
-fn parse_token<'a>(token: Token<'a>) -> Cow<'a, str> {
+fn parse_token(token: Token) -> String {
     match token {
         Token::Str(text) => text,
         Token::Paragraph(vec) => {
             let mut s = ast_to_md(vec);
             s.push_str("\n\n");
-            Cow::Owned(s)
+            s
         },
         Token::Header(n, vec) => {
             let s = ast_to_md(vec);
@@ -19,17 +19,17 @@ fn parse_token<'a>(token: Token<'a>) -> Cow<'a, str> {
             } else {
                 panic!("Error: wrong title level");
             }
-            Cow::Owned(format!("{} {} {}\n", hashes, s, hashes))
+            format!("{} {} {}\n", hashes, s, hashes)
         },
-        Token::Emphasis(vec) => Cow::Owned(format!("*{}*", ast_to_md(vec))),
-        Token::Strong(vec) => Cow::Owned(format!("**{}**", ast_to_md(vec))),
-        Token::Code(vec) => Cow::Owned(format!("`{}`", ast_to_md(vec))),
-        Token::BlockQuote(vec) => Cow::Owned(format!("> {}", ast_to_md(vec))),
-        Token::CodeBlock(language, vec) => Cow::Owned(format!("```{}\n{}\n```\n", language, ast_to_md(vec))),
-        Token::Rule => Cow::Borrowed("***"),
-        Token::SoftBreak => Cow::Borrowed(" "),
-        Token::HardBreak => Cow::Borrowed("\n"),
-        _ => Cow::Borrowed("???")
+        Token::Emphasis(vec) => format!("*{}*", ast_to_md(vec)),
+        Token::Strong(vec) => format!("**{}**", ast_to_md(vec)),
+        Token::Code(vec) => format!("`{}`", ast_to_md(vec)),
+        Token::BlockQuote(vec) => format!("> {}", ast_to_md(vec)),
+        Token::CodeBlock(language, vec) => format!("```{}\n{}\n```\n", language, ast_to_md(vec)),
+        Token::Rule => String::from("***"),
+        Token::SoftBreak => String::from(" "),
+        Token::HardBreak => String::from("\n"),
+        _ => String::from("???")
     }
 }
 

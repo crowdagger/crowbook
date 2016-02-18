@@ -7,6 +7,7 @@ use std::fmt;
 pub enum Error {
     Parser(&'static str),
     ConfigParser(&'static str, String), //error, line
+    FileNotFound(String), //file
 }
 
 impl error::Error for Error {
@@ -14,6 +15,7 @@ impl error::Error for Error {
         match self {
             &Error::Parser(ref s) => s,
             &Error::ConfigParser(ref s, _) => s,
+            &Error::FileNotFound(_) => "File not found",
         }
     }
 }
@@ -31,6 +33,10 @@ impl fmt::Display for Error {
                 try!(f.write_str(" in:\n"));
                 f.write_str(line)
             },
+            &Error::FileNotFound(ref file) => {
+                try!(f.write_str("File not found: "));
+                f.write_str(file)
+            }
         }
     }
 }

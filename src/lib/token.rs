@@ -1,24 +1,24 @@
 use std::borrow::Cow;
 
 #[derive(Debug, PartialEq)]
-pub enum Token<'a> {
-    Str(Cow<'a, str>), 
-    Paragraph(Vec<Token<'a>>), 
-    Header(i32, Vec<Token<'a>>), //title level, list of tokens
-    Emphasis(Vec<Token<'a>>),
-    Strong(Vec<Token<'a>>),
-    Code(Vec<Token<'a>>),
-    BlockQuote(Vec<Token<'a>>),
-    CodeBlock(Cow<'a, str>, Vec<Token<'a>>), //language, content of the block
+pub enum Token {
+    Str(String), 
+    Paragraph(Vec<Token>), 
+    Header(i32, Vec<Token>), //title level, list of tokens
+    Emphasis(Vec<Token>),
+    Strong(Vec<Token>),
+    Code(Vec<Token>),
+    BlockQuote(Vec<Token>),
+    CodeBlock(String, Vec<Token>), //language, content of the block
 
-    List(Vec<Token<'a>>),
-    OrderedList(usize, Vec<Token<'a>>), //starting number, list
-    Item(Vec<Token<'a>>),
+    List(Vec<Token>),
+    OrderedList(usize, Vec<Token>), //starting number, list
+    Item(Vec<Token>),
     
     Rule,
     SoftBreak,
     HardBreak,
     
-    Link(Cow<'a, str>, Cow<'a, str>, Vec<Token<'a>>), //url, title, list
-    Image(Cow<'a, str>, Cow<'a, str>, Vec<Token<'a>>), //url, title, alt text
+    Link(String, String, Vec<Token>), //url, title, list
+    Image(String, String, Vec<Token>), //url, title, alt text
 }

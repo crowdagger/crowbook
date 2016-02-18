@@ -1,7 +1,11 @@
-use cmark::{Parser as CMParser, Event, Tag};
 use token::Token;
 use cleaner::Cleaner;
 use error::{Result,Error};
+
+use std::fs::File;
+use std::io::Read;
+
+use cmark::{Parser as CMParser, Event, Tag};
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 pub struct Parser {
@@ -19,15 +23,25 @@ impl Parser {
         }
     }
 
+    /// Sets cleaner implementation
     pub fn with_cleaner(mut self, cleaner: Box<Cleaner>) -> Parser {
         self.cleaner = Some(cleaner);
         self
     }
 
+    /// Parse a file and returns an AST
+    pub fn parse_file(&mut self, filename: &str) -> Result<Vec<Token>> {
+        let mut f = try!(File::open(filename).map_err(|_| Error::FileNotFound(String::from(filename))));
+        let mut s = String::new();
+
+        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser("file contains invalid UTF-8, could not parse it")));
+        self.parse(&s)
+    }
+
     /// Parse a string and returns an AST, that is a vector of `Token`s
     ///
     /// Returns a result, at this method might fail.
-    pub fn parse<'a>(&mut self, s: &'a str) -> Result<Vec<Token<'a>>> {
+    pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
         let mut p = CMParser::new(s);
 
         let mut res = vec!();
@@ -35,7 +49,7 @@ impl Parser {
         Ok(res)
     }
     
-    fn parse_events<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token<'a>>, current_tag: Option<&Tag>) -> Result<()> {
+    fn parse_events<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, current_tag: Option<&Tag>) -> Result<()> {
         while let Some(event) = p.next() {
             match event {
                 Event::Text(mut text) => {
@@ -46,12 +60,12 @@ impl Parser {
                     }
                     if let Some(&Token::Str(_)) = v.last() {
                         if let &mut Token::Str(ref mut s) = v.last_mut().unwrap() {
-                            s.to_mut().push_str(&text);
+                            s.push_str(&text);
                         } else {
                             unreachable!();
                         }
                     } else {
-                        v.push(Token::Str(text));
+                        v.push(Token::Str(text.into_owned()));
                     }
                 },
                 Event::Start(tag) => try!(self.parse_tag(p, v, tag)),
@@ -71,7 +85,7 @@ impl Parser {
         Ok(())
     }
 
-    fn parse_tag<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token<'a>>, tag: Tag<'a>) -> Result<()> {
+    fn parse_tag<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, tag: Tag<'a>) -> Result<()> {
         let mut res = vec!();
 
         match tag {
@@ -89,8 +103,8 @@ impl Parser {
             Tag::Strong => Token::Strong(res),
             Tag::Code => Token::Code(res),
             Tag::Header(x) => Token::Header(x, res),
-            Tag::Link(url, title) => Token::Link(url, title, res),
-            Tag::Image(url, title) => Token::Image(url, title, res),
+            Tag::Link(url, title) => Token::Link(url.into_owned(), title.into_owned(), res),
+            Tag::Image(url, title) => Token::Image(url.into_owned(), title.into_owned(), res),
             Tag::Rule => Token::Rule,
             Tag::List(opt) => {
                 if let Some(n) = opt {
@@ -100,7 +114,7 @@ impl Parser {
                 }},
             Tag::Item => Token::Item(res),
             Tag::BlockQuote => Token::BlockQuote(res),
-            Tag::CodeBlock(language) => Token::CodeBlock(language, res),
+            Tag::CodeBlock(language) => Token::CodeBlock(language.into_owned(), res),
             Tag::Table(_) | Tag::TableHead | Tag::TableRow | Tag::TableCell => return Err(Error::Parser("no support for tables yet")),
             Tag::FootnoteDefinition(_) => return Err(Error::Parser("no support for footnotes")),
         };
