@@ -1,0 +1,16 @@
+[package]
+name = "crowbook"
+version = "0.1.0"
+authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
+
+[lib]
+name = "crowbook"
+path = "src/lib/lib.rs"
+
+[[bin]]
+name = "crowbook"
+path = "src/bin/main.rs"
+doc = false
+
+[dependencies]
+pulldown-cmark = "0.0.7"
