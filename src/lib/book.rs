@@ -1,6 +1,9 @@
 use error::{Error,Result};
 use cleaner::{Cleaner, French};
 
+use std::fs::File;
+use std::io::Read;
+
 use mustache::MapBuilder;
 
 // Numbering for a given chapter
@@ -38,6 +41,18 @@ impl Book {
             cover: None,
             nb_char: ' ',
         }
+    }
+
+    /// Creates a new book from a file
+    pub fn new_from_file(filename: &str) -> Result<Book> {
+        let mut f = try!(File::open(filename).map_err(|_| Error::FileNotFound(String::from(filename))));
+        let mut s = String::new();
+
+        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
+                                                                      String::from(filename))));
+        let mut book = Book::new();
+        try!(book.set_from_config(&s));
+        Ok(book)
     }
 
     /// Returns a MapBuilder, to be used (and completed) for templating
