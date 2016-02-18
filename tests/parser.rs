@@ -1,7 +1,6 @@
 extern crate crowbook;
 
 use self::crowbook::{Parser, Token};
-use std::borrow::Cow;
 
 fn parse_from_str(doc: &str) -> Vec<Token> {
     let mut parser = Parser::new();

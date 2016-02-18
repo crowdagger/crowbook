@@ -2,15 +2,16 @@ extern crate crowbook;
 
 use self::crowbook::{Parser, HtmlRenderer, Book, Token};
 
-fn ast_to_html(v: Vec<Token>) -> String {
-    let book = Book::new();
+fn ast_to_html(v: &[Token]) -> String {
+    let mut book = Book::new();
+    book.set_numbering(false);
     let mut html = HtmlRenderer::new(&book);
     html.render_vec(v)
 }
 
 
 #[test]
-fn combination() {
+fn html_combination() {
     let doc = "
 Foo
 ===
@@ -59,6 +60,6 @@ Some paragraph
 </ol>
 <p><a href = \"http://foo/bar?baz=42&coin=plop\">&amp; some link</a></p>
 ";
-    let actual = ast_to_html(Parser::new().parse(doc).unwrap());
+    let actual = ast_to_html(&Parser::new().parse(doc).unwrap());
     assert_eq!(actual, expected);
 }
