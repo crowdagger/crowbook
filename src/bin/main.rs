@@ -1,37 +1,29 @@
 extern crate crowbook;
 
-use crowbook::{ast_to_html, Parser, French};
+use crowbook::{ast_to_html, Parser, French, Book};
 
 
 fn main() {
+    let config = "
+author: Lizzie Crowdagger
+title: Boum!
+lang: fr
+numbering: false
+autoclean: ok
+cover: cover.png
+
+- preface.md
+-    intro.md
+16. chapitre_16.md
+1. chapitre_1.md
++ chapitre_2.md
+";
+
     let doc = "
 Foo
 ===
 
-« Oh la chevalier que voulez vous ? » 
-
-
-```rust
-fn min(x : &u32, y : u32) -> &u32 {
-    if x < y { x } else { y }
-}
-```
-
-Bar
----
-
-Some paragraph
-
-* a list
-    * inside a list
-* another item
-
-3. three
-4. four
-5. five
-
-[& some link](http://foo/bar?baz=42&coin=plop)
-";
+Bar";
 
     let french = French::new('~');
     let mut parser = Parser::new().with_cleaner(Box::new(french));
@@ -39,4 +31,9 @@ Some paragraph
     println!("{:?}", &v);
 
     println!("{}", ast_to_html(v));
+
+    println!("");
+    let mut book = Book::new();
+    book.set_from_config(config).unwrap();
+    println!("{:?}", &book);
 }
