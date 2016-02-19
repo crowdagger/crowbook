@@ -20,12 +20,12 @@ fn main() {
             let mut epub = EpubRenderer::new(&book);
             let buf = epub.render_book().unwrap();
 
-            let mut f = File::create("test.epub").unwrap();
-            f.write(&buf);
+//            let mut f = File::create("test.epub").unwrap();
+//            f.write(&buf);
 
-            let mut latex = LatexRenderer::new(&book);
-            let s = latex.render_book().unwrap();
-            println!("{}", s);
+//            let mut latex = LatexRenderer::new(&book);
+//            let s = latex.render_book().unwrap();
+            //          println!("{}", s);
         }
     }
 }

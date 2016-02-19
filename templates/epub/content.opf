@@ -19,10 +19,12 @@
     {{{items}}}
   </manifest>
   <spine toc="ncx">
+    {{{coverref}}}
     <itemref idref="title_page_xhtml" linear="yes" />
     {{{itemrefs}}}
   </spine>
   <guide>
     <reference type="toc" title="{{title}}" href="nav.xhtml" />
+    {{{cover_xhtml}}}
   </guide>
 </package>

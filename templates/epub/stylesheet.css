@@ -41,7 +41,7 @@ h2.author { }
 h3.date { }
 ol.toc { padding: 0; margin-left: 1em; }
 ol.toc li { list-style-type: none; margin: 0; padding: 0; }
-#cover-image img {
+#cover img {
     width: 100%;
 }
 .rule {
