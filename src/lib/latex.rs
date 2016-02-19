@@ -1,6 +1,9 @@
 use book::{Book, Number};
 use error::{Error,Result};
 use token::Token;
+use zipper::Zipper;
+
+use std::path::Path;
 
 use mustache;
 
@@ -16,6 +19,20 @@ impl<'a> LatexRenderer<'a> {
         LatexRenderer {
             book: book,
             current_chapter: Number::Default,
+        }
+    }
+
+    /// Render pdf in a file
+    pub fn render_pdf(&mut self) -> Result<String> {
+        if let Some(ref pdf_file) = self.book.output_pdf {
+            let base_file = try!(Path::new(pdf_file).file_stem().ok_or(Error::Render("could not stem pdf filename")));
+            let tex_file = format!("{}.tex", base_file.to_str().unwrap());
+            let content = try!(self.render_book());
+            let mut zipper = try!(Zipper::new(&self.book.temp_dir));
+            try!(zipper.write(&tex_file, &content.as_bytes()));
+            zipper.generate_pdf(&tex_file, pdf_file)
+        } else {
+            Err(Error::Render("no output pdf file specified in book config"))
         }
     }
 

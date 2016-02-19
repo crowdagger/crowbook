@@ -1,6 +1,6 @@
 extern crate crowbook;
 
-use crowbook::Book;
+use crowbook::{Book};
 use std::env;
 
 fn main() {
@@ -10,8 +10,16 @@ fn main() {
     match args.next() {
         None => println!("Needs the name of a book config file"),
         Some(ref s) => {
-            let book = Book::new_from_file(s).unwrap();
-            book.render_all().unwrap();
+            match Book::new_from_file(s) {
+                Ok(book) => {
+                    if let Err(err) = book.render_all()  {
+                        println!("{}", err);
+                    }
+                }
+                Err(err) => {
+                    println!("{}", err);
+                }
+            }
         }
     }
 }

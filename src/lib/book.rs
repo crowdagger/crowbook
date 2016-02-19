@@ -256,6 +256,17 @@ impl Book {
             try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
             println!("Successfully generated LaTeX file: {}", file);
         }
+        if let Some(ref file) = self.output_pdf {
+            if self.verbose {
+                println!("Attempting to generate pdf...");
+            }
+            let mut latex = LatexRenderer::new(&self);
+            let result = try!(latex.render_pdf());
+            if self.verbose {
+                println!("{}", result);
+            }
+            println!("Successfully generated pdf file: {}", file);
+        }
         Ok(())
     }
 
