@@ -9,6 +9,7 @@ pub enum Error {
     ConfigParser(&'static str, String), //error, line
     FileNotFound(String), //file
     Render(&'static str),
+    Zipper(String)
 }
 
 impl error::Error for Error {
@@ -18,6 +19,7 @@ impl error::Error for Error {
             &Error::ConfigParser(ref s, _) => s,
             &Error::FileNotFound(_) => "File not found",
             &Error::Render(ref s) => s,
+            &Error::Zipper(ref s) => s,
         }
     }
 }
@@ -41,6 +43,10 @@ impl fmt::Display for Error {
             },
             &Error::Render(ref s) => {
                 try!(f.write_str("Error during rendering: "));
+                f.write_str(s)
+            },
+            &Error::Zipper(ref s) => {
+                try!(f.write_str("Error during temporary files editing: "));
                 f.write_str(s)
             },
         }

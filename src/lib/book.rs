@@ -225,7 +225,9 @@ impl Book {
 
     /// Generates output files acccording to book options
     pub fn render_all(&self) -> Result<()> {
+        let mut did_some_stuff = false;
         if let Some(ref file) = self.output_epub {
+            did_some_stuff = true;
             if self.verbose {
                 println!("Attempting to generate epub...");
             }
@@ -237,6 +239,7 @@ impl Book {
             println!("Successfully generated epub file: {}", file);
         }
         if let Some(ref file) = self.output_html {
+            did_some_stuff = true;
             if self.verbose {
                 println!("Attempting to generate HTML...");
             }
@@ -247,6 +250,7 @@ impl Book {
             println!("Successfully generated HTML file: {}", file);
         }
         if let Some(ref file) = self.output_tex {
+            did_some_stuff = true;
             if self.verbose {
                 println!("Attempting to generate LaTeX...");
             }
@@ -257,6 +261,7 @@ impl Book {
             println!("Successfully generated LaTeX file: {}", file);
         }
         if let Some(ref file) = self.output_pdf {
+            did_some_stuff = true;
             if self.verbose {
                 println!("Attempting to generate pdf...");
             }
@@ -266,6 +271,9 @@ impl Book {
                 println!("{}", result);
             }
             println!("Successfully generated pdf file: {}", file);
+        }
+        if !did_some_stuff {
+            println!("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
         }
         Ok(())
     }

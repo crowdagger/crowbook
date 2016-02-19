@@ -28,7 +28,7 @@ impl<'a> LatexRenderer<'a> {
             let base_file = try!(Path::new(pdf_file).file_stem().ok_or(Error::Render("could not stem pdf filename")));
             let tex_file = format!("{}.tex", base_file.to_str().unwrap());
             let content = try!(self.render_book());
-            let mut zipper = try!(Zipper::new(&self.book.temp_dir));
+            let mut zipper = try!(Zipper::new(&self.book.temp_dir, &vec!()));
             try!(zipper.write(&tex_file, &content.as_bytes()));
             zipper.generate_pdf(&tex_file, pdf_file)
         } else {

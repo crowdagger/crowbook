@@ -17,22 +17,28 @@ pub struct Zipper {
 
 impl Zipper {
     /// creates new zipper
-    pub fn new(path: &str) -> Result<Zipper> {
+    ///
+    /// path: the path to a temporary directory (zipper will create a random dir in it and clean it later)
+    /// inner_dirs: a vec of inner directory to create in this directory
+    pub fn new(path: &str, inner_dirs: &[&str]) -> Result<Zipper> {
         let uuid = uuid::Uuid::new_v4();
-        let zipper = Zipper {
-            args:vec!(),
-            path: Path::new(path).join(uuid.to_simple_string())
-        };
+        let zipper_path = Path::new(path).join(uuid.to_simple_string());
 
-        let res = DirBuilder::new()
-            .recursive(true)
-            .create(zipper.path.join("META-INF"));
+        try!(DirBuilder::new()
+             .recursive(true)
+             .create(&zipper_path)
+             .map_err(|_| Error::Zipper(format!("could not create temporary directory in {}", path))));
 
-        if !res.is_ok() {
-            Err(Error::Render("could not create temporary directory "))
-        } else {
-            Ok(zipper)
+        for inner in inner_dirs {
+            try!(DirBuilder::new()
+                 .recursive(true)
+                 .create(zipper_path.join(inner))
+                 .map_err(|_| Error::Zipper(format!("could not create temporary inner directory {}", inner))));
         }
+        Ok(Zipper {
+            args: vec!(),
+            path: zipper_path,
+        })
     }
 
     /// writes a content to a temporary file
@@ -42,25 +48,25 @@ impl Zipper {
                 self.args.push(String::from(file));
                 Ok(())
             } else {
-                Err(Error::Render("could not write to temporary file"))
+                Err(Error::Zipper(format!("could not write to temporary file {}", file)))
             }
         } else {
-            Err(Error::Render("could not create temporary file"))
+            Err(Error::Zipper(format!("could not create temporary file {}", file)))
         }
     }
 
     /// run command and copy file name to current dir
     pub fn run_command(&mut self, mut command: Command, file: &str) -> Result<String> {
-        let dir = try!(env::current_dir().map_err(|_| Error::Render("could not get current directory")));
-        try!(env::set_current_dir(&self.path).map_err(|_| Error::Render("could not change current directory")));
+        let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
+        try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
 
-        let output = command.args(&self.args)
+        let output = try!(command.args(&self.args)
             .output()
-            .unwrap_or_else(|e| { panic!("failed to execute process: {}", e) });
-        try!(env::set_current_dir(dir).map_err(|_| Error::Render("could not change back to old directory")));
+            .map_err(|e| Error::Zipper(format!("failed to execute process: {}", e))));
+        try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
         try!(fs::copy(self.path.join(file), file).map_err(|_| {
             println!("{}", str::from_utf8(&output.stdout).unwrap());
-            Error::Render("could not copy file")
+            Error::Zipper(format!("could not copy file {}", file))
         }));
         Ok(String::from_utf8_lossy(&output.stdout).into_owned())
     }
