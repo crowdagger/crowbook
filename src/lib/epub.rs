@@ -3,18 +3,17 @@ use token::Token;
 use parser::Parser;
 use html::HtmlRenderer;
 use book::{Book,Number};
+use zipper::Zipper;
 
 use zip;
 use mustache;
 use chrono;
 use uuid;
 
-use std::env;
 use std::io;
 use std::io::{Read,Write};
-use std::fs::{self, File,DirBuilder};
 use std::path::Path;
-use std::process::Command;
+use std::fs::File;
 
 /// Renderer for Epub
 ///
@@ -40,25 +39,11 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render a book
-    pub fn render_book(&mut self) -> Result<Vec<u8>> {
-        let mut args:Vec<String> = vec!();
-        let path = "/tmp/crowbook/";
-        let meta_inf = "/tmp/crowbook/META-INF";
-        DirBuilder::new()
-            .recursive(true)
-            .create(meta_inf).unwrap();
-
+    pub fn render_book(&mut self) -> Result<String> {
+        let mut zipper = try!(Zipper::new("/tmp/crowbook"));
         
-        let error_writing = |_| Error::Render("Error writing to file in zip");
-
-        let buffer: Vec<u8> = vec!();
-        let cursor = io::Cursor::new(buffer);
-        let mut zip = zip::ZipWriter::new(cursor);
-
         // Write mimetype
-        let mut f = File::create("/tmp/crowbook/mimetype").unwrap();
-        f.write_all(b"application/epub+zip").unwrap();
-        args.push(String::from("mimetype"));
+        try!(zipper.write("mimetype", b"application/epub+zip"));
 
         // Write chapters        
         let mut parser = Parser::new();
@@ -79,85 +64,45 @@ impl<'a> EpubRenderer<'a> {
             let v = try!(parser.parse_file(file));
             let chapter = try!(self.render_chapter(&v));
 
-            let mut f = File::create(&format!("{}{}", path, filenamer(i))).unwrap();
-            args.push(filenamer(i));
-            f.write_all(&chapter.as_bytes()).unwrap();
+            try!(zipper.write(&filenamer(i), &chapter.as_bytes()));
             i += 1;
         }
         
         // Write CSS file
-        let mut f = File::create("/tmp/crowbook/stylesheet.css").unwrap();
-        f.write_all(include_str!("../../templates/epub/stylesheet.css").as_bytes()).unwrap();
-        args.push(String::from("stylesheet.css"));
+        try!(zipper.write("stylesheet.css", include_str!("../../templates/epub/stylesheet.css").as_bytes()));
 
         // Write titlepage
-        let mut f = File::create("/tmp/crowbook/title_page.xhtml").unwrap();
-        f.write_all(&try!(self.render_titlepage()).as_bytes()).unwrap();
-        args.push(String::from("title_page.xhtml"));
+        try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes()));
 
         // Write file for ibook (why?)
-        let mut f = File::create("/tmp/crowbook/META-INF/com.apple.ibooks.display-options.xml").unwrap();
-        try!(f.write_all(include_str!("../../templates/epub/ibookstuff.xml").as_bytes())
-             .map_err(&error_writing));
-        args.push(String::from("META-INF/com.apple.ibooks.display-options.xml"));
+        try!(zipper.write("META-INF/com.apple.ibooks.display-options.xml", include_str!("../../templates/epub/ibookstuff.xml").as_bytes()));
 
         // Write container.xml
-        let mut f = File::create("/tmp/crowbook/META-INF/container.xml").unwrap();
-        try!(f.write_all(include_str!("../../templates/epub/container.xml").as_bytes())
-             .map_err(&error_writing));
-        args.push(String::from("META-INF/container.xml"));
+        try!(zipper.write("META-INF/container.xml", include_str!("../../templates/epub/container.xml").as_bytes()));
 
         // Write nav.xhtml
-        let mut f = File::create("/tmp/crowbook/nav.xhtml").unwrap();
-        try!(f.write_all(&try!(self.render_nav()).as_bytes())
-             .map_err(&error_writing));
-        args.push(String::from("nav.xhtml"));
+        try!(zipper.write("nav.xhtml", &try!(self.render_nav()).as_bytes()));
 
         // Write content.opf
-        let mut f = File::create("/tmp/crowbook/content.opf").unwrap();
-        try!(f.write_all(&try!(self.render_opf()).as_bytes())
-             .map_err(&error_writing));
-        args.push(String::from("content.opf"));
+        try!(zipper.write("content.opf", &try!(self.render_opf()).as_bytes()));
 
         // Write toc.ncx
-        let mut f = File::create("/tmp/crowbook/toc.ncx").unwrap();
-        try!(f.write_all(&try!(self.render_toc()).as_bytes())
-             .map_err(&error_writing));
-        args.push(String::from("toc.ncx"));
+        try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes()));
 
         // Write the cover (if needs be)
         if let Some(ref cover) = self.book.cover {
             let s: &str = &*cover;
-            let mut f_target = File::create(&format!("{}{}", path, s)).unwrap();
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(String::from(s))));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|_| Error::Render("Error while reading cover file")));
-            try!(f_target.write_all(&content)
-                 .map_err(&error_writing));
-            args.push(String::from(s));
+            try!(zipper.write(s, &content));
 
             // also write cover.xhtml
-            let mut f = File::create("/tmp/crowbook/cover.xhtml").unwrap();
-            try!(f.write_all(&try!(self.render_cover()).as_bytes())
-                 .map_err(&error_writing));
-            args.push(String::from("cover.xhtml"));
+            try!(zipper.write("over.xhtml", &try!(self.render_cover()).as_bytes()));
         }
 
-        let dir = env::current_dir().unwrap();
-        env::set_current_dir(path).unwrap();
-
-
-        
-        let output = Command::new("zip")
-            .arg("test.epub")
-            .args(&args)
-            .output()
-            .unwrap_or_else(|e| { panic!("failed to execute process: {}", e) });
-        println!("{}", String::from_utf8(output.stdout).unwrap());
-        env::set_current_dir(dir);
-        fs::copy("/tmp/crowbook/test.epub", "test.epub").unwrap();
-        fs::remove_dir_all(path).unwrap();
-        Ok(vec!())
+        let res = try!(zipper.generate_epub("test.epub"));
+        Ok(res)
     }
     
 
@@ -334,7 +279,7 @@ impl<'a> EpubRenderer<'a> {
         let mut items = String::new();
         let mut itemrefs = String::new();
         let mut coverref = String::new();
-        if let Some(ref s) = self.book.cover {
+        if let Some(_) = self.book.cover {
             items.push_str("<item id = \"cover.xhtml\" href = \"cover.xhtml\" media-type = \"application/xhtml+xml\" />\n");
             coverref.push_str("<itemref idref = \"cover.xhtml\" />");
         }

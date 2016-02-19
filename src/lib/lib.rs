@@ -24,3 +24,5 @@ pub use error::{Result, Error};
 pub use book::Book;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
+
+mod zipper;

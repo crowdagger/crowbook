@@ -32,7 +32,7 @@ impl<'a> LatexRenderer<'a> {
         }
         
 
-        let mut tex_lang = String::from(match &*self.book.lang {
+        let tex_lang = String::from(match &*self.book.lang {
             "en" => "english",
             "fr" => "francais",
             _ => {
@@ -72,12 +72,20 @@ impl<'a> LatexRenderer<'a> {
                                                  self.render_vec(vec)),
             Token::Header(n, ref vec) => {
                 let mut content = String::new();
-                if let Number::Specified(n) = self.current_chapter {
-                    content.push_str(r"\setcounter{chapter}{");
-                    content.push_str(&format!("{}", n - 1));
-                    content.push_str("}\n");
+                if n == 1 {
+                    if let Number::Specified(n) = self.current_chapter {
+                        content.push_str(r"\setcounter{chapter}{");
+                        content.push_str(&format!("{}", n - 1));
+                        content.push_str("}\n");
+                    }
                 }
-                content.push_str(r"\chapter");
+                match n {
+                    1 => content.push_str(r"\chapter"),
+                    2 => content.push_str(r"\section"),
+                    3 => content.push_str(r"\subsection"),
+                    4 => content.push_str(r"\subsubsection"),
+                    _ => panic!("header level not implemented"),
+                }
                 if self.current_chapter == Number::Unnumbered {
                     content.push_str("*");
                 }
