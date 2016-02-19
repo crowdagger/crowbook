@@ -1,6 +1,5 @@
 extern crate pulldown_cmark as cmark;
 extern crate mustache;
-extern crate zip;
 extern crate chrono;
 extern crate uuid;
 

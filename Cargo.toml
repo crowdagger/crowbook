@@ -15,6 +15,5 @@ doc = false
 [dependencies]
 pulldown-cmark = "0.0.7"
 mustache = "0.6"
-zip = "0.1"
 chrono = "0.2"
 uuid = "0.1"
