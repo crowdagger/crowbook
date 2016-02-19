@@ -5,11 +5,13 @@ use token::Token;
 use epub::EpubRenderer;
 use html::HtmlRenderer;
 use latex::LatexRenderer;
+use templates::{epub,html};
 
 use std::fs::File;
 use std::io::{Write,Read};
 use std::env;
 use std::path::Path;
+use std::borrow::Cow;
 
 use mustache;
 use mustache::MapBuilder;
@@ -309,5 +311,25 @@ impl Book {
         let v = try!(parser.parse_file(file));
         self.chapters.push((number, v));
         Ok(())
+    }
+
+    /// Returns the template (default or modified version)
+    pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
+        let (option, fallback) = match template {
+            "epub_css" => (&self.epub_css, epub::CSS),
+            "epub_template" => (&self.epub_template, epub::TEMPLATE),
+            "html_css" => (&self.html_css, html::CSS),
+            "html_template" => (&self.html_template, html::TEMPLATE),
+            _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
+        };
+        if let &Some (ref s) = option {
+            let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(s.to_owned())));
+            let mut res = String::new();
+            try!(f.read_to_string(&mut res)
+                 .map_err(|_| Error::ConfigParser("file could not be read", s.to_owned())));
+            Ok(Cow::Owned(res))
+        } else {
+            Ok(Cow::Borrowed(fallback))
+        }
     }
 }

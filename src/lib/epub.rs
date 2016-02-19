@@ -61,7 +61,8 @@ impl<'a> EpubRenderer<'a> {
         }
         
         // Write CSS file
-        try!(zipper.write("stylesheet.css", CSS.as_bytes()));
+        try!(zipper.write("stylesheet.css",
+                          &try!(self.book.get_template("epub_css")).as_bytes()));
 
         // Write titlepage
         try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes()));
@@ -277,7 +278,7 @@ impl<'a> EpubRenderer<'a> {
         }
         self.toc.push(title.clone());
 
-        let template = mustache::compile_str(TEMPLATE);
+        let template = mustache::compile_str(try!(self.book.get_template("epub_template")).as_ref());
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
             .insert_str("chapter_title", title)

@@ -43,11 +43,11 @@ impl<'a> HtmlRenderer<'a> {
             }
         }
 
-        let template = mustache::compile_str(TEMPLATE);
-        
+        let template = mustache::compile_str(try!(self.book.get_template("html_template")).as_ref());        
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
-            .insert_str("style", CSS)
+            .insert_str("style",
+                        &try!(self.book.get_template("html_css")))
             .build();
 
         let mut res:Vec<u8> = vec!();
@@ -119,4 +119,6 @@ impl<'a> HtmlRenderer<'a> {
     }
 }
     
+
+
 

@@ -7,8 +7,6 @@ lang: en
 # Generic options (though not used with LaTeX)
 numbering:  true
 autoclean: true
-numbering_template: Chapter {{number}}: {{title}}
-verbose: true
 
 # Latex option
 tex_command: pdflatex
