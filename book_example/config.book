@@ -1,0 +1,28 @@
+# Metadatas
+author: Élisabeth Henry
+title: Crowbook
+description: More like some kind of manual really
+lang: en
+
+# Generic options (though not used with LaTeX)
+numbering:  true
+autoclean: true
+numbering_template: Chapter {{number}}: {{title}}
+verbose: true
+
+# Latex option
+tex_command: pdflatex
+
+# Options for generating files
+temp_dir: .
+# Specify a) where to write files b) which ones to generate
+output_epub: book.epub
+output_html: book.html
+#output_pdf: book.pdf
+#output_tex: book.tex
+
+# finally, our files
+# paths are relative to the directory where this file is
++  introduction.md
++  config.md
+

@@ -2,6 +2,7 @@ use escape::escape_html;
 use token::Token;
 use book::{Book, Number};
 use error::{Error,Result};
+use templates::html::*;
 
 use mustache;
 
@@ -42,10 +43,11 @@ impl<'a> HtmlRenderer<'a> {
             }
         }
 
-        let template = mustache::compile_str(include_str!("../../templates/template.html"));
+        let template = mustache::compile_str(TEMPLATE);
         
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
+            .insert_str("style", CSS)
             .build();
 
         let mut res:Vec<u8> = vec!();
@@ -89,7 +91,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::CodeBlock(ref language, ref vec) => {
                 let s = self.render_vec(vec);
                 if language.is_empty() {
-                    format!("<pre><code>\n{}</code></pre>\n", s)
+                    format!("<pre><code>{}</code></pre>\n", s)
                 } else {
                     format!("<pre><code class = \"language-{}\">{}</code></pre>\n", language, s)
                 }

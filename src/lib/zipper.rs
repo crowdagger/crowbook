@@ -1,7 +1,6 @@
 use error::{Error,Result};
 
 use std::env;
-use std::str;
 use std::path::{Path,PathBuf};
 use std::io::Write;
 use std::process::Command;

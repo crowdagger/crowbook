@@ -3,6 +3,7 @@ use token::Token;
 use html::HtmlRenderer;
 use book::{Book,Number};
 use zipper::Zipper;
+use templates::epub::*;
 
 use mustache;
 use chrono;
@@ -60,16 +61,16 @@ impl<'a> EpubRenderer<'a> {
         }
         
         // Write CSS file
-        try!(zipper.write("stylesheet.css", include_str!("../../templates/epub/stylesheet.css").as_bytes()));
+        try!(zipper.write("stylesheet.css", CSS.as_bytes()));
 
         // Write titlepage
         try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes()));
 
         // Write file for ibook (why?)
-        try!(zipper.write("META-INF/com.apple.ibooks.display-options.xml", include_str!("../../templates/epub/ibookstuff.xml").as_bytes()));
+        try!(zipper.write("META-INF/com.apple.ibooks.display-options.xml", IBOOK.as_bytes()));
 
         // Write container.xml
-        try!(zipper.write("META-INF/container.xml", include_str!("../../templates/epub/container.xml").as_bytes()));
+        try!(zipper.write("META-INF/container.xml", CONTAINER.as_bytes()));
 
         // Write nav.xhtml
         try!(zipper.write("nav.xhtml", &try!(self.render_nav()).as_bytes()));
@@ -102,7 +103,7 @@ impl<'a> EpubRenderer<'a> {
     
     /// Render the titlepgae
     fn render_titlepage(&self) -> Result<String> {
-        let template = mustache::compile_str(include_str!("../../templates/epub/titlepage.xhtml"));
+        let template = mustache::compile_str(TITLE);
         let data = self.book.get_mapbuilder()
             .build();
         let mut res:Vec<u8> = vec!();
@@ -128,7 +129,7 @@ impl<'a> EpubRenderer<'a> {
       <content src = \"{}\" />
     </navPoint>\n", id, title, filename));
         }
-        let template = mustache::compile_str(include_str!("../../templates/epub/toc.ncx"));
+        let template = mustache::compile_str(TOC);
         let data = self.book.get_mapbuilder()
             .insert_str("nav_points", nav_points)
             .build();
@@ -200,7 +201,7 @@ impl<'a> EpubRenderer<'a> {
             items.push_str(&format!("<item media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n", format, s, s));
         }
 
-        let template = mustache::compile_str(include_str!("../../templates/epub/content.opf"));
+        let template = mustache::compile_str(OPF);
         let data = self.book.get_mapbuilder()
             .insert_str("optional", optional)
             .insert_str("items", items)
@@ -221,7 +222,7 @@ impl<'a> EpubRenderer<'a> {
     /// Render cover.xhtml
     fn render_cover(&self) -> Result<String> {
         if let Some(ref cover) = self.book.cover {
-            let template = mustache::compile_str(include_str!("../../templates/epub/cover.xhtml"));
+            let template = mustache::compile_str(COVER);
             let data = self.book.get_mapbuilder()
                 .insert_str("cover", cover.clone())
                 .build();
@@ -246,7 +247,7 @@ impl<'a> EpubRenderer<'a> {
                                  title));
         }           
         
-        let template = mustache::compile_str(include_str!("../../templates/epub/nav.xhtml"));
+        let template = mustache::compile_str(NAV);
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
             .build();
@@ -276,7 +277,7 @@ impl<'a> EpubRenderer<'a> {
         }
         self.toc.push(title.clone());
 
-        let template = mustache::compile_str(include_str!("../../templates/epub/template.xhtml"));
+        let template = mustache::compile_str(TEMPLATE);
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
             .insert_str("chapter_title", title)

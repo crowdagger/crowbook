@@ -13,11 +13,32 @@ p {
     margin:0;
     hyphens: auto;
 }
-code { 
-    font-family: monospace;
-    margin-top: 2em;
-    margin-bottem: 2em;
+blockquote {
+    margin: 1em;
+    font-style: italic;o
 }
+code {
+    font-size: .8em;
+    font-family: "Linux Libertine Mono", monospace;
+    background-color: #F0F0F0;
+}
+pre {
+    font-family: "Linux Libertine Mono", monospace;
+    margin: 1em;
+    padding-top: 0;
+    background-color: #F0F0F0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+h1, h2, h3, h4, h5, h5 {
+    adobe-hyphenate: none;
+    -ms-hyphens: none; /* Trident (Windows) */
+    -moz-hyphens: none; /* Gecko (Firefox) */
+    -webkit-hyphens: none; /* Webkit */
+    -epub-hyphens: none; /* EPUB 3 */
+    hyphens: none; /* Futur standard */
+}
+
 h1 {
     text-align: left;
     font-family: Linux Biolinum, sans-serif;
@@ -36,11 +57,20 @@ h3 {
 h4 { text-align: left; }
 h5 { text-align: left; }
 h6 { text-align: left; }
-h1.title { }
-h2.author { }
+h1.title {
+    text-align: center;
+    font-size: 300%;
+}
+h2.author {
+    text-align: right;
+    font-size:  200%;
+}
 h3.date { }
 ol.toc { padding: 0; margin-left: 1em; }
 ol.toc li { list-style-type: none; margin: 0; padding: 0; }
+p img {
+    float: right;
+}
 #cover img {
     width: 100%;
 }

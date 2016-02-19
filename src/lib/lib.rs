@@ -25,3 +25,4 @@ pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
 
 mod zipper;
+mod templates;

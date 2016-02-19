@@ -52,6 +52,14 @@ pub struct Book {
 
     // for latex
     pub tex_command: String,
+
+    // for epub
+    pub epub_css: Option<String>,
+    pub epub_template: Option<String>,
+
+    // for HTML
+    pub html_template: Option<String>,
+    pub html_css: Option<String>,
 }
 
 impl Book {
@@ -70,12 +78,16 @@ impl Book {
             cover: None,
             nb_char: ' ',
             numbering_template: String::from("{{number}}. {{title}}"),
-            temp_dir: String::from("/tmp/"),
+            temp_dir: String::from("."),
             output_epub: None,
             output_html: None,
             output_pdf: None,
             output_tex: None,
             tex_command: String::from("pdflatex"),
+            epub_css: None,
+            epub_template: None,
+            html_template: None,
+            html_css: None,
         }
     }
 
@@ -220,6 +232,10 @@ impl Book {
                     "lang" => self.lang = String::from(value),
                     "description" => self.description = Some(String::from(value)),
                     "subject" => self.subject = Some(String::from(value)),
+                    "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
+                    "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
+                    "html_template" | "html-template" => self.html_template = Some(String::from(value)),
+                    "html_css" | "html-css" => self.html_css = Some(String::from(value)),
                     _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
                 }
             }

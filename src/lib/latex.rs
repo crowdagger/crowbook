@@ -2,6 +2,7 @@ use book::{Book, Number};
 use error::{Error,Result};
 use token::Token;
 use zipper::Zipper;
+use templates::latex::*;
 
 use std::path::Path;
 
@@ -54,7 +55,7 @@ impl<'a> LatexRenderer<'a> {
             }
         });
 
-        let template = mustache::compile_str(include_str!("../../templates/template.tex"));
+        let template = mustache::compile_str(TEMPLATE);
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
             .insert_str("tex_lang", tex_lang)
