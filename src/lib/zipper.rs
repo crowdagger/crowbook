@@ -19,7 +19,7 @@ impl Zipper {
     ///
     /// path: the path to a temporary directory (zipper will create a random dir in it and clean it later)
     /// inner_dirs: a vec of inner directory to create in this directory
-    pub fn new(path: &str, inner_dirs: &[&str]) -> Result<Zipper> {
+    pub fn new(path: &str) -> Result<Zipper> {
         let uuid = uuid::Uuid::new_v4();
         let zipper_path = Path::new(path).join(uuid.to_simple_string());
 
@@ -28,12 +28,6 @@ impl Zipper {
              .create(&zipper_path)
              .map_err(|_| Error::Zipper(format!("could not create temporary directory in {}", path))));
 
-        for inner in inner_dirs {
-            try!(DirBuilder::new()
-                 .recursive(true)
-                 .create(zipper_path.join(inner))
-                 .map_err(|_| Error::Zipper(format!("could not create temporary inner directory {}", inner))));
-        }
         Ok(Zipper {
             args: vec!(),
             path: zipper_path,
@@ -42,7 +36,17 @@ impl Zipper {
 
     /// writes a content to a temporary file
     pub fn write(&mut self, file: &str, content: &[u8]) -> Result<()> {
-        if let Ok(mut f) = File::create(self.path.join(file)) {
+        let dest_file = self.path.join(file);
+        let dest_dir = dest_file.parent().expect("This file should have a parent, it has just been joined to a directory!");
+        if !fs::metadata(dest_dir).is_ok() { // dir does not exist, create it
+            try!(DirBuilder::new()
+                 .recursive(true)
+                 .create(&dest_dir)
+                 .map_err(|_| Error::Zipper(format!("could not create temporary directory in {}", dest_dir.display()))));
+        }
+        
+        
+        if let Ok(mut f) = File::create(&dest_file) {
             if f.write_all(content).is_ok() {
                 self.args.push(String::from(file));
                 Ok(())

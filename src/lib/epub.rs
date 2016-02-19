@@ -38,7 +38,7 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
-        let mut zipper = try!(Zipper::new(&self.book.temp_dir, &["META-INF"]));
+        let mut zipper = try!(Zipper::new(&self.book.temp_dir));
         
         // Write mimetype
         try!(zipper.write("mimetype", b"application/epub+zip"));
