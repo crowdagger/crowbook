@@ -32,7 +32,7 @@ impl<'a> EpubRenderer<'a> {
             book: book,
             html: HtmlRenderer::new(book),
             current_numbering: book.numbering,
-            current_chapter: 0,
+            current_chapter: 1,
             toc: vec!(),
         }
     }
@@ -47,7 +47,7 @@ impl<'a> EpubRenderer<'a> {
         let mut zip = zip::ZipWriter::new(cursor);
 
         // Write mimetype
-        try!(zip.start_file("mimetype", zip::CompressionMethod::Stored)
+        try!(zip.start_file("mimetype", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(b"application/epub+zip")
              .map_err(&error_writing));
@@ -71,7 +71,7 @@ impl<'a> EpubRenderer<'a> {
             let v = try!(parser.parse_file(file));
             let chapter = try!(self.render_chapter(&v));
             
-            try!(zip.start_file(filenamer(i), zip::CompressionMethod::Stored)
+            try!(zip.start_file(filenamer(i), self.book.zip_compression)
                  .map_err(&error_creating));
             try!(zip.write(chapter.as_bytes())
                  .map_err(&error_writing));
@@ -79,43 +79,43 @@ impl<'a> EpubRenderer<'a> {
         }
         
         // Write CSS file
-        try!(zip.start_file("stylesheet.css", zip::CompressionMethod::Stored)
+        try!(zip.start_file("stylesheet.css", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(include_str!("../../templates/epub/stylesheet.css").as_bytes())
              .map_err(&error_writing));
 
         // Write titlepage
-        try!(zip.start_file("title_page.xhtml", zip::CompressionMethod::Stored)
+        try!(zip.start_file("title_page.xhtml", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(try!(self.render_titlepage()).as_bytes())
              .map_err(&error_writing));
 
         // Write file for ibook (why?)
-        try!(zip.start_file("META-INF/com.apple.ibooks.display-options.xml", zip::CompressionMethod::Stored)
+        try!(zip.start_file("META-INF/com.apple.ibooks.display-options.xml", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(include_str!("../../templates/epub/ibookstuff.xml").as_bytes())
              .map_err(&error_writing));        
 
         // Write container.xml
-        try!(zip.start_file("META-INF/container.xml", zip::CompressionMethod::Stored)
+        try!(zip.start_file("META-INF/container.xml", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(include_str!("../../templates/epub/container.xml").as_bytes())
              .map_err(&error_writing));
 
         // Write nav.xhtml
-        try!(zip.start_file("nav.xhtml", zip::CompressionMethod::Stored)
+        try!(zip.start_file("nav.xhtml", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(try!(self.render_nav()).as_bytes())
              .map_err(&error_writing));
 
         // Write content.opf
-        try!(zip.start_file("content.opf", zip::CompressionMethod::Stored)
+        try!(zip.start_file("content.opf", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(try!(self.render_opf()).as_bytes())
              .map_err(&error_writing));
 
         // Write toc.ncx
-        try!(zip.start_file("toc.ncx", zip::CompressionMethod::Stored)
+        try!(zip.start_file("toc.ncx", self.book.zip_compression)
              .map_err(&error_creating));
         try!(zip.write(try!(self.render_toc()).as_bytes())
              .map_err(&error_writing));
@@ -123,7 +123,7 @@ impl<'a> EpubRenderer<'a> {
         // Write the cover (if needs be)
         if let Some(ref cover) = self.book.cover {
             let s: &str = &*cover;
-            try!(zip.start_file(s, zip::CompressionMethod::Stored)
+            try!(zip.start_file(s, self.book.zip_compression)
                  .map_err(&error_creating));
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(String::from(s))));
             let mut content = vec!();
@@ -307,7 +307,7 @@ impl<'a> EpubRenderer<'a> {
                 let s = if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
-                    format!("Chapitre {} : {}", chapter, self.html.render_vec(vec)) // todo: allow customization
+                    self.book.get_header(chapter, &self.html.render_vec(vec)).unwrap()
                 } else {
                     self.html.render_vec(vec)
                 };

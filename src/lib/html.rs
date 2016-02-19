@@ -83,7 +83,7 @@ impl<'a> HtmlRenderer<'a> {
                 let s = if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
-                    format!("Chapitre {} : {}", chapter, self.render_vec(vec)) // todo: allow customization
+                    self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
                 } else {
                     self.render_vec(vec)
                 };
