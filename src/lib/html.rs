@@ -2,7 +2,6 @@ use escape::escape_html;
 use token::Token;
 use book::{Book, Number};
 use error::{Error,Result};
-use templates::html::*;
 
 use mustache;
 
@@ -29,11 +28,11 @@ impl<'a> HtmlRenderer<'a> {
     pub fn render_book(&mut self) -> Result<String> {
         let mut content = String::new();
 
-        for &(ref n, ref v) in &self.book.chapters {
+        for &(n, ref v) in &self.book.chapters {
             match n {
-                &Number::Unnumbered => self.current_numbering = false,
-                &Number::Default => self.current_numbering = self.book.numbering,
-                &Number::Specified(n) => {
+                Number::Unnumbered => self.current_numbering = false,
+                Number::Default => self.current_numbering = self.book.numbering,
+                Number::Specified(n) => {
                     self.current_numbering = self.book.numbering;
                     self.current_chapter = n;
                 }

@@ -55,7 +55,7 @@ impl Parser {
                 Event::Text(text) => {
                     let mut text = text.into_owned();
                     if let Some(&Token::Str(_)) = v.last() {
-                        if let &mut Token::Str(ref mut s) = v.last_mut().unwrap() {
+                        if let Token::Str(ref mut s) = *v.last_mut().unwrap() {
                             s.push_str(&text);
                             if let Some(ref cleaner) = self.cleaner {
                                 if !self.verbatim {

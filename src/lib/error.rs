@@ -14,38 +14,36 @@ pub enum Error {
 
 impl error::Error for Error {
     fn description(&self) -> &str {
-        match self {
-            &Error::Parser(ref s) => s,
-            &Error::ConfigParser(ref s, _) => s,
-            &Error::FileNotFound(_) => "File not found",
-            &Error::Render(ref s) => s,
-            &Error::Zipper(ref s) => s,
+        match *self {
+            Error::Parser(ref s) | Error::ConfigParser(ref s, _) | Error::Render(ref s) => s,
+            Error::Zipper(ref s) => s,
+            Error::FileNotFound(_) => "File not found",
         }
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            &Error::Parser(ref s) => {
+        match *self {
+            Error::Parser(ref s) => {
                 try!(f.write_str("Error parsing markdown: "));
                 f.write_str(s)
             },
-            &Error::ConfigParser(ref s, ref line) => {
+            Error::ConfigParser(ref s, ref line) => {
                 try!(f.write_str("Error parsing configuration file: "));
                 try!(f.write_str(s));
                 try!(f.write_str(" in:\n"));
                 f.write_str(line)
             },
-            &Error::FileNotFound(ref file) => {
+            Error::FileNotFound(ref file) => {
                 try!(f.write_str("File not found: "));
                 f.write_str(file)
             },
-            &Error::Render(ref s) => {
+            Error::Render(ref s) => {
                 try!(f.write_str("Error during rendering: "));
                 f.write_str(s)
             },
-            &Error::Zipper(ref s) => {
+            Error::Zipper(ref s) => {
                 try!(f.write_str("Error during temporary files editing: "));
                 f.write_str(s)
             },

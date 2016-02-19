@@ -322,7 +322,7 @@ impl Book {
             "html_template" => (&self.html_template, html::TEMPLATE),
             _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
         };
-        if let &Some (ref s) = option {
+        if let Some (ref s) = *option {
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)

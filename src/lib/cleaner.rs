@@ -8,7 +8,7 @@ fn is_whitespace(c: char) -> bool {
 /// NOT for code blocks, hyperlikns and so on!
 pub trait Cleaner {
     /// Cleans a string, removing multiple whitespaces
-    fn clean<'a>(&self, s: &mut String) {
+    fn clean(&self, s: &mut String) {
         if s.contains(is_whitespace) { // if not, no need to do anything
             let mut new_s = String::with_capacity(s.len());
             let mut previous_space = false;
@@ -48,7 +48,7 @@ impl French {
 
 impl Cleaner for French {
     // puts non breaking spaces between :, ;, ?, !, «, »
-    fn clean<'a>(&self, s: &mut String) {
+    fn clean(&self, s: &mut String) {
         fn is_trouble(c: char) -> bool {
             match c {
                 '?'|'!'|';'|':'|'»'|'«'|'—' => true,

@@ -38,18 +38,17 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
-        let mut zipper = try!(Zipper::new(&self.book.temp_dir, &vec!("META-INF")));
+        let mut zipper = try!(Zipper::new(&self.book.temp_dir, &["META-INF"]));
         
         // Write mimetype
         try!(zipper.write("mimetype", b"application/epub+zip"));
 
         // Write chapters        
-        let mut i = 0;
-        for &(ref n, ref v) in &self.book.chapters {
+        for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             match n {
-                &Number::Unnumbered => self.current_numbering = false,
-                &Number::Default => self.current_numbering = self.book.numbering,
-                &Number::Specified(n) => {
+                Number::Unnumbered => self.current_numbering = false,
+                Number::Default => self.current_numbering = self.book.numbering,
+                Number::Specified(n) => {
                     self.current_numbering = self.book.numbering;
                     self.current_chapter = n;
                 }
@@ -57,7 +56,6 @@ impl<'a> EpubRenderer<'a> {
             let chapter = try!(self.render_chapter(v));
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes()));
-            i += 1;
         }
         
         // Write CSS file
