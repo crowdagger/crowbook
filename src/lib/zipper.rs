@@ -60,20 +60,21 @@ impl Zipper {
         let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
         try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
 
-        let output = try!(command.args(&self.args)
+        let res_output = command.args(&self.args)
             .output()
-            .map_err(|e| Error::Zipper(format!("failed to execute process: {}", e))));
+            .map_err(|e| Error::Zipper(format!("failed to execute process: {}", e)));
         try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
+        let output = try!(res_output);
         try!(fs::copy(self.path.join(file), file).map_err(|_| {
-            println!("{}", str::from_utf8(&output.stdout).unwrap());
+            println!("{}", &String::from_utf8_lossy(&output.stdout));
             Error::Zipper(format!("could not copy file {}", file))
         }));
         Ok(String::from_utf8_lossy(&output.stdout).into_owned())
     }
 
     /// generate a pdf file into given file name
-    pub fn generate_pdf(&mut self, tex_file: &str, pdf_file: &str) -> Result<String> {
-        let mut command = Command::new("pdflatex");
+    pub fn generate_pdf(&mut self, command: &str, tex_file: &str, pdf_file: &str) -> Result<String> {
+        let mut command = Command::new(command);
         command.arg(tex_file);
         self.run_command(command, pdf_file)
     }
@@ -89,8 +90,8 @@ impl Zipper {
 
 impl Drop for Zipper {
     fn drop(&mut self) {
-        if !fs::remove_dir_all(&self.path).is_ok() {
-            println!("Error in zipper: could not delete temporary directory");
+        if let Err(err) = fs::remove_dir_all(&self.path) {
+            println!("Error in zipper: could not delete temporary directory {}, error: {}", self.path.to_string_lossy(), err);
         }
     }
 }

@@ -49,6 +49,9 @@ pub struct Book {
     pub nb_char: char,
     pub numbering_template: String, // template for chapter numbering
     pub verbose: bool,
+
+    // for latex
+    pub tex_command: String,
 }
 
 impl Book {
@@ -72,6 +75,7 @@ impl Book {
             output_html: None,
             output_pdf: None,
             output_tex: None,
+            tex_command: String::from("pdflatex"),
         }
     }
 
@@ -209,6 +213,7 @@ impl Book {
                     "output_html" | "output-html" => self.output_html = Some(String::from(value)),
                     "output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
                     "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
+                    "tex_command" | "tex-command" => self.tex_command = String::from(value),
                     "author" => self.author = String::from(value),
                     "title" => self.title = String::from(value),
                     "cover" => self.cover = Some(String::from(value)),
