@@ -2,9 +2,12 @@ use error::{Error,Result};
 use cleaner::{Cleaner, French};
 use parser::Parser;
 use token::Token;
+use epub::EpubRenderer;
+use html::HtmlRenderer;
+use latex::LatexRenderer;
 
 use std::fs::File;
-use std::io::Read;
+use std::io::{Write,Read};
 use std::env;
 use std::path::Path;
 
@@ -22,30 +25,37 @@ pub enum Number {
 // Configuration of the book
 #[derive(Debug)]
 pub struct Book {
-    // Generic options
-    pub numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
-    pub autoclean: bool, 
-    pub chapters: Vec<(Number, Vec<Token>)>,  // list of the markdown files to process
+    // Metadata
     pub lang: String,
     pub author: String,
     pub title: String,
     pub description: Option<String>,
     pub subject: Option<String>,
     pub cover: Option<String>,
-    pub nb_char: char,
-    pub numbering_template: String, // template for chapter numbering
-    pub temp_dir: String,
 
+    // Output files
     pub output_epub: Option<String>,
     pub output_html: Option<String>,
     pub output_pdf: Option<String>,
     pub output_tex: Option<String>,
+    pub temp_dir: String,
+
+    // internal structure
+    pub chapters: Vec<(Number, Vec<Token>)>, 
+
+    // options
+    pub numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
+    pub autoclean: bool, 
+    pub nb_char: char,
+    pub numbering_template: String, // template for chapter numbering
+    pub verbose: bool,
 }
 
 impl Book {
     // Creates a new Book with default options
     pub fn new() -> Book {
         Book {
+            verbose: false,
             numbering: true,
             autoclean: true,
             chapters: vec!(),
@@ -189,19 +199,20 @@ impl Book {
                 let option = parts[0].trim();
                 let value = parts[1].trim();
                 match option {
-                    "nb-char" | "nb_char" => self.set_nb_char(try!(get_char(value))),
+                    "nb-char" | "nb_char" => self.nb_char = try!(get_char(value)),
                     "numbering-template" | "numbering_template" => self.numbering_template = String::from(value),
-                    "numbering" => self.set_numbering(try!(value.parse::<bool>().map_err(bool_error))),
-                    "autoclean" => self.set_autoclean(try!(value.parse::<bool>().map_err(bool_error))),
+                    "verbose" => self.verbose = try!(value.parse::<bool>().map_err(bool_error)),
+                    "numbering" => self.numbering = try!(value.parse::<bool>().map_err(bool_error)),
+                    "autoclean" => self.autoclean = try!(value.parse::<bool>().map_err(bool_error)),
                     "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
                     "output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
                     "output_html" | "output-html" => self.output_html = Some(String::from(value)),
                     "output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
                     "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
-                    "author" => self.set_author(String::from(value)),
-                    "title" => self.set_title(String::from(value)),
-                    "cover" => self.set_cover(Some(String::from(value))),
-                    "lang" => self.set_lang(String::from(value)),
+                    "author" => self.author = String::from(value),
+                    "title" => self.title = String::from(value),
+                    "cover" => self.cover = Some(String::from(value)),
+                    "lang" => self.lang = String::from(value),
                     "description" => self.description = Some(String::from(value)),
                     "subject" => self.subject = Some(String::from(value)),
                     _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
@@ -212,73 +223,43 @@ impl Book {
         Ok(())
     }
 
-    /// Sets non-breaking character
-    ///
-    /// Currently only used if autoclean = true and lang = fr
-    pub fn set_nb_char(&mut self, nb_char: char) {
-        self.nb_char = nb_char;
+    /// Generates output files acccording to book options
+    pub fn render_all(&self) -> Result<()> {
+        if let Some(ref file) = self.output_epub {
+            if self.verbose {
+                println!("Attempting to generate epub...");
+            }
+            let mut epub = EpubRenderer::new(&self);
+            let result = try!(epub.render_book());
+            if self.verbose {
+                println!("{}", result);
+            }
+            println!("Successfully generated epub file: {}", file);
+        }
+        if let Some(ref file) = self.output_html {
+            if self.verbose {
+                println!("Attempting to generate HTML...");
+            }
+            let mut html = HtmlRenderer::new(&self);
+            let result = try!(html.render_book());
+            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
+            try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to HTML file")));
+            println!("Successfully generated HTML file: {}", file);
+        }
+        if let Some(ref file) = self.output_tex {
+            if self.verbose {
+                println!("Attempting to generate LaTeX...");
+            }
+            let mut latex = LatexRenderer::new(&self);
+            let result = try!(latex.render_book());
+            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
+            try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
+            println!("Successfully generated LaTeX file: {}", file);
+        }
+        Ok(())
     }
 
-    /// Sets numbering of chapters
-    ///
-    /// false: no chapter is numbered
-    /// true: chapters are numbered, expect the ones that opt out of it
-    ///
-    /// default: true
-    pub fn set_numbering(&mut self, numbering: bool) {
-        self.numbering = numbering;
-    }
-
-    /// Sets lang of a book
-    ///
-    /// Should be a standard code: En, Fr, ...
-    ///
-    /// Default: en
-    pub fn set_lang(&mut self, lang: String) {
-        self.lang = lang;
-    }
-
-    /// Sets author of a book
-    ///
-    /// A single string for full name
-    ///
-    /// Default: Anonymous
-    pub fn set_author(&mut self, author: String) {
-        self.author = author;
-    }
-
-    /// Sets title of a book
-    ///
-    /// Default: Untitled
-    pub fn set_title(&mut self, title: String) {
-        self.title = title;
-    }
-
-    /// Sets the cover for the book
-    ///
-    /// Specifies the name (and path!) of a file, e.g. "cover.png"
-    ///
-    /// Default: None
-    pub fn set_cover(&mut self, cover: Option<String>) {
-        self.cover = cover;
-    }
-
-    /// Sets whether cleaning of input markdown is activated
-    ///
-    /// Default: true
-    ///
-    /// The cleaning is dependend on the language. By default, it
-    /// only removes multiple following spaces, so it should have no effect
-    /// on generated result (expect for the source files). But in french,
-    /// tries to 'intelligently' replaces spaces with non-breaking ones when
-    /// in front of appopriacte characters ('?', '!', ':' and so on).
-    pub fn set_autoclean(&mut self, autoclean: bool) {
-        self.autoclean = autoclean;
-    }
-
-    /// Adds a chapter to the book and its number scheme
-    ///
-    /// Number: either Default, Unnumbered or Specified(number)
+    
     /// File: location of the file for this chapter
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
         let mut parser = Parser::new();

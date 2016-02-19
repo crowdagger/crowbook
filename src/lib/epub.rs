@@ -37,7 +37,7 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
-        let mut zipper = try!(Zipper::new("/tmp/crowbook"));
+        let mut zipper = try!(Zipper::new(&self.book.temp_dir));
         
         // Write mimetype
         try!(zipper.write("mimetype", b"application/epub+zip"));
@@ -92,8 +92,12 @@ impl<'a> EpubRenderer<'a> {
             try!(zipper.write("over.xhtml", &try!(self.render_cover()).as_bytes()));
         }
 
-        let res = try!(zipper.generate_epub("test.epub"));
-        Ok(res)
+        if let Some(ref epub_file) = self.book.output_epub {
+            let res = try!(zipper.generate_epub(epub_file));
+            Ok(res)
+        } else {
+            Err(Error::Render("no output epub file specified in book config"))
+        }
     }
     
     /// Render the titlepgae
