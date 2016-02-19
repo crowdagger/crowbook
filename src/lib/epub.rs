@@ -1,16 +1,13 @@
 use error::{Error,Result};
 use token::Token;
-use parser::Parser;
 use html::HtmlRenderer;
 use book::{Book,Number};
 use zipper::Zipper;
 
-use zip;
 use mustache;
 use chrono;
 use uuid;
 
-use std::io;
 use std::io::{Read,Write};
 use std::path::Path;
 use std::fs::File;
@@ -46,13 +43,8 @@ impl<'a> EpubRenderer<'a> {
         try!(zipper.write("mimetype", b"application/epub+zip"));
 
         // Write chapters        
-        let mut parser = Parser::new();
-        if let Some(cleaner) = self.book.get_cleaner() {
-            parser = parser.with_cleaner(cleaner);
-        }
-
         let mut i = 0;
-        for &(ref n, ref file) in &self.book.chapters {
+        for &(ref n, ref v) in &self.book.chapters {
             match n {
                 &Number::Unnumbered => self.current_numbering = false,
                 &Number::Default => self.current_numbering = self.book.numbering,
@@ -61,8 +53,7 @@ impl<'a> EpubRenderer<'a> {
                     self.current_chapter = n;
                 }
             }
-            let v = try!(parser.parse_file(file));
-            let chapter = try!(self.render_chapter(&v));
+            let chapter = try!(self.render_chapter(v));
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes()));
             i += 1;
@@ -105,115 +96,6 @@ impl<'a> EpubRenderer<'a> {
         Ok(res)
     }
     
-
-    /// Render a book
-    pub fn render_book_old(&mut self) -> Result<Vec<u8>> {
-        let error_creating = |_| Error::Render("Error creating new file in zip");
-        let error_writing = |_| Error::Render("Error writing to file in zip");
-
-        let buffer: Vec<u8> = vec!();
-        let cursor = io::Cursor::new(buffer);
-        let mut zip = zip::ZipWriter::new(cursor);
-
-        // Write mimetype
-        try!(zip.start_file("mimetype", zip::CompressionMethod::Stored)
-             .map_err(&error_creating));
-        try!(zip.write(b"application/epub+zip")
-             .map_err(&error_writing));
-
-        // Write chapters        
-        let mut parser = Parser::new();
-        if let Some(cleaner) = self.book.get_cleaner() {
-            parser = parser.with_cleaner(cleaner);
-        }
-
-        let mut i = 0;
-        for &(ref n, ref file) in &self.book.chapters {
-            match n {
-                &Number::Unnumbered => self.current_numbering = false,
-                &Number::Default => self.current_numbering = self.book.numbering,
-                &Number::Specified(n) => {
-                    self.current_numbering = self.book.numbering;
-                    self.current_chapter = n;
-                }
-            }
-            let v = try!(parser.parse_file(file));
-            let chapter = try!(self.render_chapter(&v));
-            
-            try!(zip.start_file(filenamer(i), self.book.zip_compression)
-                 .map_err(&error_creating));
-            try!(zip.write(chapter.as_bytes())
-                 .map_err(&error_writing));
-            i += 1;
-        }
-        
-        // Write CSS file
-        try!(zip.start_file("stylesheet.css", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(include_str!("../../templates/epub/stylesheet.css").as_bytes())
-             .map_err(&error_writing));
-
-        // Write titlepage
-        try!(zip.start_file("title_page.xhtml", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(try!(self.render_titlepage()).as_bytes())
-             .map_err(&error_writing));
-
-        // Write file for ibook (why?)
-        try!(zip.start_file("META-INF/com.apple.ibooks.display-options.xml", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(include_str!("../../templates/epub/ibookstuff.xml").as_bytes())
-             .map_err(&error_writing));        
-
-        // Write container.xml
-        try!(zip.start_file("META-INF/container.xml", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(include_str!("../../templates/epub/container.xml").as_bytes())
-             .map_err(&error_writing));
-
-        // Write nav.xhtml
-        try!(zip.start_file("nav.xhtml", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(try!(self.render_nav()).as_bytes())
-             .map_err(&error_writing));
-
-        // Write content.opf
-        try!(zip.start_file("content.opf", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(try!(self.render_opf()).as_bytes())
-             .map_err(&error_writing));
-
-        // Write toc.ncx
-        try!(zip.start_file("toc.ncx", self.book.zip_compression)
-             .map_err(&error_creating));
-        try!(zip.write(try!(self.render_toc()).as_bytes())
-             .map_err(&error_writing));
-
-        // Write the cover (if needs be)
-        if let Some(ref cover) = self.book.cover {
-            let s: &str = &*cover;
-            try!(zip.start_file(s, self.book.zip_compression)
-                 .map_err(&error_creating));
-            let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(String::from(s))));
-            let mut content = vec!();
-            try!(f.read_to_end(&mut content).map_err(|_| Error::Render("Error while reading cover file")));
-            try!(zip.write(&content)
-                 .map_err(&error_writing));
-
-            // also write cover.xhtml
-            try!(zip.start_file("cover.xhtml", self.book.zip_compression)
-             .map_err(&error_creating));
-            try!(zip.write(try!(self.render_cover()).as_bytes())
-                 .map_err(&error_writing));
-        }
-        
-
-        // Get back the buffer
-        let buf = try!(zip.finish()
-                       .map_err(|_| Error::Render("Error finishing zip file")));
-        Ok(buf.into_inner())
-    }
-
     /// Render the titlepgae
     fn render_titlepage(&self) -> Result<String> {
         let template = mustache::compile_str(include_str!("../../templates/epub/titlepage.xhtml"));

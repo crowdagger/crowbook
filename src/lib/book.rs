@@ -1,5 +1,7 @@
 use error::{Error,Result};
 use cleaner::{Cleaner, French};
+use parser::Parser;
+use token::Token;
 
 use std::fs::File;
 use std::io::Read;
@@ -8,7 +10,6 @@ use std::path::Path;
 
 use mustache;
 use mustache::MapBuilder;
-use zip::CompressionMethod;
 
 // Numbering for a given chapter
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -19,11 +20,12 @@ pub enum Number {
 }
     
 // Configuration of the book
+#[derive(Debug)]
 pub struct Book {
     // Generic options
     pub numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
     pub autoclean: bool, 
-    pub chapters: Vec<(Number, String)>,  // list of the markdown files to process
+    pub chapters: Vec<(Number, Vec<Token>)>,  // list of the markdown files to process
     pub lang: String,
     pub author: String,
     pub title: String,
@@ -31,8 +33,13 @@ pub struct Book {
     pub subject: Option<String>,
     pub cover: Option<String>,
     pub nb_char: char,
-    pub zip_compression: CompressionMethod,
     pub numbering_template: String, // template for chapter numbering
+    pub temp_dir: String,
+
+    pub output_epub: Option<String>,
+    pub output_html: Option<String>,
+    pub output_pdf: Option<String>,
+    pub output_tex: Option<String>,
 }
 
 impl Book {
@@ -49,8 +56,12 @@ impl Book {
             subject: None,
             cover: None,
             nb_char: ' ',
-            zip_compression: CompressionMethod::Stored,
             numbering_template: String::from("{{number}}. {{title}}"),
+            temp_dir: String::from("/tmp/"),
+            output_epub: None,
+            output_html: None,
+            output_pdf: None,
+            output_tex: None,
         }
     }
 
@@ -154,11 +165,11 @@ impl Book {
             if line.starts_with('-') {
                 //unnumbered chapter
                 let file = try!(get_filename(line));
-                self.add_chapter(Number::Unnumbered, String::from(file));
+                try!(self.add_chapter(Number::Unnumbered, file));
             } else if line.starts_with('+') {
                 //nunmbered chapter
                 let file = try!(get_filename(line));
-                self.add_chapter(Number::Default, String::from(file));
+                try!(self.add_chapter(Number::Default, file));
             } else if line.starts_with(|c: char| c.is_digit(10)) {
                 // chapter with specific number
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
@@ -167,7 +178,7 @@ impl Book {
                 } else {
                     let file = try!(get_filename(parts[1]));
                     let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser("Error parsing integer", String::from(line))));
-                    self.add_chapter(Number::Specified(number), String::from(file));
+                    try!(self.add_chapter(Number::Specified(number), file));
                 }
             } else {
                 // standard case: "option: value"
@@ -179,15 +190,14 @@ impl Book {
                 let value = parts[1].trim();
                 match option {
                     "nb-char" | "nb_char" => self.set_nb_char(try!(get_char(value))),
-                    "zip-compression" | "zip_compression" => self.zip_compression = match value {
-                        "stored" => CompressionMethod::Stored,
-                        "deflated" => CompressionMethod::Deflated,
-                        "bzip2" => CompressionMethod::Bzip2,
-                        _ => return Err(Error::ConfigParser("unrecognized compression method", String::from(value))),
-                    },
                     "numbering-template" | "numbering_template" => self.numbering_template = String::from(value),
                     "numbering" => self.set_numbering(try!(value.parse::<bool>().map_err(bool_error))),
                     "autoclean" => self.set_autoclean(try!(value.parse::<bool>().map_err(bool_error))),
+                    "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
+                    "output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
+                    "output_html" | "output-html" => self.output_html = Some(String::from(value)),
+                    "output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
+                    "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
                     "author" => self.set_author(String::from(value)),
                     "title" => self.set_title(String::from(value)),
                     "cover" => self.set_cover(Some(String::from(value))),
@@ -270,7 +280,13 @@ impl Book {
     ///
     /// Number: either Default, Unnumbered or Specified(number)
     /// File: location of the file for this chapter
-    pub fn add_chapter(&mut self, number: Number, file: String) {
-        self.chapters.push((number, file));
+    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
+        let mut parser = Parser::new();
+        if let Some(cleaner) = self.get_cleaner() {
+            parser = parser.with_cleaner(cleaner)
+        }
+        let v = try!(parser.parse_file(file));
+        self.chapters.push((number, v));
+        Ok(())
     }
 }

@@ -1,6 +1,5 @@
 use book::{Book, Number};
 use error::{Error,Result};
-use parser::Parser;
 use token::Token;
 
 use mustache;
@@ -23,12 +22,9 @@ impl<'a> LatexRenderer<'a> {
     /// Render latex in a string
     pub fn render_book(&mut self) -> Result<String> {
         let mut content = String::from("");
-        let mut parser = Parser::new();
-
-        for &(ref n, ref file) in &self.book.chapters {
-            self.current_chapter = *n;
-            let v = try!(parser.parse_file(file));
-            content.push_str(&self.render_vec(&v));
+        for &(n, ref v) in &self.book.chapters {
+            self.current_chapter = n;
+            content.push_str(&self.render_vec(v));
         }
         
 
