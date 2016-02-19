@@ -89,7 +89,7 @@ impl<'a> EpubRenderer<'a> {
             try!(zipper.write(s, &content));
 
             // also write cover.xhtml
-            try!(zipper.write("over.xhtml", &try!(self.render_cover()).as_bytes()));
+            try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes()));
         }
 
         if let Some(ref epub_file) = self.book.output_epub {
