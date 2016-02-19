@@ -1,7 +1,7 @@
 extern crate crowbook;
 extern crate zip;
 
-use crowbook::{HtmlRenderer, Book, EpubRenderer};
+use crowbook::{HtmlRenderer, Book, EpubRenderer, LatexRenderer};
 use std::env;
 use std::io::Write;
 use std::fs::File;
@@ -22,6 +22,10 @@ fn main() {
 
             let mut f = File::create("test.epub").unwrap();
             f.write(&buf);
+
+            let mut latex = LatexRenderer::new(&book);
+            let s = latex.render_book().unwrap();
+            println!("{}", s);
         }
     }
 }

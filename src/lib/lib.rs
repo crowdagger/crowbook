@@ -13,6 +13,7 @@ pub mod token;
 pub mod error;
 pub mod book;
 pub mod epub;
+pub mod latex;
 
 pub use html::HtmlRenderer;
 pub use parser::Parser;
@@ -22,3 +23,4 @@ pub use cleaner::French;
 pub use error::{Result, Error};
 pub use book::Book;
 pub use epub::EpubRenderer;
+pub use latex::LatexRenderer;

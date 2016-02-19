@@ -1,0 +1,86 @@
+\documentclass[]{book}
+\usepackage[T1]{fontenc}
+\usepackage[{{tex_lang}}]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage[a5paper, top=2cm,
+left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5
+\setcounter{secnumdepth}{0}
+
+\makeatletter
+
+\newcommand{\HRule}{
+  \paragraph{}
+  \begin{center}
+    *****
+  \end{center}
+  \paragraph{}
+}
+
+
+% Title
+\renewcommand{\maketitle}{
+  \thispagestyle{empty}
+  \vspace*{\stretch{1}}
+
+  \begin{center}
+    {\Huge \@title   \\[5mm]}
+  \end{center}
+  \vspace*{\stretch{2}}
+
+  \newpage
+  \thispagestyle{empty}
+  
+  \pagebreak
+  \newpage
+  
+  \thispagestyle{empty}
+  \chapter*{}
+  \vspace*{\stretch{1}}
+  \begin{center}
+%    {\Huge \@author \\[5mm]}
+    {\Huge \@title   \\[5mm]}
+%    {\huge \today   \\[5mm]}    
+  \end{center}
+  
+%  \HRule
+
+  \vspace*{\stretch{2}}
+
+\begin{center}
+{\large \@author}
+\end{center}
+
+                                
+ \vspace*{\stretch{1}}
+
+ \vspace*{\stretch{1}}
+}
+\pagebreak
+\newpage
+  \thispagestyle{empty}
+\pagebreak
+\newpage
+
+% Headers
+\pagestyle{fancyplain} 
+\lhead[\fancyplain{}{}]{\fancyplain{}{}}
+% Right header
+\rhead[\fancyplain{}{}]{\fancyplain{}{}}
+% Center header
+\chead[\fancyplain{}{\rm\thepage}]{\fancyplain{}{\rm\thepage}}
+% Footer
+\cfoot{\fancyplain{}{}}
+\makeatother
+
+\title{ {{{title}}} }
+\author{ {{{author}}} }
+
+\begin{document}
+\maketitle
+
+{{{content}}}
+
+\end{document}
