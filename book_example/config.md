@@ -70,7 +70,7 @@ Content of this chapter
 markdown file. Really. It's good practice.
 
 If you have more than one, Crowbook won't get too angry at you and
-it will just treat it as another chapter. It's not a big problem
+will just print a warning and treat it as another chapter. It's not a big problem
 for single-page HTML output, or for LaTeX, but it is for Epub
 generation, because it will mess the table of contents.
 
@@ -197,6 +197,49 @@ generate it, so it won't work if it isn't installed on your computer.
 
 **default**:: `None`
 
+### Options for customizing generated code ###
+
+#### numbering_template ####
+
+A string will be used as chapter title. You can use `{{number}}` and
+`{{title}}` in this string, e.g.:
+
+```
+numbering_template: Chapter {{number}} {{title}}
+```
+
+Note that:
+* this string isn't used for unnumbered chapters;
+* this string isn't used for LaTeX, either.
+
+**default**: `{{number}}. {{title}}`
+
+#### html_template ####
+
+A file containing a (mustache) HTML template.
+
+**default**: `None` (built-in template)
+
+#### html_css ####
+
+A file containing a stylesheet for the HTML file.
+
+**default**: `None` (built-in)
+
+#### epub_template ####
+
+A file containing a (mustache) xhtml template for the files generated
+for each chapter.
+
+**default**: `None` (built-in template)
+
+#### epub_css ####
+
+A file containing a stylesheet for the Epub file.
+
+**default**: `None` (built-in)
+
+
 ### Additional options ###
 
 #### temp_dir ####
@@ -226,21 +269,6 @@ my_chapter.md`. Note that even if it is set to `true`, numbering will
 be desactivated for chapters that are included with `- my_chapter.md`.
 
 **default**:: `true`
-
-#### numbering_template ####
-
-A string will be used as chapter title. You can use `{{number}}` and
-`{{title}}` in this string, e.g.:
-
-```
-numbering_template: Chapter {{number}} {{title}}
-```
-
-Note that:
-* this string isn't used for unnumbered chapters;
-* this string isn't used for LaTeX, either.
-
-**default**: `{{number}}. {{title}}`
 
 #### verbose ####
 
@@ -274,7 +302,6 @@ you need to modify.
 The command used to generate a PDF file.
 
 **default**: `pdflatex`
-
 
 
 

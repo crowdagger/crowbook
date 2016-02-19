@@ -306,7 +306,7 @@ impl<'a> EpubRenderer<'a> {
                         *title = s.clone();
                     } else {
                         println!("Warning: detected two chapters inside the same markdown file.");
-                        println!("prev_chapter: {}, old_chapter: {}", title, s);
+                        println!("conflict between: {} and {}", title, s);
                     }
                 }
                 format!("<h{}>{}</h{}>\n", n, s, n)

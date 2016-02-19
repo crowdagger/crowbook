@@ -58,3 +58,4 @@ generate this book, you'll do:
 ```
 $ cargo run book_example/config.book
 ```
+
