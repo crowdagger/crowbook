@@ -26,6 +26,8 @@ pub struct Book {
     pub lang: String,
     pub author: String,
     pub title: String,
+    pub description: Option<String>,
+    pub subject: Option<String>,
     pub cover: Option<String>,
     pub nb_char: char,
 }
@@ -40,6 +42,8 @@ impl Book {
             lang: String::from("en"),
             author: String::from("Anonymous"),
             title: String::from("Untitled"),
+            description: None,
+            subject: None,
             cover: None,
             nb_char: ' ',
         }
@@ -161,6 +165,8 @@ impl Book {
                     "title" => self.set_title(String::from(value)),
                     "cover" => self.set_cover(Some(String::from(value))),
                     "lang" => self.set_lang(String::from(value)),
+                    "description" => self.description = Some(String::from(value)),
+                    "subject" => self.subject = Some(String::from(value)),
                     _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
                 }
             }

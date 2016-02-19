@@ -1,0 +1,53 @@
+body {
+    font-family: "Linux Libertine", "Georgia", serif;
+    margin-left: 5%; 
+    margin-right: 5%; 
+    margin-top: 5%; 
+    margin-bottom: 5%; 
+    text-align: justify;
+    font-size: 100%;
+}
+p {
+    text-indent: 1.25em;
+    font-size: 1em;
+    margin:0;
+    hyphens: auto;
+}
+code { 
+    font-family: monospace;
+    margin-top: 2em;
+    margin-bottem: 2em;
+}
+h1 {
+    text-align: left;
+    font-family: Linux Biolinum, sans-serif;
+    font-variant: small-caps;
+}
+h2 {
+    text-align: left;
+    font-family: Linux Biolinum, sans-serif;
+    font-variant: small-caps;
+}
+h3 {
+    text-align: left;
+    font-family: Linux Biolinum, sans-serif;
+    font-variant: small-caps;
+}
+h4 { text-align: left; }
+h5 { text-align: left; }
+h6 { text-align: left; }
+h1.title { }
+h2.author { }
+h3.date { }
+ol.toc { padding: 0; margin-left: 1em; }
+ol.toc li { list-style-type: none; margin: 0; padding: 0; }
+#cover-image img {
+    width: 100%;
+}
+.rule {
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    font-weight: bold;
+}
+

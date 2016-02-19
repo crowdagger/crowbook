@@ -6,7 +6,7 @@ use error::{Error,Result};
 
 use mustache;
 
-/// Renderer for HTML.
+/// Renderer for HTML
 ///
 /// Also used by Epub.
 pub struct HtmlRenderer<'a> {
@@ -73,8 +73,9 @@ impl<'a> HtmlRenderer<'a> {
         }
         res
     }
-    
-    fn parse_token(&mut self, token: &Token) -> String {
+
+    /// Parse a single token.
+    pub fn parse_token(&mut self, token: &Token) -> String {
         match *token {
             Token::Str(ref text) => escape_html(&*text),
             Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
