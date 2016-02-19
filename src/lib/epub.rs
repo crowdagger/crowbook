@@ -301,10 +301,13 @@ impl<'a> EpubRenderer<'a> {
                 } else {
                     self.html.render_vec(vec)
                 };
-                if title.is_empty() {
-                    *title = s.clone();
-                } else {
-                    println!("Warning: detected two chapters inside the same markdown file.");
+                if n == 1 {
+                    if title.is_empty() {
+                        *title = s.clone();
+                    } else {
+                        println!("Warning: detected two chapters inside the same markdown file.");
+                        println!("prev_chapter: {}, old_chapter: {}", title, s);
+                    }
                 }
                 format!("<h{}>{}</h{}>\n", n, s, n)
             },
