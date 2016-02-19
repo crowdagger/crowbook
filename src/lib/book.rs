@@ -102,9 +102,11 @@ impl Book {
 
         // change current directory
         if let Some(parent) = path.parent() {
-            if !env::set_current_dir(&parent).is_ok() {
-                return Err(Error::ConfigParser("could not change current directory to the one of the config file",
-                                               format!("{}", parent.display())));
+            if !parent.to_string_lossy().is_empty() {
+                if !env::set_current_dir(&parent).is_ok() {
+                    return Err(Error::ConfigParser("could not change current directory to the one of the config file",
+                                                   format!("{}", parent.display())));
+                }
             }
         }
 
