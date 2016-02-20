@@ -242,6 +242,12 @@ A file containing a stylesheet for the Epub file.
 
 ### Additional options ###
 
+### epub_version ###
+
+Sets the version for generated Epub, either 2 or 3.
+
+**default**: `2`
+
 #### temp_dir ####
 
 When it is generating epub or pdf files, Crowbook creates a temporary
