@@ -5,7 +5,7 @@ authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Yet another converter from Markdown file to (HTML, LaTeX, Epub)"
 repository = "https://github.com/lise-henry/crowbook"
 readme = "README.md"
-keywords = "markdown, book"
+keywords = ["markdown", "book"]
 license = "mit"
 
 [lib]
@@ -22,3 +22,4 @@ pulldown-cmark = "0.0.7"
 mustache = "0.6"
 chrono = "0.2"
 uuid = "0.1"
+clap = "2"
