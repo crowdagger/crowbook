@@ -254,55 +254,81 @@ impl Book {
 
         Ok(())
     }
+    
+    /// Render book to pdf according to book options
+    pub fn render_pdf(&self, file: &str) -> Result<()> {
+        if self.verbose {
+            println!("Attempting to generate pdf...");
+        }
+        let mut latex = LatexRenderer::new(&self);
+        let result = try!(latex.render_pdf());
+        if self.verbose {
+            println!("{}", result);
+        }
+        println!("Successfully generated pdf file: {}", file);
+        Ok(())
+    }
 
+    /// Render book to epub according to book options
+    pub fn render_epub(&self, file: &str) -> Result<()> {
+        if self.verbose {
+            println!("Attempting to generate epub...");
+        }
+        let mut epub = EpubRenderer::new(&self);
+        let result = try!(epub.render_book());
+        if self.verbose {
+            println!("{}", result);
+        }
+        println!("Successfully generated epub file: {}", file);
+        Ok(())
+    }
+
+    /// Render book to html according to book options
+    pub fn render_html(&self, file: &str) -> Result<()> {
+        if self.verbose {
+            println!("Attempting to generate HTML...");
+        }
+        let mut html = HtmlRenderer::new(&self);
+        let result = try!(html.render_book());
+        let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
+        try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to HTML file")));
+        println!("Successfully generated HTML file: {}", file);
+        Ok(())
+    }
+
+    /// Render book to pdf according to book options
+    pub fn render_tex(&self, file: &str) -> Result<()> {
+        if self.verbose {
+            println!("Attempting to generate LaTeX...");
+        }
+        let mut latex = LatexRenderer::new(&self);
+        let result = try!(latex.render_book());
+        let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
+        try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
+        println!("Successfully generated LaTeX file: {}", file);
+        Ok(())
+    }
+        
     /// Generates output files acccording to book options
     pub fn render_all(&self) -> Result<()> {
         let mut did_some_stuff = false;
+
         if let Some(ref file) = self.output_epub {
             did_some_stuff = true;
-            if self.verbose {
-                println!("Attempting to generate epub...");
-            }
-            let mut epub = EpubRenderer::new(&self);
-            let result = try!(epub.render_book());
-            if self.verbose {
-                println!("{}", result);
-            }
-            println!("Successfully generated epub file: {}", file);
+            try!(self.render_epub(file));
         }
+
         if let Some(ref file) = self.output_html {
             did_some_stuff = true;
-            if self.verbose {
-                println!("Attempting to generate HTML...");
-            }
-            let mut html = HtmlRenderer::new(&self);
-            let result = try!(html.render_book());
-            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
-            try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to HTML file")));
-            println!("Successfully generated HTML file: {}", file);
+            try!(self.render_html(file));
         }
         if let Some(ref file) = self.output_tex {
             did_some_stuff = true;
-            if self.verbose {
-                println!("Attempting to generate LaTeX...");
-            }
-            let mut latex = LatexRenderer::new(&self);
-            let result = try!(latex.render_book());
-            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
-            try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
-            println!("Successfully generated LaTeX file: {}", file);
+            try!(self.render_tex(file));
         }
         if let Some(ref file) = self.output_pdf {
             did_some_stuff = true;
-            if self.verbose {
-                println!("Attempting to generate pdf...");
-            }
-            let mut latex = LatexRenderer::new(&self);
-            let result = try!(latex.render_pdf());
-            if self.verbose {
-                println!("{}", result);
-            }
-            println!("Successfully generated pdf file: {}", file);
+            try!(self.render_pdf(file));
         }
         if !did_some_stuff {
             println!("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
