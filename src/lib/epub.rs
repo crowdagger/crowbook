@@ -37,6 +37,7 @@ use std::fs::File;
 pub struct EpubRenderer<'a> {
     book: &'a Book,
     current_numbering: bool,
+    current_hide: bool,
     current_chapter: i32,
     toc: Vec<String>,
     html: HtmlRenderer<'a>,
@@ -45,12 +46,13 @@ pub struct EpubRenderer<'a> {
 impl<'a> EpubRenderer<'a> {
     /// Creates a new Epub renderer
     pub fn new(book: &'a Book) -> EpubRenderer<'a> {
-         EpubRenderer {
+        EpubRenderer {
             book: book,
             html: HtmlRenderer::new(book),
             current_numbering: book.numbering,
             current_chapter: 1,
             toc: vec!(),
+            current_hide: false,
         }
     }
 
@@ -63,12 +65,17 @@ impl<'a> EpubRenderer<'a> {
 
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
+            self.current_hide = false;
             match n {
                 Number::Unnumbered => self.current_numbering = false,
                 Number::Default => self.current_numbering = self.book.numbering,
                 Number::Specified(n) => {
                     self.current_numbering = self.book.numbering;
                     self.current_chapter = n;
+                },
+                Number::Hidden => {
+                    self.current_numbering = false;
+                    self.current_hide = true;
                 }
             }
             let chapter = try!(self.render_chapter(v));
@@ -314,6 +321,15 @@ impl<'a> EpubRenderer<'a> {
     fn parse_token(&mut self, token: &Token, title: &mut String) -> String {
         match *token {
             Token::Header(n, ref vec) => {
+                if n == 1 && self.current_hide {
+                    if title.is_empty() {
+                        *title = self.html.render_vec(vec);
+                    } else {
+                        println!("Warning: detected two chapter titles inside the same markdown file...");
+                        println!("...in a file where chapter titles are not even rendered.");
+                    }
+                    return String::new();
+                }
                 let s = if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;

@@ -41,5 +41,5 @@ pub mod epub3 {
     pub static COVER:&'static str = include_str!("../../templates/epub3/cover.xhtml");
     pub static NAV:&'static str = include_str!("../../templates/epub3/nav.xhtml");
     pub static OPF:&'static str = include_str!("../../templates/epub3/content.opf");
-    pub static TITLE:&'static str = include_str!("../../templates/epub3</titlepage.xhtml");
+    pub static TITLE:&'static str = include_str!("../../templates/epub3/titlepage.xhtml");
 }

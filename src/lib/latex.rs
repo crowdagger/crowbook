@@ -104,6 +104,9 @@ impl<'a> LatexRenderer<'a> {
                                                  self.render_vec(vec, escape)),
             Token::Header(n, ref vec) => {
                 let mut content = String::new();
+                if n == 1 && self.current_chapter == Number::Hidden {
+                    return String::new();
+                }
                 if n == 1 {
                     if let Number::Specified(n) = self.current_chapter {
                         content.push_str(r"\setcounter{chapter}{");

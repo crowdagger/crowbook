@@ -28,7 +28,8 @@ use mustache;
 pub struct HtmlRenderer<'a> {
     current_chapter: i32,
     book: &'a Book,
-    current_numbering: bool
+    current_numbering: bool,
+    current_hide: bool,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -38,6 +39,7 @@ impl<'a> HtmlRenderer<'a> {
             book: book,
             current_chapter: 1,
             current_numbering: book.numbering,
+            current_hide: false
         }
     }
 
@@ -46,13 +48,18 @@ impl<'a> HtmlRenderer<'a> {
         let mut content = String::new();
 
         for &(n, ref v) in &self.book.chapters {
+            self.current_hide = false;
             match n {
                 Number::Unnumbered => self.current_numbering = false,
                 Number::Default => self.current_numbering = self.book.numbering,
                 Number::Specified(n) => {
                     self.current_numbering = self.book.numbering;
                     self.current_chapter = n;
-                }
+                },
+                Number::Hidden => {
+                    self.current_numbering = false;
+                    self.current_hide = true;
+                },
             }
             for token in v {
                 content.push_str(&self.parse_token(token));
@@ -91,6 +98,9 @@ impl<'a> HtmlRenderer<'a> {
             Token::Str(ref text) => escape_html(&*text),
             Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
             Token::Header(n, ref vec) => {
+                if n == 1 && self.current_hide {
+                    return String::new();
+                }
                 let s = if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;

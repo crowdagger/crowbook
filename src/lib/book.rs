@@ -16,9 +16,10 @@ use std::borrow::Cow;
 use mustache;
 use mustache::MapBuilder;
 
-// Numbering for a given chapter
+/// Numbering for a given chapter
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Number {
+    Hidden, // chapter's title is hidden
     Unnumbered, // chapter is not numbered
     Default, // chapter follows books numbering, number is given automatically
     Specified(i32), //chapter number set to specified number
@@ -202,6 +203,10 @@ impl Book {
                 //nunmbered chapter
                 let file = try!(get_filename(line));
                 try!(self.add_chapter(Number::Default, file));
+            } else if line.starts_with('!') {
+                // hidden chapter
+                let file = try!(get_filename(line));
+                try!(self.add_chapter(Number::Hidden, file));
             } else if line.starts_with(|c: char| c.is_digit(10)) {
                 // chapter with specific number
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
