@@ -4,6 +4,7 @@ use html::HtmlRenderer;
 use book::{Book,Number};
 use zipper::Zipper;
 use templates::epub::*;
+use templates::epub3;
 
 use mustache;
 use chrono;
@@ -102,7 +103,7 @@ impl<'a> EpubRenderer<'a> {
     
     /// Render the titlepgae
     fn render_titlepage(&self) -> Result<String> {
-        let template = mustache::compile_str(TITLE);
+        let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::TITLE} else {TITLE});
         let data = self.book.get_mapbuilder()
             .build();
         let mut res:Vec<u8> = vec!();
@@ -157,7 +158,7 @@ impl<'a> EpubRenderer<'a> {
         }
 
         // date
-        let date = chrono::UTC::now().format("%Y-%m-%d").to_string();
+        let date = chrono::UTC::now().format("%Y-%m-%dT%H:%M:%SZ");
 
         // uuid
         let uuid = uuid::Uuid::new_v4().to_urn_string();
@@ -166,15 +167,15 @@ impl<'a> EpubRenderer<'a> {
         let mut itemrefs = String::new();
         let mut coverref = String::new();
         if let Some(_) = self.book.cover {
-            items.push_str("<item id = \"cover.xhtml\" href = \"cover.xhtml\" media-type = \"application/xhtml+xml\" />\n");
-            coverref.push_str("<itemref idref = \"cover.xhtml\" />");
+            items.push_str("<item id = \"cover_xhtml\" href = \"cover.xhtml\" media-type = \"application/xhtml+xml\" />\n");
+            coverref.push_str("<itemref idref = \"cover_xhtml\" />");
         }
         for n in 0..self.toc.len() {
             let filename = filenamer(n);
             items.push_str(&format!("<item id = \"{}\" href = \"{}\" media-type=\"application/xhtml+xml\" />\n",
-                                    filename,
+                                    to_id(&filename),
                                     filename));
-            itemrefs.push_str(&format!("<itemref idref=\"{}\" />\n", filename));
+            itemrefs.push_str(&format!("<itemref idref=\"{}\" />\n", to_id(&filename)));
         }
         // oh we must put cover in the manifest too
         if let Some(ref s) = self.book.cover {
@@ -197,10 +198,14 @@ impl<'a> EpubRenderer<'a> {
                 println!("Warning: could not guess cover format based on extension. Assuming png.");
                 "png"
             };
-            items.push_str(&format!("<item media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n", format, s, s));
+            items.push_str(&format!("<item {} media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n",
+                                    if self.book.epub_version == 3 { "properties=\"cover-image\"" } else { "" },
+                                    format,
+                                    to_id(s),
+                                    s));
         }
 
-        let template = mustache::compile_str(OPF);
+        let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::OPF} else {OPF});
         let data = self.book.get_mapbuilder()
             .insert_str("optional", optional)
             .insert_str("items", items)
@@ -221,7 +226,7 @@ impl<'a> EpubRenderer<'a> {
     /// Render cover.xhtml
     fn render_cover(&self) -> Result<String> {
         if let Some(ref cover) = self.book.cover {
-            let template = mustache::compile_str(COVER);
+            let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::COVER} else {COVER});
             let data = self.book.get_mapbuilder()
                 .insert_str("cover", cover.clone())
                 .build();
@@ -246,7 +251,7 @@ impl<'a> EpubRenderer<'a> {
                                  title));
         }           
         
-        let template = mustache::compile_str(NAV);
+        let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::NAV} else {NAV});
         let data = self.book.get_mapbuilder()
             .insert_str("content", content)
             .build();
@@ -313,7 +318,13 @@ impl<'a> EpubRenderer<'a> {
         }
     }
 }
+
+// generate an id compatible string, replacing / and . by _
+fn to_id(s: &str) -> String {
+    s.replace(".", "_").replace("/", "_")
+}
     
+/// Generate a file name given an int   
 fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.xhtml", i)
 }

@@ -11,6 +11,9 @@ autoclean: true
 # Latex option
 tex_command: pdflatex
 
+# Epub option
+epub_version: 3
+
 # Options for generating files
 temp_dir: .
 # Specify a) where to write files b) which ones to generate

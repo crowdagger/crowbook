@@ -5,7 +5,7 @@ use token::Token;
 use epub::EpubRenderer;
 use html::HtmlRenderer;
 use latex::LatexRenderer;
-use templates::{epub,html};
+use templates::{epub,html, epub3};
 
 use std::fs::File;
 use std::io::{Write,Read};
@@ -58,6 +58,7 @@ pub struct Book {
     // for epub
     pub epub_css: Option<String>,
     pub epub_template: Option<String>,
+    pub epub_version: u8,
 
     // for HTML
     pub html_template: Option<String>,
@@ -88,6 +89,7 @@ impl Book {
             tex_command: String::from("pdflatex"),
             epub_css: None,
             epub_template: None,
+            epub_version: 2,
             html_template: None,
             html_css: None,
         }
@@ -238,6 +240,11 @@ impl Book {
                     "subject" => self.subject = Some(String::from(value)),
                     "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
                     "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
+                    "epub_version" | "epub-version" => self.epub_version = match value {
+                        "2" => 2,
+                        "3" => 3,
+                        _ => return Err(Error::ConfigParser("epub_version must either be 2 or 3", String::from(value))),
+                    },
                     "html_template" | "html-template" => self.html_template = Some(String::from(value)),
                     "html_css" | "html-css" => self.html_css = Some(String::from(value)),
                     _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
@@ -319,7 +326,8 @@ impl Book {
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
         let (option, fallback) = match template {
             "epub_css" => (&self.epub_css, epub::CSS),
-            "epub_template" => (&self.epub_template, epub::TEMPLATE),
+            "epub_template" => (&self.epub_template,
+                                if self.epub_version == 3 {epub3::TEMPLATE} else {epub::TEMPLATE}),
             "html_css" => (&self.html_css, html::CSS),
             "html_template" => (&self.html_template, html::TEMPLATE),
             _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),

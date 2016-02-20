@@ -18,3 +18,11 @@ pub mod epub {
     pub static TITLE:&'static str = include_str!("../../templates/epub/titlepage.xhtml");
     pub static TOC:&'static str = include_str!("../../templates/epub/toc.ncx");
 }
+
+pub mod epub3 {
+    pub static TEMPLATE:&'static str = include_str!("../../templates/epub3/template.xhtml");
+    pub static COVER:&'static str = include_str!("../../templates/epub3/cover.xhtml");
+    pub static NAV:&'static str = include_str!("../../templates/epub3/nav.xhtml");
+    pub static OPF:&'static str = include_str!("../../templates/epub3/content.opf");
+    pub static TITLE:&'static str = include_str!("../../templates/epub3/titlepage.xhtml");
+}

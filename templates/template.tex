@@ -5,10 +5,11 @@
 \usepackage{fancyhdr}
 \usepackage{longtable}
 \usepackage{booktabs}
+\usepackage{newunicodechar}
 \usepackage[a5paper, top=2cm,
-left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5
+  left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5
+\newunicodechar{ }{ }
 \setcounter{secnumdepth}{0}
-
 \makeatletter
 
 \newcommand{\HRule}{
@@ -79,6 +80,7 @@ left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5
 \author{ {{{author}}} }
 
 \begin{document}
+
 \maketitle
 
 {{{content}}}
