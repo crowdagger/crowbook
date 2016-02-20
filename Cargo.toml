@@ -2,6 +2,11 @@
 name = "crowbook"
 version = "0.1.0"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
+description = "Yet another converter from Markdown file to (HTML, LaTeX, Epub)"
+repository = "https://github.com/lise-henry/crowbook"
+readme = "README.md"
+keywords = "markdown, book"
+license = "mit"
 
 [lib]
 name = "crowbook"

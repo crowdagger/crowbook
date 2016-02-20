@@ -27,8 +27,8 @@ Features
   some_file` and you don't have to pass more options, it generates the
   rest.
 * Support for basic Markdown features useful in writing novels.
-* Support for Epub2 format as output.
-* Basic support for LaTeX format as output, and PDF through it.
+* Support for Epub2 and Epub3 format as output.
+* Very basic support for LaTeX format as output, and PDF through it.
 * Support for HTML format as output.
 * Support for basic french typography in HTML/Epub format, and by
 that I mostly mean non-breaking spaces.
@@ -36,13 +36,14 @@ that I mostly mean non-breaking spaces.
 * Some configuration for HTML/Epub templates and CSS.
 
 ### ToDo ###
-* Support Epub3.
+* Real support for LaTeX.
 * Allow more customization.
 * Provide a binary which accepts some option and not just an input
 file.
-* Support for easily embedding custom fonts (and other files) in Epub/HTML.
-* Support for ODT as output format.
+* Support for easily embedding custom fonts (and other files) in
+Epub/HTML.
 * Correct support for technical books.
+* Support for ODT as output format?
 
 See also [Bugs](Bugs.md).
 
