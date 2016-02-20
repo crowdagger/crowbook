@@ -92,14 +92,17 @@ that I mostly mean non-breaking spaces.
 ### ToDo ###
 * Real support for LaTeX.
 * Allow more customization.
-* Provide a binary which accepts some option and not just an input
-file.
 * Support for easily embedding custom fonts (and other files) in
 Epub/HTML.
 * Correct support for technical books.
 * Support for ODT as output format?
 
 See also [Bugs](Bugs.md).
+
+ChangeLog
+---------
+
+See [ChangeLog](ChangeLog.md).
 
 License 
 -------
@@ -115,10 +118,10 @@ following libraries:
 * [pulldown-cmark](https://crates.io/crates/pulldown-cmark) (for
 parsing markdown)
 * [mustache](https://crates.io/crates/pulldown-cmark) (for templating)
+* [clap](https://github.com/kbknapp/clap-rs) (for parsing command line arguments)
 * [chrono](https://crates.io/crates/chrono) (date and time library)
 * [uuid](https://crates.io/crates/uuid) (to generate uuid)
 
-While Crowbook directly doesn't use them, there was also some
-inspiration from [Pandoc](http://pandoc.org/) and [mdBook](https://github.com/azerupi/mdBook).
+While Crowbook directly doesn't use them, there was also inspiration from [Pandoc](http://pandoc.org/) and [mdBook](https://github.com/azerupi/mdBook).
 
 
