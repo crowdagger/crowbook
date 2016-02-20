@@ -117,7 +117,7 @@ following libraries:
 
 * [pulldown-cmark](https://crates.io/crates/pulldown-cmark) (for
 parsing markdown)
-* [mustache](https://crates.io/crates/pulldown-cmark) (for templating)
+* [mustache](https://crates.io/crates/mustache) (for templating)
 * [clap](https://github.com/kbknapp/clap-rs) (for parsing command line arguments)
 * [chrono](https://crates.io/crates/chrono) (date and time library)
 * [uuid](https://crates.io/crates/uuid) (to generate uuid)
