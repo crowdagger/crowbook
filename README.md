@@ -1,22 +1,76 @@
 Crowbook
 ========
 
-Yet another converter from Markdown to (HTML, LaTeX, Epub).
+Creates a book in HTML, Epub or PDF format from markdown files.
 
 [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
 
 Usage
 -----
 
-```
-$ crowbook some_file.book # or
-$ cargo run some_file.book
+The simplest command is:
+
+```bash
+$ crowbook <BOOK>
+$ # or runninng from cargo:
+$ cargo run <BOOK>
 ```
 
-Parse the config file and generate book in HTML, Epub and/or Latex/PDF
-(according to config file).
+Where `BOOK` is a configuration file. Crowbook will then parse the
+config file and generate book in HTML, Epub, LaTeX, and/or PDF,
+according to the setting in the configuration file.
 
-For more information see the book_example directory.
+This configuration file contains some metadata, options, and list the
+Markdown files. Here is a basic example:
+
+```
+author: Joan Doe
+title: Some book
+lang: en
+
+output_html: some_book.html
+
++ chapter_1.md
++ chapter_2.md
++ chapter_3.md
++ ...
+```
+
+For more information see
+[the configuration file](book-example/config.md), or the whole
+[book_example](book_example) directory.
+
+It is also possible to give additional paramaters to `crowbook`;
+arguments set from the command line will override the ones set in the
+`BOOK` configuration file.
+
+```
+USAGE:
+        crowbook [FLAGS] [OPTIONS] <BOOK>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+    -v, --verbose    Activate verbose mode
+
+OPTIONS:
+        --autoclean <BOOL>    Try to clean input markdown [values: true, false]
+        --numbering <BOOL>    Number chapters or not [values: true, false]
+    -o, --output <FILE>       Specify output file
+    -t, --to <FORMAT>         Generate specific format [values: epub, epub, pdf, html, tex]
+
+ARGS:
+    <BOOK>    A file containing the book configuration
+
+Command line options allow to override options defined in <BOOK> configuration file. 
+E.g., even if this file specifies 'verbose: false', calling 'crowbook --verbose <BOOK>' 
+will activate verbose mode.
+
+Note that Crowbook generates output files relatively to the directory where <BOOK> is:
+$ crowbook foo/bar.book --to pdf --output baz.pdf
+will thus generate baz.pdf in directory foo and not in current
+directory.
+```
 
 Features
 --------
