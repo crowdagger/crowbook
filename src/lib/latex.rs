@@ -3,6 +3,7 @@ use error::{Error,Result};
 use token::Token;
 use zipper::Zipper;
 use templates::latex::*;
+use escape::escape_tex;
 
 use std::path::Path;
 
@@ -42,7 +43,7 @@ impl<'a> LatexRenderer<'a> {
         let mut content = String::from("");
         for &(n, ref v) in &self.book.chapters {
             self.current_chapter = n;
-            content.push_str(&self.render_vec(v));
+            content.push_str(&self.render_vec(v, true));
         }
         
 
@@ -70,20 +71,20 @@ impl<'a> LatexRenderer<'a> {
 
 
     /// Transform a vector of `Token`s to LaTeX
-    fn render_vec(&mut self, tokens: &[Token]) -> String {
+    fn render_vec(&mut self, tokens: &[Token], escape: bool) -> String {
         let mut res = String::new();
         
         for token in tokens {
-            res.push_str(&self.parse_token(&token));
+            res.push_str(&self.parse_token(&token, escape));
         }
         res
     }
     
-    fn parse_token(&mut self, token: &Token) -> String {
+    fn parse_token(&mut self, token: &Token, escape: bool) -> String {
         match *token {
-            Token::Str(ref text) => text.clone(),
+            Token::Str(ref text) => if escape {escape_tex(text)} else {text.clone()},
             Token::Paragraph(ref vec) => format!("{}\n\n",
-                                                 self.render_vec(vec)),
+                                                 self.render_vec(vec, escape)),
             Token::Header(n, ref vec) => {
                 let mut content = String::new();
                 if n == 1 {
@@ -104,22 +105,22 @@ impl<'a> LatexRenderer<'a> {
                     content.push_str("*");
                 }
                 content.push_str(r"{");
-                content.push_str(&self.render_vec(vec));
+                content.push_str(&self.render_vec(vec, true));
                 content.push_str("}\n");
                 content
             },
-            Token::Emphasis(ref vec) => format!("\\emph{{{}}}", self.render_vec(vec)),
-            Token::Strong(ref vec) => format!("\\textbf{{{}}}", self.render_vec(vec)),
-            Token::Code(ref vec) => format!("\\texttt{{{}}}", self.render_vec(vec)),
-            Token::BlockQuote(ref vec) => format!("\\begin{{quotation}}\n{}\\end{{quotation}}\n", self.render_vec(vec)),
-            Token::CodeBlock(_, ref vec) => format!("\\begin{{verbatim}}\n{}\\end{{verbatim}}\n", self.render_vec(vec)),
+            Token::Emphasis(ref vec) => format!("\\emph{{{}}}", self.render_vec(vec, escape)),
+            Token::Strong(ref vec) => format!("\\textbf{{{}}}", self.render_vec(vec, escape)),
+            Token::Code(ref vec) => format!("\\texttt{{{}}}", self.render_vec(vec, escape)),
+            Token::BlockQuote(ref vec) => format!("\\begin{{quotation}}\n{}\\end{{quotation}}\n", self.render_vec(vec, escape)),
+            Token::CodeBlock(_, ref vec) => format!("\\begin{{verbatim}}\n{}\\end{{verbatim}}\n", self.render_vec(vec, false)),
             Token::Rule => String::from("\\HRule\n"),
             Token::SoftBreak => String::from(" "),
             Token::HardBreak => String::from("\n"),
-            Token::List(ref vec) => format!("\\begin{{itemize}}\n{}\\end{{itemize}}", self.render_vec(vec)),
-            Token::OrderedList(_, ref vec) => format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n", self.render_vec(vec)),
-            Token::Item(ref vec) => format!("\\item {}\n", self.render_vec(vec)),
-            Token::Link(_, _, ref vec) => self.render_vec(vec), //todo
+            Token::List(ref vec) => format!("\\begin{{itemize}}\n{}\\end{{itemize}}", self.render_vec(vec, escape)),
+            Token::OrderedList(_, ref vec) => format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n", self.render_vec(vec, escape)),
+            Token::Item(ref vec) => format!("\\item {}\n", self.render_vec(vec, escape)),
+            Token::Link(_, _, ref vec) => self.render_vec(vec, escape), //todo
             Token::Image(_, _, _) => panic!("Not yet implemented"),
         }
     }
