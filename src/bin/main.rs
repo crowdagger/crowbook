@@ -56,7 +56,7 @@ will thus generate baz.pdf in directory foo and not in current directory.")
              .long("--to")
              .short("t")
              .takes_value(true)
-             .possible_values(&["epub", "pdf", "html", "tex"])
+             .possible_values(&["epub", "pdf", "html", "tex", "odt"])
              .value_name("FORMAT")
              .help("Generate specific format"))
         .arg(Arg::with_name("BOOK")
@@ -96,6 +96,7 @@ will thus generate baz.pdf in directory foo and not in current directory.")
                             "tex" => book.output_tex = value,
                             "html" => book.output_html = value,
                             "pdf" => book.output_pdf = value,
+                            "odt" => book.output_odt = value,
                             _ => unreachable!()
                         }
                     }
@@ -105,6 +106,7 @@ will thus generate baz.pdf in directory foo and not in current directory.")
                         "tex" => &book.output_tex,
                         "html" => &book.output_html,
                         "pdf" => &book.output_pdf,
+                        "odt" => &book.output_odt,
                         _ => unreachable!()
                     } {
                         if let Err(err) = match format {
@@ -112,6 +114,7 @@ will thus generate baz.pdf in directory foo and not in current directory.")
                             "tex" => book.render_tex(file),
                             "html" => book.render_html(file),
                             "pdf" => book.render_pdf(file),
+                            "odt" => book.render_odt(file),
                             _ => unreachable!()
                         } {
                             println!("{}", err);

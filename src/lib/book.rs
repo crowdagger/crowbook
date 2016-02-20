@@ -5,7 +5,8 @@ use token::Token;
 use epub::EpubRenderer;
 use html::HtmlRenderer;
 use latex::LatexRenderer;
-use templates::{epub,html, epub3};
+use odt::OdtRenderer;
+use templates::{epub,html,epub3};
 
 use std::fs::File;
 use std::io::{Write,Read};
@@ -41,6 +42,7 @@ pub struct Book {
     pub output_html: Option<String>,
     pub output_pdf: Option<String>,
     pub output_tex: Option<String>,
+    pub output_odt: Option<String>,
     pub temp_dir: String,
 
     // internal structure
@@ -87,6 +89,7 @@ impl Book {
             output_html: None,
             output_pdf: None,
             output_tex: None,
+            output_odt: None,
             tex_command: String::from("pdflatex"),
             epub_css: None,
             epub_template: None,
@@ -285,6 +288,19 @@ impl Book {
             println!("{}", result);
         }
         println!("Successfully generated epub file: {}", file);
+        Ok(())
+    }
+
+        /// Render book to epub according to book options
+    pub fn render_odt(&self, file: &str) -> Result<()> {
+        if self.verbose {
+            println!("Attempting to generate Odt...");
+        }
+        let mut odt = OdtRenderer::new(&self);
+        let result = try!(odt.render_book());
+        let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create ODT file")));
+        try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to ODT file")));
+        println!("Successfully generated ODT file: {}", file);
         Ok(())
     }
 
