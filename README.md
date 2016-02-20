@@ -80,17 +80,13 @@ Features
   list chapters and metadatas, so you just run `crowbook
   some_file` and you don't have to pass more options, it generates the
   rest.
-* Support for basic Markdown features useful in writing novels.
 * Support for Epub2 and Epub3 format as output.
-* Very basic support for LaTeX format as output, and PDF through it.
+* Support for LaTeX format as output, and PDF through it.
 * Support for HTML format as output.
-* Support for basic french typography in HTML/Epub format, and by
-that I mostly mean non-breaking spaces.
-* Decent default templates and CSS.
+* Support for basic french typography (i.e. non-breaking spaces) in HTML/Epub format.
 * Some configuration for HTML/Epub templates and CSS.
 
 ### ToDo ###
-* Real support for LaTeX.
 * Allow more customization.
 * Support for easily embedding custom fonts (and other files) in
 Epub/HTML.
