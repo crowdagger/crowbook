@@ -37,7 +37,7 @@ output_html: some_book.html
 ```
 
 For more information see
-[the configuration file](book-example/config.md), or the whole
+[the configuration file](book_example/config.md), or the whole
 [book_example](book_example) directory.
 
 It is also possible to give additional paramaters to `crowbook`;
