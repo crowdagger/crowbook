@@ -6,7 +6,7 @@ description = "Yet another converter from Markdown file to (HTML, LaTeX, Epub)"
 repository = "https://github.com/lise-henry/crowbook"
 readme = "README.md"
 keywords = ["markdown", "book"]
-license = "mit"
+license = "LGPL-2.1+"
 
 [lib]
 name = "crowbook"
