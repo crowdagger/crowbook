@@ -9,12 +9,14 @@ but that's besides the scope of this document).
 The format is not very complicated. This is an example of it:
 
 ```
+# metadata
 author: Joan Doe
 title: Some book
 lang: en
 
 output_html: some_book.html
 
+# list of chapters
 - preface.md
 + chapter_1.md
 + chapter_2.md
@@ -24,20 +26,44 @@ output_html: some_book.html
 ```
 Basically, it is divided in two parts:
 
-* a list of options, under the form `option: value`;
+* a list of options, under the form `key: value`;
 * a list of Markdown files.
 
-Let's start by the second one, though it appears at the end of the
-document.
+Files starting with the `#` characters are comments and are discarded
+by Crowbook when parsing the files. Note that `#` must be at the
+*beginning* of the line, so e.g.:
+
+```
+author: John Smith # aka John Doe
+```
+
+will set the `author` key to `John Smith # aka John Doe`.
 
 The list of files
 -----------------
 
-There are three options to include a markdown file:
+There are various options to include a markdown file.
 
-* `- file_name.md`: include an unnumbered chapter;
-* `+ file_name.md`: a numbered chapter;
-* `42. file_name.md`: a chapter numbered to 42.
+* `+ file_name.md` includes a numbered chapter.
+* `- file_name.md` includes an unnumbered chapter.
+* `! file_name.md` includes a chapter whose title won't be displayed
+  (except in the toc for epub); this is useful for e.g. including a
+  copyright at the beginning or the book, or for short stories where
+  there is only one chapter.
+* `42. file_name.md` specifies the number for a chapter.
+
+So a typical usage might look like this:
+
+```
+! copyright.md
+- preface.md
+# We want first chapter to be Chapter 0 because we are programmers!
+0. chapter_0.md
+# Next chapters can be numbered automatically
++ chapter_1.md
++ chapter_3.md
+...
+```
 
 There are two important things to note:
 
@@ -63,26 +89,26 @@ does not specify a chapter title, because it will read it directly in
 The day I was born
 ==================
 
-Content of this chapter
+...
 ```
 
-*Normally*, you should have one and only one level-one header in each
-markdown file. Really. It's good practice.
+You should have one and only one level-one header (i.e. chapter title)
+in each markdown file.
 
 If you have more than one, Crowbook won't get too angry at you and
-will just print a warning and treat it as another chapter. It's not a big problem
-for single-page HTML output, or for LaTeX, but it is for Epub
-generation, because it will mess the table of contents.
+will just print a warning and treat it as another chapter (numbered
+according to the scheme specified for including the file). It will
+however mess the table of contents if Crowbook tries to generate one
+(e.g. for Epub). 
 
 It's also a problem if you do *not* have a level-1 header in a
-markdown file. If it is a numbered chapter  Crowbook will still be
+markdown file. If it is a numbered chapter Crowbook will still be
 able to infer a chapter name, but if it is not numbered Crowbook
-will give up, because it can't hope to generate a decent table of
-content with that.
+will fail to generate an Epub file.
 
 ****
 
-Anyway, *please*: one file = one chapter, a chapter starts with a
+So, to sum it up. *please*: one file = one chapter, a chapter starts with a
 title, and this way this will work nice.
 
 
