@@ -1,9 +1,24 @@
 Crowbook
 ========
 
-Creates a book in HTML, Epub or PDF format from markdown files.
+Render a markdown book in HTML, Epub or PDF.
 
 [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
+
+Building and installing
+-----------------------
+
+Youl'll need to have the [Rust](https://www.rust-lang.org/) compiler
+on your machine first; you can
+[download and install it here](https://www.rust-lang.org/downloads.html). Once
+it is down:
+
+```
+$ cargo install crowbook
+```
+
+will download `crowbook` and install it. If this is the first time you
+run `cargo install`, you'll like
 
 Usage
 -----
@@ -12,8 +27,6 @@ The simplest command is:
 
 ```bash
 $ crowbook <BOOK>
-$ # or runninng from cargo:
-$ cargo run <BOOK>
 ```
 
 Where `BOOK` is a configuration file. Crowbook will then parse the
@@ -96,18 +109,6 @@ Epub/HTML.
 
 See also [Bugs](Bugs.md).
 
-ChangeLog
----------
-
-See [ChangeLog](ChangeLog.md).
-
-License 
--------
-
-Crowbook is free software: you can redistribute it and/or modify it
-under the terms of the GNU Lesser General Public License (LGPL),
-version 2.1 or (at your option) any ulterior version. See 
-[LICENSE](LICENSE.md) file for more information.
 
 Acknowledgements
 ----------------
@@ -124,4 +125,23 @@ parsing markdown)
 
 While Crowbook directly doesn't use them, there was also inspiration from [Pandoc](http://pandoc.org/) and [mdBook](https://github.com/azerupi/mdBook).
 
+ChangeLog
+---------
 
+See [ChangeLog](ChangeLog.md).
+
+Library
+-------
+
+While the main purpose of Crowbook is to be runned as a command line,
+the code is written as a library so if you want to build on it you can
+use it as such. The code is currently badly documented (and badly in a
+general manner), but you can look at the generated documentation [here](http://lise-henry.github.io/rust/crowbook/).
+
+License 
+-------
+
+Crowbook is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License (LGPL),
+version 2.1 or (at your option) any ulterior version. See 
+[LICENSE](LICENSE.md) file for more information.

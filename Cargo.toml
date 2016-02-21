@@ -1,8 +1,8 @@
 [package]
 name = "crowbook"
-version = "0.1.0-unreleased"
+version = "0.1.0"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
-description = "Yet another converter from Markdown file to (HTML, LaTeX, Epub)"
+description = "Render a book written in Markdown in HTML, PDF or Epub"
 repository = "https://github.com/lise-henry/crowbook"
 readme = "README.md"
 keywords = ["markdown", "book"]
