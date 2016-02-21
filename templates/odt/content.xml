@@ -29,8 +29,8 @@
   </office:automatic-styles>
   <office:body>
     <office:text>
-      <text:p text:style-name="Title">{{{title}}}</text:p>
-      <text:p text:style-name="Heading_20_2.author">{{{author}}}</text:p>
+      <text:p text:style-name="Title">{{title}}</text:p>
+      <text:p text:style-name="Heading_20_2.author">{{author}}</text:p>
     {{{content}}}
     </office:text>
   </office:body>
