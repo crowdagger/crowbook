@@ -52,7 +52,7 @@ impl Zipper {
     }
 
     /// writes a content to a temporary file
-    pub fn write(&mut self, file: &str, content: &[u8]) -> Result<()> {
+    pub fn write(&mut self, file: &str, content: &[u8], add_args: bool) -> Result<()> {
         let dest_file = self.path.join(file);
         let dest_dir = dest_file.parent().expect("This file should have a parent, it has just been joined to a directory!");
         if !fs::metadata(dest_dir).is_ok() { // dir does not exist, create it
@@ -65,7 +65,9 @@ impl Zipper {
         
         if let Ok(mut f) = File::create(&dest_file) {
             if f.write_all(content).is_ok() {
-                self.args.push(String::from(file));
+                if add_args {
+                    self.args.push(String::from(file));
+                }
                 Ok(())
             } else {
                 Err(Error::Zipper(format!("could not write to temporary file {}", file)))
@@ -75,7 +77,25 @@ impl Zipper {
         }
     }
 
-    /// run command and copy file name to current dir
+    /// Unzip a file and deletes it afterwards
+    pub fn unzip(&mut self, file: &str) -> Result<()> {
+        // change to dest directory to unzip file
+        let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
+        try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
+        let output = Command::new("unzip")
+                      .arg(file)
+                      .output()
+                      .map_err(|e| Error::Zipper(format!("failed to execute unzip  on {}: {}", file, e)));
+
+        // change back to original current directory before try! ing anything
+        try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
+        try!(output);
+
+        fs::remove_file(self.path.join(file))
+            .map_err(|_| Error::Zipper(format!("failed to remove file {}", file)))
+    }
+
+    /// run command and copy file name (supposed to result from the command) to current dir
     pub fn run_command(&mut self, mut command: Command, file: &str) -> Result<String> {
         let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
         try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
@@ -91,6 +111,16 @@ impl Zipper {
         }));
         Ok(String::from_utf8_lossy(&output.stdout).into_owned())
     }
+
+    /// zip all files in zipper's tmp dir to a given file name and return odt file
+    pub fn generate_odt(&mut self, odt_file: &str) -> Result<String> {
+        let mut command = Command::new("zip");
+        command.arg("-r");
+        command.arg(odt_file);
+        command.arg(".");
+        self.run_command(command, odt_file)
+    }
+    
 
     /// generate a pdf file into given file name
     pub fn generate_pdf(&mut self, command: &str, tex_file: &str, pdf_file: &str) -> Result<String> {

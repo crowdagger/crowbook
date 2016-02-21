@@ -278,7 +278,7 @@ impl Book {
     }
 
     /// Render book to epub according to book options
-    pub fn render_epub(&self, file: &str) -> Result<()> {
+    pub fn render_epub(&self) -> Result<()> {
         if self.verbose {
             println!("Attempting to generate epub...");
         }
@@ -287,20 +287,21 @@ impl Book {
         if self.verbose {
             println!("{}", result);
         }
-        println!("Successfully generated epub file: {}", file);
+        println!("Successfully generated epub file: {}", self.output_epub.as_ref().unwrap());
         Ok(())
     }
 
-        /// Render book to epub according to book options
-    pub fn render_odt(&self, file: &str) -> Result<()> {
+        /// Render book to odt according to book options
+    pub fn render_odt(&self) -> Result<()> {
         if self.verbose {
             println!("Attempting to generate Odt...");
         }
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
-        let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create ODT file")));
-        try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to ODT file")));
-        println!("Successfully generated ODT file: {}", file);
+        if self.verbose {
+            println!("{}", result);
+        }
+        println!("Successfully generated odt file: {}", self.output_odt.as_ref().unwrap());
         Ok(())
     }
 
@@ -334,9 +335,9 @@ impl Book {
     pub fn render_all(&self) -> Result<()> {
         let mut did_some_stuff = false;
 
-        if let Some(ref file) = self.output_epub {
+        if self.output_epub.is_some() {
             did_some_stuff = true;
-            try!(self.render_epub(file));
+            try!(self.render_epub());
         }
 
         if let Some(ref file) = self.output_html {

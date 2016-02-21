@@ -19,11 +19,10 @@ extern crate crowbook;
 extern crate clap;
 
 use crowbook::{Book};
-use std::env;
 use clap::{App,Arg};
 
 fn main() {
-    let mut app = App::new("crowbook")
+    let app = App::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
         .after_help("Command line options allow to override options defined in <BOOK> configuration file. 
@@ -110,11 +109,11 @@ will thus generate baz.pdf in directory foo and not in current directory.")
                         _ => unreachable!()
                     } {
                         if let Err(err) = match format {
-                            "epub" => book.render_epub(file),
+                            "epub" => book.render_epub(),
                             "tex" => book.render_tex(file),
                             "html" => book.render_html(file),
                             "pdf" => book.render_pdf(file),
-                            "odt" => book.render_odt(file),
+                            "odt" => book.render_odt(),
                             _ => unreachable!()
                         } {
                             println!("{}", err);

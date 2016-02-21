@@ -61,7 +61,7 @@ impl<'a> EpubRenderer<'a> {
         let mut zipper = try!(Zipper::new(&self.book.temp_dir));
         
         // Write mimetype
-        try!(zipper.write("mimetype", b"application/epub+zip"));
+        try!(zipper.write("mimetype", b"application/epub+zip", true));
 
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
@@ -80,30 +80,29 @@ impl<'a> EpubRenderer<'a> {
             }
             let chapter = try!(self.render_chapter(v));
 
-            try!(zipper.write(&filenamer(i), &chapter.as_bytes()));
-        }
+            try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));        }
         
         // Write CSS file
         try!(zipper.write("stylesheet.css",
-                          &try!(self.book.get_template("epub_css")).as_bytes()));
+                          &try!(self.book.get_template("epub_css")).as_bytes(), true));
 
         // Write titlepage
-        try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes()));
+        try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes(), true));
 
         // Write file for ibook (why?)
-        try!(zipper.write("META-INF/com.apple.ibooks.display-options.xml", IBOOK.as_bytes()));
+        try!(zipper.write("META-INF/com.apple.ibooks.display-options.xml", IBOOK.as_bytes(), true));
 
         // Write container.xml
-        try!(zipper.write("META-INF/container.xml", CONTAINER.as_bytes()));
+        try!(zipper.write("META-INF/container.xml", CONTAINER.as_bytes(), true));
 
         // Write nav.xhtml
-        try!(zipper.write("nav.xhtml", &try!(self.render_nav()).as_bytes()));
+        try!(zipper.write("nav.xhtml", &try!(self.render_nav()).as_bytes(), true));
 
         // Write content.opf
-        try!(zipper.write("content.opf", &try!(self.render_opf()).as_bytes()));
+        try!(zipper.write("content.opf", &try!(self.render_opf()).as_bytes(), true));
 
         // Write toc.ncx
-        try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes()));
+        try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes(), true));
 
         // Write the cover (if needs be)
         if let Some(ref cover) = self.book.cover {
@@ -111,10 +110,10 @@ impl<'a> EpubRenderer<'a> {
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(String::from(s))));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|_| Error::Render("Error while reading cover file")));
-            try!(zipper.write(s, &content));
+            try!(zipper.write(s, &content, true));
 
             // also write cover.xhtml
-            try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes()));
+            try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
         }
 
         if let Some(ref epub_file) = self.book.output_epub {

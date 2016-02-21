@@ -43,3 +43,8 @@ pub mod epub3 {
     pub static OPF:&'static str = include_str!("../../templates/epub3/content.opf");
     pub static TITLE:&'static str = include_str!("../../templates/epub3/titlepage.xhtml");
 }
+
+pub mod odt {
+    pub static CONTENT:&'static str = include_str!("../../templates/odt/content.xml");
+    pub static ODT:&'static [u8] = include_bytes!("../../templates/odt/template.odt");
+}

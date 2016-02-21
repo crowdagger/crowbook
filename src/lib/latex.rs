@@ -48,7 +48,7 @@ impl<'a> LatexRenderer<'a> {
             let tex_file = format!("{}.tex", base_file.to_str().unwrap());
             let content = try!(self.render_book());
             let mut zipper = try!(Zipper::new(&self.book.temp_dir));
-            try!(zipper.write(&tex_file, &content.as_bytes()));
+            try!(zipper.write(&tex_file, &content.as_bytes(), false));
             zipper.generate_pdf(&self.book.tex_command, &tex_file, pdf_file)
         } else {
             Err(Error::Render("no output pdf file specified in book config"))
