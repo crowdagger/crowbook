@@ -8,20 +8,23 @@ lang: en
 numbering:  true
 autoclean: true
 
-# Latex option
-tex_command: pdflatex
+# Latex options
+tex.command: pdflatex
+tex.links_as_footnotes: false
 
 # Epub option
-epub_version: 3
+epub.version: 3
 
 # Options for generating files
 temp_dir: .
 # Specify a) where to write files b) which ones to generate
-output_epub: book.epub
-output_html: book.html
-#output_pdf: book.pdf
-output_odt: book.odt
-#output_tex: book.tex
+output.epub: book.epub
+output.html: book.html
+output.pdf: book.pdf
+output.odt: book.odt
+#output.tex: book.tex
+
+
 
 # finally, our files
 # paths are relative to the directory where this file is

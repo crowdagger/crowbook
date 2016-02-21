@@ -19,7 +19,6 @@ use book::{Book, Number};
 use error::{Error,Result};
 use token::Token;
 use zipper::Zipper;
-use templates::latex::*;
 use escape::escape_tex;
 
 use std::path::Path;
@@ -73,7 +72,7 @@ impl<'a> LatexRenderer<'a> {
             }
         });
 
-        let template = mustache::compile_str(TEMPLATE);
+        let template = mustache::compile_str(try!(self.book.get_template("tex_template")).as_ref());
         let data = self.book.get_mapbuilder("tex")
             .insert_str("content", content)
             .insert_str("tex_lang", tex_lang)
@@ -125,7 +124,7 @@ impl<'a> LatexRenderer<'a> {
                     content.push_str("*");
                 }
                 content.push_str(r"{");
-                content.push_str(&escape_tex(&self.render_vec(vec, true)));
+                content.push_str(&self.render_vec(vec, true));
                 content.push_str("}\n");
                 content
             },
@@ -140,8 +139,15 @@ impl<'a> LatexRenderer<'a> {
             Token::List(ref vec) => format!("\\begin{{itemize}}\n{}\\end{{itemize}}", self.render_vec(vec, escape)),
             Token::OrderedList(_, ref vec) => format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n", self.render_vec(vec, escape)),
             Token::Item(ref vec) => format!("\\item {}\n", self.render_vec(vec, escape)),
-            Token::Link(_, _, ref vec) => self.render_vec(vec, escape), //todo
-            Token::Image(_, _, _) => panic!("Not yet implemented"),
+            Token::Link(ref url, _, ref vec) => if self.book.tex_links_as_footnotes {
+                format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", escape_tex(url), self.render_vec(vec, escape), escape_tex(url))
+            } else {
+                format!("\\href{{{}}}{{{}}}", escape_tex(url), self.render_vec(vec, escape))
+            },
+            Token::Image(_, _, _) => {
+                println!("warning: including images is not yet supported for tex output");
+                String::from(" ")
+            }
         }
     }
 }

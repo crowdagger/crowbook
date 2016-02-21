@@ -6,7 +6,7 @@ use epub::EpubRenderer;
 use html::HtmlRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
-use templates::{epub,html,epub3};
+use templates::{epub, html, epub3, latex};
 use escape;
 
 use std::fs::File;
@@ -58,6 +58,8 @@ pub struct Book {
 
     // for latex
     pub tex_command: String,
+    pub tex_links_as_footnotes: bool,
+    pub tex_template: Option<String>,
 
     // for epub
     pub epub_css: Option<String>,
@@ -92,6 +94,8 @@ impl Book {
             output_tex: None,
             output_odt: None,
             tex_command: String::from("pdflatex"),
+            tex_links_as_footnotes: true,
+            tex_template: None,
             epub_css: None,
             epub_template: None,
             epub_version: 2,
@@ -245,27 +249,29 @@ impl Book {
                     "numbering" => self.numbering = try!(value.parse::<bool>().map_err(bool_error)),
                     "autoclean" => self.autoclean = try!(value.parse::<bool>().map_err(bool_error)),
                     "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
-                    "output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
-                    "output_html" | "output-html" => self.output_html = Some(String::from(value)),
-                    "output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
-                    "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
-                    "output_odt" | "output-odt" => self.output_odt = Some(String::from(value)),
-                    "tex_command" | "tex-command" => self.tex_command = String::from(value),
+                    "output.epub" |"output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
+                    "output.html"| "output_html" | "output-html" => self.output_html = Some(String::from(value)),
+                    "output.tex" |"output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
+                    "output.pdf" | "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
+                    "output.odt" | "output_odt" | "output-odt" => self.output_odt = Some(String::from(value)),
+                    "tex.command" | "tex_command" | "tex-command" => self.tex_command = String::from(value),
+                    "tex.links-as-footnotes" | "tex.links_as_footnotes" => self.tex_links_as_footnotes = try!(value.parse::<bool>().map_err(bool_error)),
+                    "tex.template" => self.tex_template = Some(String::from(value)),
                     "author" => self.author = String::from(value),
                     "title" => self.title = String::from(value),
                     "cover" => self.cover = Some(String::from(value)),
                     "lang" => self.lang = String::from(value),
                     "description" => self.description = Some(String::from(value)),
                     "subject" => self.subject = Some(String::from(value)),
-                    "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
-                    "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
-                    "epub_version" | "epub-version" => self.epub_version = match value {
+                    "epub.css" | "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
+                    "epub.template" | "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
+                    "epub.version" | "epub_version" | "epub-version" => self.epub_version = match value {
                         "2" => 2,
                         "3" => 3,
                         _ => return Err(Error::ConfigParser("epub_version must either be 2 or 3", String::from(value))),
                     },
-                    "html_template" | "html-template" => self.html_template = Some(String::from(value)),
-                    "html_css" | "html-css" => self.html_css = Some(String::from(value)),
+                    "html.template" | "html_template" | "html-template" => self.html_template = Some(String::from(value)),
+                    "html.css" | "html_css" | "html-css" => self.html_css = Some(String::from(value)),
                     _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
                 }
             }
@@ -394,6 +400,7 @@ impl Book {
                                 if self.epub_version == 3 {epub3::TEMPLATE} else {epub::TEMPLATE}),
             "html_css" => (&self.html_css, html::CSS),
             "html_template" => (&self.html_template, html::TEMPLATE),
+            "tex_template" => (&self.tex_template, latex::TEMPLATE),
             _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
         };
         if let Some (ref s) = *option {

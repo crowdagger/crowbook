@@ -40,7 +40,7 @@ For more information see
 [the configuration file](book_example/config.md), or the whole
 [book_example](book_example) directory.
 
-It is also possible to give additional paramaters to `crowbook`;
+It is also possible to give additional parameters to `crowbook`;
 arguments set from the command line will override the ones set in the
 `BOOK` configuration file.
 

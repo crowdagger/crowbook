@@ -14,7 +14,7 @@ author: Joan Doe
 title: Some book
 lang: en
 
-output_html: some_book.html
+output.html: some_book.html
 
 # list of chapters
 - preface.md
@@ -186,7 +186,7 @@ Recall that all file paths are relative to the directory where the
 config file is, not to the one where you run `crowbook`. So if you set
 
 ```
-output_epub = foo.epub
+output.epub = foo.epub
 ```
 
 and runs
@@ -198,7 +198,7 @@ $ crowbook some/dir/config.book
 `foo.epub` will be generated in `some/dir`, not in your current
 directory.
 
-Crowbook will try to generate each of the `output_xxx` files that are
+Crowbook will try to generate each of the `output.xxx` files that are
 specified. That means that you'll have to set at least one of those if you want a call to
 
 ```
@@ -208,7 +208,7 @@ $ crowbook my.book
 to generate anything. (It's still possible to generate a specific
 format, and only this one, by using the `--to` argument on the command line).
 
-#### output_epub ####
+#### output.epub ####
 
 The name of the epub file you want to generate.
 
@@ -217,20 +217,20 @@ The name of the epub file you want to generate.
 Crowbook use the `zip` command to generate the epub, so it won't work
 if this command is not installed on your system.
 
-#### output_html ####
+#### output.html ####
 
 The name of the HTML file you want to generate. Note that this HTML
 file is self-contained, it doesn't require e.g. CSS from other files.
 
 **default**: `None`
 
-#### output_tex ####
+#### output.tex ####
 
 The name of the LaTeX file you want to generate. 
 
 **default**: `None`
 
-#### output_pdf ####
+#### output.pdf ####
 
 The name of the PDF file you want to generate. Crowbook uses LaTeX to
 generate it, so it won't work if it isn't installed on your
@@ -239,7 +239,7 @@ want to use.)
 
 **default**: `None`
 
-### output_odt ###
+### output.odt ###
 
 The name of the ODT (OpenOffice) file you want to generate. Beware: 
 ODT support is still experimental.
@@ -249,7 +249,17 @@ ODT support is still experimental.
 As for Epub generation, Crowbook depends on the presence of the `zip`
 command to generate this file.
 
-### Options for customizing generated code ###
+### Generic options for rendering  ###
+
+#### numbering ####
+
+A boolean that sets whether or not you want numbering. Setting it to
+`false` is equivalent to including all your chapters with `-
+my_chapter.md`. Note that even if it is set to `true`, numbering will
+be desactivated for chapters that are included with `- my_chapter.md`.
+
+**default**:: `true`
+
 
 #### numbering_template ####
 
@@ -265,75 +275,6 @@ Note that:
 * this string isn't used for LaTeX, either.
 
 **default**: `{{number}}. {{title}}`
-
-#### html_template ####
-
-A file containing a (mustache) HTML template.
-
-**default**: `None` (built-in template)
-
-#### html_css ####
-
-A file containing a stylesheet for the HTML file.
-
-**default**: `None` (built-in)
-
-#### epub_template ####
-
-A file containing a (mustache) xhtml template for the files generated
-for each chapter.
-
-**default**: `None` (built-in template)
-
-#### epub_css ####
-
-A file containing a stylesheet for the Epub file.
-
-**default**: `None` (built-in)
-
-
-### Additional options ###
-
-### epub_version ###
-
-Sets the version for generated Epub, either 2 or 3.
-
-**default**: `2`
-
-#### temp_dir ####
-
-When it is generating epub or pdf files, Crowbook creates a temporary
-directory (which is then removed), named from a random uuid (so we can
-be pretty certain it's not gonna exist). This option specify where to
-create this directory. E.g., if you set:
-
-```
-temp_dir: /tmp
-```
-
-crowbook might create a temporary directory
-`/tmp/7fcbe41e-1676-46ba-b1a7-40c2fa37a3a7`.
-
-By default, this temporary directory is created where the config file
-is.
-
-**default**: `.`
-
-#### numbering ####
-
-A boolean that sets whether or not you want numbering. Setting it to
-`false` is equivalent to including all your chapters with `-
-my_chapter.md`. Note that even if it is set to `true`, numbering will
-be desactivated for chapters that are included with `- my_chapter.md`.
-
-**default**:: `true`
-
-#### verbose ####
-
-Crowbook will print a little more stuff on the standard output if this
-option is set to true.
-
-**default**: `false`
 
 #### autoclean ####
 
@@ -355,11 +296,92 @@ you need to modify.
 
 **default**: `' '` (i.e. narrrow non-breaking space)
 
-#### tex_command ####
+### Options for HTML rendering ###
+
+#### html.template ####
+
+A file containing a (mustache) HTML template.
+
+**default**: `None` (built-in template)
+
+#### html.css ####
+
+A file containing a stylesheet for the HTML file.
+
+**default**: `None` (built-in)
+
+### Options for Epub rendering ###
+
+#### epub.template ####
+
+A file containing a (mustache) xhtml template for the files generated
+for each chapter.
+
+**default**: `None` (built-in template)
+
+#### epub.css ####
+
+A file containing a stylesheet for the Epub file.
+
+**default**: `None` (built-in)
+
+### epub_version ###
+
+Sets the version for generated Epub, either 2 or 3.
+
+**default**: `2`
+
+### Options for LaTeX / PDF rendering ###
+
+#### tex.template ####
+
+Sets the LaTeX template.
+
+**default**: `None` (builtin)
+
+#### tex.command ####
 
 The command used to generate a PDF file.
 
 **default**: `pdflatex`
+
+#### tex.links_as_footnotes ####
+
+Display the link in the document, using the `\footnote{}`
+command. This is useful if you want your readers to be able to see the
+URLs in a printed document.
+
+**default**: `true`
+
+### Additional options ###
+
+#### temp_dir ####
+
+When it is generating epub or pdf files, Crowbook creates a temporary
+directory (which is then removed), named from a random uuid (so we can
+be pretty certain it's not gonna exist). This option specify where to
+create this directory. E.g., if you set:
+
+```
+temp_dir: /tmp
+```
+
+crowbook might create a temporary directory
+`/tmp/7fcbe41e-1676-46ba-b1a7-40c2fa37a3a7`.
+
+By default, this temporary directory is created where the config file
+is.
+
+**default**: `.`
+
+#### verbose ####
+
+Crowbook will print a little more stuff on the standard output if this
+option is set to true. (This is equivalent to running `crowbook --verbose`.)
+
+**default**: `false`
+
+
 
 
 
