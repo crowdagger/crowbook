@@ -30,6 +30,8 @@ pub fn create_book(matches: &ArgMatches) -> ! {
         f.write_all(b"# output.html: some_file.html\n").unwrap();
         f.write_all(b"# output.epub: some_file.epub\n").unwrap();
         f.write_all(b"# output.pdf: some_file.pdf\n\n").unwrap();
+        f.write_all(b"# Uncomment and fill to set cover image (for Epub)\n").unwrap();
+        f.write_all(b"# cover: some_cover.png\n\n").unwrap();
         f.write_all(b"# List of chapters\n").unwrap();
         for file in values {
             f.write_all(&format!("{} {}\n", if numbering {"+"} else {"-"}, file).as_bytes()).unwrap();
