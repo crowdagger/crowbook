@@ -239,6 +239,7 @@ impl Book {
                     "output_html" | "output-html" => self.output_html = Some(String::from(value)),
                     "output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
                     "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
+                    "output_odt" | "output-odt" => self.output_odt = Some(String::from(value)),
                     "tex_command" | "tex-command" => self.tex_command = String::from(value),
                     "author" => self.author = String::from(value),
                     "title" => self.title = String::from(value),
@@ -351,6 +352,11 @@ impl Book {
         if let Some(ref file) = self.output_pdf {
             did_some_stuff = true;
             try!(self.render_pdf(file));
+        }
+
+        if self.output_odt.is_some() {
+            did_some_stuff = true;
+            try!(self.render_odt());
         }
         if !did_some_stuff {
             println!("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
