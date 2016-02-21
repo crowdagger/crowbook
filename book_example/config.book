@@ -30,4 +30,5 @@ output.odt: book.odt
 # paths are relative to the directory where this file is
 +  ../README.md
 + config.md
++ arguments.md
 

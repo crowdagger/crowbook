@@ -17,8 +17,8 @@ it is down:
 $ cargo install crowbook
 ```
 
-will download `crowbook` and install it. If this is the first time you
-run `cargo install`, you'll like
+will download `crowbook` and install it. 
+
 
 Usage
 -----
@@ -31,9 +31,29 @@ $ crowbook <BOOK>
 
 Where `BOOK` is a configuration file. Crowbook will then parse the
 config file and generate book in HTML, Epub, LaTeX, and/or PDF,
-according to the setting in the configuration file.
+according to the setting in the configuration file. So if you clone
+this repository and run
 
-This configuration file contains some metadata, options, and list the
+```bash
+$ crowbook book_example/config.book
+```
+
+(or `cargo run -- book_example/config.book` if you don't want to
+install it), you'll generate the example book in various format. The
+HTML version should look
+[like that](http://lise-henry.github.io/crowbook/book.html).
+
+Now, let's say you want to make your own book. Assuming you have a
+list of Markdown files, you can generate a template configuration file
+with the `--create` argument:
+
+```bash
+$ crowbook --create my.book chapter_*.md
+```
+
+This will generate a default `my.book` file, which you'll need to complete.
+
+This configuration file contains some metadata, options, and lists the
 Markdown files. Here is a basic example:
 
 ```
@@ -50,40 +70,13 @@ output_html: some_book.html
 ```
 
 For more information see
-[the configuration file](book_example/config.md), or the whole
-[book_example](book_example) directory.
+[the configuration file page](book_example/config.md), or the whole
+[book_example](book_example) directory. (A (not necessarily
+up-to-date) [rendered version is available in HTML here](http://lise-henry.github.io/crowbook/book.html)).
 
 It is also possible to give additional parameters to `crowbook`;
-arguments set from the command line will override the ones set in the
-`BOOK` configuration file.
-
-```
-USAGE:
-        crowbook [FLAGS] [OPTIONS] <BOOK>
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-    -v, --verbose    Activate verbose mode
-
-OPTIONS:
-        --autoclean <BOOL>    Try to clean input markdown [values: true, false]
-        --numbering <BOOL>    Number chapters or not [values: true, false]
-    -o, --output <FILE>       Specify output file
-    -t, --to <FORMAT>         Generate specific format [values: epub, epub, pdf, html, tex]
-
-ARGS:
-    <BOOK>    A file containing the book configuration
-
-Command line options allow to override options defined in <BOOK> configuration file. 
-E.g., even if this file specifies 'verbose: false', calling 'crowbook --verbose <BOOK>' 
-will activate verbose mode.
-
-Note that Crowbook generates output files relatively to the directory where <BOOK> is:
-$ crowbook foo/bar.book --to pdf --output baz.pdf
-will thus generate baz.pdf in directory foo and not in current
-directory.
-```
+we have already seen `--create`, but if you want the full list, see
+[the arguments page](book_example/arguments.md).
 
 Features
 --------
