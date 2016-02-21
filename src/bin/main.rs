@@ -18,8 +18,10 @@
 extern crate crowbook;
 extern crate clap;
 
+use std::io::Write;
+use std::fs;
 use crowbook::{Book};
-use clap::{App,Arg};
+use clap::{App,Arg, SubCommand};
 
 fn main() {
     let app = App::new("crowbook")
@@ -33,6 +35,16 @@ Note that Crowbook generates output files relatively to the directory where <BOO
 $ crowbook foo/bar.book --to pdf --output baz.pdf
 will thus generate baz.pdf in directory foo and not in current directory.")
         .arg_from_usage("-v, --verbose 'Activate verbose mode'")
+        .arg(Arg::with_name("files")
+             .value_name("FILES")
+             .help("Files to put in book when using --create")
+             .takes_value(true)
+             .multiple(true)
+             .requires("create")
+             .index(2))
+        .arg(Arg::with_name("create")
+             .long("--create")
+             .help("Creates a new book file with existing markdown files"))
         .arg(Arg::with_name("output")
              .long("--output")
              .short("-o")
@@ -65,6 +77,38 @@ will thus generate baz.pdf in directory foo and not in current directory.")
 
     let matches = app.get_matches();
 
+    if matches.is_present("create") {
+        if let Some(values) = matches.values_of("files") {
+            let numbering = match matches.value_of("numbering") {
+                Some("false") => false,
+                _ => true,
+            };
+
+            let s = matches.value_of("BOOK").unwrap();
+            if fs::metadata(s).is_ok() {
+                println!("Could not create file {}: it already exists!", s);
+                return;
+            } else {
+                let mut f = fs::File::create(s).unwrap();
+                f.write_all(b"author: Your name\n").unwrap();
+                f.write_all(b"title: Your title\n").unwrap();
+                f.write_all(b"lang: en\n\n").unwrap();
+                f.write_all(b"# Uncomment and fill to generate files\n").unwrap();
+                f.write_all(b"# output.html: some_file.html\n").unwrap();
+                f.write_all(b"# output.epub: some_file.epub\n").unwrap();
+                f.write_all(b"# output.pdf: some_file.pdf\n\n").unwrap();
+                f.write_all(b"# List of chapters\n").unwrap();
+                for file in values {
+                    f.write_all(&format!("{} {}\n", if numbering {"+"} else {"-"}, file).as_bytes()).unwrap();
+                }
+                println!("Created {}, now you'll have to complete it!", s);
+                return;
+            }
+        } else {
+            println!("--create must be used with a list of additonal files");
+            return;
+        }
+    }
     if let Some(s) = matches.value_of("BOOK") {
         match Book::new_from_file(s) {
             Ok(mut book) => {
@@ -78,7 +122,6 @@ will thus generate baz.pdf in directory foo and not in current directory.")
                         _ => unreachable!()
                     };
                 }
-                
                 if let Some(numbering) = matches.value_of("numbering") {
                     book.numbering = match numbering {
                         "true" => true,
