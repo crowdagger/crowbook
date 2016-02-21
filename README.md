@@ -76,13 +76,14 @@ Features
 --------
 
 ### Done ###
-* Support for some simple formatconfiguration files to
+* Support for some simple format configuration files to
   list chapters and metadatas, so you just run `crowbook
   some_file` and you don't have to pass more options, it generates the
   rest.
 * Support for Epub2 and Epub3 format as output.
-* Support for LaTeX format as output, and PDF through it.
 * Support for HTML format as output.
+* Partial support for LaTeX format as output, and PDF through it.
+* Experimental support for Odt format as output.
 * Support for basic french typography (i.e. non-breaking spaces) in HTML/Epub format.
 * Some configuration for HTML/Epub templates and CSS.
 
@@ -90,8 +91,8 @@ Features
 * Allow more customization.
 * Support for easily embedding custom fonts (and other files) in
 Epub/HTML.
+* Improve LaTeX and Odt generation.
 * Correct support for technical books.
-* Support for ODT as output format?
 
 See also [Bugs](Bugs.md).
 

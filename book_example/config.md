@@ -195,13 +195,27 @@ and runs
 $ crowbook some/dir/config.book
 ```
 
-`foo.epub` will be generated in `some/dir`, not in your current directory.
+`foo.epub` will be generated in `some/dir`, not in your current
+directory.
+
+Crowbook will try to generate each of the `output_xxx` files that are
+specified. That means that you'll have to set at least one of those if you want a call to
+
+```
+$ crowbook my.book
+```
+
+to generate anything. (It's still possible to generate a specific
+format, and only this one, by using the `--to` argument on the command line).
 
 #### output_epub ####
 
 The name of the epub file you want to generate.
 
 **default**: `None`
+
+Crowbook use the `zip` command to generate the epub, so it won't work
+if this command is not installed on your system.
 
 #### output_html ####
 
@@ -219,9 +233,21 @@ The name of the LaTeX file you want to generate.
 #### output_pdf ####
 
 The name of the PDF file you want to generate. Crowbook uses LaTeX to
-generate it, so it won't work if it isn't installed on your computer.
+generate it, so it won't work if it isn't installed on your
+computer. (See `tex_command` to specify which flavour of LaTeX you
+want to use.)
 
-**default**:: `None`
+**default**: `None`
+
+### output_odt ###
+
+The name of the ODT (OpenOffice) file you want to generate. Beware: 
+ODT support is still experimental.
+
+**default**: `None`
+
+As for Epub generation, Crowbook depends on the presence of the `zip`
+command to generate this file.
 
 ### Options for customizing generated code ###
 

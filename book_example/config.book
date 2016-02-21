@@ -20,6 +20,7 @@ temp_dir: .
 output_epub: book.epub
 output_html: book.html
 #output_pdf: book.pdf
+output_odt: book.odt
 #output_tex: book.tex
 
 # finally, our files
