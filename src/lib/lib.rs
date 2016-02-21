@@ -33,6 +33,8 @@ pub mod odt;
 
 pub use book::Book;
 pub use error::{Result, Error};
+pub use parser::Parser;
+pub use token::Token;
 pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;

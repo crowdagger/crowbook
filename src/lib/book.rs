@@ -119,7 +119,7 @@ impl Book {
     /// Creates a new book from a file
     ///
     /// This method also changes the current directory to the one of this file
-    pub fn new_from_file(filename: &str) -> Result<Book> {
+    pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
         let path = Path::new(filename);
         let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
 
@@ -139,6 +139,7 @@ impl Book {
         try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
                                                                       String::from(filename))));
         let mut book = Book::new();
+        book.verbose = verbose;
         try!(book.set_from_config(&s));
         Ok(book)
     }
@@ -217,7 +218,7 @@ impl Book {
             }
             Ok(words[0])
         }
-        
+
         for line in s.lines() {
             let line = line.trim();
             let bool_error = |_| Error::ConfigParser("could not parse bool", String::from(line));
@@ -379,6 +380,7 @@ impl Book {
     
     /// File: location of the file for this chapter
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
+        self.debug(&format!("Parsing chapter: {}...", file));
         let mut parser = Parser::new();
         if let Some(cleaner) = self.get_cleaner() {
             parser = parser.with_cleaner(cleaner)

@@ -101,7 +101,10 @@ impl Parser {
                 },
                 Event::SoftBreak => v.push(Token::SoftBreak),
                 Event::HardBreak => v.push(Token::HardBreak),
-                Event::Html(_) | Event::InlineHtml(_) => return Err(Error::Parser("no support for HTML code inside of Markdown, sorry.")),
+                Event::Html(_) | Event::InlineHtml(_) => {
+                    println!("Warning: no support for HTML code inside of Markdown");
+                    v.push(Token::SoftBreak);
+                },
                 Event::FootnoteReference(_) => return Err(Error::Parser("no support for footnotes yet."))
             }
         }

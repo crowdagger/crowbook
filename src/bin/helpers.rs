@@ -110,5 +110,4 @@ fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
         print_error("A list of additional files is only valid with the --create option.");
     }
-
 }

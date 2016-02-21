@@ -69,7 +69,6 @@ h3.date { }
 ol.toc { padding: 0; margin-left: 1em; }
 ol.toc li { list-style-type: none; margin: 0; padding: 0; }
 p img {
-    float: right;
 }
 #cover img {
     width: 100%;

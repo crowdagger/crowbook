@@ -87,10 +87,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
 
 /// sets the book options according to command line arguments
 fn set_book_options(book: &mut Book, matches: &ArgMatches) {
-    if matches.is_present("verbose") {
-        book.verbose = true;
-    }
-    if let Some(autoclean) = matches.value_of("autoclean") {
+     if let Some(autoclean) = matches.value_of("autoclean") {
         book.autoclean = match autoclean {
             "true" => true,
             "false" => false,
@@ -115,7 +112,8 @@ fn main() {
 
     // ok to unwrap since clap checks it's there
     let s = matches.value_of("BOOK").unwrap();
-    match Book::new_from_file(s) {
+    let verbose = matches.is_present("verbose");
+    match Book::new_from_file(s, verbose) {
         Err(err) => print_error(&format!("{}", err)),
         Ok(mut book) => {
             set_book_options(&mut book, &matches);
