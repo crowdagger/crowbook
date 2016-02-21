@@ -25,6 +25,6 @@ output_odt: book.odt
 
 # finally, our files
 # paths are relative to the directory where this file is
-+  introduction.md
-+  config.md
++  ../README.md
++ config.md
 
