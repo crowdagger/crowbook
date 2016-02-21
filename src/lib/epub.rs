@@ -209,16 +209,16 @@ impl<'a> EpubRenderer<'a> {
                         "jpg" | "jpeg" => "jpeg",
                         "gif" => "gif",
                         _ => {
-                            println!("Warning: could not guess cover format based on extension. Assuming png.");
+                            self.book.debug("Warning: could not guess cover format based on extension. Assuming png.");
                             "png"
                         },
                     }
                 } else {
-                    println!("Warning: could not guess cover format based on extension. Assuming png.");
+                    self.book.debug("Warning: could not guess cover format based on extension. Assuming png.");
                     "png"
                 }
             } else {
-                println!("Warning: could not guess cover format based on extension. Assuming png.");
+                self.book.debug("Warning: could not guess cover format based on extension. Assuming png.");
                 "png"
             };
             items.push_str(&format!("<item {} media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n",
@@ -324,8 +324,8 @@ impl<'a> EpubRenderer<'a> {
                     if title.is_empty() {
                         *title = self.html.render_vec(vec);
                     } else {
-                        println!("Warning: detected two chapter titles inside the same markdown file...");
-                        println!("...in a file where chapter titles are not even rendered.");
+                        self.book.debug("Warning: detected two chapter titles inside the same markdown file...");
+                        self.book.debug("...in a file where chapter titles are not even rendered.");
                     }
                     return String::new();
                 }
@@ -340,8 +340,8 @@ impl<'a> EpubRenderer<'a> {
                     if title.is_empty() {
                         *title = s.clone();
                     } else {
-                        println!("Warning: detected two chapters inside the same markdown file.");
-                        println!("conflict between: {} and {}", title, s);
+                        self.book.debug("Warning: detected two chapters inside the same markdown file.");
+                        self.book.debug(&format!("conflict between: {} and {}", title, s));
                     }
                 }
                 format!("<h{}>{}</h{}>\n", n, s, n)

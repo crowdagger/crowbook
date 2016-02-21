@@ -124,20 +124,20 @@ impl<'a> OdtRenderer<'a> {
             Token::Strong(ref vec) => format!("<text:span text:style-name=\"T2\">{}</text:span>", self.render_vec(vec)),
             Token::List(ref vec) => format!("<text:list>\n{}</text:list>\n", self.render_vec(vec)),
             Token::OrderedList(_, ref vec) => {
-                println!("Ordered list not currently implemented for ODT, fallbacking to unordered one");
+                self.book.debug("Ordered list not currently implemented for ODT, fallbacking to unordered one");
                 format!("<text:list>\n{}</text:list>\n", self.render_vec(vec))
             },
             Token::Item(ref vec) => format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>", self.render_vec(vec)),
             Token::Link(ref url, _, ref vec) => format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>", url, self.render_vec(vec)),
             Token::Code(ref vec) => format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>", self.render_vec(vec)),
             Token::BlockQuote(ref vec) | Token::CodeBlock(_, ref vec) => {
-                println!("warning: block quote and codeblocks are not currently implemented in ODT");
+                self.book.debug("warning: block quote and codeblocks are not currently implemented in ODT");
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.render_vec(vec))
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => format!("<text:p /><text:p>***</text:p><text:p />"),
             Token::Image(_,_,_) => {
-                println!("warning: images not currently implemented for odt");
+                self.book.debug("warning: images not currently implemented for odt");
                 String::from(" ")
             },
         }

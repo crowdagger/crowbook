@@ -67,7 +67,7 @@ impl<'a> LatexRenderer<'a> {
             "en" => "english",
             "fr" => "francais",
             _ => {
-                println!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.lang);
+                self.book.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.lang));
                 "english"
             }
         });
@@ -145,7 +145,7 @@ impl<'a> LatexRenderer<'a> {
                 format!("\\href{{{}}}{{{}}}", escape_tex(url), self.render_vec(vec, escape))
             },
             Token::Image(_, _, _) => {
-                println!("warning: including images is not yet supported for tex output");
+                self.book.debug("warning: including images is not yet supported for tex output");
                 String::from(" ")
             }
         }

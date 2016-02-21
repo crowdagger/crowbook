@@ -10,7 +10,7 @@ use templates::{epub, html, epub3, latex};
 use escape;
 
 use std::fs::File;
-use std::io::{Write,Read};
+use std::io::{self, Write,Read};
 use std::env;
 use std::path::Path;
 use std::borrow::Cow;
@@ -101,6 +101,18 @@ impl Book {
             epub_version: 2,
             html_template: None,
             html_css: None,
+        }
+    }
+
+    /// Prints to stderr
+    pub fn println(&self, s:&str) {
+        writeln!(&mut io::stderr(), "{}", s).unwrap();
+    }
+
+    /// Prints to stderr but only if verbose is set to true
+    pub fn debug(&self, s:&str) {
+        if self.verbose {
+            writeln!(&mut io::stderr(), "{}", s).unwrap();
         }
     }
 
@@ -281,70 +293,53 @@ impl Book {
     }
     
     /// Render book to pdf according to book options
-    pub fn render_pdf(&self, file: &str) -> Result<()> {
-        if self.verbose {
-            println!("Attempting to generate pdf...");
-        }
+    pub fn render_pdf(&self) -> Result<()> {
+        self.debug("Attempting to generate pdf...");
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_pdf());
-        if self.verbose {
-            println!("{}", result);
-        }
-        println!("Successfully generated pdf file: {}", file);
+        self.debug(&result);
+        self.println(&format!("Successfully generated pdf file: {}", self.output_pdf.as_ref().unwrap()));
         Ok(())
     }
 
     /// Render book to epub according to book options
     pub fn render_epub(&self) -> Result<()> {
-        if self.verbose {
-            println!("Attempting to generate epub...");
-        }
+        self.debug("Attempting to generate epub...");
         let mut epub = EpubRenderer::new(&self);
         let result = try!(epub.render_book());
-        if self.verbose {
-            println!("{}", result);
-        }
-        println!("Successfully generated epub file: {}", self.output_epub.as_ref().unwrap());
+        self.debug(&result);
+        self.println(&format!("Successfully generated epub file: {}", self.output_epub.as_ref().unwrap()));
         Ok(())
     }
 
         /// Render book to odt according to book options
     pub fn render_odt(&self) -> Result<()> {
-        if self.verbose {
-            println!("Attempting to generate Odt...");
-        }
+        self.debug("Attempting to generate Odt...");
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
-        if self.verbose {
-            println!("{}", result);
-        }
-        println!("Successfully generated odt file: {}", self.output_odt.as_ref().unwrap());
+        self.debug(&result);
+        self.println(&format!("Successfully generated odt file: {}", self.output_odt.as_ref().unwrap()));
         Ok(())
     }
 
     /// Render book to html according to book options
-    pub fn render_html(&self, file: &str) -> Result<()> {
-        if self.verbose {
-            println!("Attempting to generate HTML...");
-        }
+    pub fn render_html<T: Write>(&self, f: &mut T) -> Result<()> {
+        self.debug("Attempting to generate HTML...");
         let mut html = HtmlRenderer::new(&self);
         let result = try!(html.render_book());
-        let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
         try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to HTML file")));
-        println!("Successfully generated HTML file: {}", file);
+        self.println("Successfully generated HTML");
         Ok(())
     }
 
     /// Render book to pdf according to book options
-    pub fn render_tex(&self, file: &str) -> Result<()> {
-        if self.verbose {
-            println!("Attempting to generate LaTeX...");
-        }
+    pub fn render_tex<T:Write>(&self, f: &mut T) -> Result<()> {
+        self.debug("Attempting to generate LaTeX...");
+
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
-        let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
         try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
-        println!("Successfully generated LaTeX file: {}", file);
+        self.println("Successfully generated LaTeX");
         Ok(())
     }
         
@@ -359,15 +354,17 @@ impl Book {
 
         if let Some(ref file) = self.output_html {
             did_some_stuff = true;
-            try!(self.render_html(file));
+            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
+            try!(self.render_html(&mut f));
         }
         if let Some(ref file) = self.output_tex {
             did_some_stuff = true;
-            try!(self.render_tex(file));
+            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
+            try!(self.render_tex(&mut f));
         }
-        if let Some(ref file) = self.output_pdf {
+        if self.output_pdf.is_some() {
             did_some_stuff = true;
-            try!(self.render_pdf(file));
+            try!(self.render_pdf());
         }
 
         if self.output_odt.is_some() {
@@ -375,7 +372,7 @@ impl Book {
             try!(self.render_odt());
         }
         if !did_some_stuff {
-            println!("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
+            self.println("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
         }
         Ok(())
     }

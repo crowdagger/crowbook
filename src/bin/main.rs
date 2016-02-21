@@ -24,6 +24,8 @@ use helpers::*;
 use crowbook::{Book};
 use clap::ArgMatches;
 use std::process::exit;
+use std::fs::File;
+use std::io;
 
 
 /// Render a book to specific format
@@ -33,7 +35,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
         match format {
             "epub" => book.output_epub = value,
             "tex" => book.output_tex = value,
-                            "html" => book.output_html = value,
+            "html" => book.output_html = value,
             "pdf" => book.output_pdf = value,
             "odt" => book.output_odt = value,
             _ => unreachable!()
@@ -49,25 +51,37 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
         "odt" => &book.output_odt,
         _ => unreachable!()
     };
-    match *option {
-        Some(ref file) => {
-            let result = match format {
-                "epub" => book.render_epub(),
-                "tex" => book.render_tex(file),
-                "html" => book.render_html(file),
-                "pdf" => book.render_pdf(file),
-                "odt" => book.render_odt(),
-                                _ => unreachable!()
-            };
-            match result {
-                Err(err) => print_error(&format!("{}", err)),
-                Ok(_) => {
-                    println!("crowbook terminated successfully");
-                    exit(0);
-                },
+    let result = match *option {
+        None => {
+            match format {
+                "html" => book.render_html(&mut io::stdout()),
+                "tex" => book.render_tex(&mut io::stdout()),
+                _ => print_error(&format!("No output file specified, and book doesn't specify an output file for {}", format)),
             }
         },
-        None => print_error(&format!("No output file specified, and book doesn't specify an output file for {}", format)),
+        Some(ref file) => {
+            match format {
+                "epub" => book.render_epub(),
+                "tex" => {
+                    let mut f = File::create(file).unwrap();
+                    book.render_tex(&mut f)
+                },
+                "html" => {
+                    let mut f = File::create(file).unwrap();
+                    book.render_html(&mut f)
+                },
+                "pdf" => book.render_pdf(),
+                "odt" => book.render_odt(),
+                _ => unreachable!()
+            }
+        }
+    };
+    match result {
+        Err(err) => print_error(&format!("{}", err)),
+        Ok(_) => {
+                    println!("crowbook terminated successfully");
+            exit(0);
+        },
     }
 }
 
