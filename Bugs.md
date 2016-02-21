@@ -6,7 +6,7 @@ Bugs
 * markdown: no support for footnotes and tables
 * latex: no support for links and images
 * odt: no support for... a lot of stuff, actually
-* config: can't handle multiline string (and really, isn't there
-  an existing format for that?)
+* config: can't handle multiline string, which is a problem for fields
+  like "desscription"
 * config: can't parse specified numbers for negative chapter (is it
   really a bug?)

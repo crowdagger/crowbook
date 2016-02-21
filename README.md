@@ -3,6 +3,14 @@ Crowbook
 
 Render a markdown book in HTML, Epub or PDF.
 
+Crowbook's purpose is to allow you to automatically generate multiple
+outputs formats from a book written in Markdown. Its main focus is
+novels, and the default settings should (hopefully) generate readables
+book with correct typography.
+
+It is also possible to use `crowbook` for e.g. technical
+documentation, but it might not be the best tool for that.
+
 [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
 
 Building and installing
@@ -78,27 +86,63 @@ It is also possible to give additional parameters to `crowbook`;
 we have already seen `--create`, but if you want the full list, see
 [the arguments page](book_example/arguments.md).
 
-Features
---------
+Current features
+----------------
 
-### Done ###
-* Support for some simple format configuration files to
-  list chapters and metadatas, so you just run `crowbook
-  some_file` and you don't have to pass more options, it generates the
-  rest.
-* Support for Epub2 and Epub3 format as output.
-* Support for HTML format as output.
-* Partial support for LaTeX format as output, and PDF through it.
-* Experimental support for Odt format as output.
-* Support for basic french typography (i.e. non-breaking spaces) in HTML/Epub format.
-* Some configuration for HTML/Epub templates and CSS.
+### Output formats ###
 
-### ToDo ###
-* Allow more customization.
-* Support for easily embedding custom fonts (and other files) in
-Epub/HTML.
-* Improve LaTeX and Odt generation.
-* Correct support for technical books.
+Crowbook (to my knowledge) correctly supports HTML and EPUB (either
+version 2 or 3) as output formats: rendered files should pass
+respectively the [W3C validator](https://validator.w3.org/) and the
+[IDPF EPUB validator](http://validator.idpf.org/) for a wide range of
+(correctly Markdown formatted) input files. See the example book
+rendered in [HTML](http://lise-henry.github.io/crowbook/book.html) and
+[EPUB](http://lise-henry.github.io/crowbook/book.epub) on github.io.
+
+LaTeX output is more tricky: it should work reasonably well for novels
+(the primary target of Crowbook), but `pdflatex` might occasionally
+choke on some « weird » 
+unicode character. Moreover, the rendering of code blocks is not
+satisfactory and images are not yet implemented. See the example book
+rendered in [PDF](http://lise-henry.github.io/crowbook/book.pdf) on
+github.io to get an idea of the problems you might encounter.
+
+ODT output is experimental at best. It might work if your inputs files
+only include very basic formatting (basically, headers, emphasis and
+bold), it will probably look ugly in the rest of the cases, and it
+might miserably fail in some. See the example book rendered in
+[ODT](http://lise-henry.github.io/crowbook/book.odt) on github.io if
+you want to hurt your eyes.
+
+### Input format ###
+
+Crowbook uses
+[pulldown-cmark](https://crates.io/crates/pulldown-cmark) and thus
+should support most of commonmark Markdown. There are, however, a few
+features that that are not supported:
+
+* Tables and Footnotes are not yet implemented. Tables might be
+  implemented soon, but footnotes are a bit more tricky.
+* HTML in markdown is not implemented, and probably won't be, as the
+  goal is to have books that can also be generated in PDF (and maybe
+  ODT).
+
+Maybe the most specific "feature" of Crowbook is that (by default, it
+can be deactivated) tries to "clean" the input files. By default this
+doesn't do much (except removing superfluous spaces), but if the
+book's language is set to french it tries to respect french
+typography, replacing spaces with non-breaking ones when it is
+appropriate (e.g. in french you are supposed to put a non-breaking
+space before '?', '!', ';' or ':'). This feature is relatively limited
+at the moment, but I might try to add more options and support for
+more languages.
+
+### Table of Contents ###
+
+Crowbook currently only supports a table of contents for first-level
+headers (e.g. chapters). There is currently no option to integrate it
+in the document, so it is only generated in the EPUB
+format. 
 
 See also [Bugs](Bugs.md).
 
