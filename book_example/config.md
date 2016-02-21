@@ -374,14 +374,6 @@ is.
 
 **default**: `.`
 
-#### verbose ####
-
-Crowbook will print a little more stuff on the standard output if this
-option is set to true. (This is equivalent to running `crowbook --verbose`.)
-
-**default**: `false`
-
-
 
 
 

@@ -257,7 +257,6 @@ impl Book {
                 match option {
                     "nb-char" | "nb_char" => self.nb_char = try!(get_char(value)),
                     "numbering-template" | "numbering_template" => self.numbering_template = String::from(value),
-                    "verbose" => self.verbose = try!(value.parse::<bool>().map_err(bool_error)),
                     "numbering" => self.numbering = try!(value.parse::<bool>().map_err(bool_error)),
                     "autoclean" => self.autoclean = try!(value.parse::<bool>().map_err(bool_error)),
                     "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
