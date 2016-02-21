@@ -127,7 +127,7 @@ impl<'a> EpubRenderer<'a> {
     /// Render the titlepgae
     fn render_titlepage(&self) -> Result<String> {
         let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::TITLE} else {TITLE});
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
@@ -153,7 +153,7 @@ impl<'a> EpubRenderer<'a> {
     </navPoint>\n", id, title, filename));
         }
         let template = mustache::compile_str(TOC);
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .insert_str("nav_points", nav_points)
             .build();
         let mut res:Vec<u8> = vec!();
@@ -229,7 +229,7 @@ impl<'a> EpubRenderer<'a> {
         }
 
         let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::OPF} else {OPF});
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .insert_str("optional", optional)
             .insert_str("items", items)
             .insert_str("itemrefs", itemrefs)
@@ -250,7 +250,7 @@ impl<'a> EpubRenderer<'a> {
     fn render_cover(&self) -> Result<String> {
         if let Some(ref cover) = self.book.cover {
             let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::COVER} else {COVER});
-            let data = self.book.get_mapbuilder()
+            let data = self.book.get_mapbuilder("none")
                 .insert_str("cover", cover.clone())
                 .build();
             let mut res:Vec<u8> = vec!();
@@ -275,7 +275,7 @@ impl<'a> EpubRenderer<'a> {
         }           
         
         let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::NAV} else {NAV});
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .build();
         let mut res:Vec<u8> = vec!();
@@ -305,7 +305,7 @@ impl<'a> EpubRenderer<'a> {
         self.toc.push(title.clone());
 
         let template = mustache::compile_str(try!(self.book.get_template("epub_template")).as_ref());
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("chapter_title", title)
             .build();

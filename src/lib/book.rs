@@ -7,6 +7,7 @@ use html::HtmlRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
 use templates::{epub,html,epub3};
+use escape;
 
 use std::fs::File;
 use std::io::{Write,Read};
@@ -127,10 +128,19 @@ impl Book {
     }
 
     /// Returns a MapBuilder, to be used (and completed) for templating
-    pub fn get_mapbuilder(&self) -> MapBuilder {
+    pub fn get_mapbuilder(&self, format: &str) -> MapBuilder {
+        fn clone(x:&str) -> String {
+            x.to_owned()
+        }
+        let f:fn(&str)->String = match format {
+            "none" => clone,
+            "html" => escape::escape_html,
+            "tex" => escape::escape_tex,
+            _ => panic!("get mapbuilder called with invalid escape format")
+        };
         MapBuilder::new()
-            .insert_str("author", self.author.clone())
-            .insert_str("title", self.title.clone())
+            .insert_str("author", f(&self.author))
+            .insert_str("title", f(&self.title))
             .insert_str("lang", self.lang.clone())
     }
 

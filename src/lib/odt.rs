@@ -79,7 +79,7 @@ impl<'a> OdtRenderer<'a> {
         }
         
         let template = mustache::compile_str(odt::CONTENT);
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("automatic_styles", &self.automatic_styles)
             .build();
@@ -110,13 +110,13 @@ impl<'a> OdtRenderer<'a> {
                 if n == 1 && self.current_hide {
                     return String::new();
                 }
-                let s = if n == 1 && self.current_numbering {
+                let s = escape_html(&if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
                 } else {
                     self.render_vec(vec)
-                };
+                });
                 format!("<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
                         n, s)
             },
@@ -131,7 +131,7 @@ impl<'a> OdtRenderer<'a> {
             Token::Link(ref url, _, ref vec) => format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>", url, self.render_vec(vec)),
             Token::Code(ref vec) => format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>", self.render_vec(vec)),
             Token::BlockQuote(ref vec) | Token::CodeBlock(_, ref vec) => {
-                println!("warning: not currently implemented");
+                println!("warning: block quote and codeblocks are not currently implemented in ODT");
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.render_vec(vec))
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),

@@ -74,7 +74,7 @@ impl<'a> LatexRenderer<'a> {
         });
 
         let template = mustache::compile_str(TEMPLATE);
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("tex")
             .insert_str("content", content)
             .insert_str("tex_lang", tex_lang)
             .build();
@@ -125,7 +125,7 @@ impl<'a> LatexRenderer<'a> {
                     content.push_str("*");
                 }
                 content.push_str(r"{");
-                content.push_str(&self.render_vec(vec, true));
+                content.push_str(&escape_tex(&self.render_vec(vec, true)));
                 content.push_str("}\n");
                 content
             },

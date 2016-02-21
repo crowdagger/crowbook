@@ -67,7 +67,7 @@ impl<'a> HtmlRenderer<'a> {
         }
 
         let template = mustache::compile_str(try!(self.book.get_template("html_template")).as_ref());        
-        let data = self.book.get_mapbuilder()
+        let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("style",
                         &try!(self.book.get_template("html_css")))
@@ -78,7 +78,6 @@ impl<'a> HtmlRenderer<'a> {
         match String::from_utf8(res) {
             Err(_) => Err(Error::Render("generated HTML was not utf-8 valid")),
             Ok(res) => Ok(res)
-                          
         }
     }
 
@@ -108,7 +107,7 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     self.render_vec(vec)
                 };
-                format!("<h{}>{}</h{}>\n", n, s, n)
+                format!("<h{}>{}</h{}>\n", n, escape_html(&s), n)
             },
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),
