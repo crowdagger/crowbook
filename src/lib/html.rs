@@ -107,7 +107,7 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     self.render_vec(vec)
                 };
-                format!("<h{}>{}</h{}>\n", n, escape_html(&s), n)
+                format!("<h{}>{}</h{}>\n", n, s, n)
             },
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),
