@@ -110,15 +110,15 @@ impl<'a> OdtRenderer<'a> {
                 if n == 1 && self.current_hide {
                     return String::new();
                 }
-                let s = escape_html(&if n == 1 && self.current_numbering {
+                let s = if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
                 } else {
                     self.render_vec(vec)
-                });
+                };
                 format!("<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
-                        n, s)
+                        n, escape_html(&s))
             },
             Token::Emphasis(ref vec) => format!("<text:span text:style-name=\"T1\">{}</text:span>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<text:span text:style-name=\"T2\">{}</text:span>", self.render_vec(vec)),
