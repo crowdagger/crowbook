@@ -26,10 +26,10 @@ use mustache;
 ///
 /// Also used by Epub.
 pub struct HtmlRenderer<'a> {
-    current_chapter: i32,
+    pub current_chapter: i32,
     book: &'a Book,
-    current_numbering: bool,
-    current_hide: bool,
+    pub current_numbering: bool,
+    pub current_hide: bool,
     table_head: bool,
     footnote_number: u32,
     pub footnotes: Vec<String>,

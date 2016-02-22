@@ -36,9 +36,6 @@ use std::fs::File;
 /// Uses part of the HTML renderer
 pub struct EpubRenderer<'a> {
     book: &'a Book,
-    current_numbering: bool,
-    current_hide: bool,
-    current_chapter: i32,
     toc: Vec<String>,
     html: HtmlRenderer<'a>,
 }
@@ -49,10 +46,7 @@ impl<'a> EpubRenderer<'a> {
         EpubRenderer {
             book: book,
             html: HtmlRenderer::new(book),
-            current_numbering: book.numbering,
-            current_chapter: 1,
             toc: vec!(),
-            current_hide: false,
         }
     }
 
@@ -65,17 +59,17 @@ impl<'a> EpubRenderer<'a> {
 
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
-            self.current_hide = false;
+            self.html.current_hide = false;
             match n {
-                Number::Unnumbered => self.current_numbering = false,
-                Number::Default => self.current_numbering = self.book.numbering,
+                Number::Unnumbered => self.html.current_numbering = false,
+                Number::Default => self.html.current_numbering = self.book.numbering,
                 Number::Specified(n) => {
-                    self.current_numbering = self.book.numbering;
-                    self.current_chapter = n;
+                    self.html.current_numbering = self.book.numbering;
+                    self.html.current_chapter = n;
                 },
                 Number::Hidden => {
-                    self.current_numbering = false;
-                    self.current_hide = true;
+                    self.html.current_numbering = false;
+                    self.html.current_hide = true;
                 }
             }
             let chapter = try!(self.render_chapter(v));
@@ -298,9 +292,9 @@ impl<'a> EpubRenderer<'a> {
             content.push_str(&self.parse_token(&token, &mut title));
         }
         if title.is_empty() {
-            if self.current_numbering {
-                self.current_chapter += 1;
-                title = format!("Chapitre {}", self.current_chapter);
+            if self.html.current_numbering {
+                self.html.current_chapter += 1;
+                title = format!("Chapitre {}", self.html.current_chapter);
             } else {
                 return Err(Error::Render("chapter without h1 tag is not OK if numbering is off"));
             }
@@ -323,7 +317,7 @@ impl<'a> EpubRenderer<'a> {
     fn parse_token(&mut self, token: &Token, title: &mut String) -> String {
         match *token {
             Token::Header(n, ref vec) => {
-                if n == 1 && self.current_hide {
+                if n == 1 && self.html.current_hide {
                     if title.is_empty() {
                         *title = self.html.render_vec(vec);
                     } else {
@@ -332,9 +326,9 @@ impl<'a> EpubRenderer<'a> {
                     }
                     return String::new();
                 }
-                let s = if n == 1 && self.current_numbering {
-                    let chapter = self.current_chapter;
-                    self.current_chapter += 1;
+                let s = if n == 1 && self.html.current_numbering {
+                    let chapter = self.html.current_chapter;
+                    self.html.current_chapter += 1;
                     self.book.get_header(chapter, &self.html.render_vec(vec)).unwrap()
                 } else {
                     self.html.render_vec(vec)
