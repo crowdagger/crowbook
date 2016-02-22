@@ -78,23 +78,23 @@ lang: en
 `--set` 
 -------
 
-**usage**: `crowbook --set [KEY] [VALUE] <BOOK>`
+**usage**: `crowbook <BOOK> --set [KEY] [VALUE]...
 
-This options allows to set or override a wide range an option normally
-defined in book configuration file. All valid option in the
+This options takes a list `KEY` `VALUE` pairs and allows to set or
+override a book configuration option. All valid options in the
 configuration files are valid as keys. For more information, see
 [the configuration file page](config.md).
 
 ### Examples ###
 
 ```
-$ crowbook --set html.css style.css foo.book
+$ crowbook foo.book --set html.css style.css
 ```
 
-will override the CSS for HTML generation to `style.css`.
+will override the CSS for HTML generation (the `html.css` key) to `style.css`.
 
 ```
-$ crowbook --set author Foo --title Bar foo.book
+$ crowbook foo.book --set author Foo --title Bar
 ```
 
 will override the book title to `Bar` and its author to `Foo`.
@@ -152,5 +152,3 @@ $ crowbook foo/bar.book --to pdf --output baz.pdf
 ```
 will thus generate `baz.pdf` in directory `foo` and not in current
 directory.
-
-
