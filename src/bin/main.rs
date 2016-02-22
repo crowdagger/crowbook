@@ -85,29 +85,6 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     }
 }
 
-/// sets the book options according to command line arguments
-fn set_book_options(book: &mut Book, matches: &ArgMatches) {
-    if let Some(iter) = matches.values_of("set") {
-        let v:Vec<_> = iter.collect();
-        println!("{:?}", v);
-
-        if v.len() %2 != 0 {
-            print_error("An odd number of arguments was passed to --set, but it takes a list of key value pairs.");
-        }
-
-        for i in 0..v.len()/2 {
-            let key = v[i * 2];
-            let value = v[i * 2 + 1];
-            println!("setting {} to {}", key, value);
-
-            let res = book.set_option(key, value);
-            if let Err(err) = res {
-                print_error(&format!("Error in setting key {}: {}", key, err));
-            }
-        }
-    }
-
-}
 
 fn main() {
     let matches = create_matches();

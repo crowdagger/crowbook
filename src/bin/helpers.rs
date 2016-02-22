@@ -2,11 +2,37 @@ use clap::{App, Arg, AppSettings, Format, ArgMatches};
 use std::io::{self, Write};
 use std::process::exit;
 use std::fs;
+use crowbook::Book;
 
 /// Prints an error on stderr and exit the program
 pub fn print_error(s: &str) -> ! {
     writeln!(&mut io::stderr(), "{} {}", Format::Error("error:"), s).unwrap();
     exit(0);
+}
+
+/// sets the book options according to command line arguments
+/// Also print these options to a string, so it can be used at
+/// the creation of a book to check that parameters are OK and t
+/// then print them to file
+pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
+    let mut output = String::new();
+    if let Some(iter) = matches.values_of("set") {
+        let v:Vec<_> = iter.collect();
+        if v.len() %2 != 0 {
+            print_error("An odd number of arguments was passed to --set, but it takes a list of key value pairs.");
+        }
+
+        for i in 0..v.len()/2 {
+            let key = v[i * 2];
+            let value = v[i * 2 + 1];
+            let res = book.set_option(key, value);
+            if let Err(err) = res {
+                print_error(&format!("Error in setting key {}: {}", key, err));
+            }
+            output.push_str(&format!("{}: {}\n", key, value));
+        }
+    }
+    output
 }
 
 /// create a book file with the command line arguments
@@ -16,20 +42,29 @@ pub fn create_book(matches: &ArgMatches) -> ! {
         let s = matches.value_of("BOOK").unwrap();
         if fs::metadata(s).is_ok() {
             print_error(&format!("Could not create file {}: it already exists!", s));
-        } 
+        }
+
         let mut f = fs::File::create(s).unwrap();
-        f.write_all(b"author: Your name\n").unwrap();
-        f.write_all(b"title: Your title\n").unwrap();
-        f.write_all(b"lang: en\n\n").unwrap();
-        f.write_all(b"# Uncomment and fill to generate files\n").unwrap();
-        f.write_all(b"# output.html: some_file.html\n").unwrap();
-        f.write_all(b"# output.epub: some_file.epub\n").unwrap();
-        f.write_all(b"# output.pdf: some_file.pdf\n\n").unwrap();
-        f.write_all(b"# Uncomment and fill to set cover image (for Epub)\n").unwrap();
-        f.write_all(b"# cover: some_cover.png\n\n").unwrap();
-        f.write_all(b"# List of chapters\n").unwrap();
+
+        if matches.is_present("set") {
+            let mut book = Book::new();
+            let s = set_book_options(&mut book, matches);
+            f.write_all(&s.as_bytes()).unwrap();
+        } else {
+            f.write_all(b"author: Your name
+title: Your title
+lang: en
+
+# Uncomment and fill to generate files
+# output.html: some_file.html
+# output.epub: some_file.epub
+# output.pdf: some_file.pdf
+
+# Uncomment and fill to set cover image (for Epub)
+# cover: some_cover.png\n").unwrap();
+        }
+        f.write_all(b"\n# List of chapters\n").unwrap();
         for file in values {
-            //            f.write_all(&format!("{} {}\n", if numbering {"+"} else {"-"}, file).as_bytes()).unwrap();
             f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
         }
         println!("Created {}, now you'll have to complete it!", s);
