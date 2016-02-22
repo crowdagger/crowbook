@@ -149,3 +149,37 @@ fn image_inline() {
     let result = format!("{:?}", parse_from_str(doc));
     assert_eq!(result, expected);
 }                           
+
+#[test]
+fn table_simple() {
+    let doc = "
+| A             | Simple        | Table |
+| ------------- |---------------| ------|
+| bla           | bla           |  bla  |
+| bla           | bla           |  bla  |
+";
+    let expected = "[Table(3, [TableHead([TableCell([Str(\" A             \")]), TableCell([Str(\" Simple        \")]), TableCell([Str(\" Table \")])]), TableRow([TableCell([Str(\" bla           \")]), TableCell([Str(\" bla           \")]), TableCell([Str(\"  bla  \")])]), TableRow([TableCell([Str(\" bla           \")]), TableCell([Str(\" bla           \")]), TableCell([Str(\"  bla  \")])])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn foonote_correct() {
+    let doc = "A foonote[^1]...
+
+[^1]: with a valid definition";
+    let expected = "[Paragraph([Str(\"A foonote\"), Footnote([Paragraph([Str(\"with a valid definition\")])]), Str(\"...\")]), SoftBreak]";
+    let result = format!("{:?}", parse_from_str(doc));
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn footnote_incorrect() {
+    let doc = "A foonote[^1]...
+
+[^2]: without a valid definition";
+
+    let mut parser = Parser::new();
+    let result = parser.parse(doc);
+    assert!(result.is_err());
+}
