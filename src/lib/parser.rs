@@ -69,7 +69,7 @@ impl Parser {
     fn parse_events<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, current_tag: Option<&Tag>) -> Result<()> {
         while let Some(event) = p.next() {
             match event {
-                Event::Text(text) => {
+                Event::Html(text) | Event::InlineHtml(text) | Event::Text(text) => {
                     let mut text = text.into_owned();
                     if let Some(&Token::Str(_)) = v.last() {
                         if let Token::Str(ref mut s) = *v.last_mut().unwrap() {
@@ -101,10 +101,6 @@ impl Parser {
                 },
                 Event::SoftBreak => v.push(Token::SoftBreak),
                 Event::HardBreak => v.push(Token::HardBreak),
-                Event::Html(_) | Event::InlineHtml(_) => {
-                    println!("Warning: no support for HTML code inside of Markdown");
-                    v.push(Token::SoftBreak);
-                },
                 Event::FootnoteReference(_) => return Err(Error::Parser("no support for footnotes yet."))
             }
         }
