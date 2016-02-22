@@ -30,6 +30,9 @@ pub enum Number {
 // Configuration of the book
 #[derive(Debug)]
 pub struct Book {
+    // internal structure
+    pub chapters: Vec<(Number, Vec<Token>)>, 
+    
     // Metadata
     pub lang: String,
     pub author: String,
@@ -46,8 +49,7 @@ pub struct Book {
     pub output_odt: Option<String>,
     pub temp_dir: String,
 
-    // internal structure
-    pub chapters: Vec<(Number, Vec<Token>)>, 
+
 
     // options
     pub numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
@@ -190,13 +192,9 @@ impl Book {
         }
     }
 
-    /// Sets options according to configuration file
-    ///
-    /// A line with "option: value" sets the option to value
-    /// + chapter_name.md adds the (default numbered) chapter
-    /// - chapter_name.md adds the (unnumbered) chapter
-    /// 3. chapter_name.md adds the (custom numbered) chapter
-    pub fn set_from_config(&mut self, s: &str) -> Result<()> {
+    /// Sets an option
+    pub fn set_option(&mut self, key: &str, value: &str) -> Result<()> {
+        // checks that str is a char and returns it
         fn get_char(s: &str) -> Result<char> {
             let words: Vec<_> = s.trim().split('\'').collect();
             if words.len() != 3 {
@@ -208,7 +206,53 @@ impl Book {
             }
             Ok(chars[0])
         }
+
+        // convert an error on parsing bool to a Crowbook::Error
+        let bool_error = |_| {
+            Error::ConfigParser("could not parse bool", format!("{}:{}", key, value))
+        };
         
+        match key {
+            "nb-char" | "nb_char" => self.nb_char = try!(get_char(value)),
+            "numbering-template" | "numbering_template" => self.numbering_template = String::from(value),
+            "numbering" => self.numbering = try!(value.parse::<bool>().map_err(bool_error)),
+            "autoclean" => self.autoclean = try!(value.parse::<bool>().map_err(bool_error)),
+            "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
+            "output.epub" |"output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
+            "output.html"| "output_html" | "output-html" => self.output_html = Some(String::from(value)),
+            "output.tex" |"output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
+            "output.pdf" | "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
+            "output.odt" | "output_odt" | "output-odt" => self.output_odt = Some(String::from(value)),
+            "tex.command" | "tex_command" | "tex-command" => self.tex_command = String::from(value),
+            "tex.links-as-footnotes" | "tex.links_as_footnotes" => self.tex_links_as_footnotes = try!(value.parse::<bool>().map_err(bool_error)),
+            "tex.template" => self.tex_template = Some(String::from(value)),
+            "author" => self.author = String::from(value),
+            "title" => self.title = String::from(value),
+            "cover" => self.cover = Some(String::from(value)),
+            "lang" => self.lang = String::from(value),
+            "description" => self.description = Some(String::from(value)),
+            "subject" => self.subject = Some(String::from(value)),
+            "epub.css" | "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
+            "epub.template" | "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
+            "epub.version" | "epub_version" | "epub-version" => self.epub_version = match value {
+                "2" => 2,
+                "3" => 3,
+                _ => return Err(Error::ConfigParser("epub_version must either be 2 or 3", String::from(value))),
+            },
+            "html.template" | "html_template" | "html-template" => self.html_template = Some(String::from(value)),
+            "html.css" | "html_css" | "html-css" => self.html_css = Some(String::from(value)),
+            _ => return Err(Error::ConfigParser("unrecognized key", String::from(key))),
+        }
+        Ok(())
+    }
+
+    /// Sets options according to configuration file
+    ///
+    /// A line with "option: value" sets the option to value
+    /// + chapter_name.md adds the (default numbered) chapter
+    /// - chapter_name.md adds the (unnumbered) chapter
+    /// 3. chapter_name.md adds the (custom numbered) chapter
+    pub fn set_from_config(&mut self, s: &str) -> Result<()> {
         fn get_filename(s: &str) -> Result<&str> {
             let words:Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
@@ -221,7 +265,6 @@ impl Book {
 
         for line in s.lines() {
             let line = line.trim();
-            let bool_error = |_| Error::ConfigParser("could not parse bool", String::from(line));
             if line.is_empty() || line.starts_with('#') {
                 continue;
             }
@@ -253,39 +296,9 @@ impl Book {
                 if parts.len() != 2 {
                     return Err(Error::ConfigParser("option setting must be of the form option: value", String::from(line)));
                 }
-                let option = parts[0].trim();
+                let key = parts[0].trim();
                 let value = parts[1].trim();
-                match option {
-                    "nb-char" | "nb_char" => self.nb_char = try!(get_char(value)),
-                    "numbering-template" | "numbering_template" => self.numbering_template = String::from(value),
-                    "numbering" => self.numbering = try!(value.parse::<bool>().map_err(bool_error)),
-                    "autoclean" => self.autoclean = try!(value.parse::<bool>().map_err(bool_error)),
-                    "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
-                    "output.epub" |"output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
-                    "output.html"| "output_html" | "output-html" => self.output_html = Some(String::from(value)),
-                    "output.tex" |"output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
-                    "output.pdf" | "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
-                    "output.odt" | "output_odt" | "output-odt" => self.output_odt = Some(String::from(value)),
-                    "tex.command" | "tex_command" | "tex-command" => self.tex_command = String::from(value),
-                    "tex.links-as-footnotes" | "tex.links_as_footnotes" => self.tex_links_as_footnotes = try!(value.parse::<bool>().map_err(bool_error)),
-                    "tex.template" => self.tex_template = Some(String::from(value)),
-                    "author" => self.author = String::from(value),
-                    "title" => self.title = String::from(value),
-                    "cover" => self.cover = Some(String::from(value)),
-                    "lang" => self.lang = String::from(value),
-                    "description" => self.description = Some(String::from(value)),
-                    "subject" => self.subject = Some(String::from(value)),
-                    "epub.css" | "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
-                    "epub.template" | "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
-                    "epub.version" | "epub_version" | "epub-version" => self.epub_version = match value {
-                        "2" => 2,
-                        "3" => 3,
-                        _ => return Err(Error::ConfigParser("epub_version must either be 2 or 3", String::from(value))),
-                    },
-                    "html.template" | "html_template" | "html-template" => self.html_template = Some(String::from(value)),
-                    "html.css" | "html_css" | "html-css" => self.html_css = Some(String::from(value)),
-                    _ => return Err(Error::ConfigParser("unrecognized option", String::from(line))),
-                }
+                try!(self.set_option(key, value));
             }
         }
 

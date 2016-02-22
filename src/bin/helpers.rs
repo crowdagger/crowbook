@@ -13,11 +13,6 @@ pub fn print_error(s: &str) -> ! {
 /// and exit the process at the end
 pub fn create_book(matches: &ArgMatches) -> ! {
     if let Some(values) = matches.values_of("FILES") {
-        let numbering = match matches.value_of("numbering") {
-            Some("false") => false,
-            _ => true,
-        };
-        
         let s = matches.value_of("BOOK").unwrap();
         if fs::metadata(s).is_ok() {
             print_error(&format!("Could not create file {}: it already exists!", s));
@@ -34,7 +29,8 @@ pub fn create_book(matches: &ArgMatches) -> ! {
         f.write_all(b"# cover: some_cover.png\n\n").unwrap();
         f.write_all(b"# List of chapters\n").unwrap();
         for file in values {
-            f.write_all(&format!("{} {}\n", if numbering {"+"} else {"-"}, file).as_bytes()).unwrap();
+            //            f.write_all(&format!("{} {}\n", if numbering {"+"} else {"-"}, file).as_bytes()).unwrap();
+            f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
         }
         println!("Created {}, now you'll have to complete it!", s);
         exit(0);
@@ -62,13 +58,9 @@ will thus generate baz.pdf in directory foo and not in current directory.")
              .requires("to"))
         .arg(Arg::from_usage("[FILES]... 'Files to list in book when using --create'")
              .index(2))
-        .arg(Arg::from_usage("--autoclean [BOOL] 'Set/unset markdown cleaning'")
-             .possible_values(&["true", "false"]))
-        .arg(Arg::from_usage("--numbering [BOOL] 'De/activate chapter numbering'")
-             .possible_values(&["true", "false"]))
         .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
              .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
-        .arg(Arg::from_usage("--set [KEY] [VALUE] 'Sets a book option.'")
+        .arg(Arg::from_usage("-s, --set [KEY] [VALUE] 'Sets a book option.'")
              .multiple(true))
         .arg(Arg::with_name("BOOK")
              .index(1)
@@ -88,6 +80,4 @@ fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
         print_error("A list of additional files is only valid with the --create option.");
     }
-    let v:Vec<_> = matches.values_of("set").unwrap().collect();
-    println!("test {:?}", v);
 }
