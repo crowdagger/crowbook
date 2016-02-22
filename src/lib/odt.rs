@@ -23,7 +23,7 @@ impl<'a> OdtRenderer<'a> {
         OdtRenderer {
             book: book,
             current_chapter: 1,
-            current_numbering: book.numbering,
+            current_numbering: book.get_bool("numbering").unwrap(),
             current_hide: false,
             automatic_styles: String::from("
 <style:style style:name=\"T1\" style:family=\"text\">
@@ -39,7 +39,7 @@ impl<'a> OdtRenderer<'a> {
     pub fn render_book(&mut self) -> Result<String> {
         let content = try!(self.render_content());
         
-        let mut zipper = try!(Zipper::new(&self.book.temp_dir));
+        let mut zipper = try!(Zipper::new(self.book.get_str("temp_dir").unwrap()));
 
         // Write template.odt there
         try!(zipper.write("template.odt", odt::ODT, false));
@@ -48,7 +48,7 @@ impl<'a> OdtRenderer<'a> {
         // Complete it with content.xml
         try!(zipper.write("content.xml", &content.as_bytes(), false));
         // Zip and copy
-        if let Some(ref file) = self.book.output_odt {
+        if let Ok(file) = self.book.get_str("output.odt") {
             zipper.generate_odt(file)
         } else {
             panic!("odt.render_book called while book.output_odt is not set");
@@ -63,9 +63,9 @@ impl<'a> OdtRenderer<'a> {
             self.current_hide = false;
             match n {
                 Number::Unnumbered => self.current_numbering = false,
-                Number::Default => self.current_numbering = self.book.numbering,
+                Number::Default => self.current_numbering = self.book.get_bool("numbering").unwrap(),
                 Number::Specified(n) => {
-                    self.current_numbering = self.book.numbering;
+                    self.current_numbering = self.book.get_bool("numbering").unwrap();
                     self.current_chapter = n;
                 },
                 Number::Hidden => {

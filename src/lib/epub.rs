@@ -52,7 +52,7 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
-        let mut zipper = try!(Zipper::new(&self.book.temp_dir));
+        let mut zipper = try!(Zipper::new(&self.book.get_str("temp_dir").unwrap()));
         
         // Write mimetype
         try!(zipper.write("mimetype", b"application/epub+zip", true));
@@ -60,11 +60,12 @@ impl<'a> EpubRenderer<'a> {
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.html.current_hide = false;
+            let book_numbering = self.book.get_bool("numbering").unwrap();
             match n {
                 Number::Unnumbered => self.html.current_numbering = false,
-                Number::Default => self.html.current_numbering = self.book.numbering,
+                Number::Default => self.html.current_numbering = book_numbering,
                 Number::Specified(n) => {
-                    self.html.current_numbering = self.book.numbering;
+                    self.html.current_numbering = book_numbering;
                     self.html.current_chapter = n;
                 },
                 Number::Hidden => {
@@ -78,7 +79,7 @@ impl<'a> EpubRenderer<'a> {
         
         // Write CSS file
         try!(zipper.write("stylesheet.css",
-                          &try!(self.book.get_template("epub_css")).as_bytes(), true));
+                          &try!(self.book.get_template("epub.css")).as_bytes(), true));
 
         // Write titlepage
         try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes(), true));
@@ -99,7 +100,7 @@ impl<'a> EpubRenderer<'a> {
         try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes(), true));
 
         // Write the cover (if needs be)
-        if let Some(ref cover) = self.book.cover {
+        if let Ok(cover) = self.book.get_str("cover") {
             let s: &str = &*cover;
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(String::from(s))));
             let mut content = vec!();
@@ -110,7 +111,7 @@ impl<'a> EpubRenderer<'a> {
             try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
         }
 
-        if let Some(ref epub_file) = self.book.output_epub {
+        if let Ok(epub_file) = self.book.get_str("output.epub") {
             let res = try!(zipper.generate_epub(epub_file));
             Ok(res)
         } else {
@@ -120,7 +121,7 @@ impl<'a> EpubRenderer<'a> {
     
     /// Render the titlepgae
     fn render_titlepage(&self) -> Result<String> {
-        let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::TITLE} else {TITLE});
+        let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::TITLE} else {TITLE});
         let data = self.book.get_mapbuilder("none")
             .build();
         let mut res:Vec<u8> = vec!();
@@ -163,13 +164,13 @@ impl<'a> EpubRenderer<'a> {
         // Optional metadata
         let mut cover_xhtml = String::new();
         let mut optional = String::new();
-        if let Some(ref s) = self.book.description {
+        if let Ok(s) = self.book.get_str("description") {
             optional.push_str(&format!("<dc:description>{}</dc:description>\n", s));
         }
-        if let Some(ref s) = self.book.subject {
+        if let Ok(s) = self.book.get_str("subject") {
             optional.push_str(&format!("<dc:subject>{}</dc:subject>\n", s));
         }
-        if let Some(ref s) = self.book.cover {
+        if let Ok(s) = self.book.get_str("cover") {
             optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n", s));
             cover_xhtml.push_str(&format!("<reference type=\"cover\" title=\"Cover\" href=\"cover.xhtml\" />"));
         }
@@ -183,7 +184,7 @@ impl<'a> EpubRenderer<'a> {
         let mut items = String::new();
         let mut itemrefs = String::new();
         let mut coverref = String::new();
-        if let Some(_) = self.book.cover {
+        if self.book.get_str("cover").is_ok() {
             items.push_str("<item id = \"cover_xhtml\" href = \"cover.xhtml\" media-type = \"application/xhtml+xml\" />\n");
             coverref.push_str("<itemref idref = \"cover_xhtml\" />");
         }
@@ -195,7 +196,7 @@ impl<'a> EpubRenderer<'a> {
             itemrefs.push_str(&format!("<itemref idref=\"{}\" />\n", to_id(&filename)));
         }
         // oh we must put cover in the manifest too
-        if let Some(ref s) = self.book.cover {
+        if let Ok(s) = self.book.get_str("cover") {
             let format = if let Some(ext) = Path::new(s).extension() {
                 if let Some(extension) = ext.to_str() {
                     match extension {
@@ -216,13 +217,13 @@ impl<'a> EpubRenderer<'a> {
                 "png"
             };
             items.push_str(&format!("<item {} media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n",
-                                    if self.book.epub_version == 3 { "properties=\"cover-image\"" } else { "" },
+                                    if self.book.get_i32("epub.version").unwrap() == 3 { "properties=\"cover-image\"" } else { "" },
                                     format,
                                     to_id(s),
                                     s));
         }
 
-        let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::OPF} else {OPF});
+        let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::OPF} else {OPF});
         let data = self.book.get_mapbuilder("none")
             .insert_str("optional", optional)
             .insert_str("items", items)
@@ -242,8 +243,8 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render cover.xhtml
     fn render_cover(&self) -> Result<String> {
-        if let Some(ref cover) = self.book.cover {
-            let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::COVER} else {COVER});
+        if let Ok(ref cover) = self.book.get_str("cover") {
+            let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::COVER} else {COVER});
             let data = self.book.get_mapbuilder("none")
                 .insert_str("cover", cover.clone())
                 .build();
@@ -268,7 +269,7 @@ impl<'a> EpubRenderer<'a> {
                                  title));
         }           
         
-        let template = mustache::compile_str(if self.book.epub_version == 3 {epub3::NAV} else {NAV});
+        let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::NAV} else {NAV});
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .build();
@@ -301,7 +302,7 @@ impl<'a> EpubRenderer<'a> {
         }
         self.toc.push(title.clone());
 
-        let template = mustache::compile_str(try!(self.book.get_template("epub_template")).as_ref());
+        let template = mustache::compile_str(try!(self.book.get_template("epub.template")).as_ref());
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("chapter_title", title)

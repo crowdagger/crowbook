@@ -41,7 +41,7 @@ impl<'a> HtmlRenderer<'a> {
         HtmlRenderer {
             book: book,
             current_chapter: 1,
-            current_numbering: book.numbering,
+            current_numbering: book.get_bool("numbering").unwrap(),
             current_hide: false,
             table_head: false,
             footnote_number: 0,
@@ -55,11 +55,12 @@ impl<'a> HtmlRenderer<'a> {
 
         for &(n, ref v) in &self.book.chapters {
             self.current_hide = false;
+            let book_numbering = self.book.get_bool("numbering").unwrap();
             match n {
                 Number::Unnumbered => self.current_numbering = false,
-                Number::Default => self.current_numbering = self.book.numbering,
+                Number::Default => self.current_numbering = book_numbering,
                 Number::Specified(n) => {
-                    self.current_numbering = self.book.numbering;
+                    self.current_numbering = book_numbering;
                     self.current_chapter = n;
                 },
                 Number::Hidden => {
@@ -70,11 +71,11 @@ impl<'a> HtmlRenderer<'a> {
             content.push_str(&self.render_html(v));
         }
 
-        let template = mustache::compile_str(try!(self.book.get_template("html_template")).as_ref());        
+        let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("style",
-                        &try!(self.book.get_template("html_css")))
+                        &try!(self.book.get_template("html.css")))
             .build();
 
         let mut res:Vec<u8> = vec!();

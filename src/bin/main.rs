@@ -31,35 +31,33 @@ use std::io;
 /// Render a book to specific format
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     if let Some(file) = matches.value_of("output") {
-        let value = Some(file.to_owned());
         match format {
-            "epub" => book.output_epub = value,
-            "tex" => book.output_tex = value,
-            "html" => book.output_html = value,
-            "pdf" => book.output_pdf = value,
-            "odt" => book.output_odt = value,
+            "epub" => book.set_option("output.epub", file).unwrap(),
+            "tex" => book.set_option("output.tex", file).unwrap(),
+            "html" => book.set_option("output.html", file).unwrap(),
+            "pdf" => book.set_option("output.pdf", file).unwrap(),
+            "odt" => book.set_option("output.odt", file).unwrap(),
             _ => unreachable!()
         }
     }
     
     let option = match format {
-        //                    if let &Some(ref file) = match format {
-        "epub" => &book.output_epub,
-        "tex" => &book.output_tex,
-        "html" => &book.output_html,
-        "pdf" => &book.output_pdf,
-        "odt" => &book.output_odt,
+        "epub" => book.get_str("output.epub"),
+        "tex" => book.get_str("output.tex"),
+        "html" => book.get_str("output.html"),
+        "pdf" => book.get_str("output.pdf"),
+        "odt" => book.get_str("output.odt"),
         _ => unreachable!()
     };
-    let result = match *option {
-        None => {
+    let result = match option {
+        Err(_) => {
             match format {
                 "html" => book.render_html(&mut io::stdout()),
                 "tex" => book.render_tex(&mut io::stdout()),
                 _ => print_error(&format!("No output file specified, and book doesn't specify an output file for {}", format)),
             }
         },
-        Some(ref file) => {
+        Ok(file) => {
             match format {
                 "epub" => book.render_epub(),
                 "tex" => {

@@ -1,5 +1,6 @@
 use error::{Error,Result};
 use cleaner::{Cleaner, French};
+use bookoption::BookOption;
 use parser::Parser;
 use token::Token;
 use epub::EpubRenderer;
@@ -14,6 +15,7 @@ use std::io::{self, Write,Read};
 use std::env;
 use std::path::Path;
 use std::borrow::Cow;
+use std::collections::HashMap;
 
 use mustache;
 use mustache::MapBuilder;
@@ -26,84 +28,46 @@ pub enum Number {
     Default, // chapter follows books numbering, number is given automatically
     Specified(i32), //chapter number set to specified number
 }
-    
+
+static VALID_BOOLS:&'static [&'static str] = &["numbering", "autoclean", "verbose", "tex.links_as_footnotes"];
+static VALID_CHARS:&'static [&'static str] = &["nb_char"];
+static VALID_INTS:&'static [&'static str] = &["epub.version"];
+static VALID_STRINGS:&'static [&'static str] = &["lang", "author", "description", "title", "subject", "cover", "output.epub",
+                                                 "output.html", "output.pdf", "output.tex", "output.odt", "temp_dir",
+                                                 "numbering_template", "tex.command", "tex.template",
+                                                 "epub.css", "epub.template", "epub.version", "html.template", "html.css"];
+static DEFAULT_OPTIONS: &'static[(&'static str, &'static str)] = &[("verbose", "false"), ("numbering", "true"),
+                                                                   ("autoclean", "true"), ("lang", "fr"),
+                                                                   ("author", "Anonymous"), ("title", "Untitled"),
+                                                                   ("nb_char", "' '"), ("tex.command", "pdflatex"),
+                                                                   ("numbering_template", "{{number}}. {{title}}"),
+                                                                   ("temp_dir", "."), ("tex.links_as_footnotes", "true"),
+                                                                   ("epub.version", "2")];
+
+
 // Configuration of the book
 #[derive(Debug)]
 pub struct Book {
     // internal structure
     pub chapters: Vec<(Number, Vec<Token>)>, 
-    
-    // Metadata
-    pub lang: String,
-    pub author: String,
-    pub title: String,
-    pub description: Option<String>,
-    pub subject: Option<String>,
-    pub cover: Option<String>,
 
-    // Output files
-    pub output_epub: Option<String>,
-    pub output_html: Option<String>,
-    pub output_pdf: Option<String>,
-    pub output_tex: Option<String>,
-    pub output_odt: Option<String>,
-    pub temp_dir: String,
-
-
-
-    // options
-    pub numbering: bool, // turns on/off chapter numbering (individual chapters may still avoid it)
-    pub autoclean: bool, 
-    pub nb_char: char,
-    pub numbering_template: String, // template for chapter numbering
-    pub verbose: bool,
-
-    // for latex
-    pub tex_command: String,
-    pub tex_links_as_footnotes: bool,
-    pub tex_template: Option<String>,
-
-    // for epub
-    pub epub_css: Option<String>,
-    pub epub_template: Option<String>,
-    pub epub_version: u8,
-
-    // for HTML
-    pub html_template: Option<String>,
-    pub html_css: Option<String>,
+    /// book options
+    options: HashMap<String, BookOption>,
 }
+
+
 
 impl Book {
     // Creates a new Book with default options
     pub fn new() -> Book {
-        Book {
-            verbose: false,
-            numbering: true,
-            autoclean: true,
+        let mut book = Book {
             chapters: vec!(),
-            lang: String::from("en"),
-            author: String::from("Anonymous"),
-            title: String::from("Untitled"),
-            description: None,
-            subject: None,
-            cover: None,
-            nb_char: ' ',
-            numbering_template: String::from("{{number}}. {{title}}"),
-            temp_dir: String::from("."),
-            output_epub: None,
-            output_html: None,
-            output_pdf: None,
-            output_tex: None,
-            output_odt: None,
-            tex_command: String::from("pdflatex"),
-            tex_links_as_footnotes: true,
-            tex_template: None,
-            epub_css: None,
-            epub_template: None,
-            epub_version: 2,
-            html_template: None,
-            html_css: None,
+            options: HashMap::new(),
+        };
+        for &(key, value) in DEFAULT_OPTIONS {
+            book.set_option(key, value).unwrap();
         }
+        book
     }
 
     /// Prints to stderr
@@ -113,7 +77,7 @@ impl Book {
 
     /// Prints to stderr but only if verbose is set to true
     pub fn debug(&self, s:&str) {
-        if self.verbose {
+        if self.get_bool("verbose").unwrap() {
             writeln!(&mut io::stderr(), "{}", s).unwrap();
         }
     }
@@ -141,7 +105,9 @@ impl Book {
         try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
                                                                       String::from(filename))));
         let mut book = Book::new();
-        book.verbose = verbose;
+        if verbose {
+            book.set_option("verbose", "true").unwrap();
+        }
         try!(book.set_from_config(&s));
         Ok(book)
     }
@@ -158,9 +124,9 @@ impl Book {
             _ => panic!("get mapbuilder called with invalid escape format")
         };
         MapBuilder::new()
-            .insert_str("author", f(&self.author))
-            .insert_str("title", f(&self.title))
-            .insert_str("lang", self.lang.clone())
+            .insert_str("author", f(self.get_str("author").unwrap()))
+            .insert_str("title", f(&self.get_str("title").unwrap()))
+            .insert_str("lang", self.get_str("lang").unwrap().to_owned())
     }
 
     /// Either clean a string or does nothing
@@ -173,10 +139,10 @@ impl Book {
     
     /// Return a Box<Cleaner> corresponding to the appropriate cleaning method, or None
     pub fn get_cleaner(&self) -> Option<Box<Cleaner>> {
-        if self.autoclean {
-            let lang = self.lang.to_lowercase();
+        if self.get_bool("autoclean").unwrap() {
+            let lang = self.get_str("lang").unwrap().to_lowercase();
             if lang.starts_with("fr") {
-                Some(Box::new(French::new(self.nb_char)))
+                Some(Box::new(French::new(self.get_char("nb_char").unwrap())))
             } else {
                 Some(Box::new(()))
             }
@@ -187,7 +153,7 @@ impl Book {
 
     /// Returns the string corresponding to a number, title, and the numbering template
     pub fn get_header(&self, n: i32, title: &str) -> Result<String> {
-        let template = mustache::compile_str(&self.numbering_template);
+        let template = mustache::compile_str(self.get_str("numbering_template").unwrap());
         let data = MapBuilder::new()
             .insert_str("title", String::from(title))
             .insert_str("number", format!("{}", n))
@@ -200,61 +166,70 @@ impl Book {
         }
     }
 
+    /// get an option
+    pub fn get_option(&self, key: &str) -> Result<&BookOption> {
+        self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not present", key)))
+    }
+
+    /// gets a string option as str
+    pub fn get_str(&self, key: &str) -> Result<&str> {
+        try!(self.get_option(key)).as_str()
+    }
+
+    /// gets a bool option
+    pub fn get_bool(&self, key: &str) -> Result<bool> {
+        try!(self.get_option(key)).as_bool()
+    }
+
+    /// gets a char option
+    pub fn get_char(&self, key: &str) -> Result<char> {
+        try!(self.get_option(key)).as_char()
+    }
+
+    /// gets an int  option
+    pub fn get_i32(&self, key: &str) -> Result<i32> {
+        try!(self.get_option(key)).as_i32()
+    }
+
     /// Sets an option
     pub fn set_option(&mut self, key: &str, value: &str) -> Result<()> {
-        // checks that str is a char and returns it
-        fn get_char(s: &str) -> Result<char> {
-            let words: Vec<_> = s.trim().split('\'').collect();
+        if VALID_STRINGS.contains(&key) {
+            self.options.insert(key.to_owned(), BookOption::String(value.to_owned()));
+            Ok(())
+        } else if VALID_CHARS.contains(&key) {
+            let words: Vec<_> = value.trim().split('\'').collect();
             if words.len() != 3 {
-                return Err(Error::ConfigParser("could not parse char", String::from(s)));
+                return Err(Error::ConfigParser("could not parse char", String::from(value)));
             }
             let chars: Vec<_> = words[1].chars().collect();
             if chars.len() != 1 {
-                return Err(Error::ConfigParser("could not parse char", String::from(s)));
+                return Err(Error::ConfigParser("could not parse char", String::from(value)));
             }
-            Ok(chars[0])
+            self.options.insert(key.to_owned(), BookOption::Char(chars[0]));
+            Ok(())
+        } else if VALID_BOOLS.contains(&key) {
+            match value.parse::<bool>() {
+                Ok(b) => {
+                    self.options.insert(key.to_owned(), BookOption::Bool(b));
+                    ()
+                },
+                Err(_) => return Err(Error::ConfigParser("could not parse bool", format!("{}:{}", key, value))),
+            }
+            Ok(())
+        } else if VALID_INTS.contains(&key) {
+            match value.parse::<i32>() {
+                Ok(i) => {
+                    self.options.insert(key.to_owned(), BookOption::Int(i));
+                }
+                Err(_) => return Err(Error::ConfigParser("could not parse int", format!("{}:{}", key, value))),
+            }
+            Ok(())
+        } else {
+            Err(Error::ConfigParser("unrecognized key", String::from(key)))
         }
-
-        // convert an error on parsing bool to a Crowbook::Error
-        let bool_error = |_| {
-            Error::ConfigParser("could not parse bool", format!("{}:{}", key, value))
-        };
-        
-        match key {
-            "nb-char" | "nb_char" => self.nb_char = try!(get_char(value)),
-            "numbering-template" | "numbering_template" => self.numbering_template = String::from(value),
-            "numbering" => self.numbering = try!(value.parse::<bool>().map_err(bool_error)),
-            "autoclean" => self.autoclean = try!(value.parse::<bool>().map_err(bool_error)),
-            "temp_dir" | "temp-dir" => self.temp_dir = String::from(value),
-            "output.epub" |"output_epub" | "output-epub" => self.output_epub = Some(String::from(value)),
-            "output.html"| "output_html" | "output-html" => self.output_html = Some(String::from(value)),
-            "output.tex" |"output_tex" | "output-tex" => self.output_tex = Some(String::from(value)),
-            "output.pdf" | "output_pdf" | "output-pdf" => self.output_pdf = Some(String::from(value)),
-            "output.odt" | "output_odt" | "output-odt" => self.output_odt = Some(String::from(value)),
-            "tex.command" | "tex_command" | "tex-command" => self.tex_command = String::from(value),
-            "tex.links-as-footnotes" | "tex.links_as_footnotes" => self.tex_links_as_footnotes = try!(value.parse::<bool>().map_err(bool_error)),
-            "tex.template" => self.tex_template = Some(String::from(value)),
-            "author" => self.author = String::from(value),
-            "title" => self.title = String::from(value),
-            "cover" => self.cover = Some(String::from(value)),
-            "lang" => self.lang = String::from(value),
-            "description" => self.description = Some(String::from(value)),
-            "subject" => self.subject = Some(String::from(value)),
-            "epub.css" | "epub_css" | "epub-css" => self.epub_css = Some(String::from(value)),
-            "epub.template" | "epub_template" | "epub-template" => self.epub_template = Some(String::from(value)),
-            "epub.version" | "epub_version" | "epub-version" => self.epub_version = match value {
-                "2" => 2,
-                "3" => 3,
-                _ => return Err(Error::ConfigParser("epub_version must either be 2 or 3", String::from(value))),
-            },
-            "html.template" | "html_template" | "html-template" => self.html_template = Some(String::from(value)),
-            "html.css" | "html_css" | "html-css" => self.html_css = Some(String::from(value)),
-            _ => return Err(Error::ConfigParser("unrecognized key", String::from(key))),
-        }
-        Ok(())
     }
 
-    /// Sets options according to configuration file
+    /// Sets options and load chapters according to configuration file
     ///
     /// A line with "option: value" sets the option to value
     /// + chapter_name.md adds the (default numbered) chapter
@@ -319,7 +294,7 @@ impl Book {
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_pdf());
         self.debug(&result);
-        self.println(&format!("Successfully generated pdf file: {}", self.output_pdf.as_ref().unwrap()));
+        self.println(&format!("Successfully generated pdf file: {}", self.get_str("output.pdf").unwrap()));
         Ok(())
     }
 
@@ -329,7 +304,7 @@ impl Book {
         let mut epub = EpubRenderer::new(&self);
         let result = try!(epub.render_book());
         self.debug(&result);
-        self.println(&format!("Successfully generated epub file: {}", self.output_epub.as_ref().unwrap()));
+        self.println(&format!("Successfully generated epub file: {}", self.get_str("output.epub").unwrap()));
         Ok(())
     }
 
@@ -339,7 +314,7 @@ impl Book {
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
         self.debug(&result);
-        self.println(&format!("Successfully generated odt file: {}", self.output_odt.as_ref().unwrap()));
+        self.println(&format!("Successfully generated odt file: {}", self.get_str("output.odt").unwrap()));
         Ok(())
     }
 
@@ -367,28 +342,28 @@ impl Book {
     /// Generates output files acccording to book options
     pub fn render_all(&self) -> Result<()> {
         let mut did_some_stuff = false;
-
-        if self.output_epub.is_some() {
+        
+        if self.get_option("output_epub").is_ok() {
             did_some_stuff = true;
             try!(self.render_epub());
         }
 
-        if let Some(ref file) = self.output_html {
+        if let Ok(file) = self.get_str("output.html") {
             did_some_stuff = true;
             let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
             try!(self.render_html(&mut f));
         }
-        if let Some(ref file) = self.output_tex {
+        if let Ok(file) = self.get_str("output.tex") {
             did_some_stuff = true;
             let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
             try!(self.render_tex(&mut f));
         }
-        if self.output_pdf.is_some() {
+        if self.get_str("output.pdf").is_ok() {
             did_some_stuff = true;
             try!(self.render_pdf());
         }
-
-        if self.output_odt.is_some() {
+        
+        if self.get_str("output.odt").is_ok() {
             did_some_stuff = true;
             try!(self.render_odt());
         }
@@ -411,15 +386,15 @@ impl Book {
     /// Returns the template (default or modified version)
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
         let (option, fallback) = match template {
-            "epub_css" => (&self.epub_css, epub::CSS),
-            "epub_template" => (&self.epub_template,
-                                if self.epub_version == 3 {epub3::TEMPLATE} else {epub::TEMPLATE}),
-            "html_css" => (&self.html_css, html::CSS),
-            "html_template" => (&self.html_template, html::TEMPLATE),
-            "tex_template" => (&self.tex_template, latex::TEMPLATE),
-            _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
+            "epub.css" => (self.get_str("epub.css"), epub::CSS),
+            "epub.template" => (self.get_str("epub.template"),
+                                if try!(self.get_i32("epub.version")) == 3 {epub3::TEMPLATE} else {epub::TEMPLATE}),
+            "html.css" => (self.get_str("html.css"), html::CSS),
+            "html.template" => (self.get_str("html.template"), html::TEMPLATE),
+            "tex.template" => (self.get_str("tex.template"), latex::TEMPLATE),
+            _ => panic!("")//return Err(Error::ConfigParser("invalid template", template.to_owned())),
         };
-        if let Some (ref s) = *option {
+        if let Ok (s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)

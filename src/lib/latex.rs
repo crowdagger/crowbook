@@ -43,13 +43,13 @@ impl<'a> LatexRenderer<'a> {
 
     /// Render pdf in a file
     pub fn render_pdf(&mut self) -> Result<String> {
-        if let Some(ref pdf_file) = self.book.output_pdf {
+        if let Ok(pdf_file) = self.book.get_str("output.pdf") {
             let base_file = try!(Path::new(pdf_file).file_stem().ok_or(Error::Render("could not stem pdf filename")));
             let tex_file = format!("{}.tex", base_file.to_str().unwrap());
             let content = try!(self.render_book());
-            let mut zipper = try!(Zipper::new(&self.book.temp_dir));
+            let mut zipper = try!(Zipper::new(self.book.get_str("temp_dir").unwrap()));
             try!(zipper.write(&tex_file, &content.as_bytes(), false));
-            zipper.generate_pdf(&self.book.tex_command, &tex_file, pdf_file)
+            zipper.generate_pdf(&self.book.get_str("tex.command").unwrap(), &tex_file, pdf_file)
         } else {
             Err(Error::Render("no output pdf file specified in book config"))
         }
@@ -64,16 +64,16 @@ impl<'a> LatexRenderer<'a> {
         }
         
 
-        let tex_lang = String::from(match &*self.book.lang {
+        let tex_lang = String::from(match self.book.get_str("lang").unwrap() {
             "en" => "english",
             "fr" => "francais",
             _ => {
-                self.book.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.lang));
+                self.book.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.get_str("lang").unwrap()));
                 "english"
             }
         });
 
-        let template = mustache::compile_str(try!(self.book.get_template("tex_template")).as_ref());
+        let template = mustache::compile_str(try!(self.book.get_template("tex.template")).as_ref());
         let data = self.book.get_mapbuilder("tex")
             .insert_str("content", content)
             .insert_str("tex_lang", tex_lang)
@@ -140,7 +140,7 @@ impl<'a> LatexRenderer<'a> {
             Token::List(ref vec) => format!("\\begin{{itemize}}\n{}\\end{{itemize}}", self.render_vec(vec, escape)),
             Token::OrderedList(_, ref vec) => format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n", self.render_vec(vec, escape)),
             Token::Item(ref vec) => format!("\\item {}\n", self.render_vec(vec, escape)),
-            Token::Link(ref url, _, ref vec) => if self.book.tex_links_as_footnotes {
+            Token::Link(ref url, _, ref vec) => if self.book.get_bool("tex.links_as_footnotes").unwrap() {
                 format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", escape_tex(url), self.render_vec(vec, escape), escape_tex(url))
             } else {
                 format!("\\href{{{}}}{{{}}}", escape_tex(url), self.render_vec(vec, escape))

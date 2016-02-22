@@ -27,14 +27,15 @@ pub enum Error {
     FileNotFound(String), //file
     Render(&'static str),
     Zipper(String),
-    BookOption(String)
+    BookOption(String),
+    InvalidOption(String),
 }
 
 impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
             Error::ConfigParser(ref s, _) | Error::Render(ref s)  => s,
-            Error::Parser(ref s) | Error::Zipper(ref s) | Error::BookOption(ref s)=> s,
+            Error::Parser(ref s) | Error::Zipper(ref s) | Error::BookOption(ref s) | Error::InvalidOption(ref s) => s,
             Error::FileNotFound(_) => "File not found",
         }
     }
@@ -68,7 +69,11 @@ impl fmt::Display for Error {
             Error::BookOption(ref s) => {
                 try!(f.write_str("Error converting BookOption: "));
                 f.write_str(s)
-            }
+            },
+            Error::InvalidOption(ref s) => {
+                try!(f.write_str("Error accessing book option: "));
+                f.write_str(s)
+            },
         }
     }
 }
