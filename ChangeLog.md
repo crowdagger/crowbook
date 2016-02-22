@@ -3,6 +3,8 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* Refactored `Book` to use an HashMap of `BookOption`s instead of
+  having like 42 fields.
 * Tables and Footnotes are now implemented for the parser, and
   Rendered via \footnote{} for latex, and via side notes for HTML.
 * `crowbook` now have a `--set` option, allowing to define or override
