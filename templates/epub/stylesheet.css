@@ -80,3 +80,25 @@ p img {
     font-weight: bold;
 }
 
+.table {
+    margin: 1em;
+}
+
+table {
+    width: 60%;
+    margin: 0 auto;
+    border-style: solid thin;
+    border-color: black;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border-style: solid;
+    border-width: 1px;
+    text-align: center;
+}
+
+table th {
+    font-weight: bold;
+    font-variant: small-caps;
+}

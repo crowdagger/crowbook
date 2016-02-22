@@ -147,7 +147,10 @@ impl<'a> HtmlRenderer<'a> {
                                                      url,
                                                      title,
                                                                  self.render_vec(alt)),
-            Token::Table(_, ref vec) => format!("<table>\n{}</table>\n", self.render_vec(vec)),
+            Token::Table(_, ref vec) => format!("<div class = \"table\">
+    <table>\n{}
+    </table>
+</div>\n", self.render_vec(vec)),
             Token::TableRow(ref vec) => format!("<tr>\n{}</tr>\n", self.render_vec(vec)),
             Token::TableCell(ref vec) => {
                 let tag = if self.table_head {"th"} else {"td"};

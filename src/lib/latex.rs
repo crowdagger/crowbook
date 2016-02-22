@@ -22,7 +22,6 @@ use zipper::Zipper;
 use escape::escape_tex;
 
 use std::path::Path;
-use std::iter;
 use std::iter::Iterator;
 
 use mustache;
