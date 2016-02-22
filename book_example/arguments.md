@@ -10,13 +10,13 @@ USAGE:
         crowbook [OPTIONS] <BOOK> [--] [ARGS]
 
 OPTIONS:
-        --create               Creates a new book with existing markdown files.
-    -h, --help                 Prints help information
-    -o, --output <FILE>        Specifies output file.
-    -s, --set <KEY> <VALUE>    Sets a book option.
-    -t, --to <FORMAT>          Generate specific format [values: epub, pdf, html, tex, odt]
-    -V, --version              Prints version information
-    -v, --verbose              Activate verbose mode
+        --create              Creates a new book with existing markdown files.
+    -h, --help                Prints help information
+    -o, --output <FILE>       Specifies output file.
+    -s, --set <KEY_VALUES>    Sets a list of book options
+    -t, --to <FORMAT>         Generate specific format [values: epub, pdf, html, tex, odt]
+    -V, --version             Prints version information
+    -v, --verbose             Activate verbose mode
 
 ARGS:
     <BOOK>        File containing the book configuration.
@@ -48,7 +48,7 @@ Creates a new book from a list of Markdown files. It will generate the
 file `BOOK` (or abort if it already exists) with all file names
 specified added as chapters.
 
-### Example ###
+### Examples ###
 
 ```
 crowbook --create foo.book README.md ChangeLog.md LICENSE.md
@@ -75,10 +75,32 @@ lang: en
 + LICENSE.md
 ```
 
+When `crowbook` is runned with `--create`, it can also uses the
+keys/values set by `--set` (see below):
+
+```
+$ crowbook --create foo.book file1.md file2.md --set author "Pierre
+Dupont" title "Mon œeuvre" lang fr
+```
+
+will generate a `foo.book` file containing
+
+```
+author: Pierre Dupont
+title: Mon œeuvre
+lang: fr
+
+# List of chapters
++ file1.md
++ file2.md
+```
+
 `--set` 
 -------
 
 **usage**: `crowbook <BOOK> --set [KEY] [VALUE]...
+
+(or `crowbook <BOOK> -s [KEY] [VALUE]...`
 
 This options takes a list `KEY` `VALUE` pairs and allows to set or
 override a book configuration option. All valid options in the
@@ -102,16 +124,16 @@ will override the book title to `Bar` and its author to `Foo`.
 `--verbose`
 -----------
 
-**usage**: `crowbook --verbose <BOOK>`
+**usage**: `crowbook <BOOK>--verbose`
 
 If this flag is set, Crowbook will print some more messages.
 
 `--to`
 ------
 
-**usage**: `crowbook --to <FORMAT> <BOOK>`
+**usage**: `crowbook <BOOK>--to [FORMAT]`
 
-(or `crowbook -t <FORMAT> <BOOK>`)
+(or `crowbook <BOOK> -t [FORMAT]`)
 
 Generate only the specified format. `FORMAT` must be either `epub`,
 `pdf`, `html`, `odt` or `tex`.
@@ -139,7 +161,7 @@ will (try to) generate a `foo.pdf` file,.
 `--output`
 ---------
 
-**usage**: `crowbook --to <FORMAT> --output <FILE> <BOOK>`
+**usage**: `crowbook <BOOK> --to <FORMAT> --output <FILE> `
 
 (or `crowbook -t <FORMAT> -o <FILE> <BOOK>`)
 
