@@ -162,7 +162,10 @@ impl<'a> HtmlRenderer<'a> {
                 self.table_head = false;
                 format!("<tr>\n{}</tr>\n", s)
             },
-            Token::Footnote(_) => panic!("footnotes are not implemented yet"),
+            Token::Footnote(_) => {
+                self.book.debug(&format!("Warning: footnotes are not yet implemented in HTML, ignoring {:?}", token));
+                String::new()
+            },
         }
     }
 }

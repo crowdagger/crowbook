@@ -144,7 +144,10 @@ impl<'a> OdtRenderer<'a> {
                 self.book.debug("warning: tables are not currently implemented for odt");
                 String::from(" ")
             },
-            Token::Footnote(_) => panic!("footnotes are not implemented yet"),
+            Token::Footnote(_) => {
+                self.book.debug(&format!("Warning: footnotes are not yet implemented in HTML, ignoring {:?}", token));
+                String::new()
+            },
         }
     }
 }

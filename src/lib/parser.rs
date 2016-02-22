@@ -20,19 +20,21 @@ use error::{Result,Error};
 
 use std::fs::File;
 use std::io::Read;
+use std::collections::HashMap;
+use std::mem::replace;
 
 use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OPTION_ENABLE_TABLES};
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 pub struct Parser {
-    verbatim: bool, // set to true when in e.g. a code block
+    footnotes: HashMap<String, Vec<Token>>,
 }
 
 impl Parser {
     /// Creates a parser with the default options
     pub fn new() -> Parser {
         Parser {
-            verbatim: false,
+            footnotes: HashMap::new(),
         }
     }
 
@@ -44,6 +46,35 @@ impl Parser {
         try!(f.read_to_string(&mut s).map_err(|_| Error::Parser("file contains invalid UTF-8, could not parse it")));
         self.parse(&s)
     }
+
+    /// Replace footnote reference with their definition
+    pub fn parse_footnotes(&mut self, v: &mut Vec<Token>) ->Result<()> {
+        for token in v {
+            match *token {
+                Token::Footnote(ref mut content) => {
+                    let reference = if let Token::Str(ref text) = content[0] {
+                        text.clone()
+                    } else {
+                        panic!("Oups");
+                    };
+                    if let Some(in_vec) = self.footnotes.get(&reference) {
+                        *content = in_vec.clone();
+                    } else {
+                        return Err(Error::Parser("footnote reference without matching definition"));
+                    }
+                },
+                Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)
+                    | Token::Strong(ref mut vec) | Token::Code(ref mut vec) | Token::BlockQuote(ref mut vec)
+                    | Token::CodeBlock(_, ref mut vec) | Token::List(ref mut vec) | Token::OrderedList(_, ref mut vec)
+                    | Token::Item(ref mut vec) | Token::Table(_, ref mut vec) | Token::TableHead(ref mut vec)
+                    | Token::TableRow(ref mut vec) | Token::TableCell(ref mut vec) | Token::Link(_, _, ref mut vec)
+                    | Token::Image(_, _, ref mut vec) => try!(self.parse_footnotes(vec)),
+                _ => (),
+            }
+        }
+        Ok(())
+    }
+    
 
     /// Parse a string and returns an AST, that is a vector of `Token`s
     ///
@@ -57,6 +88,8 @@ impl Parser {
 
         let mut res = vec!();
         try!(self.parse_events(&mut p, &mut res, None));
+
+        try!(self.parse_footnotes(&mut res));
         Ok(res)
     }
     
@@ -84,7 +117,7 @@ impl Parser {
                 },
                 Event::SoftBreak => v.push(Token::SoftBreak),
                 Event::HardBreak => v.push(Token::HardBreak),
-                Event::FootnoteReference(_) => return Err(Error::Parser("no support for footnotes yet."))
+                Event::FootnoteReference(text) => v.push(Token::Footnote(vec!(Token::Str(text.into_owned())))),
             }
         }
         Ok(())
@@ -93,14 +126,8 @@ impl Parser {
     fn parse_tag<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, tag: Tag<'a>) -> Result<()> {
         let mut res = vec!();
 
-        match tag {
-            Tag::Code | Tag::CodeBlock(_) => self.verbatim = true,
-            _ => (),
-        }
-        
         try!(self.parse_events(p, &mut res, Some(&tag)));
 
-        self.verbatim = false;
         
         let token = match tag {
             Tag::Paragraph => Token::Paragraph(res),
@@ -124,7 +151,13 @@ impl Parser {
             Tag::TableHead => Token::TableHead(res),
             Tag::TableRow => Token::TableRow(res),
             Tag::TableCell => Token::TableCell(res),
-            Tag::FootnoteDefinition(_) => return Err(Error::Parser("no support for footnotes")),
+            Tag::FootnoteDefinition(reference) => {
+                if self.footnotes.contains_key(reference.as_ref()) {
+                    println!("Warning: footnote definition for {} but previous definition already exist, overriding it", reference);
+                }
+                self.footnotes.insert(reference.into_owned(), res);
+                Token::SoftBreak
+            },
         };
         v.push(token);
         Ok(())
