@@ -54,7 +54,7 @@ impl Parser {
                     let reference = if let Token::Str(ref text) = content[0] {
                         text.clone()
                     } else {
-                        panic!("Oups");
+                        panic!("Reference is not a vector of a single Token::Str");
                     };
                     if let Some(in_vec) = self.footnotes.get(&reference) {
                         *content = in_vec.clone();
