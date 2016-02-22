@@ -31,6 +31,8 @@ pub struct HtmlRenderer<'a> {
     current_numbering: bool,
     current_hide: bool,
     table_head: bool,
+    footnote_number: u32,
+    pub footnotes: Vec<String>,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -42,6 +44,8 @@ impl<'a> HtmlRenderer<'a> {
             current_numbering: book.numbering,
             current_hide: false,
             table_head: false,
+            footnote_number: 0,
+            footnotes: vec!(),
         }
     }
 
@@ -63,9 +67,7 @@ impl<'a> HtmlRenderer<'a> {
                     self.current_hide = true;
                 },
             }
-            for token in v {
-                content.push_str(&self.parse_token(token));
-            }
+            content.push_str(&self.render_html(v));
         }
 
         let template = mustache::compile_str(try!(self.book.get_template("html_template")).as_ref());        
@@ -81,6 +83,18 @@ impl<'a> HtmlRenderer<'a> {
             Err(_) => Err(Error::Render("generated HTML was not utf-8 valid")),
             Ok(res) => Ok(res)
         }
+    }
+
+    ///
+    pub fn render_html(&mut self, tokens: &[Token])-> String {
+        let mut res = String::new();
+        for token in tokens {
+            for footnote in self.footnotes.drain(..) {
+                res.push_str(&footnote);
+            }
+            res.push_str(&self.parse_token(&token));
+        }
+        res
     }
 
     /// Transform a vector of `Token`s to HTML format.
@@ -162,9 +176,17 @@ impl<'a> HtmlRenderer<'a> {
                 self.table_head = false;
                 format!("<tr>\n{}</tr>\n", s)
             },
-            Token::Footnote(_) => {
-                self.book.debug(&format!("Warning: footnotes are not yet implemented in HTML, ignoring {:?}", token));
-                String::new()
+            Token::Footnote(ref vec) => {
+                let s = self.render_vec(vec);
+                self.footnote_number += 1;
+                let footnote = format!("<div class = \"sidenote\">
+  <p class = \"sidenote-number\">
+   {}:
+  </p>
+{}
+</div>", self.footnote_number, s);
+                self.footnotes.push(footnote);
+                format!("<sup>{}</sup>", self.footnote_number)
             },
         }
     }

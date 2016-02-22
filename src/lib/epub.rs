@@ -292,6 +292,9 @@ impl<'a> EpubRenderer<'a> {
         let mut title = String::new();
 
         for token in v {
+            for footnote in self.html.footnotes.drain(..) {
+                content.push_str(&footnote);
+            }
             content.push_str(&self.parse_token(&token, &mut title));
         }
         if title.is_empty() {

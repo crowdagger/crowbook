@@ -1,15 +1,14 @@
 body {
     font-family: "Linux Libertine", "Georgia", serif;
-    margin-left: 5%; 
-    margin-right: 5%; 
-    margin-top: 5%; 
-    margin-bottom: 5%; 
+    margin-left: 2em; 
+    margin-right: 2em; 
+    margin-top: 1em; 
+    margin-bottom: 1em; 
     text-align: justify;
     font-size: 100%;
 }
 p {
     text-indent: 1.25em;
-    font-size: 1em;
     margin:0;
     hyphens: auto;
 }
@@ -18,7 +17,7 @@ blockquote {
     font-style: italic;
 }
 code {
-    font-size: .8em;
+    font-size: 80%;
     font-family: "Linux Libertine Mono", monospace;
     background-color: #F0F0F0;
 }
@@ -83,6 +82,23 @@ p img {
 .table {
     margin: 1em;
 }
+
+.sidenote {
+    display: block;
+    float: right;
+    width: 30%;
+    border: 1px solid black;
+    margin: 1em;
+    padding: 1em;
+    margin-right: -1.5em;
+}
+
+.sidenote-number {
+    font-weight: bold;
+    float: left;
+    text-indent: 0;
+}
+
 
 table {
     width: 60%;
