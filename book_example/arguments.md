@@ -10,18 +10,17 @@ USAGE:
         crowbook [OPTIONS] <BOOK> [--] [ARGS]
 
 OPTIONS:
-        --autoclean <BOOL>    Try to clean input markdown [values: true, false]
-        --create              Creates a new book file with existing markdown files
-    -h, --help                Prints help information
-        --numbering <BOOL>    Number chapters or not [values: true, false]
-    -o, --output <FILE>       Specify output file
-    -t, --to <FORMAT>         Generate specific format [values: epub, pdf, html, tex, odt]
-    -V, --version             Prints version information
-    -v, --verbose             Activate verbose mode
+        --create               Creates a new book with existing markdown files.
+    -h, --help                 Prints help information
+    -o, --output <FILE>        Specifies output file.
+    -s, --set <KEY> <VALUE>    Sets a book option.
+    -t, --to <FORMAT>          Generate specific format [values: epub, pdf, html, tex, odt]
+    -V, --version              Prints version information
+    -v, --verbose              Activate verbose mode
 
 ARGS:
-    <BOOK>     A file containing the book configuration
-    <FILES>...    Files to put in book when using --create
+    <BOOK>        File containing the book configuration.
+    <FILES>...    Files to list in book when using --create
 
 Command line options allow to override options defined in <BOOK> configuration file. 
 E.g., even if this file specifies 'verbose: false', calling 'crowbook --verbose <BOOK>' 
@@ -29,8 +28,7 @@ will activate verbose mode.
 
 Note that Crowbook generates output files relatively to the directory where <BOOK> is:
 $ crowbook foo/bar.book --to pdf --output baz.pdf
-will thus generate baz.pdf in directory foo and not in current
-directory.
+will thus generate baz.pdf in directory foo and not in current directory.
 ```
 
 The most important ones is obviously <BOOK>, i.e. the file
@@ -49,10 +47,6 @@ It is, however, possible to pass more arguments to `crowbook`.
 Creates a new book from a list of Markdown files. It will generate the
 file `BOOK` (or abort if it already exists) with all file names
 specified added as chapters.
-
-Most other `crowbook` options have no impact when using `--create`,
-but if `--numbering` is set to `false`, the files will be included
-with `-` instead of `+` in the Markdown file.
 
 ### Example ###
 
@@ -86,28 +80,24 @@ lang: en
 
 **usage**: `crowbook --set [KEY] [VALUE] <BOOK>`
 
-This options allows to override a wide range of options normally
-defined in book configuration file. Valid keys are:
-
-* `description`
-* `subject`
-* `cover`
-* `html.template`
-* `html.css`
-* `epub.template`
-* `epub.css`
-* `tex.template`
-
-For the usage of these keys, see
+This options allows to set or override a wide range an option normally
+defined in book configuration file. All valid option in the
+configuration files are valid as keys. For more information, see
 [the configuration file page](config.md).
 
-### Example ###
+### Examples ###
 
 ```
 $ crowbook --set html.css style.css foo.book
 ```
 
 will override the CSS for HTML generation to `style.css`.
+
+```
+$ crowbook --set author Foo --title Bar foo.book
+```
+
+will override the book title to `Bar` and its author to `Foo`.
 
 `--verbose`
 -----------
@@ -163,25 +153,4 @@ $ crowbook foo/bar.book --to pdf --output baz.pdf
 will thus generate `baz.pdf` in directory `foo` and not in current
 directory.
 
-`--numbering`
--------------
 
-**usage**: `crowbook --numbering <BOOL> <BOOK>`
-
-Turns numbering on or off. Overrides the option set in `BOOK`
-configuration file.
-
-### Example ###
-
-```
-crowbook --numbering false foo.book
-```
-
-
-`--autoclean`
--------------
-
-**usage**: `crowbook --autoclean <BOOL> <BOOK>`
-
-Turns autoclean on or off. Overrides the option set in `BOOK`
-configuration file. 
