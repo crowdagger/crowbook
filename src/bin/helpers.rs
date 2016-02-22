@@ -68,6 +68,7 @@ will thus generate baz.pdf in directory foo and not in current directory.")
              .possible_values(&["true", "false"]))
         .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
              .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
+        .arg_from_usage("--set [KEY] [VALUE] 'Sets a book option.'")
         .arg(Arg::with_name("BOOK")
              .index(1)
              .required(true)
@@ -86,4 +87,6 @@ fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
         print_error("A list of additional files is only valid with the --create option.");
     }
+    let v:Vec<_> = matches.values_of("set").unwrap().collect();
+    println!("test {:?}", v);
 }

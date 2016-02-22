@@ -101,6 +101,25 @@ fn set_book_options(book: &mut Book, matches: &ArgMatches) {
             _ => unreachable!()
         };
     }
+
+    if let Some(iter) = matches.values_of("set") {
+        let v:Vec<_> = iter.collect();
+        let name = v[0];
+        let value = v[1];
+        let dest = match name {
+            "html.template" => &mut book.html_template,
+            "html.css" => &mut book.html_css,
+            "epub.css" => &mut book.epub_css,
+                "epub.template" => &mut book.epub_template,
+            "tex.template" => &mut book.tex_template,
+            "decription" => &mut book.description,
+            "subject" => &mut book.subject,
+            "cover" => &mut book.cover,
+            _ => print_error(&format!("{} is not a valid key.", name)),
+        };
+        *dest = Some(value.to_owned());
+    }
+
 }
 
 fn main() {
