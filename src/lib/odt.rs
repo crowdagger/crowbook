@@ -140,6 +140,11 @@ impl<'a> OdtRenderer<'a> {
                 self.book.debug("warning: images not currently implemented for odt");
                 String::from(" ")
             },
+            Token::Table(_,_) | Token::TableHead(_) | Token::TableRow(_) | Token::TableCell(_) => {
+                self.book.debug("warning: tables are not currently implemented for odt");
+                String::from(" ")
+            },
+            Token::Footnote(_) => panic!("footnotes are not implemented yet"),
         }
     }
 }

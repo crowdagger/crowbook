@@ -29,7 +29,14 @@ pub enum Token {
     List(Vec<Token>),
     OrderedList(usize, Vec<Token>), //starting number, list
     Item(Vec<Token>),
+
+    Table(i32, Vec<Token>), // number of rows, TableHead|TableRows
+    TableHead(Vec<Token>), // contains TableCells
+    TableRow(Vec<Token>), // contains TableCells
+    TableCell(Vec<Token>),
     
+    Footnote(Vec<Token>),
+
     Rule,
     SoftBreak,
     HardBreak,

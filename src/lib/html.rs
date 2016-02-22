@@ -30,6 +30,7 @@ pub struct HtmlRenderer<'a> {
     book: &'a Book,
     current_numbering: bool,
     current_hide: bool,
+    table_head: bool,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -39,7 +40,8 @@ impl<'a> HtmlRenderer<'a> {
             book: book,
             current_chapter: 1,
             current_numbering: book.numbering,
-            current_hide: false
+            current_hide: false,
+            table_head: false,
         }
     }
 
@@ -144,8 +146,20 @@ impl<'a> HtmlRenderer<'a> {
             Token::Image(ref url, ref title, ref alt) => format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
                                                      url,
                                                      title,
-                                                     self.render_vec(alt))
-                
+                                                                 self.render_vec(alt)),
+            Token::Table(_, ref vec) => format!("<table>\n{}</table>\n", self.render_vec(vec)),
+            Token::TableRow(ref vec) => format!("<tr>\n{}</tr>\n", self.render_vec(vec)),
+            Token::TableCell(ref vec) => {
+                let tag = if self.table_head {"th"} else {"td"};
+                format!("<{}>{}</{}>", tag, self.render_vec(vec), tag)
+            },
+            Token::TableHead(ref vec) => {
+                self.table_head = true;
+                let s = self.render_vec(vec);
+                self.table_head = false;
+                format!("<tr>\n{}</tr>\n", s)
+            },
+            Token::Footnote(_) => panic!("footnotes are not implemented yet"),
         }
     }
 }

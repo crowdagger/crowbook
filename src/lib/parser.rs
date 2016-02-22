@@ -120,7 +120,10 @@ impl Parser {
             Tag::Item => Token::Item(res),
             Tag::BlockQuote => Token::BlockQuote(res),
             Tag::CodeBlock(language) => Token::CodeBlock(language.into_owned(), res),
-            Tag::Table(_) | Tag::TableHead | Tag::TableRow | Tag::TableCell => return Err(Error::Parser("no support for tables yet")),
+            Tag::Table(n) => Token::Table(n, res),
+            Tag::TableHead => Token::TableHead(res),
+            Tag::TableRow => Token::TableRow(res),
+            Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(_) => return Err(Error::Parser("no support for footnotes")),
         };
         v.push(token);

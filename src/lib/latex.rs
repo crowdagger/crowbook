@@ -22,6 +22,8 @@ use zipper::Zipper;
 use escape::escape_tex;
 
 use std::path::Path;
+use std::iter;
+use std::iter::Iterator;
 
 use mustache;
 
@@ -147,7 +149,33 @@ impl<'a> LatexRenderer<'a> {
             Token::Image(_, _, _) => {
                 self.book.debug("warning: including images is not yet supported for tex output");
                 String::from(" ")
+            },
+            Token::Footnote(ref vec) => format!("\\footnote{{{}}}", self.render_vec(vec, escape)),
+            Token::Table(n, ref vec) => {
+                let mut cols = String::new();
+                for _ in 0..n {
+                    cols.push_str("|c");
+                }
+                cols.push_str("|");
+                format!("\\begin{{center}}
+\\begin{{tabular}}{{{}}}
+\\hline
+{}
+\\hline
+\\end{{tabular}}
+\\end{{center}}\n\n", cols, self.render_vec(vec, escape))
+            },
+            Token::TableRow(ref vec) | Token::TableHead(ref vec) => {
+                let mut res:String = vec.iter().map(|v| {self.parse_token(v, escape)})
+                    .collect::<Vec<_>>()
+                    .join(" & ");
+                res.push_str("\\\\ \n");
+                if let Token::TableHead(_) = *token {
+                    res.push_str("\\hline\n");
+                }
+                res
             }
+            Token::TableCell(ref vec) => self.render_vec(vec, escape),
         }
     }
 }
