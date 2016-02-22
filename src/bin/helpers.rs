@@ -12,7 +12,7 @@ pub fn print_error(s: &str) -> ! {
 /// create a book file with the command line arguments
 /// and exit the process at the end
 pub fn create_book(matches: &ArgMatches) -> ! {
-    if let Some(values) = matches.values_of("files") {
+    if let Some(values) = matches.values_of("FILES") {
         let numbering = match matches.value_of("numbering") {
             Some("false") => false,
             _ => true,
@@ -47,7 +47,6 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
     let app = App::new("crowbook")
         .setting(AppSettings::ArgRequiredElseHelp)
         .setting(AppSettings::UnifiedHelpMessage)
-        //        .usage("crowbook [FLAGS] [OPTIONS] <BOOK> [FILE]")
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
         .after_help("Command line options allow to override options defined in <BOOK> configuration file. 
@@ -58,44 +57,21 @@ Note that Crowbook generates output files relatively to the directory where <BOO
 $ crowbook foo/bar.book --to pdf --output baz.pdf
 will thus generate baz.pdf in directory foo and not in current directory.")
         .arg_from_usage("-v, --verbose 'Activate verbose mode'")
-        .arg(Arg::with_name("files")
-             .value_name("FILES")
-             .help("Files to put in book when using --create")
-             .takes_value(true)
-             .multiple(true)
+        .arg_from_usage("--create 'Creates a new book with existing markdown files.'")
+        .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file.'")
+             .requires("to"))
+        .arg(Arg::from_usage("[FILES]... 'Files to list in book when using --create'")
              .index(2))
-        .arg(Arg::with_name("create")
-             .long("--create")
-             .help("Creates a new book file with existing markdown files"))
-        .arg(Arg::with_name("output")
-             .long("--output")
-             .short("-o")
-             .value_name("FILE")
-             .requires("to")
-             .help("Specify output file"))
-        .arg(Arg::with_name("autoclean")
-             .long("--autoclean")
-             .value_name("BOOL")
-             .takes_value(true)
-             .help("Try to clean input markdown")
+        .arg(Arg::from_usage("--autoclean [BOOL] 'Set/unset markdown cleaning'")
              .possible_values(&["true", "false"]))
-        .arg(Arg::with_name("numbering")
-             .long("--numbering")
-             .value_name("BOOL")
-             .takes_value(true)
-             .help("Number chapters or not")
+        .arg(Arg::from_usage("--numbering [BOOL] 'De/activate chapter numbering'")
              .possible_values(&["true", "false"]))
-        .arg(Arg::with_name("to")
-             .long("--to")
-             .short("t")
-             .takes_value(true)
-             .possible_values(&["epub", "pdf", "html", "tex", "odt"])
-             .value_name("FORMAT")
-             .help("Generate specific format"))
+        .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
+             .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
         .arg(Arg::with_name("BOOK")
              .index(1)
              .required(true)
-             .help("A file containing the book configuration"));
+             .help("File containing the book configuration."));
 
     let matches = app.get_matches();
 
