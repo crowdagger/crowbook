@@ -22,7 +22,7 @@ use std::fmt;
 #[derive(Debug)]
 /// Crowbook error type
 pub enum Error {
-    Parser(&'static str),
+    Parser(String),
     ConfigParser(&'static str, String), //error, line
     FileNotFound(String), //file
     Render(&'static str),
@@ -32,8 +32,8 @@ pub enum Error {
 impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
-            Error::Parser(ref s) | Error::ConfigParser(ref s, _) | Error::Render(ref s) => s,
-            Error::Zipper(ref s) => s,
+            Error::ConfigParser(ref s, _) | Error::Render(ref s) => s,
+            Error::Parser(ref s) | Error::Zipper(ref s) => s,
             Error::FileNotFound(_) => "File not found",
         }
     }
@@ -44,12 +44,12 @@ impl fmt::Display for Error {
         match *self {
             Error::Parser(ref s) => {
                 try!(f.write_str("Error parsing markdown: "));
-                f.write_str(s)
+                f.write_str(&s)
             },
             Error::ConfigParser(ref s, ref line) => {
                 try!(f.write_str("Error parsing configuration file: "));
                 try!(f.write_str(s));
-                try!(f.write_str(" in:\n"));
+                try!(f.write_str(" in: "));
                 f.write_str(line)
             },
             Error::FileNotFound(ref file) => {

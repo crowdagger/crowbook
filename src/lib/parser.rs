@@ -21,7 +21,6 @@ use error::{Result,Error};
 use std::fs::File;
 use std::io::Read;
 use std::collections::HashMap;
-use std::mem::replace;
 
 use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OPTION_ENABLE_TABLES};
 
@@ -43,7 +42,7 @@ impl Parser {
         let mut f = try!(File::open(filename).map_err(|_| Error::FileNotFound(String::from(filename))));
         let mut s = String::new();
 
-        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser("file contains invalid UTF-8, could not parse it")));
+        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(format!("file {} contains invalid UTF-8, could not parse it", filename))));
         self.parse(&s)
     }
 
@@ -60,7 +59,7 @@ impl Parser {
                     if let Some(in_vec) = self.footnotes.get(&reference) {
                         *content = in_vec.clone();
                     } else {
-                        return Err(Error::Parser("footnote reference without matching definition"));
+                        return Err(Error::Parser(format!("footnote reference {} does not have a matching definition", &reference)));
                     }
                 },
                 Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)
