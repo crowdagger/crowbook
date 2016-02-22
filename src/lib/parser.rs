@@ -22,7 +22,7 @@ use error::{Result,Error};
 use std::fs::File;
 use std::io::Read;
 
-use cmark::{Parser as CMParser, Event, Tag};
+use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OPTION_ENABLE_TABLES};
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 pub struct Parser {
@@ -59,7 +59,11 @@ impl Parser {
     ///
     /// Returns a result, at this method might fail.
     pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
-        let mut p = CMParser::new(s);
+        let mut opts = Options::empty();
+        opts.insert(OPTION_ENABLE_TABLES);
+        opts.insert(OPTION_ENABLE_FOOTNOTES);
+        let mut p = CMParser::new_ext(s, opts);
+        
 
         let mut res = vec!();
         try!(self.parse_events(&mut p, &mut res, None));
