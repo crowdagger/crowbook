@@ -81,6 +81,34 @@ lang: en
 + LICENSE.md
 ```
 
+`--set` 
+-------
+
+**usage**: `crowbook --set [KEY] [VALUE] <BOOK>`
+
+This options allows to override a wide range of options normally
+defined in book configuration file. Valid keys are:
+
+* `description`
+* `subject`
+* `cover`
+* `html.template`
+* `html.css`
+* `epub.template`
+* `epub.css`
+* `tex.template`
+
+For the usage of these keys, see
+[the configuration file page](config.md).
+
+### Example ###
+
+```
+$ crowbook --set html.css style.css foo.book
+```
+
+will override the CSS for HTML generation to `style.css`.
+
 `--verbose`
 -----------
 
