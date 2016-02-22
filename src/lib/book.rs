@@ -163,6 +163,14 @@ impl Book {
             .insert_str("lang", self.lang.clone())
     }
 
+    /// Either clean a string or does nothing
+    pub fn clean(&self, mut text:String) -> String  {
+        if let Some(cleaner) = self.get_cleaner() {
+            cleaner.clean(&mut text)
+        }
+        text
+    }
+    
     /// Return a Box<Cleaner> corresponding to the appropriate cleaning method, or None
     pub fn get_cleaner(&self) -> Option<Box<Cleaner>> {
         if self.autoclean {
@@ -395,9 +403,6 @@ impl Book {
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
         self.debug(&format!("Parsing chapter: {}...", file));
         let mut parser = Parser::new();
-        if let Some(cleaner) = self.get_cleaner() {
-            parser = parser.with_cleaner(cleaner)
-        }
         let v = try!(parser.parse_file(file));
         self.chapters.push((number, v));
         Ok(())

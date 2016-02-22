@@ -16,7 +16,6 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use token::Token;
-use cleaner::Cleaner;
 use error::{Result,Error};
 
 use std::fs::File;
@@ -26,8 +25,6 @@ use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OP
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 pub struct Parser {
-    cleaner: Option<Box<Cleaner>>, // An optional parameter to clean source code
-
     verbatim: bool, // set to true when in e.g. a code block
 }
 
@@ -36,14 +33,7 @@ impl Parser {
     pub fn new() -> Parser {
         Parser {
             verbatim: false,
-            cleaner: Some(Box::new(())),
         }
-    }
-
-    /// Sets cleaner implementation
-    pub fn with_cleaner(mut self, cleaner: Box<Cleaner>) -> Parser {
-        self.cleaner = Some(cleaner);
-        self
     }
 
     /// Parse a file and returns an AST
@@ -74,25 +64,14 @@ impl Parser {
         while let Some(event) = p.next() {
             match event {
                 Event::Html(text) | Event::InlineHtml(text) | Event::Text(text) => {
-                    let mut text = text.into_owned();
                     if let Some(&Token::Str(_)) = v.last() {
                         if let Token::Str(ref mut s) = *v.last_mut().unwrap() {
-                            s.push_str(&text);
-                            if let Some(ref cleaner) = self.cleaner {
-                                if !self.verbatim {
-                                    cleaner.clean(s);
-                                }
-                            }
+                            s.push_str(text.as_ref());
                         } else {
                             unreachable!();
                         }
                     } else {
-                        if let Some(ref cleaner) = self.cleaner {
-                            if !self.verbatim {
-                                cleaner.clean(&mut text);
-                            }
-                        }
-                        v.push(Token::Str(text));
+                        v.push(Token::Str(text.into_owned()));
                     }
                 },
                 Event::Start(tag) => try!(self.parse_tag(p, v, tag)),

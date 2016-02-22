@@ -95,7 +95,7 @@ impl<'a> HtmlRenderer<'a> {
     pub fn parse_token(&mut self, token: &Token) -> String {
         match *token {
             Token::Str(ref text) => escape_html(&*text),
-            Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
+            Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.book.clean(self.render_vec(vec))),
             Token::Header(n, ref vec) => {
                 if n == 1 && self.current_hide {
                     return String::new();
@@ -107,12 +107,12 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     self.render_vec(vec)
                 };
-                format!("<h{}>{}</h{}>\n", n, s, n)
+                format!("<h{}>{}</h{}>\n", n, self.book.clean(s), n)
             },
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),
             Token::Code(ref vec) => format!("<code>{}</code>", self.render_vec(vec)),
-            Token::BlockQuote(ref vec) => format!("<blockquote>{}</blockquote>\n", self.render_vec(vec)),
+            Token::BlockQuote(ref vec) => format!("<blockquote>{}</blockquote>\n", self.book.clean(self.render_vec(vec))),
             Token::CodeBlock(ref language, ref vec) => {
                 let s = self.render_vec(vec);
                 if language.is_empty() {
@@ -124,7 +124,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::Rule => String::from("<p class = \"rule\">***</p>\n"),
             Token::SoftBreak => String::from(" "),
             Token::HardBreak => String::from("<br />\n"),
-            Token::List(ref vec) => format!("<ul>\n{}</ul>\n", self.render_vec(vec)),
+            Token::List(ref vec) => format!("<ul>\n{}</ul>\n", self.book.clean(self.render_vec(vec))),
             Token::OrderedList(n, ref vec) => format!("<ol{}>\n{}</ol>\n",
                                                       if n != 1 {
                                                           format!(" start = \"{}\"", n)
@@ -132,7 +132,7 @@ impl<'a> HtmlRenderer<'a> {
                                                           String::new()
                                                       },
                                                       self.render_vec(vec)),
-            Token::Item(ref vec) => format!("<li>{}</li>\n", self.render_vec(vec)),
+            Token::Item(ref vec) => format!("<li>{}</li>\n", self.book.clean(self.render_vec(vec))),
             Token::Link(ref url, ref title, ref vec) => format!("<a href = \"{}\"{}>{}</a>",
                                                     url,
                                                     if title.is_empty() {
