@@ -4,7 +4,7 @@ use self::crowbook::{Parser, HtmlRenderer, Book, Token};
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new();
-    book.numbering = false;
+    book.set_option("numbering", "false").unwrap();
     let mut html = HtmlRenderer::new(&book);
     html.render_vec(v)
 }
