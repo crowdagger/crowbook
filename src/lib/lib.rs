@@ -42,3 +42,4 @@ pub use odt::OdtRenderer;
 
 mod zipper;
 mod templates;
+mod bookoption;

@@ -26,14 +26,15 @@ pub enum Error {
     ConfigParser(&'static str, String), //error, line
     FileNotFound(String), //file
     Render(&'static str),
-    Zipper(String)
+    Zipper(String),
+    BookOption(String)
 }
 
 impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
-            Error::ConfigParser(ref s, _) | Error::Render(ref s) => s,
-            Error::Parser(ref s) | Error::Zipper(ref s) => s,
+            Error::ConfigParser(ref s, _) | Error::Render(ref s)  => s,
+            Error::Parser(ref s) | Error::Zipper(ref s) | Error::BookOption(ref s)=> s,
             Error::FileNotFound(_) => "File not found",
         }
     }
@@ -64,6 +65,10 @@ impl fmt::Display for Error {
                 try!(f.write_str("Error during temporary files editing: "));
                 f.write_str(s)
             },
+            Error::BookOption(ref s) => {
+                try!(f.write_str("Error converting BookOption: "));
+                f.write_str(s)
+            }
         }
     }
 }
