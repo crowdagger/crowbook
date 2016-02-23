@@ -98,7 +98,8 @@ fn main() {
     }
 
     if !matches.is_present("BOOK") {
-        print_error("You must pass the file of a book configuration file");
+        print_error(&format!("You must pass the file of a book configuration file.\n\n{}\n\nFor more information try --help.",
+                            matches.usage()));
     }
 
     if matches.is_present("create") {
