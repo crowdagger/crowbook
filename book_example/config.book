@@ -5,8 +5,10 @@ description: More like some kind of manual really
 lang: en
 
 # Generic options (though not used with LaTeX)
-# Display foot notes as side notes 
-side_notes: true
+## Number chapters and sections, but not below that
+numbering: 2
+# Display foot notes as side notes
+#side_notes: true
 
 # Latex options
 tex.links_as_footnotes: false

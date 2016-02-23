@@ -126,56 +126,123 @@ title: My title
 If you *do* use quotes, Crowbook will actually put those quotes in the
 string, so basically don't do that.
 
-### Metadata ###
+### Options summary ###
 
-#### author ####
+###  Metadata ###
+- **`author`**
+    - **type**: string
+    - **default value**: `Anonymous`
+    -  The author of the book
+- **`title`**
+    - **type**: string
+    - **default value**: `Untitled`
+    -  The title of the book
+- **`lang`**
+    - **type**: string
+    - **default value**: `en`
+    -  The language of the book
+- **`subject`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Subject of the book (used for EPUB metadata)
+- **`description`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Description of the book (used for EPUB metadata)
+- **`cover`**
+    - **type**: string
+    - **default value**: `not set`
+    -  File name of the cover of the book
 
-Quite obviously, the author of the book. Note that it's currently just
-a single string, so if you want to have multiple authors, you'll have
-to do something like:
+###  Output options ###
+- **`output.epub`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for EPUB rendering
+- **`output.html`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for HTML rendering
+- **`output.tex`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for LaTeX rendering
+- **`output.pdf`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for PDF rendering
+- **`output.odt`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for ODT rendering
 
-```
-author: Jane Doe, John Smith
-```
+###  Misc options ###
+- **`numbering`**
+    - **type**: integer
+    - **default value**: `1`
+    -  The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
+- **`autoclean`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Toggles cleaning of input markdown (not used for LaTeX)
+- **`verbose`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  Toggle verbose mode
+- **`side_notes`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  Display footnotes as side notes in HTML/Epub
+- **`nb_char`**
+    - **type**: char
+    - **default value**: `' '`
+    -  The non-breaking character to use for autoclean when lang is set to fr
+- **`temp_dir`**
+    - **type**: string
+    - **default value**: `.`
+    -  Path where to create a temporary directory
+- **`numbering_template`**
+    - **type**: string
+    - **default value**: `{{number}}. {{title}}`
+    -  Format of numbered titles
 
-**default**: `Anonymous`
+###  HTML options ###
+- **`html.template`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of an HTML template
+- **`html.css`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of a stylesheet to use with HTML rendering
 
-#### title ####
+###  EPUB options ###
+- **`epub.version`**
+    - **type**: integer
+    - **default value**: `2`
+    -  The EPUB version to generate
+- **`epub.css`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of a stylesheet to use with EPUB rendering
+- **`epub.template`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of an epub template for chapter
 
-The title of the book.
-
-**default**: `Untitled`
-
-#### lang ####
-
-The language of the book, in a standard format. "en", "fr", and so on.
-
-**default**: `en`
-
-#### cover ####
-
-The file name of a cover image for the book. Note that, here again,
-you must not use quotes:
-
-```
-cover: cover.png
-```
-
-**default**: `None`
-
-#### subject ####
-
-What your book is about: e.g. Programming, Science-Fiction...
-
-**default**: `None`
-
-#### description ####
-
-A description of your book. Note that Crowbook does *not* support
-multi-line strings in configuration field, and it is a field where it
-might be a problem if you don't like very long lines.
-
-**default**: `None`
+###  LaTeX options ###
+- **`tex.links_as_footnotes`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  If set to true, will add foontotes to URL of links in LaTeX/PDF output
+- **`tex.command`**
+    - **type**: string
+    - **default value**: `pdflatex`
+    -  LaTeX flavour to use for generating PDF
+- **`tex.template`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of a LaTeX template file
 
 ### Output options ###
 
@@ -206,64 +273,32 @@ $ crowbook my.book
 ```
 
 to generate anything. (It's still possible to generate a specific
-format, and only this one, by using the `--to` argument on the command line).
+format, and only this one, by using the `--to` argument on the command
+line).
 
-#### output.epub ####
-
-The name of the epub file you want to generate.
-
-**default**: `None`
-
-Crowbook use the `zip` command to generate the epub, so it won't work
-if this command is not installed on your system.
-
-#### output.html ####
-
-The name of the HTML file you want to generate. Note that this HTML
-file is self-contained, it doesn't require e.g. CSS from other files.
-
-**default**: `None`
-
-#### output.tex ####
-
-The name of the LaTeX file you want to generate. 
-
-**default**: `None`
-
-#### output.pdf ####
-
-The name of the PDF file you want to generate. Crowbook uses LaTeX to
-generate it, so it won't work if it isn't installed on your
-computer. (See `tex_command` to specify which flavour of LaTeX you
+Note that some formats depend on some commands being installed on your
+system. Most notably, Crowbook depends on LaTeX (`pdflatex` by
+default, though you can specify the command to use with `tex.command`) to generate a PDF file,
+so PDF rendering won't work if it is not installed on your
+system. Crowbook also uses the `zip` command to generate the EPUB and
+ODT, files.
 want to use.)
-
-**default**: `None`
-
-### output.odt ###
-
-The name of the ODT (OpenOffice) file you want to generate. Beware: 
-ODT support is still experimental.
-
-**default**: `None`
-
-As for Epub generation, Crowbook depends on the presence of the `zip`
-command to generate this file.
 
 ### Generic options for rendering  ###
 
 #### numbering ####
 
-A boolean that sets whether or not you want numbering. Setting it to
-`false` is equivalent to including all your chapters with `-
-my_chapter.md`. Note that even if it is set to `true`, numbering will
-be desactivated for chapters that are included with `- my_chapter.md`.
+An integer that represents the maximum level of numbering for your
+book. E.g., `1` will only number chapters, while `2` will number
+chapters, sections, but not anything below that. `6` is the maximum  level
+and turns numbering on for all headers.
 
-**default**:: `true`
+**default**:: `1`
 
 
 #### numbering_template ####
 
-A string will be used as chapter title. You can use `{{number}}` and
+A string that will be used for chapter titles. You can use `{{number}}` and
 `{{title}}` in this string, e.g.:
 
 ```
@@ -272,9 +307,7 @@ numbering_template: Chapter {{number}} {{title}}
 
 Note that:
 * this string isn't used for unnumbered chapters;
-* this string isn't used for LaTeX, either.
-
-**default**: `{{number}}. {{title}}`
+* this string isn't used by LaTeX, either.
 
 #### autoclean ####
 
@@ -286,72 +319,12 @@ However, if `lang` is set to `fr`, it also tries to add non-breaking
 spaces in front (or after) characters like '?', '!', ';' to respect
 french typography.
 
-**default**: `true`
-
 #### nb_char ####
 
 This option allows you to specify the non breaking character used by
 the french cleaning method (see above). Probably not really something
 you need to modify. 
 
-**default**: `' '` (i.e. narrrow non-breaking space)
-
-### Options for HTML rendering ###
-
-#### html.template ####
-
-A file containing a (mustache) HTML template.
-
-**default**: `None` (built-in template)
-
-#### html.css ####
-
-A file containing a stylesheet for the HTML file.
-
-**default**: `None` (built-in)
-
-### Options for Epub rendering ###
-
-#### epub.template ####
-
-A file containing a (mustache) xhtml template for the files generated
-for each chapter.
-
-**default**: `None` (built-in template)
-
-#### epub.css ####
-
-A file containing a stylesheet for the Epub file.
-
-**default**: `None` (built-in)
-
-### epub_version ###
-
-Sets the version for generated Epub, either 2 or 3.
-
-**default**: `2`
-
-### Options for LaTeX / PDF rendering ###
-
-#### tex.template ####
-
-Sets the LaTeX template.
-
-**default**: `None` (builtin)
-
-#### tex.command ####
-
-The command used to generate a PDF file.
-
-**default**: `pdflatex`
-
-#### tex.links_as_footnotes ####
-
-Display the link in the document, using the `\footnote{}`
-command. This is useful if you want your readers to be able to see the
-URLs in a printed document.
-
-**default**: `true`
 
 ### Additional options ###
 

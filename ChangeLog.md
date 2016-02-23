@@ -3,6 +3,9 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* Option `numbering` now takes an int instead of a boolean, allowing
+  to specify the maximum level to number (e.g. `1`: chapters only,
+  `2`: chapters and sectino, ..., `6`: everything).
 * `--create` can now be used without specifying a `BOOK`, printing its
   result on `stdout`.
 * Added support for numbering all headers, not just level-1 (e.g.,
