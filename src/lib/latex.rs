@@ -119,7 +119,7 @@ impl<'a> LatexRenderer<'a> {
                     2 => content.push_str(r"\section"),
                     3 => content.push_str(r"\subsection"),
                     4 => content.push_str(r"\subsubsection"),
-                    _ => panic!("header level not implemented"),
+                    _ => content.push_str(r"\paragraph"),
                 }
                 if self.current_chapter == Number::Unnumbered {
                     content.push_str("*");
