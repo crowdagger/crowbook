@@ -30,7 +30,7 @@ pub struct HtmlRenderer<'a> {
 
     pub footnotes: Vec<(String, String)>,
     pub current_chapter: [i32;6],
-    pub current_numbering: bool,
+    pub current_numbering: i32,
     pub current_hide: bool,
     table_head: bool,
     footnote_number: u32,
@@ -45,7 +45,7 @@ impl<'a> HtmlRenderer<'a> {
         HtmlRenderer {
             book: book,
             current_chapter: [0, 0, 0, 0, 0, 0],
-            current_numbering: book.get_bool("numbering").unwrap(),
+            current_numbering: book.get_i32("numbering").unwrap(),
             current_hide: false,
             table_head: false,
             footnote_number: 0,
@@ -89,16 +89,16 @@ impl<'a> HtmlRenderer<'a> {
 
         for &(n, ref v) in &self.book.chapters {
             self.current_hide = false;
-            let book_numbering = self.book.get_bool("numbering").unwrap();
+            let book_numbering = self.book.get_i32("numbering").unwrap();
             match n {
-                Number::Unnumbered => self.current_numbering = false,
+                Number::Unnumbered => self.current_numbering = 0,
                 Number::Default => self.current_numbering = book_numbering,
                 Number::Specified(n) => {
                     self.current_numbering = book_numbering;
                     self.current_chapter[0] = n - 1;
                 },
                 Number::Hidden => {
-                    self.current_numbering = false;
+                    self.current_numbering = 0;
                     self.current_hide = true;
                 },
             }
@@ -176,10 +176,10 @@ impl<'a> HtmlRenderer<'a> {
                 if n == 1 && self.current_hide {
                     return String::new();
                 }
-                let s = if n == 1 && self.current_numbering {
+                let s = if n == 1 && self.current_numbering >= 1 {
                     let chapter = self.current_chapter[0];
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
-                } else if self.current_numbering {
+                } else if self.current_numbering >= n {
                     format!("{} {}", self.get_numbers(), self.render_vec(vec))
                 } else {
                     self.render_vec(vec)

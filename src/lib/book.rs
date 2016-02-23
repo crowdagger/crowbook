@@ -46,7 +46,7 @@ output.odt:str                      # Output file name for ODT rendering
 
 
 # Misc options
-numbering:bool:true                 # Toggles chapter/sections numbering
+numbering:int:1                     # The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
 autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
 verbose:bool:false                  # Toggle verbose mode
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub

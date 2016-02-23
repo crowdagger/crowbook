@@ -60,16 +60,16 @@ impl<'a> EpubRenderer<'a> {
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.html.current_hide = false;
-            let book_numbering = self.book.get_bool("numbering").unwrap();
+            let book_numbering = self.book.get_i32("numbering").unwrap();
             match n {
-                Number::Unnumbered => self.html.current_numbering = false,
+                Number::Unnumbered => self.html.current_numbering = 0,
                 Number::Default => self.html.current_numbering = book_numbering,
                 Number::Specified(n) => {
                     self.html.current_numbering = book_numbering;
                     self.html.current_chapter[0] = n - 1;
                 },
                 Number::Hidden => {
-                    self.html.current_numbering = false;
+                    self.html.current_numbering = 0;
                     self.html.current_hide = true;
                 }
             }
@@ -293,7 +293,7 @@ impl<'a> EpubRenderer<'a> {
         self.html.render_end_notes(&mut content);
 
         if title.is_empty() {
-            if self.html.current_numbering {
+            if self.html.current_numbering >= 1 {
                 let number = self.html.current_chapter[0] + 1;
                 title = try!(self.book.get_header(number, ""));
             } else {

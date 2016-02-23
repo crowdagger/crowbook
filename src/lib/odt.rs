@@ -11,7 +11,7 @@ use mustache;
 /// (Experimental)
 pub struct OdtRenderer<'a> {
     book: &'a Book,
-    current_numbering: bool,
+    current_numbering: i32,
     current_hide: bool,
     current_chapter: i32,
     automatic_styles: String,
@@ -23,7 +23,7 @@ impl<'a> OdtRenderer<'a> {
         OdtRenderer {
             book: book,
             current_chapter: 1,
-            current_numbering: book.get_bool("numbering").unwrap(),
+            current_numbering: book.get_i32("numbering").unwrap(),
             current_hide: false,
             automatic_styles: String::from("
 <style:style style:name=\"T1\" style:family=\"text\">
@@ -62,14 +62,14 @@ impl<'a> OdtRenderer<'a> {
         for &(n, ref v) in &self.book.chapters {
             self.current_hide = false;
             match n {
-                Number::Unnumbered => self.current_numbering = false,
-                Number::Default => self.current_numbering = self.book.get_bool("numbering").unwrap(),
+                Number::Unnumbered => self.current_numbering = 0,
+                Number::Default => self.current_numbering = self.book.get_i32("numbering").unwrap(),
                 Number::Specified(n) => {
-                    self.current_numbering = self.book.get_bool("numbering").unwrap();
+                    self.current_numbering = self.book.get_i32("numbering").unwrap();
                     self.current_chapter = n;
                 },
                 Number::Hidden => {
-                    self.current_numbering = false;
+                    self.current_numbering = 0;
                     self.current_hide = true;
                 },
             }
@@ -110,7 +110,7 @@ impl<'a> OdtRenderer<'a> {
                 if n == 1 && self.current_hide {
                     return String::new();
                 }
-                let s = if n == 1 && self.current_numbering {
+                let s = if n == 1 && self.current_numbering >= 1 {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
