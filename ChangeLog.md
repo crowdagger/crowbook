@@ -3,6 +3,8 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* `--create` can now be used without specifying a `BOOK`, printing its
+  result on `stdout`.
 * Added support for numbering all headers, not just level-1 (e.g.,
   having a subsection numbered `2.3.1`).
 * Added a `--list-options` to the binary that prints out all valid

@@ -137,10 +137,140 @@ $ crowbook foo.book --set author Foo --title Bar
 
 will override the book title to `Bar` and its author to `Foo`.
 
+`--list-options`
+----------------
+
+**usage**: `crowbook --list-options`
+
+(or `crowbook -l`)
+
+Displays all the valid options to use either in a book configuration
+file or with `--set`, with a short description. There is also
+`--list-options-md`, which outputs markdown, giving the following
+result:
+
+###  Metadata ###
+- **`author`**
+    - **type**: string
+    - **default value**: `Anonymous`
+    -  The author of the book
+- **`title`**
+    - **type**: string
+    - **default value**: `Untitled`
+    -  The title of the book
+- **`lang`**
+    - **type**: string
+    - **default value**: `en`
+    -  The language of the book
+- **`subject`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Subject of the book (used for EPUB metadata)
+- **`description`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Description of the book (used for EPUB metadata)
+- **`cover`**
+    - **type**: string
+    - **default value**: `not set`
+    -  File name of the cover of the book
+
+###  Output options ###
+- **`output.epub`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for EPUB rendering
+- **`output.html`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for HTML rendering
+- **`output.tex`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for LaTeX rendering
+- **`output.pdf`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for PDF rendering
+- **`output.odt`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Output file name for ODT rendering
+
+###  Misc options ###
+- **`numbering`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  Toggles chapter numbering for whole book
+- **`autoclean`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Toggles cleaning of input markdown (not used for LaTeX)
+- **`verbose`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  Toggle verbose mode
+- **`side_notes`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  Display footnotes as side notes in HTML/Epub
+- **`nb_char`**
+    - **type**: char
+    - **default value**: `' '`
+    -  The non-breaking character to use for autoclean when lang is set to fr
+- **`temp_dir`**
+    - **type**: string
+    - **default value**: `.`
+    -  Path where to create a temporary directory
+- **`numbering_template`**
+    - **type**: string
+    - **default value**: `{{number}}. {{title}}`
+    -  Format of numbered titles
+
+###  HTML options ###
+- **`html.template`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of an HTML template
+- **`html.css`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of a stylesheet to use with HTML rendering
+
+###  EPUB options ###
+- **`epub.version`**
+    - **type**: integer
+    - **default value**: `2`
+    -  The EPUB version to generate
+- **`epub.css`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of a stylesheet to use with EPUB rendering
+- **`epub.template`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of an epub template for chapter
+
+###  LaTeX options ###
+- **`tex.links_as_footnotes`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  If set to true, will add foontotes to URL of links in LaTeX/PDF output
+- **`tex.command`**
+    - **type**: string
+    - **default value**: `pdflatex`
+    -  LaTeX flavour to use for generating PDF
+- **`tex.template`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Path of a LaTeX template file
+
+
+
 `--verbose`
 -----------
 
-**usage**: `crowbook <BOOK>--verbose`
+**usage**: `crowbook <BOOK> --verbose`
 
 If this flag is set, Crowbook will print some more messages.
 
