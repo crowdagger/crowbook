@@ -1,0 +1,12 @@
+title: Test
+
+# Make nb_char visible
+lang: fr
+nb_char: '~'
+
+output.pdf: test_result.pdf
+output.html: test_result.html
+output.epub: test_result.epub
+output.odt: test_result.odt
+
++ test.md
