@@ -76,7 +76,7 @@ lang: en
 
 pub fn create_matches<'a>() -> ArgMatches<'a> {
     let app = App::new("crowbook")
-        .setting(AppSettings::ArgRequiredElseHelp)
+//        .setting(AppSettings::ArgRequiredElseHelp)
         .setting(AppSettings::UnifiedHelpMessage)
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
@@ -100,7 +100,6 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
     let matches = app.get_matches();
 
     pre_check(&matches);
-    
     matches
 }
 
