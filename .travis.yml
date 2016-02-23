@@ -1,14 +1,95 @@
+sudo: false
+
 language: rust
-after_success: |
-  sudo apt-get install libcurl4-openssl-dev libelf-dev libdw-dev &&
-  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
-  tar xzf master.tar.gz && mkdir kcov-master/build && cd kcov-master/build && cmake .. && make &&
-  sudo make install && cd ../.. &&
-  kcov --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo target/kcov target/debug/<<<MY_PROJECT_NAME>>>-*
-rust:
-  - stable
-  - beta
-  - nightly
+
+# NOTE This configuration has only be tested on the stable channel
+rust: stable
+
+os:
+  - linux
+  - osx
+
+env:
+  global:
+    # This will be part of the release tarball
+    # TODO change the project name
+    - PROJECT_NAME=rust-crowbook
+
 matrix:
-  allow_failures:
-    - rust: nightly
+  # Clear the whole matrix
+  exclude:
+    - os: linux
+    - os: osx
+  # Add each target manually
+  # TODO feel free to remove targets you are not interested in
+  # TODO you may want to install packages for specific build jobs, use the addons.apt.packages
+  # pattern shown below
+  include:
+    # WARNING Experimental target. Tests are executed using qemu user emulation, but this approach
+    # may have problems when too many threads are spawned. Also, by the next Rust stable release,
+    # this target will be replaced by `armv7-unknown-linux-gnueabihf`.
+    - os: linux
+      env: TARGET=arm-unknown-linux-gnueabihf
+      # Extra packages only for this build job
+      addons:
+        apt:
+          packages:
+            # Cross compiler and cross compiled C libraries
+            - gcc-arm-linux-gnueabihf
+            - libc6-armhf-cross
+            - libc6-dev-armhf-cross
+            # Emulator
+            - qemu-user
+    - os: linux
+      env: TARGET=i686-unknown-linux-gnu
+      addons:
+        apt:
+          packages:
+            # Cross compiler and cross compiled C libraries
+            - gcc-multilib
+    - os: linux
+      env: TARGET=x86_64-unknown-linux-gnu
+    - os: linux
+      env: TARGET=x86_64-unknown-linux-musl
+    - os: osx
+      env: TARGET=i686-apple-darwin
+    - os: osx
+      env: TARGET=x86_64-apple-darwin
+
+install:
+  - sh ci/install.sh
+
+script:
+  - sh ci/script.sh
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+deploy:
+  provider: releases
+  # TODO Regenerate this api_key for your project, this one won't work for you. Here's how:
+  # - Go to 'https://github.com/settings/tokens/new' and generate a Token with only the
+  # `public_repo` scope enabled
+  # - Call `travis encrypt $github_token` where $github_token is the token you got in the previous
+  # step and `travis` is the official Travis CI gem (see https://rubygems.org/gems/travis/)
+  # - Enter the "encrypted value" below
+  api_key:
+    secure: WN+505gb8SCS+KEPXN2bVcLIArrNV0/xbesSXfwJDBej+e2EjVKrsE9QeqWewhZL461pkYy2PfQPpNst3phgBK61qc2qvSO2R1C3G3Vzg+BD/ySHGNko0W2sYCG7fywrsLDsfNN367aMYUt3UweEvuL2ySd64iQwmvk10Wf4wyl8JdBWgBhzIDy97u0hkh2DaO3EyyM8HSfkWsa5X2uOtM50+OhLEg2SqMVXtaHvhzgBOkT4Qz0USpM9zqyJ12SeMJ7+PoWSgsZRfL5mQUStJnxURyffIiL2guUBRNALHpWTgqjyKrj97t76r9hUywoZwOkA+UCbmNbVCFOzklEl5+ocrbzRWuD+AdLQI3+fVSzgLvVg5cIjXPUApfSPWkiSlxfYEsK2XrVIDZu8QemaMSABaeyzkBt2cNiy2jIHYMBPTxD1aOxKn5bKmh5rQNJvAxBOX7oNwFdrNrj6soerJhZlmOJvUPdkA7H4vbT43cq6UgM1N8vs3sMmeaDifK5HFzA5XYHlkfSKWy3zNrM918oP8B5WxFEDns4WzjXL9CEJZsD3c9+PwvF3w6NnkxR7mjCm6QPoA2NZ1MZdaR1KM15nCwP5znbhBfSGELCMI/4ahhfRafAmCXzDdJ7M1Yx+Kl0H9Xm9HRLEWGTzbYwTOBBH1xooFN1xLKti09iykcM=
+  file: ${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+  # don't delete the artifacts from previous phases
+  skip_cleanup: true
+  # deploy when a new tag is pushed
+  on:
+    tags: true
+
+branches:
+  only:
+    # Pushes and PR to the master branch
+    - master
+    # IMPORTANT Ruby regex to match tags. Required, or travis won't trigger deploys when a new tag
+    # is pushed. This regex matches semantic versions like v1.2.3-rc4+2016.02.22
+    - /^v\d+\.\d+\.\d+.*$/
+
+notifications:
+  email:
+    on_success: never
