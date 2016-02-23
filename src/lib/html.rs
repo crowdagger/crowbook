@@ -34,6 +34,7 @@ pub struct HtmlRenderer<'a> {
     table_head: bool,
     footnote_number: u32,
     pub footnotes: Vec<(String, String)>,
+    verbatim: bool,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -48,6 +49,7 @@ impl<'a> HtmlRenderer<'a> {
             footnote_number: 0,
             footnotes: vec!(),
             epub3: false,
+            verbatim: false
         }
     }
 
@@ -133,7 +135,11 @@ impl<'a> HtmlRenderer<'a> {
     /// Parse a single token.
     pub fn parse_token(&mut self, token: &Token) -> String {
         match *token {
-            Token::Str(ref text) => escape_html(&self.book.clean(text.clone())),
+            Token::Str(ref text) => if self.verbatim {
+                escape_html(text)
+            } else {
+                self.book.clean(text.clone())
+            },
             Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
             Token::Header(n, ref vec) => {
                 if n == 1 && self.current_hide {
@@ -153,12 +159,15 @@ impl<'a> HtmlRenderer<'a> {
             Token::Code(ref vec) => format!("<code>{}</code>", self.render_vec(vec)),
             Token::BlockQuote(ref vec) => format!("<blockquote>{}</blockquote>\n", self.render_vec(vec)),
             Token::CodeBlock(ref language, ref vec) => {
+                self.verbatim = true;
                 let s = self.render_vec(vec);
-                if language.is_empty() {
+                let output = if language.is_empty() {
                     format!("<pre><code>{}</code></pre>\n", s)
                 } else {
                     format!("<pre><code class = \"language-{}\">{}</code></pre>\n", language, s)
-                }
+                };
+                self.verbatim = false;
+                output
             },
             Token::Rule => String::from("<p class = \"rule\">***</p>\n"),
             Token::SoftBreak => String::from(" "),
@@ -179,7 +188,7 @@ impl<'a> HtmlRenderer<'a> {
                                                                 } else {
                                                                     format!(" title = \"{}\"", title)
                                                                 },
-                                                                self.render_vec(vec)),
+                                                                escape_html(&self.render_vec(vec))),
             Token::Image(ref url, ref title, ref alt) => format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
                                                                  url,
                                                                  title,
