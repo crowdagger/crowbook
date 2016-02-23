@@ -3,6 +3,8 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* Added support for numbering all headers, not just level-1 (e.g.,
+  having a subsection numbered `2.3.1`)
 * Added a `--list-options` to the binary that prints out all valid
   options in a config file (or in `set`), their type and default
   value.
