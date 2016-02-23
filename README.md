@@ -118,14 +118,9 @@ you want to hurt your eyes.
 
 Crowbook uses
 [pulldown-cmark](https://crates.io/crates/pulldown-cmark) and thus
-should support most of commonmark Markdown. There are, however, a few
-features that that are not supported:
-
-* Tables and Footnotes are not yet implemented. Tables might be
-  implemented soon, but footnotes are a bit more tricky.
-* HTML in markdown is not implemented, and probably won't be, as the
-  goal is to have books that can also be generated in PDF (and maybe
-  ODT).
+should support most of commonmark Markdown. Inline HTML, however, is
+not implemented, and probably won't be, as the goal is to have books
+that can also be generated in PDF (and maybe ODT).
 
 Maybe the most specific "feature" of Crowbook is that (by default, it
 can be deactivated) tries to "clean" the input files. By default this
@@ -136,13 +131,6 @@ appropriate (e.g. in french you are supposed to put a non-breaking
 space before '?', '!', ';' or ':'). This feature is relatively limited
 at the moment, but I might try to add more options and support for
 more languages.
-
-### Table of Contents ###
-
-Crowbook currently only supports a table of contents for first-level
-headers (e.g. chapters). There is currently no option to integrate it
-in the document, so it is only generated in the EPUB
-format. 
 
 See also [Bugs](Bugs.md).
 
@@ -159,6 +147,12 @@ parsing markdown)
 * [clap](https://github.com/kbknapp/clap-rs) (for parsing command line arguments)
 * [chrono](https://crates.io/crates/chrono) (date and time library)
 * [uuid](https://crates.io/crates/uuid) (to generate uuid)
+
+It also uses configuration files from
+[[rust-everywhere]](https://github.com/japaric/rust-everywhere) to use
+[[Travis]](https://travis-ci.org/) and
+[[Appveyor]](http://www.appveyor.com/) to generate binaries for
+various platforms on each release.
 
 While Crowbook directly doesn't use them, there was also inspiration from [Pandoc](http://pandoc.org/) and [mdBook](https://github.com/azerupi/mdBook).
 
@@ -182,3 +176,5 @@ Crowbook is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License (LGPL),
 version 2.1 or (at your option) any ulterior version. See 
 [LICENSE](LICENSE.md) file for more information.
+
+
