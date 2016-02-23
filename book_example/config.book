@@ -1,35 +1,27 @@
-# Metadatas
+# Metadata
 author: Élisabeth Henry
 title: Crowbook
 description: More like some kind of manual really
 lang: en
 
 # Generic options (though not used with LaTeX)
-numbering:  true
-autoclean: true
+# Display foot notes as side notes 
+side_notes: true
 
 # Latex options
-tex.command: pdflatex
 tex.links_as_footnotes: false
 
 # Epub option
 epub.version: 3
 
 # Options for generating files
-temp_dir: .
-# Specify a) where to write files b) which ones to generate
-
 output.epub: book.epub
 output.html: book.html
 output.pdf: book.pdf
 output.odt: book.odt
-#output.tex: book.tex
 
-
-
-# finally, our files
-# paths are relative to the directory where this file is
+# Finally, our files.
+# Paths are relative to the directory where this file is
 +  ../README.md
 + config.md
 + arguments.md
-
