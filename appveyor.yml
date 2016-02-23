@@ -7,11 +7,11 @@ environment:
     RUST_VERSION: 1.6.0
   # TODO feel free to delete targets you are not interested in
   matrix:
-    - TARGET: i686-pc-windows-gnu
-      MSYS2_BITS: 32
+#    - TARGET: i686-pc-windows-gnu
+#      MSYS2_BITS: 32
     - TARGET: i686-pc-windows-msvc
-    - TARGET: x86_64-pc-windows-gnu
-      MSYS2_BITS: 64
+#    - TARGET: x86_64-pc-windows-gnu
+#      MSYS2_BITS: 64
     - TARGET: x86_64-pc-windows-msvc
 
 # Install Rust and Cargo
