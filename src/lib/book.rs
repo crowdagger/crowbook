@@ -46,7 +46,7 @@ output.odt:str                      # Output file name for ODT rendering
 
 
 # Misc options
-numbering:bool:false                # Toggles chapter numbering for whole book
+numbering:bool:true                 # Toggles chapter/sections numbering
 autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
 verbose:bool:false                  # Toggle verbose mode
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
@@ -97,7 +97,7 @@ impl Book {
                     out.push_str("\n");
                     previous_is_comment = true;
                 }
-                out.push_str(&format!("## {} ##\n", comment));
+                out.push_str(&format!("### {} ###\n", comment));
                 continue;
             }
             previous_is_comment = false;
