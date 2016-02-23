@@ -21,7 +21,7 @@ case $TARGET in
     cargo build --target $TARGET
 
     # run the main executable using the emulator
-#    qemu-arm -L /usr/arm-linux-gnueabihf target/$TARGET/debug/crowbook
+    qemu-arm -L /usr/arm-linux-gnueabihf target/$TARGET/debug/crowbook
     ;;
   *)
     cargo build --target $TARGET --verbose
