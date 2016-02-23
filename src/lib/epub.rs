@@ -287,11 +287,11 @@ impl<'a> EpubRenderer<'a> {
         let mut title = String::new();
 
         for token in v {
-            for footnote in self.html.footnotes.drain(..) {
-                content.push_str(&footnote);
-            }
             content.push_str(&self.parse_token(&token, &mut title));
+            self.html.render_side_notes(&mut content);
         }
+        self.html.render_end_notes(&mut content);
+        
         if title.is_empty() {
             if self.html.current_numbering {
                 self.html.current_chapter += 1;

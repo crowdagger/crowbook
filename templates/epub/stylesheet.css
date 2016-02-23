@@ -12,6 +12,7 @@ p {
     margin:0;
     hyphens: auto;
 }
+
 blockquote {
     margin: 1em;
     font-style: italic;
@@ -79,28 +80,40 @@ p img {
     font-weight: bold;
 }
 
-.table {
-    margin: 1em;
-}
-
 .sidenote {
     display: block;
     float: right;
     width: 30%;
     border: 1px solid black;
     margin: 1em;
-    padding: 1em;
+    padding: .5em;
     margin-right: -1.5em;
 }
 
-.sidenote-number {
+.note-number {
     font-weight: bold;
-    float: left;
-    text-indent: 0;
 }
 
+.sidenote .note-number {
+    float: left;
+}
 
-table {
+.notes {
+    text-align: justify;
+    border: none;
+}
+
+table.notes td {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+                 
+
+.table {
+    margin: 1em;
+}
+
+.table table {
     width: 60%;
     margin: 0 auto;
     border-style: solid thin;
@@ -108,13 +121,13 @@ table {
     border-collapse: collapse;
 }
 
-table th, table td {
+.table table th, .table table td {
     border-style: solid;
     border-width: 1px;
     text-align: center;
 }
 
-table th {
+.table table th {
     font-weight: bold;
     font-variant: small-caps;
 }

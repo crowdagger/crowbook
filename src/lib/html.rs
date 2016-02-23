@@ -27,12 +27,13 @@ use mustache;
 /// Also used by Epub.
 pub struct HtmlRenderer<'a> {
     pub current_chapter: i32,
+    epub3: bool,
     book: &'a Book,
     pub current_numbering: bool,
     pub current_hide: bool,
     table_head: bool,
     footnote_number: u32,
-    pub footnotes: Vec<String>,
+    pub footnotes: Vec<(String, String)>,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -46,6 +47,7 @@ impl<'a> HtmlRenderer<'a> {
             table_head: false,
             footnote_number: 0,
             footnotes: vec!(),
+            epub3: false,
         }
     }
 
@@ -86,15 +88,35 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
+    /// display side notes if option is to true
+    pub fn render_side_notes(&mut self, res: &mut String) {
+        if self.book.get_bool("side_notes").unwrap() {
+            for (note_number, footnote) in self.footnotes.drain(..) {
+                res.push_str(&format!("<div class = \"sidenote\">\n{} {}\n</div>\n", note_number, footnote));
+            }
+        }
+    }
+
+    // display end notes, if side_notes option is set to false
+    pub fn render_end_notes(&mut self, res: &mut String) {
+        if !self.footnotes.is_empty() {
+            res.push_str("<h2 class = \"notes\">Notes</h2>");
+            res.push_str("<table class = \"notes\">");
+            for (note_number, footnote) in self.footnotes.drain(..) {
+                res.push_str(&format!("<tr class = \"notes\"><td class = \"notes\">{}</td><td class = \"notes\">{}</td></tr>\n", note_number, footnote));
+            }
+            res.push_str("</table>");
+        }
+    }
+    
     ///
     pub fn render_html(&mut self, tokens: &[Token])-> String {
         let mut res = String::new();
         for token in tokens {
-            for footnote in self.footnotes.drain(..) {
-                res.push_str(&footnote);
-            }
             res.push_str(&self.parse_token(&token));
+            self.render_side_notes(&mut res);
         }
+        self.render_end_notes(&mut res);
         res
     }
 
@@ -111,8 +133,8 @@ impl<'a> HtmlRenderer<'a> {
     /// Parse a single token.
     pub fn parse_token(&mut self, token: &Token) -> String {
         match *token {
-            Token::Str(ref text) => escape_html(&*text),
-            Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.book.clean(self.render_vec(vec))),
+            Token::Str(ref text) => escape_html(&self.book.clean(text.clone())),
+            Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
             Token::Header(n, ref vec) => {
                 if n == 1 && self.current_hide {
                     return String::new();
@@ -129,7 +151,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),
             Token::Code(ref vec) => format!("<code>{}</code>", self.render_vec(vec)),
-            Token::BlockQuote(ref vec) => format!("<blockquote>{}</blockquote>\n", self.book.clean(self.render_vec(vec))),
+            Token::BlockQuote(ref vec) => format!("<blockquote>{}</blockquote>\n", self.render_vec(vec)),
             Token::CodeBlock(ref language, ref vec) => {
                 let s = self.render_vec(vec);
                 if language.is_empty() {
@@ -141,7 +163,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::Rule => String::from("<p class = \"rule\">***</p>\n"),
             Token::SoftBreak => String::from(" "),
             Token::HardBreak => String::from("<br />\n"),
-            Token::List(ref vec) => format!("<ul>\n{}</ul>\n", self.book.clean(self.render_vec(vec))),
+            Token::List(ref vec) => format!("<ul>\n{}</ul>\n", self.render_vec(vec)),
             Token::OrderedList(n, ref vec) => format!("<ol{}>\n{}</ol>\n",
                                                       if n != 1 {
                                                           format!(" start = \"{}\"", n)
@@ -149,18 +171,18 @@ impl<'a> HtmlRenderer<'a> {
                                                           String::new()
                                                       },
                                                       self.render_vec(vec)),
-            Token::Item(ref vec) => format!("<li>{}</li>\n", self.book.clean(self.render_vec(vec))),
+            Token::Item(ref vec) => format!("<li>{}</li>\n", self.render_vec(vec)),
             Token::Link(ref url, ref title, ref vec) => format!("<a href = \"{}\"{}>{}</a>",
-                                                    url,
-                                                    if title.is_empty() {
-                                                        String::new()
-                                                    } else {
-                                                        format!(" title = \"{}\"", title)
-                                                    },
-                                                    self.render_vec(vec)),
+                                                                url,
+                                                                if title.is_empty() {
+                                                                    String::new()
+                                                                } else {
+                                                                    format!(" title = \"{}\"", title)
+                                                                },
+                                                                self.render_vec(vec)),
             Token::Image(ref url, ref title, ref alt) => format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
-                                                     url,
-                                                     title,
+                                                                 url,
+                                                                 title,
                                                                  self.render_vec(alt)),
             Token::Table(_, ref vec) => format!("<div class = \"table\">
     <table>\n{}
@@ -178,16 +200,22 @@ impl<'a> HtmlRenderer<'a> {
                 format!("<tr>\n{}</tr>\n", s)
             },
             Token::Footnote(ref vec) => {
-                let s = self.render_vec(vec);
                 self.footnote_number += 1;
-                let footnote = format!("<div class = \"sidenote\">
-  <p class = \"sidenote-number\">
-   {}:
-  </p>
-{}
-</div>", self.footnote_number, s);
-                self.footnotes.push(footnote);
-                format!("<sup>{}</sup>", self.footnote_number)
+                let number = self.footnote_number;
+                assert!(!vec.is_empty());
+
+                let note_number = format!("<p class = \"note-number\">
+  <a href = \"#note-source-{}\">[{}]</a>:
+</p>", number, number);
+
+                let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
+                                    if self.epub3 {r#"epub:type="footnote"#}else{""},
+                                    number, self.render_vec(vec));
+                self.footnotes.push((note_number, inner));
+                
+                format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
+                        if self.epub3 {"epub:type = \"noteref\""} else {""},
+                        number, number, number)
             },
         }
     }

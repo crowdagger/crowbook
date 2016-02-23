@@ -18,6 +18,7 @@ epub.version: 3
 # Options for generating files
 temp_dir: .
 # Specify a) where to write files b) which ones to generate
+
 output.epub: book.epub
 output.html: book.html
 output.pdf: book.pdf

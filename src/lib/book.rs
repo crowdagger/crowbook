@@ -29,20 +29,20 @@ pub enum Number {
     Specified(i32), //chapter number set to specified number
 }
 
-static VALID_BOOLS:&'static [&'static str] = &["numbering", "autoclean", "verbose", "tex.links_as_footnotes"];
+static VALID_BOOLS:&'static [&'static str] = &["numbering", "autoclean", "verbose", "tex.links_as_footnotes", "side_notes"];
 static VALID_CHARS:&'static [&'static str] = &["nb_char"];
 static VALID_INTS:&'static [&'static str] = &["epub.version"];
 static VALID_STRINGS:&'static [&'static str] = &["lang", "author", "description", "title", "subject", "cover", "output.epub",
                                                  "output.html", "output.pdf", "output.tex", "output.odt", "temp_dir",
                                                  "numbering_template", "tex.command", "tex.template",
-                                                 "epub.css", "epub.template", "epub.version", "html.template", "html.css"];
+                                                 "epub.css", "epub.template", "html.template", "html.css"];
 static DEFAULT_OPTIONS: &'static[(&'static str, &'static str)] = &[("verbose", "false"), ("numbering", "true"),
                                                                    ("autoclean", "true"), ("lang", "fr"),
                                                                    ("author", "Anonymous"), ("title", "Untitled"),
                                                                    ("nb_char", "' '"), ("tex.command", "pdflatex"),
                                                                    ("numbering_template", "{{number}}. {{title}}"),
                                                                    ("temp_dir", "."), ("tex.links_as_footnotes", "true"),
-                                                                   ("epub.version", "2")];
+                                                                   ("epub.version", "2"), ("side_notes", "true")];
 
 
 // Configuration of the book
@@ -343,7 +343,7 @@ impl Book {
     pub fn render_all(&self) -> Result<()> {
         let mut did_some_stuff = false;
         
-        if self.get_option("output_epub").is_ok() {
+        if self.get_option("output.epub").is_ok() {
             did_some_stuff = true;
             try!(self.render_epub());
         }
