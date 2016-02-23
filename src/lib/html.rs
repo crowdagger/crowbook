@@ -179,10 +179,12 @@ impl<'a> HtmlRenderer<'a> {
                 let s = if n == 1 && self.current_numbering {
                     let chapter = self.current_chapter[0];
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
-                } else {
+                } else if self.current_numbering {
                     format!("{} {}", self.get_numbers(), self.render_vec(vec))
+                } else {
+                    self.render_vec(vec)
                 };
-                format!("<h{}>{}</h{}>\n", n, self.book.clean(s), n)
+                format!("<h{}>{}</h{}>\n", n, s, n)
             },
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),
