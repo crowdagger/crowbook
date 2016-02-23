@@ -66,7 +66,7 @@ impl<'a> EpubRenderer<'a> {
                 Number::Default => self.html.current_numbering = book_numbering,
                 Number::Specified(n) => {
                     self.html.current_numbering = book_numbering;
-                    self.html.current_chapter = n;
+                    self.html.current_chapter[0] = n - 1;
                 },
                 Number::Hidden => {
                     self.html.current_numbering = false;
@@ -291,11 +291,11 @@ impl<'a> EpubRenderer<'a> {
             self.html.render_side_notes(&mut content);
         }
         self.html.render_end_notes(&mut content);
-        
+
         if title.is_empty() {
             if self.html.current_numbering {
-                self.html.current_chapter += 1;
-                title = format!("Chapitre {}", self.html.current_chapter);
+                let number = self.html.current_chapter[0] + 1;
+                title = try!(self.book.get_header(number, ""));
             } else {
                 return Err(Error::Render("chapter without h1 tag is not OK if numbering is off"));
             }
@@ -318,31 +318,26 @@ impl<'a> EpubRenderer<'a> {
     fn parse_token(&mut self, token: &Token, title: &mut String) -> String {
         match *token {
             Token::Header(n, ref vec) => {
-                if n == 1 && self.html.current_hide {
-                    if title.is_empty() {
-                        *title = self.html.render_vec(vec);
-                    } else {
-                        self.book.debug("Warning: detected two chapter titles inside the same markdown file...");
-                        self.book.debug("...in a file where chapter titles are not even rendered.");
-                    }
-                    return String::new();
-                }
-                let s = if n == 1 && self.html.current_numbering {
-                    let chapter = self.html.current_chapter;
-                    self.html.current_chapter += 1;
-                    self.book.get_header(chapter, &self.html.render_vec(vec)).unwrap()
-                } else {
-                    self.html.render_vec(vec)
-                };
                 if n == 1 {
-                    if title.is_empty() {
-                        *title = s.clone();
+                    if self.html.current_hide {
+                        if title.is_empty() {
+                            *title = self.html.render_vec(vec);
+                        } else {
+                            self.book.debug("Warning: detected two chapter titles inside the same markdown file...");
+                            self.book.debug("...in a file where chapter titles are not even rendered.");
+                        }
                     } else {
-                        self.book.debug("Warning: detected two chapters inside the same markdown file.");
-                        self.book.debug(&format!("conflict between: {} and {}", title, s));
+                        let res = self.book.get_header(self.html.current_chapter[0] + 1, &self.html.render_vec(vec));
+                        let s = res.unwrap();
+                        if title.is_empty() {
+                            *title = s;
+                        } else {
+                            self.book.debug("Warning: detected two chapters inside the same markdown file.");
+                            self.book.debug(&format!("conflict between: {} and {}", title, s));
+                        }
                     }
                 }
-                format!("<h{}>{}</h{}>\n", n, s, n)
+                self.html.parse_token(token)
             },
             _ => self.html.parse_token(token)
         }

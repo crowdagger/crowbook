@@ -26,14 +26,16 @@ use mustache;
 ///
 /// Also used by Epub.
 pub struct HtmlRenderer<'a> {
-    pub current_chapter: i32,
-    epub3: bool,
     book: &'a Book,
+
+    pub footnotes: Vec<(String, String)>,
+    pub current_chapter: [i32;6],
     pub current_numbering: bool,
     pub current_hide: bool,
     table_head: bool,
     footnote_number: u32,
-    pub footnotes: Vec<(String, String)>,
+
+    epub3: bool,
     verbatim: bool,
 }
 
@@ -42,7 +44,7 @@ impl<'a> HtmlRenderer<'a> {
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         HtmlRenderer {
             book: book,
-            current_chapter: 1,
+            current_chapter: [0, 0, 0, 0, 0, 0],
             current_numbering: book.get_bool("numbering").unwrap(),
             current_hide: false,
             table_head: false,
@@ -51,6 +53,34 @@ impl<'a> HtmlRenderer<'a> {
             epub3: false,
             verbatim: false
         }
+    }
+
+    /// Increase a header
+    pub fn inc_header(&mut self, n: i32) {
+        let n = n as usize;
+        assert!(n < self.current_chapter.len());
+        self.current_chapter[n] += 1;
+        for i in n+1..self.current_chapter.len() {
+            self.current_chapter[i] = 0;
+        }
+    }
+
+    /// Returns a "x.y.z"
+    pub fn get_numbers(&self) -> String {
+        let mut output = String::new();
+        for i in 0..self.current_chapter.len() {
+            if self.current_chapter[i] == 0 {
+                if i == self.current_chapter.len() - 1 {
+                    break;
+                }
+                let bools:Vec<_> = self.current_chapter[i+1..].iter().map(|x| *x != 0).collect();
+                if !bools.contains(&true) {
+                    break;
+                }
+            }
+            output.push_str(&format!("{}.", self.current_chapter[i])); //todo
+        }
+        output
     }
 
     /// Render books as a standalone HTML file
@@ -65,7 +95,7 @@ impl<'a> HtmlRenderer<'a> {
                 Number::Default => self.current_numbering = book_numbering,
                 Number::Specified(n) => {
                     self.current_numbering = book_numbering;
-                    self.current_chapter = n;
+                    self.current_chapter[0] = n - 1;
                 },
                 Number::Hidden => {
                     self.current_numbering = false;
@@ -142,15 +172,15 @@ impl<'a> HtmlRenderer<'a> {
             },
             Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
             Token::Header(n, ref vec) => {
+                self.inc_header(n - 1);
                 if n == 1 && self.current_hide {
                     return String::new();
                 }
                 let s = if n == 1 && self.current_numbering {
-                    let chapter = self.current_chapter;
-                    self.current_chapter += 1;
+                    let chapter = self.current_chapter[0];
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
                 } else {
-                    self.render_vec(vec)
+                    format!("{} {}", self.get_numbers(), self.render_vec(vec))
                 };
                 format!("<h{}>{}</h{}>\n", n, self.book.clean(s), n)
             },
