@@ -3,6 +3,9 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* Added a `--list-options` to the binary that prints out all valid
+  options in a config file (or in `set`), their type and default
+  value.
 * Refactored `Book` to use an HashMap of `BookOption`s instead of
   having like 42 fields.
 * Tables and Footnotes are now implemented for the parser, and
