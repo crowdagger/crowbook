@@ -138,7 +138,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::Str(ref text) => if self.verbatim {
                 escape_html(text)
             } else {
-                self.book.clean(text.clone())
+                escape_html(&self.book.clean(text.clone()))
             },
             Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
             Token::Header(n, ref vec) => {
@@ -188,7 +188,7 @@ impl<'a> HtmlRenderer<'a> {
                                                                 } else {
                                                                     format!(" title = \"{}\"", title)
                                                                 },
-                                                                escape_html(&self.render_vec(vec))),
+                                                                self.render_vec(vec)),
             Token::Image(ref url, ref title, ref alt) => format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
                                                                  url,
                                                                  title,
@@ -214,7 +214,7 @@ impl<'a> HtmlRenderer<'a> {
                 assert!(!vec.is_empty());
 
                 let note_number = format!("<p class = \"note-number\">
-  <a href = \"#note-source-{}\">[{}]</a>:
+  <a href = \"#note-source-{}\">[{}]</a>
 </p>", number, number);
 
                 let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
