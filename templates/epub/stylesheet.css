@@ -92,6 +92,7 @@ p img {
 
 .note-number {
     font-weight: bold;
+    margin-right: 1em;
 }
 
 .sidenote .note-number {
