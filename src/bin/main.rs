@@ -87,6 +87,20 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
 fn main() {
     let matches = create_matches();
 
+    if matches.is_present("list-options") {
+        println!("{}", Book::description(false));
+        exit(0);
+    }
+    
+    if matches.is_present("list-options-md") {
+        println!("{}", Book::description(true));
+        exit(0);
+    }
+
+    if !matches.is_present("BOOK") {
+        print_error("You must pass the file of a book configuration file");
+    }
+
     if matches.is_present("create") {
         create_book(&matches);
     }

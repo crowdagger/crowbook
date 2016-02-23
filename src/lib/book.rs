@@ -29,20 +29,45 @@ pub enum Number {
     Specified(i32), //chapter number set to specified number
 }
 
-static VALID_BOOLS:&'static [&'static str] = &["numbering", "autoclean", "verbose", "tex.links_as_footnotes", "side_notes"];
-static VALID_CHARS:&'static [&'static str] = &["nb_char"];
-static VALID_INTS:&'static [&'static str] = &["epub.version"];
-static VALID_STRINGS:&'static [&'static str] = &["lang", "author", "description", "title", "subject", "cover", "output.epub",
-                                                 "output.html", "output.pdf", "output.tex", "output.odt", "temp_dir",
-                                                 "numbering_template", "tex.command", "tex.template",
-                                                 "epub.css", "epub.template", "html.template", "html.css"];
-static DEFAULT_OPTIONS: &'static[(&'static str, &'static str)] = &[("verbose", "false"), ("numbering", "true"),
-                                                                   ("autoclean", "true"), ("lang", "fr"),
-                                                                   ("author", "Anonymous"), ("title", "Untitled"),
-                                                                   ("nb_char", "' '"), ("tex.command", "pdflatex"),
-                                                                   ("numbering_template", "{{number}}. {{title}}"),
-                                                                   ("temp_dir", "."), ("tex.links_as_footnotes", "true"),
-                                                                   ("epub.version", "2"), ("side_notes", "true")];
+static OPTIONS:&'static str = "
+# Metadata
+author:str:Anonymous                # The author of the book
+title:str:Untitled                  # The title of the book
+lang:str:en                         # The language of the book
+subject:str                         # Subject of the book (used for EPUB metadata)
+description:str                     # Description of the book (used for EPUB metadata)
+cover:str                           # File name of the cover of the book 
+# Output options
+output.epub:str                     # Output file name for EPUB rendering
+output.html:str                     # Output file name for HTML rendering
+output.tex:str                      # Output file name for LaTeX rendering
+output.pdf:str                      # Output file name for PDF rendering
+output.odt:str                      # Output file name for ODT rendering
+
+
+# Misc options
+numbering:bool:false                # Toggles chapter numbering for whole book
+autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
+verbose:bool:false                  # Toggle verbose mode
+side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
+nb_char:char:' '                    # The non-breaking character to use for autoclean when lang is set to fr
+temp_dir:str:.                      # Path where to create a temporary directory
+numbering_template:str:{{number}}. {{title}} # Format of numbered titles
+
+# HTML options
+html.template:str                   # Path of an HTML template
+html.css:str                        # Path of a stylesheet to use with HTML rendering
+
+# EPUB options
+epub.version:int:2                  # The EPUB version to generate
+epub.css:str                        # Path of a stylesheet to use with EPUB rendering
+epub.template:str                   # Path of an epub template for chapter
+
+# LaTeX options
+tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL of links in LaTeX/PDF output
+tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
+tex.template:str                    # Path of a LaTeX template file
+";
 
 
 // Configuration of the book
@@ -53,19 +78,107 @@ pub struct Book {
 
     /// book options
     options: HashMap<String, BookOption>,
+    valid_bools: Vec<&'static str>,
+    valid_chars: Vec<&'static str>,
+    valid_strings: Vec<&'static str>,
+    valid_ints: Vec<&'static str>,
 }
 
 
 
 impl Book {
-    // Creates a new Book with default options
+    /// Returns a description for all options
+    pub fn description(md: bool) -> String {
+        let mut out = String::new();
+        let mut previous_is_comment = true;
+        for (comment, key, o_type, default) in Book::options_to_vec() {
+            if key.is_none() {
+                if !previous_is_comment {
+                    out.push_str("\n");
+                    previous_is_comment = true;
+                }
+                out.push_str(&format!("## {} ##\n", comment));
+                continue;
+            }
+            previous_is_comment = false;
+            let o_type = match o_type.unwrap() {
+                "bool" => "boolean",
+                "int" => "integer",
+                "char" => "char",
+                "str" => "string",
+                _ => unreachable!()
+            };
+            let def = if let Some(value) = default {
+                value
+            } else {
+                "not set"
+            };
+            if md {
+                out.push_str(&format!("- **`{}`**
+    - **type**: {}
+    - **default value**: `{}`
+    - {}\n", key.unwrap(), o_type, def, comment));
+            } else {
+                out.push_str(&format!("- {} (type: {}) (default: {}) {}\n", key.unwrap(), o_type, def,comment));
+            }
+        }
+        out
+    }
+
+    /// OPTIONS str to a vec of tuples (comment, key, type, default value)
+    fn options_to_vec() -> Vec<(&'static str, Option<&'static str>,
+                                Option<&'static str>, Option<&'static str>)> {
+        let mut out = vec!();
+        for line in OPTIONS.lines() {
+            let line = line.trim();
+            if line.is_empty() {
+                continue;
+            }
+            if line.starts_with('#') {
+                out.push((&line[1..], None, None, None));
+                continue;
+            }
+            let v:Vec<_> = line.split('#').collect();
+            let content = v[0];
+            let comment = v[1];
+            let v:Vec<_> = content.split(':').collect();
+            let key = Some(v[0].trim());
+            let option_type = Some(v[1].trim());
+            let default_value = if v.len() > 2 {
+                Some(v[2].trim())
+            } else {
+                None
+            };
+            out.push((comment, key, option_type, default_value));
+        }
+        out
+    }
+    
+    /// Creates a new Book with default options
     pub fn new() -> Book {
         let mut book = Book {
             chapters: vec!(),
             options: HashMap::new(),
+            valid_bools:vec!(),
+            valid_chars:vec!(),
+            valid_ints:vec!(),
+            valid_strings:vec!(),
         };
-        for &(key, value) in DEFAULT_OPTIONS {
-            book.set_option(key, value).unwrap();
+        for (_, key, option_type, default_value) in Book::options_to_vec() {
+            if key.is_none() {
+                continue;
+            }
+            let key = key.unwrap();
+            match option_type.unwrap() {
+                "str" => book.valid_strings.push(key),
+                "bool" => book.valid_bools.push(key),
+                "int" => book.valid_ints.push(key),
+                "char" => book.valid_chars.push(key),
+                _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
+            }
+            if let Some(value) = default_value {
+                book.set_option(key, value).unwrap();
+            }
         }
         book
     }
@@ -193,10 +306,10 @@ impl Book {
 
     /// Sets an option
     pub fn set_option(&mut self, key: &str, value: &str) -> Result<()> {
-        if VALID_STRINGS.contains(&key) {
+        if self.valid_strings.contains(&key) {
             self.options.insert(key.to_owned(), BookOption::String(value.to_owned()));
             Ok(())
-        } else if VALID_CHARS.contains(&key) {
+        } else if self.valid_chars.contains(&key) {
             let words: Vec<_> = value.trim().split('\'').collect();
             if words.len() != 3 {
                 return Err(Error::ConfigParser("could not parse char", String::from(value)));
@@ -207,7 +320,7 @@ impl Book {
             }
             self.options.insert(key.to_owned(), BookOption::Char(chars[0]));
             Ok(())
-        } else if VALID_BOOLS.contains(&key) {
+        } else if self.valid_bools.contains(&key) {
             match value.parse::<bool>() {
                 Ok(b) => {
                     self.options.insert(key.to_owned(), BookOption::Bool(b));
@@ -216,7 +329,7 @@ impl Book {
                 Err(_) => return Err(Error::ConfigParser("could not parse bool", format!("{}:{}", key, value))),
             }
             Ok(())
-        } else if VALID_INTS.contains(&key) {
+        } else if self.valid_ints.contains(&key) {
             match value.parse::<i32>() {
                 Ok(i) => {
                     self.options.insert(key.to_owned(), BookOption::Int(i));

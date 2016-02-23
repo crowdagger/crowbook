@@ -80,13 +80,6 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .setting(AppSettings::UnifiedHelpMessage)
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
-        .after_help("Command line options allow to override options defined in <BOOK> configuration file. 
-E.g., even if this file specifies 'verbose: false', calling 'crowbook --verbose <BOOK>' 
-will activate verbose mode.
-
-Note that Crowbook generates output files relatively to the directory where <BOOK> is:
-$ crowbook foo/bar.book --to pdf --output baz.pdf
-will thus generate baz.pdf in directory foo and not in current directory.")
         .arg_from_usage("-v, --verbose 'Activate verbose mode'")
         .arg_from_usage("--create 'Creates a new book with existing markdown files.'")
         .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file.'")
@@ -97,9 +90,11 @@ will thus generate baz.pdf in directory foo and not in current directory.")
              .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
         .arg(Arg::from_usage("-s, --set [KEY_VALUES] 'Sets a list of book options'")
              .min_values(2))
+        .arg(Arg::from_usage("-l --list-options 'Lists all possible options"))
+        .arg_from_usage("--list-options-md 'List all options, formatted in Markdown")
         .arg(Arg::with_name("BOOK")
              .index(1)
-             .required(true)
+//             .required(true)
              .help("File containing the book configuration."));
 
     let matches = app.get_matches();
