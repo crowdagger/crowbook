@@ -38,14 +38,16 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 /// create a book file with the command line arguments
 /// and exit the process at the end
 pub fn create_book(matches: &ArgMatches) -> ! {
-    if let Some(values) = matches.values_of("FILES") {
-        let s = matches.value_of("BOOK").unwrap();
-        if fs::metadata(s).is_ok() {
-            print_error(&format!("Could not create file {}: it already exists!", s));
+    let mut f:Box<Write> = if let Some(book) = matches.value_of("BOOK") {
+        if fs::metadata(book).is_ok() {
+            print_error(&format!("Could not create file {}: it already exists!", book));
         }
-
-        let mut f = fs::File::create(s).unwrap();
-
+        Box::new(fs::File::create(book).unwrap())
+    } else {
+        Box::new(io::stdout())
+    };
+        
+    if let Some(values) = matches.values_of("create") {
         if matches.is_present("set") {
             let mut book = Book::new();
             let s = set_book_options(&mut book, matches);
@@ -67,10 +69,15 @@ lang: en
         for file in values {
             f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
         }
-        println!("Created {}, now you'll have to complete it!", s);
+        if let Some(s) = matches.value_of("BOOK") {
+            println!("Created {}, now you'll have to complete it!", s);
+        }
         exit(0);
     } else {
-        print_error("--create must be used with a list of additonal files");
+        print_error("--create must be used with a list of additonal files.
+
+USAGE:
+\tcrowbook [BOOK] --create <MARKDOWN_FILES>");
     }
 }
 
@@ -81,11 +88,9 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
         .arg_from_usage("-v, --verbose 'Activate verbose mode'")
-        .arg_from_usage("--create 'Creates a new book with existing markdown files.'")
+        .arg_from_usage("--create [FILES]... 'Creates a new book with existing markdown files.'")
         .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file.'")
              .requires("to"))
-        .arg(Arg::from_usage("[FILES]... 'Files to list in book when using --create'")
-             .index(2))
         .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
              .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
         .arg(Arg::from_usage("-s, --set [KEY_VALUES] 'Sets a list of book options'")

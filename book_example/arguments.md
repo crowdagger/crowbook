@@ -7,11 +7,13 @@ Crowbook can takes a list of arguments:
 Render a markdown book in Epub, PDF or HTML.
 
 USAGE:
-        crowbook [OPTIONS] <BOOK> [--] [ARGS]
+        crowbook [OPTIONS] [--] [ARGS]
 
 OPTIONS:
         --create              Creates a new book with existing markdown files.
     -h, --help                Prints help information
+    -l, --list-options        Lists all possible option
+        --list-options-md     List all options, formatted in Markdow
     -o, --output <FILE>       Specifies output file.
     -s, --set <KEY_VALUES>    Sets a list of book options
     -t, --to <FORMAT>         Generate specific format [values: epub, pdf, html, tex, odt]
@@ -21,18 +23,22 @@ OPTIONS:
 ARGS:
     <BOOK>        File containing the book configuration.
     <FILES>...    Files to list in book when using --create
+```
 
 Command line options allow to override options defined in <BOOK> configuration file. 
 E.g., even if this file specifies 'verbose: false', calling 'crowbook --verbose <BOOK>' 
 will activate verbose mode.
 
-Note that Crowbook generates output files relatively to the directory where <BOOK> is:
-$ crowbook foo/bar.book --to pdf --output baz.pdf
-will thus generate baz.pdf in directory foo and not in current directory.
+Note that Crowbook generates output files relatively to the directory
+where <BOOK> is:
 ```
+$ crowbook foo/bar.book --to pdf --output baz.pdf
+```
+will thus generate baz.pdf in directory foo and not in current directory.
 
-The most important ones is obviously <BOOK>, i.e. the file
-configuration book. It is mandatory: if you don't pass it, `crowbook`
+The most important option obviously <BOOK>, i.e. the file
+configuration book. It is mandatory for most options: if you don't
+pass it, `crowbook` 
 will simply display this help message. In a normal use case this is
 the only argument you'll need to pass, and `crowbook` will generate
 the book in all formats specified in the configuration file.
@@ -42,16 +48,18 @@ It is, however, possible to pass more arguments to `crowbook`.
 `--create`
 ---------
 
-**Usage**: `crowbook --create <BOOK> file_1.md file_2.md ...`
+**Usage**: `crowbook [BOOK] --create file_1.md file_2.md ...`
 
-Creates a new book from a list of Markdown files. It will generate the
-file `BOOK` (or abort if it already exists) with all file names
-specified added as chapters.
+Creates a new book from a list of Markdown files. It will generate a
+book configuration file with alle file names specified as
+chapter. It either prints the result to stdout (if `BOOK` is not
+specified) or generate the file `BOOK` (or abort if it already
+exists). 
 
 ### Examples ###
 
 ```
-crowbook --create foo.book README.md ChangeLog.md LICENSE.md
+crowbook foo.book --create  README.md ChangeLog.md LICENSE.md
 ```
 
 will generate a file `foo.book` containing:
@@ -75,11 +83,19 @@ lang: en
 + LICENSE.md
 ```
 
+while
+
+```
+crowbook --create README.md ChangeLog.md LICENSE.md
+```
+
+will prints the same result, but to stdout (without creating a file).
+
 When `crowbook` is runned with `--create`, it can also uses the
 keys/values set by `--set` (see below):
 
 ```
-$ crowbook --create foo.book file1.md file2.md --set author "Pierre
+$ crowbook foo.book --create file1.md file2.md --set author "Pierre
 Dupont" title "Mon œeuvre" lang fr
 ```
 

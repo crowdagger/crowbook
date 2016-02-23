@@ -97,14 +97,16 @@ fn main() {
         exit(0);
     }
 
+    if matches.is_present("create") {
+        create_book(&matches);
+    }
+
     if !matches.is_present("BOOK") {
         print_error(&format!("You must pass the file of a book configuration file.\n\n{}\n\nFor more information try --help.",
                             matches.usage()));
     }
 
-    if matches.is_present("create") {
-        create_book(&matches);
-    }
+
 
     // ok to unwrap since clap checks it's there
     let s = matches.value_of("BOOK").unwrap();
