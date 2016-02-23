@@ -1,11 +1,13 @@
 extern crate crowbook;
 use self::crowbook::cleaner::{French, Cleaner};
+mod test_helper;
+use test_helper::test_eq;
 
 #[test]
 fn cleaner_default() {
     let mut res = String::from("   Remove    supplementary   spaces    but    don't    trim     either   ");
     ().clean(&mut res);
-    assert_eq!(&res, " Remove supplementary spaces but don't trim either ");
+    test_eq(&res, " Remove supplementary spaces but don't trim either ");
 }
 
 
@@ -15,5 +17,5 @@ fn cleaner_french() {
     let french = French::new('~');
     french.clean(&mut res);
     println!("{}", &res);
-    assert_eq!(&res, " «~Comment allez-vous~?~» demanda-t-elle à son interlocutrice qui lui répondit~: «~Mais très bien ma chère~!~»");
+    test_eq(&res, " «~Comment allez-vous~?~» demanda-t-elle à son interlocutrice qui lui répondit~: «~Mais très bien ma chère~!~»");
 }

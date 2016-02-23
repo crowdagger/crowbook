@@ -1,6 +1,7 @@
 extern crate crowbook;
-
 use self::crowbook::{Parser, Token};
+mod test_helper;
+use test_helper::test_eq;
 
 fn parse_from_str(doc: &str) -> Vec<Token> {
     let mut parser = Parser::new();
@@ -62,9 +63,9 @@ fn rule() {
 another one";
     let expected = r#"[Paragraph([Str("a paragraph")]), Rule, Paragraph([Str("another one")])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(&result, expected);
+    test_eq(&result, expected);
 }
-        
+
 #[test]
 fn lists() {
     let doc = "
@@ -76,7 +77,7 @@ fn lists() {
 ";
     let expected = r#"[List([Item([Str("banana"), OrderedList(3, [Item([Str("3")])]), List([Item([Str("4")])])]), Item([Str("apple")]), Item([Str("orange")])])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -89,7 +90,7 @@ normal paragraph
 ";
     let expected = "[Paragraph([Str(\"normal paragraph\")]), BlockQuote([Paragraph([Str(\"some\"), SoftBreak, Str(\"blockquote\")])])]";
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -107,7 +108,7 @@ rust code block
 ";
     let expected = r#"[Paragraph([Str("normal paragraph")]), CodeBlock("", [Str("code block\n")]), CodeBlock("rust", [Str("rust code block\n")])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -119,7 +120,7 @@ fn strong_emphasis() {
 ";
     let expected = r#"[Paragraph([Emphasis([Str("normal emphasis")])]), Paragraph([Strong([Str("strong emphasis")])])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -127,7 +128,7 @@ fn code() {
     let doc = "some `code` inlined";
     let expected = r#"[Paragraph([Str("some "), Code([Str("code")]), Str(" inlined")])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -139,7 +140,7 @@ fn image_reference() {
 ";
     let expected = r#"[Paragraph([Image("http://foo.bar/baz.png", "Title", [Str("alt text")])])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -147,7 +148,7 @@ fn image_inline() {
     let doc = "![alt text](http://foo.bar/baz.png \"Title\")";
     let expected = r#"[Paragraph([Image("http://foo.bar/baz.png", "Title", [Str("alt text")])])]"#;
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }                           
 
 #[test]
@@ -160,7 +161,7 @@ fn table_simple() {
 ";
     let expected = "[Table(3, [TableHead([TableCell([Str(\" A             \")]), TableCell([Str(\" Simple        \")]), TableCell([Str(\" Table \")])]), TableRow([TableCell([Str(\" bla           \")]), TableCell([Str(\" bla           \")]), TableCell([Str(\"  bla  \")])]), TableRow([TableCell([Str(\" bla           \")]), TableCell([Str(\" bla           \")]), TableCell([Str(\"  bla  \")])])])]";
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]
@@ -170,7 +171,7 @@ fn foonote_correct() {
 [^1]: with a valid definition";
     let expected = "[Paragraph([Str(\"A foonote\"), Footnote([Paragraph([Str(\"with a valid definition\")])]), Str(\"...\")]), SoftBreak]";
     let result = format!("{:?}", parse_from_str(doc));
-    assert_eq!(result, expected);
+    test_eq(&result, expected);
 }
 
 #[test]

@@ -1,6 +1,7 @@
 extern crate crowbook;
-
 use self::crowbook::{Parser, HtmlRenderer, Book, Token};
+mod test_helper;
+use test_helper::test_eq;
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new();
@@ -61,5 +62,7 @@ Some paragraph
 <p><a href = \"http://foo/bar?baz=42&coin=plop\">&amp; some link</a></p>
 ";
     let actual = ast_to_html(&Parser::new().parse(doc).unwrap());
-    assert_eq!(actual, expected);
+    println!("ecpected:\n {}", expected);
+    println!("actual:\n {}", actual);
+    test_eq(&actual, &expected);
 }
