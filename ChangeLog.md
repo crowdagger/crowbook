@@ -3,6 +3,9 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* New option `display_toc` allows to display the table of contents
+  (whose name, at least for HTML, is specified by `toc_name`) in HTML
+  and PDF documents.
 * Option `numbering` now takes an int instead of a boolean, allowing
   to specify the maximum level to number (e.g. `1`: chapters only,
   `2`: chapters and sectino, ..., `6`: everything).
