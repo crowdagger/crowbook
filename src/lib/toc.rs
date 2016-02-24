@@ -53,6 +53,10 @@ impl Toc {
                     *level = elem.level;
                 }
             } else if elem.level < *level {
+                for i in (elem.level..*level).rev() {
+                    content.push_str(&format!("{}</ul>\n",
+                                              iter::repeat(' ').take(i as usize).collect::<String>()));
+                }
                 *level = elem.level;
             }
             let spaces:String = iter::repeat(' ').take(elem.level as usize).collect();
@@ -63,9 +67,9 @@ impl Toc {
                 content.push_str(&format!("{}</ul>\n",
                                           iter::repeat(' ').take(i as usize).collect::<String>()));
             }
+            *level = elem.level;
             content.push_str(&format!("{}</li>\n", spaces));
-
-
+            
         }
         content
     }
