@@ -30,6 +30,7 @@ pub mod book;
 pub mod epub;
 pub mod latex;
 pub mod odt;
+pub mod toc;
 
 pub use book::Book;
 pub use error::{Result, Error};
@@ -39,6 +40,7 @@ pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
+pub use toc::Toc;
 
 mod zipper;
 mod templates;

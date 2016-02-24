@@ -141,7 +141,7 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
     
-    ///
+    /// Renders the HML of a chapter
     pub fn render_html(&mut self, tokens: &[Token])-> String {
         let mut res = String::new();
         for token in tokens {
