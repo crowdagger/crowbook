@@ -29,12 +29,13 @@ use mustache;
 pub struct HtmlRenderer<'a> {
     book: &'a Book,
 
-    toc: Toc,
+    pub toc: Toc,
     link_number: u32,
     pub footnotes: Vec<(String, String)>,
     pub current_chapter: [i32;6],
     pub current_numbering: i32,
     pub current_hide: bool,
+    pub filename: String,
     table_head: bool,
     footnote_number: u32,
 
@@ -56,7 +57,8 @@ impl<'a> HtmlRenderer<'a> {
             footnote_number: 0,
             footnotes: vec!(),
             epub3: false,
-            verbatim: false
+            verbatim: false,
+            filename: String::new(),
         }
     }
 
@@ -205,7 +207,11 @@ impl<'a> HtmlRenderer<'a> {
                 };
                 self.link_number += 1;
                 if n <= self.current_numbering {
-                    self.toc.add(n, format!("#link-{}", self.link_number), s.clone());
+                    self.toc.add(n,
+                                 format!("{}#link-{}",
+                                            self.filename,
+                                            self.link_number),
+                                 s.clone());
                 }
                 format!("<h{} id = \"link-{}\">{}</h{}>\n",
                         n, self.link_number, s, n)

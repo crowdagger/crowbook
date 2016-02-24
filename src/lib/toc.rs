@@ -3,7 +3,8 @@ use std::iter;
 
 /// A structure for manipulating Table Of Content
 pub struct Toc {
-    elements: Vec<TocElement>
+    elements: Vec<TocElement>,
+    numbered: bool,
 }
 
 impl Toc {
@@ -11,7 +12,13 @@ impl Toc {
     pub fn new() -> Toc {
         Toc {
             elements: vec!(),
+            numbered: false,
         }
+    }
+
+    /// Sets numbering of the Toc
+    pub fn numbered(&mut self, numbered: bool) {
+        self.numbered = numbered;
     }
 
     /// Adds an element 
@@ -28,8 +35,9 @@ impl Toc {
         let mut level = 0;
         output.push_str(&self.render_vec(&mut x, &mut level));
         for i in (0..level).rev() {
-            output.push_str(&format!("{}</ul>",
-                                     iter::repeat(' ').take(i as usize).collect::<String>()));
+            output.push_str(&format!("{}</{}>",
+                                     iter::repeat(' ').take(i as usize).collect::<String>(),
+                                     if self.numbered {"ol"} else {"ul"}));
         }
         output
     }
@@ -48,14 +56,16 @@ impl Toc {
 
             if elem.level > *level {
                 for i in *level..elem.level {
-                    content.push_str(&format!("{}<ul>\n",
-                                              iter::repeat(' ').take(i as usize).collect::<String>()));
+                    content.push_str(&format!("{}{}\n",
+                                              iter::repeat(' ').take(i as usize).collect::<String>(),
+                                              if self.numbered {"<ol>"} else {"<ul>"}));
                     *level = elem.level;
                 }
             } else if elem.level < *level {
                 for i in (elem.level..*level).rev() {
-                    content.push_str(&format!("{}</ul>\n",
-                                              iter::repeat(' ').take(i as usize).collect::<String>()));
+                    content.push_str(&format!("{}</{}>\n",
+                                              iter::repeat(' ').take(i as usize).collect::<String>(),
+                                              if self.numbered {"ol"} else {"ul"}));
                 }
                 *level = elem.level;
             }
@@ -65,8 +75,9 @@ impl Toc {
             content.push_str(&self.render_vec(x, level));
 
             for i in (elem.level..*level).rev() {
-                content.push_str(&format!("{}</ul>\n",
-                                          iter::repeat(' ').take(i as usize).collect::<String>()));
+                content.push_str(&format!("{}</{}>\n",
+                                          iter::repeat(' ').take(i as usize).collect::<String>(),
+                                          if self.numbered {"ol"} else {"ul"}));
             }
             *level = elem.level;
             content.push_str(&format!("{}</li>\n", spaces));

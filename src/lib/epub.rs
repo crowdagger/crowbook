@@ -43,9 +43,11 @@ pub struct EpubRenderer<'a> {
 impl<'a> EpubRenderer<'a> {
     /// Creates a new Epub renderer
     pub fn new(book: &'a Book) -> EpubRenderer<'a> {
+        let mut html = HtmlRenderer::new(book);
+        html.toc.numbered(true);
         EpubRenderer {
             book: book,
-            html: HtmlRenderer::new(book),
+            html: html,
             toc: vec!(),
         }
     }
@@ -59,6 +61,7 @@ impl<'a> EpubRenderer<'a> {
 
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
+            self.html.filename = filenamer(i);
             self.html.current_hide = false;
             let book_numbering = self.book.get_i32("numbering").unwrap();
             match n {
@@ -261,13 +264,7 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render nav.xhtml
     fn render_nav(&self) -> Result<String> {
-        let mut content = String::new();
-        for (x, ref title) in self.toc.iter().enumerate() {
-            let link = filenamer(x);
-            content.push_str(&format!("<li><a href = \"{}\">{}</a></li>\n",
-                                 link,
-                                 title));
-        }           
+        let content = self.html.toc.render();
         
         let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::NAV} else {NAV});
         let data = self.book.get_mapbuilder("none")
