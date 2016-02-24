@@ -58,6 +58,17 @@ impl<'a> LatexRenderer<'a> {
     /// Render latex in a string
     pub fn render_book(&mut self) -> Result<String> {
         let mut content = String::from("");
+
+        // set tex numbering and toc display to book's parameters
+        let numbering = self.book.get_i32("numbering").unwrap() - 1;
+        content.push_str(&format!("\\setcounter{{tocdepth}}{{{}}}
+\\setcounter{{secnumdepth}}{{{}}}\n",
+                                  numbering, numbering));
+        
+        if self.book.get_bool("display_toc").unwrap() {
+            content.push_str("\\tableofcontents\n");
+        }
+        
         for &(n, ref v) in &self.book.chapters {
             self.current_chapter = n;
             content.push_str(&self.render_vec(v, true));

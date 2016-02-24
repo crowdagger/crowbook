@@ -11,15 +11,26 @@ body {
     margin-left: 15%;
     margin-right: 15%;
 }
+nav {
+    display: none;
+}
+#toc ul {
+    list-style-type: none;
+}
+    
     </style>
 
 
-  </head>
+  </head>  
   <body>
+    <nav>
+      {{{toc}}}
+    </nav>
     <header>
       <h1 class="title">{{title}}</h1>
       <h2 class="author">{{author}}</h2>
     </header>
+    
     {{{content}}}
   </body>
 </html>

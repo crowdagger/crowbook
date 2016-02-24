@@ -19,6 +19,7 @@ use escape::escape_html;
 use token::Token;
 use book::{Book, Number};
 use error::{Error,Result};
+use toc::Toc;
 
 use mustache;
 
@@ -28,6 +29,8 @@ use mustache;
 pub struct HtmlRenderer<'a> {
     book: &'a Book,
 
+    toc: Toc,
+    link_number: u32,
     pub footnotes: Vec<(String, String)>,
     pub current_chapter: [i32;6],
     pub current_numbering: i32,
@@ -44,6 +47,8 @@ impl<'a> HtmlRenderer<'a> {
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         HtmlRenderer {
             book: book,
+            toc: Toc::new(),
+            link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
             current_numbering: book.get_i32("numbering").unwrap(),
             current_hide: false,
@@ -104,12 +109,26 @@ impl<'a> HtmlRenderer<'a> {
             }
             content.push_str(&self.render_html(v));
         }
+        let toc = self.toc.render();
+
+        // If display_toc, display the toc inline
+        if self.book.get_bool("display_toc").unwrap() {
+            content = format!("<h1>{}</h1>
+<div id = \"toc\">
+{}
+</div>
+{}",
+                              self.book.get_str("toc_name").unwrap(),
+                              &toc,
+                              content);
+        }
 
         let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("style",
                         &try!(self.book.get_template("html.css")))
+            .insert_str("toc", toc)
             .build();
 
         let mut res:Vec<u8> = vec!();
@@ -184,7 +203,12 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     self.render_vec(vec)
                 };
-                format!("<h{}>{}</h{}>\n", n, s, n)
+                self.link_number += 1;
+                if n <= self.current_numbering {
+                    self.toc.add(n, format!("#link-{}", self.link_number), s.clone());
+                }
+                format!("<h{} id = \"link-{}\">{}</h{}>\n",
+                        n, self.link_number, s, n)
             },
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),

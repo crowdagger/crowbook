@@ -7,6 +7,7 @@ lang: en
 # Generic options (though not used with LaTeX)
 ## Number chapters and sections, but not below that
 numbering: 2
+display_toc: true
 # Display foot notes as side notes
 #side_notes: true
 

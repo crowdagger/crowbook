@@ -60,7 +60,8 @@ impl Toc {
                 *level = elem.level;
             }
             let spaces:String = iter::repeat(' ').take(elem.level as usize).collect();
-            content.push_str(&format!("{}<li>{}\n", spaces, elem.title));
+            content.push_str(&format!("{}<li><a href = \"{}\">{}</a>\n",
+                                      spaces, elem.url, elem.title));
             content.push_str(&self.render_vec(x, level));
 
             for i in (elem.level..*level).rev() {

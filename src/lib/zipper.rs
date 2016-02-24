@@ -124,6 +124,15 @@ impl Zipper {
 
     /// generate a pdf file into given file name
     pub fn generate_pdf(&mut self, command: &str, tex_file: &str, pdf_file: &str) -> Result<String> {
+        // first pass
+        let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
+        try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
+        let _ = Command::new(command)
+            .arg(tex_file)
+            .output();
+        try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
+
+        // second pass
         let mut command = Command::new(command);
         command.arg(tex_file);
         self.run_command(command, pdf_file)
