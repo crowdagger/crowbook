@@ -38,12 +38,12 @@ Some paragraph
 
 [& some link](http://foo/bar?baz=42&coin=plop)
 ";
-    let expected = "<h1>Foo</h1>
-<pre><code class = \"language-rust\">fn min(x: &amp;u32, y: u32) -&gt; &amp;u32 {
+    let expected = r#"<h1 id = "link-1">Foo</h1>
+<pre><code class = "language-rust">fn min(x: &amp;u32, y: u32) -&gt; &amp;u32 {
     if x &lt; y { x } else { y }
 }
 </code></pre>
-<h2>Bar</h2>
+<h2 id = "link-2">Bar</h2>
 <p>Some paragraph</p>
 <ul>
 <li><p>a list</p>
@@ -54,13 +54,13 @@ Some paragraph
 <li><p>another item</p>
 </li>
 </ul>
-<ol start = \"3\">
+<ol start = "3">
 <li>three</li>
 <li>four</li>
 <li>five</li>
 </ol>
-<p><a href = \"http://foo/bar?baz=42&coin=plop\">&amp; some link</a></p>
-";
+<p><a href = "http://foo/bar?baz=42&coin=plop">&amp; some link</a></p>
+"#;
     let actual = ast_to_html(&Parser::new().parse(doc).unwrap());
     println!("ecpected:\n {}", expected);
     println!("actual:\n {}", actual);
