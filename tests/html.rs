@@ -5,7 +5,7 @@ use test_helper::test_eq;
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new();
-    book.set_option("numbering", "false").unwrap();
+    book.set_option("numbering", "0").unwrap();
     let mut html = HtmlRenderer::new(&book);
     html.render_vec(v)
 }
