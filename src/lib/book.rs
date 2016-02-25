@@ -23,10 +23,14 @@ use mustache::MapBuilder;
 /// Numbering for a given chapter
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Number {
-    Hidden, // chapter's title is hidden
-    Unnumbered, // chapter is not numbered
-    Default, // chapter follows books numbering, number is given automatically
-    Specified(i32), //chapter number set to specified number
+    /// chapter's title is hidden
+    Hidden,
+    /// chapter is not numbered
+    Unnumbered,
+    /// chapter follows books numbering, number is given automatically
+    Default,
+    /// chapter number set to specified number
+    Specified(i32), 
 }
 
 static OPTIONS:&'static str = "
@@ -380,7 +384,7 @@ impl Book {
                     continue;
                 } else {
                     // end multiline
-                    try!(self.set_option(&prev_key, &prev_value));
+                    try!(self.set_option(&prev_key, prev_value.trim()));
                     multiline = false;
                 }
             }
