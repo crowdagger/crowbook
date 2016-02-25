@@ -6,7 +6,7 @@ is all you'll have to add (assuming you'll already have the book in
 Markdown files; if you don't, you'll also have to write a book first,
 but that's besides the scope of this document).
 
-The format is not very complicated. This is an example of it:
+The format is not very complicated, and it looks a bit like YAML. This is an example of it:
 
 ```
 # metadata
@@ -125,6 +125,33 @@ title: My title
 
 If you *do* use quotes, Crowbook will actually put those quotes in the
 string, so basically don't do that.
+
+It is possible to use multiline strings with either `>` or `|`, and
+then indenting the lines that are part of the string:
+
+```
+title: >
+ A
+ long
+ title
+author: Joan Doe
+```
+
+will set `title` to `"A long title"`, whereas
+
+```
+title: >
+ A
+ long
+ title
+author: Joan Doe
+```
+
+will set `title` to `"A\nlong\ntitle\n"` (replicating line returns).
+
+This feature is useful for options like `description` who may take a
+long string.
+
 
 ### Options summary ###
 

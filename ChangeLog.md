@@ -3,6 +3,8 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
+* Added support for multiline strings in `.book` files, with either
+  '|' (preserving line returns) or '>' (transforming line returns in spaces)
 * New option `display_toc` allows to display the table of contents
   (whose name, at least for HTML, is specified by `toc_name`) in HTML
   and PDF documents.

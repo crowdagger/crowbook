@@ -361,7 +361,31 @@ impl Book {
             Ok(words[0])
         }
 
+        let mut multiline = false;
+        let mut join_new_line = false;
+        let mut prev_key = String::new();
+        let mut prev_value = String::new();
+
         for line in s.lines() {
+            // If we are multiline mode, we already have a key and a (building) value
+            if multiline {
+                if line.starts_with(' ') {
+                    // multiline continues
+                    prev_value.push_str(line.trim());
+                    if join_new_line {
+                        prev_value.push_str("\n");
+                    } else {
+                        prev_value.push_str(" ");
+                    }
+                    continue;
+                } else {
+                    // end multiline
+                    try!(self.set_option(&prev_key, &prev_value));
+                    multiline = false;
+                }
+            }
+
+            
             let line = line.trim();
             if line.is_empty() || line.starts_with('#') {
                 continue;
@@ -396,8 +420,19 @@ impl Book {
                 }
                 let key = parts[0].trim();
                 let value = parts[1].trim();
-                try!(self.set_option(key, value));
+                match value {
+                    ">" | "|" => { // multiline string
+                        multiline = true;
+                        join_new_line = value == "|";
+                        prev_key = key.to_owned();
+                        prev_value = String::new();
+                    },
+                    _ => try!(self.set_option(key, value)),
+                }
             }
+        }
+        if multiline {
+            try!(self.set_option(&prev_key, &prev_value));
         }
 
         Ok(())

@@ -16,10 +16,19 @@ nav {
     margin-right: 10%;
     transition: margin-left 1s;
 }
-
 #toc ul, #toc li, #nav ul, #nav li {
     list-style-type: none;
 }
+
+#toc li:before {
+    content: none;
+}
+
+#nav li:before {
+    content: none;
+}
+                    
+                    
 #nav ul {
     margin-left: 0;
     padding-right: 1em;

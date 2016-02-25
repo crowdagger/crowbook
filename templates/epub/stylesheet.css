@@ -133,9 +133,9 @@ table.notes td {
     font-variant: small-caps;
 }
 
-li {
+ul li {
     list-style-type: none;
 }
-li:before {
+ul li:before {
     content: "– "; 
 }
