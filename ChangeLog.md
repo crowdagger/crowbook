@@ -3,27 +3,33 @@ ChangeLog
 
 0.2.0 (unreleased) 
 ------------------
-* Added support for multiline strings in `.book` files, with either
-  '|' (preserving line returns) or '>' (transforming line returns in spaces)
-* New option `display_toc` allows to display the table of contents
-  (whose name, at least for HTML, is specified by `toc_name`) in HTML
-  and PDF documents.
-* Option `numbering` now takes an int instead of a boolean, allowing
-  to specify the maximum level to number (e.g. `1`: chapters only,
-  `2`: chapters and sectino, ..., `6`: everything).
-* `--create` can now be used without specifying a `BOOK`, printing its
-  result on `stdout`.
-* Added support for numbering all headers, not just level-1 (e.g.,
-  having a subsection numbered `2.3.1`).
-* Added a `--list-options` to the binary that prints out all valid
-  options in a config file (or in `set`), their type and default
-  value.
+* Command line arguments:
+    * New argument `--print-template` now allows to a built-in template.
+    * New argument `--list-options` prints out all valid
+      options in a config file (or in `set`), their type and default
+      value.
+    * New argument `--set` allows to define or override whatever
+      option set in a book configuration.
+    * `--create` can now be used without specifying a `BOOK`, printing
+      its result on `stdout`.
+* Configuration file:
+    * Added support for multiline strings in `.book` files, with
+      either '|' (preserving line returns) or '>' (transforming line
+      returns in spaces) 
+    * New option `display_toc` allows to display the table of contents
+      (whose name, at least for HTML, is specified by `toc_name`) in
+      HTML and PDF documents.
+    * Option `numbering` now takes an int instead of a boolean,
+      allowing to specify the maximum level to number (e.g. `1`:
+      chapters only, `2`: chapters and sectino, ..., `6`: everything).
+* Rendering: 
+    * Added support for numbering all headers, not just level-1 (e.g.,
+      having a subsection numbered `2.3.1`).
+    * Tables and Footnotes are now implemented for HTML/Epub and LaTeX
+      output. 
 * Refactored `Book` to use an HashMap of `BookOption`s instead of
   having like 42 fields.
-* Tables and Footnotes are now implemented for the parser, and
-  Rendered via \footnote{} for latex, and via side notes for HTML.
-* `crowbook` now have a `--set` option, allowing to define or override
-  whatever option set in a book configuration.
+
 
 0.1.0 (2016-02-21)
 ------------------
