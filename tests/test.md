@@ -25,7 +25,12 @@ One with **strong** and __more strong__.
 
 Combination of *empasis and __bold__*
 
-~~Strikethroughs~~ are not handled, are they ?
+a dash-yes
+
+two dashes -- cool
+
+three dashes --- neat
+
 
 ## Unordered list ##
 
