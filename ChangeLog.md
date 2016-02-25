@@ -4,7 +4,8 @@ ChangeLog
 0.2.0 (unreleased) 
 ------------------
 * Command line arguments:
-    * New argument `--print-template` now allows to a built-in template.
+    * New argument `--print-template` now allows to print a built-in
+      template to stdout. 
     * New argument `--list-options` prints out all valid
       options in a config file (or in `set`), their type and default
       value.
