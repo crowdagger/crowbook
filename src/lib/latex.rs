@@ -144,7 +144,7 @@ impl<'a> LatexRenderer<'a> {
             Token::Strong(ref vec) => format!("\\textbf{{{}}}", self.render_vec(vec, escape)),
             Token::Code(ref vec) => format!("\\texttt{{{}}}", self.render_vec(vec, escape)),
             Token::BlockQuote(ref vec) => format!("\\begin{{quotation}}\n{}\\end{{quotation}}\n", self.render_vec(vec, escape)),
-            Token::CodeBlock(_, ref vec) => format!("\\begin{{verbatim}}\n{}\\end{{verbatim}}\n", self.render_vec(vec, false)),
+            Token::CodeBlock(_, ref vec) => format!("\\begin{{spverbatim}}\n{}\\end{{spverbatim}}\n", self.render_vec(vec, false)),
             Token::Rule => String::from("\\HRule\n"),
             Token::SoftBreak => String::from(" "),
             Token::HardBreak => String::from("\n"),
