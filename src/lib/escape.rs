@@ -35,6 +35,7 @@ pub fn escape_tex(input: &str) -> String {
     let mut output = String::new();
     for c in input.chars() {
         match c {
+            '-' => output.push_str(r"-{}"),
             '&' => output.push_str(r"\&"),
             '%' => output.push_str(r"\%"),
             '$' => output.push_str(r"\$"),
