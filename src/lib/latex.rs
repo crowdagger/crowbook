@@ -151,10 +151,20 @@ impl<'a> LatexRenderer<'a> {
             Token::List(ref vec) => format!("\\begin{{itemize}}\n{}\\end{{itemize}}", self.render_vec(vec, escape)),
             Token::OrderedList(_, ref vec) => format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n", self.render_vec(vec, escape)),
             Token::Item(ref vec) => format!("\\item {}\n", self.render_vec(vec, escape)),
-            Token::Link(ref url, _, ref vec) => if self.book.get_bool("tex.links_as_footnotes").unwrap() {
-                format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", escape_tex(url), self.render_vec(vec, escape), escape_tex(url))
-            } else {
-                format!("\\href{{{}}}{{{}}}", escape_tex(url), self.render_vec(vec, escape))
+            Token::Link(ref url, _, ref vec) => {
+                let content = self.render_vec(vec, escape);
+                let url = escape_tex(url);
+                println!("content: {}, url: {}", content, url);
+                if content == url {
+                    println!("content = url");
+                    format!("\\url{{{}}}", content)
+                } else {
+                    if self.book.get_bool("tex.links_as_footnotes").unwrap() {
+                        format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", url, content, url)
+                    } else {
+                        format!("\\href{{{}}}{{{}}}", url, content)
+                    }
+                }
             },
             Token::Image(_, _, _) => {
                 self.book.debug("warning: including images is not yet supported for tex output");
