@@ -1,8 +1,5 @@
-extern crate crowbook;
-use crowbook::Toc;
-
-mod test_helper;
-use test_helper::test_eq;
+use toc::Toc;
+use super::test_eq;
 
 #[test]
 fn toc_simple() {
