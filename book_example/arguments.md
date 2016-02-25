@@ -10,19 +10,19 @@ USAGE:
         crowbook [OPTIONS] [--] [ARGS]
 
 OPTIONS:
-        --create              Creates a new book with existing markdown files.
-    -h, --help                Prints help information
-    -l, --list-options        Lists all possible option
-        --list-options-md     List all options, formatted in Markdow
-    -o, --output <FILE>       Specifies output file.
-    -s, --set <KEY_VALUES>    Sets a list of book options
-    -t, --to <FORMAT>         Generate specific format [values: epub, pdf, html, tex, odt]
-    -V, --version             Prints version information
-    -v, --verbose             Activate verbose mode
+        --create <FILES>...            Creates a new book with existing markdown files.
+    -h, --help                         Prints help information
+    -l, --list-options                 Lists all possible option
+        --list-options-md              List all options, formatted in Markdow
+    -o, --output <FILE>                Specifies output file.
+        --print-template <TEMPLATE>    Displays the default value of a template.
+    -s, --set <KEY_VALUES>             Sets a list of book options
+    -t, --to <FORMAT>                  Generate specific format [values: epub, pdf, html, tex, odt]
+    -V, --version                      Prints version information
+    -v, --verbose                      Activate verbose mode
 
 ARGS:
-    <BOOK>        File containing the book configuration.
-    <FILES>...    Files to list in book when using --create
+    <BOOK>    File containing the book configuration.
 ```
 
 Command line options allow to override options defined in <BOOK> configuration file. 

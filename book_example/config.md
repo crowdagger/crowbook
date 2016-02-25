@@ -152,8 +152,8 @@ will set `title` to `"A\nlong\ntitle\n"` (replicating line returns).
 This feature is useful for options like `description` who may take a
 long string.
 
-
-### Options summary ###
+Here is the complete list of options, with a short description. The
+usage of some of them is detailed later on.
 
 ###  Metadata ###
 - **`author`**
@@ -208,6 +208,14 @@ long string.
     - **type**: integer
     - **default value**: `1`
     -  The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
+- **`display_toc`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If true, display a table of content in the document
+- **`toc_name`**
+    - **type**: string
+    - **default value**: `Table of contents`
+    -  Name of the table of contents if toc is displayed in line
 - **`autoclean`**
     - **type**: boolean
     - **default value**: `true`
@@ -270,6 +278,7 @@ long string.
     - **type**: string
     - **default value**: `not set`
     -  Path of a LaTeX template file
+
 
 ### Output options ###
 

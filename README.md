@@ -113,10 +113,9 @@ rendered in [HTML](http://lise-henry.github.io/crowbook/book.html) and
 
 LaTeX output is a bit more tricky: it should work reasonably well for
 novels (the primary target of Crowbook), but `pdflatex` might occasionally
-choke on some « weird » unicode character. Moreover, the rendering of code blocks is not
-satisfactory and images are not yet implemented. See the example book
-rendered in [PDF](http://lise-henry.github.io/crowbook/book.pdf) on
-github.io to get an idea of the problems you might encounter.
+choke on some « weird » unicode character. Moreover, images are not yet
+implemented (but should come soon). See the example book rendered in
+[PDF](http://lise-henry.github.io/crowbook/book.pdf) on github.io.
 
 ODT output is experimental at best. It might work if your inputs files
 only include very basic formatting (basically, headers, emphasis and
