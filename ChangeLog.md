@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+0.2.2 (unreleased)
+------------------
+* Bugfixes:
+    * French cleaner now correctly replaces space after — (in
+      e.g. dialogs) with "em space"
+
+
 0.2.1 (2016-02-25)
 ------------------
 * Bugfixes:
