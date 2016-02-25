@@ -193,7 +193,9 @@ impl<'a> HtmlRenderer<'a> {
             },
             Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
             Token::Header(n, ref vec) => {
-                self.inc_header(n - 1);
+                if self.current_numbering >= n {
+                    self.inc_header(n - 1);
+                }
                 if n == 1 && self.current_hide {
                     return String::new();
                 }

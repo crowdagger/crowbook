@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.2.1 (unreleased)
+------------------
+* Bugfixes:
+    * HTML/Epub rendering no longer incorrectly increment chapter
+      count for unnumbered chapters
+
 0.2.0 (2016-02-25) 
 ------------------
 * Command line arguments:

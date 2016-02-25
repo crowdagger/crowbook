@@ -1,6 +1,8 @@
 Crowbook
 ========
 
+[![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
+
 Render a markdown book in HTML, Epub or PDF.
 
 Crowbook's purpose is to allow you to automatically generate multiple
@@ -8,7 +10,7 @@ outputs formats from a book written in Markdown. Its main focus is
 novels, and the default settings should (hopefully) generate readables
 book with correct typography.
 
-[![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
+
 
 Installing
 ----------
