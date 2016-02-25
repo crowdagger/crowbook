@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.2.0 (unreleased) 
+0.2.0 (2016-02-25) 
 ------------------
 * Command line arguments:
     * New argument `--print-template` now allows to print a built-in
@@ -27,9 +27,10 @@ ChangeLog
     * Added support for numbering all headers, not just level-1 (e.g.,
       having a subsection numbered `2.3.1`).
     * Tables and Footnotes are now implemented for HTML/Epub and LaTeX
-      output. 
-* Refactored `Book` to use an HashMap of `BookOption`s instead of
-  having like 42 fields.
+    output.
+* Internal:
+    * Refactored `Book` to use an HashMap of `BookOption`s instead of
+      having like 42 fields.
 
 
 0.1.0 (2016-02-21)
