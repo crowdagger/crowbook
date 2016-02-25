@@ -542,7 +542,7 @@ impl Book {
             "html.css" => (self.get_str("html.css"), html::CSS),
             "html.template" => (self.get_str("html.template"), html::TEMPLATE),
             "tex.template" => (self.get_str("tex.template"), latex::TEMPLATE),
-            _ => panic!("")//return Err(Error::ConfigParser("invalid template", template.to_owned())),
+            _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
         };
         if let Ok (s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(s.to_owned())));

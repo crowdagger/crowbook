@@ -83,7 +83,6 @@ USAGE:
 
 pub fn create_matches<'a>() -> ArgMatches<'a> {
     let app = App::new("crowbook")
-//        .setting(AppSettings::ArgRequiredElseHelp)
         .setting(AppSettings::UnifiedHelpMessage)
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
@@ -97,9 +96,9 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
              .min_values(2))
         .arg(Arg::from_usage("-l --list-options 'Lists all possible options"))
         .arg_from_usage("--list-options-md 'List all options, formatted in Markdown")
+        .arg_from_usage("--print-template [TEMPLATE] 'Displays the default value of a template.'")
         .arg(Arg::with_name("BOOK")
              .index(1)
-//             .required(true)
              .help("File containing the book configuration."));
 
     let matches = app.get_matches();

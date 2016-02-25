@@ -97,6 +97,19 @@ fn main() {
         exit(0);
     }
 
+    if matches.is_present("print-template") {
+        let template = matches.value_of("print-template").unwrap();
+        let book = Book::new();
+        let result = book.get_template(template.as_ref());
+        match result {
+            Ok(s) => {
+                println!("{}", s);
+                exit(0);
+            }
+            Err(_) => print_error(&format!("{} is not a valid template name.", template)),
+        }
+    }
+
     if matches.is_present("create") {
         create_book(&matches);
     }
