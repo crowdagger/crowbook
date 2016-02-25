@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.2.2 (unreleased)
+0.2.2 (2016-02-25)
 ------------------
 * Bugfixes:
     * French cleaner now correctly replaces space after — (in
