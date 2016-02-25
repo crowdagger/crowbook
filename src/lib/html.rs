@@ -206,7 +206,7 @@ impl<'a> HtmlRenderer<'a> {
                     self.render_vec(vec)
                 };
                 self.link_number += 1;
-                if n <= self.current_numbering {
+                if n <= self.book.get_i32("numbering").unwrap() {
                     self.toc.add(n,
                                  format!("{}#link-{}",
                                             self.filename,

@@ -17,7 +17,7 @@
 
 pub mod html {
     pub static TEMPLATE:&'static str = include_str!("../../templates/template.html");
-    pub static CSS:&'static str = include_str!("../../templates/epub/stylesheet.css");
+    pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
 }
 
 pub mod latex {

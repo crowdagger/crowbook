@@ -1,0 +1,41 @@
+nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 20%;
+    overflow-y: auto;
+    font-size: 80%;
+    margin-left: 0;
+    background: #F0F0F0;
+}
+#content {
+    position: absolute;
+    overflow-y: auto;
+    margin-left: 10%;
+    margin-right: 10%;
+    transition: margin-left 1s;
+}
+
+#toc ul, #nav ul {
+    list-style-type: none;
+}
+#nav ul {
+    margin-left: 0;
+    padding-right: 1em;
+    padding-left: 1em;
+}
+#menu {
+    position: fixed;
+    top: 0em;
+    left: 1em;
+    transition: left 1s;
+}
+#menu-button {
+    width: 1.5em;
+}
+
+#nav {
+    left: -20%;
+    transition: left 1s;
+}

@@ -132,3 +132,10 @@ table.notes td {
     font-weight: bold;
     font-variant: small-caps;
 }
+
+li {
+    list-style-type: none;
+}
+li:before {
+    content: "– "; 
+}
