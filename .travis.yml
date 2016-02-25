@@ -13,7 +13,7 @@ env:
   global:
     # This will be part of the release tarball
     # TODO change the project name
-    - PROJECT_NAME=rust-crowbook
+    - PROJECT_NAME=crowbook
 
 matrix:
   # Clear the whole matrix
