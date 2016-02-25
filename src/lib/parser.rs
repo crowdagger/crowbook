@@ -25,19 +25,43 @@ use std::collections::HashMap;
 use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OPTION_ENABLE_TABLES};
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
+///
+/// This AST can then be used by various renderes.
+///
+/// As this Parser uses Pulldown-cmark's one, it should be able to parse most
+/// *valid* CommonMark variant of Markdown.
+///
+/// Compared to other Markdown parser, it might fail more often on invalid code, e.g.
+/// footnotes references that are not defined anywhere.
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::Parser;
+/// let mut parser = Parser::new();
+/// let result = parser.parse("Some *valid* Markdown[^1]\n\n[^1]: with a valid footnote");
+/// assert!(result.is_ok());
+/// ```
+///
+/// ```
+/// use crowbook::Parser;
+/// let mut parser = Parser::new();
+/// let result = parser.parse("Some footnote pointing to nothing[^1] ");
+/// assert!(result.is_err());
+/// ```
 pub struct Parser {
     footnotes: HashMap<String, Vec<Token>>,
 }
 
 impl Parser {
-    /// Creates a parser with the default options
+    /// Creates a parser
     pub fn new() -> Parser {
         Parser {
             footnotes: HashMap::new(),
         }
     }
 
-    /// Parse a file and returns an AST
+    /// Parse a file and returns an AST or an error
     pub fn parse_file(&mut self, filename: &str) -> Result<Vec<Token>> {
         let mut f = try!(File::open(filename).map_err(|_| Error::FileNotFound(String::from(filename))));
         let mut s = String::new();
@@ -46,8 +70,23 @@ impl Parser {
         self.parse(&s)
     }
 
+    /// Parse a string and returns an AST, or an Error.
+    pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
+        let mut opts = Options::empty();
+        opts.insert(OPTION_ENABLE_TABLES);
+        opts.insert(OPTION_ENABLE_FOOTNOTES);
+        let mut p = CMParser::new_ext(s, opts);
+        
+
+        let mut res = vec!();
+        try!(self.parse_events(&mut p, &mut res, None));
+
+        try!(self.parse_footnotes(&mut res));
+        Ok(res)
+    }
+
     /// Replace footnote reference with their definition
-    pub fn parse_footnotes(&mut self, v: &mut Vec<Token>) ->Result<()> {
+    fn parse_footnotes(&mut self, v: &mut Vec<Token>) ->Result<()> {
         for token in v {
             match *token {
                 Token::Footnote(ref mut content) => {
@@ -72,24 +111,6 @@ impl Parser {
             }
         }
         Ok(())
-    }
-    
-
-    /// Parse a string and returns an AST, that is a vector of `Token`s
-    ///
-    /// Returns a result, at this method might fail.
-    pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
-        let mut opts = Options::empty();
-        opts.insert(OPTION_ENABLE_TABLES);
-        opts.insert(OPTION_ENABLE_FOOTNOTES);
-        let mut p = CMParser::new_ext(s, opts);
-        
-
-        let mut res = vec!();
-        try!(self.parse_events(&mut p, &mut res, None));
-
-        try!(self.parse_footnotes(&mut res));
-        Ok(res)
     }
     
     fn parse_events<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, current_tag: Option<&Tag>) -> Result<()> {

@@ -5,6 +5,8 @@ ChangeLog
 ------------------
 * Internal (or usage in library):
     * Modules `toc` and `escape` are now private.
+    * Some methods of `Parser` are now private.
+    * Improved documentation.
     * Added more unit tests.
 
 0.2.2 (2016-02-25)
