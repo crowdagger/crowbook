@@ -20,7 +20,6 @@ extern crate mustache;
 extern crate chrono;
 extern crate uuid;
 
-pub mod escape;
 pub mod parser;
 pub mod html;
 pub mod cleaner;
@@ -40,6 +39,7 @@ pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
 
+mod escape;
 mod toc;
 mod zipper;
 mod templates;

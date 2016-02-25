@@ -6,3 +6,4 @@ pub fn test_eq(actual: &str, expected: &str) {
 }
 
 mod toc;
+mod escape;

@@ -43,9 +43,9 @@ pub fn escape_tex(input: &str) -> String {
             '_' => output.push_str(r"\_"),
             '{' => output.push_str(r"\{"),
             '}' => output.push_str(r"\}"),
-            '~' => output.push_str(r"\textasciitilde " ),
-            '^' => output.push_str(r"\textasciicircum "),
-            '\\' => output.push_str(r"\textbackslash "),
+            '~' => output.push_str(r"\textasciitilde{}" ),
+            '^' => output.push_str(r"\textasciicircum{}"),
+            '\\' => output.push_str(r"\textbackslash{}"),
             _  => output.push(c)
         }
     }
