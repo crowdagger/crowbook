@@ -1,21 +1,26 @@
 ChangeLog
 =========
 
+0.3.0 (unreleased)
+------------------
+* Internal:
+    * Module `toc` is now private
+
 0.2.2 (2016-02-25)
 ------------------
 * Bugfixes:
     * French cleaner now correctly replaces space after — (in
-      e.g. dialogs) with "em space"
+      e.g. dialogs) with "em space".
 
 
 0.2.1 (2016-02-25)
 ------------------
 * Bugfixes:
     * HTML/Epub rendering no longer incorrectly increment chapter
-      count for unnumbered chapters,
+      count for unnumbered chapters.
     * Latex: makes what is possible to avoid orverflowing the page.
 * Minor changes:
-* Latex: improvement of the default way URLs are displayed
+    * Latex: improvement of the default way URLs are displayed.
       
 
 0.2.0 (2016-02-25) 
