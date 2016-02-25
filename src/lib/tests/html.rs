@@ -1,7 +1,8 @@
-extern crate crowbook;
-use self::crowbook::{Parser, HtmlRenderer, Book, Token};
-mod test_helper;
-use test_helper::test_eq;
+use html::HtmlRenderer;
+use book::Book;
+use parser::Parser;
+use token::Token;
+use super::test_eq;
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new();

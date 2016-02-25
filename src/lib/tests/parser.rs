@@ -1,7 +1,6 @@
-extern crate crowbook;
-use self::crowbook::{Parser, Token};
-mod test_helper;
-use test_helper::test_eq;
+use parser::Parser;
+use token::Token;
+use super::test_eq;
 
 fn parse_from_str(doc: &str) -> Vec<Token> {
     let mut parser = Parser::new();
@@ -184,3 +183,4 @@ fn footnote_incorrect() {
     let result = parser.parse(doc);
     assert!(result.is_err());
 }
+

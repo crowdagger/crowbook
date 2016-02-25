@@ -20,10 +20,8 @@ extern crate mustache;
 extern crate chrono;
 extern crate uuid;
 
-pub mod parser;
 pub mod html;
 pub mod cleaner;
-pub mod token;
 pub mod error;
 pub mod book;
 pub mod epub;
@@ -44,6 +42,8 @@ mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
+mod parser;
+mod token;
 
 #[cfg(test)]
 mod tests;

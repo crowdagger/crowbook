@@ -3,8 +3,9 @@ ChangeLog
 
 0.3.0 (unreleased)
 ------------------
-* Internal:
-    * Module `toc` is now private
+* Internal (or usage in library):
+    * Modules `toc`, `escape`, `token`, `parser` are now private.
+    * Added more unit tests.
 
 0.2.2 (2016-02-25)
 ------------------
