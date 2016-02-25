@@ -1,14 +1,14 @@
 ChangeLog
 =========
 
-0.2.1 (unreleased)
+0.2.1 (2016-02-25)
 ------------------
 * Bugfixes:
     * HTML/Epub rendering no longer incorrectly increment chapter
       count for unnumbered chapters,
     * Latex: makes what is possible to avoid orverflowing the page.
 * Minor changes:
-    * Latex: improvement of the default way URLs are displayed
+* Latex: improvement of the default way URLs are displayed
       
 
 0.2.0 (2016-02-25) 
