@@ -27,7 +27,7 @@ impl Toc {
         self.elements.push(element);
     }
 
-    /// Render the Toc
+    /// Render the Toc in either <ul> or <ol> form (according to Self::numbered
     pub fn render(&self) -> String {
         let mut output = String::new();
 
