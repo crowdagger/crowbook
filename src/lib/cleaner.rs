@@ -93,7 +93,17 @@ impl Cleaner for French {
                         new_s.push(current);
                         match current {
                             // handle nb space after char
-                            '«'|'—' => {
+                            '—' => {
+                                if is_whitespace(next) {
+                                    // use "em space"
+                                    new_s.push('\u{2003}');
+                                    if let Some(next) = chars.next() {
+                                        current = next;
+                                        continue;
+                                    }
+                                }
+                            },
+                            '«' => {
                                 if is_whitespace(next) {
                                     new_s.push(self.nb_char);
                                     if let Some(next) = chars.next() {
@@ -101,6 +111,7 @@ impl Cleaner for French {
                                         continue;
                                     }
                                 }
+                                
                             },
                             _ => (),
                         }
