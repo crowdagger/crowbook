@@ -96,14 +96,14 @@ keys/values set by `--set` (see below):
 
 ```
 $ crowbook foo.book --create file1.md file2.md --set author "Pierre
-Dupont" title "Mon œeuvre" lang fr
+Dupont" title "Mon œuvre" lang fr
 ```
 
 will generate a `foo.book` file containing
 
 ```
 author: Pierre Dupont
-title: Mon œeuvre
+title: Mon œuvre
 lang: fr
 
 # List of chapters
