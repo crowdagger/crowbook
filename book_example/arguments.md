@@ -146,8 +146,33 @@ will override the book title to `Bar` and its author to `Foo`.
 
 Displays all the valid options to use either in a book configuration
 file or with `--set`, with a short description. There is also
-`--list-options-md`, which outputs markdown, giving the following
-result:
+`--list-options-md`, which outputs markdown.
+
+`--print-template`
+------------------
+
+**usage**: `crowbook --print-template template`
+
+Prints to stdout the built-in template. Useful if you want to
+customize the appearance of your document. E.g., if you want to modify
+the CSS used for HTML rendering:
+
+```
+$ crowbook --print-template html.css > my_style.css
+# edit my_style.css in your favourite editor
+$ crowbook my.book --set html.css my_style.css
+# or add "html.css: my_style.css" in my.book
+```
+
+Note that it is possible to use this option in conjonction with
+`--set`, though it is currently only useful for EPUB template:
+
+```
+$ crowbook --print-template epub.template --set epub.version 2
+# Returns the template for Epub 2 (default one)
+$ crowbook --print-template epub.template --set epub.version 3
+# Returns the template for Epub 3
+```
 
 
 `--verbose`

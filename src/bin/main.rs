@@ -99,7 +99,8 @@ fn main() {
 
     if matches.is_present("print-template") {
         let template = matches.value_of("print-template").unwrap();
-        let book = Book::new();
+        let mut book = Book::new();
+        set_book_options(&mut book, &matches);
         let result = book.get_template(template.as_ref());
         match result {
             Ok(s) => {
