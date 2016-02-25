@@ -6,9 +6,7 @@ ChangeLog
 * Bugfixes:
     * HTML/Epub rendering no longer incorrectly increment chapter
       count for unnumbered chapters,
-    * Latex: try to more agressively break lines in long URLs.
-    * Latex: code blocks with long lines should no longer overflow the
-      page 
+    * Latex: makes what is possible to avoid orverflowing the page.
 * Minor changes:
     * Latex: improvement of the default way URLs are displayed
       
