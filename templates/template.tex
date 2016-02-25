@@ -8,13 +8,21 @@
 \usepackage[colorlinks=true,breaklinks=true]{hyperref}
 \usepackage[anythingbreaks]{breakurl}
 
-\usepackage{newunicodechar}
+
+% TODO: provide a way to configure
 \usepackage[a5paper, top=2cm,
-  left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5
+  left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5 by default
 
+% Even with inputenc, not all unicode chars are recognized. This a
+% listof some I stumbled upon and manually added to fix
+\usepackage{newunicodechar}
+\newunicodechar{ }{ } % thin non breaking space
 
-\newunicodechar{ }{ }
-\setcounter{secnumdepth}{0}
+% Force LaTeX not to overflow page e.g. when there is long words
+% (e.g. filenames, urls, ...). The result is not necesarily very
+% beautiful, though, but at least it's readable.
+\setlength\emergencystretch{.5\textwidth}
+
 \makeatletter
 
 \newcommand{\HRule}{
