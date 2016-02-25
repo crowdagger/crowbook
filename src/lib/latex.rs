@@ -154,9 +154,7 @@ impl<'a> LatexRenderer<'a> {
             Token::Link(ref url, _, ref vec) => {
                 let content = self.render_vec(vec, escape);
                 let url = escape_tex(url);
-                println!("content: {}, url: {}", content, url);
                 if content == url {
-                    println!("content = url");
                     format!("\\url{{{}}}", content)
                 } else {
                     if self.book.get_bool("tex.links_as_footnotes").unwrap() {
