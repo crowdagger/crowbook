@@ -30,3 +30,4 @@ output.odt: book.odt
 +  ../README.md
 + config.md
 + arguments.md
+- ../ChangeLog.md
