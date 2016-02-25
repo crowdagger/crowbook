@@ -8,15 +8,26 @@ outputs formats from a book written in Markdown. Its main focus is
 novels, and the default settings should (hopefully) generate readables
 book with correct typography.
 
-It is also possible to use `crowbook` for e.g. technical
-documentation, but it might not be the best tool for that.
-
 [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
 
-Building and installing
------------------------
+Installing
+----------
 
-Youl'll need to have the [Rust](https://www.rust-lang.org/) compiler
+There are two ways to get `crowbook`: either use a precompiled binary
+or build it yourself.
+
+### Binaries ###
+
+See
+![the releases page](https://github.com/lise-henry/crowbook/releases)
+to download a precompiled binary for your architecture (currently:
+Linux, Windows and MacOSX). Just extract the archive and run
+`crowbook` (you might also want to copy the binary somewhere in your
+`PATH` for later usage).
+
+### Building ###
+
+You'll need to have the [Rust](https://www.rust-lang.org/) compiler
 on your machine first; you can
 [download and install it here](https://www.rust-lang.org/downloads.html). Once
 it is down:
@@ -25,8 +36,8 @@ it is down:
 $ cargo install crowbook
 ```
 
-will download `crowbook` and install it. 
-
+will automatically download the latest `crowbook` release on
+![crates.io](https://crates.io/crates/crowbook) and install it.
 
 Usage
 -----
@@ -37,21 +48,20 @@ The simplest command is:
 $ crowbook <BOOK>
 ```
 
-Where `BOOK` is a configuration file. Crowbook will then parse the
-config file and generate book in HTML, Epub, LaTeX, and/or PDF,
-according to the setting in the configuration file. So if you clone
+Where `BOOK` is a configuration file. Crowbook will then parse this
+file and generate a book in HTML, Epub, LaTeX, and/or PDF,
+according to the settings in the configuration file. So if you clone
 this repository and run
 
 ```bash
 $ crowbook book_example/config.book
 ```
 
-(or `cargo run -- book_example/config.book` if you don't want to
-install it), you'll generate the example book in various format. The
+you'll generate the example book in various formats. The
 HTML version should look
 [like that](http://lise-henry.github.io/crowbook/book.html).
 
-Now, let's say you want to make your own book. Assuming you have a
+To create a new book, assuming you have a
 list of Markdown files, you can generate a template configuration file
 with the `--create` argument:
 
@@ -99,10 +109,9 @@ respectively the [W3C validator](https://validator.w3.org/) and the
 rendered in [HTML](http://lise-henry.github.io/crowbook/book.html) and
 [EPUB](http://lise-henry.github.io/crowbook/book.epub) on github.io.
 
-LaTeX output is more tricky: it should work reasonably well for novels
-(the primary target of Crowbook), but `pdflatex` might occasionally
-choke on some « weird » 
-unicode character. Moreover, the rendering of code blocks is not
+LaTeX output is a bit more tricky: it should work reasonably well for
+novels (the primary target of Crowbook), but `pdflatex` might occasionally
+choke on some « weird » unicode character. Moreover, the rendering of code blocks is not
 satisfactory and images are not yet implemented. See the example book
 rendered in [PDF](http://lise-henry.github.io/crowbook/book.pdf) on
 github.io to get an idea of the problems you might encounter.
@@ -120,10 +129,10 @@ Crowbook uses
 [pulldown-cmark](https://crates.io/crates/pulldown-cmark) and thus
 should support most of commonmark Markdown. Inline HTML, however, is
 not implemented, and probably won't be, as the goal is to have books
-that can also be generated in PDF (and maybe ODT).
+that can also be generated in PDF (and maybe eventually ODT).
 
 Maybe the most specific "feature" of Crowbook is that (by default, it
-can be deactivated) tries to "clean" the input files. By default this
+can be deactivated) it tries to "clean" the input files. By default this
 doesn't do much (except removing superfluous spaces), but if the
 book's language is set to french it tries to respect french
 typography, replacing spaces with non-breaking ones when it is
@@ -165,7 +174,7 @@ Library
 -------
 
 While the main purpose of Crowbook is to be runned as a command line,
-the code is written as a library so if you want to build on it you can
+the code is written as a library, so if you want to build on it you can
 use it as such. The code is currently badly documented (and badly in a
 general manner), but you can look at the generated documentation [here](http://lise-henry.github.io/rust/crowbook/).
 
