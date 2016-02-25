@@ -9,3 +9,4 @@ mod toc;
 mod escape;
 mod parser;
 mod html;
+mod cleaner;

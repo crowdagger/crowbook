@@ -1,7 +1,5 @@
-extern crate crowbook;
-use self::crowbook::cleaner::{French, Cleaner};
-mod test_helper;
-use test_helper::test_eq;
+use cleaner::{French, Cleaner};
+use super::test_eq;
 
 #[test]
 fn cleaner_default() {

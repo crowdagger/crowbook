@@ -21,7 +21,6 @@ extern crate chrono;
 extern crate uuid;
 
 pub mod html;
-pub mod cleaner;
 pub mod error;
 pub mod book;
 pub mod epub;
@@ -30,13 +29,12 @@ pub mod odt;
 
 pub use book::Book;
 pub use error::{Result, Error};
-pub use parser::Parser;
-pub use token::Token;
 pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
 
+mod cleaner;
 mod escape;
 mod toc;
 mod zipper;
