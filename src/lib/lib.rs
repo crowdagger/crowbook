@@ -26,22 +26,24 @@ pub mod book;
 pub mod epub;
 pub mod latex;
 pub mod odt;
+pub mod parser;
+pub mod token;
+pub mod cleaner;
 
 pub use book::Book;
-pub use error::{Result, Error};
 pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
+pub use parser::Parser;
+pub use token::Token;
+pub use error::{Result, Error};
 
-mod cleaner;
 mod escape;
 mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
-mod parser;
-mod token;
 
 #[cfg(test)]
 mod tests;
