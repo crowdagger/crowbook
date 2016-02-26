@@ -158,9 +158,9 @@ parsing markdown)
 * [uuid](https://crates.io/crates/uuid) (to generate uuid)
 
 It also uses configuration files from
-[[rust-everywhere]](https://github.com/japaric/rust-everywhere) to use
-[[Travis]](https://travis-ci.org/) and
-[[Appveyor]](http://www.appveyor.com/) to generate binaries for
+[rust-everywhere](https://github.com/japaric/rust-everywhere) to use
+[Travis]]https://travis-ci.org/) and
+[Appveyor](http://www.appveyor.com/) to generate binaries for
 various platforms on each release.
 
 While Crowbook directly doesn't use them, there was also inspiration from [Pandoc](http://pandoc.org/) and [mdBook](https://github.com/azerupi/mdBook).
