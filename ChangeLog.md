@@ -5,8 +5,8 @@ ChangeLog
 ------------------
 * Crowbook now tries to convert local links. That is, if you link to a
   Markdown file that is used in the book
-  (e.g. [README.md](README.md)), it will link to an appropriate inner
-  link inside the book (at least for Epub and HTML renderer).
+  (e.g. [README.md](README.md)), it *should* link to an appropriate
+  inner referenc inside the book.
 * Internal (or usage as a library):
     * Crowbook no longer changes current directory, which worked in
       the binary but could cause problem if library was used in
