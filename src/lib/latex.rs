@@ -162,10 +162,9 @@ impl<'a> LatexRenderer<'a> {
                     }
                 }
             },
-            Token::Image(_, _, _) => {
-                self.book.debug("warning: including images is not yet supported for tex output");
-                String::from(" ")
-            },
+            Token::Image(ref url, _, _) => {
+                format!("\\includegraphics{{{}}}", self.book.root.join(url).display())
+            }
             Token::Footnote(ref vec) => format!("\\footnote{{{}}}", self.render_vec(vec, escape)),
             Token::Table(n, ref vec) => {
                 let mut cols = String::new();

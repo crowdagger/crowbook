@@ -98,5 +98,32 @@ impl Token {
                 | Image(_,_,ref v) => Some(v)
         }
     }
+
+    /// Returns the inner list of tokens contained in this token (if any) (mutable version)
+    pub fn inner_mut(&mut self) -> Option<&mut Vec<Token>> {
+        match *self {
+            Rule
+                | SoftBreak
+                | HardBreak
+                | Str(_) => None,
+            Paragraph(ref mut v) 
+                | Header(_, ref mut v)
+                | Emphasis(ref mut v)
+                | Strong(ref mut v)
+                | Code(ref mut v)
+                | BlockQuote(ref mut v)
+                | CodeBlock(_, ref mut v)
+                | List(ref mut v)
+                | OrderedList(_, ref mut v)
+                | Item(ref mut v)
+                | Table(_, ref mut v)
+                | TableHead(ref mut v)
+                | TableRow(ref mut v)
+                | TableCell(ref mut v)
+                | Footnote(ref mut v)
+                | Link(_,_,ref mut v)
+                | Image(_,_,ref mut v) => Some(v)
+        }
+    }
 }
 

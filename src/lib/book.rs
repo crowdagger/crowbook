@@ -10,6 +10,7 @@ use odt::OdtRenderer;
 use templates::{epub, html, epub3, latex};
 use escape;
 use number::Number;
+use resource::ResourceHandler;
 
 use std::env;
 use std::fs::File;
@@ -97,7 +98,9 @@ tex.template:path                   # Path of a LaTeX template file
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if
     /// you are writing a new renderer.
-    pub chapters: Vec<(Number, Vec<Token>)>, 
+    pub chapters: Vec<(Number, Vec<Token>)>,
+    /// A list of the filenames of the chapters
+    pub filenames: Vec<String>,
 
     /// book options
     options: HashMap<String, BookOption>,
@@ -108,7 +111,7 @@ pub struct Book {
     valid_ints: Vec<&'static str>,
 
     /// root path of the book
-    root: PathBuf,
+    pub root: PathBuf,
 }
 
 impl Book {
@@ -116,6 +119,7 @@ impl Book {
     pub fn new() -> Book {
         let mut book = Book {
             chapters: vec!(),
+            filenames: vec!(),
             options: HashMap::new(),
             valid_bools:vec!(),
             valid_chars:vec!(),
@@ -437,9 +441,22 @@ impl Book {
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
         self.debug(&format!("Parsing chapter: {}...", file));
+        
+        // add file to the list of file names
+        self.filenames.push(file.to_owned());
+        
+        // parse the file
         let mut parser = Parser::new();
-        let file = self.root.join(file);
-        let v = try!(parser.parse_file(file));
+        let mut v = try!(parser.parse_file(self.root.join(file)));
+        
+        // transform the AST to make local links and images relative to `book` directory
+        let offset = Path::new(file).parent().unwrap();
+        if offset.starts_with("..") {
+            self.println(&format!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
+        }
+        
+        ResourceHandler::add_offset(offset, &mut v);
+                              
         self.chapters.push((number, v));
         Ok(())
     }
@@ -459,6 +476,7 @@ impl Book {
         let mut parser = Parser::new();
         let v = try!(parser.parse(content));
         self.chapters.push((number, v));
+        self.filenames.push(String::new());
         Ok(())
     }
 

@@ -1,6 +1,8 @@
 Bugs 
 ====
 
+* epub: what happens if cover point to "../foo" or "/foo/bar"? nothing
+  good, I fear...
 * epub: no way to embed custom files to epub
 * epub: toc.ncx currently only displays chapters (first level headers)
 * latex: no support for images
