@@ -19,6 +19,8 @@ tex.links_as_footnotes: false
 # Epub option
 epub.version: 3
 
+temp_dir: .
+
 # Options for generating files
 output.epub: book.epub
 output.html: book.html

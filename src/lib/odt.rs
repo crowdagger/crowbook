@@ -59,7 +59,7 @@ impl<'a> OdtRenderer<'a> {
         try!(zipper.write("content.xml", &content.as_bytes(), false));
         // Zip and copy
         if let Ok(ref file) = self.book.get_path("output.odt") {
-            zipper.generate_odt(file)
+            zipper.generate_odt(self.book.get_str("zip.command").unwrap(), file)
         } else {
             panic!("odt.render_book called while book.output_odt is not set");
         }

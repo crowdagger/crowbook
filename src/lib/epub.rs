@@ -115,7 +115,7 @@ impl<'a> EpubRenderer<'a> {
         }
 
         if let Ok(epub_file) = self.book.get_path("output.epub") {
-            let res = try!(zipper.generate_epub(&epub_file));
+            let res = try!(zipper.generate_epub(self.book.get_str("zip.command").unwrap(), &epub_file));
             Ok(res)
         } else {
             Err(Error::Render("no output epub file specified in book config"))

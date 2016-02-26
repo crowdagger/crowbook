@@ -11,6 +11,7 @@ use templates::{epub, html, epub3, latex};
 use escape;
 use number::Number;
 
+use std::env;
 use std::fs::File;
 use std::io::{self, Write,Read};
 use std::path::{Path, PathBuf};
@@ -37,15 +38,16 @@ output.odt:path                     # Output file name for ODT rendering
 
 
 # Misc options
+zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
 numbering:int:1                     # The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
 display_toc:bool:false              # If true, display a table of content in the document
 toc_name:str:Table of contents      # Name of the table of contents if toc is displayed in line
 autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
 verbose:bool:false                  # Toggle verbose mode
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
-nb_char:char:' '                    # The non-breaking character to use for autoclean when lang is set to fr
-temp_dir:path:.                     # Path where to create a temporary directory
+temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 numbering_template:str:{{number}}. {{title}} # Format of numbered titles
+nb_char:char:' '                    # The non-breaking character to use for autoclean when lang is set to fr
 
 # HTML options
 html.template:path                  # Path of an HTML template
@@ -134,6 +136,10 @@ impl Book {
                 "char" => book.valid_chars.push(key),
                 "path" => book.valid_paths.push(key),
                 _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
+            }
+            if key == "temp_dir" {
+                book.set_option(key, &env::temp_dir().to_string_lossy()).unwrap();
+                continue;
             }
             if let Some(value) = default_value {
                 book.set_option(key, value).unwrap();
@@ -373,6 +379,7 @@ impl Book {
                 "int" => "integer",
                 "char" => "char",
                 "str" => "string",
+                "path" => "path",
                 _ => unreachable!()
             };
             let def = if let Some(value) = default {

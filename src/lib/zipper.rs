@@ -110,8 +110,8 @@ impl Zipper {
     }
 
     /// zip all files in zipper's tmp dir to a given file name and return odt file
-    pub fn generate_odt(&mut self, odt_file: &str) -> Result<String> {
-        let mut command = Command::new("zip");
+    pub fn generate_odt(&mut self, command: &str, odt_file: &str) -> Result<String> {
+        let mut command = Command::new(command);
         command.arg("-r");
         command.arg("result.odt");
         command.arg(".");
@@ -134,8 +134,8 @@ impl Zipper {
     }
     
     /// generate an epub into given file name
-    pub fn generate_epub(&mut self, file: &str) -> Result<String> {
-        let mut command = Command::new("zip");
+    pub fn generate_epub(&mut self, command: &str, file: &str) -> Result<String> {
+        let mut command = Command::new(command);
         command.arg("-X");
         command.arg("result.epub");
         self.run_command(command, "result.epub", file)
