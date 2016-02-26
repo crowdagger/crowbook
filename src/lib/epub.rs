@@ -55,6 +55,10 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
+        for (i, filename) in self.book.filenames.iter().enumerate() {
+            self.html.handler.add_link(filename.clone(), filenamer(i));
+        }
+        
         let mut zipper = try!(Zipper::new(&self.book.get_path("temp_dir").unwrap()));
         
         // Write mimetype
