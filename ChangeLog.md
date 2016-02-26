@@ -3,6 +3,10 @@ ChangeLog
 
 0.3.0 (unreleased)
 ------------------
+* Crowbook now tries to convert local links. That is, if you link to a
+  Markdown file that is used in the book
+  (e.g. [README.md](README.md)), it will link to an appropriate inner
+  link inside the book (at least for Epub and HTML renderer).
 * Internal (or usage as a library):
     * Crowbook no longer changes current directory, which worked in
       the binary but could cause problem if library was used in
@@ -11,6 +15,11 @@ ChangeLog
     * More methods are now private.
     * Improved documentation.
     * Added more unit tests.
+* Bugfixes: 
+    * Epub renderer now correctly renders unnumbered chapter without a
+      number in its toc.ncx file
+
+
 
 0.2.2 (2016-02-25)
 ------------------
