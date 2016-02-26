@@ -4,6 +4,9 @@ ChangeLog
 0.3.0 (unreleased)
 ------------------
 * Internal (or usage as a library):
+    * Crowbook no longer changes current directory, which worked in
+      the binary but could cause problem if library was used in
+      multithreaded environment (e.g. in `cargo test`).
     * Modules `toc` and `escape` are now private.
     * More methods are now private.
     * Improved documentation.
