@@ -320,7 +320,7 @@ impl<'a> EpubRenderer<'a> {
         match *token {
             Token::Header(n, ref vec) => {
                 if n == 1 {
-                    if self.html.current_hide {
+                    if self.html.current_hide || self.html.current_numbering == 0 {
                         if title.is_empty() {
                             *title = self.html.render_vec(vec);
                         } else {
