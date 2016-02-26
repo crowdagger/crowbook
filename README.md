@@ -20,8 +20,7 @@ or build it yourself.
 
 ### Binaries ###
 
-See
-![the releases page](https://github.com/lise-henry/crowbook/releases)
+See [the releases page](https://github.com/lise-henry/crowbook/releases)
 to download a precompiled binary for your architecture (currently:
 Linux, Windows and MacOSX). Just extract the archive and run
 `crowbook` (you might also want to copy the binary somewhere in your
@@ -39,7 +38,7 @@ $ cargo install crowbook
 ```
 
 will automatically download the latest `crowbook` release on
-![crates.io](https://crates.io/crates/crowbook) and install it.
+[crates.io](https://crates.io/crates/crowbook) and install it.
 
 Usage
 -----
