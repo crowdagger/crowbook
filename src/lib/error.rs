@@ -20,14 +20,21 @@ use std::result;
 use std::fmt;
 
 #[derive(Debug)]
-/// Crowbook error type
+/// Crowbook's error type
 pub enum Error {
+    /// An error in Parsing markdown file
     Parser(String),
+    /// An error in parsing a book configuration file
     ConfigParser(&'static str, String), //error, line
+    /// An error when a file is not found
     FileNotFound(String), //file
+    /// An error in a renderer
     Render(&'static str),
+    /// An error during "zipping" processus
     Zipper(String),
+    /// An error relative to BookOption convertion (usually a type error)
     BookOption(String),
+    /// An invalid option
     InvalidOption(String),
 }
 

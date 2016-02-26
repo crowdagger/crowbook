@@ -9,6 +9,7 @@ use latex::LatexRenderer;
 use odt::OdtRenderer;
 use templates::{epub, html, epub3, latex};
 use escape;
+use number::Number;
 
 use std::fs::File;
 use std::io::{self, Write,Read};
@@ -19,19 +20,6 @@ use std::collections::HashMap;
 
 use mustache;
 use mustache::MapBuilder;
-
-/// Numbering for a given chapter
-#[derive(Debug, PartialEq, Clone, Copy)]
-pub enum Number {
-    /// chapter's title is hidden
-    Hidden,
-    /// chapter is not numbered
-    Unnumbered,
-    /// chapter follows books numbering, number is given automatically
-    Default,
-    /// chapter number set to specified number
-    Specified(i32), 
-}
 
 static OPTIONS:&'static str = "
 # Metadata
@@ -76,10 +64,19 @@ tex.template:str                    # Path of a LaTeX template file
 ";
 
 
-// Configuration of the book
+/// A Book.
+///
+/// Probably the central structure for of Crowbook, as it is the one
+/// that calls the other ones.
+///
+/// It has the tasks of loading a configuration file, loading chapters
+/// and using `Parser`to parse them, and then calling various renderers
+/// (`HtmlRendrer`, `LatexRenderer`, `EpubRenderer` and/or `OdtRenderer`)
+/// to convert the AST into documents.
 #[derive(Debug)]
 pub struct Book {
-    // internal structure
+    /// Internal structure. You should not accesss this directly except if
+    /// you are writing a new renderer.
     pub chapters: Vec<(Number, Vec<Token>)>, 
 
     /// book options
@@ -93,7 +90,40 @@ pub struct Book {
 
 
 impl Book {
-    /// Returns a description for all options
+    /// Creates a new, empty `Book` with default options
+    pub fn new() -> Book {
+        let mut book = Book {
+            chapters: vec!(),
+            options: HashMap::new(),
+            valid_bools:vec!(),
+            valid_chars:vec!(),
+            valid_ints:vec!(),
+            valid_strings:vec!(),
+        };
+        for (_, key, option_type, default_value) in Book::options_to_vec() {
+            if key.is_none() {
+                continue;
+            }
+            let key = key.unwrap();
+            match option_type.unwrap() {
+                "str" => book.valid_strings.push(key),
+                "bool" => book.valid_bools.push(key),
+                "int" => book.valid_ints.push(key),
+                "char" => book.valid_chars.push(key),
+                _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
+            }
+            if let Some(value) = default_value {
+                book.set_option(key, value).unwrap();
+            }
+        }
+        book
+    }
+
+    
+    /// Returns a description of all options valid to pass to a book.
+    ///
+    /// # arguments
+    /// * `md`: whether the output should be formatted in Markdown
     pub fn description(md: bool) -> String {
         let mut out = String::new();
         let mut previous_is_comment = true;
@@ -131,186 +161,7 @@ impl Book {
         out
     }
 
-    /// OPTIONS str to a vec of tuples (comment, key, type, default value)
-    fn options_to_vec() -> Vec<(&'static str, Option<&'static str>,
-                                Option<&'static str>, Option<&'static str>)> {
-        let mut out = vec!();
-        for line in OPTIONS.lines() {
-            let line = line.trim();
-            if line.is_empty() {
-                continue;
-            }
-            if line.starts_with('#') {
-                out.push((&line[1..], None, None, None));
-                continue;
-            }
-            let v:Vec<_> = line.split('#').collect();
-            let content = v[0];
-            let comment = v[1];
-            let v:Vec<_> = content.split(':').collect();
-            let key = Some(v[0].trim());
-            let option_type = Some(v[1].trim());
-            let default_value = if v.len() > 2 {
-                Some(v[2].trim())
-            } else {
-                None
-            };
-            out.push((comment, key, option_type, default_value));
-        }
-        out
-    }
-    
-    /// Creates a new Book with default options
-    pub fn new() -> Book {
-        let mut book = Book {
-            chapters: vec!(),
-            options: HashMap::new(),
-            valid_bools:vec!(),
-            valid_chars:vec!(),
-            valid_ints:vec!(),
-            valid_strings:vec!(),
-        };
-        for (_, key, option_type, default_value) in Book::options_to_vec() {
-            if key.is_none() {
-                continue;
-            }
-            let key = key.unwrap();
-            match option_type.unwrap() {
-                "str" => book.valid_strings.push(key),
-                "bool" => book.valid_bools.push(key),
-                "int" => book.valid_ints.push(key),
-                "char" => book.valid_chars.push(key),
-                _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
-            }
-            if let Some(value) = default_value {
-                book.set_option(key, value).unwrap();
-            }
-        }
-        book
-    }
-
-    /// Prints to stderr
-    pub fn println(&self, s:&str) {
-        writeln!(&mut io::stderr(), "{}", s).unwrap();
-    }
-
-    /// Prints to stderr but only if verbose is set to true
-    pub fn debug(&self, s:&str) {
-        if self.get_bool("verbose").unwrap() {
-            writeln!(&mut io::stderr(), "{}", s).unwrap();
-        }
-    }
-
-    /// Creates a new book from a file
-    ///
-    /// This method also changes the current directory to the one of this file
-    pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
-        let path = Path::new(filename);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
-
-        // change current directory
-        if let Some(parent) = path.parent() {
-            if !parent.to_string_lossy().is_empty() {
-                if !env::set_current_dir(&parent).is_ok() {
-                    return Err(Error::ConfigParser("could not change current directory to the one of the config file",
-                                                   format!("{}", parent.display())));
-                }
-            }
-        }
-
-        
-        let mut s = String::new();
-
-        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
-                                                                      String::from(filename))));
-        let mut book = Book::new();
-        if verbose {
-            book.set_option("verbose", "true").unwrap();
-        }
-        try!(book.set_from_config(&s));
-        Ok(book)
-    }
-
-    /// Returns a MapBuilder, to be used (and completed) for templating
-    pub fn get_mapbuilder(&self, format: &str) -> MapBuilder {
-        fn clone(x:&str) -> String {
-            x.to_owned()
-        }
-        let f:fn(&str)->String = match format {
-            "none" => clone,
-            "html" => escape::escape_html,
-            "tex" => escape::escape_tex,
-            _ => panic!("get mapbuilder called with invalid escape format")
-        };
-        MapBuilder::new()
-            .insert_str("author", f(self.get_str("author").unwrap()))
-            .insert_str("title", f(&self.get_str("title").unwrap()))
-            .insert_str("lang", self.get_str("lang").unwrap().to_owned())
-    }
-
-    /// Either clean a string or does nothing
-    pub fn clean(&self, mut text:String) -> String  {
-        if let Some(cleaner) = self.get_cleaner() {
-            cleaner.clean(&mut text)
-        }
-        text
-    }
-    
-    /// Return a Box<Cleaner> corresponding to the appropriate cleaning method, or None
-    pub fn get_cleaner(&self) -> Option<Box<Cleaner>> {
-        if self.get_bool("autoclean").unwrap() {
-            let lang = self.get_str("lang").unwrap().to_lowercase();
-            if lang.starts_with("fr") {
-                Some(Box::new(French::new(self.get_char("nb_char").unwrap())))
-            } else {
-                Some(Box::new(()))
-            }
-        } else {
-            None
-        }
-    }
-
-    /// Returns the string corresponding to a number, title, and the numbering template
-    pub fn get_header(&self, n: i32, title: &str) -> Result<String> {
-        let template = mustache::compile_str(self.get_str("numbering_template").unwrap());
-        let data = MapBuilder::new()
-            .insert_str("title", String::from(title))
-            .insert_str("number", format!("{}", n))
-            .build();
-        let mut res:Vec<u8> = vec!();
-        template.render_data(&mut res, &data);
-        match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("header generated by mustache was not valid utf-8")),
-            Ok(res) => Ok(res)
-        }
-    }
-
-    /// get an option
-    pub fn get_option(&self, key: &str) -> Result<&BookOption> {
-        self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not present", key)))
-    }
-
-    /// gets a string option as str
-    pub fn get_str(&self, key: &str) -> Result<&str> {
-        try!(self.get_option(key)).as_str()
-    }
-
-    /// gets a bool option
-    pub fn get_bool(&self, key: &str) -> Result<bool> {
-        try!(self.get_option(key)).as_bool()
-    }
-
-    /// gets a char option
-    pub fn get_char(&self, key: &str) -> Result<char> {
-        try!(self.get_option(key)).as_char()
-    }
-
-    /// gets an int  option
-    pub fn get_i32(&self, key: &str) -> Result<i32> {
-        try!(self.get_option(key)).as_i32()
-    }
-
-    /// Sets an option
+        /// Sets an option
     pub fn set_option(&mut self, key: &str, value: &str) -> Result<()> {
         if self.valid_strings.contains(&key) {
             self.options.insert(key.to_owned(), BookOption::String(value.to_owned()));
@@ -441,6 +292,112 @@ impl Book {
 
         Ok(())
     }
+
+
+    /// Prints a message to stderr
+    pub fn println(&self, s:&str) {
+        writeln!(&mut io::stderr(), "{}", s).unwrap();
+    }
+
+    /// Prints a message to stderr if verbose is set to true
+    pub fn debug(&self, s:&str) {
+        if self.get_bool("verbose").unwrap() {
+            writeln!(&mut io::stderr(), "{}", s).unwrap();
+        }
+    }
+
+    /// Creates a new book from a file
+    ///
+    /// Note that this method also changes the current directory to the one of this file
+    ///
+    /// # Arguments
+    /// * `filename`: the path of file to load.
+    /// * `verbose`: sets the book to verbose mode either if the file's doesn't specify it
+    ///    or specifies `verbose: false`
+    pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
+        let path = Path::new(filename);
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
+
+        // change current directory
+        if let Some(parent) = path.parent() {
+            if !parent.to_string_lossy().is_empty() {
+                if !env::set_current_dir(&parent).is_ok() {
+                    return Err(Error::ConfigParser("could not change current directory to the one of the config file",
+                                                   format!("{}", parent.display())));
+                }
+            }
+        }
+
+        
+        let mut s = String::new();
+
+        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
+                                                                      String::from(filename))));
+        let mut book = Book::new();
+        if verbose {
+            book.set_option("verbose", "true").unwrap();
+        }
+        try!(book.set_from_config(&s));
+        Ok(book)
+    }
+
+
+    /// Either clean a string or does nothing,
+    /// according to book `lang` and `autoclean` options
+    pub fn clean(&self, mut text:String) -> String  {
+        // todo: not very efficient!
+        if self.get_bool("autoclean").unwrap() {
+            let lang = self.get_str("lang").unwrap().to_lowercase();
+            let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
+                Box::new(French::new(self.get_char("nb_char").unwrap()))
+            } else {
+                Box::new(())
+            };
+            cleaner.clean(&mut text);
+        }
+        text
+    }
+    
+    /// Returns the string corresponding to a number, title, and the numbering template
+    pub fn get_header(&self, n: i32, title: &str) -> Result<String> {
+        let template = mustache::compile_str(self.get_str("numbering_template").unwrap());
+        let data = MapBuilder::new()
+            .insert_str("title", String::from(title))
+            .insert_str("number", format!("{}", n))
+            .build();
+        let mut res:Vec<u8> = vec!();
+        template.render_data(&mut res, &data);
+        match String::from_utf8(res) {
+            Err(_) => Err(Error::Render("header generated by mustache was not valid utf-8")),
+            Ok(res) => Ok(res)
+        }
+    }
+
+    /// get an option
+    pub fn get_option(&self, key: &str) -> Result<&BookOption> {
+        self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not present", key)))
+    }
+
+    /// gets a string option as str
+    pub fn get_str(&self, key: &str) -> Result<&str> {
+        try!(self.get_option(key)).as_str()
+    }
+
+    /// gets a bool option
+    pub fn get_bool(&self, key: &str) -> Result<bool> {
+        try!(self.get_option(key)).as_bool()
+    }
+
+    /// gets a char option
+    pub fn get_char(&self, key: &str) -> Result<char> {
+        try!(self.get_option(key)).as_char()
+    }
+
+    /// gets an int  option
+    pub fn get_i32(&self, key: &str) -> Result<i32> {
+        try!(self.get_option(key)).as_i32()
+    }
+
     
     /// Render book to pdf according to book options
     pub fn render_pdf(&self) -> Result<()> {
@@ -558,4 +515,57 @@ impl Book {
             Ok(Cow::Borrowed(fallback))
         }
     }
+
+    /// Returns a `MapBuilder` (used by `Mustache` for templating), to be used (and completed)
+    /// by renderers. It fills it with the followings strings, corresponding to the matching
+    /// `Book` options:
+    ///
+    /// * "author"
+    /// * "title"
+    /// * "lang"
+    pub fn get_mapbuilder(&self, format: &str) -> MapBuilder {
+        fn clone(x:&str) -> String {
+            x.to_owned()
+        }
+        let f:fn(&str)->String = match format {
+            "none" => clone,
+            "html" => escape::escape_html,
+            "tex" => escape::escape_tex,
+            _ => panic!("get mapbuilder called with invalid escape format")
+        };
+        MapBuilder::new()
+            .insert_str("author", f(self.get_str("author").unwrap()))
+            .insert_str("title", f(&self.get_str("title").unwrap()))
+            .insert_str("lang", self.get_str("lang").unwrap().to_owned())
+    }
+
+    /// OPTIONS to a vec of tuples (comment, key, type, default value)
+    fn options_to_vec() -> Vec<(&'static str, Option<&'static str>,
+                                Option<&'static str>, Option<&'static str>)> {
+        let mut out = vec!();
+        for line in OPTIONS.lines() {
+            let line = line.trim();
+            if line.is_empty() {
+                continue;
+            }
+            if line.starts_with('#') {
+                out.push((&line[1..], None, None, None));
+                continue;
+            }
+            let v:Vec<_> = line.split('#').collect();
+            let content = v[0];
+            let comment = v[1];
+            let v:Vec<_> = content.split(':').collect();
+            let key = Some(v[0].trim());
+            let option_type = Some(v[1].trim());
+            let default_value = if v.len() > 2 {
+                Some(v[2].trim())
+            } else {
+                None
+            };
+            out.push((comment, key, option_type, default_value));
+        }
+        out
+    }
+
 }

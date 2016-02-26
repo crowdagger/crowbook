@@ -15,7 +15,8 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use book::{Book, Number};
+use book::Book;
+use number::Number;
 use error::{Error,Result};
 use token::Token;
 use zipper::Zipper;

@@ -22,9 +22,9 @@ fn is_whitespace(c: char) -> bool {
 
 /// Trait for cleaning a string.
 /// This trait should be called for text that is e.g. in a paragraph, a title,
-/// NOT for code blocks, hyperlikns and so on!
+/// NOT for code blocks, hyperlinks and so on!
 pub trait Cleaner {
-    /// Cleans a string, removing multiple whitespaces
+    /// Cleans a string. The default implementation is to remove multiple consecutive whitespaces
     fn clean(&self, s: &mut String) {
         if s.contains(is_whitespace) { // if not, no need to do anything
             let mut new_s = String::with_capacity(s.len());
@@ -56,7 +56,8 @@ pub struct French {
 }
 
 impl French {
-    /// Creates a new french cleaner, which will replace spaces with nb_char when appropriate.
+    /// Creates a new french cleaner, which will replace spaces with the defined
+    /// non-breaking space when appropriate.
     pub fn new(nb_char: char) -> French {
         French { nb_char: nb_char }
     }

@@ -18,7 +18,8 @@
 use error::{Error,Result};
 use token::Token;
 use html::HtmlRenderer;
-use book::{Book,Number};
+use book::Book;
+use number::Number;
 use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;

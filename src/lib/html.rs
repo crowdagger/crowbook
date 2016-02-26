@@ -17,7 +17,8 @@
 
 use escape::escape_html;
 use token::Token;
-use book::{Book, Number};
+use book::Book;
+use number::Number;
 use error::{Error,Result};
 use toc::Toc;
 
