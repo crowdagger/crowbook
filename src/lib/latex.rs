@@ -21,6 +21,7 @@ use error::{Error,Result};
 use token::Token;
 use zipper::Zipper;
 use escape::escape_tex;
+use resource::ResourceHandler;
 
 use std::iter::Iterator;
 
@@ -30,6 +31,7 @@ use mustache;
 pub struct LatexRenderer<'a> {
     book: &'a Book,
     current_chapter: Number,
+    handler: ResourceHandler,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -38,6 +40,7 @@ impl<'a> LatexRenderer<'a> {
         LatexRenderer {
             book: book,
             current_chapter: Number::Default,
+            handler: ResourceHandler::new(),
         }
     }
 
@@ -56,6 +59,9 @@ impl<'a> LatexRenderer<'a> {
     /// Render latex in a string
     pub fn render_book(&mut self) -> Result<String> {
         let mut content = String::from("");
+        for (i, filename) in self.book.filenames.iter().enumerate() {
+            self.handler.add_link(filename.clone(), format!("chapter-{}", i));
+        }
 
         // set tex numbering and toc display to book's parameters
         let numbering = self.book.get_i32("numbering").unwrap() - 1;
@@ -66,10 +72,13 @@ impl<'a> LatexRenderer<'a> {
         if self.book.get_bool("display_toc").unwrap() {
             content.push_str("\\tableofcontents\n");
         }
-        
+
+        let mut i = 0;
         for &(n, ref v) in &self.book.chapters {
+            content.push_str(&format!("\\label{{chapter-{}}}", i));
             self.current_chapter = n;
             content.push_str(&self.render_vec(v, true));
+            i += 1;
         }
         
 
@@ -151,19 +160,32 @@ impl<'a> LatexRenderer<'a> {
             Token::Item(ref vec) => format!("\\item {}\n", self.render_vec(vec, escape)),
             Token::Link(ref url, _, ref vec) => {
                 let content = self.render_vec(vec, escape);
-                let url = escape_tex(url);
-                if content == url {
-                    format!("\\url{{{}}}", content)
-                } else {
-                    if self.book.get_bool("tex.links_as_footnotes").unwrap() {
-                        format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", url, content, url)
+
+                if ResourceHandler::is_local(url) {
+                    format!("\\hyperref[{}]{{{}}}",
+                            self.handler.get_link(url),
+                            content)
+                }
+                else {
+                    let url = escape_tex(url);
+                    if content == url {
+                        format!("\\url{{{}}}", content)
                     } else {
-                        format!("\\href{{{}}}{{{}}}", url, content)
+                        if self.book.get_bool("tex.links_as_footnotes").unwrap() {
+                            format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", url, content, url)
+                        } else {
+                            format!("\\href{{{}}}{{{}}}", url, content)
+                        }
                     }
                 }
             },
             Token::Image(ref url, _, _) => {
-                format!("\\includegraphics{{{}}}", self.book.root.join(url).display())
+                if ResourceHandler::is_local(url) {
+                    format!("\\includegraphics{{{}}}", self.book.root.join(url).display())
+                } else {
+                    self.book.debug(&format!("image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
+                    String::new()
+                }
             }
             Token::Footnote(ref vec) => format!("\\footnote{{{}}}", self.render_vec(vec, escape)),
             Token::Table(n, ref vec) => {
