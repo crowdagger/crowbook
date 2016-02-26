@@ -110,6 +110,7 @@ pub use error::{Result, Error};
 pub use token::Token;
 pub use cleaner::{Cleaner, French};
 pub use number::Number;
+pub use resource::ResourceHandler;
 
 mod html;
 mod error;
@@ -121,13 +122,14 @@ mod parser;
 mod token;
 mod cleaner;
 mod number;
-
+mod resource;
 
 mod escape;
 mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
+
 
 #[cfg(test)]
 mod tests;

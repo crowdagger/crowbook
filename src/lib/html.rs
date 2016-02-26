@@ -21,6 +21,7 @@ use book::Book;
 use number::Number;
 use error::{Error,Result};
 use toc::Toc;
+use resource::ResourceHandler;
 
 use mustache;
 
@@ -48,7 +49,8 @@ pub struct HtmlRenderer<'a> {
     pub current_hide: bool,
     #[doc(hidden)]
     pub filename: String,
-
+    #[doc(hidden)]
+    pub handler: ResourceHandler,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -67,14 +69,22 @@ impl<'a> HtmlRenderer<'a> {
             epub3: false,
             verbatim: false,
             filename: String::new(),
+            handler: ResourceHandler::new(),
         }
     }
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
+        for (i, filename) in self.book.filenames.iter().enumerate() {
+            self.handler.add_link(filename.clone(), format!("#chapter-{}", i));
+        }
+        println!("{:?}", &self.handler);
+        
         let mut content = String::new();
 
+        let mut i = 0;
         for &(n, ref v) in &self.book.chapters {
+            content.push_str(&format!("<a id = \"chapter-{}\" />\n", i));
             self.current_hide = false;
             let book_numbering = self.book.get_i32("numbering").unwrap();
             match n {
@@ -90,6 +100,7 @@ impl<'a> HtmlRenderer<'a> {
                 },
             }
             content.push_str(&self.render_html(v));
+            i+= 1;
         }
         let toc = self.toc.render();
 
@@ -267,14 +278,21 @@ impl<'a> HtmlRenderer<'a> {
                                                       },
                                                       self.render_vec(vec)),
             Token::Item(ref vec) => format!("<li>{}</li>\n", self.render_vec(vec)),
-            Token::Link(ref url, ref title, ref vec) => format!("<a href = \"{}\"{}>{}</a>",
-                                                                url,
-                                                                if title.is_empty() {
-                                                                    String::new()
-                                                                } else {
-                                                                    format!(" title = \"{}\"", title)
-                                                                },
-                                                                self.render_vec(vec)),
+            Token::Link(ref url, ref title, ref vec) => {
+                let url: String = if ResourceHandler::is_local(url) {
+                    self.handler.get_link(url).to_owned()
+                } else {
+                    url.clone()
+                };
+                
+                format!("<a href = \"{}\"{}>{}</a>", url,
+                        if title.is_empty() {
+                            String::new()
+                        } else {
+                            format!(" title = \"{}\"", title)
+                        },
+                        self.render_vec(vec))
+            },
             Token::Image(ref url, ref title, ref alt) => format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
                                                                  url,
                                                                  title,
