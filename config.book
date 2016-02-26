@@ -22,14 +22,14 @@ epub.version: 3
 temp_dir: .
 
 # Options for generating files
-output.epub: book.epub
-output.html: book.html
-output.pdf: book.pdf
-output.odt: book.odt
+output.epub: book_example/book.epub
+output.html: book_example/book.html
+# output.pdf: book_example/book.pdf
+output.odt: book_example/book.odt
 
 # Finally, our files.
 # Paths are relative to the directory where this file is
-+  ../README.md
-+ config.md
-+ arguments.md
-- ../ChangeLog.md
++ README.md
++ book_example/config.md
++ book_example/arguments.md
+- ChangeLog.md
