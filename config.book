@@ -33,3 +33,5 @@ output.odt: book_example/book.odt
 + book_example/config.md
 + book_example/arguments.md
 - ChangeLog.md
+- Bugs.md
+- LICENSE.md
