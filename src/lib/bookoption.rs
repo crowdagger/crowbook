@@ -3,10 +3,11 @@ use error::{Error,Result};
 /// Structure for storing a book option
 #[derive(Debug, PartialEq)]
 pub enum BookOption {
-    String(String), /// Stores a string
+    String(String), // Stores a string
     Bool(bool), // stores a boolean
     Char(char), // stores a char
     Int(i32), // stores an int
+    Path(String), // Stores a path
 }
 
 impl BookOption {
@@ -15,6 +16,14 @@ impl BookOption {
         match *self {
             BookOption::String(ref s) => Ok(s),
             _ => Err(Error::BookOption(format!("{:?} is not a string", self)))
+        }
+    }
+
+    /// Returns the BookOption as a &str, but only if it is a path
+    pub fn as_path(&self) -> Result<&str> {
+        match *self {
+            BookOption::Path(ref s) => Ok(s),
+            _ => Err(Error::BookOption(format!("{:?} is not a path", self)))
         }
     }
 

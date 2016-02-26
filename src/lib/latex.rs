@@ -44,13 +44,11 @@ impl<'a> LatexRenderer<'a> {
 
     /// Render pdf in a file
     pub fn render_pdf(&mut self) -> Result<String> {
-        if let Ok(pdf_file) = self.book.get_str("output.pdf") {
-            let base_file = try!(Path::new(pdf_file).file_stem().ok_or(Error::Render("could not stem pdf filename")));
-            let tex_file = format!("{}.tex", base_file.to_str().unwrap());
+        if let Ok(pdf_file) = self.book.get_path("output.pdf") {
             let content = try!(self.render_book());
-            let mut zipper = try!(Zipper::new(self.book.get_str("temp_dir").unwrap()));
-            try!(zipper.write(&tex_file, &content.as_bytes(), false));
-            zipper.generate_pdf(&self.book.get_str("tex.command").unwrap(), &tex_file, pdf_file)
+            let mut zipper = try!(Zipper::new(&self.book.get_path("temp_dir").unwrap()));
+            try!(zipper.write("result.tex", &content.as_bytes(), false));
+            zipper.generate_pdf(&self.book.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
             Err(Error::Render("no output pdf file specified in book config"))
         }

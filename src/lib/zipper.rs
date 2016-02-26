@@ -80,7 +80,7 @@ impl Zipper {
     /// Unzip a file and deletes it afterwards
     pub fn unzip(&mut self, file: &str) -> Result<()> {
         // change to dest directory to unzip file
-        let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
+        let dir = env::current_dir().unwrap();
         try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
         let output = Command::new("unzip")
                       .arg(file)
@@ -88,7 +88,7 @@ impl Zipper {
                       .map_err(|e| Error::Zipper(format!("failed to execute unzip  on {}: {}", file, e)));
 
         // change back to original current directory before try! ing anything
-        try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
+        env::set_current_dir(dir).unwrap();
         try!(output);
 
         fs::remove_file(self.path.join(file))
@@ -96,18 +96,15 @@ impl Zipper {
     }
 
     /// run command and copy file name (supposed to result from the command) to current dir
-    pub fn run_command(&mut self, mut command: Command, file: &str) -> Result<String> {
-        let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
-        try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
-
+    pub fn run_command(&mut self, mut command: Command, in_file: &str, out_file: &str) -> Result<String> {
         let res_output = command.args(&self.args)
+            .current_dir(&self.path)
             .output()
             .map_err(|e| Error::Zipper(format!("failed to execute process: {}", e)));
-        try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
         let output = try!(res_output);
-        try!(fs::copy(self.path.join(file), file).map_err(|_| {
+        try!(fs::copy(self.path.join(in_file), out_file).map_err(|_| {
             println!("{}", &String::from_utf8_lossy(&output.stdout));
-            Error::Zipper(format!("could not copy file {}", file))
+            Error::Zipper(format!("could not copy file {} to {}", in_file, out_file))
         }));
         Ok(String::from_utf8_lossy(&output.stdout).into_owned())
     }
@@ -116,34 +113,32 @@ impl Zipper {
     pub fn generate_odt(&mut self, odt_file: &str) -> Result<String> {
         let mut command = Command::new("zip");
         command.arg("-r");
-        command.arg(odt_file);
+        command.arg("result.odt");
         command.arg(".");
-        self.run_command(command, odt_file)
+        self.run_command(command, "result.odt", odt_file)
     }
     
 
     /// generate a pdf file into given file name
     pub fn generate_pdf(&mut self, command: &str, tex_file: &str, pdf_file: &str) -> Result<String> {
         // first pass
-        let dir = try!(env::current_dir().map_err(|_| Error::Zipper("could not get current directory".to_owned())));
-        try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
         let _ = Command::new(command)
+            .current_dir(&self.path)
             .arg(tex_file)
             .output();
-        try!(env::set_current_dir(dir).map_err(|_| Error::Zipper("could not change back to old directory".to_owned())));
 
         // second pass
         let mut command = Command::new(command);
         command.arg(tex_file);
-        self.run_command(command, pdf_file)
+        self.run_command(command, "result.pdf", pdf_file)
     }
     
     /// generate an epub into given file name
     pub fn generate_epub(&mut self, file: &str) -> Result<String> {
         let mut command = Command::new("zip");
         command.arg("-X");
-        command.arg(file);
-        self.run_command(command, file)
+        command.arg("result.epub");
+        self.run_command(command, "result.epub", file)
     }
 }
 

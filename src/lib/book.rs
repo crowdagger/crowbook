@@ -13,8 +13,7 @@ use number::Number;
 
 use std::fs::File;
 use std::io::{self, Write,Read};
-use std::env;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::collections::HashMap;
 
@@ -28,13 +27,13 @@ title:str:Untitled                  # The title of the book
 lang:str:en                         # The language of the book
 subject:str                         # Subject of the book (used for EPUB metadata)
 description:str                     # Description of the book (used for EPUB metadata)
-cover:str                           # File name of the cover of the book 
+cover:path                          # File name of the cover of the book 
 # Output options
-output.epub:str                     # Output file name for EPUB rendering
-output.html:str                     # Output file name for HTML rendering
-output.tex:str                      # Output file name for LaTeX rendering
-output.pdf:str                      # Output file name for PDF rendering
-output.odt:str                      # Output file name for ODT rendering
+output.epub:path                    # Output file name for EPUB rendering
+output.html:path                    # Output file name for HTML rendering
+output.tex:path                     # Output file name for LaTeX rendering
+output.pdf:path                     # Output file name for PDF rendering
+output.odt:path                     # Output file name for ODT rendering
 
 
 # Misc options
@@ -45,22 +44,22 @@ autoclean:bool:true                 # Toggles cleaning of input markdown (not us
 verbose:bool:false                  # Toggle verbose mode
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
 nb_char:char:' '                    # The non-breaking character to use for autoclean when lang is set to fr
-temp_dir:str:.                      # Path where to create a temporary directory
+temp_dir:path:.                     # Path where to create a temporary directory
 numbering_template:str:{{number}}. {{title}} # Format of numbered titles
 
 # HTML options
-html.template:str                   # Path of an HTML template
-html.css:str                        # Path of a stylesheet to use with HTML rendering
+html.template:path                  # Path of an HTML template
+html.css:path                       # Path of a stylesheet to use with HTML rendering
 
 # EPUB options
 epub.version:int:2                  # The EPUB version to generate
-epub.css:str                        # Path of a stylesheet to use with EPUB rendering
-epub.template:str                   # Path of an epub template for chapter
+epub.css:path                       # Path of a stylesheet to use with EPUB rendering
+epub.template:path                  # Path of an epub template for chapter
 
 # LaTeX options
 tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL of links in LaTeX/PDF output
 tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
-tex.template:str                    # Path of a LaTeX template file
+tex.template:path                   # Path of a LaTeX template file
 ";
 
 
@@ -103,10 +102,12 @@ pub struct Book {
     valid_bools: Vec<&'static str>,
     valid_chars: Vec<&'static str>,
     valid_strings: Vec<&'static str>,
+    valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
+
+    /// root path of the book
+    root: PathBuf,
 }
-
-
 
 impl Book {
     /// Creates a new, empty `Book` with default options
@@ -118,6 +119,8 @@ impl Book {
             valid_chars:vec!(),
             valid_ints:vec!(),
             valid_strings:vec!(),
+            valid_paths:vec!(),
+            root: PathBuf::new(),
         };
         for (_, key, option_type, default_value) in Book::options_to_vec() {
             if key.is_none() {
@@ -129,6 +132,7 @@ impl Book {
                 "bool" => book.valid_bools.push(key),
                 "int" => book.valid_ints.push(key),
                 "char" => book.valid_chars.push(key),
+                "path" => book.valid_paths.push(key),
                 _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
             }
             if let Some(value) = default_value {
@@ -138,48 +142,36 @@ impl Book {
         book
     }
 
-    
-    /// Returns a description of all options valid to pass to a book.
+    /// Creates a new book from a file
     ///
-    /// # arguments
-    /// * `md`: whether the output should be formatted in Markdown
-    pub fn description(md: bool) -> String {
-        let mut out = String::new();
-        let mut previous_is_comment = true;
-        for (comment, key, o_type, default) in Book::options_to_vec() {
-            if key.is_none() {
-                if !previous_is_comment {
-                    out.push_str("\n");
-                    previous_is_comment = true;
-                }
-                out.push_str(&format!("### {} ###\n", comment));
-                continue;
-            }
-            previous_is_comment = false;
-            let o_type = match o_type.unwrap() {
-                "bool" => "boolean",
-                "int" => "integer",
-                "char" => "char",
-                "str" => "string",
-                _ => unreachable!()
-            };
-            let def = if let Some(value) = default {
-                value
-            } else {
-                "not set"
-            };
-            if md {
-                out.push_str(&format!("- **`{}`**
-    - **type**: {}
-    - **default value**: `{}`
-    - {}\n", key.unwrap(), o_type, def, comment));
-            } else {
-                out.push_str(&format!("- {} (type: {}) (default: {}) {}\n", key.unwrap(), o_type, def,comment));
-            }
+    /// Note that this method also changes the current directory to the one of this file
+    ///
+    /// # Arguments
+    /// * `filename`: the path of file to load.
+    /// * `verbose`: sets the book to verbose mode even if the file's doesn't specify it
+    ///    or specifies `verbose: false`
+    pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
+        let mut book = Book::new();
+        if verbose {
+            book.set_option("verbose", "true").unwrap();
         }
-        out
+        
+        let path = Path::new(filename);
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
+        // Set book path to book's directory
+        if let Some(parent) = path.parent() {
+            book.root = parent.to_owned();
+        }
+
+        let mut s = String::new();
+        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
+                                                                      filename.to_owned())));
+
+        try!(book.set_from_config(&s));
+        Ok(book)
     }
     
+
     /// Sets an option
     ///
     /// # Arguments
@@ -204,6 +196,9 @@ impl Book {
     pub fn set_option(&mut self, key: &str, value: &str) -> Result<()> {
         if self.valid_strings.contains(&key) {
             self.options.insert(key.to_owned(), BookOption::String(value.to_owned()));
+            Ok(())
+        } else if self.valid_paths.contains(&key) {
+            self.options.insert(key.to_owned(), BookOption::Path(value.to_owned()));
             Ok(())
         } else if self.valid_chars.contains(&key) {
             let words: Vec<_> = value.trim().split('\'').collect();
@@ -333,40 +328,6 @@ impl Book {
     }
 
 
-    /// Creates a new book from a file
-    ///
-    /// Note that this method also changes the current directory to the one of this file
-    ///
-    /// # Arguments
-    /// * `filename`: the path of file to load.
-    /// * `verbose`: sets the book to verbose mode even if the file's doesn't specify it
-    ///    or specifies `verbose: false`
-    pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
-        let path = Path::new(filename);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
-
-        // change current directory
-        if let Some(parent) = path.parent() {
-            if !parent.to_string_lossy().is_empty() {
-                if !env::set_current_dir(&parent).is_ok() {
-                    return Err(Error::ConfigParser("could not change current directory to the one of the config file",
-                                                   format!("{}", parent.display())));
-                }
-            }
-        }
-
-        
-        let mut s = String::new();
-
-        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
-                                                                      String::from(filename))));
-        let mut book = Book::new();
-        if verbose {
-            book.set_option("verbose", "true").unwrap();
-        }
-        try!(book.set_from_config(&s));
-        Ok(book)
-    }
 
     /// Adds a chapter, as a file name, to the book
     ///
@@ -383,10 +344,54 @@ impl Book {
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
         self.debug(&format!("Parsing chapter: {}...", file));
         let mut parser = Parser::new();
+        let file = self.root.join(file);
         let v = try!(parser.parse_file(file));
         self.chapters.push((number, v));
         Ok(())
     }
+
+
+    /// Returns a description of all options valid to pass to a book.
+    ///
+    /// # arguments
+    /// * `md`: whether the output should be formatted in Markdown
+    pub fn description(md: bool) -> String {
+        let mut out = String::new();
+        let mut previous_is_comment = true;
+        for (comment, key, o_type, default) in Book::options_to_vec() {
+            if key.is_none() {
+                if !previous_is_comment {
+                    out.push_str("\n");
+                    previous_is_comment = true;
+                }
+                out.push_str(&format!("### {} ###\n", comment));
+                continue;
+            }
+            previous_is_comment = false;
+            let o_type = match o_type.unwrap() {
+                "bool" => "boolean",
+                "int" => "integer",
+                "char" => "char",
+                "str" => "string",
+                _ => unreachable!()
+            };
+            let def = if let Some(value) = default {
+                value
+            } else {
+                "not set"
+            };
+            if md {
+                out.push_str(&format!("- **`{}`**
+    - **type**: {}
+    - **default value**: `{}`
+    - {}\n", key.unwrap(), o_type, def, comment));
+            } else {
+                out.push_str(&format!("- {} (type: {}) (default: {}) {}\n", key.unwrap(), o_type, def,comment));
+            }
+        }
+        out
+    }
+
 
 
     /// Adds a chapter, as a string, to the book
@@ -458,9 +463,29 @@ impl Book {
         self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not present", key)))
     }
 
-    /// gets a string option as str
+    /// Gets a string option 
     pub fn get_str(&self, key: &str) -> Result<&str> {
         try!(self.get_option(key)).as_str()
+    }
+
+    /// Get a path option
+    ///
+    /// Adds book's root path before it
+    pub fn get_path(&self, key: &str) -> Result<String> {
+        let path: &str = try!(try!(self.get_option(key)).as_path());
+        let new_path:PathBuf = self.root.join(path);
+        if let Some(path) = new_path.to_str() {
+            Ok(path.to_owned())
+        } else {
+            Err(Error::BookOption(format!("'{}''s path contains invalid UTF-8 code", key)))
+        }
+    }
+
+    /// Get a path option
+    ///
+    /// Don't add book's root path before it
+    pub fn get_relative_path(&self, key: &str) -> Result<&str> {
+        try!(self.get_option(key)).as_path()
     }
 
     /// gets a bool option
@@ -485,7 +510,7 @@ impl Book {
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_pdf());
         self.debug(&result);
-        self.println(&format!("Successfully generated pdf file: {}", self.get_str("output.pdf").unwrap()));
+        self.println(&format!("Successfully generated pdf file: {}", self.get_path("output.pdf").unwrap()));
         Ok(())
     }
 
@@ -495,7 +520,7 @@ impl Book {
         let mut epub = EpubRenderer::new(&self);
         let result = try!(epub.render_book());
         self.debug(&result);
-        self.println(&format!("Successfully generated epub file: {}", self.get_str("output.epub").unwrap()));
+        self.println(&format!("Successfully generated epub file: {}", self.get_path("output.epub").unwrap()));
         Ok(())
     }
 
@@ -505,7 +530,7 @@ impl Book {
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
         self.debug(&result);
-        self.println(&format!("Successfully generated odt file: {}", self.get_str("output.odt").unwrap()));
+        self.println(&format!("Successfully generated odt file: {}", self.get_path("output.odt").unwrap()));
         Ok(())
     }
 
@@ -539,22 +564,22 @@ impl Book {
             try!(self.render_epub());
         }
 
-        if let Ok(file) = self.get_str("output.html") {
+        if let Ok(file) = self.get_path("output.html") {
             did_some_stuff = true;
             let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
             try!(self.render_html(&mut f));
         }
-        if let Ok(file) = self.get_str("output.tex") {
+        if let Ok(file) = self.get_path("output.tex") {
             did_some_stuff = true;
             let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
             try!(self.render_tex(&mut f));
         }
-        if self.get_str("output.pdf").is_ok() {
+        if self.get_option("output.pdf").is_ok() {
             did_some_stuff = true;
             try!(self.render_pdf());
         }
         
-        if self.get_str("output.odt").is_ok() {
+        if self.get_option("output.odt").is_ok() {
             did_some_stuff = true;
             try!(self.render_odt());
         }

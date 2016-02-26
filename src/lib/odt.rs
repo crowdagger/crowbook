@@ -49,7 +49,7 @@ impl<'a> OdtRenderer<'a> {
     pub fn render_book(&mut self) -> Result<String> {
         let content = try!(self.render_content());
         
-        let mut zipper = try!(Zipper::new(self.book.get_str("temp_dir").unwrap()));
+        let mut zipper = try!(Zipper::new(&self.book.get_path("temp_dir").unwrap()));
 
         // Write template.odt there
         try!(zipper.write("template.odt", odt::ODT, false));
@@ -58,7 +58,7 @@ impl<'a> OdtRenderer<'a> {
         // Complete it with content.xml
         try!(zipper.write("content.xml", &content.as_bytes(), false));
         // Zip and copy
-        if let Ok(file) = self.book.get_str("output.odt") {
+        if let Ok(ref file) = self.book.get_path("output.odt") {
             zipper.generate_odt(file)
         } else {
             panic!("odt.render_book called while book.output_odt is not set");

@@ -19,6 +19,8 @@ use token::Token;
 use error::{Result,Error};
 
 use std::fs::File;
+use std::path::Path;
+use std::convert::AsRef;
 use std::io::Read;
 use std::collections::HashMap;
 
@@ -62,11 +64,12 @@ impl Parser {
     }
 
     /// Parse a file and returns an AST or an error
-    pub fn parse_file(&mut self, filename: &str) -> Result<Vec<Token>> {
-        let mut f = try!(File::open(filename).map_err(|_| Error::FileNotFound(String::from(filename))));
+    pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
+        let path: &Path = filename.as_ref();
+        let mut f = try!(File::open(path).map_err(|_| Error::FileNotFound(format!("{}", path.display()))));
         let mut s = String::new();
 
-        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(format!("file {} contains invalid UTF-8, could not parse it", filename))));
+        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(format!("file {} contains invalid UTF-8, could not parse it", path.display()))));
         self.parse(&s)
     }
 
