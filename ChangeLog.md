@@ -3,9 +3,9 @@ ChangeLog
 
 0.3.0 (unreleased)
 ------------------
-* Internal (or usage in library):
+* Internal (or usage as a library):
     * Modules `toc` and `escape` are now private.
-    * Some methods of `Parser` are now private.
+    * More methods are now private.
     * Improved documentation.
     * Added more unit tests.
 
