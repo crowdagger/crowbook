@@ -9,7 +9,8 @@ use zipper::Zipper;
 use mustache;
 
 /// Rendererer for ODT
-/// (Experimental)
+///
+/// Still very experimental.
 pub struct OdtRenderer<'a> {
     book: &'a Book,
     current_numbering: i32,
@@ -19,7 +20,7 @@ pub struct OdtRenderer<'a> {
 }
 
 impl<'a> OdtRenderer<'a> {
-    /// Create a new OdtRenderer
+    /// Creates a new OdtRenderer
     pub fn new(book: &'a Book) -> OdtRenderer {
         OdtRenderer {
             book: book,
@@ -36,7 +37,15 @@ impl<'a> OdtRenderer<'a> {
         }
     }
 
-    /// Render book
+    /// Renders a full book
+    ///
+    /// This will try to generate an ODT file according to self.book options.
+    ///
+    /// # Returns
+    /// * `Ok(s)` where `s` contains the output of the `zip` command
+    ///   used to create the ODT file.
+    /// * An error if there was somel problem during either the rendering to
+    ///   ODT format, or the generation of the ODT file itself.
     pub fn render_book(&mut self) -> Result<String> {
         let content = try!(self.render_content());
         
@@ -57,7 +66,7 @@ impl<'a> OdtRenderer<'a> {
     }
 
     /// Render content.xml
-    pub fn render_content(&mut self) -> Result<String> {
+    fn render_content(&mut self) -> Result<String> {
         let mut content = String::new();
 
         for &(n, ref v) in &self.book.chapters {
@@ -94,7 +103,7 @@ impl<'a> OdtRenderer<'a> {
     }
 
     /// Transform a vector of `Token`s to Odt format
-    pub fn render_vec(&mut self, tokens:&[Token]) -> String {
+    fn render_vec(&mut self, tokens:&[Token]) -> String {
         let mut res = String::new();
 
         for token in tokens {
@@ -103,7 +112,7 @@ impl<'a> OdtRenderer<'a> {
         res
     }
     
-    pub fn parse_token(&mut self, token: &Token) -> String {
+    fn parse_token(&mut self, token: &Token) -> String {
         match *token {
             Token::Str(ref text) => escape_html(&*text),
             Token::Paragraph(ref vec) => format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n", self.book.clean(self.render_vec(vec))),

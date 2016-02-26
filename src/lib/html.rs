@@ -24,24 +24,31 @@ use toc::Toc;
 
 use mustache;
 
-/// Renderer for HTML
+/// Renders HTML document.
 ///
-/// Also used by Epub.
+/// Also used by `EpubRenderer`.
 pub struct HtmlRenderer<'a> {
     book: &'a Book,
-
-    pub toc: Toc,
-    link_number: u32,
-    pub footnotes: Vec<(String, String)>,
-    pub current_chapter: [i32;6],
-    pub current_numbering: i32,
-    pub current_hide: bool,
-    pub filename: String,
     table_head: bool,
     footnote_number: u32,
-
     epub3: bool,
     verbatim: bool,
+    link_number: u32,
+
+    // fields used by EpubRenderer so marked public but hidden
+    #[doc(hidden)]
+    pub toc: Toc,
+    #[doc(hidden)]
+    pub footnotes: Vec<(String, String)>,
+    #[doc(hidden)]
+    pub current_chapter: [i32;6],
+    #[doc(hidden)]
+    pub current_numbering: i32,
+    #[doc(hidden)]
+    pub current_hide: bool,
+    #[doc(hidden)]
+    pub filename: String,
+
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -61,34 +68,6 @@ impl<'a> HtmlRenderer<'a> {
             verbatim: false,
             filename: String::new(),
         }
-    }
-
-    /// Increase a header
-    pub fn inc_header(&mut self, n: i32) {
-        let n = n as usize;
-        assert!(n < self.current_chapter.len());
-        self.current_chapter[n] += 1;
-        for i in n+1..self.current_chapter.len() {
-            self.current_chapter[i] = 0;
-        }
-    }
-
-    /// Returns a "x.y.z"
-    pub fn get_numbers(&self) -> String {
-        let mut output = String::new();
-        for i in 0..self.current_chapter.len() {
-            if self.current_chapter[i] == 0 {
-                if i == self.current_chapter.len() - 1 {
-                    break;
-                }
-                let bools:Vec<_> = self.current_chapter[i+1..].iter().map(|x| *x != 0).collect();
-                if !bools.contains(&true) {
-                    break;
-                }
-            }
-            output.push_str(&format!("{}.", self.current_chapter[i])); //todo
-        }
-        output
     }
 
     /// Render books as a standalone HTML file
@@ -142,7 +121,51 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
-    /// display side notes if option is to true
+    /// Renders a chapter to HTML
+    pub fn render_html(&mut self, tokens: &[Token])-> String {
+        let mut res = String::new();
+        for token in tokens {
+            res.push_str(&self.parse_token(&token));
+            self.render_side_notes(&mut res);
+        }
+        self.render_end_notes(&mut res);
+        res
+    }
+
+
+    /// Increase a header
+    fn inc_header(&mut self, n: i32) {
+        let n = n as usize;
+        assert!(n < self.current_chapter.len());
+        self.current_chapter[n] += 1;
+        for i in n+1..self.current_chapter.len() {
+            self.current_chapter[i] = 0;
+        }
+    }
+
+    /// Returns a "x.y.z"
+    fn get_numbers(&self) -> String {
+        let mut output = String::new();
+        for i in 0..self.current_chapter.len() {
+            if self.current_chapter[i] == 0 {
+                if i == self.current_chapter.len() - 1 {
+                    break;
+                }
+                let bools:Vec<_> = self.current_chapter[i+1..].iter().map(|x| *x != 0).collect();
+                if !bools.contains(&true) {
+                    break;
+                }
+            }
+            output.push_str(&format!("{}.", self.current_chapter[i])); //todo
+        }
+        output
+    }
+
+
+    /// Display side notes if option is to true
+    ///
+    /// Only public because EpubRenderer uses it
+    #[doc(hidden)]
     pub fn render_side_notes(&mut self, res: &mut String) {
         if self.book.get_bool("side_notes").unwrap() {
             for (note_number, footnote) in self.footnotes.drain(..) {
@@ -151,7 +174,10 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
-    // display end notes, if side_notes option is set to false
+    /// Display end notes, if side_notes option is set to false
+    ///
+    /// Only public because EpubRenderer uses it
+    #[doc(hidden)]
     pub fn render_end_notes(&mut self, res: &mut String) {
         if !self.footnotes.is_empty() {
             res.push_str("<h2 class = \"notes\">Notes</h2>");
@@ -163,18 +189,10 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
     
-    /// Renders the HML of a chapter
-    pub fn render_html(&mut self, tokens: &[Token])-> String {
-        let mut res = String::new();
-        for token in tokens {
-            res.push_str(&self.parse_token(&token));
-            self.render_side_notes(&mut res);
-        }
-        self.render_end_notes(&mut res);
-        res
-    }
-
     /// Transform a vector of `Token`s to HTML format.
+    ///
+    /// Only public becauses `EpubRenderer` uses it
+    #[doc(hidden)]
     pub fn render_vec(&mut self, tokens: &[Token]) -> String {
         let mut res = String::new();
         
@@ -185,6 +203,9 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Parse a single token.
+    ///
+    /// Only public because EpubRenderer uses it
+    #[doc(hidden)]
     pub fn parse_token(&mut self, token: &Token) -> String {
         match *token {
             Token::Str(ref text) => if self.verbatim {
