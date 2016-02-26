@@ -339,7 +339,7 @@ impl Book {
     ///
     /// # Arguments
     /// * `filename`: the path of file to load.
-    /// * `verbose`: sets the book to verbose mode either if the file's doesn't specify it
+    /// * `verbose`: sets the book to verbose mode even if the file's doesn't specify it
     ///    or specifies `verbose: false`
     pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
         let path = Path::new(filename);

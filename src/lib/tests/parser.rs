@@ -7,6 +7,7 @@ fn parse_from_str(doc: &str) -> Vec<Token> {
     parser.parse(doc).unwrap()
 }
 
+
 #[test]
 fn h_p_em() {
     let doc = "

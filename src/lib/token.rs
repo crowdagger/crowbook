@@ -69,3 +69,34 @@ pub enum Token {
     Image(String, String, Vec<Token>), 
 }
 
+use Token::*;
+
+impl Token {
+    /// Returns the inner list of tokens contained in this token (if any)
+    pub fn inner(&self) -> Option<&[Token]> {
+        match *self {
+            Rule
+                | SoftBreak
+                | HardBreak
+                | Str(_) => None,
+            Paragraph(ref v) 
+                | Header(_, ref v)
+                | Emphasis(ref v)
+                | Strong(ref v)
+                | Code(ref v)
+                | BlockQuote(ref v)
+                | CodeBlock(_, ref v)
+                | List(ref v)
+                | OrderedList(_, ref v)
+                | Item(ref v)
+                | Table(_, ref v)
+                | TableHead(ref v)
+                | TableRow(ref v)
+                | TableCell(ref v)
+                | Footnote(ref v)
+                | Link(_,_,ref v)
+                | Image(_,_,ref v) => Some(v)
+        }
+    }
+}
+
