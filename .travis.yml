@@ -3,7 +3,7 @@ sudo: false
 language: rust
 
 # NOTE This configuration has only be tested on the stable channel
-rust: nightly
+rust: 1.5.0
 
 os:
   - linux
