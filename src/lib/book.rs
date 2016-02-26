@@ -73,6 +73,25 @@ tex.template:str                    # Path of a LaTeX template file
 /// and using `Parser`to parse them, and then calling various renderers
 /// (`HtmlRendrer`, `LatexRenderer`, `EpubRenderer` and/or `OdtRenderer`)
 /// to convert the AST into documents.
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::{Book, Number};
+/// // Create an empty book
+/// let mut book = Book::new();
+//
+/// // Set some options
+/// book.set_option("author", "Joan Doe");
+/// book.set_option("title", "An untitled book");
+/// book.set_option("lang", "en");
+///
+/// // Add content to the book
+/// book.add_chapter_as_str(Number::Default, "# The beginning#\nBla, bla, bla").unwrap();
+///
+/// // Render the book as html to stdout
+/// book.render_html(&mut std::io::stdout()).unwrap();
+/// ```
 #[derive(Debug)]
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if
@@ -160,8 +179,28 @@ impl Book {
         }
         out
     }
-
-        /// Sets an option
+    
+    /// Sets an option
+    ///
+    /// # Arguments
+    /// * `key`: the identifier of the option, e.g.: "author"
+    /// * `value`: the value of the option as a string
+    ///
+    /// **Returns** an error either if `key` is not a valid option or if the
+    /// value is not of the right type
+    ///
+    /// # Examples
+    /// ```
+    /// use crowbook::Book;
+    /// let mut book = Book::new();
+    /// book.set_option("author", "Joan Doe").unwrap(); // ok
+    /// book.set_option("numbering", "2").unwrap(); // sets numbering to chapters and subsections
+    /// let result = book.set_option("autor", "John Smith"); 
+    /// assert!(result.is_err()); // error: "author" was mispelled "autor"
+    ///
+    /// let result = book.set_option("numbering", "foo"); 
+    /// assert!(result.is_err()); // error: numbering must be an int
+    /// ```
     pub fn set_option(&mut self, key: &str, value: &str) -> Result<()> {
         if self.valid_strings.contains(&key) {
             self.options.insert(key.to_owned(), BookOption::String(value.to_owned()));
@@ -294,18 +333,6 @@ impl Book {
     }
 
 
-    /// Prints a message to stderr
-    pub fn println(&self, s:&str) {
-        writeln!(&mut io::stderr(), "{}", s).unwrap();
-    }
-
-    /// Prints a message to stderr if verbose is set to true
-    pub fn debug(&self, s:&str) {
-        if self.get_bool("verbose").unwrap() {
-            writeln!(&mut io::stderr(), "{}", s).unwrap();
-        }
-    }
-
     /// Creates a new book from a file
     ///
     /// Note that this method also changes the current directory to the one of this file
@@ -340,6 +367,59 @@ impl Book {
         try!(book.set_from_config(&s));
         Ok(book)
     }
+
+    /// Adds a chapter, as a file name, to the book
+    ///
+    /// `Book` will then parse the file and store the AST (i.e., a vector
+    /// of `Token`s).
+    ///
+    /// # Arguments
+    /// * `number`: specifies if the chapter must be numbered, not numbered, or if its title
+    ///   must be hidden. See `Number`.
+    /// * `file`: path of the file for this chapter
+    ///
+    /// **Returns** an error if `file` does not exist, could not be read, of if there was
+    /// some error parsing it.
+    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
+        self.debug(&format!("Parsing chapter: {}...", file));
+        let mut parser = Parser::new();
+        let v = try!(parser.parse_file(file));
+        self.chapters.push((number, v));
+        Ok(())
+    }
+
+
+    /// Adds a chapter, as a string, to the book
+    ///
+    /// `Book` will then parse the string and store the AST (i.e., a vector
+    /// of `Token`s).
+    ///
+    /// # Arguments
+    /// * `number`: specifies if the chapter must be numbered, not numbered, or if its title
+    ///   must be hidden. See `Number`.
+    /// * `content`: the content of the chapter.
+    ///
+    /// **Returns** an error if there was some errror parsing `content`.
+    pub fn add_chapter_as_str(&mut self, number: Number, content: &str) -> Result<()> {
+        let mut parser = Parser::new();
+        let v = try!(parser.parse(content));
+        self.chapters.push((number, v));
+        Ok(())
+    }
+
+    
+    /// Prints a message to stderr
+    pub fn println(&self, s:&str) {
+        writeln!(&mut io::stderr(), "{}", s).unwrap();
+    }
+
+    /// Prints a message to stderr if verbose is set to true
+    pub fn debug(&self, s:&str) {
+        if self.get_bool("verbose").unwrap() {
+            writeln!(&mut io::stderr(), "{}", s).unwrap();
+        }
+    }
+
 
 
     /// Either clean a string or does nothing,
@@ -485,15 +565,6 @@ impl Book {
     }
 
     
-    /// File: location of the file for this chapter
-    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
-        self.debug(&format!("Parsing chapter: {}...", file));
-        let mut parser = Parser::new();
-        let v = try!(parser.parse_file(file));
-        self.chapters.push((number, v));
-        Ok(())
-    }
-
     /// Returns the template (default or modified version)
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
         let (option, fallback) = match template {
