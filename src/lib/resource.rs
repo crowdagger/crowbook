@@ -2,6 +2,7 @@ use token::Token;
 
 use std::collections::HashMap;
 use std::path::Path;
+use std::borrow::Cow;
 
 /// Resource Handler.
 ///
@@ -11,7 +12,11 @@ use std::path::Path;
 pub struct ResourceHandler {
     /// Maps an original url (e.g.) "foo/Readme.md" to a valid link
     /// (e.g.) chapter3.html
-    links: HashMap<String, String>
+    links: HashMap<String, String>,
+    /// Maps an original (local) file name to a new file name. Allows to
+    // make sure all image files will be included in e.g. the Epub document.
+    pub images: HashMap<String, String>,
+    map_images: bool,
 }
 
 impl ResourceHandler {
@@ -19,7 +24,49 @@ impl ResourceHandler {
     pub fn new() -> ResourceHandler {
         ResourceHandler {
             links: HashMap::new(),
+            images: HashMap::new(),
+            map_images: false,
         }
+    }
+
+    /// Turns mapping for image files on
+    pub fn set_images_mapping(&mut self, b: bool) {
+        self.map_images = b;
+    }
+
+    /// Add a local image file and get the resulting transformed
+    /// file name
+    pub fn map_image<'a>(&'a mut self, file: Cow<'a, str>) -> Cow<'a, str> {
+        // if image mapping is not activated, do nothing
+        if !self.map_images {
+            return file;
+        }
+
+        // If image is not local, do nothing either
+        if !Self::is_local(file.as_ref()) {
+            println!("Warning: book includes non-local images which might not be displayed correctly in EPUB");
+            return file;
+        }
+        
+        // If this image has already been registered, returns it
+        if self.images.contains_key(file.as_ref()) {
+            return Cow::Borrowed(self.images.get(file.as_ref()).unwrap());
+        }
+
+        // Else, create a new file name that has same extension 
+        let dest_file = if let Some(extension) = Path::new(file.as_ref()).extension() {
+            format!("images/image{}.{}", self.images.len(), extension.to_string_lossy())
+        } else {
+            format!("image{}", self.images.len())
+        };
+        
+        self.images.insert(file.into_owned(), dest_file.clone());
+        Cow::Owned(dest_file)
+    }
+
+    /// Returns an iterator the the images files mapping
+    pub fn images_mapping(&self) -> &HashMap<String,String> {
+        &self.images
     }
 
     /// Add a match between an original file and a dest file

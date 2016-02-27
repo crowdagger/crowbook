@@ -22,6 +22,7 @@ use number::Number;
 use error::{Error,Result};
 use toc::Toc;
 use resource::ResourceHandler;
+use std::borrow::Cow;
 
 use mustache;
 
@@ -293,10 +294,14 @@ impl<'a> HtmlRenderer<'a> {
                         },
                         self.render_vec(vec))
             },
-            Token::Image(ref url, ref title, ref alt) => format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
-                                                                 url,
-                                                                 title,
-                                                                 self.render_vec(alt)),
+            Token::Image(ref url, ref title, ref alt) => {
+                let content = self.render_vec(alt);
+                let url = self.handler.map_image(Cow::Borrowed(url));
+                format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
+                        url,
+                        title,
+                        content)
+            },
             Token::Table(_, ref vec) => format!("<div class = \"table\">
     <table>\n{}
     </table>

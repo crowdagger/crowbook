@@ -31,6 +31,7 @@ use uuid;
 use std::io::{Read,Write};
 use std::path::Path;
 use std::fs::File;
+use std::borrow::Cow;
 
 /// Renderer for Epub
 ///
@@ -46,6 +47,7 @@ impl<'a> EpubRenderer<'a> {
     pub fn new(book: &'a Book) -> EpubRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.toc.numbered(true);
+        html.handler.set_images_mapping(true);
         EpubRenderer {
             book: book,
             html: html,
@@ -58,7 +60,7 @@ impl<'a> EpubRenderer<'a> {
         for (i, filename) in self.book.filenames.iter().enumerate() {
             self.html.handler.add_link(filename.clone(), filenamer(i));
         }
-        
+
         let mut zipper = try!(Zipper::new(&self.book.get_path("temp_dir").unwrap()));
         
         // Write mimetype
@@ -83,7 +85,8 @@ impl<'a> EpubRenderer<'a> {
             }
             let chapter = try!(self.render_chapter(v));
 
-            try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));        }
+            try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
+        }
         
         // Write CSS file
         try!(zipper.write("stylesheet.css",
@@ -107,17 +110,19 @@ impl<'a> EpubRenderer<'a> {
         // Write toc.ncx
         try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes(), true));
 
-        // Write the cover (if needs be)
-        if let Ok(ref s) = self.book.get_path("cover") {
-            let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(s.to_owned())));
-            let mut content = vec!();
-            try!(f.read_to_end(&mut content).map_err(|_| Error::Render("Error while reading cover file")));
-            try!(zipper.write(self.book.get_relative_path("cover").unwrap(), &content, true));
-
-            // also write cover.xhtml
+        // Write cover.xhtml (if needs be)
+        if self.book.get_path("cover").is_ok() {
             try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
         }
 
+        // Write all images (including cover)
+        for (source, dest) in self.html.handler.images_mapping() {
+            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(source.to_owned())));
+            let mut content = vec!();
+            try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading image file")));
+            try!(zipper.write(dest, &content, true));
+        }
+        
         if let Ok(epub_file) = self.book.get_path("output.epub") {
             let res = try!(zipper.generate_epub(self.book.get_str("zip.command").unwrap(), &epub_file));
             Ok(res)
@@ -167,7 +172,7 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render content.opf
-    fn render_opf(&self) -> Result<String> {
+    fn render_opf(&mut self) -> Result<String> {
         // Optional metadata
         let mut cover_xhtml = String::new();
         let mut optional = String::new();
@@ -177,8 +182,9 @@ impl<'a> EpubRenderer<'a> {
         if let Ok(s) = self.book.get_str("subject") {
             optional.push_str(&format!("<dc:subject>{}</dc:subject>\n", s));
         }
-        if let Ok(s) = self.book.get_relative_path("cover") {
-            optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n", s));
+        if let Ok(ref s) = self.book.get_path("cover") {
+            optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n",
+                                       self.html.handler.map_image(Cow::Borrowed(s))));
             cover_xhtml.push_str(&format!("<reference type=\"cover\" title=\"Cover\" href=\"cover.xhtml\" />"));
         }
 
@@ -203,31 +209,21 @@ impl<'a> EpubRenderer<'a> {
             itemrefs.push_str(&format!("<itemref idref=\"{}\" />\n", to_id(&filename)));
         }
         // oh we must put cover in the manifest too
-        if let Ok(s) = self.book.get_relative_path("cover") {
-            let format = if let Some(ext) = Path::new(s).extension() {
-                if let Some(extension) = ext.to_str() {
-                    match extension {
-                        "png" => "png",
-                        "jpg" | "jpeg" => "jpeg",
-                        "gif" => "gif",
-                        _ => {
-                            self.book.debug("Warning: could not guess cover format based on extension. Assuming png.");
-                            "png"
-                        },
-                    }
-                } else {
-                    self.book.debug("Warning: could not guess cover format based on extension. Assuming png.");
-                    "png"
-                }
-            } else {
-                self.book.debug("Warning: could not guess cover format based on extension. Assuming png.");
-                "png"
-            };
+        if let Ok(ref cover) = self.book.get_path("cover") {
+            let format = self.get_format(cover);
+            let s= self.html.handler.map_image(Cow::Borrowed(cover));
             items.push_str(&format!("<item {} media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n",
                                     if self.book.get_i32("epub.version").unwrap() == 3 { "properties=\"cover-image\"" } else { "" },
                                     format,
-                                    to_id(s),
+                                    to_id(s.as_ref()),
                                     s));
+        }
+
+        // and the other images
+        for image in self.html.handler.images_mapping().values() {
+            let format = self.get_format(image);
+            items.push_str(&format!("<item media-type = \"image/{}\" id = \"{}\" href = \"{}\" />\n",
+                                    format, to_id(image), image));
         }
 
         let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::OPF} else {OPF});
@@ -249,11 +245,11 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render cover.xhtml
-    fn render_cover(&self) -> Result<String> {
-        if let Ok(cover) = self.book.get_relative_path("cover") {
+    fn render_cover(&mut self) -> Result<String> {
+        if let Ok(cover) = self.book.get_path("cover") {
             let template = mustache::compile_str(if self.book.get_i32("epub.version").unwrap() == 3 {epub3::COVER} else {COVER});
             let data = self.book.get_mapbuilder("none")
-                .insert_str("cover", cover.clone())
+                .insert_str("cover", self.html.handler.map_image(Cow::Owned(cover)).into_owned())
                 .build();
             let mut res:Vec<u8> = vec!();
             template.render_data(&mut res, &data);
@@ -343,7 +339,29 @@ impl<'a> EpubRenderer<'a> {
             _ => self.html.parse_token(token)
         }
     }
+
+    // Get the format of an image file, based on its extension
+    fn get_format(&self, s: &str) -> &'static str {
+        let format = if let Some(ext) = Path::new(s).extension() {
+            match ext.to_string_lossy().as_ref() {
+                "png" => Some("png"),
+                "jpg" | "jpeg" => Some("jpeg"),
+                "gif" => Some("gif"),
+                _ => None,
+            }
+        } else {
+            None
+        };
+        match format {
+            Some(s) => s,
+            None => {
+                self.book.debug(&format!("Warning: could not guess the format of {} based on extension. Assuming png.", s));
+                "png"
+            }
+        }
+    }
 }
+
 
 // generate an id compatible string, replacing / and . by _
 fn to_id(s: &str) -> String {
