@@ -79,8 +79,6 @@ impl<'a> HtmlRenderer<'a> {
         for (i, filename) in self.book.filenames.iter().enumerate() {
             self.handler.add_link(filename.clone(), format!("#chapter-{}", i));
         }
-        println!("{:?}", &self.handler);
-        
         let mut content = String::new();
 
         let mut i = 0;

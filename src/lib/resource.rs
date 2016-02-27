@@ -104,7 +104,6 @@ impl ResourceHandler {
                     | Token::Image (ref mut url, _, ref mut v) => {
                         if ResourceHandler::is_local(url) {
                             let new_url = format!("{}", offset.join(&url).display());
-                            println!("converting link '{}' to '{}'", url, &new_url);
                             *url = new_url;
                         }
                         Self::add_offset(offset, v);
