@@ -228,9 +228,7 @@ impl<'a> HtmlRenderer<'a> {
                 if self.current_numbering >= n {
                     self.inc_header(n - 1);
                 }
-                if n == 1 && self.current_hide {
-                    return String::new();
-                }
+                self.link_number += 1;
                 let s = if n == 1 && self.current_numbering >= 1 {
                     let chapter = self.current_chapter[0];
                     self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
@@ -239,7 +237,6 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     self.render_vec(vec)
                 };
-                self.link_number += 1;
                 if n <= self.book.options.get_i32("numbering").unwrap() {
                     self.toc.add(n,
                                  format!("{}#link-{}",
@@ -247,8 +244,12 @@ impl<'a> HtmlRenderer<'a> {
                                             self.link_number),
                                  s.clone());
                 }
-                format!("<h{} id = \"link-{}\">{}</h{}>\n",
-                        n, self.link_number, s, n)
+                if n == 1 && self.current_hide {
+                    format!("<a id = \"link-{}\"></a>", self.link_number)
+                } else {
+                    format!("<h{} id = \"link-{}\">{}</h{}>\n",
+                            n, self.link_number, s, n)
+                }
             },
             Token::Emphasis(ref vec) => format!("<em>{}</em>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<b>{}</b>", self.render_vec(vec)),
