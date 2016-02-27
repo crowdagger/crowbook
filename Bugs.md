@@ -9,3 +9,11 @@ Bugs
 * odt: no support for... a lot of stuff, actually
 * config: can't parse specified numbers for negative chapter (is it
   really a bug?)
+
+ToDo
+----
+
+* better debugging/warning/verbose messages
+* generate cleaner codes (e.g. indentation)
+* clean CSS and templates files
+* html: add option to generate multi-pages html

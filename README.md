@@ -90,7 +90,7 @@ output_html: some_book.html
 
 For more information see
 [the configuration file page](book_example/config.md), or the whole
-[book_example](book_example) directory. (A (not necessarily
+`book_example` source directory. (A (not necessarily
 up-to-date) [rendered version is available in HTML here](http://lise-henry.github.io/crowbook/book.html)).
 
 It is also possible to give additional parameters to `crowbook`;
@@ -140,6 +140,13 @@ appropriate (e.g. in french you are supposed to put a non-breaking
 space before '?', '!', ';' or ':'). This feature is relatively limited
 at the moment, but I might try to add more options and support for
 more languages.
+
+### Links handling ###
+
+Crowbook tries to correctly translate local links in the input
+Markdown files: e.g. if you have a link to a markdown file that is
+part of your book, it will be transformed into a link inside the
+document. 
 
 See also [Bugs](Bugs.md).
 
