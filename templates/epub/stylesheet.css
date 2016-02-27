@@ -7,6 +7,7 @@ body {
     text-align: justify;
     font-size: 100%;
 }
+
 p {
     text-indent: 1.25em;
     margin:0;
@@ -30,6 +31,7 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+/* Try to disable hyphenation in titles */
 h1, h2, h3, h4, h5, h5 {
     adobe-hyphenate: none;
     -ms-hyphens: none; /* Trident (Windows) */
@@ -39,40 +41,42 @@ h1, h2, h3, h4, h5, h5 {
     hyphens: none; /* Futur standard */
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
     text-align: left;
     font-family: Linux Biolinum, sans-serif;
     font-variant: small-caps;
 }
-h2 {
-    text-align: left;
-    font-family: Linux Biolinum, sans-serif;
-    font-variant: small-caps;
-}
-h3 {
-    text-align: left;
-    font-family: Linux Biolinum, sans-serif;
-    font-variant: small-caps;
-}
-h4 { text-align: left; }
-h5 { text-align: left; }
-h6 { text-align: left; }
+
+/* Title of the book */
 h1.title {
     text-align: center;
     font-size: 300%;
 }
+/* Author */
 h2.author {
     text-align: right;
     font-size:  200%;
 }
-h3.date { }
-ol.toc { padding: 0; margin-left: 1em; }
-ol.toc li { list-style-type: none; margin: 0; padding: 0; }
-p img {
+
+/* When toc is displayed inlined */
+#toc ol, #toc ul {
+    padding: 0;
+    margin-left: 1em;
 }
+#toc li, {
+    list-style-type: none;
+    margin: 0; padding: 0;
+}
+
+#toc li:before {
+    content: none;
+}
+
+
 #cover img {
     width: 100%;
 }
+
 .rule {
     text-align: center;
     margin-top: 1em;
@@ -80,6 +84,13 @@ p img {
     font-weight: bold;
 }
 
+/* The number of the note in an expanded footnote (e.g. [3]) */
+.note-number {
+    font-weight: bold;
+    margin-right: 1em;
+}
+
+/* When footnotes (try to) be diplayed as margin notes */
 .sidenote {
     display: block;
     float: right;
@@ -90,15 +101,11 @@ p img {
     margin-right: -1.5em;
 }
 
-.note-number {
-    font-weight: bold;
-    margin-right: 1em;
-}
-
 .sidenote .note-number {
     float: left;
 }
 
+/* The div class displaying notes at the end of a chapter */
 .notes {
     text-align: justify;
     border: none;
@@ -109,7 +116,7 @@ table.notes td {
     margin-right: 1em;
 }
                  
-
+/* Every markdown table is included in a <div class = "table"> */
 .table {
     margin: 1em;
 }
@@ -133,6 +140,7 @@ table.notes td {
     font-variant: small-caps;
 }
 
+/* Make list displays '–' instead of puces */
 ul li {
     list-style-type: none;
 }

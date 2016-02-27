@@ -1,3 +1,4 @@
+/* The nav element corresponding to the navigation menu */
 nav {
     position: fixed;
     left: 0;
@@ -7,33 +8,47 @@ nav {
     overflow-y: auto;
     font-size: 80%;
     margin-left: 0;
-    background: #F0F0F0;
-}
-#content {
-    position: absolute;
-    overflow-y: auto;
-    margin-left: 10%;
-    margin-right: 10%;
-    transition: margin-left 1s;
-}
-#toc ul, #toc li, #nav ul, #nav li {
-    list-style-type: none;
+    background: black;
+    color: white;
 }
 
-#toc li:before {
-    content: none;
+#nav code {
+    background-color: transparent;
+}
+    
+#nav a:link {
+    color: white;
+    text-decoration: none;
+}
+
+#nav a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+#nav {
+    text-align: left;
+}
+
+#nav h2 {
+    text-align: center;
+}
+
+#nav li {
+    list-style-type: none;
+    text-indent: -1em;
 }
 
 #nav li:before {
     content: none;
 }
                     
-                    
 #nav ul {
-    margin-left: 0;
     padding-right: 1em;
-    padding-left: 1em;
+    padding-left: 1.5em;
 }
+
+/* The menu containing the button to display the navigation bar */
 #menu {
     position: fixed;
     top: 0em;
@@ -45,7 +60,17 @@ nav {
     padding: 0.5em;
 }
 
+/* Hide navigation bar */
 #nav {
     left: -20%;
     transition: left 1s;
+}
+
+/* The main content of the book */
+#content {
+    position: absolute;
+    overflow-y: auto;
+    margin-left: 10%;
+    margin-right: 10%;
+    transition: margin-left 1s;
 }
