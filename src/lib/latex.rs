@@ -21,7 +21,7 @@ use error::{Error,Result};
 use token::Token;
 use zipper::Zipper;
 use escape::escape_tex;
-use resource::ResourceHandler;
+use resource_handler::ResourceHandler;
 
 use std::iter::Iterator;
 use std::fs::File;

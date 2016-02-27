@@ -110,7 +110,7 @@ pub use error::{Result, Error};
 pub use token::Token;
 pub use cleaner::{Cleaner, French};
 pub use number::Number;
-pub use resource::ResourceHandler;
+pub use resource_handler::ResourceHandler;
 
 mod html;
 mod error;
@@ -122,7 +122,7 @@ mod parser;
 mod token;
 mod cleaner;
 mod number;
-mod resource;
+mod resource_handler;
 
 mod escape;
 mod toc;

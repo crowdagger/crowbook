@@ -21,7 +21,7 @@ use book::Book;
 use number::Number;
 use error::{Error,Result};
 use toc::Toc;
-use resource::ResourceHandler;
+use resource_handler::ResourceHandler;
 use std::borrow::Cow;
 
 use mustache;

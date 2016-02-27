@@ -10,7 +10,7 @@ use odt::OdtRenderer;
 use templates::{epub, html, epub3, latex};
 use escape;
 use number::Number;
-use resource::ResourceHandler;
+use resource_handler::ResourceHandler;
 
 use std::env;
 use std::fs::File;
