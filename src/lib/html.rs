@@ -83,7 +83,7 @@ impl<'a> HtmlRenderer<'a> {
 
         let mut i = 0;
         for &(n, ref v) in &self.book.chapters {
-            content.push_str(&format!("<a id = \"chapter-{}\" />\n", i));
+            content.push_str(&format!("<a id = \"chapter-{}\"></a>\n", i));
             self.current_hide = false;
             let book_numbering = self.book.get_i32("numbering").unwrap();
             match n {
