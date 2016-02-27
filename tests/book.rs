@@ -1,6 +1,5 @@
 extern crate crowbook;
 use crowbook::Book;
-use std::env;
 use std::io;
 
 #[test]
