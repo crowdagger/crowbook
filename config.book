@@ -1,17 +1,16 @@
 # Metadata
-author: >
- Élisabeth
- Henry
+author: Élisabeth Henry
 title: Crowbook
-description: More like some kind of manual really
+description: >
+ Crowbook allows to render a book written in Markdown in various
+ formats. This is some kind of manual for it, and a way to
+ demonstrate and test it.
 lang: en
 
 # Generic options (though not used with LaTeX)
 ## Number chapters and sections, but not below that
-numbering: 4
+numbering: 2
 display_toc: true
-# Display foot notes as side notes
-#side_notes: true
 
 # Latex options
 tex.links_as_footnotes: false
@@ -19,12 +18,10 @@ tex.links_as_footnotes: false
 # Epub option
 epub.version: 3
 
-temp_dir: .
-
 # Options for generating files
 output.epub: book_example/book.epub
 output.html: book_example/book.html
-# output.pdf: book_example/book.pdf
+output.pdf: book_example/book.pdf
 output.odt: book_example/book.odt
 
 # Finally, our files.
