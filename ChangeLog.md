@@ -6,7 +6,9 @@ ChangeLog
 * Crowbook now tries to convert local links. That is, if you link to a
   Markdown file that is used in the book
   (e.g. [README.md](README.md)), it *should* link to an appropriate
-  inner referenc inside the book.
+  inner reference inside the book.
+* Latex renderer now supports (local) images.
+* Epub renderer now embed (local) images in the EPUB file.
 * Internal (or usage as a library):
     * Crowbook no longer changes current directory, which worked in
       the binary but could cause problem if library was used in
