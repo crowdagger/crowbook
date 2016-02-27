@@ -29,7 +29,9 @@ impl ResourceHandler {
         }
     }
 
-    /// Turns mapping for image files on
+    /// Turns on mapping for image files
+    ///
+    /// # Argument: an offset (should be book.root)
     pub fn set_images_mapping(&mut self, b: bool) {
         self.map_images = b;
     }
@@ -44,7 +46,7 @@ impl ResourceHandler {
 
         // If image is not local, do nothing either
         if !Self::is_local(file.as_ref()) {
-            println!("Warning: book includes non-local images which might not be displayed correctly in EPUB");
+            println!("Warning: book includes non-local images which might cause problem for proper inclusion, particularly for EPUB and PDF");
             return file;
         }
         
@@ -55,11 +57,11 @@ impl ResourceHandler {
 
         // Else, create a new file name that has same extension 
         let dest_file = if let Some(extension) = Path::new(file.as_ref()).extension() {
-            format!("images/image{}.{}", self.images.len(), extension.to_string_lossy())
+            format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
         } else {
-            format!("image{}", self.images.len())
+            format!("image_{}", self.images.len())
         };
-        
+
         self.images.insert(file.into_owned(), dest_file.clone());
         Cow::Owned(dest_file)
     }
@@ -90,7 +92,7 @@ impl ResourceHandler {
         !path.contains("://") // todo: use better algorithm
     }
 
-    /// Add a path offset to all linked urls
+    /// Add a path offset to all linked urls and images src
     pub fn add_offset(offset: &Path, ast: &mut [Token]) {
         if offset == Path::new("") {
             //nothing do to

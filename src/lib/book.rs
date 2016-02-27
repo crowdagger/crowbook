@@ -454,7 +454,8 @@ impl Book {
         if offset.starts_with("..") {
             self.println(&format!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
         }
-        
+
+        // add offset 
         ResourceHandler::add_offset(offset, &mut v);
                               
         self.chapters.push((number, v));

@@ -24,6 +24,9 @@ use escape::escape_tex;
 use resource::ResourceHandler;
 
 use std::iter::Iterator;
+use std::fs::File;
+use std::borrow::Cow;
+use std::io::Read;
 
 use mustache;
 
@@ -37,10 +40,12 @@ pub struct LatexRenderer<'a> {
 impl<'a> LatexRenderer<'a> {
     /// Creates new LatexRenderer
     pub fn new(book: &'a Book) -> LatexRenderer<'a> {
+        let mut handler = ResourceHandler::new();
+        handler.set_images_mapping(true);
         LatexRenderer {
             book: book,
             current_chapter: Number::Default,
-            handler: ResourceHandler::new(),
+            handler: handler,
         }
     }
 
@@ -50,6 +55,16 @@ impl<'a> LatexRenderer<'a> {
             let content = try!(self.render_book());
             let mut zipper = try!(Zipper::new(&self.book.get_path("temp_dir").unwrap()));
             try!(zipper.write("result.tex", &content.as_bytes(), false));
+
+            // write image files
+            for (source, dest) in self.handler.images_mapping() {
+                let mut f = try!(File::open(self.book.root.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
+                let mut content = vec!();
+                try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading image file")));
+                try!(zipper.write(dest, &content, true));
+            }
+        
+            
             zipper.generate_pdf(&self.book.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
             Err(Error::Render("no output pdf file specified in book config"))
@@ -181,7 +196,7 @@ impl<'a> LatexRenderer<'a> {
             },
             Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
-                    format!("\\includegraphics{{{}}}", self.book.root.join(url).display())
+                    format!("\\includegraphics{{{}}}", self.handler.map_image(Cow::Borrowed(url)))
                 } else {
                     self.book.debug(&format!("image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     String::new()
