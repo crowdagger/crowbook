@@ -102,6 +102,7 @@ extern crate uuid;
 
 pub use parser::Parser;
 pub use book::Book;
+pub use bookoption::{BookOption, BookOptions};
 pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;

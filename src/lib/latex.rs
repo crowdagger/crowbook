@@ -51,9 +51,9 @@ impl<'a> LatexRenderer<'a> {
 
     /// Render pdf in a file
     pub fn render_pdf(&mut self) -> Result<String> {
-        if let Ok(pdf_file) = self.book.get_path("output.pdf") {
+        if let Ok(pdf_file) = self.book.options.get_path("output.pdf") {
             let content = try!(self.render_book());
-            let mut zipper = try!(Zipper::new(&self.book.get_path("temp_dir").unwrap()));
+            let mut zipper = try!(Zipper::new(&self.book.options.get_path("temp_dir").unwrap()));
             try!(zipper.write("result.tex", &content.as_bytes(), false));
 
             // write image files
@@ -65,7 +65,7 @@ impl<'a> LatexRenderer<'a> {
             }
         
             
-            zipper.generate_pdf(&self.book.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
+            zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
             Err(Error::Render("no output pdf file specified in book config"))
         }
@@ -79,12 +79,12 @@ impl<'a> LatexRenderer<'a> {
         }
 
         // set tex numbering and toc display to book's parameters
-        let numbering = self.book.get_i32("numbering").unwrap() - 1;
+        let numbering = self.book.options.get_i32("numbering").unwrap() - 1;
         content.push_str(&format!("\\setcounter{{tocdepth}}{{{}}}
 \\setcounter{{secnumdepth}}{{{}}}\n",
                                   numbering, numbering));
         
-        if self.book.get_bool("display_toc").unwrap() {
+        if self.book.options.get_bool("display_toc").unwrap() {
             content.push_str("\\tableofcontents\n");
         }
 
@@ -97,11 +97,11 @@ impl<'a> LatexRenderer<'a> {
         }
         
 
-        let tex_lang = String::from(match self.book.get_str("lang").unwrap() {
+        let tex_lang = String::from(match self.book.options.get_str("lang").unwrap() {
             "en" => "english",
             "fr" => "francais",
             _ => {
-                self.book.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.get_str("lang").unwrap()));
+                self.book.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
                 "english"
             }
         });
@@ -186,7 +186,7 @@ impl<'a> LatexRenderer<'a> {
                     if content == url {
                         format!("\\url{{{}}}", content)
                     } else {
-                        if self.book.get_bool("tex.links_as_footnotes").unwrap() {
+                        if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
                             format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", url, content, url)
                         } else {
                             format!("\\href{{{}}}{{{}}}", url, content)

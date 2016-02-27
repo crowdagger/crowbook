@@ -21,7 +21,7 @@ extern crate clap;
 mod helpers;
 use helpers::*;
 
-use crowbook::{Book};
+use crowbook::{Book,BookOptions};
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
@@ -32,21 +32,21 @@ use std::io;
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     if let Some(file) = matches.value_of("output") {
         match format {
-            "epub" => book.set_option("output.epub", file).unwrap(),
-            "tex" => book.set_option("output.tex", file).unwrap(),
-            "html" => book.set_option("output.html", file).unwrap(),
-            "pdf" => book.set_option("output.pdf", file).unwrap(),
-            "odt" => book.set_option("output.odt", file).unwrap(),
+            "epub" => book.options.set("output.epub", file).unwrap(),
+            "tex" => book.options.set("output.tex", file).unwrap(),
+            "html" => book.options.set("output.html", file).unwrap(),
+            "pdf" => book.options.set("output.pdf", file).unwrap(),
+            "odt" => book.options.set("output.odt", file).unwrap(),
             _ => unreachable!()
         }
     }
     
     let option = match format {
-        "epub" => book.get_path("output.epub"),
-        "tex" => book.get_path("output.tex"),
-        "html" => book.get_path("output.html"),
-        "pdf" => book.get_path("output.pdf"),
-        "odt" => book.get_path("output.odt"),
+        "epub" => book.options.get_path("output.epub"),
+        "tex" => book.options.get_path("output.tex"),
+        "html" => book.options.get_path("output.html"),
+        "pdf" => book.options.get_path("output.pdf"),
+        "odt" => book.options.get_path("output.odt"),
         _ => unreachable!()
     };
     let result = match option {
@@ -88,12 +88,12 @@ fn main() {
     let matches = create_matches();
 
     if matches.is_present("list-options") {
-        println!("{}", Book::description(false));
+        println!("{}", BookOptions::description(false));
         exit(0);
     }
     
     if matches.is_present("list-options-md") {
-        println!("{}", Book::description(true));
+        println!("{}", BookOptions::description(true));
         exit(0);
     }
 

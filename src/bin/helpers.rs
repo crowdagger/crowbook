@@ -25,7 +25,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
         for i in 0..v.len()/2 {
             let key = v[i * 2];
             let value = v[i * 2 + 1];
-            let res = book.set_option(key, value);
+            let res = book.options.set(key, value);
             if let Err(err) = res {
                 print_error(&format!("Error in setting key {}: {}", key, err));
             }

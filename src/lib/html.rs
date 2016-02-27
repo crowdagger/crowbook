@@ -62,7 +62,7 @@ impl<'a> HtmlRenderer<'a> {
             toc: Toc::new(),
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
-            current_numbering: book.get_i32("numbering").unwrap(),
+            current_numbering: book.options.get_i32("numbering").unwrap(),
             current_hide: false,
             table_head: false,
             footnote_number: 0,
@@ -85,7 +85,7 @@ impl<'a> HtmlRenderer<'a> {
         for &(n, ref v) in &self.book.chapters {
             content.push_str(&format!("<a id = \"chapter-{}\"></a>\n", i));
             self.current_hide = false;
-            let book_numbering = self.book.get_i32("numbering").unwrap();
+            let book_numbering = self.book.options.get_i32("numbering").unwrap();
             match n {
                 Number::Unnumbered => self.current_numbering = 0,
                 Number::Default => self.current_numbering = book_numbering,
@@ -104,13 +104,13 @@ impl<'a> HtmlRenderer<'a> {
         let toc = self.toc.render();
 
         // If display_toc, display the toc inline
-        if self.book.get_bool("display_toc").unwrap() {
+        if self.book.options.get_bool("display_toc").unwrap() {
             content = format!("<h1>{}</h1>
 <div id = \"toc\">
 {}
 </div>
 {}",
-                              self.book.get_str("toc_name").unwrap(),
+                              self.book.options.get_str("toc_name").unwrap(),
                               &toc,
                               content);
         }
@@ -177,7 +177,7 @@ impl<'a> HtmlRenderer<'a> {
     /// Only public because EpubRenderer uses it
     #[doc(hidden)]
     pub fn render_side_notes(&mut self, res: &mut String) {
-        if self.book.get_bool("side_notes").unwrap() {
+        if self.book.options.get_bool("side_notes").unwrap() {
             for (note_number, footnote) in self.footnotes.drain(..) {
                 res.push_str(&format!("<div class = \"sidenote\">\n{} {}\n</div>\n", note_number, footnote));
             }
@@ -240,7 +240,7 @@ impl<'a> HtmlRenderer<'a> {
                     self.render_vec(vec)
                 };
                 self.link_number += 1;
-                if n <= self.book.get_i32("numbering").unwrap() {
+                if n <= self.book.options.get_i32("numbering").unwrap() {
                     self.toc.add(n,
                                  format!("{}#link-{}",
                                             self.filename,

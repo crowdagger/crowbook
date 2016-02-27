@@ -48,6 +48,7 @@ pub trait Cleaner {
     }
 }
 
+
 impl Cleaner for () {}
 
 /// Implementation for french 'cleaning'
