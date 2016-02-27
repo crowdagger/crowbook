@@ -177,33 +177,37 @@ usage of some of them is detailed later on.
     - **default value**: `not set`
     -  Description of the book (used for EPUB metadata)
 - **`cover`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  File name of the cover of the book
 
 ###  Output options ###
 - **`output.epub`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Output file name for EPUB rendering
 - **`output.html`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Output file name for HTML rendering
 - **`output.tex`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Output file name for LaTeX rendering
 - **`output.pdf`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Output file name for PDF rendering
 - **`output.odt`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Output file name for ODT rendering
 
 ###  Misc options ###
+- **`zip.command`**
+    - **type**: string
+    - **default value**: `zip`
+    -  Command to use to zip files (for EPUB/ODT)
 - **`numbering`**
     - **type**: integer
     - **default value**: `1`
@@ -228,26 +232,26 @@ usage of some of them is detailed later on.
     - **type**: boolean
     - **default value**: `false`
     -  Display footnotes as side notes in HTML/Epub
-- **`nb_char`**
-    - **type**: char
-    - **default value**: `' '`
-    -  The non-breaking character to use for autoclean when lang is set to fr
 - **`temp_dir`**
-    - **type**: string
-    - **default value**: `.`
-    -  Path where to create a temporary directory
+    - **type**: path
+    - **default value**: ``
+    -  Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 - **`numbering_template`**
     - **type**: string
     - **default value**: `{{number}}. {{title}}`
     -  Format of numbered titles
+- **`nb_char`**
+    - **type**: char
+    - **default value**: `' '`
+    -  The non-breaking character to use for autoclean when lang is set to fr
 
 ###  HTML options ###
 - **`html.template`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Path of an HTML template
 - **`html.css`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Path of a stylesheet to use with HTML rendering
 
@@ -257,11 +261,11 @@ usage of some of them is detailed later on.
     - **default value**: `2`
     -  The EPUB version to generate
 - **`epub.css`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Path of a stylesheet to use with EPUB rendering
 - **`epub.template`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Path of an epub template for chapter
 
@@ -275,9 +279,16 @@ usage of some of them is detailed later on.
     - **default value**: `pdflatex`
     -  LaTeX flavour to use for generating PDF
 - **`tex.template`**
-    - **type**: string
+    - **type**: path
     - **default value**: `not set`
     -  Path of a LaTeX template file
+
+Note that these options take a type, which in most case should be
+pretty straightforward (a boolean can be `true` or `false`, an integer
+must be composed a number, a string is, well, any string, just
+remember not to put the quotes). The `path` type might puzzle you a
+bit, but it's equivalent a string, except Crowbook will consider it
+relatively to the book file.
 
 
 ### Output options ###
@@ -368,21 +379,10 @@ you need to modify.
 
 When it is generating epub or pdf files, Crowbook creates a temporary
 directory (which is then removed), named from a random uuid (so we can
-be pretty certain it's not gonna exist). This option specify where to
-create this directory. E.g., if you set:
-
-```
-temp_dir: /tmp
-```
-
-crowbook might create a temporary directory
-`/tmp/7fcbe41e-1676-46ba-b1a7-40c2fa37a3a7`.
-
-By default, this temporary directory is created where the config file
-is.
-
-**default**: `.`
-
+be pretty certain it's not gonna exist). By default, it uses Rust's
+[`std::env::temp_dir`](https://doc.rust-lang.org/std/env/fn.temp_dir.html)
+function, which should an appropriate place for temporary files, so
+you probably won't have to use this option.
 
 
 

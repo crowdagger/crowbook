@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.3.0 (unreleased)
+0.3.0 (2016-02-27)
 ------------------
 * Crowbook now tries to convert local links. That is, if you link to a
   Markdown file that is used in the book
@@ -9,12 +9,12 @@ ChangeLog
   inner reference inside the book.
 * Latex renderer now supports (local) images.
 * Epub renderer now embed (local) images in the EPUB file.
+* Some changes to the HTML/Epub stylesheets.
 * Internal (or usage as a library):
     * Crowbook no longer changes current directory, which worked in
       the binary but could cause problem if library was used in
       multithreaded environment (e.g. in `cargo test`).
-    * Modules `toc` and `escape` are now private.
-    * More methods are now private.
+    * More modules and methods are now private.
     * Improved documentation.
     * Added more unit tests.
 * Bugfixes: 

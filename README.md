@@ -170,7 +170,13 @@ It also uses configuration files from
 [Appveyor](http://www.appveyor.com/) to generate binaries for
 various platforms on each release.
 
-While Crowbook directly doesn't use them, there was also inspiration from [Pandoc](http://pandoc.org/) and [mdBook](https://github.com/azerupi/mdBook).
+While Crowbook directly doesn't use them, there was also inspiration
+from [Pandoc](http://pandoc.org/) and
+[mdBook](https://github.com/azerupi/mdBook).
+
+Also, the [W3C HTML validator](https://validator.w3.org/) and the
+[IDPF EPUB validator](http://validator.idpf.org/) proved very useful
+during development.
 
 ChangeLog
 ---------
