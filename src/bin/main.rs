@@ -42,11 +42,11 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     }
     
     let option = match format {
-        "epub" => book.get_str("output.epub"),
-        "tex" => book.get_str("output.tex"),
-        "html" => book.get_str("output.html"),
-        "pdf" => book.get_str("output.pdf"),
-        "odt" => book.get_str("output.odt"),
+        "epub" => book.get_path("output.epub"),
+        "tex" => book.get_path("output.tex"),
+        "html" => book.get_path("output.html"),
+        "pdf" => book.get_path("output.pdf"),
+        "odt" => book.get_path("output.odt"),
         _ => unreachable!()
     };
     let result = match option {
