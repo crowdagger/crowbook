@@ -81,7 +81,7 @@ numbering:int:1                     # The  maximum heading levels to number (0: 
 display_toc:bool:false              # If true, display a table of content in the document
 toc_name:str:Table of contents      # Name of the table of contents if toc is displayed in line
 autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
-verbose:bool:false                  # Toggle verbose mode
+verbose:bool:false                  # If set to true, print warnings in Markdown processing
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 numbering_template:str:{{number}}. {{title}} # Format of numbered titles
@@ -218,7 +218,7 @@ impl BookOptions {
 
     /// get an option
     pub fn get(&self, key: &str) -> Result<&BookOption> {
-        self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not present", key)))
+        self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not persent", key)))
     }
 
     

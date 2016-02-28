@@ -19,7 +19,7 @@ use std::error;
 use std::result;
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 /// Crowbook's error type
 pub enum Error {
     /// An error in Parsing markdown file

@@ -14,7 +14,7 @@ use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
 
 use std::fs::File;
-use std::io::{self, Write,Read};
+use std::io::{Write, Read};
 use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 
@@ -92,7 +92,7 @@ impl Book {
         let mut book = Book::new();
         if verbose {
             book.options.set("verbose", "true").unwrap();
-            book.logger.set_verbosity(InfoLevel::Debug);
+            book.logger.set_verbosity(InfoLevel::Warning);
         }
         
         let path = Path::new(filename);
@@ -200,6 +200,12 @@ impl Book {
         }
         if multiline {
             try!(self.options.set(&prev_key, &prev_value));
+        }
+
+        if self.options.get_bool("verbose") == Ok(true) {
+            if self.logger.verbosity() >= InfoLevel::Warning {
+                self.logger.set_verbosity(InfoLevel::Warning);
+            }
         }
 
         Ok(())

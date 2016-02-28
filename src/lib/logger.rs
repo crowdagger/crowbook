@@ -33,6 +33,11 @@ impl Logger {
         }
     }
 
+    /// Gets verbosity
+    pub fn verbosity(&self)-> InfoLevel {
+        self.verbosity
+    }
+
     /// Sets verbosity
     pub fn set_verbosity(&mut self, verbosity: InfoLevel) {
         self.verbosity = verbosity;
@@ -42,10 +47,10 @@ impl Logger {
     pub fn log<S: AsRef<str>>(&self, level: InfoLevel, s: S) {
         if level >= self.verbosity {
             match level {
-                Debug => writeln!(&mut io::stderr(), "debug: {}", s.as_ref()).unwrap(),
-                Info => writeln!(&mut io::stderr(), "info: {}", s.as_ref()).unwrap(),
-                Warning => writeln!(&mut io::stderr(), "warning: {}", s.as_ref()).unwrap(),
-                Error => writeln!(&mut io::stderr(), "error: {}", s.as_ref()).unwrap(),
+                Debug => writeln!(&mut io::stderr(), "{}{}{}", SHELL_COLOUR_BLUE,s.as_ref(), SHELL_COLOUR_OFF).unwrap(),
+                Info => writeln!(&mut io::stderr(), "{}", s.as_ref()).unwrap(),
+                Warning => writeln!(&mut io::stderr(), "{}{}{}", SHELL_COLOUR_ORANGE, s.as_ref(), SHELL_COLOUR_OFF).unwrap(),
+                Error => writeln!(&mut io::stderr(), "{}{}{}", SHELL_COLOUR_RED, s.as_ref(), SHELL_COLOUR_OFF).unwrap(),
             }
         }
     }
@@ -70,3 +75,9 @@ impl Logger {
         self.log(InfoLevel::Error, s);
     }
 }
+
+// Code to end shell colouring
+const SHELL_COLOUR_OFF: &'static str = "\x1B[0m";
+const SHELL_COLOUR_RED: &'static str = "\x1B[31m";
+const SHELL_COLOUR_BLUE: &'static str = "\x1B[36m";
+const SHELL_COLOUR_ORANGE: &'static str = "\x1B[33m";
