@@ -124,6 +124,7 @@ mod token;
 mod cleaner;
 mod number;
 mod resource_handler;
+mod logger;
 
 mod escape;
 mod toc;
