@@ -34,13 +34,13 @@ use mustache;
 pub struct LatexRenderer<'a> {
     book: &'a Book,
     current_chapter: Number,
-    handler: ResourceHandler,
+    handler: ResourceHandler<'a>,
 }
 
 impl<'a> LatexRenderer<'a> {
     /// Creates new LatexRenderer
     pub fn new(book: &'a Book) -> LatexRenderer<'a> {
-        let mut handler = ResourceHandler::new();
+        let mut handler = ResourceHandler::new(&book.logger);
         handler.set_images_mapping(true);
         LatexRenderer {
             book: book,
@@ -101,7 +101,7 @@ impl<'a> LatexRenderer<'a> {
             "en" => "english",
             "fr" => "francais",
             _ => {
-                self.book.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
+                self.book.logger.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
                 "english"
             }
         });
@@ -198,7 +198,7 @@ impl<'a> LatexRenderer<'a> {
                 if ResourceHandler::is_local(url) {
                     format!("\\includegraphics{{{}}}", self.handler.map_image(Cow::Borrowed(url)))
                 } else {
-                    self.book.debug(&format!("image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
+                    self.book.logger.debug(&format!("image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     String::new()
                 }
             }

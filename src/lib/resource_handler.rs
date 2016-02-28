@@ -1,4 +1,5 @@
 use token::Token;
+use logger::Logger;
 
 use std::collections::HashMap;
 use std::path::Path;
@@ -9,7 +10,7 @@ use std::borrow::Cow;
 /// Its task is to make sure that some resource (image, link) is available
 /// for the book and to list images used in Markdown files so they can be used for the book
 #[derive(Debug)]
-pub struct ResourceHandler {
+pub struct ResourceHandler<'r> {
     /// Maps an original url (e.g.) "foo/Readme.md" to a valid link
     /// (e.g.) chapter3.html
     links: HashMap<String, String>,
@@ -17,15 +18,17 @@ pub struct ResourceHandler {
     // make sure all image files will be included in e.g. the Epub document.
     pub images: HashMap<String, String>,
     map_images: bool,
+    logger: &'r Logger,
 }
 
-impl ResourceHandler {
+impl<'r> ResourceHandler<'r> {
     /// Creates a new, empty Resource Handler
-    pub fn new() -> ResourceHandler {
+    pub fn new(logger: &'r Logger) -> ResourceHandler {
         ResourceHandler {
             links: HashMap::new(),
             images: HashMap::new(),
             map_images: false,
+            logger: logger,
         }
     }
 
@@ -46,7 +49,7 @@ impl ResourceHandler {
 
         // If image is not local, do nothing either
         if !Self::is_local(file.as_ref()) {
-            println!("Warning: book includes non-local images which might cause problem for proper inclusion, particularly for EPUB and PDF");
+            self.logger.warning("book includes non-local images which might cause problem for proper inclusion, particularly for EPUB and PDF");
             return file;
         }
         
@@ -81,7 +84,7 @@ impl ResourceHandler {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            println!("Warning: resource handler could not find a match for link {}", from);
+            self.logger.warning(format!("Warning: resource handler could not find a match for link {}", from));
             from
         }
     }

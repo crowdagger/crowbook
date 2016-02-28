@@ -11,6 +11,7 @@ use templates::{epub, html, epub3, latex};
 use escape;
 use number::Number;
 use resource_handler::ResourceHandler;
+use logger::{Logger, InfoLevel};
 
 use std::fs::File;
 use std::io::{self, Write,Read};
@@ -62,6 +63,9 @@ pub struct Book {
 
     /// Root path of the book
     pub root: PathBuf,
+
+    /// Logger
+    pub logger: Logger,
 }
 
 impl Book {
@@ -72,6 +76,7 @@ impl Book {
             filenames: vec!(),
             root: PathBuf::new(),
             options: BookOptions::new(),
+            logger: Logger::new(InfoLevel::Info),
         }
     }
 
@@ -87,6 +92,7 @@ impl Book {
         let mut book = Book::new();
         if verbose {
             book.options.set("verbose", "true").unwrap();
+            book.logger.set_verbosity(InfoLevel::Debug);
         }
         
         let path = Path::new(filename);
@@ -229,7 +235,7 @@ impl Book {
             try!(self.render_odt());
         }
         if !did_some_stuff {
-            self.println("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
+            self.logger.warning("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
         }
         Ok(())
     }
@@ -238,52 +244,52 @@ impl Book {
     
     /// Render book to pdf according to book options
     pub fn render_pdf(&self) -> Result<()> {
-        self.debug("Attempting to generate pdf...");
+        self.logger.debug("Attempting to generate pdf...");
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_pdf());
-        self.debug(&result);
-        self.println(&format!("Successfully generated pdf file: {}", self.options.get_path("output.pdf").unwrap()));
+        self.logger.debug(result);
+        self.logger.info(format!("Successfully generated pdf file: {}", self.options.get_path("output.pdf").unwrap()));
         Ok(())
     }
 
     /// Render book to epub according to book options
     pub fn render_epub(&self) -> Result<()> {
-        self.debug("Attempting to generate epub...");
+        self.logger.debug("Attempting to generate epub...");
         let mut epub = EpubRenderer::new(&self);
         let result = try!(epub.render_book());
-        self.debug(&result);
-        self.println(&format!("Successfully generated epub file: {}", self.options.get_path("output.epub").unwrap()));
+        self.logger.debug(&result);
+        self.logger.info(&format!("Successfully generated epub file: {}", self.options.get_path("output.epub").unwrap()));
         Ok(())
     }
 
         /// Render book to odt according to book options
     pub fn render_odt(&self) -> Result<()> {
-        self.debug("Attempting to generate Odt...");
+        self.logger.debug("Attempting to generate Odt...");
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
-        self.debug(&result);
-        self.println(&format!("Successfully generated odt file: {}", self.options.get_path("output.odt").unwrap()));
+        self.logger.debug(&result);
+        self.logger.info(format!("Successfully generated odt file: {}", self.options.get_path("output.odt").unwrap()));
         Ok(())
     }
 
     /// Render book to html according to book options
     pub fn render_html<T: Write>(&self, f: &mut T) -> Result<()> {
-        self.debug("Attempting to generate HTML...");
+        self.logger.debug("Attempting to generate HTML...");
         let mut html = HtmlRenderer::new(&self);
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to HTML file")));
-        self.println("Successfully generated HTML");
+        self.logger.info("Successfully generated HTML");
         Ok(())
     }
 
     /// Render book to pdf according to book options
     pub fn render_tex<T:Write>(&self, f: &mut T) -> Result<()> {
-        self.debug("Attempting to generate LaTeX...");
+        self.logger.debug("Attempting to generate LaTeX...");
 
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
-        self.println("Successfully generated LaTeX");
+        self.logger.info("Successfully generated LaTeX");
         Ok(())
     }
         
@@ -302,7 +308,7 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
-        self.debug(&format!("Parsing chapter: {}...", file));
+        self.logger.debug(&format!("Parsing chapter: {}...", file));
         
         // add file to the list of file names
         self.filenames.push(file.to_owned());
@@ -314,7 +320,7 @@ impl Book {
         // transform the AST to make local links and images relative to `book` directory
         let offset = Path::new(file).parent().unwrap();
         if offset.starts_with("..") {
-            self.println(&format!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
+            self.logger.warning(format!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
         }
 
         // add offset 
@@ -399,20 +405,6 @@ impl Book {
             Ok(res) => Ok(res)
         }
     }
-
-    
-    /// Prints a message to stderr
-    pub fn println(&self, s:&str) {
-        writeln!(&mut io::stderr(), "{}", s).unwrap();
-    }
-
-    /// Prints a message to stderr if verbose is set to true
-    pub fn debug(&self, s:&str) {
-        if self.options.get_bool("verbose").unwrap() {
-            writeln!(&mut io::stderr(), "{}", s).unwrap();
-        }
-    }
-
 
     /// Returns a `MapBuilder` (used by `Mustache` for templating), to be used (and completed)
     /// by renderers. It fills it with the followings strings, corresponding to the matching

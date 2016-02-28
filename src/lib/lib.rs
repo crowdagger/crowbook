@@ -112,6 +112,7 @@ pub use token::Token;
 pub use cleaner::{Cleaner, French};
 pub use number::Number;
 pub use resource_handler::ResourceHandler;
+pub use logger::{Logger, InfoLevel};
 
 mod html;
 mod error;

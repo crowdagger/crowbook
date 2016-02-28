@@ -51,7 +51,7 @@ pub struct HtmlRenderer<'a> {
     #[doc(hidden)]
     pub filename: String,
     #[doc(hidden)]
-    pub handler: ResourceHandler,
+    pub handler: ResourceHandler<'a>,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -70,7 +70,7 @@ impl<'a> HtmlRenderer<'a> {
             epub3: false,
             verbatim: false,
             filename: String::new(),
-            handler: ResourceHandler::new(),
+            handler: ResourceHandler::new(&book.logger),
         }
     }
 
