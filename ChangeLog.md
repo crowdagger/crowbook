@@ -1,10 +1,20 @@
 ChangeLog
 =========
 
+0.4.0 (unreleased)
+------------------
+* Enhanced the way debugging/warning/info messages are handled and
+displayed:
+    * Added a `--debug` option to the binary.
+    * Internal: added a `Logger` struct.
+    * Different levels of information (debug/warning/info/error) get
+      different colours.
+
+
 0.3.0 (2016-02-27)
 ------------------
 * Crowbook now tries to convert local links. That is, if you link to a
-  Markdown file that is used in the book
+  Markdown file that is used in the book.
   (e.g. [README.md](README.md)), it *should* link to an appropriate
   inner reference inside the book.
 * Latex renderer now supports (local) images.
