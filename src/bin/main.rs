@@ -21,7 +21,7 @@ extern crate clap;
 mod helpers;
 use helpers::*;
 
-use crowbook::{Book,BookOptions};
+use crowbook::{Book,BookOptions, InfoLevel};
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
@@ -124,8 +124,14 @@ fn main() {
 
     // ok to unwrap since clap checks it's there
     let s = matches.value_of("BOOK").unwrap();
-    let verbose = matches.is_present("verbose");
-    match Book::new_from_file(s, verbose) {
+    let verbosity = if matches.is_present("debug") {
+        InfoLevel::Debug
+    } else if matches.is_present("verbose") {
+        InfoLevel::Warning
+    } else {
+        InfoLevel::Info
+    };
+    match Book::new_from_file(s, verbosity) {
         Err(err) => print_error(&format!("{}", err)),
         Ok(mut book) => {
             set_book_options(&mut book, &matches);

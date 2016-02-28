@@ -86,15 +86,11 @@ impl Book {
     /// * `filename`: the path of file to load. The directory of this file is used as
     ///   a "root" directory for all paths referenced in books, whether chapter files,
     ///   templates, cover images, and so on.
-    /// * `verbose`: sets the book to verbose mode even if the file's doesn't specify it
-    ///    or specifies `verbose: false`.
-    pub fn new_from_file(filename: &str, verbose: bool) -> Result<Book> {
+    /// * `verbosity: sets the book verbosity 
+    pub fn new_from_file(filename: &str, verbosity: InfoLevel) -> Result<Book> {
         let mut book = Book::new();
-        if verbose {
-            book.options.set("verbose", "true").unwrap();
-            book.logger.set_verbosity(InfoLevel::Warning);
-        }
-        
+        book.logger.set_verbosity(verbosity);
+                
         let path = Path::new(filename);
         let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
         // Set book path to book's directory
