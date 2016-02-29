@@ -9,6 +9,9 @@ displayed:
     * Internal: added a `Logger` struct.
     * Different levels of information (debug/warning/info/error) get
       different colours.
+* Bugfixes:
+    * Crowbook no longer crashes when called with the `--to` argument
+      if it can't create a file 
 
 
 0.3.0 (2016-02-27)
