@@ -11,7 +11,7 @@ displayed:
       different colours.
 * Bugfixes:
     * Crowbook no longer crashes when called with the `--to` argument
-      if it can't create a file 
+      if it can't create a file. 
 
 
 0.3.0 (2016-02-27)
