@@ -139,13 +139,7 @@ fn main() {
             if let Some(format) = matches.value_of("to") {
                 render_format(&mut book, &matches, format);
             } else {
-                match book.render_all() {
-                    Err(err) => print_error(&format!("{}", err)),
-                    Ok(_) => {
-                        println!("crowbook terminated successfully");
-                        exit(0);
-                    }
-                }
+                book.render_all();
             }
         }
     }

@@ -209,37 +209,57 @@ impl Book {
 
     
     /// Generates output files acccording to book options
-    pub fn render_all(&self) -> Result<()> {
+    pub fn render_all(&self) -> () {
         let mut did_some_stuff = false;
         
         if self.options.get("output.epub").is_ok() {
             did_some_stuff = true;
-            try!(self.render_epub());
+            let result = self.render_epub();
+            if let Err(err) = result {
+                self.logger.error(format!("Error rendering EPUB:\n{}", err));
+            }
         }
 
-        if let Ok(file) = self.options.get_path("output.html") {
+        if let Ok(ref file) = self.options.get_path("output.html") {
             did_some_stuff = true;
-            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create HTML file")));
-            try!(self.render_html(&mut f));
+            if let Ok(mut f) = File::create(file) {
+                let result = self.render_html(&mut f);
+                if let Err(err) = result {
+                    self.logger.error(format!("Error rendering HTML:\n{}", err));
+                }
+            } else {
+                self.logger.error(format!("could not create HTML file '{}'", file));
+            }
         }
-        if let Ok(file) = self.options.get_path("output.tex") {
+        if let Ok(ref file) = self.options.get_path("output.tex") {
             did_some_stuff = true;
-            let mut f = try!(File::create(file).map_err(|_| Error::Render("could not create LaTeX file")));
-            try!(self.render_tex(&mut f));
+            if let Ok(mut f) = File::create(file) {
+                let result = self.render_tex(&mut f);
+                if let Err(err) = result {
+                    self.logger.error(format!("Error rendering LaTeX:\n{}", err));
+                }
+            }
+            else {
+                self.logger.error(format!("could not create LaTeX file '{}'", file));
+            }
         }
         if self.options.get("output.pdf").is_ok() {
             did_some_stuff = true;
-            try!(self.render_pdf());
+            let result = self.render_pdf();
+            if let Err(err) = result {
+                self.logger.error(format!("Error rendering PDF:\n{}", err));
+            }
         }
-        
         if self.options.get("output.odt").is_ok() {
             did_some_stuff = true;
-            try!(self.render_odt());
+            let result = self.render_odt();
+            if let Err(err) = result {
+                self.logger.error(format!("Error rendering PDF:\n{}", err));
+            }
         }
         if !did_some_stuff {
-            self.logger.warning("Warning: generated no file because no output file speficied. Add output_{{format}} to your config file.");
+            self.logger.info("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
         }
-        Ok(())
     }
 
 
@@ -280,7 +300,11 @@ impl Book {
         let mut html = HtmlRenderer::new(&self);
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to HTML file")));
-        self.logger.info("Successfully generated HTML");
+        if let Ok(file) = self.options.get_path("output.html") {
+            self.logger.info(format!("Successfully generated HTML file: {}", file));
+        } else {
+            self.logger.info("Successfully generated HTML");
+        }
         Ok(())
     }
 
@@ -291,12 +315,14 @@ impl Book {
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|_| Error::Render("problem when writing to LaTeX file")));
-        self.logger.info("Successfully generated LaTeX");
+        if let Ok(file) = self.options.get_path("output.tex") {
+            self.logger.info(format!("Successfully generated LaTeX file: {}", file));
+        } else {
+            self.logger.info("Successfully generated LaTeX");
+        }
         Ok(())
     }
         
-    
-
     /// Adds a chapter, as a file name, to the book
     ///
     /// `Book` will then parse the file and store the AST (i.e., a vector
