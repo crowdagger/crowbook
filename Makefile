@@ -3,7 +3,7 @@ BINARYNAME = crowbook
 BINARY = target/release/$(BINARYNAME)
 
 PKGNAME= $(BINARYNAME)
-MAINTAINER = "'Élisabeth Henry \<liz.henry@ouvaton.org\>'"
+MAINTAINER = "Élisabeth Henry \<liz.henry@ouvaton.org\>"
 PKGVERSION = "0.4.0-unreleased"
 PKGLICENSE = "LGPL-2.1+"
 
