@@ -49,7 +49,7 @@ impl<'r> ResourceHandler<'r> {
 
         // If image is not local, do nothing either
         if !Self::is_local(file.as_ref()) {
-            self.logger.warning("book includes non-local images which might cause problem for proper inclusion, particularly for EPUB and PDF");
+            self.logger.warning("Resources: book includes non-local images which might cause problem for proper inclusion.");
             return file;
         }
         
@@ -84,7 +84,7 @@ impl<'r> ResourceHandler<'r> {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            self.logger.warning(format!("Warning: resource handler could not find a match for link {}", from));
+            self.logger.warning(format!("Resources: could not find a in-book match for link {}", from));
             from
         }
     }

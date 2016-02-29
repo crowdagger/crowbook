@@ -101,7 +101,7 @@ impl<'a> LatexRenderer<'a> {
             "en" => "english",
             "fr" => "francais",
             _ => {
-                self.book.logger.debug(&format!("Warning: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
+                self.book.logger.warning(format!("LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
                 "english"
             }
         });
@@ -198,7 +198,7 @@ impl<'a> LatexRenderer<'a> {
                 if ResourceHandler::is_local(url) {
                     format!("\\includegraphics{{{}}}", self.handler.map_image(Cow::Borrowed(url)))
                 } else {
-                    self.book.logger.debug(&format!("image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
+                    self.book.logger.warning(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     String::new()
                 }
             }

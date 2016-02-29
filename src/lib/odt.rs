@@ -134,28 +134,28 @@ impl<'a> OdtRenderer<'a> {
             Token::Strong(ref vec) => format!("<text:span text:style-name=\"T2\">{}</text:span>", self.render_vec(vec)),
             Token::List(ref vec) => format!("<text:list>\n{}</text:list>\n", self.render_vec(vec)),
             Token::OrderedList(_, ref vec) => {
-                self.book.logger.warning("ordered list not currently implemented for ODT, fallbacking to unordered one");
+                self.book.logger.warning("ODT: ordered list not currently implemented for this format, fallbacking to unordered one");
                 format!("<text:list>\n{}</text:list>\n", self.render_vec(vec))
             },
             Token::Item(ref vec) => format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>", self.book.clean(self.render_vec(vec))),
             Token::Link(ref url, _, ref vec) => format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>", url, self.render_vec(vec)),
             Token::Code(ref vec) => format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>", self.render_vec(vec)),
             Token::BlockQuote(ref vec) | Token::CodeBlock(_, ref vec) => {
-                self.book.logger.warning("block quote and codeblocks are not currently implemented in ODT");
+                self.book.logger.warning("ODT: blockquotes and codeblocks are not currently implemented for ODT");
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.book.clean(self.render_vec(vec)))
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => format!("<text:p /><text:p>***</text:p><text:p />"),
             Token::Image(_,_,_) => {
-                self.book.logger.warning("images not currently implemented for odt");
+                self.book.logger.warning("ODT: images not currently implemented for this format");
                 String::from(" ")
             },
             Token::Table(_,_) | Token::TableHead(_) | Token::TableRow(_) | Token::TableCell(_) => {
-                self.book.logger.warning("tables are not currently implemented for odt");
+                self.book.logger.warning("ODT: tables are not currently implemented for this format");
                 String::from(" ")
             },
             Token::Footnote(_) => {
-                self.book.logger.warning(format!("footnotes are not yet implemented in HTML, ignoring {:?}", token));
+                self.book.logger.warning(format!("ODT: footnotes are not yet implemented in this format, ignoring {:?}", token));
                 String::new()
             },
         }
