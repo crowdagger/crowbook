@@ -61,12 +61,18 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
             match format {
                 "epub" => book.render_epub(),
                 "tex" => {
-                    let mut f = File::create(file).unwrap();
-                    book.render_tex(&mut f)
+                    if let Ok(mut f) = File::create(&file) {
+                        book.render_tex(&mut f)
+                    } else {
+                        print_error(&format!("Could not create file '{}'", file));
+                    }
                 },
                 "html" => {
-                    let mut f = File::create(file).unwrap();
-                    book.render_html(&mut f)
+                    if let Ok(mut f) = File::create(&file) {
+                        book.render_html(&mut f)
+                    } else {
+                        print_error(&format!("Could not create file '{}'", file));
+                    }
                 },
                 "pdf" => book.render_pdf(),
                 "odt" => book.render_odt(),

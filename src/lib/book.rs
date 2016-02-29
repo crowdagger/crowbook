@@ -228,7 +228,7 @@ impl Book {
                     self.logger.error(format!("Error rendering HTML:\n{}", err));
                 }
             } else {
-                self.logger.error(format!("could not create HTML file '{}'", file));
+                self.logger.error(format!("Could not create HTML file '{}'", file));
             }
         }
         if let Ok(ref file) = self.options.get_path("output.tex") {
@@ -240,7 +240,7 @@ impl Book {
                 }
             }
             else {
-                self.logger.error(format!("could not create LaTeX file '{}'", file));
+                self.logger.error(format!("Could not create LaTeX file '{}'", file));
             }
         }
         if self.options.get("output.pdf").is_ok() {
