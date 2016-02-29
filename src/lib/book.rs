@@ -269,6 +269,7 @@ impl Book {
         self.logger.debug("Attempting to generate pdf...");
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_pdf());
+        self.logger.debug("Output of latex command:");
         self.logger.debug(result);
         self.logger.info(format!("Successfully generated pdf file: {}", self.options.get_path("output.pdf").unwrap()));
         Ok(())
@@ -279,6 +280,7 @@ impl Book {
         self.logger.debug("Attempting to generate epub...");
         let mut epub = EpubRenderer::new(&self);
         let result = try!(epub.render_book());
+        self.logger.debug("Output of zip command:");
         self.logger.debug(&result);
         self.logger.info(&format!("Successfully generated epub file: {}", self.options.get_path("output.epub").unwrap()));
         Ok(())
@@ -289,6 +291,7 @@ impl Book {
         self.logger.debug("Attempting to generate Odt...");
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
+        self.logger.debug("Output of zip command:");
         self.logger.debug(&result);
         self.logger.info(format!("Successfully generated odt file: {}", self.options.get_path("output.odt").unwrap()));
         Ok(())
