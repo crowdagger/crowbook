@@ -137,7 +137,14 @@ fn main() {
     } else {
         InfoLevel::Info
     };
-    match Book::new_from_file(s, verbosity) {
+
+    let book_res = if matches.is_present("single") {
+        Book::new_from_markdown_file(s, verbosity)
+    } else {
+        Book::new_from_file(s, verbosity)
+    };
+            
+    match book_res {
         Err(err) => print_error(&format!("{}", err)),
         Ok(mut book) => {
             set_book_options(&mut book, &matches);
