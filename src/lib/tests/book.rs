@@ -6,8 +6,8 @@ fn load_config() {
     let config = "
 author: Author
 title: Some title
-description: >
- A 
+description: >-
+ A
  long
  description
 epub.version: 3";
