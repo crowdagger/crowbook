@@ -3,6 +3,8 @@ ChangeLog
 
 0.4.0 (unreleased)
 ------------------
+* Crowbook now ignores YAML blocks (delimited by two lines with "---")
+  in Markdown files. 
 * Enhanced the way debugging/warning/info messages are handled and
 displayed:
     * Added a `--debug` option to the binary.

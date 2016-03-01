@@ -20,6 +20,7 @@ use std::borrow::Cow;
 
 use mustache;
 use mustache::MapBuilder;
+use yaml_rust::YamlLoader;
 
 
 /// A Book.
@@ -343,11 +344,22 @@ impl Book {
         
         // add file to the list of file names
         self.filenames.push(file.to_owned());
+
+
+        // try to open file
+        let path = self.root.join(file);
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(format!("{}", path.display()))));
+        let mut s = String::new();
+        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(format!("file {} contains invalid UTF-8", path.display()))));    
+            
+        // Ignore YAML blocks
+        self.remove_yaml(&mut s);
         
         // parse the file
         let mut parser = Parser::new();
-        let mut v = try!(parser.parse_file(self.root.join(file)));
-        
+        let mut v = try!(parser.parse(&s));
+
+
         // transform the AST to make local links and images relative to `book` directory
         let offset = Path::new(file).parent().unwrap();
         if offset.starts_with("..") {
@@ -356,12 +368,12 @@ impl Book {
 
         // add offset 
         ResourceHandler::add_offset(offset, &mut v);
-                              
+        
         self.chapters.push((number, v));
         Ok(())
-    }
+    }     
 
-    /// Adds a chapter, as a string, to the book
+            /// Adds a chapter, as a string, to the book
     ///
     /// `Book` will then parse the string and store the AST (i.e., a vector
     /// of `Token`s).
@@ -460,5 +472,58 @@ impl Book {
             .insert_str("lang", self.options.get_str("lang").unwrap().to_owned())
     }
 
-
+    /// Remove YAML blocks for a string
+    ///
+    /// I.e. blocks that start with
+    /// ---
+    /// and end either with
+    /// ---
+    /// or
+    /// ... 
+    fn remove_yaml(&self, content: &mut String) {
+        if !(content.starts_with("---\n") || content.contains("\n---\n")
+             || content.starts_with("---\r\n") || content.contains("\n---\r\n")) {
+            // Content can't contain YAML, so aborting early
+            return;
+        }
+        let mut new_content = String::new();
+        {
+            let mut lines = content.lines();
+            while let Some(line) = lines.next() {
+                if line == "---" {
+                    let mut yaml_block = String::new();
+                    let mut valid_block = false;
+                    while let Some(new_line) = lines.next() {
+                        if new_line == "---" || new_line == "..." {
+                            // Checks that this is valid YAML
+                            match YamlLoader::load_from_str(&yaml_block) {
+                                Ok(_) => {
+                                    self.logger.debug(format!("Ignoring YAML block:\n---\n{}---", &yaml_block));
+                                    valid_block = true;
+                                },
+                                Err(err) => {
+                                    self.logger.debug(format!("Found something that looked like a YAML block:\n{}", &yaml_block));
+                                    self.logger.debug(format!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
+                                }
+                            }
+                            break;
+                        } else {
+                            yaml_block.push_str(new_line);
+                            yaml_block.push_str("\n");
+                        }
+                    }
+                    if !valid_block {
+                        // Block was invalid, so add it to markdown content 
+                        new_content.push_str(&yaml_block);
+                        new_content.push_str("\n");
+                    }
+                } else {
+                    new_content.push_str(line);
+                    new_content.push_str("\n");
+                }
+            }
+        }
+        *content = new_content;
+    }
 }
+

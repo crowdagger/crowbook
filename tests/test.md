@@ -1,3 +1,15 @@
+---
+# This is a YAML block. It should not appear in the final result
+foo: bar
+---
+
+---
+# This is another YAML block.
+plop: coin
+...
+
+
+
 # Chapter #
 
 Section 

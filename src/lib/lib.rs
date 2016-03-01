@@ -99,6 +99,7 @@ extern crate pulldown_cmark as cmark;
 extern crate mustache;
 extern crate chrono;
 extern crate uuid;
+extern crate yaml_rust;
 
 pub use parser::Parser;
 pub use book::Book;
