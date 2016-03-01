@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.4.0 (unreleased)
+0.4.0 (2016-03-01)
 ------------------
 * Crowbook now internally uses a true YAML parser, `yaml_rust`, for its
   options. Since the "old" Crowbooks's config format was similar, but
