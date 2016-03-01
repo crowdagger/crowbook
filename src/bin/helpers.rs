@@ -74,10 +74,7 @@ lang: en
         }
         exit(0);
     } else {
-        print_error("--create must be used with a list of additonal files.
-
-USAGE:
-\tcrowbook [BOOK] --create <MARKDOWN_FILES>");
+        unreachable!(); // because Clap takes care of it
     }
 }
 
@@ -87,20 +84,21 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .about("Render a markdown book in Epub, PDF or HTML.")
         .arg_from_usage("-s, --single 'Use a single Markdown file instead of a book configuration file'")
         .arg_from_usage("-v, --verbose 'Print warnings in parsing/rendering'")
-        .arg_from_usage("-d, --debug 'Print debugging information'")
-        .arg_from_usage("--create [FILES]... 'Creates a new book with existing markdown files.'")
-        .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file.'")
+        .arg(Arg::from_usage("-d, --debug 'Print debugging information'")
+             .hidden(true))
+        .arg_from_usage("-c, --create [FILES]... 'Creates a new book with existing markdown files'")
+        .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file'")
              .requires("to"))
-        .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
+        .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format")
              .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
         .arg(Arg::from_usage("--set [KEY_VALUES] 'Sets a list of book options'")
              .min_values(2))
         .arg(Arg::from_usage("-l --list-options 'Lists all possible options"))
-        .arg_from_usage("--list-options-md 'List all options, formatted in Markdown.'")
-        .arg_from_usage("--print-template [TEMPLATE] 'Displays the default value of a template.'")
+        .arg_from_usage("--list-options-md 'List all options, formatted in Markdown'")
+        .arg_from_usage("--print-template [TEMPLATE] 'Displays the default value of a template'")
         .arg(Arg::with_name("BOOK")
              .index(1)
-             .help("File containing the book configuration, or a Markdown file when called with --single."));
+             .help("File containing the book configuration, or a Markdown file when called with --single"));
 
     let matches = app.get_matches();
 
