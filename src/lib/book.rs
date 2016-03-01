@@ -509,8 +509,8 @@ impl Book {
                                     valid_block = true;
                                 },
                                 Err(err) => {
-                                    self.logger.debug(format!("Found something that looked like a YAML block:\n{}", &yaml_block));
-                                    self.logger.debug(format!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
+                                    self.logger.warning(format!("Found something that looked like a YAML block:\n{}", &yaml_block));
+                                    self.logger.warning(format!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
                                 }
                             }
                             break;
