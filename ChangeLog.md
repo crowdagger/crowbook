@@ -5,13 +5,23 @@ ChangeLog
 ------------------
 * Crowbook now internally uses a true YAML parser, `yaml_rust` for its
   options. Since the "old" Crowbooks's config format was similar, but somewhat
-    different, to markdown, this is somewhat of a breaking change:
-  particularly, strings should now be escaped with "" in some casess
-  (e.g. if it contains special characters). On the other hand, it
-  *allows* to optionally espace a string with these quotes, which
-  wasn't possible until then and might be useful in some cases.
-* Crowbook now ignores YAML blocks (delimited by two lines with "---")
-  in Markdown files. 
+  different, to markdown, this is somewhat of a breaking change:
+    * strings should now be escaped with "" in some cases (e.g. if it
+      contains special characters). On the other hand, it *allows* to
+      optionally espace a string with these quotes, which wasn't
+      possible until then and might be useful in some cases.
+    * multiline strings now follow the YAML format, instead of the
+      previous "YAML-ish" format. This can impact the way newlines are
+      added at the end of a multiline string. See
+      e.g. [this link](http://stackoverflow.com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multiple-lines)
+      for the various ways to include mulitiline strings in Yaml.
+* Crowbook now parses YAML blocks (delimited by two lines with "---")
+  in Markdown files, ignoring keys that it doesn't recognize. This
+  allows crowbook to be compatible(-ish) with Markdown that contains
+  YAML blocks for Jekyll or Pandoc.
+* New option `--single` allows to give Crowbook a single Markdown file
+  (which can contain options within an inline YAML block) instead of a
+  book configuration file. This is useful for e.g. short stories.
 * Enhanced the way debugging/warning/info messages are handled and
 displayed:
     * Added a `--debug` option to the binary.
