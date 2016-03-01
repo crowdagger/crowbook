@@ -1,6 +1,6 @@
 ---
 # This is a YAML block. It should not appear in the final result
-foo: bar
+title: A test
 ---
 
 ---

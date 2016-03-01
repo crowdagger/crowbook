@@ -358,7 +358,7 @@ impl Book {
         try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(format!("file {} contains invalid UTF-8", path.display()))));    
             
         // Ignore YAML blocks
-        self.remove_yaml(&mut s);
+        self.parse_yaml(&mut s);
         
         // parse the file
         let mut parser = Parser::new();
@@ -477,15 +477,15 @@ impl Book {
             .insert_str("lang", self.options.get_str("lang").unwrap().to_owned())
     }
 
-    /// Remove YAML blocks for a string
+    /// Remove YAML blocks from a string and try to parse them to set options
     ///
-    /// I.e. blocks that start with
+    /// YAML blocks start with
     /// ---
     /// and end either with
     /// ---
     /// or
     /// ... 
-    fn remove_yaml(&self, content: &mut String) {
+    fn parse_yaml(&mut self, content: &mut String) {
         if !(content.starts_with("---\n") || content.contains("\n---\n")
              || content.starts_with("---\r\n") || content.contains("\n---\r\n")) {
             // Content can't contain YAML, so aborting early
@@ -504,8 +504,25 @@ impl Book {
                         if new_line == "---" || new_line == "..." {
                             // Checks that this is valid YAML
                             match YamlLoader::load_from_str(&yaml_block) {
-                                Ok(_) => {
-                                    self.logger.debug(format!("Ignoring YAML block:\n---\n{}---", &yaml_block));
+                                Ok(docs) => {
+                                    if docs.len() == 1 && docs[0].as_hash().is_some() {
+                                        let hash = docs[0].as_hash().unwrap();
+                                        for (key, value) in hash {
+                                            match self.options.set_yaml(key.clone(), value.clone()) { //todo: remove clone
+                                                Ok(opt) => {
+                                                    if let Some(old_value) = opt {
+                                                        self.logger.debug(format!("Inline YAML block replaced {:?} previously set to {:?} to {:?}",
+                                                                                  key, old_value, value));
+                                                    } else {
+                                                        self.logger.debug(format!("Inline YAML block set {:?} to {:?}", key, value));
+                                                    }
+                                                }
+                                                Err(_) => self.logger.debug(format!("Inline YAML block could not set {:?} to {:?}, ignoring it", key, value)),
+                                            }
+                                        }
+                                    } else {
+                                        self.logger.debug(format!("Ignoring YAML block:\n---\n{}---", &yaml_block));
+                                    }
                                     valid_block = true;
                                 },
                                 Err(err) => {
