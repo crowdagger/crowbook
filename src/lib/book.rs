@@ -112,6 +112,12 @@ impl Book {
     pub fn new_from_markdown_file(filename: &str, verbosity: InfoLevel) -> Result<Book> {
         let mut book = Book::new();
         book.logger.set_verbosity(verbosity);
+
+        // Set book path to book's directory
+        if let Some(parent) = Path::new(filename).parent() {
+            book.root = parent.to_owned();
+            book.options.root = book.root.clone();
+        }
         
         // Add the file as chapter with hidden title
         try!(book.add_chapter(Number::Hidden, filename));
