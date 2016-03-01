@@ -3,7 +3,7 @@ ChangeLog
 
 0.4.0 (unreleased)
 ------------------
-* CrowBook now internally uses a true YAML parser, `yaml_rust` for its
+* Crowbook now internally uses a true YAML parser, `yaml_rust` for its
   options. Since the "old" Crowbooks's config format was similar, but somewhat
     different, to markdown, this is somewhat of a breaking change:
   particularly, strings should now be escaped with "" in some casess

@@ -37,8 +37,8 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
             "html" => book.options.set("output.html", file).unwrap(),
             "pdf" => book.options.set("output.pdf", file).unwrap(),
             "odt" => book.options.set("output.odt", file).unwrap(),
-            _ => unreachable!()
-        }
+            _ => unreachable!(),
+        };
     }
     
     let option = match format {

@@ -92,6 +92,7 @@ impl BookOptions {
                 _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
             }
             if key == "temp_dir" {
+                // "temp_dir" has a special default value that depends on the environment
                 options.set(key, &env::temp_dir().to_string_lossy()).unwrap();
                 continue;
             }
@@ -110,7 +111,7 @@ impl BookOptions {
     ///
     /// **Returns** an error if `key` is not a String, not a valid option, of if
     /// the value is not of the right type.
-    pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<()> {
+    pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<Option<BookOption>> {
         let key = if let Yaml::String(key) = key {
             key
         } else {
@@ -120,14 +121,14 @@ impl BookOptions {
         if self.valid_strings.contains(&key.as_ref()) {
             // value is a string
             if let Yaml::String(value) = value {
-                self.options.insert(key, BookOption::String(value));
+                return Ok(self.options.insert(key, BookOption::String(value)));
             } else {
                 return Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)));
             }
         } else if self.valid_paths.contains(&key.as_ref()) {
             // value is a path
             if let Yaml::String(value) = value {
-                self.options.insert(key, BookOption::Path(value));
+                return Ok(self.options.insert(key, BookOption::Path(value)));
             } else {
                 return Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)));
             }
@@ -138,21 +139,21 @@ impl BookOptions {
                 if chars.len() != 1 {
                     return Err(Error::BookOption(format!("could not parse {} as a char: does not contain exactly one char", &value)));
                 }
-                self.options.insert(key.to_owned(), BookOption::Char(chars[0]));
+                return Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])));
             } else {
                 return Err(Error::BookOption(format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)));
             }
         } else if self.valid_bools.contains(&key.as_ref()) {
             // value is a bool
             if let Yaml::Boolean(value) = value {
-                self.options.insert(key, BookOption::Bool(value));
+                return Ok(self.options.insert(key, BookOption::Bool(value)));
             } else {
                 return Err(Error::BookOption(format!("Expected a boolean as value for key {}, found {:?}", &key, &value)));
             }
         } else if self.valid_ints.contains(&key.as_ref()) {
             // value is an int
             if let Yaml::Integer(value) = value {
-                self.options.insert(key, BookOption::Int(value as i32));
+                return Ok(self.options.insert(key, BookOption::Int(value as i32)));
             } else {
                 return Err(Error::BookOption(format!("Expected an integer as value for key {}, found {:?}", &key, &value)));
             }
@@ -160,7 +161,6 @@ impl BookOptions {
             // key not recognized
             return Err(Error::BookOption(format!("Unrecognized key: {}", &key)));
         }
-        Ok(())
     }
     
     /// Sets an option
@@ -170,7 +170,8 @@ impl BookOptions {
     /// * `value`: the value of the option as a string
     ///
     /// **Returns** an error either if `key` is not a valid option or if the
-    /// value is not of the right type
+    /// value is not of the right type. An option containing None if key was
+    /// not set, and Some(previous_value) if key was already present.
     ///
     /// # Examples
     /// ```
@@ -184,12 +185,11 @@ impl BookOptions {
     /// let result = book.options.set("numbering", "foo"); 
     /// assert!(result.is_err()); // error: numbering must be an int
     /// ```
-    pub fn set(&mut self, key: &str, value: &str) -> Result<()> {
+    pub fn set(&mut self, key: &str, value: &str) -> Result<Option<BookOption>> {
         let result = YamlLoader::load_from_str(value);
         if let Ok(yaml_docs) = result {
             if yaml_docs.len() == 1 {
                 let yaml_value = yaml_docs.into_iter().next().unwrap();
-                println!("trying to set key {} to yaml {:?}", key, &yaml_value);
                 self.set_yaml(Yaml::String(key.to_owned()), yaml_value)
             } else {
                 Err(Error::BookOption(format!("value {} for key {} does not contain one and only one YAML value", value, key)))

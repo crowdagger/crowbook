@@ -191,7 +191,12 @@ impl Book {
                         prev_key = key.to_owned();
                         prev_value = String::new();
                     },
-                    _ => try!(self.options.set(key, value)),
+                    _ => {
+                        let opt = try!(self.options.set(key, value));
+                        if let Some(previous) = opt {
+                            self.logger.debug(format!("Key {} was already set to {:?}, replacing it with {}", key, previous, value));
+                        }
+                    },
                 }
             }
         }
