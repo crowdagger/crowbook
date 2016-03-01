@@ -10,23 +10,21 @@ USAGE:
         crowbook [FLAGS] [OPTIONS] [--] [ARGS]
 
 FLAGS:
-    -d, --debug              Print debugging information
-    -h, --help               Prints help information
-    -l, --list-options       Lists all possible option
-        --list-options-md    List all options, formatted in Markdown.
-    -s, --single             Use a single Markdown file instead of a book configuration file
-    -V, --version            Prints version information
-    -v, --verbose            Print warnings in parsing/rendering
+    -h, --help            Prints help information
+    -l, --list-options    Lists all possible option
+    -s, --single          Use a single Markdown file instead of a book configuration file
+    -V, --version         Prints version information
+    -v, --verbose         Print warnings in parsing/rendering
 
 OPTIONS:
-        --create <FILES>...            Creates a new book with existing markdown files.
-    -o, --output <FILE>                Specifies output file.
-        --print-template <TEMPLATE>    Displays the default value of a template.
+    -c, --create <FILES>...            Creates a new book with existing markdown files
+    -o, --output <FILE>                Specifies output file
+        --print-template <TEMPLATE>    Displays the default value of a template
         --set <KEY_VALUES>             Sets a list of book options
-    -t, --to <FORMAT>                  Generate specific format [values: epub, pdf, html, tex, odt]
+    -t, --to <FORMAT>                  Generate specific forma [values: epub, pdf, html, tex, odt]
 
 ARGS:
-    <BOOK>    File containing the book configuration, or a Markdown file when called with --single.
+    <BOOK>    File containing the book configuration, or a Markdown file when called with --single
 ```
 
 Note that Crowbook generates output files relatively to the directory
@@ -51,8 +49,8 @@ It is, however, possible to pass more arguments to `crowbook`.
 **Usage**: `crowbook [BOOK] --create file_1.md file_2.md ...`
 
 Creates a new book from a list of Markdown files. It will generate a
-book configuration file with alle file names specified as
-chapter. It either prints the result to stdout (if `BOOK` is not
+book configuration file with all file names specified as
+chapters. It either prints the result to stdout (if `BOOK` is not
 specified) or generate the file `BOOK` (or abort if it already
 exists). 
 
@@ -131,7 +129,7 @@ title: A short story
 If this YAML block is not at the beginning of a file, it must also be
 preceded by a blank line.
 
-This allows to not have to generate a `.book` configuration file for a
+This allows to not have to write a `.book` configuration file for a
 short story or an article. `crowbook --single foo.md` is rougly equivalent to having a book
 configuration file containing:
 
@@ -145,12 +143,12 @@ documents (though they still appear in the TOC).
 `--set` 
 -------
 
-**usage**: `crowbook <BOOK> --set [KEY] [VALUE]...
+**usage**: `crowbook <BOOK> --set [KEY] [VALUE]...`
 
 This options takes a list `KEY` `VALUE` pairs and allows to set or
 override a book configuration option. All valid options in the
 configuration files are valid as keys. For more information, see
-[the configuration file page](config.md).
+[the configuration file](config.md).
 
 ### Examples ###
 
@@ -173,9 +171,8 @@ will override the book title to `Bar` and its author to `Foo`.
 
 (or `crowbook -l`)
 
-Displays all the valid options to use either in a book configuration
-file or with `--set`, with a short description. There is also
-`--list-options-md`, which outputs markdown.
+Displays all the valid options to use, whether in a book configuration
+file, with `--set`, or in an inline YAML block.
 
 `--print-template`
 ------------------
@@ -198,7 +195,7 @@ Note that it is possible to use this option in conjonction with
 
 ```
 $ crowbook --print-template epub.template --set epub.version 2
-# Returns the template for Epub 2 (default one)
+# Returns the template for Epub 2 (currently it is the default one)
 $ crowbook --print-template epub.template --set epub.version 3
 # Returns the template for Epub 3
 ```
@@ -209,7 +206,10 @@ $ crowbook --print-template epub.template --set epub.version 3
 
 **usage**: `crowbook <BOOK> --verbose`
 
-If this flag is set, Crowbook will print some more messages.
+If this flag is set, Crowbook will print the warnings it detect while
+parsing and rendering. These warnings are typically related to the
+inclusion of non-local images, linking to Markdown files that are not
+part of the book, and so on.
 
 `--to`
 ------
@@ -233,13 +233,13 @@ crowbook --to html foo.book
 ```
 
 will generate some HTML, and prints it either to the file specified by
-`output.html` in `foo.book`, or to stdout.
+`output.html` in `foo.book`, or to stdout if it is not specified.
 
 ```
 crowbook --to pdf --output foo.pdf foo.book
 ```
 
-will (try to) generate a `foo.pdf` file,.
+will generate a `foo.pdf` file,.
 
 `--output`
 ---------

@@ -3,12 +3,12 @@ ChangeLog
 
 0.4.0 (unreleased)
 ------------------
-* Crowbook now internally uses a true YAML parser, `yaml_rust` for its
-  options. Since the "old" Crowbooks's config format was similar, but somewhat
-  different, to markdown, this is somewhat of a breaking change:
+* Crowbook now internally uses a true YAML parser, `yaml_rust`, for its
+  options. Since the "old" Crowbooks's config format was similar, but
+  had some subtle differences, this is somewhat of a breaking change:
     * strings should now be escaped with "" in some cases (e.g. if it
       contains special characters). On the other hand, it *allows* to
-      optionally espace a string with these quotes, which wasn't
+      optionally escape a string with these quotes, which wasn't
       possible until then and might be useful in some cases.
     * multiline strings now follow the YAML format, instead of the
       previous "YAML-ish" format. This can impact the way newlines are

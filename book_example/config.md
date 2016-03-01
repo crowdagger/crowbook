@@ -2,7 +2,7 @@ The configuration file
 ======================
 
 If you want to use Crowbook for your book, this configuration file
-is all you'll have to add (assuming you'll already have the book in
+is all you'll have to add (assuming you already have the book in
 Markdown files; if you don't, you'll also have to write a book first,
 but that's besides the scope of this document).
 
@@ -29,8 +29,7 @@ Basically, it is divided in two parts:
 * a list of options, under the form `key: value`, following YAML syntax.
 * a list of Markdown files.
 
-Files starting with the `#` characters are comments and are discarded
-when parsing the files. 
+Lines starting with the `#` characters are comments and are discarded.
 
 The list of files
 -----------------
@@ -40,7 +39,7 @@ There are various options to include a markdown file.
 * `+ file_name.md` includes a numbered chapter.
 * `- file_name.md` includes an unnumbered chapter.
 * `! file_name.md` includes a chapter whose title won't be displayed
-  (except in the toc for epub); this is useful for e.g. including a
+  (except in the table of contents); this is useful for e.g. including a
   copyright at the beginning or the book, or for short stories where
   there is only one chapter.
 * `42. file_name.md` specifies the number for a chapter.
@@ -54,13 +53,13 @@ So a typical usage might look like this:
 0. chapter_0.md
 # Next chapters can be numbered automatically
 + chapter_1.md
-+ chapter_3.md
++ chapter_2.md
 ...
 ```
 
 There are two important things to note:
 
-1. you must *not* use quotes around the file names
+1. you must *not* use quotes around the file names.
 2. the path of these files are relative to the directory where your
    config file is, *not* to the directory where you are when running
    `crowbook`. E.g. you can run `crowbook
@@ -88,33 +87,39 @@ The day I was born
 You should have one and only one level-one header (i.e. chapter title)
 in each markdown file.
 
-If you have more than one, Crowbook won't get too angry at you and
-will just print a warning and treat it as another chapter (numbered
-according to the scheme specified for including the file). It will
-however mess the table of contents if Crowbook tries to generate one
-(e.g. for Epub). 
+If you have more than one, Crowbook will print a warning and treat it
+as another chapter (numbered according to the scheme specified for
+including the file). It might however mess the table of contents in
+some cases (e.g. for Epub). 
 
-It's also a problem if you do *not* have a level-1 header in a
-markdown file. If it is a numbered chapter Crowbook will still be
-able to infer a chapter name, but if it is not numbered Crowbook
-will fail to generate an Epub file.
-
-****
-
-So, to sum it up. *please*: one file = one chapter, a chapter starts with a
-title, and this way this will work nice.
+If you do *not* have a level-1 header in a
+markdown file:
+* if it is a numbered chapter, Crowbook will infer a chapter name from
+the numbering scheme;
+* if it is not numbered, chapter's title will default to the empty
+string and won't be displayed in the TOC.
 
 
 Crowbook options 
 ----------------
 
 The first part of the configuration file is dedicated to pass options
-to Crowbook. This is YAML syntax, so each one is of the form `option:
-value`. Note that in most cases you don't have to put string in quotes, e.g.: 
+to Crowbook. This is
+[YAML syntax](https://en.wikipedia.org/wiki/YAML), so each line should
+be of the form `key: value`. Note that in most cases you don't have to
+put string in quotes, e.g.:
 
 ```
 title: My title
 ```
+
+It is however possible (and sometimes necessary to escape some
+characters) to use quotes around strings:
+
+```
+title: "My title!"
+```
+
 
 It is possible to use multiline strings with `>-` and
 then indenting the lines that are part of the string:
@@ -129,10 +134,8 @@ author: Joan Doe
 
 will set `title` to `"A long title"`. See
 [block literals in YAML](https://en.wikipedia.org/wiki/YAML#Block_literals)
-for more information and nuances.
-
-This feature is useful for options like `description` who may take a
-long string.
+for more information on the various way to insert multiline strings
+(which mostly change the way newlines will or won't be inserted).
 
 Here is the complete list of options, with a short description. The
 usage of some of them is detailed later on.
@@ -209,7 +212,7 @@ usage of some of them is detailed later on.
 - **`verbose`**
     - **type**: boolean
     - **default value**: `false`
-    -  Toggle verbose mode
+    -  If set to true, print warnings in Markdown processing
 - **`side_notes`**
     - **type**: boolean
     - **default value**: `false`
@@ -220,7 +223,7 @@ usage of some of them is detailed later on.
     -  Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 - **`numbering_template`**
     - **type**: string
-    - **default value**: `{{number}}. {{title}}`
+    - **default value**: `"{{number}}. {{title}}"`
     -  Format of numbered titles
 - **`nb_char`**
     - **type**: char
@@ -265,10 +268,10 @@ usage of some of them is detailed later on.
     - **default value**: `not set`
     -  Path of a LaTeX template file
 
-Note that these options take a type, which in most case should be
+Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
-must be composed a number, a string is, well, any string, just
-remember not to put the quotes). The `path` type might puzzle you a
+must be composed a number, a string is, well, any string). The `path`
+type might puzzle you a 
 bit, but it's equivalent a string, except Crowbook will consider it
 relatively to the book file.
 
@@ -311,7 +314,6 @@ default, though you can specify the command to use with `tex.command`) to genera
 so PDF rendering won't work if it is not installed on your
 system. Crowbook also uses the `zip` command to generate the EPUB and
 ODT, files.
-want to use.)
 
 ### Generic options for rendering  ###
 
@@ -322,7 +324,7 @@ book. E.g., `1` will only number chapters, while `2` will number
 chapters, sections, but not anything below that. `6` is the maximum  level
 and turns numbering on for all headers.
 
-**default**:: `1`
+**default**: `1`
 
 
 #### numbering_template ####
@@ -331,12 +333,14 @@ A string that will be used for chapter titles. You can use `{{number}}` and
 `{{title}}` in this string, e.g.:
 
 ```
-numbering_template: Chapter {{number}} {{title}}
+numbering_template: "Chapter {{number}} {{title}}"
 ```
 
 Note that:
-* this string isn't used for unnumbered chapters;
-* this string isn't used by LaTeX, either.
+* in this case, quoting is necessary because `{` and `}` have special
+  meaning in YAML;
+* this string won't be used for unnumbered chapters;
+* this string isn't currently used by LaTeX, either.
 
 #### autoclean ####
 
@@ -348,23 +352,6 @@ However, if `lang` is set to `fr`, it also tries to add non-breaking
 spaces in front (or after) characters like '?', '!', ';' to respect
 french typography.
 
-#### nb_char ####
-
-This option allows you to specify the non breaking character used by
-the french cleaning method (see above). Probably not really something
-you need to modify. 
-
-
-### Additional options ###
-
-#### temp_dir ####
-
-When it is generating epub or pdf files, Crowbook creates a temporary
-directory (which is then removed), named from a random uuid (so we can
-be pretty certain it's not gonna exist). By default, it uses Rust's
-[`std::env::temp_dir`](https://doc.rust-lang.org/std/env/fn.temp_dir.html)
-function, which should an appropriate place for temporary files, so
-you probably won't have to use this option.
 
 
 

@@ -7,16 +7,27 @@ Render a markdown book in HTML, Epub or PDF.
 
 Crowbook's purpose is to allow you to automatically generate multiple
 outputs formats from a book written in Markdown. Its main focus is
-novels, and the default settings should (hopefully) generate readables
-book with correct typography.
+novels, and the default settings should (hopefully) generate readable
+books with correct typography.
 
+Example
+-------
+
+To see what Crowbook's output looks like, you can read (a
+not-necessarily up-to-date version of) the Crowbook
+guide (containing this README.md file and additional documentation)
+rendered in [HTML](http://lise-henry.github.io/crowbook/book.html),
+[PDF](http://lise-henry.github.io/crowbook/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book.epub).
 
 
 Installing
 ----------
 
-There are two ways to get `crowbook`: either use a precompiled binary
-or build it yourself.
+### Packages ###
+
+If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can
+download `.deb` packages on
+[the releases page](https://github.com/lise-henry/crowbook/releases). 
 
 ### Binaries ###
 
@@ -49,13 +60,13 @@ The simplest command is:
 $ crowbook <BOOK>
 ```
 
-Where `BOOK` is a configuration file. Crowbook will then parse this
+where `BOOK` is a configuration file. Crowbook will parse this
 file and generate a book in HTML, Epub, LaTeX, and/or PDF,
 according to the settings in the configuration file. So if you clone
 this repository and run
 
 ```bash
-$ crowbook book_example/config.book
+$ crowbook config.book
 ```
 
 you'll generate the example book in various formats. The
@@ -70,9 +81,8 @@ with the `--create` argument:
 $ crowbook --create my.book chapter_*.md
 ```
 
-This will generate a default `my.book` file, which you'll need to complete.
-
-This configuration file contains some metadata, options, and lists the
+This will generate a default `my.book` file, which you'll need to
+complete. This configuration file contains some metadata, options, and lists the
 Markdown files. Here is a basic example:
 
 ```
@@ -89,13 +99,11 @@ output_html: some_book.html
 ```
 
 For more information see
-[the configuration file page](book_example/config.md), or the whole
-`book_example` source directory. (A (not necessarily
-up-to-date) [rendered version is available in HTML here](http://lise-henry.github.io/crowbook/book.html)).
+[the configuration file](book_example/config.md).
 
 It is also possible to give additional parameters to `crowbook`;
 we have already seen `--create`, but if you want the full list, see
-[the arguments page](book_example/arguments.md).
+[the arguments](book_example/arguments.md).
 
 Current features
 ----------------
@@ -148,13 +156,36 @@ Markdown files: e.g. if you have a link to a markdown file that is
 part of your book, it will be transformed into a link inside the
 document. 
 
-See also [Bugs](Bugs.md).
+### Inline YAML blocks ###
 
+Crowbook supports inline YAML blocks. These are blocks
+delimited with lines containing `---` (three dashes). An example of
+such block:
+
+```markdown
+---
+author: Me
+title: My title
+---
+```
+
+These blocks must contain *valid* YAML syntax. If they are not at the
+beginning of the Markdown file, they must also be preceded by an empty
+line.
+
+It is possible to use inline YAML blocks to modify options for the
+book (`author` and `title` in the previous example). This is mostly
+useful when Crowbook is runned with the `--single` argument (receiving
+a single Markdown file instead of a book configuration file).
+
+### Bugs ###
+
+See [Bugs](Bugs.md).
 
 Acknowledgements
 ----------------
 
-Besides the Rust compiler and standard library, Crowbook uses the
+Besides the [Rust](https://www.rust-lang.org/) compiler and standard library, Crowbook uses the
 following libraries:
 
 * [pulldown-cmark](https://crates.io/crates/pulldown-cmark) (for
@@ -167,7 +198,7 @@ parsing markdown)
 
 It also uses configuration files from
 [rust-everywhere](https://github.com/japaric/rust-everywhere) to use
-[Travis]]https://travis-ci.org/) and
+[Travis](https://travis-ci.org/) and
 [Appveyor](http://www.appveyor.com/) to generate binaries for
 various platforms on each release.
 
@@ -189,8 +220,7 @@ Library
 
 While the main purpose of Crowbook is to be runned as a command line,
 the code is written as a library, so if you want to build on it you can
-use it as such. The code is currently badly documented (and badly in a
-general manner), but you can look at the generated documentation [here](http://lise-henry.github.io/rust/crowbook/).
+use it as such. You can look at the generated documentation [here](http://lise-henry.github.io/rust/crowbook/).
 
 License 
 -------
@@ -198,6 +228,6 @@ License
 Crowbook is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License (LGPL),
 version 2.1 or (at your option) any ulterior version. See 
-[LICENSE](LICENSE.md) file for more information.
+[LICENSE](LICENSE.md) for more information.
 
 
