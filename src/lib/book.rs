@@ -107,6 +107,17 @@ impl Book {
         try!(book.set_from_config(&s));
         Ok(book)
     }
+
+    /// Creates a book from a single markdown file
+    pub fn new_from_markdown_file(filename: &str, verbosity: InfoLevel) -> Result<Book> {
+        let mut book = Book::new();
+        book.logger.set_verbosity(verbosity);
+        
+        // Add the file as chapter with hidden title
+        try!(book.add_chapter(Number::Hidden, filename));
+
+        Ok(book)
+    }
     
     /// Sets options and load chapters according to configuration file
     ///
