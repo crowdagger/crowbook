@@ -208,18 +208,8 @@ impl<'a> EpubRenderer<'a> {
                                     filename));
             itemrefs.push_str(&format!("<itemref idref=\"{}\" />\n", to_id(&filename)));
         }
-        // oh we must put cover in the manifest too
-        if let Ok(ref cover) = self.book.options.get_path("cover") {
-            let format = self.get_format(cover);
-            let s= self.html.handler.map_image(Cow::Borrowed(cover));
-            items.push_str(&format!("<item {} media-type = \"image/{}\" id =\"{}\" href = \"{}\" />\n",
-                                    if self.book.options.get_i32("epub.version").unwrap() == 3 { "properties=\"cover-image\"" } else { "" },
-                                    format,
-                                    to_id(s.as_ref()),
-                                    s));
-        }
 
-        // and the other images
+        // put the images in the manifest too
         for image in self.html.handler.images_mapping().values() {
             let format = self.get_format(image);
             items.push_str(&format!("<item media-type = \"image/{}\" id = \"{}\" href = \"{}\" />\n",
@@ -293,9 +283,7 @@ impl<'a> EpubRenderer<'a> {
             if self.html.current_numbering >= 1 {
                 let number = self.html.current_chapter[0] + 1;
                 title = try!(self.book.get_header(number, ""));
-            } else {
-                return Err(Error::Render("chapter without h1 tag is not OK if numbering is off"));
-            }
+            } 
         }
         self.toc.push(title.clone());
 
