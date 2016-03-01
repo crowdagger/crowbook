@@ -63,7 +63,7 @@ h2.author {
     padding: 0;
     margin-left: 1em;
 }
-#toc li, {
+#toc li {
     list-style-type: none;
     margin: 0; padding: 0;
 }
