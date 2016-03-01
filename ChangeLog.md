@@ -3,6 +3,13 @@ ChangeLog
 
 0.4.0 (unreleased)
 ------------------
+* CrowBook now internally uses a true YAML parser, `yaml_rust` for its
+  options. Since the "old" Crowbooks's config format was similar, but somewhat
+    different, to markdown, this is somewhat of a breaking change:
+  particularly, strings should now be escaped with "" in some casess
+  (e.g. if it contains special characters). On the other hand, it
+  *allows* to optionally espace a string with these quotes, which
+  wasn't possible until then and might be useful in some cases.
 * Crowbook now ignores YAML blocks (delimited by two lines with "---")
   in Markdown files. 
 * Enhanced the way debugging/warning/info messages are handled and
