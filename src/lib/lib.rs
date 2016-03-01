@@ -103,7 +103,8 @@ extern crate yaml_rust;
 
 pub use parser::Parser;
 pub use book::Book;
-pub use bookoption::{BookOption, BookOptions};
+pub use bookoption::BookOption;
+pub use bookoptions::BookOptions;
 pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
@@ -114,6 +115,7 @@ pub use cleaner::{Cleaner, French};
 pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
+
 
 mod html;
 mod error;
@@ -127,6 +129,7 @@ mod cleaner;
 mod number;
 mod resource_handler;
 mod logger;
+mod bookoptions;
 
 mod escape;
 mod toc;

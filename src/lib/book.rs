@@ -1,6 +1,6 @@
 use error::{Error,Result};
 use cleaner::{Cleaner, French};
-use bookoption::BookOptions;
+use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
 use epub::EpubRenderer;
