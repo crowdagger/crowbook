@@ -1,4 +1,4 @@
-use clap::{App, Arg, AppSettings, Format, ArgMatches};
+use clap::{App, Arg, Format, ArgMatches};
 use std::io::{self, Write};
 use std::process::exit;
 use std::fs;
@@ -83,12 +83,11 @@ USAGE:
 
 pub fn create_matches<'a>() -> ArgMatches<'a> {
     let app = App::new("crowbook")
-        .setting(AppSettings::UnifiedHelpMessage)
         .version(env!("CARGO_PKG_VERSION"))
         .about("Render a markdown book in Epub, PDF or HTML.")
-        .arg_from_usage("-s, --single 'Create a book from a single MarkDown file'")
+        .arg_from_usage("-s, --single 'Use a single Markdown file instead of a book configuration file'")
         .arg_from_usage("-v, --verbose 'Print warnings in parsing/rendering'")
-        .arg_from_usage("-d, --debug 'Print additional information")
+        .arg_from_usage("-d, --debug 'Print debugging information'")
         .arg_from_usage("--create [FILES]... 'Creates a new book with existing markdown files.'")
         .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file.'")
              .requires("to"))
@@ -101,7 +100,7 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .arg_from_usage("--print-template [TEMPLATE] 'Displays the default value of a template.'")
         .arg(Arg::with_name("BOOK")
              .index(1)
-             .help("File containing the book configuration."));
+             .help("File containing the book configuration, or a Markdown file when called with --single."));
 
     let matches = app.get_matches();
 
