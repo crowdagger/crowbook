@@ -3,6 +3,7 @@ use error::{Error,Result};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::env;
+use yaml_rust::{Yaml, YamlLoader};
 
 /// Structure for storing a book option
 #[derive(Debug, PartialEq)]
@@ -84,7 +85,7 @@ autoclean:bool:true                 # Toggles cleaning of input markdown (not us
 verbose:bool:false                  # If set to true, print warnings in Markdown processing
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
-numbering_template:str:{{number}}. {{title}} # Format of numbered titles
+numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
 nb_char:char:' '                    # The non-breaking character to use for autoclean when lang is set to fr
 
 # HTML options
@@ -155,6 +156,67 @@ impl BookOptions {
         options
     }
 
+    /// Sets an option from a Yaml tuple
+    ///
+    /// # Arguments
+    /// * `key`: the identifier of the option, must be Yaml::String(_)
+    /// * `value`: the value of the option
+    ///
+    /// **Returns** an error if `key` is not a String, not a valid option, of if
+    /// the value is not of the right type.
+    pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<()> {
+        let key = if let Yaml::String(key) = key {
+            key
+        } else {
+            return Err(Error::BookOption(format!("Expected a String as a key, found {:?}", key)));
+        };
+        
+        if self.valid_strings.contains(&key.as_ref()) {
+            // value is a string
+            if let Yaml::String(value) = value {
+                self.options.insert(key, BookOption::String(value));
+            } else {
+                return Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)));
+            }
+        } else if self.valid_paths.contains(&key.as_ref()) {
+            // value is a path
+            if let Yaml::String(value) = value {
+                self.options.insert(key, BookOption::Path(value));
+            } else {
+                return Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)));
+            }
+        } else if self.valid_chars.contains(&key.as_ref()) {
+            // value is a char
+            if let Yaml::String(value) = value {
+                let chars: Vec<_> = value.chars().collect();
+                if chars.len() != 1 {
+                    return Err(Error::BookOption(format!("could not parse {} as a char: does not contain exactly one char", &value)));
+                }
+                self.options.insert(key.to_owned(), BookOption::Char(chars[0]));
+            } else {
+                return Err(Error::BookOption(format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)));
+            }
+        } else if self.valid_bools.contains(&key.as_ref()) {
+            // value is a bool
+            if let Yaml::Boolean(value) = value {
+                self.options.insert(key, BookOption::Bool(value));
+            } else {
+                return Err(Error::BookOption(format!("Expected a boolean as value for key {}, found {:?}", &key, &value)));
+            }
+        } else if self.valid_ints.contains(&key.as_ref()) {
+            // value is an int
+            if let Yaml::Integer(value) = value {
+                self.options.insert(key, BookOption::Int(value as i32));
+            } else {
+                return Err(Error::BookOption(format!("Expected an integer as value for key {}, found {:?}", &key, &value)));
+            }
+        } else {
+            // key not recognized
+            return Err(Error::BookOption(format!("Unrecognized key: {}", &key)));
+        }
+        Ok(())
+    }
+    
     /// Sets an option
     ///
     /// # Arguments
@@ -177,45 +239,20 @@ impl BookOptions {
     /// assert!(result.is_err()); // error: numbering must be an int
     /// ```
     pub fn set(&mut self, key: &str, value: &str) -> Result<()> {
-        if self.valid_strings.contains(&key) {
-            self.options.insert(key.to_owned(), BookOption::String(value.to_owned()));
-            Ok(())
-        } else if self.valid_paths.contains(&key) {
-            self.options.insert(key.to_owned(), BookOption::Path(value.to_owned()));
-            Ok(())
-        } else if self.valid_chars.contains(&key) {
-            let words: Vec<_> = value.trim().split('\'').collect();
-            if words.len() != 3 {
-                return Err(Error::ConfigParser("could not parse char", String::from(value)));
+        let result = YamlLoader::load_from_str(value);
+        if let Ok(yaml_docs) = result {
+            if yaml_docs.len() == 1 {
+                let yaml_value = yaml_docs.into_iter().next().unwrap();
+                println!("trying to set key {} to yaml {:?}", key, &yaml_value);
+                self.set_yaml(Yaml::String(key.to_owned()), yaml_value)
+            } else {
+                Err(Error::BookOption(format!("value {} for key {} does not contain one and only one YAML value", value, key)))
             }
-            let chars: Vec<_> = words[1].chars().collect();
-            if chars.len() != 1 {
-                return Err(Error::ConfigParser("could not parse char", String::from(value)));
-            }
-            self.options.insert(key.to_owned(), BookOption::Char(chars[0]));
-            Ok(())
-        } else if self.valid_bools.contains(&key) {
-            match value.parse::<bool>() {
-                Ok(b) => {
-                    self.options.insert(key.to_owned(), BookOption::Bool(b));
-                    ()
-                },
-                Err(_) => return Err(Error::ConfigParser("could not parse bool", format!("{}:{}", key, value))),
-            }
-            Ok(())
-        } else if self.valid_ints.contains(&key) {
-            match value.parse::<i32>() {
-                Ok(i) => {
-                    self.options.insert(key.to_owned(), BookOption::Int(i));
-                }
-                Err(_) => return Err(Error::ConfigParser("could not parse int", format!("{}:{}", key, value))),
-            }
-            Ok(())
         } else {
-            Err(Error::ConfigParser("unrecognized key", String::from(key)))
+            Err(Error::BookOption(format!("could not parse {} as a valid YAML value", value)))
         }
     }
-
+        
     /// get an option
     pub fn get(&self, key: &str) -> Result<&BookOption> {
         self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not persent", key)))
