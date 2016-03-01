@@ -125,31 +125,44 @@ impl Book {
             Ok(words[0])
         }
 
-        let mut multiline = false;
-        let mut join_new_line = false;
-        let mut prev_key = String::new();
-        let mut prev_value = String::new();
+        // Parse the YAML block, that is, until first chapter
+        let mut yaml = String::new();
+        let mut lines = s.lines().peekable();
+        let mut line;
 
-        for line in s.lines() {
-            // If we are multiline mode, we already have a key and a (building) value
-            if multiline {
-                if line.starts_with(' ') {
-                    // multiline continues
-                    prev_value.push_str(line.trim());
-                    if join_new_line {
-                        prev_value.push_str("\n");
-                    } else {
-                        prev_value.push_str(" ");
+        loop {
+            if let Some(next_line) = lines.peek() {
+                if next_line.starts_with(|c| match c {
+                    '-'|'+'|'!' => true,
+                    _ => c.is_digit(10)
+                }) {
+                    break;
+                }
+            } else {
+                break;
+            }
+            line = lines.next().unwrap();
+            yaml.push_str(line);
+            yaml.push_str("\n");
+        }
+        match YamlLoader::load_from_str(&yaml) {
+            Err(err) => return Err(Error::ConfigParser("YAML block was not valid Yaml", format!("{}", err))),
+            Ok(docs) => {
+                if docs.len() == 1 && docs[0].as_hash().is_some() {
+                    for (key,value) in docs[0].as_hash().unwrap() {
+                        let opt = try!(self.options.set_yaml(key.clone(), value.clone())); //todo: remove clone
+                        if let Some(previous) = opt {
+                            self.logger.debug(format!("Key {:?} was already set to {:?}, replacing it with {:?}", key, previous, value));
+                        }
                     }
-                    continue;
                 } else {
-                    // end multiline
-                    try!(self.options.set(&prev_key, prev_value.trim()));
-                    multiline = false;
+                    return Err(Error::ConfigParser("YAML part of the book is not a valid hashmap", format!("{:?}", docs)));
                 }
             }
-
+        }
             
+        // Parse chapters
+        while let Some(line) = lines.next() {
             let line = line.trim();
             if line.is_empty() || line.starts_with('#') {
                 continue;
@@ -177,36 +190,7 @@ impl Book {
                     try!(self.add_chapter(Number::Specified(number), file));
                 }
             } else {
-                // standard case: "option: value"
-                let parts:Vec<_> = line.splitn(2, ':').collect();
-                if parts.len() != 2 {
-                    return Err(Error::ConfigParser("option setting must be of the form option: value", String::from(line)));
-                }
-                let key = parts[0].trim();
-                let value = parts[1].trim();
-                match value {
-                    ">" | "|" => { // multiline string
-                        multiline = true;
-                        join_new_line = value == "|";
-                        prev_key = key.to_owned();
-                        prev_value = String::new();
-                    },
-                    _ => {
-                        let opt = try!(self.options.set(key, value));
-                        if let Some(previous) = opt {
-                            self.logger.debug(format!("Key {} was already set to {:?}, replacing it with {}", key, previous, value));
-                        }
-                    },
-                }
-            }
-        }
-        if multiline {
-            try!(self.options.set(&prev_key, &prev_value));
-        }
-
-        if self.options.get_bool("verbose") == Ok(true) {
-            if self.logger.verbosity() >= InfoLevel::Warning {
-                self.logger.set_verbosity(InfoLevel::Warning);
+                return Err(Error::ConfigParser("found invalid chapter definition in the chapter list", String::from(line)));
             }
         }
 
