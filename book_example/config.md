@@ -6,7 +6,7 @@ is all you'll have to add (assuming you'll already have the book in
 Markdown files; if you don't, you'll also have to write a book first,
 but that's besides the scope of this document).
 
-The format is not very complicated, and it looks a bit like YAML. This is an example of it:
+The format is not very complicated. This is an example of it:
 
 ```
 # metadata
@@ -26,18 +26,11 @@ output.html: some_book.html
 ```
 Basically, it is divided in two parts:
 
-* a list of options, under the form `key: value`;
+* a list of options, under the form `key: value`, following YAML syntax.
 * a list of Markdown files.
 
 Files starting with the `#` characters are comments and are discarded
-by Crowbook when parsing the files. Note that `#` must be at the
-*beginning* of the line, so e.g.:
-
-```
-author: John Smith # aka John Doe
-```
-
-will set the `author` key to `John Smith # aka John Doe`.
+when parsing the files. 
 
 The list of files
 -----------------
@@ -116,38 +109,27 @@ Crowbook options
 ----------------
 
 The first part of the configuration file is dedicated to pass options
-to Crowbook. Each one is of the form `option: value`. Note that you
-don't have to put string in quotes, e.g.:
+to Crowbook. This is YAML syntax, so each one is of the form `option:
+value`. Note that in most cases you don't have to put string in quotes, e.g.: 
 
 ```
 title: My title
 ```
 
-If you *do* use quotes, Crowbook will actually put those quotes in the
-string, so basically don't do that.
-
-It is possible to use multiline strings with either `>` or `|`, and
+It is possible to use multiline strings with `>-` and
 then indenting the lines that are part of the string:
 
 ```
-title: >
+title: >-
  A
  long
  title
 author: Joan Doe
 ```
 
-will set `title` to `"A long title"`, whereas
-
-```
-title: >
- A
- long
- title
-author: Joan Doe
-```
-
-will set `title` to `"A\nlong\ntitle\n"` (replicating line returns).
+will set `title` to `"A long title"`. See
+[block literals in YAML](https://en.wikipedia.org/wiki/YAML#Block_literals)
+for more information and nuances.
 
 This feature is useful for options like `description` who may take a
 long string.

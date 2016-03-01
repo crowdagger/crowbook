@@ -7,27 +7,27 @@ Crowbook can takes a list of arguments:
 Render a markdown book in Epub, PDF or HTML.
 
 USAGE:
-        crowbook [OPTIONS] [--] [ARGS]
+        crowbook [FLAGS] [OPTIONS] [--] [ARGS]
+
+FLAGS:
+    -d, --debug              Print debugging information
+    -h, --help               Prints help information
+    -l, --list-options       Lists all possible option
+        --list-options-md    List all options, formatted in Markdown.
+    -s, --single             Use a single Markdown file instead of a book configuration file
+    -V, --version            Prints version information
+    -v, --verbose            Print warnings in parsing/rendering
 
 OPTIONS:
         --create <FILES>...            Creates a new book with existing markdown files.
-    -h, --help                         Prints help information
-    -l, --list-options                 Lists all possible option
-        --list-options-md              List all options, formatted in Markdow
     -o, --output <FILE>                Specifies output file.
         --print-template <TEMPLATE>    Displays the default value of a template.
-    -s, --set <KEY_VALUES>             Sets a list of book options
+        --set <KEY_VALUES>             Sets a list of book options
     -t, --to <FORMAT>                  Generate specific format [values: epub, pdf, html, tex, odt]
-    -V, --version                      Prints version information
-    -v, --verbose                      Activate verbose mode
 
 ARGS:
-    <BOOK>    File containing the book configuration.
+    <BOOK>    File containing the book configuration, or a Markdown file when called with --single.
 ```
-
-Command line options allow to override options defined in <BOOK> configuration file. 
-E.g., even if this file specifies 'verbose: false', calling 'crowbook --verbose <BOOK>' 
-will activate verbose mode.
 
 Note that Crowbook generates output files relatively to the directory
 where <BOOK> is:
@@ -95,8 +95,7 @@ When `crowbook` is runned with `--create`, it can also uses the
 keys/values set by `--set` (see below):
 
 ```
-$ crowbook foo.book --create file1.md file2.md --set author "Pierre
-Dupont" title "Mon œuvre" lang fr
+$ crowbook foo.book --create file1.md file2.md --set author "Pierre Dupont" title "Mon œuvre" lang fr
 ```
 
 will generate a `foo.book` file containing
@@ -111,12 +110,42 @@ lang: fr
 + file2.md
 ```
 
+`--single`
+----------
+
+**usage**: `crowbook --single <FILE>`
+
+(or `crowbook -s <FILE>`)
+
+This options allows to pass `crowbook` a single Markdown file. This
+file can contain an inline YAML block to set some book options. Inline
+YAML blocks must start and end with a line with `---` (three dashes). E.g:
+
+```markdown
+---
+author: Joan Doe
+title: A short story
+---
+```
+
+If this YAML block is not at the beginning of a file, it must also be
+preceded by a blank line.
+
+This allows to not have to generate a `.book` configuration file for a
+short story or an article. `crowbook --single foo.md` is rougly equivalent to having a book
+configuration file containing:
+
+```markdown
+! foo.md
+```
+
+That is, the chapter heading (if any) won't be displayed in the output
+documents (though they still appear in the TOC).
+
 `--set` 
 -------
 
 **usage**: `crowbook <BOOK> --set [KEY] [VALUE]...
-
-(or `crowbook <BOOK> -s [KEY] [VALUE]...`
 
 This options takes a list `KEY` `VALUE` pairs and allows to set or
 override a book configuration option. All valid options in the

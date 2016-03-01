@@ -23,8 +23,8 @@ or build it yourself.
 See [the releases page](https://github.com/lise-henry/crowbook/releases)
 to download a precompiled binary for your architecture (currently:
 Linux, Windows and MacOSX). Just extract the archive and run
-`crowbook` (you might also want to copy the binary somewhere in your
-`PATH` for later usage).
+`crowbook` (or `crowbook.exe` on Windows). You might also want to copy
+the binary somewhere in your `PATH` for later usage.
 
 ### Building ###
 
@@ -112,7 +112,7 @@ rendered in [HTML](http://lise-henry.github.io/crowbook/book.html) and
 
 LaTeX output is a bit more tricky: it should work reasonably well for
 novels (the primary target of Crowbook), but `pdflatex` might occasionally
-choke on some « weird » unicode character. Moreover, images are not yet
+choke on some "weird" unicode character. Moreover, images are not yet
 implemented (but should come soon). See the example book rendered in
 [PDF](http://lise-henry.github.io/crowbook/book.pdf) on github.io.
 
@@ -127,7 +127,7 @@ you want to hurt your eyes.
 
 Crowbook uses
 [pulldown-cmark](https://crates.io/crates/pulldown-cmark) and thus
-should support most of commonmark Markdown. Inline HTML, however, is
+should support most of CommonMark Markdown. Inline HTML, however, is
 not implemented, and probably won't be, as the goal is to have books
 that can also be generated in PDF (and maybe eventually ODT).
 
@@ -159,6 +159,7 @@ following libraries:
 
 * [pulldown-cmark](https://crates.io/crates/pulldown-cmark) (for
 parsing markdown)
+* [yaml-rust](https://crates.io/crates/yaml-rust) (for parsing YAML blocks)
 * [mustache](https://crates.io/crates/mustache) (for templating)
 * [clap](https://github.com/kbknapp/clap-rs) (for parsing command line arguments)
 * [chrono](https://crates.io/crates/chrono) (date and time library)
