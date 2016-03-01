@@ -9,6 +9,14 @@ plop: coin
 ...
 
 
+foo
+---
+
+bar
+---
+
+the above should NOT be a YAML block.
+
 
 # Chapter #
 

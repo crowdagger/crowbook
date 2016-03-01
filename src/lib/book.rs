@@ -487,10 +487,12 @@ impl Book {
             return;
         }
         let mut new_content = String::new();
+        let mut previous_empty = true;
         {
             let mut lines = content.lines();
             while let Some(line) = lines.next() {
-                if line == "---" {
+                if line == "---" && previous_empty {
+                    previous_empty = false;
                     let mut yaml_block = String::new();
                     let mut valid_block = false;
                     while let Some(new_line) = lines.next() {
@@ -517,7 +519,11 @@ impl Book {
                         new_content.push_str(&yaml_block);
                         new_content.push_str("\n");
                     }
+                } else if line.is_empty() {
+                    previous_empty = true;
+                    new_content.push_str("\n");
                 } else {
+                    previous_empty = false;
                     new_content.push_str(line);
                     new_content.push_str("\n");
                 }
