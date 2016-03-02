@@ -47,6 +47,7 @@ epub.css:path                       # Path of a stylesheet to use with EPUB rend
 epub.template:path                  # Path of an epub template for chapter
 
 # LaTeX options
+tex.short:bool:false                # If set to true, use article class instead of book and a the default \\maketitle
 tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL of links in LaTeX/PDF output
 tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file

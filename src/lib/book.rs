@@ -118,9 +118,12 @@ impl Book {
             book.root = parent.to_owned();
             book.options.root = book.root.clone();
         }
+        book.options.set("tex.short", "true").unwrap();
         
         // Add the file as chapter with hidden title
-        try!(book.add_chapter(Number::Hidden, filename));
+        // hideous line, but basically transforms foo/bar/baz.md to baz.md
+        let relative_path = Path::new(Path::new(filename).components().last().unwrap().as_os_str());
+        try!(book.add_chapter(Number::Hidden, &relative_path.to_string_lossy()));
 
         Ok(book)
     }

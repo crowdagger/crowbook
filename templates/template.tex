@@ -1,6 +1,7 @@
-\documentclass{book}
+{{=<< >>=}}
+\documentclass{<<#short>>article<</short>><<^short>>book<</short>>}
 \usepackage[T1]{fontenc}
-\usepackage[{{tex_lang}}]{babel}
+\usepackage[<<&tex_lang>>]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 \usepackage{spverbatim}
@@ -36,15 +37,16 @@
 
 
 % Title
+<<^short>>
 \renewcommand{\maketitle}{
   \thispagestyle{empty}
   \vspace*{\stretch{1}}
-
+  
   \begin{center}
     {\Huge \@title   \\[5mm]}
   \end{center}
   \vspace*{\stretch{2}}
-
+  
   \newpage
   \thispagestyle{empty}
   
@@ -55,29 +57,31 @@
   \chapter*{}
   \vspace*{\stretch{1}}
   \begin{center}
-%    {\Huge \@author \\[5mm]}
+    %    {\Huge \@author \\[5mm]}
     {\Huge \@title   \\[5mm]}
-%    {\huge \today   \\[5mm]}    
+    %    {\huge \today   \\[5mm]}    
   \end{center}
   
-%  \HRule
-
+  %  \HRule
+  
   \vspace*{\stretch{2}}
-
-\begin{center}
-{\large \@author}
-\end{center}
-
-                                
- \vspace*{\stretch{1}}
-
- \vspace*{\stretch{1}}
-}
-\pagebreak
-\newpage
+  
+  \begin{center}
+    {\large \@author}
+  \end{center}
+  
+  
+  \vspace*{\stretch{1}}
+  
+  \vspace*{\stretch{1}}
+  
+  \pagebreak
+  \newpage
   \thispagestyle{empty}
-\pagebreak
-\newpage
+  \pagebreak
+  \newpage
+}
+<</short>>
 
 % Headers
 \pagestyle{fancyplain} 
@@ -90,13 +94,13 @@
 \cfoot{\fancyplain{}{}}
 \makeatother
 
-\title{ {{{title}}} }
-\author{ {{{author}}} }
+\title{<<&title>>}
+\author{<<&author>>}
 
 \begin{document}
 
 \maketitle
 
-{{{content}}}
+<<&content>>
 
 \end{document}

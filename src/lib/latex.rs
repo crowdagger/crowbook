@@ -107,10 +107,13 @@ impl<'a> LatexRenderer<'a> {
         });
 
         let template = mustache::compile_str(try!(self.book.get_template("tex.template")).as_ref());
-        let data = self.book.get_mapbuilder("tex")
+        let mut data = self.book.get_mapbuilder("tex")
             .insert_str("content", content)
-            .insert_str("tex_lang", tex_lang)
-            .build();
+            .insert_str("tex_lang", tex_lang);
+        if self.book.options.get_bool("tex.short") == Ok(true) {
+            data = data.insert_bool("short", true);
+        }
+        let data = data.build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
