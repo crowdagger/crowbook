@@ -399,7 +399,7 @@ impl Book {
         Ok(())
     }     
 
-            /// Adds a chapter, as a string, to the book
+    /// Adds a chapter, as a string, to the book
     ///
     /// `Book` will then parse the string and store the AST (i.e., a vector
     /// of `Token`s).
