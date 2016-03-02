@@ -29,7 +29,7 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
 }
     
 
-/// sets the book options according to command line arguments
+/// Sets the book options according to command line arguments
 /// Also print these options to a string, so it can be used at
 /// the creation of a book to check that parameters are OK and t
 /// then print them to file
