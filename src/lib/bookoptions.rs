@@ -23,6 +23,9 @@ output.odt:path                     # Output file name for ODT rendering
 
 
 # Misc options
+base_path:path                      # By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
+base_path.links:path                # Set base path but only for links. Useless if base_path is set.
+base_path.images:path               # Set base path but only for images. Useless if base_path is set.
 zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
 numbering:int:1                     # The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
 display_toc:bool:false              # If true, display a table of content in the document

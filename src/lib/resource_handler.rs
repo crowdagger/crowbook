@@ -96,24 +96,30 @@ impl<'r> ResourceHandler<'r> {
     }
 
     /// Add a path offset to all linked urls and images src
-    pub fn add_offset(offset: &Path, ast: &mut [Token]) {
-        if offset == Path::new("") {
+    pub fn add_offset(link_offset: &Path, image_offset: &Path, ast: &mut [Token]) {
+        if link_offset == Path::new("") && image_offset == Path::new("") {
             //nothing do to
             return;
         }
         for mut token in ast {
             match *token {
-                Token::Link(ref mut url, _, ref mut v)
-                    | Token::Image (ref mut url, _, ref mut v) => {
-                        if ResourceHandler::is_local(url) {
-                            let new_url = format!("{}", offset.join(&url).display());
-                            *url = new_url;
-                        }
-                        Self::add_offset(offset, v);
-                    },
+                Token::Link(ref mut url, _, ref mut v) => {
+                    if ResourceHandler::is_local(url) {
+                        let new_url = format!("{}", link_offset.join(&url).display());
+                        *url = new_url;
+                    }
+                    Self::add_offset(link_offset, image_offset, v);
+                },
+                Token::Image (ref mut url, _, ref mut v) => {
+                    if ResourceHandler::is_local(url) {
+                        let new_url = format!("{}", image_offset.join(&url).display());
+                        *url = new_url;
+                    }
+                    Self::add_offset(link_offset, image_offset, v);
+                },
                 _ => {
                     if let Some(ref mut inner) = token.inner_mut() {
-                            Self::add_offset(offset, inner);
+                            Self::add_offset(link_offset, image_offset, inner);
                     }
                 }
             }

@@ -372,8 +372,28 @@ impl Book {
             self.logger.warning(format!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
         }
 
-        // add offset 
-        ResourceHandler::add_offset(offset, &mut v);
+
+        // For offset: if nothing is specified, it is the filename's directory
+        // If base_path.{images/links} is specified, override it for one of them.
+        // If base_path is specified, override it for both.
+        let res_base = self.options.get_path("base_path");
+        let res_base_img = self.options.get_path("base_path.images");
+        let res_base_lnk = self.options.get_path("base_path.links");
+        let mut link_offset = offset;
+        let mut image_offset = offset;
+        if let Ok(ref path) = res_base {
+            link_offset = Path::new(path);
+            image_offset = Path::new(path);
+        } else {
+            if let Ok(ref path) = res_base_img {
+                image_offset = Path::new(path);
+            }
+            if let Ok(ref path) = res_base_lnk {
+                link_offset = Path::new(path);
+            }
+        }
+        // add offset
+        ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut v);
         
         self.chapters.push((number, v));
         Ok(())
