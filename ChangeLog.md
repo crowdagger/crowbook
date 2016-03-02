@@ -16,6 +16,14 @@ ChangeLog
       default `\maketitle` command for article. This option is by
       default set to false, except when Crowbook is called with
       `--single`.
+    * `enable_yaml_blocks`: parsing YAML blocks is no longer activated
+      by default, except when using `--single`. This is because you
+      might want to have e.g. multiple short stories using YAML blocks
+      to set their titles and so on, *and* a separate `.book` files to
+      render a book as a collection of short stories. In this case,
+      you wouldn't want the displayed title or the
+      output.pdf/html/epub files be redefined by the short stories .md
+      files. 
 * Bugfixes:
     * Fixed a bug of filename "resolution" when Crowbook was called
       with `--single` (e.g., `crowbook -s tests/test.md` would

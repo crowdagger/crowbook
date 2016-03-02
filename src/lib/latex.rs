@@ -137,7 +137,6 @@ impl<'a> LatexRenderer<'a> {
             "tr" => "turkish",
             "uk" => "ukrainian",
             "cy" => "welsh",
-
             _ => {
                 self.book.logger.warning(format!("LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
                 "english"

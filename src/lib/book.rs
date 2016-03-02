@@ -139,6 +139,7 @@ impl Book {
             book.options.root = book.root.clone();
         }
         book.options.set("tex.short", "true").unwrap();
+        book.options.set("enable_yaml_blocks", "true").unwrap();
 
         for &(key, value) in options {
             try!(book.options.set(key, value));
@@ -553,7 +554,10 @@ impl Book {
                             // Checks that this is valid YAML
                             match YamlLoader::load_from_str(&yaml_block) {
                                 Ok(docs) => {
-                                    if docs.len() == 1 && docs[0].as_hash().is_some() {
+                                    // Use this yaml block to set options only if 1) it is valid
+                                    // 2) the option is activated
+                                    if docs.len() == 1 && docs[0].as_hash().is_some()
+                                        && self.options.get_bool("enable_yaml_blocks") == Ok(true) {
                                         let hash = docs[0].as_hash().unwrap();
                                         for (key, value) in hash {
                                             match self.options.set_yaml(key.clone(), value.clone()) { //todo: remove clone
