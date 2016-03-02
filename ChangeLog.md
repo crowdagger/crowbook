@@ -1,6 +1,27 @@
 ChangeLog
 =========
 
+0.4.1 (unreleased)
+------------------
+* New book options:
+    * `base_path`: by default, Crowbook resolves local links in
+      markdown files relatively to the markdown file. This option
+      allows to resolve them relatively to a base path. This option
+      comes with two variants, `base_path.images` and
+      `base_path.links`, which only activate it for respectively
+      images tags and links tags. These two options are ignored when
+      `base_path` is set.
+    * `tex.short`: if set to true, the LaTeX renderer will use
+      `article` instead of `book` as document class, and will use the
+      default `\maketitle` command for article. This option is by
+      default set to false, except when Crowbook is called with
+      `--single`.
+* Bugfixes:
+    * Fixed a bug of filename "resolution" when Crowbook was called
+      with `--single` (e.g., `crowbook -s tests/test.md` would
+      previously try to load `tests/tests/test.md).
+
+
 0.4.0 (2016-03-01)
 ------------------
 * Crowbook now internally uses a true YAML parser, `yaml_rust`, for its
