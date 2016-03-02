@@ -139,9 +139,9 @@ fn main() {
     };
 
     let book_res = if matches.is_present("single") {
-        Book::new_from_markdown_file(s, verbosity)
+        Book::new_from_markdown_file(s, verbosity, &get_book_options(&matches))
     } else {
-        Book::new_from_file(s, verbosity)
+        Book::new_from_file_with_options(s, verbosity, &get_book_options(&matches))
     };
             
     match book_res {

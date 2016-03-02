@@ -17,6 +17,7 @@ use std::fs::File;
 use std::io::{Write, Read};
 use std::path::{Path, PathBuf};
 use std::borrow::Cow;
+use std::iter::IntoIterator;
 
 use mustache;
 use mustache::MapBuilder;
@@ -81,6 +82,40 @@ impl Book {
         }
     }
 
+    /// Creates a new book from a file, with options
+    ///
+    /// # Arguments
+    /// * `filename`: the path of file to load. The directory of this file is used as
+    ///   a "root" directory for all paths referenced in books, whether chapter files,
+    ///   templates, cover images, and so on.
+    /// * `verbosity: sets the book verbosity
+    /// * `options`: a list of (key, value) options to pass to the book
+    pub fn new_from_file_with_options<'a, I> (filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
+    where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
+        let mut book = Book::new();
+        book.logger.set_verbosity(verbosity);
+        
+        let path = Path::new(filename);
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
+        // Set book path to book's directory
+        if let Some(parent) = path.parent() {
+            book.root = parent.to_owned();
+            book.options.root = book.root.clone();
+        }
+        
+        // set options
+        for &(key, value) in options {
+            try!(book.options.set(key, value));
+        }
+        
+        let mut s = String::new();
+        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
+                                                                      filename.to_owned())));
+        
+        try!(book.set_from_config(&s));
+        Ok(book)
+    }
+
     /// Creates a new book from a file
     ///
     /// # Arguments
@@ -89,27 +124,12 @@ impl Book {
     ///   templates, cover images, and so on.
     /// * `verbosity: sets the book verbosity 
     pub fn new_from_file(filename: &str, verbosity: InfoLevel) -> Result<Book> {
-        let mut book = Book::new();
-        book.logger.set_verbosity(verbosity);
-                
-        let path = Path::new(filename);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
-        // Set book path to book's directory
-        if let Some(parent) = path.parent() {
-            book.root = parent.to_owned();
-            book.options.root = book.root.clone();
-        }
-
-        let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
-                                                                      filename.to_owned())));
-
-        try!(book.set_from_config(&s));
-        Ok(book)
+        Book::new_from_file_with_options(filename, verbosity, &[])
     }
 
     /// Creates a book from a single markdown file
-    pub fn new_from_markdown_file(filename: &str, verbosity: InfoLevel) -> Result<Book> {
+    pub fn new_from_markdown_file<'a, I>(filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
+    where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book::new();
         book.logger.set_verbosity(verbosity);
 
@@ -119,6 +139,10 @@ impl Book {
             book.options.root = book.root.clone();
         }
         book.options.set("tex.short", "true").unwrap();
+
+        for &(key, value) in options {
+            try!(book.options.set(key, value));
+        }
         
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md

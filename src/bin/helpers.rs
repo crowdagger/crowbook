@@ -10,12 +10,9 @@ pub fn print_error(s: &str) -> ! {
     exit(0);
 }
 
-/// sets the book options according to command line arguments
-/// Also print these options to a string, so it can be used at
-/// the creation of a book to check that parameters are OK and t
-/// then print them to file
-pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
-    let mut output = String::new();
+/// Gets the book options in a (key, value) list, or print an error
+pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> {
+    let mut output = vec!();
     if let Some(iter) = matches.values_of("set") {
         let v:Vec<_> = iter.collect();
         if v.len() %2 != 0 {
@@ -25,12 +22,27 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
         for i in 0..v.len()/2 {
             let key = v[i * 2];
             let value = v[i * 2 + 1];
-            let res = book.options.set(key, value);
-            if let Err(err) = res {
-                print_error(&format!("Error in setting key {}: {}", key, err));
-            }
-            output.push_str(&format!("{}: {}\n", key, value));
+            output.push((key, value));
         }
+    }
+    output
+}
+    
+
+/// sets the book options according to command line arguments
+/// Also print these options to a string, so it can be used at
+/// the creation of a book to check that parameters are OK and t
+/// then print them to file
+pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
+    let mut output = String::new();
+    let options = get_book_options(matches);
+
+    for (key, value) in options {
+        let res = book.options.set(key, value);
+        if let Err(err) = res {
+            print_error(&format!("Error in setting key {}: {}", key, err));
+        }
+        output.push_str(&format!("{}: {}\n", key, value));
     }
     output
 }
