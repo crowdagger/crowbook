@@ -3,11 +3,18 @@ use error::{Error,Result};
 /// Structure for storing a book option
 #[derive(Debug, PartialEq)]
 pub enum BookOption {
-    String(String), // Stores a string
-    Bool(bool), // stores a boolean
-    Char(char), // stores a char
-    Int(i32), // stores an int
-    Path(String), // Stores a path
+    /// Stores a String
+    String(String),
+    /// Stores a boolean
+    Bool(bool),
+    /// Stores a single char
+    Char(char),
+    /// Stores an int
+    Int(i32),
+    /// Stores a path
+    ///
+    /// Stored the same way as a string, but some base path is usually prepended to it
+    Path(String), 
 }
 
 impl BookOption {

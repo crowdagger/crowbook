@@ -85,6 +85,7 @@ impl fmt::Display for Error {
     }
 }
 
+/// Crowbook's Result type, used by many methods that can fail
 pub type Result<T> = result::Result<T, Error>;
 
 

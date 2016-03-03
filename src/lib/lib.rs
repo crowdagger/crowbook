@@ -93,7 +93,7 @@
 //! assert_eq!(count(&ast), 2);
 //! ```
 
-
+#![deny(missing_docs)]
 
 extern crate pulldown_cmark as cmark;
 extern crate mustache;
