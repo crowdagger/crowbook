@@ -19,15 +19,16 @@ ChangeLog
     * `enable_yaml_blocks`: parsing YAML blocks is no longer activated
       by default, except when using `--single`. This is because you
       might want to have e.g. multiple short stories using YAML blocks
-      to set their titles and so on, *and* a separate `.book` files to
+      to set their titles and so on, *and* a separate `.book` file to
       render a book as a collection of short stories. In this case,
       you wouldn't want the displayed title or the
       output.pdf/html/epub files be redefined by the short stories .md
       files.
 * Rendering:
-    * HTML/EPUB: default CSS now uses lang value do determine how to
-      display lists (currently it uses "–" for "fr" and standard
-      bullets for other languages.
+    * HTML/EPUB: default CSS now uses the `lang` value do determine
+      how to display lists (currently the only difference is it uses
+      "–" when `lang` is set to "fr" and standard bullets for other
+      languages).
 * Bugfixes:
     * Fixed a bug of filename "resolution" when Crowbook was called
       with `--single` (e.g., `crowbook -s tests/test.md` would
