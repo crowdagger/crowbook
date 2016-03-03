@@ -88,9 +88,16 @@ impl<'a> EpubRenderer<'a> {
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
         }
         
-        // Write CSS file
+        // Render the CSS file and write it
+        let template_css = mustache::compile_str(try!(self.book.get_template("epub.css")).as_ref());
+        let data = self.book.get_mapbuilder("none")
+            .insert_bool(self.book.options.get_str("lang").unwrap(), true)
+            .build();
+        let mut res:Vec<u8> = vec!();
+        template_css.render_data(&mut res, &data);
+        let css = String::from_utf8_lossy(&res);
         try!(zipper.write("stylesheet.css",
-                          &try!(self.book.get_template("epub.css")).as_bytes(), true));
+                          css.as_bytes(), true));
 
         // Write titlepage
         try!(zipper.write("title_page.xhtml", &try!(self.render_titlepage()).as_bytes(), true));

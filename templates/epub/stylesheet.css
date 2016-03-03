@@ -140,6 +140,7 @@ table.notes td {
     font-variant: small-caps;
 }
 
+{{#fr}}
 /* Make list displays '–' instead of puces */
 ul li {
     list-style-type: none;
@@ -147,3 +148,4 @@ ul li {
 ul li:before {
     content: "– "; 
 }
+{{/fr}}

@@ -19,7 +19,7 @@ use escape::escape_html;
 use token::Token;
 use book::Book;
 use number::Number;
-use error::{Error,Result};
+use error::Result;
 use toc::Toc;
 use resource_handler::ResourceHandler;
 use std::borrow::Cow;
@@ -115,20 +115,26 @@ impl<'a> HtmlRenderer<'a> {
                               content);
         }
 
-        let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
+        // Render the CSS
+        let template_css = mustache::compile_str(try!(self.book.get_template("html.css")).as_ref());
+        let data = self.book.get_mapbuilder("none")
+            .insert_bool(self.book.options.get_str("lang").unwrap(), true)
+            .build();
+        let mut res:Vec<u8> = vec!();
+        template_css.render_data(&mut res, &data);
+        let css = String::from_utf8_lossy(&res);
+
+        // Render the HTML document
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
-            .insert_str("style",
-                        &try!(self.book.get_template("html.css")))
             .insert_str("toc", toc)
+            .insert_bool(self.book.options.get_str("lang").unwrap(), true)
+            .insert_str("style", css.as_ref())
             .build();
-
-        let mut res:Vec<u8> = vec!();
+        let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
+        let mut res = vec!();
         template.render_data(&mut res, &data);
-        match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated HTML was not utf-8 valid")),
-            Ok(res) => Ok(res)
-        }
+        Ok(String::from_utf8_lossy(&res).into_owned())
     }
 
     /// Renders a chapter to HTML
