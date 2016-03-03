@@ -33,6 +33,10 @@ ChangeLog
     * Fixed a bug of filename "resolution" when Crowbook was called
       with `--single` (e.g., `crowbook -s tests/test.md` would
       previously try to load `tests/tests/test.md).
+* Internal/API:
+    * The `Book::new`, `new_from_file`, and `new_from_markdown_file`
+      take an additional `options` parameter. To create a book with
+      default options, set it to `&[]`.
 
 
 0.4.0 (2016-03-01)

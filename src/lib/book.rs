@@ -38,14 +38,9 @@ use yaml_rust::YamlLoader;
 ///
 /// ```
 /// use crowbook::{Book, Number};
-/// // Create an empty book
-/// let mut book = Book::new();
+/// // Create a book with some options
+/// let mut book = Book::new(&[("author", "Joan Doe"), ("title", "An untitled book"), ("lang", "en")]);
 //
-/// // Set some options
-/// book.options.set("author", "Joan Doe");
-/// book.options.set("title", "An untitled book");
-/// book.options.set("lang", "en");
-///
 /// // Add content to the book
 /// book.add_chapter_as_str(Number::Default, "# The beginning#\nBla, bla, bla").unwrap();
 ///
@@ -71,15 +66,27 @@ pub struct Book {
 }
 
 impl Book {
-    /// Creates a new, empty `Book` with default options
-    pub fn new() -> Book {
-        Book {
+    /// Creates a new `Book` with given options
+    ///
+    /// # Arguments
+    /// *`options` a list (or other iterator) of (key, value) tuples. Can be &[].
+    pub fn new<'a,I>(options: I) -> Book
+    where I: IntoIterator<Item=&'a(&'a str, &'a str)> {
+        let mut book = Book {
             chapters: vec!(),
             filenames: vec!(),
             root: PathBuf::new(),
             options: BookOptions::new(),
             logger: Logger::new(InfoLevel::Info),
+        };
+
+        // set options
+        for &(key, value) in options {
+            if let Err(err) = book.options.set(key, value) {
+                book.logger.error(format!("Error initializing book: could not set {} to {}: {}", key, value, err));
+            }
         }
+        book
     }
 
     /// Creates a new book from a file, with options
@@ -90,9 +97,9 @@ impl Book {
     ///   templates, cover images, and so on.
     /// * `verbosity: sets the book verbosity
     /// * `options`: a list of (key, value) options to pass to the book
-    pub fn new_from_file_with_options<'a, I> (filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
+    pub fn new_from_file<'a, I> (filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
     where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
-        let mut book = Book::new();
+        let mut book = Book::new(options);
         book.logger.set_verbosity(verbosity);
         
         let path = Path::new(filename);
@@ -103,11 +110,6 @@ impl Book {
             book.options.root = book.root.clone();
         }
         
-        // set options
-        for &(key, value) in options {
-            try!(book.options.set(key, value));
-        }
-        
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
                                                                       filename.to_owned())));
@@ -116,21 +118,10 @@ impl Book {
         Ok(book)
     }
 
-    /// Creates a new book from a file
-    ///
-    /// # Arguments
-    /// * `filename`: the path of file to load. The directory of this file is used as
-    ///   a "root" directory for all paths referenced in books, whether chapter files,
-    ///   templates, cover images, and so on.
-    /// * `verbosity: sets the book verbosity 
-    pub fn new_from_file(filename: &str, verbosity: InfoLevel) -> Result<Book> {
-        Book::new_from_file_with_options(filename, verbosity, &[])
-    }
-
     /// Creates a book from a single markdown file
     pub fn new_from_markdown_file<'a, I>(filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
     where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
-        let mut book = Book::new();
+        let mut book = Book::new(options);
         book.logger.set_verbosity(verbosity);
 
         // Set book path to book's directory
@@ -141,10 +132,6 @@ impl Book {
         book.options.set("tex.short", "true").unwrap();
         book.options.set("enable_yaml_blocks", "true").unwrap();
 
-        for &(key, value) in options {
-            try!(book.options.set(key, value));
-        }
-        
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md
         let relative_path = Path::new(Path::new(filename).components().last().unwrap().as_os_str());

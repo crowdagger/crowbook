@@ -181,7 +181,7 @@ impl BookOptions {
     /// # Examples
     /// ```
     /// use crowbook::Book;
-    /// let mut book = Book::new();
+    /// let mut book = Book::new(&[]);
     /// book.options.set("author", "Joan Doe").unwrap(); // ok
     /// book.options.set("numbering", "2").unwrap(); // sets numbering to chapters and subsections
     /// let result = book.options.set("autor", "John Smith"); 

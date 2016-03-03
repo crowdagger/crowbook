@@ -61,7 +61,7 @@ pub fn create_book(matches: &ArgMatches) -> ! {
         
     if let Some(values) = matches.values_of("create") {
         if matches.is_present("set") {
-            let mut book = Book::new();
+            let mut book = Book::new(&[]);
             let s = set_book_options(&mut book, matches);
             f.write_all(&s.as_bytes()).unwrap();
         } else {

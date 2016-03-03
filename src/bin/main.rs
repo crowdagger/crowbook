@@ -105,7 +105,7 @@ fn main() {
 
     if matches.is_present("print-template") {
         let template = matches.value_of("print-template").unwrap();
-        let mut book = Book::new();
+        let mut book = Book::new(&[]);
         set_book_options(&mut book, &matches);
         let result = book.get_template(template.as_ref());
         match result {
@@ -141,7 +141,7 @@ fn main() {
     let book_res = if matches.is_present("single") {
         Book::new_from_markdown_file(s, verbosity, &get_book_options(&matches))
     } else {
-        Book::new_from_file_with_options(s, verbosity, &get_book_options(&matches))
+        Book::new_from_file(s, verbosity, &get_book_options(&matches))
     };
             
     match book_res {

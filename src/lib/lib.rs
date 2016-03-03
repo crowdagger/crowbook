@@ -36,7 +36,7 @@
 //! ```ignore
 //! use crowbook::{Book, InfoLevel};
 //! // Reads configuration file "foo.book" (and set verbosity do default level)
-//! let mut book = Book::new_from_file("foo.book", InfoLevel::Info).unwrap();
+//! let mut book = Book::new_from_file("foo.book", InfoLevel::Info, &[]).unwrap();
 //! // Render all formats according to this configuration file
 //! book.render_all().unwrap();
 //! ```
