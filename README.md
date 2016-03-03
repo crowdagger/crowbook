@@ -180,7 +180,7 @@ a single Markdown file instead of a book configuration file).
 
 ### Bugs ###
 
-See [Bugs](Bugs.md).
+See the [github's issue tracker](https://github.com/lise-henry/crowbook/issues).
 
 Acknowledgements
 ----------------
