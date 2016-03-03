@@ -25,8 +25,9 @@
 //! The central structure of Crowbook is `Book`, who coordinates everything.
 //!
 //! Its roles are:
+//!
 //! * reading a book configuration file and setting the book options accordingly
-//! * giving the chapters (written in Markdown) listed in this configuration file
+//! * reading the chapters (written in Markdown) listed in this configuration file
 //!   to `Parser`, get back an AST and store it in memory
 //! * call `HtmlRenderer`, `EpubRenderer`, `LatexRenderer` and/or `OdtRenderer`
 //!   according to the book's parameters and generate the appopriate files.
