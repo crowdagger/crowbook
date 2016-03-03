@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.4.1 (unreleased)
+0.5.0 (unreleased)
 ------------------
 * New book options:
     * `base_path`: by default, Crowbook resolves local links in
