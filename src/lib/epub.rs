@@ -30,6 +30,7 @@ use uuid;
 
 use std::io::{Read,Write};
 use std::fs::File;
+use std::path::Path;
 use std::borrow::Cow;
 use mime_guess::guess_mime_type_opt;
 
@@ -129,6 +130,17 @@ impl<'a> EpubRenderer<'a> {
             try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading image file")));
             try!(zipper.write(dest, &content, true));
         }
+
+        // Write additional resources
+        if let Ok(list) = self.book.options.get_paths_list("resources.files") {
+            let data_path = Path::new(try!(self.book.options.get_relative_path("resources.path")));
+            for path in list{
+                let mut f = try!(File::open(self.book.root.join(&path)).map_err(|_| Error::FileNotFound(path.clone())));
+                let mut content = vec!();
+                try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading resource file")));
+                try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
+            }
+        }
         
         if let Ok(epub_file) = self.book.options.get_path("output.epub") {
             let res = try!(zipper.generate_epub(self.book.options.get_str("zip.command").unwrap(), &epub_file));
@@ -219,8 +231,22 @@ impl<'a> EpubRenderer<'a> {
         // put the images in the manifest too
         for image in self.html.handler.images_mapping().values() {
             let format = self.get_format(image);
-            items.push_str(&format!("<item media-type = \"image/{}\" id = \"{}\" href = \"{}\" />\n",
+            items.push_str(&format!("<item media-type = \"{}\" id = \"{}\" href = \"{}\" />\n",
                                     format, to_id(image), image));
+        }
+
+        // and additional files too
+        if let Ok(list) = self.book.options.get_paths_list("resources.files") {
+            let data_path = Path::new(self.book.options.get_relative_path("resources.path").unwrap());
+            for path in list {
+                let format = self.get_format(&path);
+                let path = data_path.join(&path);
+                let path_str = path.to_str().unwrap();
+                items.push_str(&format!("<item media-type = \"{}\" id = \"{}\" href = \"{}\" />\n",
+                                        format,
+                                        to_id(path_str),
+                                        path_str));
+            }
         }
 
         let template = mustache::compile_str(if self.book.options.get_i32("epub.version").unwrap() == 3 {epub3::OPF} else {OPF});

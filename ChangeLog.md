@@ -24,6 +24,12 @@ ChangeLog
       you wouldn't want the displayed title or the
       output.pdf/html/epub files be redefined by the short stories .md
       files.
+    * `resources.files`: indicate a (whitespace-separated) list of
+      files that should be embedded. Currently only used with the EPUB
+      renderer.
+    * `resources.data`: indicate where `resources.files` should be
+      copied in the final document. Default to `data`, meaning that
+      files will be placed in a `data` directory in the EPUB.
 * Rendering:
     * HTML/EPUB: default CSS now uses the `lang` value do determine
       how to display lists (currently the only difference is it uses

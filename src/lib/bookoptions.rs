@@ -223,11 +223,7 @@ impl BookOptions {
             .split_whitespace();
         let mut res = vec!();
         for s in list {
-            if let Some(path) = self.root.join(s).to_str() {
-                res.push(path.to_owned());
-            } else {
-                return Err(Error::BookOption(format!("{} contains invalid UTF-8", key)));
-            }
+            res.push(s.to_owned());
         }
         Ok(res)
     }
