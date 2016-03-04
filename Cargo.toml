@@ -20,6 +20,7 @@ path = "src/bin/main.rs"
 doc = false
 
 [dependencies]
+mime_guess = "1.4"
 pulldown-cmark = "0.0.7"
 yaml-rust = "0.3"
 mustache = "0.6"

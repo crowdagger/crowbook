@@ -32,6 +32,7 @@ use std::io::{Read,Write};
 use std::path::Path;
 use std::fs::File;
 use std::borrow::Cow;
+use mime_guess::guess_mime_type_opt;
 
 /// Renderer for Epub
 ///
@@ -336,22 +337,13 @@ impl<'a> EpubRenderer<'a> {
     }
 
     // Get the format of an image file, based on its extension
-    fn get_format(&self, s: &str) -> &'static str {
-        let format = if let Some(ext) = Path::new(s).extension() {
-            match ext.to_string_lossy().as_ref() {
-                "png" => Some("png"),
-                "jpg" | "jpeg" => Some("jpeg"),
-                "gif" => Some("gif"),
-                _ => None,
-            }
-        } else {
-            None
-        };
-        match format {
-            Some(s) => s,
+    fn get_format(&self, s: &str) -> String {
+        let opt = guess_mime_type_opt(s);
+        match opt {
+            Some(s) => s.to_string(),
             None => {
                 self.book.logger.warning(format!("EPUB: could not guess the format of {} based on extension. Assuming png.", s));
-                "png"
+                String::from("png")
             }
         }
     }

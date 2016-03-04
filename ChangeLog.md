@@ -33,10 +33,14 @@ ChangeLog
     * Fixed a bug of filename "resolution" when Crowbook was called
       with `--single` (e.g., `crowbook -s tests/test.md` would
       previously try to load `tests/tests/test.md).
+    * Epub renderer now uses the `mime_guess` library to guess the
+      mime type based on extension, which should fix the mime type
+      guessed for a wide range of extensions (e.g., svg).
 * Internal/API:
     * The `Book::new`, `new_from_file`, and `new_from_markdown_file`
       take an additional `options` parameter. To create a book with
       default options, set it to `&[]`.
+
 
 
 0.4.0 (2016-03-01)
