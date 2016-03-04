@@ -20,10 +20,10 @@ path = "src/bin/main.rs"
 doc = false
 
 [dependencies]
-mime_guess = "1.4"
+mime_guess = "1"
 pulldown-cmark = "0.0.7"
 yaml-rust = "0.3"
-mustache = "0.6"
+mustache = "0.7"
 chrono = "0.2"
 uuid = "0.1"
 clap = "2"
