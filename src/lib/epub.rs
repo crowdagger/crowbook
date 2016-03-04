@@ -27,10 +27,11 @@ use templates::epub3;
 use mustache;
 use chrono;
 use uuid;
+use walkdir::WalkDir;
 
 use std::io::{Read,Write};
 use std::fs::{self, File};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use mime_guess::guess_mime_type_opt;
 
@@ -133,6 +134,7 @@ impl<'a> EpubRenderer<'a> {
 
         // Write additional resources
         if let Ok(list) = self.book.options.get_paths_list("resources.files") {
+            let list = try!(self.get_files(list));
             let data_path = Path::new(try!(self.book.options.get_relative_path("resources.path")));
             for path in list{
                 let mut f = try!(File::open(self.book.root.join(&path)).map_err(|_| Error::FileNotFound(path.clone())));
@@ -237,6 +239,7 @@ impl<'a> EpubRenderer<'a> {
 
         // and additional files too
         if let Ok(list) = self.book.options.get_paths_list("resources.files") {
+            let list = try!(self.get_files(list));
             let data_path = Path::new(self.book.options.get_relative_path("resources.path").unwrap());
             for path in list {
                 let format = self.get_format(&path);
@@ -359,6 +362,35 @@ impl<'a> EpubRenderer<'a> {
             },
             _ => self.html.parse_token(token)
         }
+    }
+
+    // Get the list of all files, walking directories
+    fn get_files(&self, list: Vec<String>) -> Result<Vec<String>> {
+        let mut out:Vec<String> = vec!();
+        for path in list.into_iter() {
+            let res= fs::metadata(self.book.root.join(&path));
+            match res {
+                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", &path, err))),
+                Ok(metadata) => {
+                    if metadata.is_file() {
+                        out.push(path);
+                    } else if metadata.is_dir() {
+                        let files = WalkDir::new(self.book.root.join(path))
+                            .follow_links(true)
+                            .into_iter()
+                            .filter_map(|e| e.ok())
+                            .filter(|e| e.file_type().is_file())
+                            .map(|e| PathBuf::from(e.path().strip_prefix(&self.book.root).unwrap()));
+                        for file in files {
+                            out.push(file.to_string_lossy().into_owned());
+                        }
+                    } else {
+                        return Err(Error::Render(format!("error in epub rendering: {} is neither a file nor a directory", &path)));
+                    }
+                }
+            }
+        }
+        Ok(out)
     }
 
     // Get the format of an image file, based on its extension
