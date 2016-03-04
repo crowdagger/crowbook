@@ -3,6 +3,8 @@ ChangeLog
 
 0.5.0 (unreleased)
 ------------------
+* Crowbook now requires Rustc 1.7.0 (because it uses the renamed
+  `Path::strip_prefix` method).
 * New book options:
     * `base_path`: by default, Crowbook resolves local links in
       markdown files relatively to the markdown file. This option
