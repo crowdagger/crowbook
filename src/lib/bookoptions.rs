@@ -21,6 +21,9 @@ output.tex:path                     # Output file name for LaTeX rendering
 output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
 
+# Resources option
+resources.path:path:data            # Paths where additional resources should be copied in the EPUB file or HTML directory 
+resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file
 
 # Misc options
 base_path:path                      # By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
@@ -204,11 +207,30 @@ impl BookOptions {
         }
     }
         
-    /// get an option
+    /// Gets an option
     pub fn get(&self, key: &str) -> Result<&BookOption> {
         self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not persent", key)))
     }
 
+    /// Gets a list of path. Only used for resources.files.
+    pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
+        if key != "resources.files" {
+            return Err(Error::BookOption(format!("Can't get {} as a list of files, only valid if key is resources.files", key)));
+        }
+
+        let list = try!(try!(self.get(key))
+                        .as_str())
+            .split_whitespace();
+        let mut res = vec!();
+        for s in list {
+            if let Some(path) = self.root.join(s).to_str() {
+                res.push(path.to_owned());
+            } else {
+                return Err(Error::BookOption(format!("{} contains invalid UTF-8", key)));
+            }
+        }
+        Ok(res)
+    }
     
     /// Gets a string option 
     pub fn get_str(&self, key: &str) -> Result<&str> {
