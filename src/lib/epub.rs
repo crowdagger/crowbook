@@ -29,7 +29,7 @@ use chrono;
 use uuid;
 
 use std::io::{Read,Write};
-use std::fs::File;
+use std::fs::{self, File};
 use std::path::Path;
 use std::borrow::Cow;
 use mime_guess::guess_mime_type_opt;
@@ -127,7 +127,7 @@ impl<'a> EpubRenderer<'a> {
         for (source, dest) in self.html.handler.images_mapping() {
             let mut f = try!(File::open(self.book.root.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
             let mut content = vec!();
-            try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading image file")));
+            try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
             try!(zipper.write(dest, &content, true));
         }
 
@@ -137,7 +137,7 @@ impl<'a> EpubRenderer<'a> {
             for path in list{
                 let mut f = try!(File::open(self.book.root.join(&path)).map_err(|_| Error::FileNotFound(path.clone())));
                 let mut content = vec!();
-                try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading resource file")));
+                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
                 try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
             }
         }
@@ -146,7 +146,7 @@ impl<'a> EpubRenderer<'a> {
             let res = try!(zipper.generate_epub(self.book.options.get_str("zip.command").unwrap(), &epub_file));
             Ok(res)
         } else {
-            Err(Error::Render("no output epub file specified in book config"))
+            Err(Error::Render(format!("no output epub file specified in book config")))
         }
     }
     
@@ -158,7 +158,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated HTML in titlepage was not utf-8 valid")),
+            Err(_) => panic!("generated HTML in titlepage was not utf-8 valid"),
             Ok(res) => Ok(res)
         }
     }
@@ -185,7 +185,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated HTML in toc.ncx was not valid utf-8")),
+            Err(_) => panic!("generated HTML in toc.ncx was not valid utf-8"),
             Ok(res) => Ok(res)
         }
     }
@@ -262,7 +262,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated HTML in content.opf was not valid utf-8")),
+            Err(_) => panic!("generated HTML in content.opf was not valid utf-8"),
             Ok(res) => Ok(res)
         }
     }
@@ -277,7 +277,7 @@ impl<'a> EpubRenderer<'a> {
             let mut res:Vec<u8> = vec!();
             template.render_data(&mut res, &data);
             match String::from_utf8(res) {
-                Err(_) => Err(Error::Render("generated HTML for cover.xhtml was not utf-8 valid")),
+                Err(_) => panic!("generated HTML for cover.xhtml was not utf-8 valid"),
                 Ok(res) => Ok(res)
             }
         } else {
@@ -296,7 +296,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated HTML in nav.xhtml was not utf-8 valid")),
+            Err(_) => panic!("generated HTML in nav.xhtml was not utf-8 valid"),
             Ok(res) => Ok(res)
         }
     }
@@ -328,7 +328,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated HTML was not utf-8 valid")),
+            Err(_) => panic!("generated HTML was not utf-8 valid"),
             Ok(res) => Ok(res)
         }
     }

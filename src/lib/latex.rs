@@ -60,14 +60,14 @@ impl<'a> LatexRenderer<'a> {
             for (source, dest) in self.handler.images_mapping() {
                 let mut f = try!(File::open(self.book.root.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
                 let mut content = vec!();
-                try!(f.read_to_end(&mut content).map_err(|_| Error::Render("error while reading image file")));
+                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
                 try!(zipper.write(dest, &content, true));
             }
         
             
             zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
-            Err(Error::Render("no output pdf file specified in book config"))
+            Err(Error::Render(format!("no output pdf file specified in book config")))
         }
     }
 
@@ -154,7 +154,7 @@ impl<'a> LatexRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated LaTeX was not valid utf-8")),
+            Err(_) => panic!("generated LaTeX was not valid utf-8"),
             Ok(res) => Ok(res)
         }
     }

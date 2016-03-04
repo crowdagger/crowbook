@@ -2,7 +2,7 @@ use escape::escape_html;
 use token::Token;
 use book::Book;
 use number::Number;
-use error::{Error,Result};
+use error::Result;
 use templates::odt;
 use zipper::Zipper;
 
@@ -97,7 +97,7 @@ impl<'a> OdtRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => Err(Error::Render("generated content.xml was not utf-8 valid")),
+            Err(_) => panic!("generated content.xml was not utf-8 valid"),
             Ok(res) => Ok(res)
         }
     }
