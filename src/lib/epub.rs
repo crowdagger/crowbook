@@ -29,7 +29,6 @@ use chrono;
 use uuid;
 
 use std::io::{Read,Write};
-use std::path::Path;
 use std::fs::File;
 use std::borrow::Cow;
 use mime_guess::guess_mime_type_opt;
