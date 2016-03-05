@@ -148,7 +148,7 @@ impl<'a> EpubRenderer<'a> {
             let res = try!(zipper.generate_epub(self.book.options.get_str("zip.command").unwrap(), &epub_file));
             Ok(res)
         } else {
-            Err(Error::Render(format!("no output epub file specified in book config")))
+            Err(Error::Render(String::from("no output epub file specified in book config")))
         }
     }
     
@@ -206,7 +206,7 @@ impl<'a> EpubRenderer<'a> {
         if let Ok(ref s) = self.book.options.get_path("cover") {
             optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n",
                                        self.html.handler.map_image(Cow::Borrowed(s))));
-            cover_xhtml.push_str(&format!("<reference type=\"cover\" title=\"Cover\" href=\"cover.xhtml\" />"));
+            cover_xhtml.push_str("<reference type=\"cover\" title=\"Cover\" href=\"cover.xhtml\" />");
         }
 
         // date
@@ -315,11 +315,9 @@ impl<'a> EpubRenderer<'a> {
         }
         self.html.render_end_notes(&mut content);
 
-        if title.is_empty() {
-            if self.html.current_numbering >= 1 {
-                let number = self.html.current_chapter[0] + 1;
-                title = try!(self.book.get_header(number, ""));
-            } 
+        if title.is_empty() && self.html.current_numbering >= 1 {
+            let number = self.html.current_chapter[0] + 1;
+            title = try!(self.book.get_header(number, ""));
         }
         self.toc.push(title.clone());
 

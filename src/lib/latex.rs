@@ -67,7 +67,7 @@ impl<'a> LatexRenderer<'a> {
             
             zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
-            Err(Error::Render(format!("no output pdf file specified in book config")))
+            Err(Error::Render("no output pdf file specified in book config".to_owned()))
         }
     }
 

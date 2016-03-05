@@ -129,16 +129,16 @@ impl BookOptions {
         if self.valid_strings.contains(&key.as_ref()) {
             // value is a string
             if let Yaml::String(value) = value {
-                return Ok(self.options.insert(key, BookOption::String(value)));
+                Ok(self.options.insert(key, BookOption::String(value)))
             } else {
-                return Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)));
+                Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_paths.contains(&key.as_ref()) {
             // value is a path
             if let Yaml::String(value) = value {
-                return Ok(self.options.insert(key, BookOption::Path(value)));
+                Ok(self.options.insert(key, BookOption::Path(value)))
             } else {
-                return Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)));
+                Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_chars.contains(&key.as_ref()) {
             // value is a char
@@ -147,27 +147,27 @@ impl BookOptions {
                 if chars.len() != 1 {
                     return Err(Error::BookOption(format!("could not parse {} as a char: does not contain exactly one char", &value)));
                 }
-                return Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])));
+                Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])))
             } else {
-                return Err(Error::BookOption(format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)));
+                Err(Error::BookOption(format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_bools.contains(&key.as_ref()) {
             // value is a bool
             if let Yaml::Boolean(value) = value {
-                return Ok(self.options.insert(key, BookOption::Bool(value)));
+                Ok(self.options.insert(key, BookOption::Bool(value)))
             } else {
-                return Err(Error::BookOption(format!("Expected a boolean as value for key {}, found {:?}", &key, &value)));
+                Err(Error::BookOption(format!("Expected a boolean as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_ints.contains(&key.as_ref()) {
             // value is an int
             if let Yaml::Integer(value) = value {
-                return Ok(self.options.insert(key, BookOption::Int(value as i32)));
+                Ok(self.options.insert(key, BookOption::Int(value as i32)))
             } else {
-                return Err(Error::BookOption(format!("Expected an integer as value for key {}, found {:?}", &key, &value)));
+                Err(Error::BookOption(format!("Expected an integer as value for key {}, found {:?}", &key, &value)))
             }
         } else {
             // key not recognized
-            return Err(Error::BookOption(format!("Unrecognized key: {}", &key)));
+            Err(Error::BookOption(format!("Unrecognized key: {}", &key)))
         }
     }
     
@@ -209,7 +209,7 @@ impl BookOptions {
         
     /// Gets an option
     pub fn get(&self, key: &str) -> Result<&BookOption> {
-        self.options.get(key).ok_or(Error::InvalidOption(format!("option {} is not persent", key)))
+        self.options.get(key).ok_or_else(|| Error::InvalidOption(format!("option {} is not present", key)))
     }
 
     /// Gets a list of path. Only used for resources.files.

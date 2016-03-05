@@ -145,7 +145,7 @@ impl<'a> OdtRenderer<'a> {
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.book.clean(self.render_vec(vec)))
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),
-            Token::Rule => format!("<text:p /><text:p>***</text:p><text:p />"),
+            Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),
             Token::Image(_,_,_) => {
                 self.book.logger.warning("ODT: images not currently implemented for this format");
                 String::from(" ")

@@ -216,11 +216,10 @@ impl Book {
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
                 if parts.len() != 2 {
                     return Err(Error::ConfigParser("ill-formatted line specifying chapter number", String::from(line)));
-                } else {
-                    let file = try!(get_filename(parts[1]));
-                    let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser("Error parsing integer", String::from(line))));
-                    try!(self.add_chapter(Number::Specified(number), file));
-                }
+                } 
+                let file = try!(get_filename(parts[1]));
+                let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser("Error parsing integer", String::from(line))));
+                try!(self.add_chapter(Number::Specified(number), file));
             } else {
                 return Err(Error::ConfigParser("found invalid chapter definition in the chapter list", String::from(line)));
             }

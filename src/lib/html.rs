@@ -277,10 +277,10 @@ impl<'a> HtmlRenderer<'a> {
             Token::HardBreak => String::from("<br />\n"),
             Token::List(ref vec) => format!("<ul>\n{}</ul>\n", self.render_vec(vec)),
             Token::OrderedList(n, ref vec) => format!("<ol{}>\n{}</ol>\n",
-                                                      if n != 1 {
-                                                          format!(" start = \"{}\"", n)
-                                                      } else {
+                                                      if n == 1 {
                                                           String::new()
+                                                      } else {
+                                                          format!(" start = \"{}\"", n)
                                                       },
                                                       self.render_vec(vec)),
             Token::Item(ref vec) => format!("<li>{}</li>\n", self.render_vec(vec)),
