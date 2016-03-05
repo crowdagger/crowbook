@@ -4,6 +4,16 @@ ChangeLog
 0.5.0 (unreleased)
 ------------------
 * Crowbook now requires Rustc 1.7.0.
+* It is possible to render HTML in multiple files (set in a
+directory):
+     * `output.html_dir` will activate this renderer, and specify in
+       which directory to render these files;
+     * `html_dir.css` allows to override the CSS for this rendering;
+     * `html_dir.index.html` allows to specify a template for the
+       `index.html` page;
+     * `html_dir.chapter.html` allows to specify a template for the
+       chapters pages.
+    
 * New book options:
     * `tex.short`: if set to true, the LaTeX renderer will use
       `article` instead of `book` as document class, and will use the
