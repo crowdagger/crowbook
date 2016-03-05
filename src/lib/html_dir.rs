@@ -11,6 +11,7 @@ use std::fs;
 use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
+use std::borrow::Cow;
 
 /// Multiple files HTML renderer
 ///
@@ -56,8 +57,19 @@ impl<'a> HtmlDirRenderer<'a> {
              .create(&dest_path)
              .map_err(|e| Error::Render(format!("could not create HTML directory {}:{}", &dest_path, e))));
 
+        // Write CSS
         try!(self.write_css());
+        // Write index.html and chapter_xxx.html
         try!(self.write_html());
+        
+        // Write all images (including cover)
+        let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
+        for (source, dest) in self.html.handler.images_mapping() {
+            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
+            let mut content = vec!();
+            try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
+            try!(self.write_file(dest, &content));
+        }
         
         Ok(())
     }
@@ -102,9 +114,18 @@ impl<'a> HtmlDirRenderer<'a> {
             try!(self.write_file(&filenamer(i), &res));
         }
 
+        let content = if let Ok(cover) = self.book.options.get_path("cover") {
+            format!("<div id = \"cover\">
+  <img class = \"cover\" alt = \"{}\" src = \"{}\" />
+</div>",
+                    self.book.options.get_str("title").unwrap(),
+                    self.html.handler.map_image(Cow::Owned(cover)).as_ref())
+        } else {
+            String::new()
+        };
         // Render index.html and write it too
         let data = self.book.get_mapbuilder("none")
-            .insert_str("content", "")
+            .insert_str("content", content)
             .insert_str("toc", toc.clone())
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .build();

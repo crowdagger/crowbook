@@ -25,7 +25,7 @@ output.odt:path                     # Output file name for ODT rendering
 # Resources option
 resources.base_path:path                 # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
 resources.base_path.links:path           # Set base path but only for links. Useless if resources.base_path is set.
-resources.base_path.images:path          # Set base path but only for images. Useless if resources.base_path is set.
+resources.base_path.images:path:.        # Set base path but only for images. Useless if resources.base_path is set.
 resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
 resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
 resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file
