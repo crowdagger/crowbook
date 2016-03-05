@@ -3,16 +3,8 @@ ChangeLog
 
 0.5.0 (unreleased)
 ------------------
-* Crowbook now requires Rustc 1.7.0 (because it uses the renamed
-  `Path::strip_prefix` method).
+* Crowbook now requires Rustc 1.7.0.
 * New book options:
-    * `resources.base_path`: by default, Crowbook resolves local links in
-      markdown files relatively to the markdown file. This option
-      allows to resolve them relatively to a base path. This option
-      comes with two variants, `resources.base_path.images` and
-      `resources.base_path.links`, which only activate it for respectively
-      images tags and links tags. These two options are ignored when
-      `base_path` is set.
     * `tex.short`: if set to true, the LaTeX renderer will use
       `article` instead of `book` as document class, and will use the
       default `\maketitle` command for article. This option is by
@@ -26,6 +18,16 @@ ChangeLog
       you wouldn't want the displayed title or the
       output.pdf/html/epub files be redefined by the short stories .md
       files.
+    * `resources.base_path`: by default, Crowbook resolves local links in
+      markdown files relatively to the markdown file. This option
+      allows to resolve them relatively to a base path. This option
+      comes with two variants, `resources.base_path.images` and
+      `resources.base_path.links`, which only activate it for respectively
+      images tags and links tags. These two options are ignored when
+      `base_path` is set. There is also `resources.base_path.files`
+      which specify where additional files (see below) should be read,
+      but this is one is set to `.` (i.e.,  the directory where the
+      `.book` file is) by default.
     * `resources.files`: indicate a (whitespace-separated) list of
       files that should be embedded. Currently only used with the EPUB
       renderer.
