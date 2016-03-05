@@ -137,7 +137,11 @@ impl<'a> EpubRenderer<'a> {
             let list = try!(self.get_files(list));
             let data_path = Path::new(try!(self.book.options.get_relative_path("resources.out_path")));
             for path in list{
-                let mut f = try!(File::open(self.book.root.join(&path)).map_err(|_| Error::FileNotFound(path.clone())));
+                let abs_path = Path::new(&self.book.options.get_path("resources.base_path.files").unwrap())
+                    .join(&path);
+                println!("trying to read {}", abs_path.display());
+                let mut f = try!(File::open(&abs_path)
+                                 .map_err(|_| Error::FileNotFound(abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
                 try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
@@ -366,19 +370,23 @@ impl<'a> EpubRenderer<'a> {
     fn get_files(&self, list: Vec<String>) -> Result<Vec<String>> {
         let mut out:Vec<String> = vec!();
         for path in list.into_iter() {
-            let res= fs::metadata(self.book.root.join(&path));
+            let abs_path = Path::new(&self.book.options.get_path("resources.base_path.files").unwrap())
+                .join(&path);
+            let res= fs::metadata(&abs_path);
             match res {
-                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", &path, err))),
+                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", abs_path.display(), err))),
                 Ok(metadata) => {
                     if metadata.is_file() {
                         out.push(path);
                     } else if metadata.is_dir() {
-                        let files = WalkDir::new(self.book.root.join(path))
+                        let files = WalkDir::new(&abs_path)
                             .follow_links(true)
                             .into_iter()
                             .filter_map(|e| e.ok())
                             .filter(|e| e.file_type().is_file())
-                            .map(|e| PathBuf::from(e.path().strip_prefix(&self.book.root).unwrap()));
+                            .map(|e| PathBuf::from(e.path().strip_prefix(&self.book.options.get_path("resources.base_path.files")
+                                                                         .unwrap())
+                                                   .unwrap()));
                         for file in files {
                             out.push(file.to_string_lossy().into_owned());
                         }
