@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="generator" content="crowbook">
     <meta name="author" content="{{{author}}}">
-    <title>{{title}}</title>
+    <title>{{{chapter_title}}}</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css" />
    <script>
     var display_menu = false;
@@ -40,9 +40,9 @@ function toggle() {
            alt = "Menu" title = "Menu" />
           </div>
     </header>
-    
-    
+    {{{prev_chapter}}}
     {{{content}}}
+    {{{next_chapter}}}
     </div>
   </body>
 </html>

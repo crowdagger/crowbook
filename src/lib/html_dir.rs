@@ -3,6 +3,7 @@ use html::HtmlRenderer;
 use book::Book;
 use number::Number;
 use templates;
+use token::Token;
 
 use mustache;
 
@@ -77,6 +78,7 @@ impl<'a> HtmlDirRenderer<'a> {
     // Render each chapter and write them, and index.html too
     fn write_html(&mut self) -> Result<()> {
         let mut chapters = vec!();
+        let mut titles = vec!();
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.html.filename = filenamer(i);
             // Todo: this part could be factorized between html, epub and html_dir
@@ -96,16 +98,65 @@ impl<'a> HtmlDirRenderer<'a> {
                 }
             }
 
+            let mut title = String::new();
+            for token in v {
+                match *token {
+                    Token::Header(1, ref vec) => {
+                        if self.html.current_hide || self.html.current_numbering == 0 {
+                            title = self.html.render_vec(vec);
+                        } else {
+                            title = try!(self.book.get_header(self.html.current_chapter[0] + 1,
+                                                              &self.html.render_vec(vec)));
+                        }
+                        break;
+                    },
+                    _ => {
+                        continue;
+                    }
+                }
+            }
+            titles.push(title);
+            
             let chapter = self.html.render_html(v);
             chapters.push(chapter);
         }
         let toc = self.html.toc.render();
 
         for (i, content) in chapters.into_iter().enumerate() {
+            let prev_chapter = if i > 0 {
+                format!("<p id = \"prev_chapter\">
+  <a href = \"{}\">
+    << {}
+  </a>
+</p>",
+                        filenamer(i-1),
+                        titles[i-1])
+            } else {
+                String::new()
+            };
+
+            let next_chapter = if i < titles.len() - 1 {
+                format!("<p id = \"next_chapter\">
+  <a href = \"{}\">
+    {} >>
+  </a>
+</p>",
+                        filenamer(i+1),
+                        titles[i+1])
+            } else {
+                String::new()
+            };
+
+            
             // Render each HTML document
             let data = self.book.get_mapbuilder("none")
                 .insert_str("content", content)
+                .insert_str("chapter_title", format!("{} – {}",
+                                             self.book.options.get_str("title").unwrap(),
+                                             titles[i]))
                 .insert_str("toc", toc.clone())
+                .insert_str("prev_chapter", prev_chapter)
+                .insert_str("next_chapter", next_chapter)
                 .insert_bool(self.book.options.get_str("lang").unwrap(), true)
                 .build();
             let template = mustache::compile_str(try!(self.book.get_template("html_dir.chapter.html")).as_ref());        
@@ -114,7 +165,7 @@ impl<'a> HtmlDirRenderer<'a> {
             try!(self.write_file(&filenamer(i), &res));
         }
 
-        let content = if let Ok(cover) = self.book.options.get_path("cover") {
+        let mut content = if let Ok(cover) = self.book.options.get_path("cover") {
             format!("<div id = \"cover\">
   <img class = \"cover\" alt = \"{}\" src = \"{}\" />
 </div>",
@@ -123,6 +174,15 @@ impl<'a> HtmlDirRenderer<'a> {
         } else {
             String::new()
         };
+        if titles.len() > 1 {
+            content.push_str(&format!("<p id = \"next_chapter\">
+  <a href = \"{}\">
+    {} >>
+  </a>
+</p>",
+                        filenamer(0),
+                        titles[0]));
+        }
         // Render index.html and write it too
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
