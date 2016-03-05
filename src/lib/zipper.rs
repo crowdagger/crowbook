@@ -53,8 +53,13 @@ impl Zipper {
 
     /// writes a content to a temporary file
     pub fn write(&mut self, file: &str, content: &[u8], add_args: bool) -> Result<()> {
-        let dest_file = self.path.join(file);
-        let dest_dir = dest_file.parent().expect("This file should have a parent, it has just been joined to a directory!");
+        let path = Path::new(file);
+        if path.starts_with("..") || path.is_absolute() {
+            return Err(Error::Zipper(format!("file {} refers to an absolute or a parent path.
+This is forbidden because we are supposed to create a temporary file in a temporary dir.", file)));
+        }
+        let dest_file = self.path.join(path);
+        let dest_dir = dest_file.parent().unwrap();
         if !fs::metadata(dest_dir).is_ok() { // dir does not exist, create it
             try!(DirBuilder::new()
                  .recursive(true)
