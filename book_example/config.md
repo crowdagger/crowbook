@@ -113,11 +113,11 @@ put string in quotes, e.g.:
 title: My title
 ```
 
-It is however possible (and sometimes necessary to escape some
-characters) to use quotes around strings:
+It is however possible (and sometimes necessary) to escape some
+characters to use quotes around strings:
 
 ```
-title: "My title!"
+title: "My: title!"
 ```
 
 
@@ -136,6 +136,10 @@ will set `title` to `"A long title"`. See
 [block literals in YAML](https://en.wikipedia.org/wiki/YAML#Block_literals)
 for more information on the various way to insert multiline strings
 (which mostly change the way newlines will or won't be inserted).
+
+A final note on the syntax: all options must be set *before* the first
+chapter inclusion (that is, a line beginning with '+', '-', 'x.'
+(where `x` is a number) or '!'). 
 
 Here is the complete list of options, with a short description. The
 usage of some of them is detailed later on.
@@ -188,7 +192,33 @@ usage of some of them is detailed later on.
     - **default value**: `not set`
     -  Output file name for ODT rendering
 
+###  Resources option ###
+- **`resources.path`**
+    - **type**: path
+    - **default value**: `data`
+    -  Paths where additional resources should be copied in the EPUB file or HTML directory
+- **`resources.files`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Whitespace-separated list of files to embed in e.g. EPUB file
+
 ###  Misc options ###
+- **`base_path`**
+    - **type**: path
+    - **default value**: `not set`
+    -  By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
+- **`base_path.links`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Set base path but only for links. Useless if base_path is set.
+- **`base_path.images`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Set base path but only for images. Useless if base_path is set.
+- **`enable_yaml_blocks`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  Enable inline YAML blocks to override options set in config file
 - **`zip.command`**
     - **type**: string
     - **default value**: `zip`
@@ -255,6 +285,11 @@ usage of some of them is detailed later on.
     -  Path of an epub template for chapter
 
 ###  LaTeX options ###
+- **`tex.short`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If set to true, use article class instead of book and a the
+       default `\maketitle` command
 - **`tex.links_as_footnotes`**
     - **type**: boolean
     - **default value**: `true`
@@ -268,6 +303,7 @@ usage of some of them is detailed later on.
     - **default value**: `not set`
     -  Path of a LaTeX template file
 
+    
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
 must be composed a number, a string is, well, any string). The `path`
@@ -314,6 +350,69 @@ default, though you can specify the command to use with `tex.command`) to genera
 so PDF rendering won't work if it is not installed on your
 system. Crowbook also uses the `zip` command to generate the EPUB and
 ODT, files.
+
+### Resources options ###
+
+These two options allow to embed additional files for some formats
+(currently, only EPUB). This can be useful for embedding fonts.
+
+#### resources.files ####
+
+A list of files or directories that should be added. It's a
+whitespace-separated list, so it can be, e.g.:
+
+```
+resources.files: font1.otf font2.otf
+```
+
+It is also possible to specify a directory (or multiple
+directories). So if you have a `fonts` directories containing
+`font1.otf` and `font2.otf`,
+
+```
+resources.files: fonts
+```
+
+will be equivalent to:
+
+```
+resources.files fonts/font1.otf fonts/font2.otf
+```
+
+
+**default**: not set
+
+#### resources.path ####
+
+This option determine where (in which directory), *in the resulting
+document*, will those files be copied. The default is `data`, so by
+default the `resources.files` in the first example above will search
+`font1.otf` and `font2.otf` *in the same directory than the `.book`
+file, and will copy them to `data/font1.otf` and `data/font2.otf` *in
+the EPUB file*. This is therefore this last path that you should use
+if you want to access those files e.g. in a custom CSS stylesheet.
+
+Note that if you pass directories to `resources.files`, the whole
+directory would be copied. So assuming `font/` contains `font1.otf`
+and `font2.otf`
+
+```
+resources.files: fonts
+resources.path: data
+```
+
+will copy these two files to `data/fonts/font1.otf` and
+`data/fonts/font2.otf` (and not `data/font1.otf` and `data/font2.otf`).
+
+Similarly, the whole path of `resources.files` is copied, so
+
+```
+resources.files: fonts/font1.otf fonts/font2.otf
+```
+
+will yield the same result.
+
+**default**: `data`
 
 ### Generic options for rendering  ###
 
