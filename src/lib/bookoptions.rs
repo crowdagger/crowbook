@@ -22,13 +22,14 @@ output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
 
 # Resources option
-resources.path:path:data            # Paths where additional resources should be copied in the EPUB file or HTML directory 
+resources.base_path:path                 # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
+resources.base_path.links:path           # Set base path but only for links. Useless if resources.base_path is set.
+resources.base_path.images:path          # Set base path but only for images. Useless if resources.base_path is set.
+resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
+resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
 resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file
 
 # Misc options
-base_path:path                      # By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
-base_path.links:path                # Set base path but only for links. Useless if base_path is set.
-base_path.images:path               # Set base path but only for images. Useless if base_path is set.
 enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
 zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
 numbering:int:1                     # The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
@@ -55,6 +56,11 @@ tex.short:bool:false                # If set to true, use article class instead 
 tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL of links in LaTeX/PDF output
 tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
+
+# Deprecated options
+base_path:alias:resources.base_path  # Renamed
+base_path.links:alias:resources.base_path.links  # Renamed
+base_path.images:alias:resources.base_path.images  # Renamed
 ";
 
 
@@ -63,6 +69,7 @@ tex.template:path                   # Path of a LaTeX template file
 #[derive(Debug)]
 pub struct BookOptions {
     options: HashMap<String, BookOption>,
+    deprecated: HashMap<String, Option<String>>,
     valid_bools: Vec<&'static str>,
     valid_chars: Vec<&'static str>,
     valid_strings: Vec<&'static str>,
@@ -78,6 +85,7 @@ impl BookOptions {
     pub fn new() -> BookOptions {
         let mut options = BookOptions {
             options: HashMap::new(),
+            deprecated: HashMap::new(),
             valid_bools:vec!(),
             valid_chars:vec!(),
             valid_ints:vec!(),
@@ -97,6 +105,10 @@ impl BookOptions {
                 "int" => options.valid_ints.push(key),
                 "char" => options.valid_chars.push(key),
                 "path" => options.valid_paths.push(key),
+                "alias" => {
+                    options.deprecated.insert(key.to_owned(), default_value.map(|s| s.to_owned()));
+                    continue;
+                }
                 _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
             }
             if key == "temp_dir" {
@@ -164,6 +176,14 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::Int(value as i32)))
             } else {
                 Err(Error::BookOption(format!("Expected an integer as value for key {}, found {:?}", &key, &value)))
+            }
+        } else if self.deprecated.contains_key(&key) {
+            let opt = self.deprecated.get(&key).unwrap().clone();
+            if let Some(new_key) = opt {
+                println!("{} has been deprecated, you should now use {}", &key, &new_key);
+                self.set_yaml(Yaml::String(new_key), value)
+            } else {
+                Err(Error::BookOption(format!("key {} has been deprecated.", &key)))
             }
         } else {
             // key not recognized

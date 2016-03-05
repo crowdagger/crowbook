@@ -390,9 +390,9 @@ impl Book {
         // For offset: if nothing is specified, it is the filename's directory
         // If base_path.{images/links} is specified, override it for one of them.
         // If base_path is specified, override it for both.
-        let res_base = self.options.get_path("base_path");
-        let res_base_img = self.options.get_path("base_path.images");
-        let res_base_lnk = self.options.get_path("base_path.links");
+        let res_base = self.options.get_path("resources.base_path");
+        let res_base_img = self.options.get_path("resources.base_path.images");
+        let res_base_lnk = self.options.get_path("resources.base_path.links");
         let mut link_offset = offset;
         let mut image_offset = offset;
         if let Ok(ref path) = res_base {
