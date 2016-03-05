@@ -135,7 +135,7 @@ impl<'a> EpubRenderer<'a> {
         // Write additional resources
         if let Ok(list) = self.book.options.get_paths_list("resources.files") {
             let list = try!(self.get_files(list));
-            let data_path = Path::new(try!(self.book.options.get_relative_path("resources.path")));
+            let data_path = Path::new(try!(self.book.options.get_relative_path("resources.out_path")));
             for path in list{
                 let mut f = try!(File::open(self.book.root.join(&path)).map_err(|_| Error::FileNotFound(path.clone())));
                 let mut content = vec!();
@@ -240,7 +240,7 @@ impl<'a> EpubRenderer<'a> {
         // and additional files too
         if let Ok(list) = self.book.options.get_paths_list("resources.files") {
             let list = try!(self.get_files(list));
-            let data_path = Path::new(self.book.options.get_relative_path("resources.path").unwrap());
+            let data_path = Path::new(self.book.options.get_relative_path("resources.out_path").unwrap());
             for path in list {
                 let format = self.get_format(&path);
                 let path = data_path.join(&path);
