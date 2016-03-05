@@ -313,6 +313,7 @@ impl BookOptions {
                 "char" => "char",
                 "str" => "string",
                 "path" => "path",
+                "alias" => "DEPRECATED",
                 _ => unreachable!()
             };
             let def = if let Some(value) = default {
