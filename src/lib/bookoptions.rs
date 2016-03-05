@@ -17,6 +17,7 @@ cover:path                          # File name of the cover of the book
 # Output options
 output.epub:path                    # Output file name for EPUB rendering
 output.html:path                    # Output file name for HTML rendering
+output.html_dir:path                # Output directory name for HTML rendering
 output.tex:path                     # Output file name for LaTeX rendering
 output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
@@ -45,6 +46,11 @@ nb_char:char:' '                    # The non-breaking character to use for au
 # HTML options
 html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet to use with HTML rendering
+
+# Multifile HTML options
+html_dir.css:path                   # Path of a CSS template
+html_dir.index.html:path            # Path of index.html template
+html_dir.chapter.html:path          # Path of a chapter.html template
 
 # EPUB options
 epub.version:int:2                  # The EPUB version to generate

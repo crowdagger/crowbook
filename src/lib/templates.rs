@@ -20,6 +20,12 @@ pub mod html {
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
 }
 
+pub mod html_dir {
+    pub static INDEX_HTML: &'static str = include_str!("../../templates/html_dir/index.html");
+    pub static CHAPTER_HTML: &'static str = include_str!("../../templates/html_dir/chapter.html");
+    pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
+}
+
 pub mod latex {
     pub static TEMPLATE:&'static str = include_str!("../../templates/template.tex");
 }
