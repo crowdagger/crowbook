@@ -118,9 +118,11 @@ pub use cleaner::{Cleaner, French};
 pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
+pub use html_dir::HtmlDirRenderer;
 
 
 mod html;
+mod html_dir;
 mod error;
 mod book;
 mod epub;

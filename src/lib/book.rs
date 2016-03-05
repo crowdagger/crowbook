@@ -5,6 +5,7 @@ use parser::Parser;
 use token::Token;
 use epub::EpubRenderer;
 use html::HtmlRenderer;
+use html_dir::HtmlDirRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
 use templates::{epub, html, epub3, latex, html_dir};
@@ -241,6 +242,14 @@ impl Book {
             }
         }
 
+        if self.options.get("output.html_dir").is_ok() {
+            did_some_stuff = true;
+            let result = self.render_html_dir();
+            if let Err(err) = result {
+                self.logger.error(format!("Error rendering HTML directory:\n{}", err));
+            }
+        }
+
         if let Ok(ref file) = self.options.get_path("output.html") {
             did_some_stuff = true;
             if let Ok(mut f) = File::create(file) {
@@ -307,7 +316,16 @@ impl Book {
         Ok(())
     }
 
-        /// Render book to odt according to book options
+    /// Render book to HTML directory according to book options
+    pub fn render_html_dir(&self) -> Result<()> {
+        self.logger.debug("Attempting to generate html directory...");
+        let mut html = HtmlDirRenderer::new(&self);
+        try!(html.render_book());
+        self.logger.info(&format!("Successfully generated html directory: {}", self.options.get_path("output.html_dir").unwrap()));
+        Ok(())
+    }
+
+    /// Render book to odt according to book options
     pub fn render_odt(&self) -> Result<()> {
         self.logger.debug("Attempting to generate Odt...");
         let mut odt = OdtRenderer::new(&self);

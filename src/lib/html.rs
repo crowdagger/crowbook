@@ -26,9 +26,10 @@ use std::borrow::Cow;
 
 use mustache;
 
-/// Renders HTML document.
+/// Renders HTML document in a standalone file.
 ///
-/// Also used by `EpubRenderer`.
+/// Also used by `EpubRenderer` and `HtmlDirRenderer`.
+#[derive(Debug)]
 pub struct HtmlRenderer<'a> {
     book: &'a Book,
     table_head: bool,

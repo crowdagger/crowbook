@@ -5,9 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="{{{author}}}">
     <title>{{title}}</title>
-    <style type = "text/css">
-      {{{style}}}
-   </style>
+    <link rel = "stylesheet" href = "stylesheet.css" type = "text/css" />
    <script>
     var display_menu = false;
 function toggle() {
@@ -30,7 +28,7 @@ function toggle() {
   <body>
 
   <nav id = "nav">
-    <h2>Menu</h2>
+    <h2><a href = "index.html">{{{title}}}</a></h2>
     {{{toc}}}
   </nav>
 
@@ -42,8 +40,8 @@ function toggle() {
            alt = "Menu" title = "Menu" />
           </div>
           
-          <h1 class="title">{{title}}</h1>
-          <h2 class="author">{{author}}</h2>
+          <h1 class = "title">{{{title}}}</h1>
+          <h2 class = "author">{{{author}}}</h2>
     </header>
     
     
