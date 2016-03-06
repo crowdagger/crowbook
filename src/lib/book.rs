@@ -471,16 +471,21 @@ impl Book {
     
     /// Returns the template (default or modified version)
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
-        let (option, fallback) = match template {
-            "epub.css" => (self.options.get_path("epub.css"), epub::CSS),
-            "epub.template" => (self.options.get_path("epub.template"),
-                                if try!(self.options.get_i32("epub.version")) == 3 {epub3::TEMPLATE} else {epub::TEMPLATE}),
-            "html.css" => (self.options.get_path("html.css"), html::CSS),
-            "html.template" => (self.options.get_path("html.template"), html::TEMPLATE),
-            "html_dir.css" => (self.options.get_path("html_dir.css"), html_dir::CSS),
-            "html_dir.index.html" => (self.options.get_path(template), html_dir::INDEX_HTML),
-            "html_dir.chapter.html" => (self.options.get_path(template), html_dir::CHAPTER_HTML),
-            "tex.template" => (self.options.get_path("tex.template"), latex::TEMPLATE),
+        let option = self.options.get_path(template);
+        let fallback = match template {
+            "epub.css" => epub::CSS,
+            "epub.template" => if try!(self.options.get_i32("epub.version")) == 3 {
+                epub3::TEMPLATE
+            } else {
+                epub::TEMPLATE
+            },
+            "html.css" => html::CSS,
+            "html.template" => html::TEMPLATE,
+            "html.script" => html::SCRIPT,
+            "html_dir.css" => html_dir::CSS,
+            "html_dir.index.html" => html_dir::INDEX_HTML,
+            "html_dir.chapter.html" => html_dir::CHAPTER_HTML,
+            "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
         };
         if let Ok (ref s) = option {

@@ -68,7 +68,7 @@ nav {
 
 /* The main content of the book */
 #content {
-    position: absolute;
+/*    position: absolute;*/
     overflow-y: auto;
     margin-left: 10%;
     margin-right: 10%;

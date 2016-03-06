@@ -129,6 +129,7 @@ impl<'a> HtmlRenderer<'a> {
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("toc", toc)
+            .insert_str("script", self.book.get_template("html.script").unwrap())
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .insert_str("style", css.as_ref())
             .build();
