@@ -20,6 +20,7 @@ epub.version: 3
 # Options for generating files
 output.epub: book_example/book.epub
 output.html: book_example/book.html
+output.html_dir: book_example/html
 output.pdf: book_example/book.pdf
 output.odt: book_example/book.odt
 
