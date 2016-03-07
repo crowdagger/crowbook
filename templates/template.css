@@ -15,7 +15,7 @@ nav {
 #nav code {
     background-color: transparent;
 }
-    
+
 #nav a:link {
     color: white;
     text-decoration: none;
@@ -42,7 +42,7 @@ nav {
 #nav li:before {
     content: none;
 }
-                    
+
 #nav ul {
     padding-right: 1em;
     padding-left: 1.5em;
@@ -92,4 +92,14 @@ nav {
     font-size: 120%;
     font-variant: small-caps;
     font-weight: bold;
+}
+
+/* Improving readability for the HTML format only */
+p, blockquote  {
+    margin: auto;
+    max-width: 33em;
+}
+
+blockquote {
+    padding: 1em;
 }
