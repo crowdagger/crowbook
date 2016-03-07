@@ -1,9 +1,13 @@
 use token::Token;
 use logger::Logger;
+use error::{Error, Result};
 
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path,PathBuf};
 use std::borrow::Cow;
+use std::fs;
+
+use walkdir::WalkDir;
 
 /// Resource Handler.
 ///
@@ -124,5 +128,45 @@ impl<'r> ResourceHandler<'r> {
                 }
             }
         }
+    }
+
+
+    /// Get the list of all files, walking recursively in directories
+    ///
+    /// # Arguments
+    /// - list: a list of files
+    /// - base: the path where to get them
+    ///
+    /// # Returns
+    /// A list of files (relative to `base`), or an error.
+    pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
+        let mut out:Vec<String> = vec!();
+        let base = Path::new(base);
+        for path in list.into_iter() {
+            let abs_path = base.join(&path);
+            let res= fs::metadata(&abs_path);
+            match res {
+                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", abs_path.display(), err))),
+                Ok(metadata) => {
+                    if metadata.is_file() {
+                        out.push(path);
+                    } else if metadata.is_dir() {
+                        let files = WalkDir::new(&abs_path)
+                            .follow_links(true)
+                            .into_iter()
+                            .filter_map(|e| e.ok())
+                            .filter(|e| e.file_type().is_file())
+                            .map(|e| PathBuf::from(e.path().strip_prefix(base)
+                                                   .unwrap()));
+                        for file in files {
+                            out.push(file.to_string_lossy().into_owned());
+                        }
+                    } else {
+                        return Err(Error::Render(format!("error in epub rendering: {} is neither a file nor a directory", &path)));
+                    }
+                }
+            }
+        }
+        Ok(out)
     }
 }

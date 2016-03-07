@@ -4,14 +4,17 @@ use book::Book;
 use number::Number;
 use token::Token;
 use templates::html;
+use resource_handler::ResourceHandler;
 
 use mustache;
 
 use std::io::{Read,Write};
 use std::fs;
 use std::fs::File;
+use std::path::Path;
 use std::path::PathBuf;
 use std::borrow::Cow;
+
 
 /// Multiple files HTML renderer
 ///
@@ -71,6 +74,21 @@ impl<'a> HtmlDirRenderer<'a> {
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
             try!(self.write_file(dest, &content));
+        }
+
+        // Write additional files
+        if let Ok(list) = self.book.options.get_paths_list("resources.files") {
+            let files_path = self.book.options.get_path("resources.base_path.files").unwrap();
+            let data_path = Path::new(self.book.options.get_relative_path("resources.out_path").unwrap());
+            let list = try!(ResourceHandler::get_files(list, &files_path));
+            for path in list {
+                let abs_path = Path::new(&files_path).join(&path);
+                let mut f = try!(File::open(&abs_path)
+                                 .map_err(|_| Error::FileNotFound(abs_path.to_string_lossy().into_owned())));
+                let mut content = vec!();
+                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
+                try!(self.write_file(data_path.join(&path).to_str().unwrap(), &content));
+            }
         }
         
         Ok(())
