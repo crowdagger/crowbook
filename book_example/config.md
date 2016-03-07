@@ -179,6 +179,10 @@ usage of some of them is detailed later on.
     - **type**: path
     - **default value**: `not set`
     -  Output file name for HTML rendering
+- **`output.html_dir`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Output directory name for HTML rendering
 - **`output.tex`**
     - **type**: path
     - **default value**: `not set`
@@ -193,7 +197,23 @@ usage of some of them is detailed later on.
     -  Output file name for ODT rendering
 
 ###  Resources option ###
-- **`resources.path`**
+- **`resources.base_path`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
+- **`resources.base_path.links`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Set base path but only for links. Useless if resources.base_path is set.
+- **`resources.base_path.images`**
+    - **type**: path
+    - **default value**: `.`
+    -  Set base path but only for images. Useless if resources.base_path is set.
+- **`resources.base_path.files`**
+    - **type**: path
+    - **default value**: `.`
+    -  Set base path but only for additional files. Useless if resources.base_path is set.
+- **`resources.out_path`**
     - **type**: path
     - **default value**: `data`
     -  Paths where additional resources should be copied in the EPUB file or HTML directory
@@ -203,18 +223,6 @@ usage of some of them is detailed later on.
     -  Whitespace-separated list of files to embed in e.g. EPUB file
 
 ###  Misc options ###
-- **`base_path`**
-    - **type**: path
-    - **default value**: `not set`
-    -  By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
-- **`base_path.links`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Set base path but only for links. Useless if base_path is set.
-- **`base_path.images`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Set base path but only for images. Useless if base_path is set.
 - **`enable_yaml_blocks`**
     - **type**: boolean
     - **default value**: `false`
@@ -269,6 +277,24 @@ usage of some of them is detailed later on.
     - **type**: path
     - **default value**: `not set`
     -  Path of a stylesheet to use with HTML rendering
+- **`html.script`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path of a javascript file
+
+###  Multifile HTML options ###
+- **`html_dir.css`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path of a CSS template
+- **`html_dir.index.html`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path of index.html template
+- **`html_dir.chapter.html`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path of a chapter.html template
 
 ###  EPUB options ###
 - **`epub.version`**
@@ -288,8 +314,7 @@ usage of some of them is detailed later on.
 - **`tex.short`**
     - **type**: boolean
     - **default value**: `false`
-    -  If set to true, use article class instead of book and a the
-       default `\maketitle` command
+    -  If set to true, use article class instead of book and a the default `\maketitle` command
 - **`tex.links_as_footnotes`**
     - **type**: boolean
     - **default value**: `true`
@@ -303,7 +328,20 @@ usage of some of them is detailed later on.
     - **default value**: `not set`
     -  Path of a LaTeX template file
 
-    
+###  Deprecated options ###
+- **`base_path`**
+    - **type**: DEPRECATED
+    - **default value**: `resources.base_path`
+    -  Renamed
+- **`base_path.links`**
+    - **type**: DEPRECATED
+    - **default value**: `resources.base_path.links`
+    -  Renamed
+- **`base_path.images`**
+    - **type**: DEPRECATED
+    - **default value**: `resources.base_path.images`
+    -  Renamed
+
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
 must be composed a number, a string is, well, any string). The `path`
@@ -350,6 +388,14 @@ default, though you can specify the command to use with `tex.command`) to genera
 so PDF rendering won't work if it is not installed on your
 system. Crowbook also uses the `zip` command to generate the EPUB and
 ODT, files.
+
+Current output options are:
+
+* `output.html`: renders a standalone HTML file;
+* `output.html_dir`: render a HTML directory with one page by chapter;
+* `output.epub`: renders an EPUB file;
+* `output.tex`: renders a LaTeX file;
+* `output.pdf`: renders a PDF file (using `tex.command`);
 
 ### Resources options ###
 
