@@ -95,7 +95,7 @@ nav {
 }
 
 /* Improving readability for the HTML format only */
-p, blockquote, ul, ol  {
+p, blockquote, li  {
     margin-right: auto;
     max-width: 33em;
 }
