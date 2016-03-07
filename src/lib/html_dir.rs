@@ -3,6 +3,7 @@ use html::HtmlRenderer;
 use book::Book;
 use number::Number;
 use token::Token;
+use templates::html;
 
 use mustache;
 
@@ -60,6 +61,8 @@ impl<'a> HtmlDirRenderer<'a> {
         try!(self.write_css());
         // Write index.html and chapter_xxx.html
         try!(self.write_html());
+        // Write menu.svg
+        try!(self.write_file("menu.svg", html::MENU_SVG));
         
         // Write all images (including cover)
         let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
