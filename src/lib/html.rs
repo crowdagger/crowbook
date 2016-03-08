@@ -23,8 +23,10 @@ use error::Result;
 use toc::Toc;
 use resource_handler::ResourceHandler;
 use std::borrow::Cow;
+use templates::html;
 
 use mustache;
+use rustc_serialize::base64::{self, ToBase64};
 
 /// Renders HTML document in a standalone file.
 ///
@@ -77,6 +79,9 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
+        let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
+        let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
+         
         for (i, filename) in self.book.filenames.iter().enumerate() {
             self.handler.add_link(filename.clone(), format!("#chapter-{}", i));
         }
@@ -132,6 +137,7 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("script", self.book.get_template("html.script").unwrap())
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .insert_str("style", css.as_ref())
+            .insert_str("menu_svg", menu_svg)
             .build();
         let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
         let mut res = vec!();
