@@ -50,6 +50,7 @@ impl<'a> EpubRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.toc.numbered(true);
         html.handler.set_images_mapping(true);
+        html.handler.set_base64(false);
         EpubRenderer {
             book: book,
             html: html,

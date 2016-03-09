@@ -30,6 +30,7 @@ impl<'a> HtmlDirRenderer<'a> {
     pub fn new(book: &'a Book) -> HtmlDirRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.handler.set_images_mapping(true);
+        html.handler.set_base64(false);
         HtmlDirRenderer {
             book: book,
             html: html,

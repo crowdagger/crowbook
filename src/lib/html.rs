@@ -60,7 +60,7 @@ pub struct HtmlRenderer<'a> {
 impl<'a> HtmlRenderer<'a> {
     /// Creates a new HTML renderer
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        HtmlRenderer {
+        let mut html = HtmlRenderer {
             book: book,
             toc: Toc::new(),
             link_number: 0,
@@ -74,7 +74,10 @@ impl<'a> HtmlRenderer<'a> {
             verbatim: false,
             filename: String::new(),
             handler: ResourceHandler::new(&book.logger),
-        }
+        };
+        html.handler.set_images_mapping(true);
+        html.handler.set_base64(true);
+        html
     }
 
     /// Render books as a standalone HTML file

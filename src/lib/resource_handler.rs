@@ -6,8 +6,11 @@ use std::collections::HashMap;
 use std::path::{Path,PathBuf};
 use std::borrow::Cow;
 use std::fs;
+use std::io::Read;
 
 use walkdir::WalkDir;
+use rustc_serialize::base64::{self, ToBase64};
+use mime_guess;
 
 /// Resource Handler.
 ///
@@ -45,6 +48,14 @@ impl<'r> ResourceHandler<'r> {
         self.map_images = b;
     }
 
+    /// Sets base64 mode for image mapping
+    ///
+    /// If set to true, instead of returning a destination file path,
+    /// `map_image` will include the image as base64
+    pub fn set_base64(&mut self, b: bool) {
+        self.base64 = b;
+    }
+
     /// Add a local image file and get the resulting transformed
     /// file name
     pub fn map_image<'a>(&'a mut self, file: Cow<'a, str>) -> Cow<'a, str> {
@@ -55,7 +66,7 @@ impl<'r> ResourceHandler<'r> {
 
         // If image is not local, do nothing either
         if !Self::is_local(file.as_ref()) {
-            self.logger.warning("Resources: book includes non-local images which might cause problem for proper inclusion.");
+            self.logger.warning(format!("Resources: book includes non-local image {}, which might cause problem for proper inclusion.", file));
             return file;
         }
         
@@ -64,11 +75,36 @@ impl<'r> ResourceHandler<'r> {
             return Cow::Borrowed(self.images.get(file.as_ref()).unwrap());
         }
 
-        // Else, create a new file name that has same extension 
-        let dest_file = if let Some(extension) = Path::new(file.as_ref()).extension() {
-            format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
+        // Else, create a new file name that has same extension
+        // (or a base64 version of the file)
+        let dest_file = if !(self.base64) {
+            if let Some(extension) = Path::new(file.as_ref()).extension() {
+                format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
+            } else {
+                self.logger.warning(format!("Resources: book includes image {} which doesn't have an extension", file));
+                format!("images/image_{}", self.images.len())
+            }
         } else {
-            format!("images/image_{}", self.images.len())
+            let mut f = match fs::File::open(file.as_ref()) {
+                Ok(f) => f,
+                Err(err) => {
+                    self.logger.error(format!("Resources: could not open file {}: {}", file, err));
+                    return file;
+                }
+            };
+            let mut content: Vec<u8> = vec!();
+            if f.read_to_end(&mut content).is_err() {
+                self.logger.error(format!("Resources: could not read file {}", file));
+                return file;
+            }
+            let base64 = content.to_base64(base64::STANDARD);
+            match mime_guess::guess_mime_type_opt(file.as_ref()) {
+                None => {
+                    self.logger.error(format!("Resources: could not guess mime type of file {}", file));
+                    return file;
+                },
+                Some(s) => format!("data:{};base64,{}", s.to_string(), base64)
+            }
         };
 
         self.images.insert(file.into_owned(), dest_file.clone());
