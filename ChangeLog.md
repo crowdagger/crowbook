@@ -44,6 +44,7 @@ ChangeLog
       copied in the final document. Default to `data`, meaning that
       files will be placed in a `data` directory in the EPUB.
 * Rendering:
+    * Standalone HTML now includes locale files using base64.
     * HTML/EPUB: default CSS now uses the `lang` value do determine
       how to display lists (currently the only difference is it uses
       "–" when `lang` is set to "fr" and standard bullets for other
