@@ -23,6 +23,7 @@ pub struct ResourceHandler<'r> {
     pub images: HashMap<String, String>,
     map_images: bool,
     logger: &'r Logger,
+    base64: bool,
 }
 
 impl<'r> ResourceHandler<'r> {
@@ -32,6 +33,7 @@ impl<'r> ResourceHandler<'r> {
             links: HashMap::new(),
             images: HashMap::new(),
             map_images: false,
+            base64: false,
             logger: logger,
         }
     }
@@ -66,7 +68,7 @@ impl<'r> ResourceHandler<'r> {
         let dest_file = if let Some(extension) = Path::new(file.as_ref()).extension() {
             format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
         } else {
-            format!("image_{}", self.images.len())
+            format!("images/image_{}", self.images.len())
         };
 
         self.images.insert(file.into_owned(), dest_file.clone());
