@@ -36,9 +36,10 @@ impl Toc {
         let mut level = 0;
         output.push_str(&self.render_vec(&mut x, &mut level));
         for i in (0..level).rev() {
-            output.push_str(&format!("{}</{}>",
-                                     iter::repeat(' ').take(i as usize).collect::<String>(),
-                                     if self.numbered {"ol"} else {"ul"}));
+            output.push_str(&format!(
+                "{}</{}>",
+                iter::repeat(' ').take(i as usize).collect::<String>(),
+                if self.numbered {"ol"} else {"ul"}));
         }
         output
     }
@@ -57,22 +58,27 @@ impl Toc {
 
             if elem.level > *level {
                 for i in *level..elem.level {
-                    content.push_str(&format!("{}{}\n",
-                                              iter::repeat(' ').take(i as usize).collect::<String>(),
-                                              if self.numbered {"<ol>"} else {"<ul>"}));
+                    content.push_str(&format!(
+                        "{}{}\n",
+                        iter::repeat(' ').take(i as usize).collect::<String>(),
+                        if self.numbered {"<ol>"} else {"<ul>"}));
                     *level = elem.level;
                 }
             } else if elem.level < *level {
                 for i in (elem.level..*level).rev() {
-                    content.push_str(&format!("{}</{}>\n",
-                                              iter::repeat(' ').take(i as usize).collect::<String>(),
-                                              if self.numbered {"ol"} else {"ul"}));
+                    content.push_str(&format!(
+                        "{}</{}>\n",
+                        iter::repeat(' ').take(i as usize).collect::<String>(),
+                        if self.numbered {"ol"} else {"ul"}));
                 }
                 *level = elem.level;
             }
             let spaces:String = iter::repeat(' ').take(elem.level as usize).collect();
-            content.push_str(&format!("{}<li><a href = \"{}\">{}</a>\n",
-                                      spaces, elem.url, elem.title));
+            content.push_str(&format!(
+                "{}<li><a href = \"{}\">{}</a>\n",
+                spaces,
+                elem.url,
+                elem.title));
             content.push_str(&self.render_vec(x, level));
 
             for i in (elem.level..*level).rev() {

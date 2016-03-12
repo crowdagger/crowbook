@@ -90,9 +90,10 @@ impl<'a> HtmlRenderer<'a> {
         }
         let mut content = String::new();
 
-        let mut i = 0;
-        for &(n, ref v) in &self.book.chapters {
-            content.push_str(&format!("<a id = \"chapter-{}\"></a>\n", i));
+        let mut titles = vec!();
+        let mut chapters = vec!();
+
+        for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.current_hide = false;
             let book_numbering = self.book.options.get_i32("numbering").unwrap();
             match n {
@@ -107,21 +108,76 @@ impl<'a> HtmlRenderer<'a> {
                     self.current_hide = true;
                 },
             }
-            content.push_str(&self.render_html(v));
-            i+= 1;
+
+            let mut title = String::new();
+            for token in v {
+                match *token {
+                    Token::Header(1, ref vec) => {
+                        if self.current_hide || self.current_numbering == 0 {
+                            title = self.render_vec(vec);
+                        } else {
+                            title = try!(self.book.get_header(
+                                self.current_chapter[0] + 1,
+                                &self.render_vec(vec)));
+                        }
+                        break;
+                    },
+                    _ => {
+                        continue;
+                    }
+                }
+            }
+            titles.push(title);
+            
+            chapters.push(format!(
+                "<div id = \"chapter-{}\" class = \"chapter\">
+  {}
+</div>",
+                i,
+                self.render_html(v)));
         }
+
+        for (i, chapter) in chapters.iter().enumerate() {
+            if i != 0 {
+                content.push_str(&format!(
+                    "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls prev_chapter chapter-{}\">
+  <a href = \"#chapter-{}\">
+  « {}
+  </a>
+</p>",
+                    i - 1,
+                    i,
+                    i - 1,
+                    titles[i -1]));
+            }
+            content.push_str(chapter);
+            if i < titles.len() - 1 {
+                content.push_str(&format!(
+                    "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls next_chapter chapter-{}\">
+  <a href = \"#chapter-{}\">
+  {} »
+  </a>
+</p>",
+                    i + 1,
+                    i,
+                    i + 1,
+                    titles[i + 1]));
+            }
+        }
+        
         let toc = self.toc.render();
 
         // If display_toc, display the toc inline
         if self.book.options.get_bool("display_toc").unwrap() {
-            content = format!("<h1>{}</h1>
+            content = format!(
+                "<h1>{}</h1>
 <div id = \"toc\">
 {}
 </div>
 {}",
-                              self.book.options.get_str("toc_name").unwrap(),
-                              &toc,
-                              content);
+                self.book.options.get_str("toc_name").unwrap(),
+                &toc,
+                content);
         }
 
         // Render the CSS
