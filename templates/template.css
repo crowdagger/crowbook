@@ -95,11 +95,20 @@ nav {
 }
 
 /* Improving readability for the HTML format only */
-p, blockquote  {
-    margin: auto;
+p, blockquote, li  {
+    margin-right: auto;
     max-width: 33em;
 }
 
 blockquote {
     padding: 1em;
+}
+
+#content {
+    text-align: center;
+}
+
+#page {
+    display: inline-block;
+    text-align: justify;
 }

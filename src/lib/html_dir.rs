@@ -3,14 +3,18 @@ use html::HtmlRenderer;
 use book::Book;
 use number::Number;
 use token::Token;
+use templates::html;
+use resource_handler::ResourceHandler;
 
 use mustache;
 
 use std::io::{Read,Write};
 use std::fs;
 use std::fs::File;
+use std::path::Path;
 use std::path::PathBuf;
 use std::borrow::Cow;
+
 
 /// Multiple files HTML renderer
 ///
@@ -26,6 +30,7 @@ impl<'a> HtmlDirRenderer<'a> {
     pub fn new(book: &'a Book) -> HtmlDirRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.handler.set_images_mapping(true);
+        html.handler.set_base64(false);
         HtmlDirRenderer {
             book: book,
             html: html,
@@ -60,6 +65,8 @@ impl<'a> HtmlDirRenderer<'a> {
         try!(self.write_css());
         // Write index.html and chapter_xxx.html
         try!(self.write_html());
+        // Write menu.svg
+        try!(self.write_file("menu.svg", html::MENU_SVG));
         
         // Write all images (including cover)
         let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
@@ -68,6 +75,21 @@ impl<'a> HtmlDirRenderer<'a> {
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
             try!(self.write_file(dest, &content));
+        }
+
+        // Write additional files
+        if let Ok(list) = self.book.options.get_paths_list("resources.files") {
+            let files_path = self.book.options.get_path("resources.base_path.files").unwrap();
+            let data_path = Path::new(self.book.options.get_relative_path("resources.out_path").unwrap());
+            let list = try!(ResourceHandler::get_files(list, &files_path));
+            for path in list {
+                let abs_path = Path::new(&files_path).join(&path);
+                let mut f = try!(File::open(&abs_path)
+                                 .map_err(|_| Error::FileNotFound(abs_path.to_string_lossy().into_owned())));
+                let mut content = vec!();
+                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
+                try!(self.write_file(data_path.join(&path).to_str().unwrap(), &content));
+            }
         }
         
         Ok(())
@@ -155,7 +177,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("toc", toc.clone())
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
-                .insert_str("script", self.book.get_template("html.script").unwrap())
+                .insert_str("script", self.book.get_template("html_dir.script").unwrap())
                 .insert_bool(self.book.options.get_str("lang").unwrap(), true)
                 .build();
             let template = mustache::compile_str(try!(self.book.get_template("html_dir.chapter.html")).as_ref());        
@@ -186,7 +208,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("toc", toc.clone())
-            .insert_str("script", self.book.get_template("html.script").unwrap())
+            .insert_str("script", self.book.get_template("html_dir.script").unwrap())
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .build();
         let template = mustache::compile_str(try!(self.book.get_template("html_dir.index.html")).as_ref());        

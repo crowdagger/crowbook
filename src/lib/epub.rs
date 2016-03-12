@@ -23,14 +23,14 @@ use number::Number;
 use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;
+use resource_handler::ResourceHandler;
 
 use mustache;
 use chrono;
 use uuid;
-use walkdir::WalkDir;
 
 use std::io::{Read,Write};
-use std::fs::{self, File};
+use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use mime_guess::guess_mime_type_opt;
@@ -50,6 +50,7 @@ impl<'a> EpubRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.toc.numbered(true);
         html.handler.set_images_mapping(true);
+        html.handler.set_base64(false);
         EpubRenderer {
             book: book,
             html: html,
@@ -135,12 +136,11 @@ impl<'a> EpubRenderer<'a> {
 
         // Write additional resources
         if let Ok(list) = self.book.options.get_paths_list("resources.files") {
-            let list = try!(self.get_files(list));
+            let base_path_files = self.book.options.get_path("resources.base_path.files").unwrap();
+            let list = try!(ResourceHandler::get_files(list, &base_path_files));
             let data_path = Path::new(try!(self.book.options.get_relative_path("resources.out_path")));
             for path in list{
-                let abs_path = Path::new(&self.book.options.get_path("resources.base_path.files").unwrap())
-                    .join(&path);
-                println!("trying to read {}", abs_path.display());
+                let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
                                  .map_err(|_| Error::FileNotFound(abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
@@ -244,7 +244,7 @@ impl<'a> EpubRenderer<'a> {
 
         // and additional files too
         if let Ok(list) = self.book.options.get_paths_list("resources.files") {
-            let list = try!(self.get_files(list));
+            let list = try!(ResourceHandler::get_files(list, &self.book.options.get_path("resources.base_path.files").unwrap()));
             let data_path = Path::new(self.book.options.get_relative_path("resources.out_path").unwrap());
             for path in list {
                 let format = self.get_format(&path);
@@ -365,39 +365,6 @@ impl<'a> EpubRenderer<'a> {
             },
             _ => self.html.parse_token(token)
         }
-    }
-
-    // Get the list of all files, walking directories
-    fn get_files(&self, list: Vec<String>) -> Result<Vec<String>> {
-        let mut out:Vec<String> = vec!();
-        for path in list.into_iter() {
-            let abs_path = Path::new(&self.book.options.get_path("resources.base_path.files").unwrap())
-                .join(&path);
-            let res= fs::metadata(&abs_path);
-            match res {
-                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", abs_path.display(), err))),
-                Ok(metadata) => {
-                    if metadata.is_file() {
-                        out.push(path);
-                    } else if metadata.is_dir() {
-                        let files = WalkDir::new(&abs_path)
-                            .follow_links(true)
-                            .into_iter()
-                            .filter_map(|e| e.ok())
-                            .filter(|e| e.file_type().is_file())
-                            .map(|e| PathBuf::from(e.path().strip_prefix(&self.book.options.get_path("resources.base_path.files")
-                                                                         .unwrap())
-                                                   .unwrap()));
-                        for file in files {
-                            out.push(file.to_string_lossy().into_owned());
-                        }
-                    } else {
-                        return Err(Error::Render(format!("error in epub rendering: {} is neither a file nor a directory", &path)));
-                    }
-                }
-            }
-        }
-        Ok(out)
     }
 
     // Get the format of an image file, based on its extension

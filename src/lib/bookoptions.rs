@@ -49,6 +49,7 @@ html.css:path                       # Path of a stylesheet to use with HTML rend
 html.script:path                    # Path of a javascript file
 
 # Multifile HTML options
+html_dir.script:path                # Path of a javascript file
 html_dir.css:path                   # Path of a CSS template
 html_dir.index.html:path            # Path of index.html template
 html_dir.chapter.html:path          # Path of a chapter.html template

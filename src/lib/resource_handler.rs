@@ -1,9 +1,16 @@
 use token::Token;
 use logger::Logger;
+use error::{Error, Result};
 
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path,PathBuf};
 use std::borrow::Cow;
+use std::fs;
+use std::io::Read;
+
+use walkdir::WalkDir;
+use rustc_serialize::base64::{self, ToBase64};
+use mime_guess;
 
 /// Resource Handler.
 ///
@@ -19,6 +26,7 @@ pub struct ResourceHandler<'r> {
     pub images: HashMap<String, String>,
     map_images: bool,
     logger: &'r Logger,
+    base64: bool,
 }
 
 impl<'r> ResourceHandler<'r> {
@@ -28,6 +36,7 @@ impl<'r> ResourceHandler<'r> {
             links: HashMap::new(),
             images: HashMap::new(),
             map_images: false,
+            base64: false,
             logger: logger,
         }
     }
@@ -37,6 +46,14 @@ impl<'r> ResourceHandler<'r> {
     /// # Argument: an offset (should be book.root)
     pub fn set_images_mapping(&mut self, b: bool) {
         self.map_images = b;
+    }
+
+    /// Sets base64 mode for image mapping
+    ///
+    /// If set to true, instead of returning a destination file path,
+    /// `map_image` will include the image as base64
+    pub fn set_base64(&mut self, b: bool) {
+        self.base64 = b;
     }
 
     /// Add a local image file and get the resulting transformed
@@ -49,7 +66,7 @@ impl<'r> ResourceHandler<'r> {
 
         // If image is not local, do nothing either
         if !Self::is_local(file.as_ref()) {
-            self.logger.warning("Resources: book includes non-local images which might cause problem for proper inclusion.");
+            self.logger.warning(format!("Resources: book includes non-local image {}, which might cause problem for proper inclusion.", file));
             return file;
         }
         
@@ -58,11 +75,36 @@ impl<'r> ResourceHandler<'r> {
             return Cow::Borrowed(self.images.get(file.as_ref()).unwrap());
         }
 
-        // Else, create a new file name that has same extension 
-        let dest_file = if let Some(extension) = Path::new(file.as_ref()).extension() {
-            format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
+        // Else, create a new file name that has same extension
+        // (or a base64 version of the file)
+        let dest_file = if !(self.base64) {
+            if let Some(extension) = Path::new(file.as_ref()).extension() {
+                format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
+            } else {
+                self.logger.warning(format!("Resources: book includes image {} which doesn't have an extension", file));
+                format!("images/image_{}", self.images.len())
+            }
         } else {
-            format!("image_{}", self.images.len())
+            let mut f = match fs::File::open(file.as_ref()) {
+                Ok(f) => f,
+                Err(err) => {
+                    self.logger.error(format!("Resources: could not open file {}: {}", file, err));
+                    return file;
+                }
+            };
+            let mut content: Vec<u8> = vec!();
+            if f.read_to_end(&mut content).is_err() {
+                self.logger.error(format!("Resources: could not read file {}", file));
+                return file;
+            }
+            let base64 = content.to_base64(base64::STANDARD);
+            match mime_guess::guess_mime_type_opt(file.as_ref()) {
+                None => {
+                    self.logger.error(format!("Resources: could not guess mime type of file {}", file));
+                    return file;
+                },
+                Some(s) => format!("data:{};base64,{}", s.to_string(), base64)
+            }
         };
 
         self.images.insert(file.into_owned(), dest_file.clone());
@@ -124,5 +166,45 @@ impl<'r> ResourceHandler<'r> {
                 }
             }
         }
+    }
+
+
+    /// Get the list of all files, walking recursively in directories
+    ///
+    /// # Arguments
+    /// - list: a list of files
+    /// - base: the path where to get them
+    ///
+    /// # Returns
+    /// A list of files (relative to `base`), or an error.
+    pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
+        let mut out:Vec<String> = vec!();
+        let base = Path::new(base);
+        for path in list.into_iter() {
+            let abs_path = base.join(&path);
+            let res= fs::metadata(&abs_path);
+            match res {
+                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", abs_path.display(), err))),
+                Ok(metadata) => {
+                    if metadata.is_file() {
+                        out.push(path);
+                    } else if metadata.is_dir() {
+                        let files = WalkDir::new(&abs_path)
+                            .follow_links(true)
+                            .into_iter()
+                            .filter_map(|e| e.ok())
+                            .filter(|e| e.file_type().is_file())
+                            .map(|e| PathBuf::from(e.path().strip_prefix(base)
+                                                   .unwrap()));
+                        for file in files {
+                            out.push(file.to_string_lossy().into_owned());
+                        }
+                    } else {
+                        return Err(Error::Render(format!("error in epub rendering: {} is neither a file nor a directory", &path)));
+                    }
+                }
+            }
+        }
+        Ok(out)
     }
 }
