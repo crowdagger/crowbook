@@ -482,6 +482,7 @@ impl Book {
             "html.css" => html::CSS,
             "html.template" => html::TEMPLATE,
             "html.script" => html::SCRIPT,
+            "html_dir.script" => html_dir::SCRIPT,
             "html_dir.css" => html_dir::CSS,
             "html_dir.index.html" => html_dir::INDEX_HTML,
             "html_dir.chapter.html" => html_dir::CHAPTER_HTML,

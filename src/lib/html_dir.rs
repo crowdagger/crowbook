@@ -177,7 +177,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("toc", toc.clone())
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
-                .insert_str("script", self.book.get_template("html.script").unwrap())
+                .insert_str("script", self.book.get_template("html_dir.script").unwrap())
                 .insert_bool(self.book.options.get_str("lang").unwrap(), true)
                 .build();
             let template = mustache::compile_str(try!(self.book.get_template("html_dir.chapter.html")).as_ref());        
@@ -208,7 +208,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("toc", toc.clone())
-            .insert_str("script", self.book.get_template("html.script").unwrap())
+            .insert_str("script", self.book.get_template("html_dir.script").unwrap())
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .build();
         let template = mustache::compile_str(try!(self.book.get_template("html_dir.index.html")).as_ref());        

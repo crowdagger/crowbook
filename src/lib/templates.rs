@@ -18,11 +18,12 @@
 pub mod html {
     pub static TEMPLATE:&'static str = include_str!("../../templates/template.html");
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
-    pub static SCRIPT:&'static str = include_str!("../../templates/script.js");
+    pub static SCRIPT:&'static str = concat!(include_str!("../../templates/html_dir/script.js"), include_str!("../../templates/script.js"));
     pub static MENU_SVG:&'static [u8] = include_bytes!("../../templates/img/menu.svg");
 }
 
 pub mod html_dir {
+    pub static SCRIPT:&'static str = include_str!("../../templates/html_dir/script.js");
     pub static INDEX_HTML: &'static str = include_str!("../../templates/html_dir/index.html");
     pub static CHAPTER_HTML: &'static str = include_str!("../../templates/html_dir/chapter.html");
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
