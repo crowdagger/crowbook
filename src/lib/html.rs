@@ -39,6 +39,7 @@ pub struct HtmlRenderer<'a> {
     epub3: bool,
     verbatim: bool,
     link_number: u32,
+    add_script: bool,
 
     // fields used by EpubRenderer so marked public but hidden
     #[doc(hidden)]
@@ -66,6 +67,7 @@ impl<'a> HtmlRenderer<'a> {
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("numbering").unwrap(),
+            add_script: false,
             current_hide: false,
             table_head: false,
             footnote_number: 0,
@@ -82,6 +84,7 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
+        self.add_script = true;
         let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
         let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
          
@@ -311,11 +314,22 @@ impl<'a> HtmlRenderer<'a> {
                     self.render_vec(vec)
                 };
                 if n <= self.book.options.get_i32("numbering").unwrap() {
-                    self.toc.add(n,
-                                 format!("{}#link-{}",
-                                            self.filename,
-                                            self.link_number),
-                                 s.clone());
+                    if self.add_script {
+                        self.toc.add(n,
+                                     format!("{}#link-{}\" onclick = \"javascript:showChapter({})",
+                                             self.filename,
+                                             self.link_number,
+                                             self.current_chapter[0] - 1
+                                             ),
+                                     s.clone());
+                    } else {
+                        self.toc.add(n,
+                                     format!("{}#link-{}",
+                                             self.filename,
+                                             self.link_number),
+                                     s.clone());
+                    }
+                        
                 }
                 if n == 1 && self.current_hide {
                     format!("<a id = \"link-{}\"></a>", self.link_number)
