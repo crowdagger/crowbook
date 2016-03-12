@@ -76,7 +76,7 @@ nav {
 }
 
 /* Used for multifiles HTML */
-#prev_chapter {
+.prev_chapter {
     text-align: left;
     text-indent: 0;
     margin-bottom: 1em;
@@ -85,7 +85,7 @@ nav {
     font-weight: bold;
 }
 
-#next_chapter {
+.next_chapter {
     text-align: right;
     margin-top: 1em;
     margin-bottom: 1em;

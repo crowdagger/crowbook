@@ -158,7 +158,7 @@ impl<'a> HtmlDirRenderer<'a> {
             let next_chapter = if i < titles.len() - 1 {
                 format!("<p id = \"next_chapter\">
   <a href = \"{}\">
-    {} >>
+    {} »
   </a>
 </p>",
                         filenamer(i+1),
