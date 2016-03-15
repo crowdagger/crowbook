@@ -1,27 +1,50 @@
 /* Builtin script also includes html_dir.script */
-function showChapter(chap,noreset) {
-    var chapters = document.getElementsByClassName("chapter");
-    for (i = 0; i < chapters.length; i++) {
-        if (i == chap) {
+    function showChapter(chap,noreset){
+      if (!displayAll) {
+        var chapters = document.getElementsByClassName("chapter");
+        for (i = 0; i < chapters.length; i++) {
+          if (i == chap){
             chapters[i].style.display = "block";
-        } else {
+          }else{
             chapters[i].style.display = "none";
+          }
         }
-    }
-    var controls = document.getElementsByClassName("chapterControls");
-    for (i = 0; i < controls.length; i++) {
-        if (i>=chap*2-1 && i<=chap*2){
+        var controls = document.getElementsByClassName("chapterControls");
+        for (i = 0; i < controls.length; i++){
+          if (i>=chap*2-1 && i<=chap*2){
             controls[i].style.display = "block";
-        } else {
+          }else{
             controls[i].style.display = "none";
+          }
         }
-    }
-    if (!noreset) {
+        if (!noreset) {
+          window.location.hash = "#chapter-"+chap;
+        }
+      }else{
         window.location.hash = "#chapter-"+chap;
+      }
     }
-}
-
-window.onload = function(){
-    showChapter(0, true);
-    var controls = document.getElementsByClassName("chapterControls");
-};
+    function switchAll(){
+      if (!displayAll){
+        displayAll = true;
+        var chapters = document.getElementsByClassName("chapter");
+        for (i = 0; i < chapters.length; i++) {
+          chapters[i].style.display = "block";
+        }
+        var controls = document.getElementsByClassName("chapterControls");
+        for (i = 0; i < controls.length; i++){
+          controls[i].style.display = "none";
+        }
+        displayAllSwitcher = document.getElementById("displayAllSwitcher");
+        displayAllSwitcher.src="img/pages.svg";
+      }else{
+        displayAll = false;
+        showChapter(0);
+        displayAllSwitcher = document.getElementById("displayAllSwitcher");
+        displayAllSwitcher.src="img/book.svg";
+      }
+    }
+    window.onload = function(){
+      displayAll = false;
+      showChapter(0,true);
+    };
