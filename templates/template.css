@@ -56,8 +56,17 @@ nav {
     transition: left 1s;
 }
 
+#menu img {
+    opacity: 0.3;
+}
+
+#menu img:hover {
+    opacity: 1.0;
+    cursor: pointer;
+}
+
 #menu-button {
-    width: 1.5em;
+    height: 1.5em;
     padding: 0.5em;
 }
 
