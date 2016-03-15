@@ -20,6 +20,8 @@ pub mod html {
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
     pub static SCRIPT:&'static str = concat!(include_str!("../../templates/html_dir/script.js"), include_str!("../../templates/script.js"));
     pub static MENU_SVG:&'static [u8] = include_bytes!("../../templates/img/menu.svg");
+    pub static BOOK_SVG:&'static [u8] = include_bytes!("../../templates/img/book.svg");
+    pub static PAGES_SVG:&'static [u8] = include_bytes!("../../templates/img/pages.svg");
 }
 
 pub mod html_dir {

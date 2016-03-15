@@ -87,6 +87,12 @@ impl<'a> HtmlRenderer<'a> {
         self.add_script = true;
         let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
         let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
+
+        let book_svg = html::BOOK_SVG.to_base64(base64::STANDARD);
+        let book_svg = format!("data:image/svg+xml;base64,{}", book_svg);
+
+        let pages_svg = html::PAGES_SVG.to_base64(base64::STANDARD);
+        let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
          
         for (i, filename) in self.book.filenames.iter().enumerate() {
             self.handler.add_link(filename.clone(), format!("#chapter-{}", i));
@@ -192,14 +198,26 @@ impl<'a> HtmlRenderer<'a> {
         template_css.render_data(&mut res, &data);
         let css = String::from_utf8_lossy(&res);
 
+        // Render the JS
+        let template_js = mustache::compile_str(try!(self.book.get_template("html.script")).as_ref());
+        let data = self.book.get_mapbuilder("none")
+            .insert_str("book_svg", book_svg.clone())
+            .insert_str("pages_svg", pages_svg.clone())
+            .build();
+        let mut res:Vec<u8> = vec!();
+        template_js.render_data(&mut res, &data);
+        let js = String::from_utf8_lossy(&res);
+
         // Render the HTML document
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("toc", toc)
-            .insert_str("script", self.book.get_template("html.script").unwrap())
+            .insert_str("script", js)
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .insert_str("style", css.as_ref())
             .insert_str("menu_svg", menu_svg)
+            .insert_str("book_svg", book_svg)
+            .insert_str("pages_svg", pages_svg)
             .build();
         let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
         let mut res = vec!();

@@ -1,50 +1,52 @@
 /* Builtin script also includes html_dir.script */
-    function showChapter(chap,noreset){
-      if (!displayAll) {
+function showChapter(chap,noreset){
+    if (!displayAll) {
         var chapters = document.getElementsByClassName("chapter");
         for (i = 0; i < chapters.length; i++) {
-          if (i == chap){
-            chapters[i].style.display = "block";
-          }else{
-            chapters[i].style.display = "none";
-          }
+            if (i == chap){
+                chapters[i].style.display = "block";
+            }else{
+                chapters[i].style.display = "none";
+            }
         }
         var controls = document.getElementsByClassName("chapterControls");
         for (i = 0; i < controls.length; i++){
-          if (i>=chap*2-1 && i<=chap*2){
-            controls[i].style.display = "block";
-          }else{
-            controls[i].style.display = "none";
-          }
+            if (i>=chap*2-1 && i<=chap*2){
+                controls[i].style.display = "block";
+            }else{
+                controls[i].style.display = "none";
+            }
         }
         if (!noreset) {
-          window.location.hash = "#chapter-"+chap;
+            window.location.hash = "#chapter-"+chap;
         }
-      }else{
+    }else{
         window.location.hash = "#chapter-"+chap;
-      }
     }
-    function switchAll(){
-      if (!displayAll){
+}
+
+function switchAll(){
+    if (!displayAll){
         displayAll = true;
         var chapters = document.getElementsByClassName("chapter");
         for (i = 0; i < chapters.length; i++) {
-          chapters[i].style.display = "block";
+            chapters[i].style.display = "block";
         }
         var controls = document.getElementsByClassName("chapterControls");
         for (i = 0; i < controls.length; i++){
-          controls[i].style.display = "none";
+            controls[i].style.display = "none";
         }
-        displayAllSwitcher = document.getElementById("displayAllSwitcher");
-        displayAllSwitcher.src="img/pages.svg";
-      }else{
+        displayAllSwitcher = document.getElementById("book-button");
+        displayAllSwitcher.src="{{{pages_svg}}}";
+    }else{
         displayAll = false;
         showChapter(0);
-        displayAllSwitcher = document.getElementById("displayAllSwitcher");
-        displayAllSwitcher.src="img/book.svg";
-      }
+        displayAllSwitcher = document.getElementById("book-button");
+        displayAllSwitcher.src="{{{book_svg}}}";
     }
-    window.onload = function(){
-      displayAll = false;
-      showChapter(0,true);
-    };
+}
+
+window.onload = function(){
+    displayAll = false;
+    showChapter(0,true);
+};
