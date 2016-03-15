@@ -13,11 +13,12 @@
    </script>
 
 
-  </head>  
+  </head>
   <body>
 
   <nav id = "nav">
     <h2>Menu</h2>
+    <div id="toolbar"><img id="displayAllSwitcher" alt="{Display all}"src="img/book.svg" onclick="javascript:switchAll()"></div>
     {{{toc}}}
   </nav>
 
@@ -26,14 +27,14 @@
       <header>
         <div id = "menu">
           <img id = "menu-button" onclick="toggle();"
-               src="{{{menu_svg}}}" 
+               src="{{{menu_svg}}}"
                alt = "Menu" title = "Menu" />
         </div>
-        
+
         <h1 class="title">{{title}}</h1>
       <h2 class="author">{{author}}</h2>
       </header>
-      
+
       {{{content}}}
     </div>
   </div>

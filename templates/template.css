@@ -112,3 +112,11 @@ blockquote {
     display: inline-block;
     text-align: justify;
 }
+
+#toolbar {
+  background: silver;
+  padding-top: 2px;
+}
+#toolbar img {
+    cursor: pointer;
+}
