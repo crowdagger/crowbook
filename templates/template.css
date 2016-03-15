@@ -55,7 +55,13 @@ nav {
     left: 1em;
     transition: left 1s;
 }
+
 #menu-button {
+    width: 1.5em;
+    padding: 0.5em;
+}
+
+#book-button {
     width: 1.5em;
     padding: 0.5em;
 }
@@ -113,10 +119,3 @@ blockquote {
     text-align: justify;
 }
 
-#toolbar {
-  background: silver;
-  padding-top: 2px;
-}
-#toolbar img {
-    cursor: pointer;
-}

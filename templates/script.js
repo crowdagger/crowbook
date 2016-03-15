@@ -1,4 +1,5 @@
 /* Builtin script also includes html_dir.script */
+{{#display_chapter}}
 function showChapter(chap,noreset){
     if (!displayAll) {
         var chapters = document.getElementsByClassName("chapter");
@@ -50,3 +51,4 @@ window.onload = function(){
     displayAll = false;
     showChapter(0,true);
 };
+{{/display_chapter}}

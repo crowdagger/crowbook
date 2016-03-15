@@ -18,7 +18,6 @@
 
   <nav id = "nav">
     <h2>Menu</h2>
-    <div id="toolbar"></div>
     {{{toc}}}
   </nav>
 
@@ -29,8 +28,11 @@
           <img id = "menu-button" onclick="toggle();"
                src="{{{menu_svg}}}"
                alt = "Menu" title = "Menu" />
+          {{#display_chapter}}
           <img id="book-button" alt="Display all" title =
-               "Display all" src="{{{book_svg}}}" onclick="javascript:switchAll()">
+               "Display all" src="{{{book_svg}}}"
+               onclick="javascript:switchAll()">
+          {{/display_chapter}}
         </div>
 
         <h1 class="title">{{title}}</h1>

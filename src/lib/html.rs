@@ -203,6 +203,7 @@ impl<'a> HtmlRenderer<'a> {
         let data = self.book.get_mapbuilder("none")
             .insert_str("book_svg", book_svg.clone())
             .insert_str("pages_svg", pages_svg.clone())
+            .insert_bool("display_chapter", self.book.options.get_bool("html.display_chapter").unwrap())
             .build();
         let mut res:Vec<u8> = vec!();
         template_js.render_data(&mut res, &data);
@@ -214,6 +215,7 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("toc", toc)
             .insert_str("script", js)
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
+            .insert_bool("display_chapter", self.book.options.get_bool("html.display_chapter").unwrap())
             .insert_str("style", css.as_ref())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)

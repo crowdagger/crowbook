@@ -47,6 +47,7 @@ nb_char:char:' '                    # The non-breaking character to use for au
 html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet to use with HTML rendering
 html.script:path                    # Path of a javascript file
+html.display_chapter:bool:true      # Display one chapter at a time (with option to dislay all)
 
 # Multifile HTML options
 html_dir.script:path                # Path of a javascript file
