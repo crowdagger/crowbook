@@ -201,8 +201,8 @@ impl<'a> HtmlRenderer<'a> {
         // Render the JS
         let template_js = mustache::compile_str(try!(self.book.get_template("html.script")).as_ref());
         let data = self.book.get_mapbuilder("none")
-            .insert_str("book_svg", book_svg.clone())
-            .insert_str("pages_svg", pages_svg.clone())
+            .insert_str("book_svg", &book_svg)
+            .insert_str("pages_svg", &pages_svg)
             .insert_bool("display_chapter", self.book.options.get_bool("html.display_chapter").unwrap())
             .build();
         let mut res:Vec<u8> = vec!();
@@ -217,6 +217,7 @@ impl<'a> HtmlRenderer<'a> {
             .insert_bool(self.book.options.get_str("lang").unwrap(), true)
             .insert_bool("display_chapter", self.book.options.get_bool("html.display_chapter").unwrap())
             .insert_str("style", css.as_ref())
+            .insert_str("print_style", self.book.get_template("html.print_css").unwrap())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
             .insert_str("pages_svg", pages_svg)

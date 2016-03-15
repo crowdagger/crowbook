@@ -18,6 +18,7 @@
 pub mod html {
     pub static TEMPLATE:&'static str = include_str!("../../templates/template.html");
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
+    pub static PRINT_CSS:&'static str = include_str!("../../templates/print.css");
     pub static SCRIPT:&'static str = concat!(include_str!("../../templates/html_dir/script.js"), include_str!("../../templates/script.js"));
     pub static MENU_SVG:&'static [u8] = include_bytes!("../../templates/img/menu.svg");
     pub static BOOK_SVG:&'static [u8] = include_bytes!("../../templates/img/book.svg");
