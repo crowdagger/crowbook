@@ -57,7 +57,7 @@ nav {
 }
 
 #menu img {
-    opacity: 0.3;
+    opacity: 0.5;
 }
 
 #menu img:hover {
@@ -128,3 +128,13 @@ blockquote {
     text-align: justify;
 }
 
+
+#toolbar {
+    background: silver;
+    padding-top: 2px;
+    right: 0;
+}
+
+#toolbar img {
+    cursor: pointer;
+}

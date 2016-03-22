@@ -18,11 +18,17 @@
 
   </head>
   <body>
-
-  <nav id = "nav">
-    <h2>{{{title}}}</h2>
-    {{{toc}}}
-  </nav>
+    
+    <nav id = "nav">
+      <div id="toolbar">
+        <img id="book-button" alt="Display mode"
+             title = "Display all chapters"
+             src="{{{book_svg}}}"
+             onclick="javascript:switchAll()">
+      </div>
+      <h2>{{{title}}}</h2>
+      {{{toc}}}
+    </nav>
 
   <div id = "content">
     <div id = "page">
@@ -32,10 +38,6 @@
                src="{{{menu_svg}}}"
                alt = "Menu" title = "Menu" />
           {{#display_chapter}}
-          <img id="book-button" alt="Display mode"
-               title = "Display mode"
-               src="{{{book_svg}}}"
-               onclick="javascript:switchAll()">
           {{/display_chapter}}
         </div>
 

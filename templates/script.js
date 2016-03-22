@@ -47,11 +47,15 @@ function switchAll() {
         }
         displayAllSwitcher = document.getElementById("book-button");
         displayAllSwitcher.src="{{{pages_svg}}}";
+        displayAllSwitcher.alt="Display one chapter";
+        displayAllSwitcher.title="Display one chapter";
     }else{
         displayAll = false;
         showChapter(0);
         displayAllSwitcher = document.getElementById("book-button");
         displayAllSwitcher.src="{{{book_svg}}}";
+        displayAllSwitcher.alt="Display all chapters";
+        displayAllSwitcher.title="Display all chapters";
     }
 }
 
