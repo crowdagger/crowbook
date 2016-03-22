@@ -45,6 +45,8 @@ ChangeLog
       files will be placed in a `data` directory in the EPUB.
 * Rendering:
     * Standalone HTML now includes locale files using base64.
+    * Standalone HTML displays one chapter at a time, thouht it can be
+      changed via a button in the menu.
     * HTML/EPUB: default CSS now uses the `lang` value do determine
       how to display lists (currently the only difference is it uses
       "–" when `lang` is set to "fr" and standard bullets for other
