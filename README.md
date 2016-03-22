@@ -182,19 +182,26 @@ a single Markdown file instead of a book configuration file).
 
 See the [github's issue tracker](https://github.com/lise-henry/crowbook/issues).
 
+Contributors
+------------
+
+* [Stéphane Mourey](http://stephanemourey.fr/) (<s+crowbook AT
+  stephanemourey DOT fr>)
+
 Acknowledgements
 ----------------
 
 Besides the [Rust](https://www.rust-lang.org/) compiler and standard library, Crowbook uses the
 following libraries:
 
-* [pulldown-cmark](https://crates.io/crates/pulldown-cmark) (for
-parsing markdown)
-* [yaml-rust](https://crates.io/crates/yaml-rust) (for parsing YAML blocks)
-* [mustache](https://crates.io/crates/mustache) (for templating)
-* [clap](https://github.com/kbknapp/clap-rs) (for parsing command line arguments)
-* [chrono](https://crates.io/crates/chrono) (date and time library)
-* [uuid](https://crates.io/crates/uuid) (to generate uuid)
+* [pulldown-cmark](https://crates.io/crates/pulldown-cmark) 
+* [yaml-rust](https://crates.io/crates/yaml-rust) 
+* [mustache](https://crates.io/crates/mustache) 
+* [clap](https://github.com/kbknapp/clap-rs)
+* [chrono](https://crates.io/crates/chrono) 
+* [uuid](https://crates.io/crates/uuid) 
+* [mime_guess](https://crates.io/crates/mime_guess) 
+* [walkdir](https://crates.io/crates/walkdir)
 
 It also uses configuration files from
 [rust-everywhere](https://github.com/japaric/rust-everywhere) to use
