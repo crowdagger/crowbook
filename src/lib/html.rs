@@ -40,6 +40,7 @@ pub struct HtmlRenderer<'a> {
     verbatim: bool,
     link_number: u32,
     add_script: bool,
+    current_par: u32,
 
     // fields used by EpubRenderer so marked public but hidden
     #[doc(hidden)]
@@ -67,6 +68,7 @@ impl<'a> HtmlRenderer<'a> {
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("numbering").unwrap(),
+            current_par: 0,
             add_script: false,
             current_hide: false,
             table_head: false,
@@ -320,7 +322,13 @@ impl<'a> HtmlRenderer<'a> {
             } else {
                 escape_html(&self.book.clean(text.clone()))
             },
-            Token::Paragraph(ref vec) => format!("<p>{}</p>\n", self.render_vec(vec)),
+            Token::Paragraph(ref vec) => {
+                self.current_par += 1;
+                let par = self.current_par;
+                format!("<p id = \"para-{}\">{}</p>\n",
+                        par,
+                        self.render_vec(vec))
+            },
             Token::Header(n, ref vec) => {
                 if self.current_numbering >= n {
                     self.inc_header(n - 1);
