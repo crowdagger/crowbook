@@ -62,16 +62,7 @@ $ crowbook <BOOK>
 
 where `BOOK` is a configuration file. Crowbook will parse this
 file and generate a book in HTML, Epub, LaTeX, and/or PDF,
-according to the settings in the configuration file. So if you clone
-this repository and run
-
-```bash
-$ crowbook config.book
-```
-
-you'll generate the example book in various formats. The
-HTML version should look
-[like that](http://lise-henry.github.io/crowbook/book.html).
+according to the settings in the configuration file. 
 
 To create a new book, assuming you have a
 list of Markdown files, you can generate a template configuration file
@@ -83,20 +74,7 @@ $ crowbook --create my.book chapter_*.md
 
 This will generate a default `my.book` file, which you'll need to
 complete. This configuration file contains some metadata, options, and lists the
-Markdown files. Here is a basic example:
-
-```
-author: Joan Doe
-title: Some book
-lang: en
-
-output_html: some_book.html
-
-+ chapter_1.md
-+ chapter_2.md
-+ chapter_3.md
-+ ...
-```
+Markdown files. 
 
 For more information see
 [the configuration file](book_example/config.md).
@@ -110,7 +88,7 @@ Current features
 
 ### Output formats ###
 
-Crowbook (to my knowledge) correctly supports HTML and EPUB (either
+Crowbook should correctly support HTML and EPUB (either
 version 2 or 3) as output formats: rendered files should pass
 respectively the [W3C validator](https://validator.w3.org/) and the
 [IDPF EPUB validator](http://validator.idpf.org/) for a wide range of
@@ -118,11 +96,10 @@ respectively the [W3C validator](https://validator.w3.org/) and the
 rendered in [HTML](http://lise-henry.github.io/crowbook/book.html) and
 [EPUB](http://lise-henry.github.io/crowbook/book.epub) on github.io.
 
-LaTeX output is a bit more tricky: it should work reasonably well for
+LaTeX/PDF output is a bit more tricky: it should work reasonably well for
 novels (the primary target of Crowbook), but `pdflatex` might occasionally
-choke on some "weird" unicode character. Moreover, images are not yet
-implemented (but should come soon). See the example book rendered in
-[PDF](http://lise-henry.github.io/crowbook/book.pdf) on github.io.
+choke on some "weird" unicode character. See the example book rendered
+in [PDF](http://lise-henry.github.io/crowbook/book.pdf) on github.io.
 
 ODT output is experimental at best. It might work if your inputs files
 only include very basic formatting (basically, headers, emphasis and
@@ -158,9 +135,7 @@ document.
 
 ### Inline YAML blocks ###
 
-Crowbook supports inline YAML blocks. These are blocks
-delimited with lines containing `---` (three dashes). An example of
-such block:
+Crowbook supports inline YAML blocks: 
 
 ```markdown
 ---
@@ -169,14 +144,8 @@ title: My title
 ---
 ```
 
-These blocks must contain *valid* YAML syntax. If they are not at the
-beginning of the Markdown file, they must also be preceded by an empty
-line.
-
-It is possible to use inline YAML blocks to modify options for the
-book (`author` and `title` in the previous example). This is mostly
-useful when Crowbook is runned with the `--single` argument (receiving
-a single Markdown file instead of a book configuration file).
+This is mostly useful when Crowbook is runned with the `--single`
+argument (receiving a single Markdown file instead of a book configuration file).
 
 ### Bugs ###
 
@@ -201,6 +170,7 @@ following libraries:
 * [uuid](https://crates.io/crates/uuid) 
 * [mime_guess](https://crates.io/crates/mime_guess) 
 * [walkdir](https://crates.io/crates/walkdir)
+* [rustc-serialize](https://crates.io/crates/rustc-serialize)
 
 It also uses configuration files from
 [rust-everywhere](https://github.com/japaric/rust-everywhere) to use
