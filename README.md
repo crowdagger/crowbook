@@ -185,7 +185,7 @@ See the [github's issue tracker](https://github.com/lise-henry/crowbook/issues).
 Contributors
 ------------
 
-* [Stéphane Mourey](http://stephanemourey.fr/) (`<s+crowbook AT stephanemourey DOT fr`)
+* [Stéphane Mourey](http://stephanemourey.fr/) `<s+crowbook AT stephanemourey DOT fr>`
 
 Acknowledgements
 ----------------
