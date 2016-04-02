@@ -136,6 +136,7 @@ mod number;
 mod resource_handler;
 mod logger;
 mod bookoptions;
+mod lang;
 
 mod escape;
 mod toc;

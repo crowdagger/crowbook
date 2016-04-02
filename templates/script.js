@@ -47,15 +47,15 @@ function switchAll() {
         }
         displayAllSwitcher = document.getElementById("book-button");
         displayAllSwitcher.src="{{{pages_svg}}}";
-        displayAllSwitcher.alt="Display one chapter";
-        displayAllSwitcher.title="Display one chapter";
+        displayAllSwitcher.alt="{{{loc_display_one}}}";
+        displayAllSwitcher.title="{{{loc_display_one}}}";
     }else{
         displayAll = false;
         showChapter(0);
         displayAllSwitcher = document.getElementById("book-button");
         displayAllSwitcher.src="{{{book_svg}}}";
-        displayAllSwitcher.alt="Display all chapters";
-        displayAllSwitcher.title="Display all chapters";
+        displayAllSwitcher.alt="{{{loc_display_all}}}";
+        displayAllSwitcher.title="{{{loc_display_all}}}";
     }
 }
 

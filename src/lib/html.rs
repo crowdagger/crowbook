@@ -24,6 +24,7 @@ use toc::Toc;
 use resource_handler::ResourceHandler;
 use std::borrow::Cow;
 use templates::html;
+use lang::localize;
 
 use mustache;
 use rustc_serialize::base64::{self, ToBase64};
@@ -206,6 +207,10 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
             .insert_bool("display_chapter", self.book.options.get_bool("html.display_chapter").unwrap())
+            .insert_str("loc_display_one", localize(self.book.options.get_str("lang").unwrap(),
+                                                          "display_one"))
+            .insert_str("loc_display_all", localize(self.book.options.get_str("lang").unwrap(),
+                                                          "display_all"))
             .build();
         let mut res:Vec<u8> = vec!();
         template_js.render_data(&mut res, &data);
@@ -223,6 +228,10 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
             .insert_str("pages_svg", pages_svg)
+            .insert_str("loc_display_one", localize(self.book.options.get_str("lang").unwrap(),
+                                                          "display_one"))
+            .insert_str("loc_display_all", localize(self.book.options.get_str("lang").unwrap(),
+                                                          "display_all"))
             .build();
         let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
         let mut res = vec!();
