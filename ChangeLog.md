@@ -44,6 +44,8 @@ ChangeLog
       copied in the final document. Default to `data`, meaning that
       files will be placed in a `data` directory in the EPUB.
 * Rendering:
+    * Templates can now use localized strings according to the `lang`
+      option 
     * Standalone HTML now includes locale files using base64.
     * Standalone HTML displays one chapter at a time, thouht it can be
       changed via a button in the menu.
