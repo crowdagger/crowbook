@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+unreleased
+----------
+
 0.5.0 (2016-04-02)
 ------------------
 * Crowbook now requires Rustc 1.7.0.
