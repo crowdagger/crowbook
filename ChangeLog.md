@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.5.0 (unreleased)
+0.5.0 (2016-04-02)
 ------------------
 * Crowbook now requires Rustc 1.7.0.
 * It is now possible to render HTML in multiple files:
