@@ -13,6 +13,7 @@ use escape;
 use number::Number;
 use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
+use lang;
 
 use std::fs::File;
 use std::io::{Write, Read};
@@ -524,6 +525,9 @@ impl Book {
     /// * "author"
     /// * "title"
     /// * "lang"
+    ///
+    /// It also uses the lang/xx.yaml file corresponding to the language and fills
+    /// `loc_xxx` fiels with it that corresponds to translated versions
     pub fn get_mapbuilder(&self, format: &str) -> MapBuilder {
         fn clone(x:&str) -> String {
             x.to_owned()
@@ -534,10 +538,17 @@ impl Book {
             "tex" => escape::escape_tex,
             _ => panic!("get mapbuilder called with invalid escape format")
         };
-        MapBuilder::new()
+        let mut mapbuilder = MapBuilder::new()
             .insert_str("author", f(self.options.get_str("author").unwrap()))
             .insert_str("title", f(&self.options.get_str("title").unwrap()))
-            .insert_str("lang", self.options.get_str("lang").unwrap().to_owned())
+            .insert_str("lang", self.options.get_str("lang").unwrap().to_owned());
+        let hash = lang::get_hash(self.options.get_str("lang").unwrap());
+        for (key, value) in hash.into_iter() {
+            let key = format!("loc_{}", key.as_str().unwrap());
+            let value = value.as_str().unwrap();
+            mapbuilder = mapbuilder.insert_str(&key, f(value));
+        }
+        mapbuilder
     }
 
     /// Remove YAML blocks from a string and try to parse them to set options
