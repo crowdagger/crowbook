@@ -26,7 +26,12 @@ ChangeLog
       you wouldn't want the displayed title or the
       output.pdf/html/epub files be redefined by the short stories .md
       files.
-    * `html.script`: allows to specify a custom javascript file.
+    * `html.print_css`: allows to specify a stylesheet for media print
+    * `html.display_chapter`: displays one chapter at a time in
+      standalone HTML
+    * `html.script`: allows to specify a custom javascript file for
+    standalone HTML
+    * `html_dir.script`: same thing for multipage HTML
     * `resources.base_path`: by default, Crowbook resolves local links in
       markdown files relatively to the markdown file. This option
       allows to resolve them relatively to a base path. This option

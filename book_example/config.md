@@ -277,12 +277,24 @@ usage of some of them is detailed later on.
     - **type**: path
     - **default value**: `not set`
     -  Path of a stylesheet to use with HTML rendering
+- **`html.print_css`**
+  - **type**: path
+    - **default value**: `not set`
+    -  Path of a stylesheet to use with media print in HTML rendering
 - **`html.script`**
     - **type**: path
     - **default value**: `not set`
     -  Path of a javascript file
+- **`html.display_chapter`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Display one chapter at a time (with option to dislay all)
 
 ###  Multifile HTML options ###
+- **`html_dir.script`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path of a javascript file
 - **`html_dir.css`**
     - **type**: path
     - **default value**: `not set`
