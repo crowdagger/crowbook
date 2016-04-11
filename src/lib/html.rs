@@ -86,7 +86,7 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
-        self.add_script = true;
+        self.add_script = self.book.options.get_bool("html.display_chapter").unwrap();
         let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
         let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
 
@@ -149,7 +149,8 @@ impl<'a> HtmlRenderer<'a> {
         }
 
         for (i, chapter) in chapters.iter().enumerate() {
-            if i != 0 {
+            if self.book.options.get_bool("html.display_chapter").unwrap()
+                && i != 0 {
                 content.push_str(&format!(
                     "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls prev_chapter chapter-{}\">
   <a href = \"#chapter-{}\">
@@ -162,7 +163,8 @@ impl<'a> HtmlRenderer<'a> {
                     titles[i -1]));
             }
             content.push_str(chapter);
-            if i < titles.len() - 1 {
+            if self.book.options.get_bool("html.display_chapter").unwrap()
+                && i < titles.len() - 1 {
                 content.push_str(&format!(
                     "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls next_chapter chapter-{}\">
   <a href = \"#chapter-{}\">
