@@ -41,6 +41,7 @@ pub struct HtmlRenderer<'a> {
     link_number: u32,
     add_script: bool,
     current_par: u32,
+    current_chapter_internal: i32,
 
     // fields used by EpubRenderer so marked public but hidden
     #[doc(hidden)]
@@ -67,6 +68,7 @@ impl<'a> HtmlRenderer<'a> {
             toc: Toc::new(),
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
+            current_chapter_internal: -1,
             current_numbering: book.options.get_i32("numbering").unwrap(),
             current_par: 0,
             add_script: false,
@@ -332,6 +334,9 @@ impl<'a> HtmlRenderer<'a> {
                         self.render_vec(vec))
             },
             Token::Header(n, ref vec) => {
+                if n == 1 {
+                    self.current_chapter_internal += 1;
+                }
                 if self.current_numbering >= n {
                     self.inc_header(n - 1);
                 }
@@ -350,7 +355,7 @@ impl<'a> HtmlRenderer<'a> {
                                      format!("{}#link-{}\" onclick = \"javascript:showChapter({})",
                                              self.filename,
                                              self.link_number,
-                                             self.current_chapter[0] - 1
+                                             self.current_chapter_internal,
                                              ),
                                      s.clone());
                     } else {
