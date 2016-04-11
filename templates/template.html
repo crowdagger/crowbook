@@ -20,12 +20,14 @@
   <body>
     
     <nav id = "nav">
+      {{#display_chapter}}
       <div id="toolbar">
         <img id="book-button" alt="Display mode"
              title = "{{{loc_display_all}}}"
              src="{{{book_svg}}}"
              onclick="javascript:switchAll()">
       </div>
+      {{/display_chapter}}
       <h2>{{{title}}}</h2>
       {{{toc}}}
     </nav>
@@ -37,8 +39,8 @@
           <img id = "menu-button" onclick="toggle();"
                src="{{{menu_svg}}}"
                alt = "{{{loc_menu}}}" title = "{{{loc_menu}}}" />
-          {{#display_chapter}}
-          {{/display_chapter}}
+
+
         </div>
 
         <h1 class="title">{{title}}</h1>
