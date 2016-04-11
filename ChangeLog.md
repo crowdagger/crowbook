@@ -6,9 +6,12 @@ unreleased
 * Rendering:
   * French cleaner: use semi-cadratine space instead of cadratine
     space for dialogs.
-  * HTML: don't display the button to display chapter and the
-    previous/next chapter link if `html.display_chapter` is set to
+  * Standalone HTML: don't display the button to display chapter and
+    the previous/next chapter link if `html.display_chapter` is set to
     `false`.
+  * Standalone HTML: fix chapter displaying when some chapters are not
+    numbered.
+
 
 0.5.0 (2016-04-02)
 ------------------
