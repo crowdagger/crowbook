@@ -4,8 +4,9 @@ ChangeLog
 unreleased
 ----------
 * Rendering:
-  * HTML:
-    * Don't display the button to display chapter if the option is
+  * French cleaner: use semi-cadratine space instead of cadratine
+    space for dialogs
+  * HTML: don't display the button to display chapter if the option is
       disabled with `html.display_chapter`
 
 0.5.0 (2016-04-02)

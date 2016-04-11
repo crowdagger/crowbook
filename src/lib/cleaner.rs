@@ -97,8 +97,8 @@ impl Cleaner for French {
                             // handle nb space after char
                             '—' => {
                                 if is_whitespace(next) {
-                                    // use "em space"
-                                    new_s.push('\u{2003}');
+                                    // use demi "em space"
+                                    new_s.push('\u{2002}');
                                     if let Some(next) = chars.next() {
                                         current = next;
                                         continue;
