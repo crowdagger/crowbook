@@ -3,6 +3,10 @@ ChangeLog
 
 unreleased
 ----------
+* Rendering:
+  * HTML:
+    * Don't display the button to display chapter if the option is
+      disabled with `html.display_chapter`
 
 0.5.0 (2016-04-02)
 ------------------
