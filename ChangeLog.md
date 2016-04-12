@@ -4,6 +4,7 @@ ChangeLog
 unreleased
 ----------
 * Rendering:
+  * Epub: fix a validation problem when book contained hidden chapters.
   * French cleaner: use semi-cadratine space instead of cadratine
     space for dialogs.
   * Standalone HTML: don't display the button to display chapter and
