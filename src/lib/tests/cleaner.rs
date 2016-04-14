@@ -15,5 +15,5 @@ fn cleaner_french() {
     let french = French::new('~');
     french.clean(&mut res);
     println!("{}", &res);
-    test_eq(&res, " «~Comment allez-vous~?~» demanda-t-elle à son interlocutrice qui lui répondit~: «~Mais très bien ma chère~!~»");
+    test_eq(&res, " « Comment allez-vous~? » demanda-t-elle à son interlocutrice qui lui répondit : « Mais très bien ma chère~! »");
 }
