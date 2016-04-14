@@ -13,13 +13,16 @@ Mostly Rendering fixes:
   narrow one for ':', '«' and '»' (following
   https://fr.wikipedia.org/wiki/Espace_ins%C3%A9cable#En_France).
 * HTML:
-  * Add Viewport meta tags
+  * Add viewport meta tags.
   * Standalone HTML:
     * Don't display the button to display chapter and
     the previous/next chapter link if `html.display_chapter` is set to
     `false`.
     * Fix chapter displaying when some chapters are not
     numbered.
+  * Multi-files HTML:
+    * Fix previous/next chapter display to make it consistent with
+      standalone HTML.
 
 
 0.5.0 (2016-04-02)
