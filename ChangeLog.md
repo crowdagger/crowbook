@@ -3,16 +3,22 @@ ChangeLog
 
 unreleased
 ----------
-* Rendering:
-  * Epub: fix a validation problem when book contained hidden chapters.
-  * French cleaner: use semi-cadratine space instead of cadratine
-    space for dialogs, use non-narrow non-breaking spapce instead of
-    narrow one for ':', '«' and '»' (following
-    https://fr.wikipedia.org/wiki/Espace_ins%C3%A9cable#En_France) 
-  * Standalone HTML: don't display the button to display chapter and
+Mostly Rendering fixes:
+* Epub:
+  * Fix a validation problem when book contained hidden chapters.
+* French cleaner:
+  * Use semi-cadratine space instead of cadratine
+  space for dialogs.
+  * Use non-narrow non-breaking spapce instead of
+  narrow one for ':', '«' and '»' (following
+  https://fr.wikipedia.org/wiki/Espace_ins%C3%A9cable#En_France).
+* HTML:
+  * Add Viewport meta tags
+  * Standalone HTML:
+    * Don't display the button to display chapter and
     the previous/next chapter link if `html.display_chapter` is set to
     `false`.
-  * Standalone HTML: fix chapter displaying when some chapters are not
+    * Fix chapter displaying when some chapters are not
     numbered.
 
 
