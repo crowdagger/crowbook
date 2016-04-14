@@ -87,8 +87,9 @@ impl Cleaner for French {
                 while let  Some(next) = chars.next() {
                     if is_whitespace(current) {
                         match next {
-                            // handle nb space before char
-                            '?' | '»' | '!' | ';' | ':' => new_s.push(self.nb_char),
+                            // handle narrow nb space before char
+                            '?' | '!' | ';' => new_s.push(self.nb_char),
+                            ':' | '»' => new_s.push(' '),
                             _ => new_s.push(current)
                         }
                     } else {
@@ -107,7 +108,7 @@ impl Cleaner for French {
                             },
                             '«' => {
                                 if is_whitespace(next) {
-                                    new_s.push(self.nb_char);
+                                    new_s.push(' ');
                                     if let Some(next) = chars.next() {
                                         current = next;
                                         continue;
