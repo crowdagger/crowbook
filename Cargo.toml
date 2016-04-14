@@ -25,7 +25,7 @@ pulldown-cmark = "0.0.7"
 yaml-rust = "0.3"
 mustache = "0.7"
 chrono = "0.2"
-uuid = "0.1"
+uuid = { version = "0.2", features = ["v4"] }
 clap = "2"
 walkdir = "0.1"
 rustc-serialize = "0.3"

@@ -38,7 +38,7 @@ impl Zipper {
     /// inner_dirs: a vec of inner directory to create in this directory
     pub fn new(path: &str) -> Result<Zipper> {
         let uuid = uuid::Uuid::new_v4();
-        let zipper_path = Path::new(path).join(uuid.to_simple_string());
+        let zipper_path = Path::new(path).join(uuid.simple().to_string());
 
         try!(DirBuilder::new()
              .recursive(true)
