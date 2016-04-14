@@ -1,9 +1,9 @@
 ChangeLog
 =========
 
-unreleased
-----------
-Mostly Rendering fixes:
+0.5.1 (2016-04-14)
+------------------
+Mostly rendering fixes:
 * Epub:
   * Fix a validation problem when book contained hidden chapters.
 * French cleaner:
