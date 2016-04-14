@@ -147,9 +147,9 @@ impl<'a> HtmlDirRenderer<'a> {
 
         for (i, content) in chapters.into_iter().enumerate() {
             let prev_chapter = if i > 0 {
-                format!("<p id = \"prev_chapter\">
+                format!("<p class = \"prev_chapter\">
   <a href = \"{}\">
-    << {}
+    « {}
   </a>
 </p>",
                         filenamer(i-1),
@@ -159,7 +159,7 @@ impl<'a> HtmlDirRenderer<'a> {
             };
 
             let next_chapter = if i < titles.len() - 1 {
-                format!("<p id = \"next_chapter\">
+                format!("<p class = \"next_chapter\">
   <a href = \"{}\">
     {} »
   </a>
@@ -199,9 +199,9 @@ impl<'a> HtmlDirRenderer<'a> {
             String::new()
         };
         if titles.len() > 1 {
-            content.push_str(&format!("<p id = \"next_chapter\">
+            content.push_str(&format!("<p class = \"next_chapter\">
   <a href = \"{}\">
-    {} >>
+    {} »
   </a>
 </p>",
                         filenamer(0),
