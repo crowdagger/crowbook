@@ -21,7 +21,7 @@ doc = false
 
 [dependencies]
 mime_guess = "1"
-pulldown-cmark = "0.0.7"
+pulldown-cmark = "0.0.8"
 yaml-rust = "0.3"
 mustache = "0.7"
 chrono = "0.2"
