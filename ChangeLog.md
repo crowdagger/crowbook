@@ -3,7 +3,11 @@ ChangeLog
 
 unreleased
 ----------
-
+* Deprecated options:
+  * `nb_char`: since it was only used for french cleaner and for
+    typography reasons it's better to use different non breaking
+    spaces according to context, this option was not really useful
+    anymore. 
 
 0.5.1 (2016-04-14)
 ------------------
