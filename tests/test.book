@@ -2,7 +2,6 @@ title: Test
 
 # Make nb_char visible
 lang: fr
-nb_char: '~'
 
 output.pdf: test_result.pdf
 output.html: test_result.html
