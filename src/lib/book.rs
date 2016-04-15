@@ -459,7 +459,7 @@ impl Book {
         if self.options.get_bool("autoclean").unwrap() {
             let lang = self.options.get_str("lang").unwrap().to_lowercase();
             let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
-                Box::new(French::new(self.options.get_char("nb_char").unwrap()))
+                Box::new(French)
             } else {
                 Box::new(())
             };

@@ -52,18 +52,7 @@ pub trait Cleaner {
 impl Cleaner for () {}
 
 /// Implementation for french 'cleaning'
-pub struct French {
-    nb_char: char,
-}
-
-impl French {
-    /// Creates a new french cleaner, which will replace spaces with the defined
-    /// non-breaking space when appropriate.
-    pub fn new(nb_char: char) -> French {
-        French { nb_char: nb_char }
-    }
-}
-    
+pub struct French;
 
 impl Cleaner for French {
     // puts non breaking spaces between :, ;, ?, !, «, »
@@ -74,6 +63,8 @@ impl Cleaner for French {
                 _ => false
             }
         }
+
+        let nb_char = ' '; // narrow non breaking space
 
         
         if !s.contains(is_trouble) { // if not, no need to do anything
@@ -88,7 +79,7 @@ impl Cleaner for French {
                     if is_whitespace(current) {
                         match next {
                             // handle narrow nb space before char
-                            '?' | '!' | ';' => new_s.push(self.nb_char),
+                            '?' | '!' | ';' => new_s.push(nb_char),
                             ':' | '»' => new_s.push(' '),
                             _ => new_s.push(current)
                         }
