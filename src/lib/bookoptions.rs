@@ -41,7 +41,7 @@ verbose:bool:false                  # If set to true, print warnings in Markdown
 side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
-nb_char:char:' '                    # The non-breaking character to use for autoclean when lang is set to fr
+
 
 # HTML options
 html.template:path                  # Path of an HTML template
@@ -71,6 +71,7 @@ tex.template:path                   # Path of a LaTeX template file
 base_path:alias:resources.base_path  # Renamed
 base_path.links:alias:resources.base_path.links  # Renamed
 base_path.images:alias:resources.base_path.images  # Renamed
+nb_char:alias # Removed
 ";
 
 
