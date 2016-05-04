@@ -42,7 +42,8 @@ impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
             Error::ConfigParser(ref s, _)  => s,
-            Error::Parser(ref s) | Error::Zipper(ref s) | Error::BookOption(ref s) | Error::InvalidOption(ref s) | Error::Render(ref s) => s,
+            Error::Parser(ref s) | Error::Zipper(ref s) | Error::BookOption(ref s)
+                | Error::InvalidOption(ref s) | Error::Render(ref s) => s,
             Error::FileNotFound(_) => "File not found",
         }
     }
