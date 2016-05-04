@@ -19,7 +19,6 @@ use std::borrow::Cow;
 /// Multiple files HTML renderer
 ///
 /// Renders HTML in a given directory.
-#[derive(Debug)]
 pub struct HtmlDirRenderer<'a> {
     book: &'a Book,
     html: HtmlRenderer<'a>,

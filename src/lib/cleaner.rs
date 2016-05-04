@@ -25,7 +25,17 @@ fn is_whitespace(c: char) -> bool {
 /// NOT for code blocks, hyperlinks and so on!
 pub trait Cleaner {
     /// Cleans a string. The default implementation is to remove multiple consecutive whitespaces
-    fn clean(&self, s: &mut String) {
+    fn clean(&self, _: &mut String, _: bool) {}
+}
+
+
+pub struct Off;
+impl Cleaner for Off {}
+
+pub struct Default;
+impl Cleaner for Default {
+    // Remove unnecessary whitespaces
+    fn clean(&self, s: &mut String, _: bool) {
         if s.contains(is_whitespace) { // if not, no need to do anything
             let mut new_s = String::with_capacity(s.len());
             let mut previous_space = false;
@@ -42,21 +52,18 @@ pub trait Cleaner {
                     new_s.push(c);
                 }
             }
-
+            
             *s = new_s
         }
     }
 }
-
-
-impl Cleaner for () {}
 
 /// Implementation for french 'cleaning'
 pub struct French;
 
 impl Cleaner for French {
     // puts non breaking spaces between :, ;, ?, !, «, »
-    fn clean(&self, s: &mut String) {
+    fn clean(&self, s: &mut String, latex: bool) {
         fn is_trouble(c: char) -> bool {
             match c {
                 '?'|'!'|';'|':'|'»'|'«'|'—' => true,
@@ -64,13 +71,27 @@ impl Cleaner for French {
             }
         }
 
-        let nb_char = ' '; // narrow non breaking space
+        let nb_char = if latex {
+            '~'
+        } else {
+            ' '
+        };
+        let nb_char_narrow = if latex {
+            '~'
+        } else {
+            ' ' // narrow non breaking space
+        };
+        let nb_char_em = if latex {
+            '~'
+        } else {
+            '\u{2002}' // demi em space
+        };
 
         
         if !s.contains(is_trouble) { // if not, no need to do anything
             return;
         }
-        ().clean(s); // first pass with default impl
+        Default.clean(s, latex); // first pass with default impl
         let mut new_s = String::with_capacity(s.len());
         {
             let mut chars = s.chars();
@@ -79,8 +100,8 @@ impl Cleaner for French {
                     if is_whitespace(current) {
                         match next {
                             // handle narrow nb space before char
-                            '?' | '!' | ';' => new_s.push(nb_char),
-                            ':' | '»' => new_s.push(' '),
+                            '?' | '!' | ';' => new_s.push(nb_char_narrow),
+                            ':' | '»' => new_s.push(nb_char),
                             _ => new_s.push(current)
                         }
                     } else {
@@ -89,8 +110,7 @@ impl Cleaner for French {
                             // handle nb space after char
                             '—' => {
                                 if is_whitespace(next) {
-                                    // use demi "em space"
-                                    new_s.push('\u{2002}');
+                                    new_s.push(nb_char_em);
                                     if let Some(next) = chars.next() {
                                         current = next;
                                         continue;

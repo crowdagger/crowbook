@@ -115,7 +115,7 @@ impl<'a> OdtRenderer<'a> {
     fn parse_token(&mut self, token: &Token) -> String {
         match *token {
             Token::Str(ref text) => escape_html(&*text),
-            Token::Paragraph(ref vec) => format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n", self.book.clean(self.render_vec(vec))),
+            Token::Paragraph(ref vec) => format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n", self.book.clean(self.render_vec(vec), false)),
             Token::Header(n, ref vec) => {
                 if n == 1 && self.current_hide {
                     return String::new();
@@ -128,7 +128,7 @@ impl<'a> OdtRenderer<'a> {
                     self.render_vec(vec)
                 };
                 format!("<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
-                        n, escape_html(&self.book.clean(s)))
+                        n, escape_html(&self.book.clean(s, false)))
             },
             Token::Emphasis(ref vec) => format!("<text:span text:style-name=\"T1\">{}</text:span>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<text:span text:style-name=\"T2\">{}</text:span>", self.render_vec(vec)),
@@ -137,12 +137,12 @@ impl<'a> OdtRenderer<'a> {
                 self.book.logger.warning("ODT: ordered list not currently implemented for this format, fallbacking to unordered one");
                 format!("<text:list>\n{}</text:list>\n", self.render_vec(vec))
             },
-            Token::Item(ref vec) => format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>", self.book.clean(self.render_vec(vec))),
+            Token::Item(ref vec) => format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>", self.book.clean(self.render_vec(vec), false)),
             Token::Link(ref url, _, ref vec) => format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>", url, self.render_vec(vec)),
             Token::Code(ref vec) => format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>", self.render_vec(vec)),
             Token::BlockQuote(ref vec) | Token::CodeBlock(_, ref vec) => {
                 self.book.logger.warning("ODT: blockquotes and codeblocks are not currently implemented for ODT");
-                format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.book.clean(self.render_vec(vec)))
+                format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.book.clean(self.render_vec(vec), false))
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),

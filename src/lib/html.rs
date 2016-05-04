@@ -31,7 +31,6 @@ use rustc_serialize::base64::{self, ToBase64};
 /// Renders HTML document in a standalone file.
 ///
 /// Also used by `EpubRenderer` and `HtmlDirRenderer`.
-#[derive(Debug)]
 pub struct HtmlRenderer<'a> {
     book: &'a Book,
     table_head: bool,
@@ -324,7 +323,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::Str(ref text) => if self.verbatim {
                 escape_html(text)
             } else {
-                escape_html(&self.book.clean(text.clone()))
+                escape_html(&self.book.clean(text.clone(), false))
             },
             Token::Paragraph(ref vec) => {
                 self.current_par += 1;

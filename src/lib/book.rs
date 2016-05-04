@@ -1,5 +1,5 @@
 use error::{Error,Result};
-use cleaner::{Cleaner, French};
+use cleaner::{Cleaner, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
@@ -49,7 +49,6 @@ use yaml_rust::YamlLoader;
 /// // Render the book as html to stdout
 /// book.render_html(&mut std::io::stdout()).unwrap();
 /// ```
-#[derive(Debug)]
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if
     /// you are writing a new renderer.
@@ -65,6 +64,8 @@ pub struct Book {
 
     /// Logger
     pub logger: Logger,
+
+    cleaner: Box<Cleaner>,
 }
 
 impl Book {
@@ -77,6 +78,7 @@ impl Book {
         let mut book = Book {
             chapters: vec!(),
             filenames: vec!(),
+            cleaner: Box::new(Off),
             root: PathBuf::new(),
             options: BookOptions::new(),
             logger: Logger::new(InfoLevel::Info),
@@ -88,6 +90,9 @@ impl Book {
                 book.logger.error(format!("Error initializing book: could not set {} to {}: {}", key, value, err));
             }
         }
+        // set cleaner according to lang and autoclean settings
+        book.update_cleaner();
+
         book
     }
 
@@ -194,7 +199,9 @@ impl Book {
                 }
             }
         }
-            
+
+        self.update_cleaner();
+        
         // Parse chapters
         while let Some(line) = lines.next() {
             let line = line.trim();
@@ -454,17 +461,8 @@ impl Book {
 
     /// Either clean a string or does nothing,
     /// according to book `lang` and `autoclean` options
-    pub fn clean(&self, mut text:String) -> String  {
-        // todo: not very efficient!
-        if self.options.get_bool("autoclean").unwrap() {
-            let lang = self.options.get_str("lang").unwrap().to_lowercase();
-            let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
-                Box::new(French)
-            } else {
-                Box::new(())
-            };
-            cleaner.clean(&mut text);
-        }
+    pub fn clean(&self, mut text:String, tex: bool) -> String  {
+        self.cleaner.clean(&mut text, tex);
         text
     }
 
@@ -629,6 +627,21 @@ impl Book {
             }
         }
         *content = new_content;
+    }
+
+    // Update the cleaner according to autoclean and lang options
+    fn update_cleaner(&mut self) {
+        if self.options.get_bool("autoclean").unwrap() {
+            let lang = self.options.get_str("lang").unwrap().to_lowercase();
+            let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
+                Box::new(French)
+            } else {
+                Box::new(Default)
+            };
+            self.cleaner = cleaner;
+        } else {
+        self.cleaner = Box::new(Off);
+        }
     }
 }
 

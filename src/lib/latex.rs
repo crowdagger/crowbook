@@ -172,7 +172,11 @@ impl<'a> LatexRenderer<'a> {
     
     fn parse_token(&mut self, token: &Token, escape: bool) -> String {
         match *token {
-            Token::Str(ref text) => if escape {escape_tex(text)} else {text.clone()},
+            Token::Str(ref text) => if escape {
+                self.book.clean(escape_tex(text), true)
+            } else {
+                text.clone()
+            },
             Token::Paragraph(ref vec) => format!("{}\n\n",
                                                  self.render_vec(vec, escape)),
             Token::Header(n, ref vec) => {
