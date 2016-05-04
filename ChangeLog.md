@@ -7,7 +7,13 @@ unreleased
   * `nb_char`: since it was only used for french cleaner and for
     typography reasons it's better to use different non breaking
     spaces according to context, this option was not really useful
-    anymore. 
+    anymore.
+* Rendering:
+  * LaTeX/PDF:
+    * "Autocleaning" is now also activated (for french at least) for
+      LaTeX rendering, since it doesn't correctly insert non-breaking
+      spaces for e.g. '«' or '»'.
+    
 
 0.5.1 (2016-04-14)
 ------------------
