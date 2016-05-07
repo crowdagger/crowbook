@@ -108,31 +108,23 @@ impl Cleaner for French {
                         new_s.push(current);
                         match current {
                             // handle nb space after char
-                            '—' => {
+                            '—' | '«' => {
                                 if is_whitespace(next) {
+                                    let replacing_char = match current {
+                                        '—' => nb_char_em,
+                                        '«' => nb_char,
+                                        _ => unreachable!(),
+                                    };
                                     if let Some(next) = chars.next() {
-                                        new_s.push(nb_char_em);
+                                        new_s.push(replacing_char);
                                         current = next;
                                         continue;
                                     } else {
-                                        current = nb_char_em;
-                                        break;
-                                    }
-                                    
-                                }
-                            },
-                            '«' => {
-                                if is_whitespace(next) {
-                                    if let Some(next) = chars.next() {
-                                        new_s.push(nb_char);
-                                        current = next;
-                                        continue;
-                                    } else {
-                                        current = nb_char;
+                                        // current will be added after the loop, do don't do it now
+                                        current = replacing_char;
                                         break;
                                     }
                                 }
-                                
                             },
                             _ => (),
                         }
