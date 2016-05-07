@@ -79,7 +79,7 @@ impl Cleaner for French {
         let nb_char_narrow = if latex {
             '~'
         } else {
-            ' ' // narrow non breaking space
+            '\u{2009}' // narrow non breaking space
         };
         let nb_char_em = if latex {
             '~'

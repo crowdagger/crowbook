@@ -200,6 +200,7 @@ impl Book {
             }
         }
 
+        // Update cleaner according to options (autoclean/lang)
         self.update_cleaner();
         
         // Parse chapters
@@ -627,6 +628,7 @@ impl Book {
             }
         }
         *content = new_content;
+        self.update_cleaner();
     }
 
     // Update the cleaner according to autoclean and lang options
