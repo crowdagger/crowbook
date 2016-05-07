@@ -8,7 +8,9 @@ unreleased
     typography reasons it's better to use different non breaking
     spaces according to context, this option was not really useful
     anymore.
-* Rendering:
+* Bugfixes:
+  * Fixed a bug in `French` cleaner when a string to clean ended by a
+    non-breaking space (space was doubled with a breaking one).
   * LaTeX/PDF:
     * "Autocleaning" is now also activated (for french at least) for
       LaTeX rendering, since it doesn't correctly insert non-breaking

@@ -79,7 +79,7 @@ impl Cleaner for French {
         let nb_char_narrow = if latex {
             '~'
         } else {
-            '\u{2009}' // narrow non breaking space
+            '\u{202F}' // narrow non breaking space
         };
         let nb_char_em = if latex {
             '~'
@@ -96,7 +96,7 @@ impl Cleaner for French {
         {
             let mut chars = s.chars();
             if let Some(mut current) = chars.next() {
-                while let  Some(next) = chars.next() {
+                while let Some(next) = chars.next() {
                     if is_whitespace(current) {
                         match next {
                             // handle narrow nb space before char
@@ -110,19 +110,26 @@ impl Cleaner for French {
                             // handle nb space after char
                             '—' => {
                                 if is_whitespace(next) {
-                                    new_s.push(nb_char_em);
                                     if let Some(next) = chars.next() {
+                                        new_s.push(nb_char_em);
                                         current = next;
                                         continue;
+                                    } else {
+                                        current = nb_char_em;
+                                        break;
                                     }
+                                    
                                 }
                             },
                             '«' => {
                                 if is_whitespace(next) {
-                                    new_s.push(' ');
                                     if let Some(next) = chars.next() {
+                                        new_s.push(nb_char);
                                         current = next;
                                         continue;
+                                    } else {
+                                        current = nb_char;
+                                        break;
                                     }
                                 }
                                 
@@ -135,7 +142,7 @@ impl Cleaner for French {
                 new_s.push(current);
             }
         }
-            
+
         *s = new_s
     }
 }
