@@ -593,7 +593,7 @@ impl Book {
                                                         self.logger.debug(format!("Inline YAML block set {:?} to {:?}", key, value));
                                                     }
                                                 }
-                                                Err(_) => self.logger.debug(format!("Inline YAML block could not set {:?} to {:?}, ignoring it", key, value)),
+                                                Err(e) => self.logger.warning(format!("Inline YAML block could not set {:?} to {:?}: {}", key, value, e)),
                                             }
                                         }
                                     } else {
