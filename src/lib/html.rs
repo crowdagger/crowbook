@@ -401,10 +401,11 @@ impl<'a> HtmlRenderer<'a> {
                                                       self.render_vec(vec)),
             Token::Item(ref vec) => format!("<li>{}</li>\n", self.render_vec(vec)),
             Token::Link(ref url, ref title, ref vec) => {
-                let url: String = if ResourceHandler::is_local(url) {
-                    self.handler.get_link(url).to_owned()
+                let url = escape_html(url);
+                let url = if ResourceHandler::is_local(&url) {
+                    self.handler.get_link(&url).to_owned()
                 } else {
-                    url.clone()
+                    url
                 };
                 
                 format!("<a href = \"{}\"{}>{}</a>", url,
