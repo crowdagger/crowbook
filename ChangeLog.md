@@ -15,6 +15,9 @@ unreleased
     * "Autocleaning" is now also activated (for french at least) for
       LaTeX rendering, since it doesn't correctly insert non-breaking
       spaces for e.g. '«' or '»'.
+  * HTML/EPUB:
+    * Links are now HTML-escaped, fixing errors in XHTML (for EPUB
+      rendering) when links contained '&' character.
     
 
 0.5.1 (2016-04-14)
