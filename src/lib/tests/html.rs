@@ -60,7 +60,7 @@ Some paragraph
 <li>four</li>
 <li>five</li>
 </ol>
-<p id = "para-4"><a href = "http://foo/bar?baz=42&coin=plop">&amp; some link</a></p>
+<p id = "para-4"><a href = "http://foo/bar?baz=42&amp;coin=plop">&amp; some link</a></p>
 "#;
     let actual = ast_to_html(&Parser::new().parse(doc).unwrap());
     println!("ecpected:\n {}", expected);
