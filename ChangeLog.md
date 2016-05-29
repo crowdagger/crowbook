@@ -8,10 +8,11 @@ unreleased
     typography reasons it's better to use different non breaking
     spaces according to context, this option was not really useful
     anymore.
+* Rendering:
+  * Images are now displayed at 80% width of the page.
 * Bugfixes:
   * Image paths are now found correctly in LaTeX and EPUB rendering
-    even if `crowbook` is called 
-    from another directory.
+    even if `crowbook` is called from another directory.
   * Fixed a bug in `French` cleaner when a string to clean ended by a
     non-breaking space (space was doubled with a breaking one).
   * LaTeX/PDF:
