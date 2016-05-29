@@ -72,6 +72,10 @@ h2.author {
     width: 100%;
 }
 
+p img {
+    width: 80%;
+}
+
 .rule {
     text-align: center;
     margin-top: 1em;
