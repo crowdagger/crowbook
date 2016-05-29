@@ -240,7 +240,9 @@ impl<'a> LatexRenderer<'a> {
             },
             Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
-                    format!("\\includegraphics{{{}}}", self.handler.map_image(Cow::Borrowed(url)))
+                    format!("\\begin{{center}}
+  \\includegraphics[width=0.8\\linewidth]{{{}}}
+\\end{{center}}", self.handler.map_image(Cow::Borrowed(url)))
                 } else {
                     self.book.logger.warning(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     String::new()
