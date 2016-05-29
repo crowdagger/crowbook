@@ -58,7 +58,7 @@ impl<'a> LatexRenderer<'a> {
 
             // write image files
             for (source, dest) in self.handler.images_mapping() {
-                let mut f = try!(File::open(self.book.root.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
+                let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(source.to_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
                 try!(zipper.write(dest, &content, true));

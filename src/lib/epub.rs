@@ -126,9 +126,8 @@ impl<'a> EpubRenderer<'a> {
         }
 
         // Write all images (including cover)
-        let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
+            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
             try!(zipper.write(dest, &content, true));
