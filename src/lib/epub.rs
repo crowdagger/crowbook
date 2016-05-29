@@ -31,7 +31,7 @@ use uuid;
 
 use std::io::{Read,Write};
 use std::fs::File;
-use std::path::{Path, PathBuf};
+use std::path::{Path};
 use std::borrow::Cow;
 use mime_guess::guess_mime_type_opt;
 
