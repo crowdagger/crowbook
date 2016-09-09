@@ -142,9 +142,7 @@ table.notes td {
 {{#fr}}
 /* Make list displays '–' instead of puces */
 ul li {
-    list-style-type: none;
+    list-style-type: '–';
 }
-ul li:before {
-    content: "– "; 
-}
+
 {{/fr}}
