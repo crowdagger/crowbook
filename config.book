@@ -27,7 +27,7 @@ output.odt: book_example/book.odt
 # Finally, our files.
 # Paths are relative to the directory where this file is
 + README.md
-+ book_example/config.md
 + book_example/arguments.md
++ book_example/config.md
 - ChangeLog.md
 - LICENSE.md
