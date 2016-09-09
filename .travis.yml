@@ -21,8 +21,6 @@ matrix:
     - os: linux
     - os: osx
   # Add each target manually
-  # TODO feel free to remove targets you are not interested in
-  # TODO you may want to install packages for specific build jobs, use the addons.apt.packages
   # pattern shown below
   include:
     # WARNING Experimental target. Tests are executed using qemu user emulation, but this approach
@@ -40,15 +38,15 @@ matrix:
     #         - libc6-dev-armhf-cross
     #         # Emulator
     #         - qemu-user
-    - os: linux
-      env: TARGET=i686-unknown-linux-gnu
-      addons:
-        apt:
-          packages:
-            # Cross compiler and cross compiled C libraries
-            - gcc-multilib
-    - os: linux
-      env: TARGET=x86_64-unknown-linux-gnu
+    # - os: linux
+    # env: TARGET=i686-unknown-linux-gnu
+    # addons:
+    #     apt:
+    #       packages:
+    #         # Cross compiler and cross compiled C libraries
+    #         - gcc-multilib
+    # - os: linux
+    #   env: TARGET=x86_64-unknown-linux-gnu
     # - os: linux
     #   env: TARGET=x86_64-unknown-linux-musl
     - os: osx
