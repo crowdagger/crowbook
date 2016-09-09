@@ -48,7 +48,7 @@ html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet to use with HTML rendering
 html.print_css:path                 # Path of a stylesheet to use with media print in HTML rendering
 html.script:path                    # Path of a javascript file
-html.display_chapter:bool:true      # Display one chapter at a time (with option to display all)
+html.display_chapter:bool:false      # Display one chapter at a time (with option to display all)
 
 # Multifile HTML options
 html_dir.script:path                # Path of a javascript file

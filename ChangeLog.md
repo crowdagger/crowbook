@@ -21,6 +21,8 @@ unreleased
       spaces for e.g. '«' or '»'.
     * Fixed escaping of `--` to `-{}-` to avoid tex ligatures.
   * HTML/EPUB:
+    * `html.display_chapter` now defaults to `false` (e.g., by default
+      the HTML displays the entirety of a book).
     * Fixed rendering of lists when `lang` is set to `fr`.
     * Links are now HTML-escaped, fixing errors in XHTML (for EPUB
       rendering) when links contained '&' character.
