@@ -33,13 +33,15 @@ pub fn escape_html(input: &str) -> String {
 /// Escape characters for tex file
 pub fn escape_tex(input: &str) -> String {
     let mut output = String::new();
-    let v:Vec<char> = input.chars().collect();
-    for i in 0..v.len() {
-        let c = v[i];
-        let next = if i < v.len() - 1 { Some(v[i+1]) } else { None };
+    let mut chars:Vec<char> = input.chars().collect();
+    chars.push(' '); // add a dummy char for call to .windows()
+    // for &[c, next] in chars.windows(2) { // still experimental, uncomment when stable
+    for win in chars.windows(2) { 
+        let c = win[0];
+        let next = win[1];
         match c {
             '-' => {
-                if next == Some('-') {
+                if next == '-' {
                     output.push_str(r"-{}"); // if next char is also a -, to avoid tex ligatures
                 } else {
                     output.push(c);
