@@ -140,6 +140,10 @@ configuration file containing:
 That is, the chapter heading (if any) won't be displayed in the output
 documents (though they still appear in the TOC).
 
+Note that by default, using `--single` sets the `tex.short` option to
+`true`, using the LaTeX class of `article` instead of `book`.
+
+
 `--set` 
 -------
 

@@ -156,7 +156,7 @@ output.html: book.html
 ---
 
 This is a very tiny book!
-```
+    ```
 
 can be processed with `crowbook --single foo.md` or `crowbook -s
 foo.md` to produce the `book.html` file. This is useful for short
