@@ -144,7 +144,23 @@ title: My title
 ```
 
 This is mostly useful when Crowbook is runned with the `--single`
-argument (receiving a single Markdown file instead of a book configuration file).
+argument (receiving a single Markdown file instead of a book
+configuration file). E.g., the following Markdown file:
+
+```
+---
+author: John Doe
+title: A book
+
+output.html: book.html
+---
+
+This is a very tiny book!
+```
+
+can be processed with `crowbook --single foo.md` or `crowbook -s
+foo.md` to produce the `book.html` file. This is useful for short
+texts that typically only contain one "chapter".
 
 ### Bugs ###
 
