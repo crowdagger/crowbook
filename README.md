@@ -101,12 +101,11 @@ novels (the primary target of Crowbook), but `pdflatex` might occasionally
 choke on some "weird" unicode character. See the example book rendered
 in [PDF](http://lise-henry.github.io/crowbook/book.pdf) on github.io.
 
-ODT output is experimental at best. It might work if your inputs files
-only include very basic formatting (basically, headers, emphasis and
-bold), it will probably look ugly in the rest of the cases, and it
-might miserably fail in some. See the example book rendered in
-[ODT](http://lise-henry.github.io/crowbook/book.odt) on github.io if
-you want to hurt your eyes.
+ODT output is currently experimental at best. It might work with very
+basic formatting but still needs a *lot* of work. You can still see
+the example book rendered in
+[ODT](http://lise-henry.github.io/crowbook/book.odt) on github.io to
+have an idea of the current status for this output format.
 
 ### Input format ###
 
