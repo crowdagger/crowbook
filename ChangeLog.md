@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-----------
+0.6.0 (2016-09-09)
+------------------
 * Deprecated options:
   * `nb_char`: since it was only used for french cleaner and for
     typography reasons it's better to use different non breaking
