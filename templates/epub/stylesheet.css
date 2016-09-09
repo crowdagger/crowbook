@@ -143,6 +143,7 @@ table.notes td {
 /* Make list displays '–' instead of puces */
 ul li {
     list-style-type: '–';
+    padding-left: .5em;
 }
 
 {{/fr}}
