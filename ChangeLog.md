@@ -19,7 +19,9 @@ unreleased
     * "Autocleaning" is now also activated (for french at least) for
       LaTeX rendering, since it doesn't correctly insert non-breaking
       spaces for e.g. '«' or '»'.
+    * Fixed escaping of `--` to `-{}-` to avoid tex ligatures.
   * HTML/EPUB:
+    * Fixed rendering of lists when `lang` is set to `fr`.
     * Links are now HTML-escaped, fixing errors in XHTML (for EPUB
       rendering) when links contained '&' character.
     
