@@ -7,7 +7,7 @@ Crowbook can takes a list of arguments:
 Render a markdown book in Epub, PDF or HTML.
 
 USAGE:
-        crowbook [FLAGS] [OPTIONS] [--] [ARGS]
+    crowbook [FLAGS] [OPTIONS] [--] [BOOK]
 
 FLAGS:
     -h, --help            Prints help information
