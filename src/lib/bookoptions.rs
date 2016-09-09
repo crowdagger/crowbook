@@ -28,7 +28,7 @@ resources.base_path.links:path           # Set base path but only for links. Use
 resources.base_path.images:path:.        # Set base path but only for images. Useless if resources.base_path is set.
 resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
 resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
-resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file
+resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file ; useful for including additional fonts
 
 # Misc options
 enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
@@ -62,7 +62,7 @@ epub.css:path                       # Path of a stylesheet to use with EPUB rend
 epub.template:path                  # Path of an epub template for chapter
 
 # LaTeX options
-tex.short:bool:false                # If set to true, use article class instead of book and a the default `\\maketitle` command
+tex.short:bool:false                # If set to true, use article class instead of book and the default `\\maketitle` command
 tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL of links in LaTeX/PDF output
 tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file

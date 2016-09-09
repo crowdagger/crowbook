@@ -61,8 +61,7 @@ There are two important things to note:
 
 1. you must *not* use quotes around the file names.
 2. the path of these files are relative to the directory where your
-   config file is, *not* to the directory where you are when running
-   `crowbook`. E.g. you can run `crowbook
+   configuration file is. This means you can run `crowbook
    books/my_trilogy/first_book/config.book` without being in the
    book's directory.
 
@@ -358,7 +357,7 @@ Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
 must be composed a number, a string is, well, any string). The `path`
 type might puzzle you a 
-bit, but it's equivalent a string, except Crowbook will consider it
+bit, but it's equivalent to a string, except Crowbook will consider it
 relatively to the book file.
 
 
@@ -407,7 +406,7 @@ Current output options are:
 * `output.html_dir`: render a HTML directory with one page by chapter;
 * `output.epub`: renders an EPUB file;
 * `output.tex`: renders a LaTeX file;
-* `output.pdf`: renders a PDF file (using `tex.command`);
+* `output.pdf`: renders a PDF file (using `tex.command`).
 
 ### Resources options ###
 
@@ -451,7 +450,7 @@ the EPUB file*. This is therefore this last path that you should use
 if you want to access those files e.g. in a custom CSS stylesheet.
 
 Note that if you pass directories to `resources.files`, the whole
-directory would be copied. So assuming `font/` contains `font1.otf`
+directory would be copied. So assuming `fonts/` contains `font1.otf`
 and `font2.otf`
 
 ```
