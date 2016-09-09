@@ -211,7 +211,8 @@ Library
 
 While the main purpose of Crowbook is to be runned as a command line,
 the code is written as a library, so if you want to build on it you can
-use it as such. You can look at the generated documentation [here](http://lise-henry.github.io/rust/crowbook/).
+use it as such. You can look at the generated documentation on
+[docs.rs](https://docs.rs/releases/search?query=crowbook).
 
 License 
 -------
