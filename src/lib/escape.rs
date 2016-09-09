@@ -33,9 +33,18 @@ pub fn escape_html(input: &str) -> String {
 /// Escape characters for tex file
 pub fn escape_tex(input: &str) -> String {
     let mut output = String::new();
-    for c in input.chars() {
+    let v:Vec<char> = input.chars().collect();
+    for i in 0..v.len() {
+        let c = v[i];
+        let next = if i < v.len() - 1 { Some(v[i+1]) } else { None };
         match c {
-            '-' => output.push_str(r"-{}"),
+            '-' => {
+                if next == Some('-') {
+                    output.push_str(r"-{}"); // if next char is also a -, to avoid tex ligatures
+                } else {
+                    output.push(c);
+                }
+            },
             '&' => output.push_str(r"\&"),
             '%' => output.push_str(r"\%"),
             '$' => output.push_str(r"\$"),
@@ -49,6 +58,5 @@ pub fn escape_tex(input: &str) -> String {
             _  => output.push(c)
         }
     }
-
     output
 }

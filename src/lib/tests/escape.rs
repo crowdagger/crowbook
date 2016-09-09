@@ -19,7 +19,7 @@ fn escape_tex_braces() {
 #[test]
 fn escape_tex_dashes() {
     let actual = escape_tex("--foo, ---bar");
-    let expected = r"-{}-{}foo, -{}-{}-{}bar";
+    let expected = r"-{}-foo, -{}-{}-bar";
     test_eq(&actual, expected);
 }
 
