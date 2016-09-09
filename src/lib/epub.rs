@@ -29,7 +29,7 @@ use mustache;
 use chrono;
 use uuid;
 
-use std::io::{Read,Write};
+use std::io::{Read};
 use std::fs::File;
 use std::path::{Path};
 use std::borrow::Cow;
