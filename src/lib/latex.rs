@@ -238,8 +238,7 @@ impl<'a> LatexRenderer<'a> {
                     }
                 }
             },
-            Token::Image(ref url, _, _)
-                | Token::StandaloneImage(ref url, _, _) => {
+            Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     format!("\\begin{{center}}
   \\includegraphics[width=0.8\\linewidth]{{{}}}
@@ -248,7 +247,16 @@ impl<'a> LatexRenderer<'a> {
                     self.book.logger.warning(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     String::new()
                 }
-            }
+            },
+            Token::StandaloneImage(ref url, _, _) => {
+                if ResourceHandler::is_local(url) {
+                    format!("\\includegraphics{{{}}}",
+                            self.handler.map_image(Cow::Borrowed(url)))
+                } else {
+                    self.book.logger.warning(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
+                    String::new()
+                }                                
+            },
             Token::Footnote(ref vec) => format!("\\footnote{{{}}}", self.render_vec(vec, escape)),
             Token::Table(n, ref vec) => {
                 let mut cols = String::new();
