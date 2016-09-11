@@ -65,7 +65,7 @@ pub enum Error {
     /// An error in parsing a book configuration file
     ConfigParser(Source, String), 
     /// An error when a file is not found
-    FileNotFound(Source, String),
+    FileNotFound(Source, String, String), //source, description file
     /// An error in a renderer
     Render(String),
     /// An error during "zipping" processus
@@ -81,7 +81,7 @@ impl Error {
     pub fn get_source(&self) -> Option<&Source> {
         use Error::*;
         match *self {
-            Parser(ref s, _) | ConfigParser(ref s, _) | FileNotFound(ref s, _)
+            Parser(ref s, _) | ConfigParser(ref s, _) | FileNotFound(ref s, _, _)
                 | BookOption(ref s, _) | InvalidOption(ref s, _) => {
                     Some(s)
                 },
@@ -95,7 +95,7 @@ impl error::Error for Error {
         match *self {
             Error::Parser(_, ref s) | Error::Zipper(ref s) | Error::BookOption(_, ref s) | Error::ConfigParser(_, ref s)
                 | Error::InvalidOption(_, ref s) | Error::Render(ref s) => s,
-            Error::FileNotFound(_, _) => "File not found",
+            Error::FileNotFound(_, _, _) => "File not found",
         }
     }
 }
@@ -124,8 +124,8 @@ impl fmt::Display for Error {
                 try!(f.write_str("Error parsing configuration file: "));
                 f.write_str(s)
             },
-            Error::FileNotFound(_, ref file) => {
-                try!(f.write_str("File not found: "));
+            Error::FileNotFound(_, ref description, ref file) => {
+                try!(write!(f, "File not found ({}):", description));
                 f.write_str(file)
             },
             Error::Render(ref s) => {

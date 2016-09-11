@@ -68,6 +68,7 @@ impl<'r> ResourceHandler<'r> {
         // Check exisence of the file
         if fs::metadata(file.as_ref()).is_err() {
             return Err(Error::FileNotFound(source.clone(),
+                                           "image".to_owned(),
                                            format!("{}", file)));
         }
         
@@ -95,6 +96,7 @@ impl<'r> ResourceHandler<'r> {
                 Ok(f) => f,
                 Err(_) => {
                     return Err(Error::FileNotFound(source.clone(),
+                                                   "image".to_owned(),
                                                    format!("{}", file)));
                 }
             };

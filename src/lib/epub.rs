@@ -130,6 +130,7 @@ impl<'a> EpubRenderer<'a> {
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
             let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.html.source.clone(),
+                                                                                "image or cover".to_owned(),
                                                                                 source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
@@ -145,6 +146,7 @@ impl<'a> EpubRenderer<'a> {
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
                                  .map_err(|_| Error::FileNotFound(self.html.source.clone(),
+                                                                  "additional resource from resources.files".to_owned(),
                                                                   abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));

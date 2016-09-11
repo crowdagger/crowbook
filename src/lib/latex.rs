@@ -61,6 +61,7 @@ impl<'a> LatexRenderer<'a> {
             // write image files
             for (source, dest) in self.handler.images_mapping() {
                 let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                                    "image".to_owned(),
                                                                                     source.to_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));

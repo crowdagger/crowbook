@@ -118,6 +118,7 @@ impl Book {
         
         let path = Path::new(filename);
         let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(Source::empty(),
+                                                                           "book".to_owned(),
                                                                            String::from(filename))));
         // Set book path to book's directory
         if let Some(parent) = path.parent() {
@@ -423,6 +424,7 @@ impl Book {
         // try to open file
         let path = self.root.join(file);
         let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                           "book chapter".to_owned(),
                                                                            format!("{}", path.display()))));
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(self.source.clone(),
@@ -523,6 +525,7 @@ impl Book {
         };
         if let Ok (ref s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                           format!("template {}", template),
                                                                            s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)

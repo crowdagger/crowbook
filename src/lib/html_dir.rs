@@ -76,6 +76,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
         for (source, dest) in self.html.handler.images_mapping() {
             let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                                                  "image or cover".to_owned(),
                                                                                                   source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
@@ -91,6 +92,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 let abs_path = Path::new(&files_path).join(&path);
                 let mut f = try!(File::open(&abs_path)
                                  .map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                  "additional resource from resources.files".to_owned(),
                                                                   abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
