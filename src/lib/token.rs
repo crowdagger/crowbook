@@ -129,5 +129,10 @@ impl Token {
                 | StandaloneImage(_,_,ref mut v) => Some(v)
         }
     }
+
+    /// Checks whether token is an image
+    pub fn is_image(&self) -> bool {
+        if let Token::Image(_, _, _) = *self { true } else { false }
+    }
 }
 
