@@ -11,6 +11,7 @@ unreleased
     `StandaloneImage`. Currently, an image is considered "standalone"
     if it is the sole element of a paragraph, even if it is among a
     link.
+  * `Token` has a new `is_image` method.
 * Rendering:
   * Standalone images are now rendered differently than inline images
     (80% of width VS original size) in HTML/EPUB and LaTeX.
