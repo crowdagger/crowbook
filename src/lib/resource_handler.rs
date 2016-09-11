@@ -134,7 +134,7 @@ impl<'r> ResourceHandler<'r> {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            self.logger.warning(format!("Resources: could not find a in-book match for link {}", from));
+            self.logger.error(format!("Resources: could not find a in-book match for link {}", from));
             from
         }
     }
