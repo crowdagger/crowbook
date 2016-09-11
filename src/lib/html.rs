@@ -421,7 +421,7 @@ impl<'a> HtmlRenderer<'a> {
                     let content = self.render_vec(alt);
                     let url = self.handler.map_image(Cow::Borrowed(url));
 
-                    if let Token::Image(_, _, _) = *token {
+                    if token.is_image() {
                         format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
                                 url,
                                 title,
