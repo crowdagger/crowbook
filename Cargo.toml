@@ -1,10 +1,10 @@
 [package]
 name = "crowbook"
-version = "0.7.0-unreleased"
+version = "0.7.0"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Render a Markdown book in HTML, PDF or Epub"
 repository = "https://github.com/lise-henry/crowbook"
-documentation = "http://lise-henry.github.io/rust/crowbook/index.html"
+documentation = "https://docs.rs/crowbook/"
 readme = "README.md"
 keywords = ["markdown", "book"]
 license = "LGPL-2.1+"

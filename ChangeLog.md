@@ -1,9 +1,9 @@
 ChangeLog
 =========
 
-unreleased
-----------
-* Internal (or use as a library):
+0.7.0 (2016-09-11)
+------------------
+* Internal/API:
   * `Token` has a new variant, `StandaloneImage`. This is used to
     distinguish an image that is alone in a paragraph of an image that
     is inlined alongside text.
