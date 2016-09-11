@@ -416,7 +416,8 @@ impl<'a> HtmlRenderer<'a> {
                         },
                         self.render_vec(vec))
             },
-            Token::Image(ref url, ref title, ref alt) => {
+            Token::Image(ref url, ref title, ref alt)
+                | Token::StandaloneImage(ref url, ref title, ref alt) => {
                 let content = self.render_vec(alt);
                 let url = self.handler.map_image(Cow::Borrowed(url));
                 format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",

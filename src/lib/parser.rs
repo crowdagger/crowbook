@@ -85,6 +85,8 @@ impl Parser {
         try!(self.parse_events(&mut p, &mut res, None));
 
         try!(self.parse_footnotes(&mut res));
+
+        find_standalone(&mut res);
         Ok(res)
     }
 
@@ -187,5 +189,25 @@ impl Parser {
     }
 }
 
+/// Replace images which are alone in a paragraph by standalone images
+fn find_standalone(ast: &mut Vec<Token>) {
+    for token in ast {
+        let res = if let &mut Token::Paragraph(ref mut inner) = token {
+            if inner.len() == 1 {
+                let inner_token = inner.pop().unwrap();
+                if let Token::Image(source, title, inner) = inner_token {
+                    Token::StandaloneImage(source, title, inner)
+                } else {
+                    inner.push(inner_token);
+                    continue;
+                }
+            } else {
+                continue;
+            }
+        } else {
+            continue;
+        };
 
-
+        *token = res;
+    }
+}

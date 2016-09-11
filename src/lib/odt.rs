@@ -146,7 +146,7 @@ impl<'a> OdtRenderer<'a> {
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),
-            Token::Image(_,_,_) => {
+            Token::Image(_,_,_) | Token::StandaloneImage(_,_,_) => {
                 self.book.logger.warning("ODT: images not currently implemented for this format");
                 String::from(" ")
             },

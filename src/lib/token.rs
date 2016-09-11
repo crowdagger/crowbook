@@ -66,7 +66,9 @@ pub enum Token {
     /// A link with an url, a title, and the linked text
     Link(String, String, Vec<Token>),
     /// An image with a source url, a title and an alt tex
-    Image(String, String, Vec<Token>), 
+    Image(String, String, Vec<Token>),
+    /// Similar to previous, but when image is in a standalone paragraph
+    StandaloneImage(String, String, Vec<Token>),
 }
 
 use Token::*;
@@ -95,7 +97,8 @@ impl Token {
                 | TableCell(ref v)
                 | Footnote(ref v)
                 | Link(_,_,ref v)
-                | Image(_,_,ref v) => Some(v)
+                | Image(_,_,ref v)
+                | StandaloneImage(_,_,ref v) => Some(v)
         }
     }
 
@@ -122,7 +125,8 @@ impl Token {
                 | TableCell(ref mut v)
                 | Footnote(ref mut v)
                 | Link(_,_,ref mut v)
-                | Image(_,_,ref mut v) => Some(v)
+                | Image(_,_,ref mut v)
+                | StandaloneImage(_,_,ref mut v) => Some(v)
         }
     }
 }

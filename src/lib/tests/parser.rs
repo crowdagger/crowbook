@@ -132,21 +132,34 @@ fn code() {
 }
 
 #[test]
-fn image_reference() {
+fn image_reference_inline() {
     let doc = "
-![alt text][logo]
+Test: ![alt text][logo]
 
 [logo]: http://foo.bar/baz.png \"Title\"
 ";
-    let expected = r#"[Paragraph([Image("http://foo.bar/baz.png", "Title", [Str("alt text")])])]"#;
+    let expected = r#"[Paragraph([Str("Test: "), Image("http://foo.bar/baz.png", "Title", [Str("alt text")])])]"#;
     let result = format!("{:?}", parse_from_str(doc));
     test_eq(&result, expected);
 }
 
 #[test]
-fn image_inline() {
+fn image_reference_standalone() {
+    let doc = "
+![alt text][logo]
+
+[logo]: http://foo.bar/baz.png \"Title\"
+";
+    let expected = r#"[StandaloneImage("http://foo.bar/baz.png", "Title", [Str("alt text")])]"#;
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+}
+
+
+#[test]
+fn image_standalone() {
     let doc = "![alt text](http://foo.bar/baz.png \"Title\")";
-    let expected = r#"[Paragraph([Image("http://foo.bar/baz.png", "Title", [Str("alt text")])])]"#;
+    let expected = r#"[StandaloneImage("http://foo.bar/baz.png", "Title", [Str("alt text")])]"#;
     let result = format!("{:?}", parse_from_str(doc));
     test_eq(&result, expected);
 }                           

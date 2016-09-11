@@ -238,7 +238,8 @@ impl<'a> LatexRenderer<'a> {
                     }
                 }
             },
-            Token::Image(ref url, _, _) => {
+            Token::Image(ref url, _, _)
+                | Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     format!("\\begin{{center}}
   \\includegraphics[width=0.8\\linewidth]{{{}}}
