@@ -144,7 +144,7 @@ impl<'a> LatexRenderer<'a> {
             "uk" => "ukrainian",
             "cy" => "welsh",
             _ => {
-                self.book.logger.warning(format!("LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
+                self.book.logger.error(format!("LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
                 "english"
             }
         });
@@ -254,7 +254,7 @@ impl<'a> LatexRenderer<'a> {
                             img))
 
                 } else {
-                    self.book.logger.warning(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
+                    self.book.logger.error(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     Ok(String::new())
                 }
             },
@@ -264,7 +264,7 @@ impl<'a> LatexRenderer<'a> {
                             try!(self.handler.map_image(&self.source,
                                                         Cow::Borrowed(url)))))
                 } else {
-                    self.book.logger.warning(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
+                    self.book.logger.error(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     Ok(String::new())
                 }                                
             },
