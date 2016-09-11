@@ -66,7 +66,7 @@ pub struct Book {
     pub logger: Logger,
 
     /// Source for error files
-    source: Source,
+    pub source: Source,
     
     cleaner: Box<Cleaner>,
 

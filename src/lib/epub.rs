@@ -30,6 +30,7 @@ use chrono;
 use uuid;
 
 use std::io::{Read};
+use std::fs;
 use std::fs::File;
 use std::path::{Path};
 use std::borrow::Cow;
@@ -68,6 +69,11 @@ impl<'a> EpubRenderer<'a> {
         
         // Write mimetype
         try!(zipper.write("mimetype", b"application/epub+zip", true));
+
+        // Write cover.xhtml (if needs be)
+        if self.book.options.get_path("cover").is_ok() {
+            try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
+        }
 
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
@@ -122,11 +128,6 @@ impl<'a> EpubRenderer<'a> {
         // Write toc.ncx
         try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes(), true));
 
-        // Write cover.xhtml (if needs be)
-        if self.book.options.get_path("cover").is_ok() {
-            try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
-        }
-
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
             let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.html.source.clone(),
@@ -145,7 +146,7 @@ impl<'a> EpubRenderer<'a> {
             for path in list{
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(self.html.source.clone(),
+                                 .map_err(|_| Error::FileNotFound(self.book.source.clone(),
                                                                   "additional resource from resources.files".to_owned(),
                                                                   abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
@@ -284,6 +285,13 @@ impl<'a> EpubRenderer<'a> {
     /// Render cover.xhtml
     fn render_cover(&mut self) -> Result<String> {
         if let Ok(cover) = self.book.options.get_path("cover") {
+            // Check that cover can be found
+            if fs::metadata(&cover).is_err() {
+                return Err(Error::FileNotFound(self.book.source.clone(),
+                                               "cover".to_owned(),
+                                               cover));
+
+            }
             let template = mustache::compile_str(if self.book.options.get_i32("epub.version").unwrap() == 3 {epub3::COVER} else {COVER});
             let data = self.book.get_mapbuilder("none")
                 .insert_str("cover", try!(self.html.handler.map_image(&self.html.source,

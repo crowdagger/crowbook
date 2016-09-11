@@ -148,7 +148,7 @@ impl BookOptions {
     /// **Returns** an error if `key` is not a String, not a valid option, of if
     /// the value is not of the right type.
     pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<Option<BookOption>> {
-        let key = if let Yaml::String(key) = key {
+        let key:String = if let Yaml::String(key) = key {
             key
         } else {
             return Err(Error::BookOption(self.source.clone(), format!("Expected a String as a key, found {:?}", key)));

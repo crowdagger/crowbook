@@ -22,7 +22,6 @@ use std::borrow::Cow;
 pub struct HtmlDirRenderer<'a> {
     book: &'a Book,
     html: HtmlRenderer<'a>,
-    source: Source,
 }
 
 impl<'a> HtmlDirRenderer<'a> {
@@ -34,7 +33,6 @@ impl<'a> HtmlDirRenderer<'a> {
         HtmlDirRenderer {
             book: book,
             html: html,
-            source: Source::empty(),
         }
     }
 
@@ -75,7 +73,7 @@ impl<'a> HtmlDirRenderer<'a> {
         // Write all images (including cover)
         let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(self.source.clone(),
+            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(self.book.source.clone(),
                                                                                                   "image or cover".to_owned(),
                                                                                                   source.to_owned())));
             let mut content = vec!();
@@ -91,7 +89,7 @@ impl<'a> HtmlDirRenderer<'a> {
             for path in list {
                 let abs_path = Path::new(&files_path).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(self.source.clone(),
+                                 .map_err(|_| Error::FileNotFound(self.book.source.clone(),
                                                                   "additional resource from resources.files".to_owned(),
                                                                   abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
@@ -108,7 +106,6 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut chapters = vec!();
         let mut titles = vec!();
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
-            self.source = Source::new(&self.book.filenames[i]);
             self.html.source = Source::new(&self.book.filenames[i]);
             self.html.filename = filenamer(i);
             // Todo: this part could be factorized between html, epub and html_dir
@@ -150,7 +147,6 @@ impl<'a> HtmlDirRenderer<'a> {
             let chapter = self.html.render_html(v);
             chapters.push(chapter);
         }
-        self.source = Source::empty();
         self.html.source = Source::empty();
         let toc = self.html.toc.render();
 
@@ -199,11 +195,18 @@ impl<'a> HtmlDirRenderer<'a> {
         }
 
         let mut content = if let Ok(cover) = self.book.options.get_path("cover") {
+            // checks first that cover exists
+            if fs::metadata(&cover).is_err() {
+                return Err(Error::FileNotFound(self.book.source.clone(),
+                                               "cover".to_owned(),
+                                               cover));
+                
+            }
             format!("<div id = \"cover\">
   <img class = \"cover\" alt = \"{}\" src = \"{}\" />
 </div>",
                     self.book.options.get_str("title").unwrap(),
-                    try!(self.html.handler.map_image(&self.source,
+                    try!(self.html.handler.map_image(&self.book.source,
                                                      Cow::Owned(cover))).as_ref())
         } else {
             String::new()
