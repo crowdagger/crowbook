@@ -7,6 +7,8 @@ unreleased
   when displaying an error, with the file name where a problem was
   found, and, in some cases, the line. It also tries to detect errors
   (such as files not found) sooner.
+* Some "warning" messages have also been "moved" to error messages, to
+  make sure they are displayed even when crowbook isn't runned with `--verbose`.
 * Internal/API:
   * In order to have better error messages, there was a need to
     refactor the `Error` type, and make more methods return
