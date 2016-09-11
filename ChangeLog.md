@@ -1,6 +1,20 @@
 ChangeLog
 =========
 
+unreleased
+----------
+* Internal (or use as a library):
+  * `Token` has a new variant, `StandaloneImage`. This is used to
+    distinguish an image that is alone in a paragraph of an image that
+    is inlined alongside text.
+  * `Parser.parse` method now distingues between `Image` and
+    `StandaloneImage`. Currently, an image is considered "standalone"
+    if it is the sole element of a paragraph, even if it is among a
+    link.
+* Rendering:
+  * Standalone images are now rendered differently than inline images
+    (80% of width VS original size) in HTML/EPUB and LaTeX.
+
 0.6.0 (2016-09-09)
 ------------------
 * Deprecated options:
