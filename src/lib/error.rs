@@ -19,6 +19,33 @@ use std::error;
 use std::result;
 use std::fmt;
 
+#[derive(Debug)]
+/// Source of an error file
+pub struct Source {
+    /// File name of the source
+    file: Option<String>,
+    /// Line number of the source
+    line: Option<u32>,
+}
+
+impl Source {
+    /// Create an empty source, with both fields set to None
+    pub fn empty() -> Source {
+        Source { file: None, line: None }
+    }
+
+    /// Create a new source pointing to file
+    pub fn new(s: &str) -> Source {
+        Source { file: Some(String::from(s)), line: None }
+    }
+
+    /// Sets line number of a source
+    pub fn line(mut self, line: u32) -> Source {
+        self.line = Some(line);
+        self
+    }
+}
+
 #[derive(Debug, PartialEq)]
 /// Crowbook's error type
 pub enum Error {
