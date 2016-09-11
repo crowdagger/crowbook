@@ -18,6 +18,7 @@
 use token::Token;
 use error::{Result,Error};
 
+use std::mem;
 use std::fs::File;
 use std::path::Path;
 use std::convert::AsRef;
@@ -194,11 +195,13 @@ fn find_standalone(ast: &mut Vec<Token>) {
     for token in ast {
         let res = if let &mut Token::Paragraph(ref mut inner) = token {
             if inner.len() == 1 {
-                let inner_token = inner.pop().unwrap();
-                if let Token::Image(source, title, inner) = inner_token {
-                    Token::StandaloneImage(source, title, inner)
+                if inner[0].is_image() {
+                    if let Token::Image(source, title, inner) = mem::replace(&mut inner[0], Token::Rule) {
+                        Token::StandaloneImage(source, title, inner)
+                    } else {
+                        unreachable!();
+                    }
                 } else {
-                    inner.push(inner_token);
                     continue;
                 }
             } else {
