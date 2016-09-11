@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+unreleased
+----------
+
+* Better error messages. Crowbook now tries to give the source of the
+  error message, with the file name where a problem was found, and, in
+  some cases, the line. 
+* Internal/API:
+  * In order to have better error messages, there was a need to
+    refactor the `Error` type, and make more methods return
+    `Result<X>` instead of `X`. The API is, therefore, quite deeply
+    modified. 
+
 0.7.0 (2016-09-11)
 ------------------
 * Internal/API:
