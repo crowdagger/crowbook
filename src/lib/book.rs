@@ -211,7 +211,7 @@ impl Book {
                     for (key,value) in docs[0].as_hash().unwrap() {
                         let opt = try!(self.options.set_yaml(key.clone(), value.clone())); //todo: remove clone
                         if let Some(previous) = opt {
-                            self.logger.debug(format!("Key {:?} was already set to {:?}, replacing it with {:?}", key, previous, value));
+                            self.logger.warning(format!("Key {:?} was already set to {:?}, replacing it with {:?}", key, previous, value));
                         }
                     }
                 } else {
@@ -629,7 +629,7 @@ impl Book {
                                                         self.logger.debug(format!("Inline YAML block set {:?} to {:?}", key, value));
                                                     }
                                                 }
-                                                Err(e) => self.logger.warning(format!("Inline YAML block could not set {:?} to {:?}: {}", key, value, e)),
+                                                Err(e) => self.logger.error(format!("Inline YAML block could not set {:?} to {:?}: {}", key, value, e)),
                                             }
                                         }
                                     } else {
@@ -638,8 +638,8 @@ impl Book {
                                     valid_block = true;
                                 },
                                 Err(err) => {
-                                    self.logger.warning(format!("Found something that looked like a YAML block:\n{}", &yaml_block));
-                                    self.logger.warning(format!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
+                                    self.logger.error(format!("Found something that looked like a YAML block:\n{}", &yaml_block));
+                                    self.logger.error(format!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
                                 }
                             }
                             break;
