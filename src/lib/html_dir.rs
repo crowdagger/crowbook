@@ -107,6 +107,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut titles = vec!();
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.source = Source::new(&self.book.filenames[i]);
+            self.html.source = Source::new(&self.book.filenames[i]);
             self.html.filename = filenamer(i);
             // Todo: this part could be factorized between html, epub and html_dir
             self.html.current_hide = false;
@@ -130,10 +131,10 @@ impl<'a> HtmlDirRenderer<'a> {
                 match *token {
                     Token::Header(1, ref vec) => {
                         if self.html.current_hide || self.html.current_numbering == 0 {
-                            title = self.html.render_vec(vec);
+                            title = try!(self.html.render_vec(vec));
                         } else {
                             title = try!(self.book.get_header(self.html.current_chapter[0] + 1,
-                                                              &self.html.render_vec(vec)));
+                                                              &try!(self.html.render_vec(vec))));
                         }
                         break;
                     },
@@ -148,6 +149,7 @@ impl<'a> HtmlDirRenderer<'a> {
             chapters.push(chapter);
         }
         self.source = Source::empty();
+        self.html.source = Source::empty();
         let toc = self.html.toc.render();
 
         for (i, content) in chapters.into_iter().enumerate() {
@@ -178,7 +180,7 @@ impl<'a> HtmlDirRenderer<'a> {
             
             // Render each HTML document
             let data = self.book.get_mapbuilder("none")
-                .insert_str("content", content)
+                .insert_str("content", try!(content))
                 .insert_str("chapter_title", format!("{} – {}",
                                              self.book.options.get_str("title").unwrap(),
                                              titles[i]))
@@ -199,7 +201,8 @@ impl<'a> HtmlDirRenderer<'a> {
   <img class = \"cover\" alt = \"{}\" src = \"{}\" />
 </div>",
                     self.book.options.get_str("title").unwrap(),
-                    self.html.handler.map_image(Cow::Owned(cover)).as_ref())
+                    try!(self.html.handler.map_image(&self.source,
+                                                     Cow::Owned(cover))).as_ref())
         } else {
             String::new()
         };

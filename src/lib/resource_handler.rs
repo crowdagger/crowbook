@@ -1,6 +1,6 @@
 use token::Token;
 use logger::Logger;
-use error::{Error, Result};
+use error::{Error, Result, Source};
 
 use std::collections::HashMap;
 use std::path::{Path,PathBuf};
@@ -58,21 +58,27 @@ impl<'r> ResourceHandler<'r> {
 
     /// Add a local image file and get the resulting transformed
     /// file name
-    pub fn map_image<'a>(&'a mut self, file: Cow<'a, str>) -> Cow<'a, str> {
-        // if image mapping is not activated, do nothing
-        if !self.map_images {
-            return file;
-        }
-
-        // If image is not local, do nothing either
+    pub fn map_image<'a>(&'a mut self, source: &Source, file: Cow<'a, str>) -> Result<Cow<'a, str>> {
+        // If image is not local, do nothing much
         if !Self::is_local(file.as_ref()) {
             self.logger.warning(format!("Resources: book includes non-local image {}, which might cause problem for proper inclusion.", file));
-            return file;
+            return Ok(file);
         }
         
+        // Check exisence of the file
+        if fs::metadata(file.as_ref()).is_err() {
+            return Err(Error::FileNotFound(source.clone(),
+                                           format!("{}", file)));
+        }
+        
+        // if image mapping is not activated do nothing else
+        if !self.map_images {
+            return Ok(file);
+        }
+
         // If this image has already been registered, returns it
         if self.images.contains_key(file.as_ref()) {
-            return Cow::Borrowed(self.images.get(file.as_ref()).unwrap());
+            return Ok(Cow::Borrowed(self.images.get(file.as_ref()).unwrap()));
         }
 
         // Else, create a new file name that has same extension
@@ -87,28 +93,28 @@ impl<'r> ResourceHandler<'r> {
         } else {
             let mut f = match fs::File::open(file.as_ref()) {
                 Ok(f) => f,
-                Err(err) => {
-                    self.logger.error(format!("Resources: could not open file {}: {}", file, err));
-                    return file;
+                Err(_) => {
+                    return Err(Error::FileNotFound(source.clone(),
+                                                   format!("{}", file)));
                 }
             };
             let mut content: Vec<u8> = vec!();
             if f.read_to_end(&mut content).is_err() {
                 self.logger.error(format!("Resources: could not read file {}", file));
-                return file;
+                return Ok(file);
             }
             let base64 = content.to_base64(base64::STANDARD);
             match mime_guess::guess_mime_type_opt(file.as_ref()) {
                 None => {
                     self.logger.error(format!("Resources: could not guess mime type of file {}", file));
-                    return file;
+                    return Ok(file);
                 },
                 Some(s) => format!("data:{};base64,{}", s.to_string(), base64)
             }
         };
 
         self.images.insert(file.into_owned(), dest_file.clone());
-        Cow::Owned(dest_file)
+        Ok(Cow::Owned(dest_file))
     }
 
     /// Returns an iterator the the images files mapping

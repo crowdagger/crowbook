@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error,Result, Source};
+use error::{Error,Result,Source};
 use token::Token;
 use html::HtmlRenderer;
 use book::Book;
@@ -42,7 +42,6 @@ pub struct EpubRenderer<'a> {
     book: &'a Book,
     toc: Vec<String>,
     html: HtmlRenderer<'a>,
-    source: Source,
 }
 
 impl<'a> EpubRenderer<'a> {
@@ -56,7 +55,6 @@ impl<'a> EpubRenderer<'a> {
             book: book,
             html: html,
             toc: vec!(),
-            source: Source::empty(),
         }
     }
 
@@ -74,7 +72,7 @@ impl<'a> EpubRenderer<'a> {
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.html.filename = filenamer(i);
-            self.source = Source::new(&self.book.filenames[i]);
+            self.html.source = Source::new(&self.book.filenames[i]);
             self.html.current_hide = false;
             let book_numbering = self.book.options.get_i32("numbering").unwrap();
             match n {
@@ -93,7 +91,7 @@ impl<'a> EpubRenderer<'a> {
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
         }
-        self.source = Source::empty();
+        self.html.source = Source::empty();
         
         // Render the CSS file and write it
         let template_css = mustache::compile_str(try!(self.book.get_template("epub.css")).as_ref());
@@ -131,7 +129,7 @@ impl<'a> EpubRenderer<'a> {
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.source.clone(),
+            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.html.source.clone(),
                                                                                 source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
@@ -146,7 +144,7 @@ impl<'a> EpubRenderer<'a> {
             for path in list{
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(self.source.clone(),
+                                 .map_err(|_| Error::FileNotFound(self.html.source.clone(),
                                                                   abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
@@ -215,7 +213,8 @@ impl<'a> EpubRenderer<'a> {
         }
         if let Ok(ref s) = self.book.options.get_path("cover") {
             optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n",
-                                       self.html.handler.map_image(Cow::Borrowed(s))));
+                                       try!(self.html.handler.map_image(&self.html.source,
+                                                                        Cow::Borrowed(s)))));
             cover_xhtml.push_str("<reference type=\"cover\" title=\"Cover\" href=\"cover.xhtml\" />");
         }
 
@@ -285,7 +284,8 @@ impl<'a> EpubRenderer<'a> {
         if let Ok(cover) = self.book.options.get_path("cover") {
             let template = mustache::compile_str(if self.book.options.get_i32("epub.version").unwrap() == 3 {epub3::COVER} else {COVER});
             let data = self.book.get_mapbuilder("none")
-                .insert_str("cover", self.html.handler.map_image(Cow::Owned(cover)).into_owned())
+                .insert_str("cover", try!(self.html.handler.map_image(&self.html.source,
+                                                                      Cow::Owned(cover))).into_owned())
                 .build();
             let mut res:Vec<u8> = vec!();
             template.render_data(&mut res, &data);
@@ -320,7 +320,8 @@ impl<'a> EpubRenderer<'a> {
         let mut title = String::new();
 
         for token in v {
-            content.push_str(&self.parse_token(&token, &mut title));
+            let res = try!(self.parse_token(&token, &mut title));
+            content.push_str(&res);
             self.html.render_side_notes(&mut content);
         }
         self.html.render_end_notes(&mut content);
@@ -344,19 +345,19 @@ impl<'a> EpubRenderer<'a> {
         }
     }
 
-    fn parse_token(&mut self, token: &Token, title: &mut String) -> String {
+    fn parse_token(&mut self, token: &Token, title: &mut String) -> Result<String> {
         match *token {
             Token::Header(n, ref vec) => {
                 if n == 1 {
                     if self.html.current_hide || self.html.current_numbering == 0 {
                         if title.is_empty() {
-                            *title = self.html.render_vec(vec);
+                            *title = try!(self.html.render_vec(vec));
                         } else {
                             self.book.logger.warning("EPUB: detected two chapter titles inside the same markdown file...");
                             self.book.logger.warning("EPUB: ...in a file where chapter titles are not even rendered.");
                         }
                     } else {
-                        let res = self.book.get_header(self.html.current_chapter[0] + 1, &self.html.render_vec(vec));
+                        let res = self.book.get_header(self.html.current_chapter[0] + 1, &try!(self.html.render_vec(vec)));
                         let s = res.unwrap();
                         if title.is_empty() {
                             *title = s;
