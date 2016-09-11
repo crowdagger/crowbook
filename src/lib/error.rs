@@ -19,13 +19,13 @@ use std::error;
 use std::result;
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 /// Source of an error file
 pub struct Source {
     /// File name of the source
-    file: Option<String>,
+    pub file: Option<String>,
     /// Line number of the source
-    line: Option<u32>,
+    pub line: Option<u32>,
 }
 
 impl Source {
@@ -44,52 +44,87 @@ impl Source {
         self.line = Some(line);
         self
     }
+
+    /// Sets line number of a source (with &mut self)
+    pub fn set_line(&mut self, line: u32) {
+        self.line = Some(line);
+    }
+
+    /// Unsets a line number of a source
+    pub fn unset_line(&mut self) {
+        self.line = None;
+    }
+    
 }
 
 #[derive(Debug, PartialEq)]
 /// Crowbook's error type
 pub enum Error {
     /// An error in Parsing markdown file
-    Parser(String),
+    Parser(Source, String),
     /// An error in parsing a book configuration file
-    ConfigParser(&'static str, String), //error, line
+    ConfigParser(Source, String), 
     /// An error when a file is not found
-    FileNotFound(String), //file
+    FileNotFound(Source, String),
     /// An error in a renderer
     Render(String),
     /// An error during "zipping" processus
     Zipper(String),
     /// An error relative to BookOption convertion (usually a type error)
-    BookOption(String),
+    BookOption(Source, String),
     /// An invalid option
-    InvalidOption(String),
+    InvalidOption(Source, String),
+}
+
+impl Error {
+    /// Return the source of an error
+    pub fn get_source(&self) -> Option<&Source> {
+        use Error::*;
+        match *self {
+            Parser(ref s, _) | ConfigParser(ref s, _) | FileNotFound(ref s, _)
+                | BookOption(ref s, _) | InvalidOption(ref s, _) => {
+                    Some(s)
+                },
+            Render(_) | Zipper(_) => None,
+        }
+    }
 }
 
 impl error::Error for Error {
     fn description(&self) -> &str {
         match *self {
-            Error::ConfigParser(ref s, _)  => s,
-            Error::Parser(ref s) | Error::Zipper(ref s) | Error::BookOption(ref s)
-                | Error::InvalidOption(ref s) | Error::Render(ref s) => s,
-            Error::FileNotFound(_) => "File not found",
+            Error::Parser(_, ref s) | Error::Zipper(ref s) | Error::BookOption(_, ref s) | Error::ConfigParser(_, ref s)
+                | Error::InvalidOption(_, ref s) | Error::Render(ref s) => s,
+            Error::FileNotFound(_, _) => "File not found",
         }
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let source = self.get_source();
+        if let Some(source) = source {
+            if let Some(ref file) = source.file {
+                try!(f.write_str("Error in file "));
+                try!(f.write_str(file));
+                if let Some(line) = source.line {
+                    try!(f.write_str(", line "));
+                    try!(write!(f, "{}", line));
+                }
+                try!(f.write_str(":\n"));
+            }
+        }
+        
         match *self {
-            Error::Parser(ref s) => {
+            Error::Parser(_, ref s) => {
                 try!(f.write_str("Error parsing markdown: "));
                 f.write_str(&s)
             },
-            Error::ConfigParser(ref s, ref line) => {
+            Error::ConfigParser(_, ref s) => {
                 try!(f.write_str("Error parsing configuration file: "));
-                try!(f.write_str(s));
-                try!(f.write_str(" in: "));
-                f.write_str(line)
+                f.write_str(s)
             },
-            Error::FileNotFound(ref file) => {
+            Error::FileNotFound(_, ref file) => {
                 try!(f.write_str("File not found: "));
                 f.write_str(file)
             },
@@ -101,11 +136,11 @@ impl fmt::Display for Error {
                 try!(f.write_str("Error during temporary files editing: "));
                 f.write_str(s)
             },
-            Error::BookOption(ref s) => {
+            Error::BookOption(_, ref s) => {
                 try!(f.write_str("Error converting BookOption: "));
                 f.write_str(s)
             },
-            Error::InvalidOption(ref s) => {
+            Error::InvalidOption(_, ref s) => {
                 try!(f.write_str("Error accessing book option: "));
                 f.write_str(s)
             },
@@ -115,5 +150,4 @@ impl fmt::Display for Error {
 
 /// Crowbook's Result type, used by many methods that can fail
 pub type Result<T> = result::Result<T, Error>;
-
 

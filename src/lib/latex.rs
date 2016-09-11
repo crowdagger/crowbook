@@ -17,7 +17,7 @@
 
 use book::Book;
 use number::Number;
-use error::{Error,Result};
+use error::{Error,Result, Source};
 use token::Token;
 use zipper::Zipper;
 use escape::escape_tex;
@@ -35,6 +35,7 @@ pub struct LatexRenderer<'a> {
     book: &'a Book,
     current_chapter: Number,
     handler: ResourceHandler<'a>,
+    source: Source,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -46,6 +47,7 @@ impl<'a> LatexRenderer<'a> {
             book: book,
             current_chapter: Number::Default,
             handler: handler,
+            source: Source::empty(),
         }
     }
 
@@ -58,7 +60,8 @@ impl<'a> LatexRenderer<'a> {
 
             // write image files
             for (source, dest) in self.handler.images_mapping() {
-                let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(source.to_owned())));
+                let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                                    source.to_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
                 try!(zipper.write(dest, &content, true));
@@ -90,11 +93,13 @@ impl<'a> LatexRenderer<'a> {
 
         let mut i = 0;
         for &(n, ref v) in &self.book.chapters {
+            self.source = Source::new(&self.book.filenames[i]);
             content.push_str(&format!("\\label{{chapter-{}}}", i));
             self.current_chapter = n;
             content.push_str(&self.render_vec(v, true));
             i += 1;
         }
+        self.source = Source::empty();
         
 
         let tex_lang = String::from(match self.book.options.get_str("lang").unwrap() {

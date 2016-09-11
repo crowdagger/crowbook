@@ -1,4 +1,4 @@
-use error::{Error,Result};
+use error::{Error,Result, Source};
 use html::HtmlRenderer;
 use book::Book;
 use number::Number;
@@ -22,6 +22,7 @@ use std::borrow::Cow;
 pub struct HtmlDirRenderer<'a> {
     book: &'a Book,
     html: HtmlRenderer<'a>,
+    source: Source,
 }
 
 impl<'a> HtmlDirRenderer<'a> {
@@ -33,6 +34,7 @@ impl<'a> HtmlDirRenderer<'a> {
         HtmlDirRenderer {
             book: book,
             html: html,
+            source: Source::empty(),
         }
     }
 
@@ -73,7 +75,8 @@ impl<'a> HtmlDirRenderer<'a> {
         // Write all images (including cover)
         let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(source.to_owned())));
+            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                                                  source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
             try!(self.write_file(dest, &content));
@@ -87,7 +90,8 @@ impl<'a> HtmlDirRenderer<'a> {
             for path in list {
                 let abs_path = Path::new(&files_path).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(abs_path.to_string_lossy().into_owned())));
+                                 .map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                  abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
                 try!(self.write_file(data_path.join(&path).to_str().unwrap(), &content));
@@ -102,6 +106,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut chapters = vec!();
         let mut titles = vec!();
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
+            self.source = Source::new(&self.book.filenames[i]);
             self.html.filename = filenamer(i);
             // Todo: this part could be factorized between html, epub and html_dir
             self.html.current_hide = false;
@@ -142,6 +147,7 @@ impl<'a> HtmlDirRenderer<'a> {
             let chapter = self.html.render_html(v);
             chapters.push(chapter);
         }
+        self.source = Source::empty();
         let toc = self.html.toc.render();
 
         for (i, content) in chapters.into_iter().enumerate() {

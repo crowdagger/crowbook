@@ -1,4 +1,4 @@
-use error::{Error,Result};
+use error::{Error,Result, Source};
 
 /// Structure for storing a book option
 #[derive(Debug, PartialEq)]
@@ -22,7 +22,8 @@ impl BookOption {
     pub fn as_str(&self) -> Result<&str> {
         match *self {
             BookOption::String(ref s) => Ok(s),
-            _ => Err(Error::BookOption(format!("{:?} is not a string", self)))
+            _ => Err(Error::BookOption(Source::empty(),
+                                       format!("{:?} is not a string", self)))
         }
     }
 
@@ -30,7 +31,8 @@ impl BookOption {
     pub fn as_path(&self) -> Result<&str> {
         match *self {
             BookOption::Path(ref s) => Ok(s),
-            _ => Err(Error::BookOption(format!("{:?} is not a path", self)))
+            _ => Err(Error::BookOption(Source::empty(),
+                                       format!("{:?} is not a path", self)))
         }
     }
 
@@ -38,7 +40,8 @@ impl BookOption {
     pub fn as_bool(&self) -> Result<bool> {
         match *self {
             BookOption::Bool(b) => Ok(b),
-            _ => Err(Error::BookOption(format!("{:?} is not a bool", self)))
+            _ => Err(Error::BookOption(Source::empty(),
+                                       format!("{:?} is not a bool", self)))
         }
     }
 
@@ -46,7 +49,8 @@ impl BookOption {
     pub fn as_char(&self) -> Result<char> {
         match *self {
             BookOption::Char(c) => Ok(c),
-            _ => Err(Error::BookOption(format!("{:?} is not a char", self)))
+            _ => Err(Error::BookOption(Source::empty(),
+                                       format!("{:?} is not a char", self)))
         }
     }
     
@@ -54,7 +58,8 @@ impl BookOption {
     pub fn as_i32(&self) -> Result<i32> {
         match *self {
             BookOption::Int(i) => Ok(i),
-            _ => Err(Error::BookOption(format!("{:?} is not an i32", self)))
+            _ => Err(Error::BookOption(Source::empty(),
+                                       format!("{:?} is not an i32", self)))
 
         }
     }

@@ -1,4 +1,4 @@
-use error::{Error,Result};
+use error::{Error,Result, Source};
 use cleaner::{Cleaner, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
@@ -65,7 +65,11 @@ pub struct Book {
     /// Logger
     pub logger: Logger,
 
+    /// Source for error files
+    source: Source,
+    
     cleaner: Box<Cleaner>,
+
 }
 
 impl Book {
@@ -76,6 +80,7 @@ impl Book {
     pub fn new<'a,I>(options: I) -> Book
     where I: IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book {
+            source: Source::empty(),
             chapters: vec!(),
             filenames: vec!(),
             cleaner: Box::new(Off),
@@ -107,10 +112,13 @@ impl Book {
     pub fn new_from_file<'a, I> (filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
     where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book::new(options);
+        book.source = Source::new(filename);
+        book.options.source = Source::new(filename);
         book.logger.set_verbosity(verbosity);
         
         let path = Path::new(filename);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(String::from(filename))));
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(Source::empty(),
+                                                                           String::from(filename))));
         // Set book path to book's directory
         if let Some(parent) = path.parent() {
             book.root = parent.to_owned();
@@ -118,8 +126,9 @@ impl Book {
         }
         
         let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser("file contains invalid UTF-8, could not parse it",
-                                                                      filename.to_owned())));
+        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser(Source::new(filename),
+                                                                      "file contains invalid UTF-8, could not parse it".to_owned())));
+                                            
         
         try!(book.set_from_config(&s));
         Ok(book)
@@ -129,6 +138,7 @@ impl Book {
     pub fn new_from_markdown_file<'a, I>(filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
     where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book::new(options);
+        book.source = Source::new(filename);
         book.logger.set_verbosity(verbosity);
 
         // Set book path to book's directory
@@ -157,12 +167,14 @@ impl Book {
     ///
     /// 3. chapter_name.md adds the (custom numbered) chapter
     pub fn set_from_config(&mut self, s: &str) -> Result<()> {
-        fn get_filename(s: &str) -> Result<&str> {
+        fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
             let words:Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
-                return Err(Error::ConfigParser("chapter filenames must not contain whitespace", String::from(s)));
+                return Err(Error::ConfigParser(source.clone(),
+                                               "chapter filenames must not contain whitespace".to_owned()));
             } else if words.len() < 1 {
-                return Err(Error::ConfigParser("no chapter name specified", String::from(s)));
+                return Err(Error::ConfigParser(source.clone(),
+                                               "no chapter name specified".to_owned()));
             }
             Ok(words[0])
         }
@@ -172,6 +184,8 @@ impl Book {
         let mut lines = s.lines().peekable();
         let mut line;
 
+        let mut line_number = 0;
+        
         loop {
             if let Some(next_line) = lines.peek() {
                 if next_line.starts_with(|c| match c {
@@ -184,11 +198,13 @@ impl Book {
                 break;
             }
             line = lines.next().unwrap();
+            line_number += 1;
             yaml.push_str(line);
             yaml.push_str("\n");
         }
         match YamlLoader::load_from_str(&yaml) {
-            Err(err) => return Err(Error::ConfigParser("YAML block was not valid Yaml", format!("{}", err))),
+            Err(err) => return Err(Error::ConfigParser(self.source.clone(),
+                                                       format!("YAML block was not valid Yaml: {}", err))),
             Ok(docs) => {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
                     for (key,value) in docs[0].as_hash().unwrap() {
@@ -198,7 +214,8 @@ impl Book {
                         }
                     }
                 } else {
-                    return Err(Error::ConfigParser("YAML part of the book is not a valid hashmap", format!("{:?}", docs)));
+                    return Err(Error::ConfigParser(self.source.clone(),
+                                                   "YAML part of the book is not a valid hashmap".to_owned()));
                 }
             }
         }
@@ -208,35 +225,42 @@ impl Book {
         
         // Parse chapters
         while let Some(line) = lines.next() {
+            line_number += 1;
+            self.source.set_line(line_number);
             let line = line.trim();
             if line.is_empty() || line.starts_with('#') {
                 continue;
             }
             if line.starts_with('-') {
                 //unnumbered chapter
-                let file = try!(get_filename(line));
+                let file = try!(get_filename(&self.source, line));
                 try!(self.add_chapter(Number::Unnumbered, file));
             } else if line.starts_with('+') {
                 //nunmbered chapter
-                let file = try!(get_filename(line));
+                let file = try!(get_filename(&self.source, line));
                 try!(self.add_chapter(Number::Default, file));
             } else if line.starts_with('!') {
                 // hidden chapter
-                let file = try!(get_filename(line));
+                let file = try!(get_filename(&self.source, line));
                 try!(self.add_chapter(Number::Hidden, file));
             } else if line.starts_with(|c: char| c.is_digit(10)) {
                 // chapter with specific number
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
                 if parts.len() != 2 {
-                    return Err(Error::ConfigParser("ill-formatted line specifying chapter number", String::from(line)));
+                    return Err(Error::ConfigParser(self.source.clone(),
+                                                   "ill-formatted line specifying chapter number".to_owned()));
                 } 
-                let file = try!(get_filename(parts[1]));
-                let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser("Error parsing integer", String::from(line))));
+                let file = try!(get_filename(&self.source, parts[1]));
+                let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser(self.source.clone(),
+                                                                                          "Error parsing chapter number".to_owned())));
                 try!(self.add_chapter(Number::Specified(number), file));
             } else {
-                return Err(Error::ConfigParser("found invalid chapter definition in the chapter list", String::from(line)));
+                return Err(Error::ConfigParser(self.source.clone(),
+                                               "found invalid chapter definition in the chapter list".to_owned()));
             }
         }
+
+        self.source.unset_line();
 
         Ok(())
     }
@@ -398,15 +422,18 @@ impl Book {
 
         // try to open file
         let path = self.root.join(file);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(format!("{}", path.display()))));
+        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                           format!("{}", path.display()))));
         let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(format!("file {} contains invalid UTF-8", path.display()))));    
+        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(self.source.clone(),
+                                                                format!("file {} contains invalid UTF-8", path.display()))));    
             
         // Ignore YAML blocks
         self.parse_yaml(&mut s);
         
         // parse the file
         let mut parser = Parser::new();
+        parser.set_source_file(file);
         let mut v = try!(parser.parse(&s));
 
 
@@ -491,13 +518,16 @@ impl Book {
             "html_dir.index.html" => html_dir::INDEX_HTML,
             "html_dir.chapter.html" => html_dir::CHAPTER_HTML,
             "tex.template" => latex::TEMPLATE,
-            _ => return Err(Error::ConfigParser("invalid template", template.to_owned())),
+            _ => return Err(Error::ConfigParser(self.source.clone(),
+                                                format!("invalid template {}", template))),
         };
         if let Ok (ref s) = option {
-            let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(s.to_owned())));
+            let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                           s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)
-                 .map_err(|_| Error::ConfigParser("file could not be read", s.to_owned())));
+                 .map_err(|_| Error::ConfigParser(self.source.clone(),
+                                                  format!("file '{}' could not be read", s))));
             Ok(Cow::Owned(res))
         } else {
             Ok(Cow::Borrowed(fallback))

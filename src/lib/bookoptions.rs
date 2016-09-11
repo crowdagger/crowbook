@@ -1,4 +1,4 @@
-use error::{Error,Result};
+use error::{Error,Result, Source};
 use bookoption::BookOption;
 
 use yaml_rust::{Yaml, YamlLoader};
@@ -87,6 +87,9 @@ pub struct BookOptions {
     valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
 
+    /// Source for errors
+    pub source: Source,
+
     /// Root path of the book (unnecessary copy :/)
     pub root: PathBuf,
 }
@@ -103,6 +106,7 @@ impl BookOptions {
             valid_strings:vec!(),
             valid_paths:vec!(),
             root: PathBuf::new(),
+            source: Source::empty(),
         };
             
         for (_, key, option_type, default_value) in Self::options_to_vec() {
@@ -134,6 +138,7 @@ impl BookOptions {
         options
     }
 
+
     /// Sets an option from a Yaml tuple
     ///
     /// # Arguments
@@ -146,7 +151,7 @@ impl BookOptions {
         let key = if let Yaml::String(key) = key {
             key
         } else {
-            return Err(Error::BookOption(format!("Expected a String as a key, found {:?}", key)));
+            return Err(Error::BookOption(self.source.clone(), format!("Expected a String as a key, found {:?}", key)));
         };
         
         if self.valid_strings.contains(&key.as_ref()) {
@@ -154,39 +159,42 @@ impl BookOptions {
             if let Yaml::String(value) = value {
                 Ok(self.options.insert(key, BookOption::String(value)))
             } else {
-                Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)))
+                Err(Error::BookOption(self.source.clone(), format!("Expected a string as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_paths.contains(&key.as_ref()) {
             // value is a path
             if let Yaml::String(value) = value {
                 Ok(self.options.insert(key, BookOption::Path(value)))
             } else {
-                Err(Error::BookOption(format!("Expected a string as value for key {}, found {:?}", &key, &value)))
+                Err(Error::BookOption(self.source.clone(), format!("Expected a string as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_chars.contains(&key.as_ref()) {
             // value is a char
             if let Yaml::String(value) = value {
                 let chars: Vec<_> = value.chars().collect();
                 if chars.len() != 1 {
-                    return Err(Error::BookOption(format!("could not parse {} as a char: does not contain exactly one char", &value)));
+                    return Err(Error::BookOption(self.source.clone(), format!("could not parse {} as a char: does not contain exactly one char", &value)));
                 }
                 Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])))
             } else {
-                Err(Error::BookOption(format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)))
+                Err(Error::BookOption(self.source.clone(),
+                                      format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_bools.contains(&key.as_ref()) {
             // value is a bool
             if let Yaml::Boolean(value) = value {
                 Ok(self.options.insert(key, BookOption::Bool(value)))
             } else {
-                Err(Error::BookOption(format!("Expected a boolean as value for key {}, found {:?}", &key, &value)))
+                Err(Error::BookOption(self.source.clone(),
+                                      format!("Expected a boolean as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.valid_ints.contains(&key.as_ref()) {
             // value is an int
             if let Yaml::Integer(value) = value {
                 Ok(self.options.insert(key, BookOption::Int(value as i32)))
             } else {
-                Err(Error::BookOption(format!("Expected an integer as value for key {}, found {:?}", &key, &value)))
+                Err(Error::BookOption(self.source.clone(),
+                                      format!("Expected an integer as value for key {}, found {:?}", &key, &value)))
             }
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
@@ -194,11 +202,13 @@ impl BookOptions {
                 println!("{} has been deprecated, you should now use {}", &key, &new_key);
                 self.set_yaml(Yaml::String(new_key), value)
             } else {
-                Err(Error::BookOption(format!("key {} has been deprecated.", &key)))
+                Err(Error::BookOption(self.source.clone(),
+                                      format!("key {} has been deprecated.", &key)))
             }
         } else {
             // key not recognized
-            Err(Error::BookOption(format!("Unrecognized key: {}", &key)))
+            Err(Error::BookOption(self.source.clone(),
+                                  format!("Unrecognized key: {}", &key)))
         }
     }
     
@@ -231,22 +241,26 @@ impl BookOptions {
                 let yaml_value = yaml_docs.into_iter().next().unwrap();
                 self.set_yaml(Yaml::String(key.to_owned()), yaml_value)
             } else {
-                Err(Error::BookOption(format!("value {} for key {} does not contain one and only one YAML value", value, key)))
+                Err(Error::BookOption(self.source.clone(),
+                                      format!("value {} for key {} does not contain one and only one YAML value", value, key)))
             }
         } else {
-            Err(Error::BookOption(format!("could not parse {} as a valid YAML value", value)))
+            Err(Error::BookOption(self.source.clone(),
+                                  format!("could not parse {} as a valid YAML value", value)))
         }
     }
         
     /// Gets an option
     pub fn get(&self, key: &str) -> Result<&BookOption> {
-        self.options.get(key).ok_or_else(|| Error::InvalidOption(format!("option {} is not present", key)))
+        self.options.get(key).ok_or_else(|| Error::InvalidOption(self.source.clone(),
+                                                                 format!("option {} is not present", key)))
     }
 
     /// Gets a list of path. Only used for resources.files.
     pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
         if key != "resources.files" {
-            return Err(Error::BookOption(format!("Can't get {} as a list of files, only valid if key is resources.files", key)));
+            return Err(Error::BookOption(self.source.clone(),
+                                         format!("Can't get {} as a list of files, only valid if key is resources.files", key)));
         }
 
         let list = try!(try!(self.get(key))
@@ -273,7 +287,8 @@ impl BookOptions {
         if let Some(path) = new_path.to_str() {
             Ok(path.to_owned())
         } else {
-            Err(Error::BookOption(format!("'{}''s path contains invalid UTF-8 code", key)))
+            Err(Error::BookOption(self.source.clone(),
+                                  format!("'{}''s path contains invalid UTF-8 code", key)))
         }
     }
 

@@ -113,7 +113,7 @@ pub use html::HtmlRenderer;
 pub use epub::EpubRenderer;
 pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
-pub use error::{Result, Error};
+pub use error::{Result, Error, Source};
 pub use token::Token;
 pub use cleaner::{Cleaner, French};
 pub use number::Number;

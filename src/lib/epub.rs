@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error,Result};
+use error::{Error,Result, Source};
 use token::Token;
 use html::HtmlRenderer;
 use book::Book;
@@ -42,6 +42,7 @@ pub struct EpubRenderer<'a> {
     book: &'a Book,
     toc: Vec<String>,
     html: HtmlRenderer<'a>,
+    source: Source,
 }
 
 impl<'a> EpubRenderer<'a> {
@@ -55,6 +56,7 @@ impl<'a> EpubRenderer<'a> {
             book: book,
             html: html,
             toc: vec!(),
+            source: Source::empty(),
         }
     }
 
@@ -72,6 +74,7 @@ impl<'a> EpubRenderer<'a> {
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.html.filename = filenamer(i);
+            self.source = Source::new(&self.book.filenames[i]);
             self.html.current_hide = false;
             let book_numbering = self.book.options.get_i32("numbering").unwrap();
             match n {
@@ -90,6 +93,7 @@ impl<'a> EpubRenderer<'a> {
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
         }
+        self.source = Source::empty();
         
         // Render the CSS file and write it
         let template_css = mustache::compile_str(try!(self.book.get_template("epub.css")).as_ref());
@@ -127,7 +131,8 @@ impl<'a> EpubRenderer<'a> {
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(source.to_owned())));
+            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                                source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
             try!(zipper.write(dest, &content, true));
@@ -141,7 +146,8 @@ impl<'a> EpubRenderer<'a> {
             for path in list{
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(abs_path.to_string_lossy().into_owned())));
+                                 .map_err(|_| Error::FileNotFound(self.source.clone(),
+                                                                  abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
                 try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
