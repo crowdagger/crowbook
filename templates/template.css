@@ -110,7 +110,7 @@ nav {
 }
 
 /* Improving readability for the HTML format only */
-p, blockquote, li  {
+p, blockquote, li, .image  {
     margin-right: auto;
     max-width: 33em;
 }

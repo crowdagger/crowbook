@@ -418,13 +418,23 @@ impl<'a> HtmlRenderer<'a> {
             },
             Token::Image(ref url, ref title, ref alt)
                 | Token::StandaloneImage(ref url, ref title, ref alt) => {
-                let content = self.render_vec(alt);
-                let url = self.handler.map_image(Cow::Borrowed(url));
-                format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
-                        url,
-                        title,
-                        content)
-            },
+                    let content = self.render_vec(alt);
+                    let url = self.handler.map_image(Cow::Borrowed(url));
+
+                    if let Token::Image(_, _, _) = *token {
+                        format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
+                                url,
+                                title,
+                                content)
+                    } else {
+                        format!("<div class = \"image\">
+  <img src = \"{}\" title = \"{}\" alt = \"{}\" />
+</div>", 
+                                url,
+                                title,
+                                content)
+                    }
+                },
             Token::Table(_, ref vec) => format!("<div class = \"table\">
     <table>\n{}
     </table>
