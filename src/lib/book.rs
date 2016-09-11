@@ -150,8 +150,11 @@ impl Book {
     /// Sets options and load chapters according to configuration file
     ///
     /// A line with "option: value" sets the option to value
+    ///
     /// + chapter_name.md adds the (default numbered) chapter
+    ///
     /// - chapter_name.md adds the (unnumbered) chapter
+    ///
     /// 3. chapter_name.md adds the (custom numbered) chapter
     pub fn set_from_config(&mut self, s: &str) -> Result<()> {
         fn get_filename(s: &str) -> Result<&str> {
