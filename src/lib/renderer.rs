@@ -29,12 +29,5 @@ pub trait Renderer {
             .map(|token| self.render_token(token))
             .collect::<Result<Vec<_>>>()
             .map(|vec| vec.join(""))
-
-        //     let mut res = String::new();
-        
-        // for token in tokens {
-        //     res.push_str(&try!(self.parse_token(&token)));
-        // }
-        // Ok(res)
     }
 }
