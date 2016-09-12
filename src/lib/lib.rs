@@ -120,7 +120,7 @@ pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
 pub use html_dir::HtmlDirRenderer;
-
+pub use renderer::Renderer;
 
 mod html;
 mod html_dir;
@@ -137,6 +137,7 @@ mod resource_handler;
 mod logger;
 mod bookoptions;
 mod lang;
+mod renderer;
 
 mod escape;
 mod toc;

@@ -5,6 +5,7 @@ use number::Number;
 use token::Token;
 use templates::html;
 use resource_handler::ResourceHandler;
+use renderer::Renderer;
 
 use mustache;
 

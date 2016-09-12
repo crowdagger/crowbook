@@ -24,6 +24,7 @@ use toc::Toc;
 use resource_handler::ResourceHandler;
 use std::borrow::Cow;
 use templates::html;
+use renderer::Renderer;
 
 use mustache;
 use rustc_serialize::base64::{self, ToBase64};
@@ -244,7 +245,7 @@ impl<'a> HtmlRenderer<'a> {
     pub fn render_html(&mut self, tokens: &[Token])-> Result<String> {
         let mut res = String::new();
         for token in tokens {
-            res.push_str(&try!(self.parse_token(&token)));
+            res.push_str(&try!(self.render_token(&token)));
             self.render_side_notes(&mut res);
         }
         self.render_end_notes(&mut res);
@@ -307,25 +308,10 @@ impl<'a> HtmlRenderer<'a> {
             res.push_str("</table>");
         }
     }
-    
-    /// Transform a vector of `Token`s to HTML format.
-    ///
-    /// Only public becauses `EpubRenderer` uses it
-    #[doc(hidden)]
-    pub fn render_vec(&mut self, tokens: &[Token]) -> Result<String> {
-        let mut res = String::new();
-        
-        for token in tokens {
-            res.push_str(&try!(self.parse_token(&token)));
-        }
-        Ok(res)
-    }
+}
 
-    /// Parse a single token.
-    ///
-    /// Only public because EpubRenderer uses it
-    #[doc(hidden)]
-    pub fn parse_token(&mut self, token: &Token) -> Result<String> {
+impl<'a> Renderer for HtmlRenderer<'a> {
+    fn render_token(&mut self, token: &Token) -> Result<String> {
         match *token {
             Token::Str(ref text) => if self.verbatim {
                 Ok(escape_html(text))
@@ -480,6 +466,7 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 }
+
     
 
 

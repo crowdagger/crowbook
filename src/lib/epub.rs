@@ -24,6 +24,7 @@ use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;
 use resource_handler::ResourceHandler;
+use renderer::Renderer;
 
 use mustache;
 use chrono;
@@ -34,6 +35,7 @@ use std::fs;
 use std::fs::File;
 use std::path::{Path};
 use std::borrow::Cow;
+use std::mem;
 use mime_guess::guess_mime_type_opt;
 
 /// Renderer for Epub
@@ -43,6 +45,7 @@ pub struct EpubRenderer<'a> {
     book: &'a Book,
     toc: Vec<String>,
     html: HtmlRenderer<'a>,
+    chapter_title: String,
 }
 
 impl<'a> EpubRenderer<'a> {
@@ -56,6 +59,7 @@ impl<'a> EpubRenderer<'a> {
             book: book,
             html: html,
             toc: vec!(),
+            chapter_title: String::new(),
         }
     }
 
@@ -327,25 +331,24 @@ impl<'a> EpubRenderer<'a> {
     /// Render a chapter
     pub fn render_chapter(&mut self, v: &[Token]) -> Result<String> {
         let mut content = String::new();
-        let mut title = String::new();
 
         for token in v {
-            let res = try!(self.parse_token(&token, &mut title));
+            let res = try!(self.render_token(&token));
             content.push_str(&res);
             self.html.render_side_notes(&mut content);
         }
         self.html.render_end_notes(&mut content);
 
-        if title.is_empty() && self.html.current_numbering >= 1 {
+        if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
             let number = self.html.current_chapter[0] + 1;
-            title = try!(self.book.get_header(number, ""));
+            self.chapter_title = try!(self.book.get_header(number, ""));
         }
-        self.toc.push(title.clone());
-
+        self.toc.push(self.chapter_title.clone());
+        
         let template = mustache::compile_str(try!(self.book.get_template("epub.template")).as_ref());
         let data = self.book.get_mapbuilder("none")
             .insert_str("content", content)
-            .insert_str("chapter_title", title)
+            .insert_str("chapter_title", mem::replace(&mut self.chapter_title, String::new()))
             .build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
@@ -355,34 +358,29 @@ impl<'a> EpubRenderer<'a> {
         }
     }
 
-    fn parse_token(&mut self, token: &Token, title: &mut String) -> Result<String> {
-        match *token {
-            Token::Header(n, ref vec) => {
-                if n == 1 {
-                    if self.html.current_hide || self.html.current_numbering == 0 {
-                        if title.is_empty() {
-                            *title = try!(self.html.render_vec(vec));
-                        } else {
-                            self.book.logger.warning("EPUB: detected two chapter titles inside the same markdown file...");
-                            self.book.logger.warning("EPUB: ...in a file where chapter titles are not even rendered.");
-                        }
-                    } else {
-                        let res = self.book.get_header(self.html.current_chapter[0] + 1, &try!(self.html.render_vec(vec)));
-                        let s = res.unwrap();
-                        if title.is_empty() {
-                            *title = s;
-                        } else {
-                            self.book.logger.warning("EPUB: detected two chapters inside the same markdown file.");
-                            self.book.logger.warning(format!("EPUB: conflict between: {} and {}", title, s));
-                        }
-                    }
-                }
-                self.html.parse_token(token)
-            },
-            _ => self.html.parse_token(token)
+    /// Renders the header section of the book, finding the title of the chapter
+    fn find_title(&mut self, vec: &[Token]) -> Result<()> {
+        if self.html.current_hide || self.html.current_numbering == 0 {
+            if self.chapter_title.is_empty() {
+                self.chapter_title = try!(self.html.render_vec(vec));
+            } else {
+                self.book.logger.warning("EPUB: detected two chapter titles inside the same markdown file...");
+                self.book.logger.warning("EPUB: ...in a file where chapter titles are not even rendered.");
+            }
+        } else {
+            let res = self.book.get_header(self.html.current_chapter[0] + 1,
+                                           &try!(self.html.render_vec(vec)));
+            let s = res.unwrap();
+            if self.chapter_title.is_empty() {
+                self.chapter_title = s;
+            } else {
+                self.book.logger.warning("EPUB: detected two chapters inside the same markdown file.");
+                self.book.logger.warning(format!("EPUB: conflict between: {} and {}", self.chapter_title, s));
+            }
         }
+        Ok(())
     }
-
+    
     // Get the format of an image file, based on its extension
     fn get_format(&self, s: &str) -> String {
         let opt = guess_mime_type_opt(s);
@@ -405,4 +403,17 @@ fn to_id(s: &str) -> String {
 /// Generate a file name given an int   
 fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.xhtml", i)
+}
+
+
+impl<'a> Renderer for EpubRenderer<'a> {
+    fn render_token(&mut self, token: &Token) -> Result<String> {
+        match *token {
+            Token::Header(1, ref vec) => {
+                try!(self.find_title(vec));
+                self.html.render_token(token)
+            },
+            _ => self.html.render_token(token)
+        }
+    }
 }
