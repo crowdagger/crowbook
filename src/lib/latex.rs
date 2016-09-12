@@ -244,7 +244,7 @@ impl<'a> LatexRenderer<'a> {
                     }
                 }
             },
-            Token::Image(ref url, _, _) => {
+            Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     let img = try!(self.handler.map_image(&self.source,
                                                           Cow::Borrowed(url)));
@@ -258,7 +258,7 @@ impl<'a> LatexRenderer<'a> {
                     Ok(String::new())
                 }
             },
-            Token::StandaloneImage(ref url, _, _) => {
+            Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     Ok(format!("\\includegraphics{{{}}}",
                             try!(self.handler.map_image(&self.source,
