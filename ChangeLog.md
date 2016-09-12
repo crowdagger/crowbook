@@ -8,7 +8,11 @@ unreleased
   found, and, in some cases, the line. It also tries to detect errors
   (such as files not found) sooner.
 * Some "warning" messages have also been "moved" to error messages, to
-  make sure they are displayed even when crowbook isn't runned with `--verbose`.
+  make sure they are displayed even when crowbook isn't runned with
+`--verbose`.
+* Bugfixes:
+  * Implementations of `Image` and `StandaloneImage` were reversed in
+    LaTeX.
 * Internal/API:
   * In order to have better error messages, there was a need to
     refactor the `Error` type, and make more methods return
