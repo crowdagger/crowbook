@@ -58,7 +58,6 @@ tex.template:path                   # Path of a LaTeX template file
 enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
 zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
 autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
-side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 
 # Resources option
@@ -202,7 +201,7 @@ impl BookOptions {
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
             if let Some(new_key) = opt {
-                println!("{} has been deprecated, you should now use {}", &key, &new_key);
+                println!("WARNING: {} has been deprecated, you should now use {}", &key, &new_key);
                 self.set_yaml(Yaml::String(new_key), value)
             } else {
                 Err(Error::BookOption(self.source.clone(),
