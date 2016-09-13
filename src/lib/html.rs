@@ -91,6 +91,25 @@ impl<'a> HtmlRenderer<'a> {
         html
     }
 
+    /// Configure the Renderer for this chapter
+    pub fn chapter_config(&mut self, i: usize, n: Number) {
+        self.source = Source::new(&self.book.filenames[i]);
+        self.current_hide = false;
+        let book_numbering = self.book.options.get_i32("numbering").unwrap();
+        match n {
+            Number::Unnumbered => self.current_numbering = 0,
+            Number::Default => self.current_numbering = book_numbering,
+            Number::Specified(n) => {
+                self.current_numbering = book_numbering;
+                self.current_chapter[0] = n - 1;
+            },
+            Number::Hidden => {
+                self.current_numbering = 0;
+                self.current_hide = true;
+            },
+        }
+    }
+
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
         self.add_script = self.book.options.get_bool("html.display_chapter").unwrap();
@@ -112,22 +131,8 @@ impl<'a> HtmlRenderer<'a> {
         let mut chapters = vec!();
 
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
-            self.source = Source::new(&self.book.filenames[i]);
-            self.current_hide = false;
-            let book_numbering = self.book.options.get_i32("numbering").unwrap();
-            match n {
-                Number::Unnumbered => self.current_numbering = 0,
-                Number::Default => self.current_numbering = book_numbering,
-                Number::Specified(n) => {
-                    self.current_numbering = book_numbering;
-                    self.current_chapter[0] = n - 1;
-                },
-                Number::Hidden => {
-                    self.current_numbering = 0;
-                    self.current_hide = true;
-                },
-            }
-
+            self.chapter_config(i, n);
+            
             let mut title = String::new();
             for token in v {
                 match *token {

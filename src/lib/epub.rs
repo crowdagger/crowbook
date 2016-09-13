@@ -19,7 +19,6 @@ use error::{Error,Result,Source};
 use token::Token;
 use html::HtmlRenderer;
 use book::Book;
-use number::Number;
 use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;
@@ -81,22 +80,7 @@ impl<'a> EpubRenderer<'a> {
 
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
-            self.html.filename = filenamer(i);
-            self.html.source = Source::new(&self.book.filenames[i]);
-            self.html.current_hide = false;
-            let book_numbering = self.book.options.get_i32("numbering").unwrap();
-            match n {
-                Number::Unnumbered => self.html.current_numbering = 0,
-                Number::Default => self.html.current_numbering = book_numbering,
-                Number::Specified(n) => {
-                    self.html.current_numbering = book_numbering;
-                    self.html.current_chapter[0] = n - 1;
-                },
-                Number::Hidden => {
-                    self.html.current_numbering = 0;
-                    self.html.current_hide = true;
-                }
-            }
+            self.html.chapter_config(i, n);
             let chapter = try!(self.render_chapter(v));
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));

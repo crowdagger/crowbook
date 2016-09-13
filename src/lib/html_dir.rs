@@ -1,7 +1,6 @@
 use error::{Error,Result, Source};
 use html::HtmlRenderer;
 use book::Book;
-use number::Number;
 use token::Token;
 use templates::html;
 use resource_handler::ResourceHandler;
@@ -107,25 +106,8 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut chapters = vec!();
         let mut titles = vec!();
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
-            self.html.source = Source::new(&self.book.filenames[i]);
-            self.html.filename = filenamer(i);
-            // Todo: this part could be factorized between html, epub and html_dir
-            self.html.current_hide = false;
+            self.html.chapter_config(i, n);
             
-            let book_numbering = self.book.options.get_i32("numbering").unwrap();
-            match n {
-                Number::Unnumbered => self.html.current_numbering = 0,
-                Number::Default => self.html.current_numbering = book_numbering,
-                Number::Specified(n) => {
-                    self.html.current_numbering = book_numbering;
-                    self.html.current_chapter[0] = n - 1;
-                },
-                Number::Hidden => {
-                    self.html.current_numbering = 0;
-                    self.html.current_hide = true;
-                }
-            }
-
             let mut title = String::new();
             for token in v {
                 match *token {
