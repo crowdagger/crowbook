@@ -3,6 +3,10 @@ ChangeLog
 
 unreleased
 ----------
+* New options:
+  * `use_initials` make Crowbook use initials ("lettrines") at start
+    of each chapter. Support is still experimental and currently
+    limited to HTML/EPUB rendering.
 * Deprecated options:
   * `side_notes` has been renamed `html.side_notes`.
 * All output formats are now rendered concurrently.
@@ -19,8 +23,7 @@ unreleased
 * Internal/API:
   * In order to have better error messages, there was a need to
     refactor the `Error` type, and make more methods return
-    `Result<X>` instead of `X`. The API is, therefore, quite deeply
-    modified.
+    `Result<X>` instead of `X`. The API is, therefore, quite modified.
   * Added a `Renderer` trait used by the various renderers.
 
 0.7.0 (2016-09-11)
