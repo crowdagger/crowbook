@@ -183,7 +183,8 @@ following libraries:
 * [clap](https://github.com/kbknapp/clap-rs)
 * [chrono](https://crates.io/crates/chrono) 
 * [uuid](https://crates.io/crates/uuid) 
-* [mime_guess](https://crates.io/crates/mime_guess) 
+* [mime_guess](https://crates.io/crates/mime_guess)
+* [crossbeam](https://crates.io/crates/crossbeam)
 * [walkdir](https://crates.io/crates/walkdir)
 * [rustc-serialize](https://crates.io/crates/rustc-serialize)
 
