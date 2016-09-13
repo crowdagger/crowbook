@@ -3,6 +3,7 @@ use book::Book;
 use parser::Parser;
 use token::Token;
 use super::test_eq;
+use renderer::Renderer;
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new(&[]);
