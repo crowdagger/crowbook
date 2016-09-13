@@ -8,12 +8,12 @@ use std::env;
 
 static OPTIONS:&'static str = "
 # Metadata
-author:str:Anonymous                # The author of the book
-title:str:Untitled                  # The title of the book
-lang:str:en                         # The language of the book
+author:str:Anonymous                # Author of the book
+title:str:Untitled                  # Title of the book
+lang:str:en                         # Language of the book
 subject:str                         # Subject of the book (used for EPUB metadata)
 description:str                     # Description of the book (used for EPUB metadata)
-cover:path                          # File name of the cover of the book 
+cover:path                          # Path to the cover of the book 
 # Output options
 output.epub:path                    # Output file name for EPUB rendering
 output.html:path                    # Output file name for HTML rendering
@@ -24,17 +24,17 @@ output.odt:path                     # Output file name for ODT rendering
 
 # Misc options
 numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
-numbering:int:1                     # The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
-display_toc:bool:false              # If true, display a table of content in the document
-toc_name:str:Table of contents      # Name of the table of contents if toc is displayed in line
-verbose:bool:false                  # If set to true, print warnings in Markdown processing
+numbering:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
+display_toc:bool:false              # Display a table of content in the document
+toc_name:str:Table of contents      # Name of the table of contents if it is displayed in document
+verbose:bool:false                  # Make Crowbook display more messages
 
 # HTML options
 html.template:path                  # Path of an HTML template
-html.css:path                       # Path of a stylesheet to use with HTML rendering
-html.print_css:path                 # Path of a stylesheet to use with media print in HTML rendering
+html.css:path                       # Path of a stylesheet for HTML rendering
+html.print_css:path                 # Path of a media print stylesheet for HTML rendering
 html.script:path                    # Path of a javascript file
-html.display_chapter:bool:false     # Display one chapter at a time (with option to display all)
+html.display_chapter:bool:false     # Display only one chapter at a time (with option to display all)
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
 
 # Multifile HTML options
@@ -44,20 +44,20 @@ html_dir.index.html:path            # Path of index.html template
 html_dir.chapter.html:path          # Path of a chapter.html template
 
 # EPUB options
-epub.version:int:2                  # The EPUB version to generate
-epub.css:path                       # Path of a stylesheet to use with EPUB rendering
-epub.template:path                  # Path of an epub template for chapter
+epub.version:int:2                  # EPUB version to generate (2 or 3)
+epub.css:path                       # Path of a stylesheet for EPUB
+epub.template:path                  # Path of an xhtml template for each chapter
 
 # LaTeX options
-tex.short:bool:false                # If set to true, use article class instead of book and the default `\\maketitle` command
-tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL of links in LaTeX/PDF output
-tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
+tex.short:bool:false                # Use article class instead of book, and the default `\\maketitle` command
+tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
+tex.command:str:pdflatex            # LaTeX command to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
 
 # Advanced options
 enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
 zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
-autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
+autoclean:bool:true                 # Toggle cleaning of input markdown according to lang (not used for LaTeX)
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 
 # Resources option
