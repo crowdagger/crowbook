@@ -81,6 +81,7 @@ impl<'a> EpubRenderer<'a> {
         // Write chapters        
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
             self.html.chapter_config(i, n);
+            self.html.filename = filenamer(i);
             let chapter = try!(self.render_chapter(v));
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
