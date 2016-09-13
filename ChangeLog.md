@@ -3,6 +3,8 @@ ChangeLog
 
 unreleased
 ----------
+* Deprecated options:
+  * `side_notes` has been renamed `html.side_notes`.
 * All output formats are now rendered concurrently.
 * Better error messages. Crowbook now tries to give more information
   when displaying an error, with the file name where a problem was
