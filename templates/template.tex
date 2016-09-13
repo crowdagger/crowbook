@@ -7,6 +7,15 @@
 \usepackage{spverbatim}
 \usepackage{booktabs}
 \usepackage{graphicx}
+<<#initials>> % only if use_initials is set to true
+\usepackage{lettrine}
+\setlength{\DefaultNindent}{0em}
+\setcounter{DefaultLines}{3}
+\input Romantik.fd
+\newcommand*\initfamily{\usefont{U}{Romantik}{xl}{n}}
+\renewcommand{\LettrineFontHook}{\initfamily}
+
+<</initials>>
 \usepackage[colorlinks=true,breaklinks=true]{hyperref}
 \usepackage[anythingbreaks]{breakurl}
 

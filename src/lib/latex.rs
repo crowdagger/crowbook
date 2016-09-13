@@ -38,6 +38,8 @@ pub struct LatexRenderer<'a> {
     handler: ResourceHandler<'a>,
     source: Source,
     escape: bool,
+    first_letter: bool,
+    first_paragraph: bool,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -51,6 +53,8 @@ impl<'a> LatexRenderer<'a> {
             handler: handler,
             source: Source::empty(),
             escape: true,
+            first_letter: false,
+            first_paragraph: true,
         }
     }
 
@@ -159,6 +163,9 @@ impl<'a> LatexRenderer<'a> {
         if self.book.options.get_bool("tex.short") == Ok(true) {
             data = data.insert_bool("short", true);
         }
+        if self.book.options.get_bool("use_initials") == Ok(true) {
+            data = data.insert_bool("initials", true);
+        }
         let data = data.build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
@@ -172,15 +179,64 @@ impl<'a> LatexRenderer<'a> {
 impl<'a> Renderer for LatexRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {
         match *token {
-            Token::Str(ref text) => if self.escape {
-                Ok(self.book.clean(escape_tex(text), true))
-            } else {
-                Ok(text.clone())
+            Token::Str(ref text) => {
+                let content = if self.escape {
+                    self.book.clean(escape_tex(text), true)
+                } else {
+                    text.clone()
+                };
+                if self.first_letter {
+                    self.first_letter = false;
+                    if self.book.options.get_bool("use_initials").unwrap() {
+                        let mut chars = content.chars().peekable();
+                        let initial = try!(chars.next()
+                                           .ok_or(Error::Parser(self.book.source.clone(),
+                                                                "empty str token, could not find initial".to_owned())));
+                        let mut first_word = String::new();
+                        loop  {
+                            let c = if let Some(next_char) = chars.peek() {
+                                *next_char
+                            } else {
+                                break;
+                            };
+                            if !c.is_whitespace() {
+                                first_word.push(c);
+                                chars.next();
+                            } else {
+                                break;
+                            }
+                        }
+
+                        let rest = chars.collect::<String>();
+
+                        if initial.is_alphanumeric() {
+                            Ok(format!("\\lettrine{{{}}}{{{}}}{}", initial, first_word, rest))
+                        } else {
+                            Ok(format!("{}{}{}", initial, first_word, rest))
+                        }
+                    } else {
+                        Ok(content)
+                    }
+                } else {
+                    Ok(content)
+                }
+            }
+            Token::Paragraph(ref vec) => {
+                if self.first_paragraph {
+                    self.first_paragraph = false;
+                    if !vec.is_empty() && vec[0].is_str() {
+                        // Only use initials if first element is a Token::str
+                        self.first_letter = true;
+                    }
+                }
+                Ok(format!("{}\n\n",
+                           try!(self.render_vec(vec))))
             },
-            Token::Paragraph(ref vec) => Ok(format!("{}\n\n",
-                                                 try!(self.render_vec(vec)))),
             Token::Header(n, ref vec) => {
                 let mut content = String::new();
+                if n == 1 {
+                    self.first_paragraph = true;
+                }
                 if n == 1 && self.current_chapter == Number::Hidden {
                     return Ok(String::new());
                 }
