@@ -292,7 +292,7 @@ impl<'a> HtmlRenderer<'a> {
     /// Only public because EpubRenderer uses it
     #[doc(hidden)]
     pub fn render_side_notes(&mut self, res: &mut String) {
-        if self.book.options.get_bool("side_notes").unwrap() {
+        if self.book.options.get_bool("html.side_notes").unwrap() {
             for (note_number, footnote) in self.footnotes.drain(..) {
                 res.push_str(&format!("<div class = \"sidenote\">\n{} {}\n</div>\n", note_number, footnote));
             }
