@@ -236,15 +236,14 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 let mut content = String::new();
                 if n == 1 {
                     self.first_paragraph = true;
-                }
-                if n == 1 && self.current_chapter == Number::Hidden {
-                    return Ok(String::new());
-                }
-                if n == 1 {
-                    if let Number::Specified(n) = self.current_chapter {
-                        content.push_str(r"\setcounter{chapter}{");
-                        content.push_str(&format!("{}", n - 1));
-                        content.push_str("}\n");
+                    if self.current_chapter == Number::Hidden {
+                        return Ok(r#"\chapter*{}"#.to_owned());
+                    } else {
+                        if let Number::Specified(n) = self.current_chapter {
+                            content.push_str(r"\setcounter{chapter}{");
+                            content.push_str(&format!("{}", n - 1));
+                            content.push_str("}\n");
+                        }
                     }
                 }
                 match n {

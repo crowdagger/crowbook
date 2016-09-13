@@ -408,7 +408,7 @@ impl<'a> Renderer for HtmlRenderer<'a> {
                         
                 }
                 if n == 1 && self.current_hide {
-                    Ok(format!("<a id = \"link-{}\"></a>", self.link_number))
+                    Ok(format!("<h1 id = \"link-{}\"></h1>", self.link_number))
                 } else {
                     Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",
                             n, self.link_number, s, n))
