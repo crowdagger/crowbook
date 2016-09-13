@@ -4,19 +4,16 @@ title: A test
 ---
 
 ---
-# This is another YAML block.
-plop: coin
+# This is another YAML block. 
+foo: "this should not be parsed"
 ...
 
 
 foo
 ---
 
-bar
----
-
-the above should NOT be a YAML block.
-
+Sub-chapter
+-----------
 
 # Chapter #
 
@@ -79,7 +76,12 @@ three dashes --- neat
 
 ## Code ##
 
-Ìnline `code passage`
+Ìnline `<br>*foo*\text`[^code]
+
+[^code]: inline code should escape markdown, latex or HTML characters
+inside of it.
+
+
 
 ```
 code block
