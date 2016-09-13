@@ -130,6 +130,11 @@ impl Token {
         }
     }
 
+    /// Checks whether token is an str
+    pub fn is_str(&self) -> bool {
+        if let Token::Str(_) = *self { true } else { false }
+    }
+
     /// Checks whether token is an image
     ///
     /// **Returns** `true` if and only if token is Image variant (StandaloneImage returns *false*, like other variants)
