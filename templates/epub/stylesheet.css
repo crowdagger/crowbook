@@ -145,5 +145,16 @@ ul li {
     list-style-type: '–';
     padding-left: .5em;
 }
-
 {{/fr}}
+
+span.initial {
+    float: left;
+    font-size: 2em;
+    font-family: "Linux Libertine Initials O"; 
+    margin-right: 0.1em;
+    color: #770000;
+}       
+
+p.first-para {
+    text-indent: 0;
+}

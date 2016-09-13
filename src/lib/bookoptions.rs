@@ -26,6 +26,7 @@ output.odt:path                     # Output file name for ODT rendering
 numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
 numbering:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
 display_toc:bool:false              # Display a table of content in the document
+use_initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
 toc_name:str:Table of contents      # Name of the table of contents if it is displayed in document
 verbose:bool:false                  # Make Crowbook display more messages
 
@@ -57,7 +58,7 @@ tex.template:path                   # Path of a LaTeX template file
 # Advanced options
 enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
 zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
-autoclean:bool:true                 # Toggle cleaning of input markdown according to lang (not used for LaTeX)
+autoclean:bool:true                 # Toggle cleaning of input markdown according to lang
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 
 # Resources option

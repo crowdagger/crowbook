@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Result, Source};
+use error::{Result, Error, Source};
 use escape::escape_html;
 use token::Token;
 use book::Book;
@@ -42,7 +42,8 @@ pub struct HtmlRenderer<'a> {
     add_script: bool,
     current_par: u32,
     current_chapter_internal: i32,
-
+    first_letter: bool,
+    first_paragraph: bool,
 
 
     // fields used by EpubRenderer so marked public but hidden
@@ -85,6 +86,8 @@ impl<'a> HtmlRenderer<'a> {
             filename: String::new(),
             handler: ResourceHandler::new(&book.logger),
             source: Source::empty(),
+            first_letter: false,
+            first_paragraph: true,
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
@@ -94,6 +97,7 @@ impl<'a> HtmlRenderer<'a> {
     /// Configure the Renderer for this chapter
     pub fn chapter_config(&mut self, i: usize, n: Number) {
         self.source = Source::new(&self.book.filenames[i]);
+        self.first_paragraph = true;
         self.current_hide = false;
         let book_numbering = self.book.options.get_i32("numbering").unwrap();
         match n {
@@ -318,17 +322,56 @@ impl<'a> HtmlRenderer<'a> {
 impl<'a> Renderer for HtmlRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {
         match *token {
-            Token::Str(ref text) => if self.verbatim {
-                Ok(escape_html(text))
-            } else {
-                Ok(escape_html(&self.book.clean(text.clone(), false)))
+            Token::Str(ref text) => {
+                let content = if self.verbatim {
+                    escape_html(text)
+                } else {
+                    escape_html(&self.book.clean(text.clone(), false))
+                };
+                if self.first_letter {
+                    self.first_letter = false;
+                    if self.book.options.get_bool("use_initials").unwrap() {
+                        // Use initial
+                        let mut chars = content.chars();
+                        let initial = try!(chars.next()
+                                          .ok_or(Error::Parser(self.book.source.clone(),
+                                                               "empty str token, could not find initial".to_owned())));
+                        let mut new_content = if initial.is_alphanumeric() {
+                            format!("<span class = \"initial\">{}</span>", initial)
+                        } else {
+                            format!("{}", initial)
+                        };
+                        for c in chars {
+                            new_content.push(c);
+                        }
+                        Ok(new_content)
+                    } else {
+                        Ok(content)
+                    }
+                } else {
+                    Ok(content)
+                }
             },
             Token::Paragraph(ref vec) => {
+                if self.first_paragraph {
+                    self.first_paragraph = false;
+                    if !vec.is_empty() && vec[0].is_str() {
+                        // Only use initials if first element is a Token::str
+                        self.first_letter = true;
+                    }
+                }
+                let class = if self.first_letter && self.book.options.get_bool("use_initials").unwrap() {
+                    " class = \"first-para\""
+                } else {
+                    ""
+                };
+                let content = try!(self.render_vec(vec));
                 self.current_par += 1;
                 let par = self.current_par;
-                Ok(format!("<p id = \"para-{}\">{}</p>\n",
-                        par,
-                        try!(self.render_vec(vec))))
+                Ok(format!("<p id = \"para-{}\"{}>{}</p>\n",
+                           par,
+                           class,
+                           content))
             },
             Token::Header(n, ref vec) => {
                 if n == 1 {
