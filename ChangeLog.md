@@ -9,14 +9,19 @@ unreleased
     limited to HTML/EPUB rendering.
 * Deprecated options:
   * `side_notes` has been renamed `html.side_notes`.
-* All output formats are now rendered concurrently.
-* Better error messages. Crowbook now tries to give more information
+* Crowbook program:
+  * All output formats are now rendered concurrently.
+  * Better error messages. Crowbook now tries to give more information
   when displaying an error, with the file name where a problem was
   found, and, in some cases, the line. It also tries to detect errors
   (such as files not found) sooner.
-* Some "warning" messages have also been "moved" to error messages, to
+  * Some "warning" messages have also been "moved" to error messages, to
   make sure they are displayed even when crowbook isn't runned with
-`--verbose`.
+  `--verbose`.
+* Rendering:
+  * Hidden chapter now produce empty `\chapter*{}` and `<h1>` in LaTeX
+    and HTML. This allow to delimit a chapter break even if nothing is
+    displayed.
 * Bugfixes:
   * Implementations of `Image` and `StandaloneImage` were reversed in
     LaTeX.
