@@ -18,6 +18,8 @@ impl Toc {
     }
 
     /// Sets numbering of the Toc
+    ///
+    /// Only affects whether the generated HTML code should be <ul> or <ol> (epub)
     pub fn numbered(&mut self, numbered: bool) {
         self.numbered = numbered;
     }
