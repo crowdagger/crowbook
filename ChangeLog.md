@@ -17,7 +17,8 @@ unreleased
   * In order to have better error messages, there was a need to
     refactor the `Error` type, and make more methods return
     `Result<X>` instead of `X`. The API is, therefore, quite deeply
-    modified. 
+    modified.
+  * Added a `Renderer` trait used by the various renderers.
 
 0.7.0 (2016-09-11)
 ------------------
