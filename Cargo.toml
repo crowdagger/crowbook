@@ -29,3 +29,4 @@ uuid = { version = "0.3", features = ["v4"] }
 clap = "2"
 walkdir = "0.1"
 rustc-serialize = "0.3"
+crossbeam = "0.2"

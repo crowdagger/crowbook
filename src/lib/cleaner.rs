@@ -23,7 +23,7 @@ fn is_whitespace(c: char) -> bool {
 /// Trait for cleaning a string.
 /// This trait should be called for text that is e.g. in a paragraph, a title,
 /// NOT for code blocks, hyperlinks and so on!
-pub trait Cleaner {
+pub trait Cleaner: Sync {
     /// Cleans a string. The default implementation is to remove multiple consecutive whitespaces
     fn clean(&self, _: &mut String, _: bool) {}
 }

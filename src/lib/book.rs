@@ -21,6 +21,7 @@ use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::iter::IntoIterator;
 
+use crossbeam;
 use mustache;
 use mustache::MapBuilder;
 use yaml_rust::YamlLoader;
@@ -269,64 +270,71 @@ impl Book {
     
     /// Generates output files acccording to book options
     pub fn render_all(&self) -> () {
-        let mut did_some_stuff = false;
-        
-        if self.options.get("output.epub").is_ok() {
-            did_some_stuff = true;
-            let result = self.render_epub();
-            if let Err(err) = result {
-                self.logger.error(format!("Error rendering EPUB:\n{}", err));
+        let mut handles = vec!();
+        crossbeam::scope(|scope| {
+            if self.options.get("output.epub").is_ok() {
+                handles.push(scope.spawn(|| {
+                    let result = self.render_epub();
+                    if let Err(err) = result {
+                        self.logger.error(format!("Error rendering EPUB:\n{}", err));
+                    }
+                }));
             }
-        }
-
-        if self.options.get("output.html_dir").is_ok() {
-            did_some_stuff = true;
-            let result = self.render_html_dir();
-            if let Err(err) = result {
-                self.logger.error(format!("Error rendering HTML directory:\n{}", err));
+            
+            if self.options.get("output.html_dir").is_ok() {
+                handles.push(scope.spawn(move || {
+                    let result = self.render_html_dir();
+                    if let Err(err) = result {
+                        self.logger.error(format!("Error rendering HTML directory:\n{}", err));
+                    }
+                }));
             }
-        }
-
-        if let Ok(ref file) = self.options.get_path("output.html") {
-            did_some_stuff = true;
-            if let Ok(mut f) = File::create(file) {
-                let result = self.render_html(&mut f);
-                if let Err(err) = result {
-                    self.logger.error(format!("Error rendering HTML:\n{}", err));
-                }
-            } else {
-                self.logger.error(format!("Could not create HTML file '{}'", file));
+            
+            if let Ok(file) = self.options.get_path("output.html") {
+                handles.push(scope.spawn(move || {
+                    if let Ok(mut f) = File::create(&file) {
+                        let result = self.render_html(&mut f);
+                        if let Err(err) = result {
+                            self.logger.error(format!("Error rendering HTML:\n{}", err));
+                        }
+                    } else {
+                        self.logger.error(format!("Could not create HTML file '{}'", &file));
+                    }
+                }));
             }
-        }
-        if let Ok(ref file) = self.options.get_path("output.tex") {
-            did_some_stuff = true;
-            if let Ok(mut f) = File::create(file) {
-                let result = self.render_tex(&mut f);
-                if let Err(err) = result {
-                    self.logger.error(format!("Error rendering LaTeX:\n{}", err));
-                }
+            if let Ok(file) = self.options.get_path("output.tex") {
+                handles.push(scope.spawn(move || {
+                    if let Ok(mut f) = File::create(&file) {
+                        let result = self.render_tex(&mut f);
+                        if let Err(err) = result {
+                            self.logger.error(format!("Error rendering LaTeX:\n{}", err));
+                        }
+                    }
+                    else {
+                        self.logger.error(format!("Could not create LaTeX file '{}'", &file));
+                    }
+                }));
             }
-            else {
-                self.logger.error(format!("Could not create LaTeX file '{}'", file));
+            if self.options.get("output.pdf").is_ok() {
+                handles.push(scope.spawn(|| {
+                    let result = self.render_pdf();
+                    if let Err(err) = result {
+                        self.logger.error(format!("Error rendering PDF:\n{}", err));
+                    }
+                }));
             }
-        }
-        if self.options.get("output.pdf").is_ok() {
-            did_some_stuff = true;
-            let result = self.render_pdf();
-            if let Err(err) = result {
-                self.logger.error(format!("Error rendering PDF:\n{}", err));
+            if self.options.get("output.odt").is_ok() {
+                handles.push(scope.spawn(|| {
+                    let result = self.render_odt();
+                    if let Err(err) = result {
+                        self.logger.error(format!("Error rendering PDF:\n{}", err));
+                    }
+                }));
             }
-        }
-        if self.options.get("output.odt").is_ok() {
-            did_some_stuff = true;
-            let result = self.render_odt();
-            if let Err(err) = result {
-                self.logger.error(format!("Error rendering PDF:\n{}", err));
+            if handles.is_empty() {
+                self.logger.info("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
             }
-        }
-        if !did_some_stuff {
-            self.logger.info("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
-        }
+        });
     }
 
 
