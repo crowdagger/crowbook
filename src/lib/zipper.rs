@@ -17,7 +17,6 @@
 
 use error::{Error,Result};
 
-use std::env;
 use std::path::{Path,PathBuf};
 use std::io::Write;
 use std::process::Command;
@@ -84,16 +83,12 @@ This is forbidden because we are supposed to create a temporary file in a tempor
 
     /// Unzip a file and deletes it afterwards
     pub fn unzip(&mut self, file: &str) -> Result<()> {
-        // change to dest directory to unzip file
-        let dir = env::current_dir().unwrap();
-        try!(env::set_current_dir(&self.path).map_err(|_| Error::Zipper("could not change current directory".to_owned())));
         let output = Command::new("unzip")
-                      .arg(file)
-                      .output()
-                      .map_err(|e| Error::Zipper(format!("failed to execute unzip  on {}: {}", file, e)));
+            .current_dir(&self.path)
+            .arg(file)
+            .output()
+            .map_err(|e| Error::Zipper(format!("failed to execute unzip  on {}: {}", file, e)));
 
-        // change back to original current directory before try! ing anything
-        env::set_current_dir(dir).unwrap();
         try!(output);
 
         fs::remove_file(self.path.join(file))
