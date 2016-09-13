@@ -22,33 +22,20 @@ output.tex:path                     # Output file name for LaTeX rendering
 output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
 
-# Resources option
-resources.base_path:path                 # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
-resources.base_path.links:path           # Set base path but only for links. Useless if resources.base_path is set.
-resources.base_path.images:path:.        # Set base path but only for images. Useless if resources.base_path is set.
-resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
-resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
-resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file ; useful for including additional fonts
-
 # Misc options
-enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
-zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
+numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
 numbering:int:1                     # The  maximum heading levels to number (0: no numbering, 1: only chapters, ..., 6: all)
 display_toc:bool:false              # If true, display a table of content in the document
 toc_name:str:Table of contents      # Name of the table of contents if toc is displayed in line
-autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
 verbose:bool:false                  # If set to true, print warnings in Markdown processing
-side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
-temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
-numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
-
 
 # HTML options
 html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet to use with HTML rendering
 html.print_css:path                 # Path of a stylesheet to use with media print in HTML rendering
 html.script:path                    # Path of a javascript file
-html.display_chapter:bool:false      # Display one chapter at a time (with option to display all)
+html.display_chapter:bool:false     # Display one chapter at a time (with option to display all)
+html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
 
 # Multifile HTML options
 html_dir.script:path                # Path of a javascript file
@@ -67,10 +54,26 @@ tex.links_as_footnotes:bool:true    # If set to true, will add foontotes to URL 
 tex.command:str:pdflatex            # LaTeX flavour to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
 
+# Advanced options
+enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
+zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
+autoclean:bool:true                 # Toggles cleaning of input markdown (not used for LaTeX)
+side_notes:bool:false               # Display footnotes as side notes in HTML/Epub
+temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
+
+# Resources option
+resources.base_path:path                 # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
+resources.base_path.links:path           # Set base path but only for links. Useless if resources.base_path is set.
+resources.base_path.images:path:.        # Set base path but only for images. Useless if resources.base_path is set.
+resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
+resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
+resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file ; useful for including additional fonts
+
 # Deprecated options
 base_path:alias:resources.base_path  # Renamed
 base_path.links:alias:resources.base_path.links  # Renamed
 base_path.images:alias:resources.base_path.images  # Renamed
+side_notes:alias:html.side_notes # Renamed
 nb_char:alias # Removed
 ";
 
