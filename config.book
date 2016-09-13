@@ -11,6 +11,8 @@ lang: en
 ## Number chapters and sections, but not below that
 numbering: 2
 
+use_initials: true
+
 # Latex options
 tex.links_as_footnotes: false
 
