@@ -1,3 +1,15 @@
+span.initial {
+    all: initial;
+}
+
+p.first-para:first-letter {
+    font-size: 300%;
+    float: left;
+    font-weight: bold;
+    margin-right: 0.05em;
+    line-height: 1em;
+}
+
 /* The nav element corresponding to the navigation menu */
 nav {
     position: fixed;
@@ -137,8 +149,4 @@ blockquote {
 
 #toolbar img {
     cursor: pointer;
-}
-
-span.initial {
-   color: #770000;
 }

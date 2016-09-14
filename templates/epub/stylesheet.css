@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'EBGaramondInitialsRegular';
+    src: url('/assets/fonts/eb-garamond/ad76a14ea9b136557b474c3445caea08/f36596fa0c3b3d23f033a5b85fbe3ee5/EBGaramondInitialsRegular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     font-family: "Linux Libertine", "Georgia", serif;
     text-align: justify;
@@ -147,14 +154,16 @@ ul li {
 }
 {{/fr}}
 
-span.initial {
+span.initial { 
     float: left;
-    font-size: 2.5em;
-    font-family: "Linux Libertine Initials O";
-    margin-right: 0.1em;
-    margin-top: -0.25em;
-}       
+    font-size: 2em;
+    font-weight: bold;
+    margin-right: 0.05em;
+    line-height: 1em;
+}
 
 p.first-para {
     text-indent: 0;
 }
+
+                           
