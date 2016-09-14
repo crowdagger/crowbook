@@ -149,10 +149,10 @@ ul li {
 
 span.initial {
     float: left;
-    font-size: 2em;
+    font-size: 2.5em;
     font-family: "Linux Libertine Initials O";
     margin-right: 0.1em;
-    color: #770000;
+    margin-top: -0.25em;
 }       
 
 p.first-para {

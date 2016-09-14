@@ -138,3 +138,7 @@ blockquote {
 #toolbar img {
     cursor: pointer;
 }
+
+span.initial {
+   color: #770000;
+}
