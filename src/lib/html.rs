@@ -376,6 +376,7 @@ impl<'a> Renderer for HtmlRenderer<'a> {
             Token::Header(n, ref vec) => {
                 if n == 1 {
                     self.current_chapter_internal += 1;
+                    self.first_paragraph = true;
                 }
                 if self.current_numbering >= n {
                     self.inc_header(n - 1);
