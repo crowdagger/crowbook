@@ -28,6 +28,11 @@ use renderer::Renderer;
 
 use mustache;
 use rustc_serialize::base64::{self, ToBase64};
+use syntect::easy::HighlightLines;
+use syntect::parsing::SyntaxSet;
+use syntect::highlighting::{ThemeSet, Style};
+use syntect;
+
 
 /// Renders HTML document in a standalone file.
 ///
@@ -63,6 +68,8 @@ pub struct HtmlRenderer<'a> {
     pub filename: String,
     #[doc(hidden)]
     pub handler: ResourceHandler<'a>,
+    syntax_set: SyntaxSet,
+    theme_set: ThemeSet,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -88,6 +95,8 @@ impl<'a> HtmlRenderer<'a> {
             source: Source::empty(),
             first_letter: false,
             first_paragraph: true,
+            syntax_set: SyntaxSet::load_defaults_nonewlines(),
+            theme_set:ThemeSet::load_defaults(),
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
@@ -116,6 +125,7 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
+        println!("theme_set: {:?}", &self.theme_set.themes.keys().clone().collect::<Vec<_>>());
         self.add_script = self.book.options.get_bool("html.display_chapter").unwrap();
         let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
         let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
@@ -324,7 +334,7 @@ impl<'a> Renderer for HtmlRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.verbatim {
-                    escape_html(text)
+                    text.clone()
                 } else {
                     escape_html(&self.book.clean(text.clone(), false))
                 };
@@ -422,10 +432,21 @@ impl<'a> Renderer for HtmlRenderer<'a> {
             Token::CodeBlock(ref language, ref vec) => {
                 self.verbatim = true;
                 let s = try!(self.render_vec(vec));
-                let output = if language.is_empty() {
-                    format!("<pre><code>{}</code></pre>\n", s)
+                let output = if true { // change to use_syntex {
+                    let syntax = self.syntax_set.find_syntax_by_token(language)
+                        .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
+                    let ref theme = self.theme_set.themes["InspiredGitHub"]; 
+                    let mut h = HighlightLines::new(syntax, theme);
+                    let regions = h.highlight(&s);
+                    format!("<pre>{}</pre>",
+                            syntect::html::styles_to_coloured_html(&regions[..],
+                                                                   syntect::html::IncludeBackground::No))
                 } else {
-                    format!("<pre><code class = \"language-{}\">{}</code></pre>\n", language, s)
+                    if language.is_empty() {
+                        format!("<pre><code>{}</code></pre>\n", s)
+                    } else {
+                        format!("<pre><code class = \"language-{}\">{}</code></pre>\n", language, s)
+                    }
                 };
                 self.verbatim = false;
                 Ok(output)
