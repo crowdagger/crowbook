@@ -3,7 +3,7 @@ Arguments
 
 Crowbook can takes a list of arguments:
 
-```bash
+```text
 Render a markdown book in Epub, PDF or HTML.
 
 USAGE:
@@ -29,7 +29,8 @@ ARGS:
 
 Note that Crowbook generates output files relatively to the directory
 where <BOOK> is:
-```
+
+```bash
 $ crowbook foo/bar.book --to pdf --output baz.pdf
 ```
 will thus generate baz.pdf in directory foo and not in current directory.
@@ -56,13 +57,13 @@ exists).
 
 ### Examples ###
 
-```
+```bash
 crowbook foo.book --create  README.md ChangeLog.md LICENSE.md
 ```
 
 will generate a file `foo.book` containing:
 
-```
+```yaml
 author: Your name
 title: Your title
 lang: en
@@ -83,7 +84,7 @@ lang: en
 
 while
 
-```
+```bash
 crowbook --create README.md ChangeLog.md LICENSE.md
 ```
 
@@ -92,13 +93,13 @@ will prints the same result, but to stdout (without creating a file).
 When `crowbook` is runned with `--create`, it can also uses the
 keys/values set by `--set` (see below):
 
-```
+```bash
 $ crowbook foo.book --create file1.md file2.md --set author "Pierre Dupont" title "Mon œuvre" lang fr
 ```
 
 will generate a `foo.book` file containing
 
-```
+```yaml
 author: Pierre Dupont
 title: Mon œuvre
 lang: fr
@@ -119,7 +120,7 @@ This options allows to pass `crowbook` a single Markdown file. This
 file can contain an inline YAML block to set some book options. Inline
 YAML blocks must start and end with a line with `---` (three dashes). E.g:
 
-```markdown
+```yaml
 ---
 author: Joan Doe
 title: A short story
@@ -133,7 +134,7 @@ This allows to not have to write a `.book` configuration file for a
 short story or an article. `crowbook --single foo.md` is rougly equivalent to having a book
 configuration file containing:
 
-```markdown
+```yaml
 ! foo.md
 ```
 
@@ -156,13 +157,13 @@ configuration files are valid as keys. For more information, see
 
 ### Examples ###
 
-```
+```bash
 $ crowbook foo.book --set html.css style.css
 ```
 
 will override the CSS for HTML generation (the `html.css` key) to `style.css`.
 
-```
+```bash
 $ crowbook foo.book --set author Foo --title Bar
 ```
 
@@ -187,7 +188,7 @@ Prints to stdout the built-in template. Useful if you want to
 customize the appearance of your document. E.g., if you want to modify
 the CSS used for HTML rendering:
 
-```
+```bash
 $ crowbook --print-template html.css > my_style.css
 # edit my_style.css in your favourite editor
 $ crowbook my.book --set html.css my_style.css
@@ -197,7 +198,7 @@ $ crowbook my.book --set html.css my_style.css
 Note that it is possible to use this option in conjonction with
 `--set`, though it is currently only useful for EPUB template:
 
-```
+```bash
 $ crowbook --print-template epub.template --set epub.version 2
 # Returns the template for Epub 2 (currently it is the default one)
 $ crowbook --print-template epub.template --set epub.version 3
@@ -232,14 +233,14 @@ possible to specify a file with the `--output` option.
 
 ### Examples ###
 
-```
+```bash
 crowbook --to html foo.book
 ```
 
 will generate some HTML, and prints it either to the file specified by
 `output.html` in `foo.book`, or to stdout if it is not specified.
 
-```
+```bash
 crowbook --to pdf --output foo.pdf foo.book
 ```
 
@@ -256,7 +257,8 @@ Specifies an output file. Only valid when `--to` is used.
 
 Note that Crowbook generates output files relatively to the directory
 where `BOOK` is:
-```
+
+```bash
 $ crowbook foo/bar.book --to pdf --output baz.pdf
 ```
 will thus generate `baz.pdf` in directory `foo` and not in current

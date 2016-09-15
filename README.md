@@ -1,12 +1,6 @@
 Crowbook
 ========
 
-```rust
-fn test() {
-    println!("{}", 42);
-}
-```
-
 [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
 
 Render a book written in markdown to HTML, Epub or PDF.
@@ -50,7 +44,7 @@ on your machine first; you can
 [download and install it here](https://www.rust-lang.org/downloads.html). Once
 it is down:
 
-```
+```bash
 $ cargo install crowbook
 ```
 
@@ -142,7 +136,7 @@ document.
 
 Crowbook supports inline YAML blocks: 
 
-```markdown
+```yaml
 ---
 author: Me
 title: My title
@@ -153,7 +147,7 @@ This is mostly useful when Crowbook is runned with the `--single`
 argument (receiving a single Markdown file instead of a book
 configuration file). E.g., the following Markdown file:
 
-```
+```yaml
 ---
 author: John Doe
 title: A book

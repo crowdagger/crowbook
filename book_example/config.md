@@ -8,7 +8,7 @@ but that's besides the scope of this document).
 
 The format is not very complicated. This is an example of it:
 
-```
+```yaml
 # metadata
 author: Joan Doe
 title: Some book
@@ -46,7 +46,7 @@ There are various options to include a markdown file.
 
 So a typical usage might look like this:
 
-```
+```yaml
 ! copyright.md
 - preface.md
 # We want first chapter to be Chapter 0 because we are programmers!
@@ -108,14 +108,14 @@ to Crowbook. This is
 be of the form `key: value`. Note that in most cases you don't have to
 put string in quotes, e.g.:
 
-```
+```yaml
 title: My title
 ```
 
 It is however possible (and sometimes necessary) to escape some
 characters to use quotes around strings:
 
-```
+```yaml
 title: "My: title!"
 ```
 
@@ -123,7 +123,7 @@ title: "My: title!"
 It is possible to use multiline strings with `>-` and
 then indenting the lines that are part of the string:
 
-```
+```yaml
 title: >-
  A
  long
@@ -369,7 +369,7 @@ one of this option, or Crowbook won't do anything.
 Recall that all file paths are relative to the directory where the
 config file is, not to the one where you run `crowbook`. So if you set
 
-```
+```yaml
 output.epub = foo.epub
 ```
 
@@ -385,7 +385,7 @@ directory.
 Crowbook will try to generate each of the `output.xxx` files that are
 specified. That means that you'll have to set at least one of those if you want a call to
 
-```
+```bash
 $ crowbook my.book
 ```
 
@@ -418,7 +418,7 @@ These two options allow to embed additional files for some formats
 A list of files or directories that should be added. It's a
 whitespace-separated list, so it can be, e.g.:
 
-```
+```yaml
 resources.files: font1.otf font2.otf
 ```
 
@@ -426,14 +426,14 @@ It is also possible to specify a directory (or multiple
 directories). So if you have a `fonts` directories containing
 `font1.otf` and `font2.otf`,
 
-```
+```yaml
 resources.files: fonts
 ```
 
 will be equivalent to:
 
-```
-resources.files fonts/font1.otf fonts/font2.otf
+```yaml
+resources.files: fonts/font1.otf fonts/font2.otf
 ```
 
 
@@ -453,7 +453,7 @@ Note that if you pass directories to `resources.files`, the whole
 directory would be copied. So assuming `fonts/` contains `font1.otf`
 and `font2.otf`
 
-```
+```yaml
 resources.files: fonts
 resources.path: data
 ```
@@ -463,7 +463,7 @@ will copy these two files to `data/fonts/font1.otf` and
 
 Similarly, the whole path of `resources.files` is copied, so
 
-```
+```yaml
 resources.files: fonts/font1.otf fonts/font2.otf
 ```
 
@@ -488,7 +488,7 @@ and turns numbering on for all headers.
 A string that will be used for chapter titles. You can use `{{number}}` and
 `{{title}}` in this string, e.g.:
 
-```
+```yaml
 numbering_template: "Chapter {{number}} {{title}}"
 ```
 
