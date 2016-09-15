@@ -12,6 +12,15 @@
     <style type = "text/css" media = "print">
       {{{print_style}}}
     </style>
+    {{#highlight_code}}
+    <style>
+      {{{highlight_css}}}
+    </style>
+    <script src = "{{{highlight_js}}}"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+    {{/highlight_code}}
    <script>
 {{{script}}}
    </script>

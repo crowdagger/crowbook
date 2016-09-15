@@ -23,7 +23,7 @@ use number::Number;
 use toc::Toc;
 use resource_handler::ResourceHandler;
 use std::borrow::Cow;
-use templates::html;
+use templates::{html, highlight};
 use renderer::Renderer;
 
 use mustache;
@@ -125,7 +125,10 @@ impl<'a> HtmlRenderer<'a> {
 
         let pages_svg = html::PAGES_SVG.to_base64(base64::STANDARD);
         let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
-         
+
+        let highlight_js = highlight::JS.to_base64(base64::STANDARD);
+        let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
+
         for (i, filename) in self.book.filenames.iter().enumerate() {
             self.handler.add_link(filename.clone(), format!("#chapter-{}", i));
         }
@@ -232,7 +235,7 @@ impl<'a> HtmlRenderer<'a> {
         let js = String::from_utf8_lossy(&res);
 
         // Render the HTML document
-        let data = self.book.get_mapbuilder("none")
+        let mut mapbuilder = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("toc", toc)
             .insert_str("script", js)
@@ -242,8 +245,13 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("print_style", self.book.get_template("html.print_css").unwrap())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
-            .insert_str("pages_svg", pages_svg)
-            .build();
+            .insert_str("pages_svg", pages_svg);
+        if self.book.options.get_bool("html.highlight_code") == Ok(true) {
+            mapbuilder = mapbuilder.insert_bool("highlight_code", true)
+                .insert_str("highlight_css", highlight::CSS)
+                .insert_str("highlight_js", highlight_js);
+        }
+        let data = mapbuilder.build();
         let template = mustache::compile_str(try!(self.book.get_template("html.template")).as_ref());        
         let mut res = vec!();
         template.render_data(&mut res, &data);

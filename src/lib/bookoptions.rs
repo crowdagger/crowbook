@@ -31,6 +31,7 @@ toc_name:str:Table of contents      # Name of the table of contents if it is dis
 verbose:bool:false                  # Make Crowbook display more messages
 
 # HTML options
+html.highlight_code:bool:true            # Provides syntax highlighting for code blocks (using highlight.js) 
 html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet for HTML rendering
 html.print_css:path                 # Path of a media print stylesheet for HTML rendering

@@ -15,6 +15,11 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
+pub mod highlight {
+    pub static CSS:&'static str = include_str!("../../templates/highlight/default.css");
+    pub static JS:&'static [u8] = include_bytes!("../../templates/highlight/highlight.pack.js");
+}
+
 pub mod html {
     pub static TEMPLATE:&'static str = include_str!("../../templates/template.html");
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
