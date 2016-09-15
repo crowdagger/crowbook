@@ -4,9 +4,11 @@ ChangeLog
 unreleased
 ----------
 * New options:
-  * `use_initials` make Crowbook use initials ("lettrines") at start
-    of each chapter. Support is still experimental and currently
-    limited to HTML/EPUB rendering.
+  * `use_initials` (set to false by default) make Crowbook use
+    initials ("lettrines") at start of each chapter. Support is still
+    experimental.
+  * `html.highlight_code` (set to true by default) allows syntax
+    highlighting for code blocks, using highlight.js.
 * Deprecated options:
   * `side_notes` has been renamed `html.side_notes`.
 * Crowbook program:
