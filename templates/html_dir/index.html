@@ -8,6 +8,14 @@
     <title>{{title}}</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
+    {{#highlight_code}}
+    <link rel = "stylesheet" href = "highlight.css" type = "text/css"
+          />
+    <script src = "highlight.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+    {{/highlight_code}}
     <link rel = "stylesheet" href = "print.css" type = "text/css"
           media = "print" />
    <script>

@@ -2,7 +2,7 @@ use error::{Error,Result, Source};
 use html::HtmlRenderer;
 use book::Book;
 use token::Token;
-use templates::html;
+use templates::{html,highlight};
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 
@@ -69,6 +69,12 @@ impl<'a> HtmlDirRenderer<'a> {
         try!(self.write_html());
         // Write menu.svg
         try!(self.write_file("menu.svg", html::MENU_SVG));
+
+        // Write highlight files if they are needed
+        if self.book.options.get_bool("html.highlight_code") == Ok(true) {
+            try!(self.write_file("highlight.js", highlight::JS));
+            try!(self.write_file("highlight.css", highlight::CSS.as_bytes()));
+        }
         
         // Write all images (including cover)
         let images_path = PathBuf::from(&self.book.options.get_path("resources.base_path.images").unwrap());
@@ -160,7 +166,7 @@ impl<'a> HtmlDirRenderer<'a> {
 
             
             // Render each HTML document
-            let data = self.book.get_mapbuilder("none")
+            let mut mapbuilder = self.book.get_mapbuilder("none")
                 .insert_str("content", try!(content))
                 .insert_str("chapter_title", format!("{} – {}",
                                              self.book.options.get_str("title").unwrap(),
@@ -169,8 +175,12 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
                 .insert_str("script", self.book.get_template("html_dir.script").unwrap())
-                .insert_bool(self.book.options.get_str("lang").unwrap(), true)
-                .build();
+                .insert_bool(self.book.options.get_str("lang").unwrap(), true);
+            
+            if self.book.options.get_bool("html.highlight_code").unwrap() == true {
+                mapbuilder = mapbuilder.insert_bool("highlight_code", true);
+            }
+            let data = mapbuilder.build();
             let template = mustache::compile_str(try!(self.book.get_template("html_dir.chapter.html")).as_ref());        
             let mut res = vec!();
             template.render_data(&mut res, &data);
@@ -204,12 +214,15 @@ impl<'a> HtmlDirRenderer<'a> {
                         titles[0]));
         }
         // Render index.html and write it too
-        let data = self.book.get_mapbuilder("none")
+        let mut mapbuilder = self.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("toc", toc.clone())
             .insert_str("script", self.book.get_template("html_dir.script").unwrap())
-            .insert_bool(self.book.options.get_str("lang").unwrap(), true)
-            .build();
+            .insert_bool(self.book.options.get_str("lang").unwrap(), true);
+        if self.book.options.get_bool("html.highlight_code").unwrap() == true {
+            mapbuilder = mapbuilder.insert_bool("highlight_code", true);
+        }
+        let data = mapbuilder.build();
         let template = mustache::compile_str(try!(self.book.get_template("html_dir.index.html")).as_ref());        
         let mut res = vec!();
         template.render_data(&mut res, &data);
