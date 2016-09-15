@@ -105,6 +105,7 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
+extern crate syntect;
 
 pub use parser::Parser;
 pub use book::Book;
