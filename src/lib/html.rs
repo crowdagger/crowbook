@@ -126,9 +126,6 @@ impl<'a> HtmlRenderer<'a> {
         let pages_svg = html::PAGES_SVG.to_base64(base64::STANDARD);
         let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
 
-        let highlight_js = highlight::JS.to_base64(base64::STANDARD);
-        let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
-
         for (i, filename) in self.book.filenames.iter().enumerate() {
             self.handler.add_link(filename.clone(), format!("#chapter-{}", i));
         }
@@ -247,6 +244,8 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("book_svg", book_svg)
             .insert_str("pages_svg", pages_svg);
         if self.book.options.get_bool("html.highlight_code") == Ok(true) {
+            let highlight_js = highlight::JS.to_base64(base64::STANDARD);
+            let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
             mapbuilder = mapbuilder.insert_bool("highlight_code", true)
                 .insert_str("highlight_css", highlight::CSS)
                 .insert_str("highlight_js", highlight_js);
