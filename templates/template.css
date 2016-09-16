@@ -1,3 +1,4 @@
+/* Default  HTML CSS file includes default EPUB CSS file */
 span.initial {
     all: initial;
 }
@@ -150,3 +151,28 @@ blockquote {
 #toolbar img {
     cursor: pointer;
 }
+
+#footer {
+    background-color: #474747;
+    margin-top: 2em;
+    text-align: center;
+    color: white;
+}
+
+#footer a {
+    color: #ef68ff;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    color: #ca58d7;
+}
+
+#footer p {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+
+                 

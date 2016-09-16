@@ -172,6 +172,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("toc", toc.clone())
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
+                .insert_str("footer", self.html.get_footer())
                 .insert_str("script", self.html.book.get_template("html_dir.script").unwrap())
                 .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
             
@@ -214,6 +215,7 @@ impl<'a> HtmlDirRenderer<'a> {
         // Render index.html and write it too
         let mut mapbuilder = self.html.book.get_mapbuilder("none")
             .insert_str("content", content)
+            .insert_str("footer", self.html.get_footer())
             .insert_str("toc", toc.clone())
             .insert_str("script", self.html.book.get_template("html_dir.script").unwrap())
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);

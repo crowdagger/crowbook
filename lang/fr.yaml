@@ -2,3 +2,5 @@ menu: Table des matières
 
 display_all: Afficher tous les chapitres
 display_one: "N'afficher qu'un chapitre"
+
+generated_by_crowbook: 'Généré par <a href = "https://github.com/lise-henry/crowbook">Crowbook</a>'
