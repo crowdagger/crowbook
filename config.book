@@ -14,9 +14,6 @@ numbering: 2
 
 use_initials: true
 
-html.highlight.css: /tmp/highlight/styles/mono-blue.css
-
-
 # Latex options
 tex.links_as_footnotes: false
 
