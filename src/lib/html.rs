@@ -23,7 +23,7 @@ use number::Number;
 use toc::Toc;
 use resource_handler::ResourceHandler;
 use std::borrow::Cow;
-use templates::{html, highlight};
+use templates::{html};
 use renderer::Renderer;
 
 use mustache;
@@ -244,10 +244,12 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("book_svg", book_svg)
             .insert_str("pages_svg", pages_svg);
         if self.book.options.get_bool("html.highlight_code") == Ok(true) {
-            let highlight_js = highlight::JS.to_base64(base64::STANDARD);
+            let highlight_js = try!(self.book.get_template("html.highlight.js"))
+                .as_bytes()
+                .to_base64(base64::STANDARD);
             let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
             mapbuilder = mapbuilder.insert_bool("highlight_code", true)
-                .insert_str("highlight_css", highlight::CSS)
+                .insert_str("highlight_css", try!(self.book.get_template("html.highlight.css")))
                 .insert_str("highlight_js", highlight_js);
         }
         let data = mapbuilder.build();

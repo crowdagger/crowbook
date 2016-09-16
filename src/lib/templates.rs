@@ -17,7 +17,7 @@
 
 pub mod highlight {
     pub static CSS:&'static str = include_str!("../../templates/highlight/default.css");
-    pub static JS:&'static [u8] = include_bytes!("../../templates/highlight/highlight.pack.js");
+    pub static JS:&'static str = include_str!("../../templates/highlight/highlight.pack.js");
 }
 
 pub mod html {

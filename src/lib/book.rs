@@ -8,7 +8,7 @@ use html::HtmlRenderer;
 use html_dir::HtmlDirRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
-use templates::{epub, html, epub3, latex, html_dir};
+use templates::{epub, html, epub3, latex, html_dir, highlight};
 use escape;
 use number::Number;
 use resource_handler::ResourceHandler;
@@ -527,6 +527,8 @@ impl Book {
             "html_dir.css" => html_dir::CSS,
             "html_dir.index.html" => html_dir::INDEX_HTML,
             "html_dir.chapter.html" => html_dir::CHAPTER_HTML,
+            "html.highlight.js" => highlight::JS,
+            "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::ConfigParser(self.source.clone(),
                                                 format!("invalid template {}", template))),

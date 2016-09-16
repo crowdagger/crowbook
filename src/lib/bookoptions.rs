@@ -32,6 +32,8 @@ verbose:bool:false                  # Make Crowbook display more messages
 
 # HTML options
 html.highlight_code:bool:true            # Provides syntax highlighting for code blocks (using highlight.js) 
+html.highlight.js:path              # Set another highlight.js version than the included one
+html.highlight.css:path             # Set another highlight.js CSS theme than the default one
 html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet for HTML rendering
 html.print_css:path                 # Path of a media print stylesheet for HTML rendering

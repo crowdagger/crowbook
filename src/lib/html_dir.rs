@@ -2,7 +2,7 @@ use error::{Error,Result, Source};
 use html::HtmlRenderer;
 use book::Book;
 use token::Token;
-use templates::{html,highlight};
+use templates::{html};
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 
@@ -72,8 +72,8 @@ impl<'a> HtmlDirRenderer<'a> {
 
         // Write highlight files if they are needed
         if self.book.options.get_bool("html.highlight_code") == Ok(true) {
-            try!(self.write_file("highlight.js", highlight::JS));
-            try!(self.write_file("highlight.css", highlight::CSS.as_bytes()));
+            try!(self.write_file("highlight.js", self.book.get_template("html.highlight.js").unwrap().as_bytes()));
+            try!(self.write_file("highlight.css", self.book.get_template("html.highlight.css").unwrap().as_bytes()));
         }
         
         // Write all images (including cover)
