@@ -160,13 +160,13 @@ impl<'r> ResourceHandler<'r> {
                     }
                     Self::add_offset(link_offset, image_offset, v);
                 },
-                Token::Image (ref mut url, _, ref mut v) => {
-                    if ResourceHandler::is_local(url) {
-                        let new_url = format!("{}", image_offset.join(&url).display());
-                        *url = new_url;
-                    }
-                    Self::add_offset(link_offset, image_offset, v);
-                },
+                Token::Image(ref mut url, _, ref mut v) | Token::StandaloneImage(ref mut url, _, ref mut v) => {
+                        if ResourceHandler::is_local(url) {
+                            let new_url = format!("{}", image_offset.join(&url).display());
+                            *url = new_url;
+                        }
+                        Self::add_offset(link_offset, image_offset, v);
+                    },
                 _ => {
                     if let Some(ref mut inner) = token.inner_mut() {
                             Self::add_offset(link_offset, image_offset, inner);
