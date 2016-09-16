@@ -1,11 +1,12 @@
 # Metadata
 author: Élisabeth Henry
-title: Crowbook
+title: Crowbook User Guide
 description: >-
  Crowbook allows to render a book written in Markdown in various
  formats. This is some kind of manual for it, and a way to
  demonstrate and test it.
 lang: en
+cover: img/cover.png
 
 # Generic options (though not used with LaTeX)
 ## Number chapters and sections, but not below that
