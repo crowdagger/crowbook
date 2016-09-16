@@ -3,6 +3,9 @@ ChangeLog
 
 unreleased
 ----------
+This release adds support for syntax higlighting in code blocks and
+provide better error messages.
+
 * New options:
   * `use_initials` (set to false by default) make Crowbook use
     initials ("lettrines") at start of each chapter. Support is still
@@ -40,6 +43,9 @@ unreleased
 
 0.7.0 (2016-09-11)
 ------------------
+This releases renders images differently when they are on a standalone
+paragraph or inside a paragraph.
+
 * Internal/API:
   * `Token` has a new variant, `StandaloneImage`. This is used to
     distinguish an image that is alone in a paragraph of an image that
