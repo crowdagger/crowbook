@@ -33,7 +33,6 @@ use rustc_serialize::base64::{self, ToBase64};
 ///
 /// Also used by `EpubRenderer` and `HtmlDirRenderer`.
 pub struct HtmlRenderer<'a> {
-    book: &'a Book,
     table_head: bool,
     footnote_number: u32,
     epub3: bool,
@@ -47,6 +46,8 @@ pub struct HtmlRenderer<'a> {
 
 
     // fields used by EpubRenderer so marked public but hidden
+    #[doc(hidden)]
+    pub book: &'a Book,
     #[doc(hidden)]
     pub source: Source,
     #[doc(hidden)]
