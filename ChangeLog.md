@@ -9,6 +9,9 @@ unreleased
     experimental.
   * `html.highlight_code` (set to true by default) allows syntax
     highlighting for code blocks, using highlight.js.
+  * `html.higlight.css` and `html.highlight.js` can be used to provide
+    other themes (default is default.css) and an highlight.js build
+    that support other languages.
 * Deprecated options:
   * `side_notes` has been renamed `html.side_notes`.
 * Crowbook program:
@@ -27,6 +30,8 @@ unreleased
 * Bugfixes:
   * Implementations of `Image` and `StandaloneImage` were reversed in
     LaTeX.
+  * `StandaloneImage` urls were not adjusted (meanning that running
+    `crowbook` from another directory failed).
 * Internal/API:
   * In order to have better error messages, there was a need to
     refactor the `Error` type, and make more methods return
