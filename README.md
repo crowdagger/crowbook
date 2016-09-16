@@ -174,40 +174,8 @@ Contributors
 Acknowledgements
 ----------------
 
-Crowbook includes binary (minified) CSS and Javascript files from
-[Highlight.js](https://highlightjs.org/), written by Ivan
-Sagalaev, licensed under the following terms:
-
-> Copyright (c) 2006, Ivan Sagalaev
->
-> All rights reserved.
->
-> Redistribution and use in source and binary forms, with or without
-> modification, are permitted provided that the following conditions are met:
->  * Redistributions of source code must retain the above copyright
->    notice, this list of conditions and the following disclaimer.
->  * Redistributions in binary form must reproduce the above copyright
->    notice, this list of conditions and the following disclaimer in the
->    documentation and/or other materials provided with the
->    distribution.
->  * Neither the name of highlight.js nor the names of its contributors 
->    may be used to endorse or promote products derived from this software 
->    without specific prior written permission.
-> 
-> THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
-> EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-> WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY
-> DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-> ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-> SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-Besides the [Rust](https://www.rust-lang.org/) compiler and standard library, Crowbook uses the
-following libraries:
+Besides the [Rust](https://www.rust-lang.org/) compiler and standard
+library, Crowbook uses the following libraries:
 
 * [pulldown-cmark](https://crates.io/crates/pulldown-cmark) 
 * [yaml-rust](https://crates.io/crates/yaml-rust) 
@@ -219,6 +187,9 @@ following libraries:
 * [crossbeam](https://crates.io/crates/crossbeam)
 * [walkdir](https://crates.io/crates/walkdir)
 * [rustc-serialize](https://crates.io/crates/rustc-serialize)
+
+It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
+to enable syntax highlighting for code blocks.
 
 It also uses configuration files from
 [rust-everywhere](https://github.com/japaric/rust-everywhere) to use
@@ -250,9 +221,46 @@ use it as such. You can look at the generated documentation on
 License 
 -------
 
+
+
 Crowbook is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License (LGPL),
 version 2.1 or (at your option) any ulterior version. See 
 [LICENSE](LICENSE.md) for more information.
 
+Crowbook's logo is licensed under the [Creative Commons Attribution 4.0
+International license](https://creativecommons.org/licenses/by/4.0/deed.en),
+based on the
+[Rust logo](https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg)
+by Mozilla Corporation.
 
+Crowbook includes binary (minified) CSS and Javascript files from
+[Highlight.js](https://highlightjs.org/), written by Ivan
+Sagalaev, licensed under the following terms:
+
+> Copyright (c) 2006, Ivan Sagalaev
+>
+> All rights reserved.
+>
+> Redistribution and use in source and binary forms, with or without
+> modification, are permitted provided that the following conditions are met:
+>  * Redistributions of source code must retain the above copyright
+>    notice, this list of conditions and the following disclaimer.
+>  * Redistributions in binary form must reproduce the above copyright
+>    notice, this list of conditions and the following disclaimer in the
+>    documentation and/or other materials provided with the
+>    distribution.
+>  * Neither the name of highlight.js nor the names of its contributors 
+>    may be used to endorse or promote products derived from this software 
+>    without specific prior written permission.
+> 
+> THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
+> EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+> WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY
+> DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+> (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+> ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+> SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
