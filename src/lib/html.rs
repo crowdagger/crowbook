@@ -22,10 +22,12 @@ use book::Book;
 use number::Number;
 use toc::Toc;
 use resource_handler::ResourceHandler;
-use std::borrow::Cow;
 use templates::{html};
 use renderer::Renderer;
 use lang;
+
+use std::borrow::Cow;
+use std::convert::{AsMut,AsRef};
 
 use mustache;
 use rustc_serialize::base64::{self, ToBase64};
@@ -331,6 +333,205 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
+    /// Renders a token
+    ///
+    /// Used by render_token implementation of Renderer trait. Separate function
+    /// because we need to be able to call it from other renderers.
+    ///
+    /// See http://lise-henry.github.io/articles/rust_inheritance.html
+    fn render_token<T>(this: &mut T, token: &Token) -> Result<String>
+    where T: AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer {
+        match *token {
+            Token::Str(ref text) => {
+                let content = if this.as_ref().verbatim {
+                    escape_html(text)
+                } else {
+                    escape_html(&this.as_ref().book.clean(text.clone(), false))
+                };
+                if this.as_ref().first_letter {
+                    this.as_mut().first_letter = false;
+                    if this.as_ref().book.options.get_bool("use_initials").unwrap() {
+                        // Use initial
+                        let mut chars = content.chars();
+                        let initial = try!(chars.next()
+                                          .ok_or(Error::Parser(this.as_ref().book.source.clone(),
+                                                               "empty str token, could not find initial".to_owned())));
+                        let mut new_content = if initial.is_alphanumeric() {
+                            format!("<span class = \"initial\">{}</span>", initial)
+                        } else {
+                            format!("{}", initial)
+                        };
+                        for c in chars {
+                            new_content.push(c);
+                        }
+                        Ok(new_content)
+                    } else {
+                        Ok(content)
+                    }
+                } else {
+                    Ok(content)
+                }
+            },
+            Token::Paragraph(ref vec) => {
+                if this.as_ref().first_paragraph {
+                    this.as_mut().first_paragraph = false;
+                    if !vec.is_empty() && vec[0].is_str() {
+                        // Only use initials if first element is a Token::str
+                        this.as_mut().first_letter = true;
+                    }
+                }
+                let class = if this.as_ref().first_letter && this.as_ref().book.options.get_bool("use_initials").unwrap() {
+                    " class = \"first-para\""
+                } else {
+                    ""
+                };
+                let content = try!(this.render_vec(vec));
+                this.as_mut().current_par += 1;
+                let par = this.as_ref().current_par;
+                Ok(format!("<p id = \"para-{}\"{}>{}</p>\n",
+                           par,
+                           class,
+                           content))
+            },
+            Token::Header(n, ref vec) => {
+                if n == 1 {
+                    this.as_mut().current_chapter_internal += 1;
+                    this.as_mut().first_paragraph = true;
+                }
+                if this.as_ref().current_numbering >= n {
+                    this.as_mut().inc_header(n - 1);
+                }
+                this.as_mut().link_number += 1;
+                let s = if n == 1 && this.as_ref().current_numbering >= 1 {
+                    let chapter = this.as_ref().current_chapter[0];
+                    try!(this.as_ref().book.get_header(chapter, &try!(this.render_vec(vec))))
+                } else if this.as_ref().current_numbering >= n {
+                    format!("{} {}", this.as_ref().get_numbers(), try!(this.render_vec(vec)))
+                } else {
+                    try!(this.render_vec(vec))
+                };
+                if n <= this.as_ref().book.options.get_i32("numbering").unwrap() {
+                    let url = if this.as_ref().add_script {
+                        format!("{}#link-{}\" onclick = \"javascript:showChapter({})",
+                                this.as_ref().filename,
+                                this.as_ref().link_number,
+                                this.as_ref().current_chapter_internal)
+                    } else {
+                        format!("{}#link-{}",
+                                this.as_ref().filename,
+                                this.as_ref().link_number)
+                    };
+                    this.as_mut().toc.add(n, url, s.clone());
+                }
+                if n == 1 && this.as_ref().current_hide {
+                    Ok(format!("<h1 id = \"link-{}\"></h1>", this.as_ref().link_number))
+                } else {
+                    Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",
+                            n, this.as_ref().link_number, s, n))
+                }
+            },
+            Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", try!(this.render_vec(vec)))),
+            Token::Strong(ref vec) => Ok(format!("<b>{}</b>", try!(this.render_vec(vec)))),
+            Token::Code(ref vec) => Ok(format!("<code>{}</code>", try!(this.render_vec(vec)))),
+            Token::BlockQuote(ref vec) => Ok(format!("<blockquote>{}</blockquote>\n", try!(this.render_vec(vec)))),
+            Token::CodeBlock(ref language, ref vec) => {
+                this.as_mut().verbatim = true;
+                let s = try!(this.render_vec(vec));
+                let output = if language.is_empty() {
+                    format!("<pre><code>{}</code></pre>\n", s)
+                } else {
+                    format!("<pre><code class = \"language-{}\">{}</code></pre>\n", language, s)
+                };
+                this.as_mut().verbatim = false;
+                Ok(output)
+            },
+            Token::Rule => Ok(String::from("<p class = \"rule\">***</p>\n")),
+            Token::SoftBreak => Ok(String::from(" ")),
+            Token::HardBreak => Ok(String::from("<br />\n")),
+            Token::List(ref vec) => Ok(format!("<ul>\n{}</ul>\n", try!(this.render_vec(vec)))),
+            Token::OrderedList(n, ref vec) => Ok(format!("<ol{}>\n{}</ol>\n",
+                                                      if n == 1 {
+                                                          String::new()
+                                                      } else {
+                                                          format!(" start = \"{}\"", n)
+                                                      },
+                                                      try!(this.render_vec(vec)))),
+            Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", try!(this.render_vec(vec)))),
+            Token::Link(ref url, ref title, ref vec) => {
+                let url = escape_html(url);
+                let url = if ResourceHandler::is_local(&url) {
+                    this.as_ref().handler.get_link(&url).to_owned()
+                } else {
+                    url
+                };
+                
+                Ok(format!("<a href = \"{}\"{}>{}</a>", url,
+                        if title.is_empty() {
+                            String::new()
+                        } else {
+                            format!(" title = \"{}\"", title)
+                        },
+                        try!(this.render_vec(vec))))
+            },
+            Token::Image(ref url, ref title, ref alt)
+                | Token::StandaloneImage(ref url, ref title, ref alt) => {
+                    let content = try!(this.render_vec(alt));
+                    let html: &mut HtmlRenderer = this.as_mut();
+                    let url = try!(html.handler.map_image(&html.source,
+                                                          Cow::Borrowed(url)));
+
+                    if token.is_image() {
+                        Ok(format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
+                                url,
+                                title,
+                                content))
+                    } else {
+                        Ok(format!("<div class = \"image\">
+  <img src = \"{}\" title = \"{}\" alt = \"{}\" />
+</div>", 
+                                url,
+                                title,
+                                content))
+                    }
+                },
+            Token::Table(_, ref vec) => Ok(format!("<div class = \"table\">
+    <table>\n{}
+    </table>
+</div>\n",
+                                                   try!(this.render_vec(vec)))),
+            Token::TableRow(ref vec) => Ok(format!("<tr>\n{}</tr>\n", try!(this.render_vec(vec)))),
+            Token::TableCell(ref vec) => {
+                let tag = if this.as_ref().table_head {"th"} else {"td"};
+                Ok(format!("<{}>{}</{}>", tag, try!(this.render_vec(vec)), tag))
+            },
+            Token::TableHead(ref vec) => {
+                this.as_mut().table_head = true;
+                let s = try!(this.render_vec(vec));
+                this.as_mut().table_head = false;
+                Ok(format!("<tr>\n{}</tr>\n", s))
+            },
+            Token::Footnote(ref vec) => {
+                this.as_mut().footnote_number += 1;
+                let number = this.as_ref().footnote_number;
+                assert!(!vec.is_empty());
+
+                let note_number = format!("<p class = \"note-number\">
+  <a href = \"#note-source-{}\">[{}]</a>
+</p>", number, number);
+
+                let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
+                                    if this.as_ref().epub3 {r#"epub:type="footnote"#}else{""},
+                                    number, try!(this.render_vec(vec)));
+                this.as_mut().footnotes.push((note_number, inner));
+                
+                Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
+                        if this.as_ref().epub3 {"epub:type = \"noteref\""} else {""},
+                        number, number, number))
+            },
+        }
+    }
+
+
     /// Renders a footer, which can include a "Generated by Crowboook" link
     /// or a customized text
     pub fn get_footer(&self) -> String {
@@ -361,200 +562,21 @@ impl<'a> HtmlRenderer<'a> {
     }
 }
 
+impl<'a> AsMut<HtmlRenderer<'a>> for HtmlRenderer<'a> {
+    fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
+        self
+    }
+}
+
+impl<'a> AsRef<HtmlRenderer<'a>> for HtmlRenderer<'a> {
+    fn as_ref(&self) -> &HtmlRenderer<'a> {
+        self
+    }
+}
+
 impl<'a> Renderer for HtmlRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {
-        match *token {
-            Token::Str(ref text) => {
-                let content = if self.verbatim {
-                    escape_html(text)
-                } else {
-                    escape_html(&self.book.clean(text.clone(), false))
-                };
-                if self.first_letter {
-                    self.first_letter = false;
-                    if self.book.options.get_bool("use_initials").unwrap() {
-                        // Use initial
-                        let mut chars = content.chars();
-                        let initial = try!(chars.next()
-                                          .ok_or(Error::Parser(self.book.source.clone(),
-                                                               "empty str token, could not find initial".to_owned())));
-                        let mut new_content = if initial.is_alphanumeric() {
-                            format!("<span class = \"initial\">{}</span>", initial)
-                        } else {
-                            format!("{}", initial)
-                        };
-                        for c in chars {
-                            new_content.push(c);
-                        }
-                        Ok(new_content)
-                    } else {
-                        Ok(content)
-                    }
-                } else {
-                    Ok(content)
-                }
-            },
-            Token::Paragraph(ref vec) => {
-                if self.first_paragraph {
-                    self.first_paragraph = false;
-                    if !vec.is_empty() && vec[0].is_str() {
-                        // Only use initials if first element is a Token::str
-                        self.first_letter = true;
-                    }
-                }
-                let class = if self.first_letter && self.book.options.get_bool("use_initials").unwrap() {
-                    " class = \"first-para\""
-                } else {
-                    ""
-                };
-                let content = try!(self.render_vec(vec));
-                self.current_par += 1;
-                let par = self.current_par;
-                Ok(format!("<p id = \"para-{}\"{}>{}</p>\n",
-                           par,
-                           class,
-                           content))
-            },
-            Token::Header(n, ref vec) => {
-                if n == 1 {
-                    self.current_chapter_internal += 1;
-                    self.first_paragraph = true;
-                }
-                if self.current_numbering >= n {
-                    self.inc_header(n - 1);
-                }
-                self.link_number += 1;
-                let s = if n == 1 && self.current_numbering >= 1 {
-                    let chapter = self.current_chapter[0];
-                    try!(self.book.get_header(chapter, &try!(self.render_vec(vec))))
-                } else if self.current_numbering >= n {
-                    format!("{} {}", self.get_numbers(), try!(self.render_vec(vec)))
-                } else {
-                    try!(self.render_vec(vec))
-                };
-                if n <= self.book.options.get_i32("numbering").unwrap() {
-                    if self.add_script {
-                        self.toc.add(n,
-                                     format!("{}#link-{}\" onclick = \"javascript:showChapter({})",
-                                             self.filename,
-                                             self.link_number,
-                                             self.current_chapter_internal,
-                                             ),
-                                     s.clone());
-                    } else {
-                        self.toc.add(n,
-                                     format!("{}#link-{}",
-                                             self.filename,
-                                             self.link_number),
-                                     s.clone());
-                    }
-                        
-                }
-                if n == 1 && self.current_hide {
-                    Ok(format!("<h1 id = \"link-{}\"></h1>", self.link_number))
-                } else {
-                    Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",
-                            n, self.link_number, s, n))
-                }
-            },
-            Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", try!(self.render_vec(vec)))),
-            Token::Strong(ref vec) => Ok(format!("<b>{}</b>", try!(self.render_vec(vec)))),
-            Token::Code(ref vec) => Ok(format!("<code>{}</code>", try!(self.render_vec(vec)))),
-            Token::BlockQuote(ref vec) => Ok(format!("<blockquote>{}</blockquote>\n", try!(self.render_vec(vec)))),
-            Token::CodeBlock(ref language, ref vec) => {
-                self.verbatim = true;
-                let s = try!(self.render_vec(vec));
-                let output = if language.is_empty() {
-                    format!("<pre><code>{}</code></pre>\n", s)
-                } else {
-                    format!("<pre><code class = \"language-{}\">{}</code></pre>\n", language, s)
-                };
-                self.verbatim = false;
-                Ok(output)
-            },
-            Token::Rule => Ok(String::from("<p class = \"rule\">***</p>\n")),
-            Token::SoftBreak => Ok(String::from(" ")),
-            Token::HardBreak => Ok(String::from("<br />\n")),
-            Token::List(ref vec) => Ok(format!("<ul>\n{}</ul>\n", try!(self.render_vec(vec)))),
-            Token::OrderedList(n, ref vec) => Ok(format!("<ol{}>\n{}</ol>\n",
-                                                      if n == 1 {
-                                                          String::new()
-                                                      } else {
-                                                          format!(" start = \"{}\"", n)
-                                                      },
-                                                      try!(self.render_vec(vec)))),
-            Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", try!(self.render_vec(vec)))),
-            Token::Link(ref url, ref title, ref vec) => {
-                let url = escape_html(url);
-                let url = if ResourceHandler::is_local(&url) {
-                    self.handler.get_link(&url).to_owned()
-                } else {
-                    url
-                };
-                
-                Ok(format!("<a href = \"{}\"{}>{}</a>", url,
-                        if title.is_empty() {
-                            String::new()
-                        } else {
-                            format!(" title = \"{}\"", title)
-                        },
-                        try!(self.render_vec(vec))))
-            },
-            Token::Image(ref url, ref title, ref alt)
-                | Token::StandaloneImage(ref url, ref title, ref alt) => {
-                    let content = try!(self.render_vec(alt));
-                    let url = try!(self.handler.map_image(&self.source,
-                                                          Cow::Borrowed(url)));
-
-                    if token.is_image() {
-                        Ok(format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
-                                url,
-                                title,
-                                content))
-                    } else {
-                        Ok(format!("<div class = \"image\">
-  <img src = \"{}\" title = \"{}\" alt = \"{}\" />
-</div>", 
-                                url,
-                                title,
-                                content))
-                    }
-                },
-            Token::Table(_, ref vec) => Ok(format!("<div class = \"table\">
-    <table>\n{}
-    </table>
-</div>\n",
-                                                   try!(self.render_vec(vec)))),
-            Token::TableRow(ref vec) => Ok(format!("<tr>\n{}</tr>\n", try!(self.render_vec(vec)))),
-            Token::TableCell(ref vec) => {
-                let tag = if self.table_head {"th"} else {"td"};
-                Ok(format!("<{}>{}</{}>", tag, try!(self.render_vec(vec)), tag))
-            },
-            Token::TableHead(ref vec) => {
-                self.table_head = true;
-                let s = try!(self.render_vec(vec));
-                self.table_head = false;
-                Ok(format!("<tr>\n{}</tr>\n", s))
-            },
-            Token::Footnote(ref vec) => {
-                self.footnote_number += 1;
-                let number = self.footnote_number;
-                assert!(!vec.is_empty());
-
-                let note_number = format!("<p class = \"note-number\">
-  <a href = \"#note-source-{}\">[{}]</a>
-</p>", number, number);
-
-                let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
-                                    if self.epub3 {r#"epub:type="footnote"#}else{""},
-                                    number, try!(self.render_vec(vec)));
-                self.footnotes.push((note_number, inner));
-                
-                Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
-                        if self.epub3 {"epub:type = \"noteref\""} else {""},
-                        number, number, number))
-            },
-        }
+        HtmlRenderer::render_token(self, token)
     }
 }
 
