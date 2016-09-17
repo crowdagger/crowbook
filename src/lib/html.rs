@@ -245,6 +245,7 @@ impl<'a> HtmlRenderer<'a> {
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
             .insert_str("footer", self.get_footer())
+            .insert_str("top", self.get_top())
             .insert_str("pages_svg", pages_svg);
         if self.book.options.get_bool("html.highlight_code") == Ok(true) {
             let highlight_js = try!(self.book.get_template("html.highlight.js"))
@@ -346,7 +347,16 @@ impl<'a> HtmlRenderer<'a> {
         if content.is_empty() {
             content
         } else {
-            format!("<div id = \"footer\"><p>{}</p></div>", content)
+            format!("<footer><p>{}</p></footer>", content)
+        }
+    }
+
+    /// Renders a header
+    pub fn get_top(&self) -> String {
+        if let Ok(top) = self.book.options.get_str("html.top") {
+            format!("<div id = \"top\"><p>{}</p></div>", top)
+        } else {
+            String::new()
         }
     }
 }

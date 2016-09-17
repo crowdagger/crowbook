@@ -64,6 +64,7 @@ nav {
 /* The menu containing the button to display the navigation bar */
 #menu {
     position: fixed;
+    z-index: 2;
     top: 0em;
     left: 1em;
     transition: left 1s;
@@ -152,23 +153,47 @@ blockquote {
     cursor: pointer;
 }
 
-#footer {
+#top {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2em;
+    width: auto;
+    text-align: center;
+    background-color: #474747;
+    color: white;
+    transition: left 1s;
+}
+
+#top p {
+    margin-top: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    text-align: center;
+    font-family: "Linux Biolinum";
+    font-variant: small-caps;
+}
+
+footer {
     background-color: #474747;
     margin-top: 2em;
     text-align: center;
     color: white;
 }
 
-#footer a {
+footer a, #top a {
     color: #ef68ff;
     text-decoration: none;
 }
 
-#footer a:hover {
+footer a:hover, #top a:hover  {
     color: #ca58d7;
 }
 
-#footer p {
+footer p {
     margin-left: auto;
     margin-right: auto;
     width: 70%;

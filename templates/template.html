@@ -42,24 +42,22 @@
       {{{toc}}}
     </nav>
 
-  <div id = "content">
-    <div id = "page">
-      <header>
-        <div id = "menu">
-          <img id = "menu-button" onclick="toggle();"
-               src="{{{menu_svg}}}"
-               alt = "{{{loc_menu}}}" title = "{{{loc_menu}}}" />
-
-
-        </div>
-
-        <h1 class="title">{{title}}</h1>
-      <h2 class="author">{{author}}</h2>
-      </header>
-
-      {{{content}}}
+    <div id = "content">
+      <div id = "page">
+        <header>
+          {{{top}}}
+          <div id = "menu">
+            <img id = "menu-button" onclick="toggle();"
+                 src="{{{menu_svg}}}"
+                 alt = "{{{loc_menu}}}" title = "{{{loc_menu}}}" />
+            
+          </div>
+          <h1 class="title">{{title}}</h1>
+          <h2 class="author">{{author}}</h2>
+        </header>
+        {{{content}}}
+      </div>
     </div>
-  </div>
-  {{{footer}}}
+    {{{footer}}}
   </body>
 </html>
