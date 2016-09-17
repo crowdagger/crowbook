@@ -339,7 +339,7 @@ impl<'a> HtmlRenderer<'a> {
     /// because we need to be able to call it from other renderers.
     ///
     /// See http://lise-henry.github.io/articles/rust_inheritance.html
-    fn render_token<T>(this: &mut T, token: &Token) -> Result<String>
+    pub fn static_render_token<T>(this: &mut T, token: &Token) -> Result<String>
     where T: AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer {
         match *token {
             Token::Str(ref text) => {
@@ -576,7 +576,7 @@ impl<'a> AsRef<HtmlRenderer<'a>> for HtmlRenderer<'a> {
 
 impl<'a> Renderer for HtmlRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {
-        HtmlRenderer::render_token(self, token)
+        HtmlRenderer::static_render_token(self, token)
     }
 }
 

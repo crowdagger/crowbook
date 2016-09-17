@@ -30,6 +30,7 @@ use chrono;
 use uuid;
 
 use std::io::{Read};
+use std::convert::{AsRef,AsMut};
 use std::fs;
 use std::fs::File;
 use std::path::{Path};
@@ -388,15 +389,27 @@ fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.xhtml", i)
 }
 
+impl<'a> AsRef<HtmlRenderer<'a>> for EpubRenderer<'a> {
+    fn as_ref(&self) -> &HtmlRenderer<'a> {
+        &self.html
+    }
+}
+
+impl<'a> AsMut<HtmlRenderer<'a>> for EpubRenderer<'a> {
+    fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
+        &mut self.html
+    }
+}
+
 
 impl<'a> Renderer for EpubRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {
         match *token {
             Token::Header(1, ref vec) => {
                 try!(self.find_title(vec));
-                self.html.render_token(token)
+                HtmlRenderer::static_render_token(self, token)
             },
-            _ => self.html.render_token(token)
+            _ => HtmlRenderer::static_render_token(self, token)
         }
     }
 }
