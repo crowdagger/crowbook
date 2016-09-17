@@ -12,6 +12,8 @@ cover: img/cover.png
 ## Number chapters and sections, but not below that
 numbering: 2
 
+html.crowbook_link: true
+
 use_initials: true
 
 # Latex options
