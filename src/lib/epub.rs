@@ -376,6 +376,23 @@ impl<'a> EpubRenderer<'a> {
             }
         }
     }
+
+    /// Renders a token
+    ///
+    /// Used by render_token implementation of Renderer trait. Separate function
+    /// because we need to be able to call it from other renderers.
+    ///
+    /// See http://lise-henry.github.io/articles/rust_inheritance.html
+    pub fn static_render_token<T>(this: &mut T, token: &Token) -> Result<String>
+    where T: AsMut<EpubRenderer<'a>>+AsRef<EpubRenderer<'a>> + Renderer {
+        match *token {
+            Token::Header(1, ref vec) => {
+                try!(this.as_mut().find_title(vec));
+                HtmlRenderer::static_render_token(this.as_mut(), token)
+            },
+            _ => HtmlRenderer::static_render_token(this.as_mut(), token)
+        }
+    }
 }
 
 
@@ -401,15 +418,21 @@ impl<'a> AsMut<HtmlRenderer<'a>> for EpubRenderer<'a> {
     }
 }
 
+impl<'a> AsRef<EpubRenderer<'a>> for EpubRenderer<'a> {
+    fn as_ref(&self) -> &EpubRenderer<'a> {
+        self
+    }
+}
+
+impl<'a> AsMut<EpubRenderer<'a>> for EpubRenderer<'a> {
+    fn as_mut(&mut self) -> &mut EpubRenderer<'a> {
+        self
+    }
+}
+
 
 impl<'a> Renderer for EpubRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {
-        match *token {
-            Token::Header(1, ref vec) => {
-                try!(self.find_title(vec));
-                HtmlRenderer::static_render_token(self, token)
-            },
-            _ => HtmlRenderer::static_render_token(self, token)
-        }
+        EpubRenderer::static_render_token(self, token)
     }
 }
