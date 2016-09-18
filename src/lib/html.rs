@@ -44,7 +44,17 @@ pub struct HtmlRenderer<'a> {
     current_chapter_internal: i32,
     first_letter: bool,
     first_paragraph: bool,
+    footnotes: Vec<(String, String)>,
 
+    /// Current chapter (and subsection, subsubsection and so on)
+    pub current_chapter: [i32;6],
+    /// Current numbering level 
+    pub current_numbering: i32,
+    /// Whether current chapter's title must be displayed
+    pub current_hide: bool,
+    filename: String,
+    /// Resource handler
+    pub handler: ResourceHandler<'a>,
     /// Current footnote number
     pub footnote_number: u32,
     /// Book that must be renderer
@@ -53,18 +63,6 @@ pub struct HtmlRenderer<'a> {
     pub source: Source,
     /// Table of contents
     pub toc: Toc,
-    #[doc(hidden)]
-    pub footnotes: Vec<(String, String)>,
-    #[doc(hidden)]
-    pub current_chapter: [i32;6],
-    #[doc(hidden)]
-    pub current_numbering: i32,
-    #[doc(hidden)]
-    pub current_hide: bool,
-    #[doc(hidden)]
-    pub filename: String,
-    #[doc(hidden)]
-    pub handler: ResourceHandler<'a>,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -95,8 +93,13 @@ impl<'a> HtmlRenderer<'a> {
         html
     }
 
+    /// Add a footnote which will be renderer later on
+    pub fn add_footnote(&mut self, number: String, content: String) {
+        self.footnotes.push((number, content));
+    }
+
     /// Configure the Renderer for this chapter
-    pub fn chapter_config(&mut self, i: usize, n: Number) {
+    pub fn chapter_config(&mut self, i: usize, n: Number, filename: String) {
         self.source = Source::new(&self.book.filenames[i]);
         self.first_paragraph = true;
         self.current_hide = false;
@@ -113,6 +116,7 @@ impl<'a> HtmlRenderer<'a> {
                 self.current_hide = true;
             },
         }
+        self.filename = filename;
     }
 
     /// Render books as a standalone HTML file
@@ -136,7 +140,7 @@ impl<'a> HtmlRenderer<'a> {
         let mut chapters = vec!();
 
         for (i, &(n, ref v)) in self.book.chapters.iter().enumerate() {
-            self.chapter_config(i, n);
+            self.chapter_config(i, n, String::new());
             
             let mut title = String::new();
             for token in v {

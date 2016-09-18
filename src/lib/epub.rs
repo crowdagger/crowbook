@@ -79,8 +79,7 @@ impl<'a> EpubRenderer<'a> {
 
         // Write chapters        
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
-            self.html.chapter_config(i, n);
-            self.html.filename = filenamer(i);
+            self.html.chapter_config(i, n, filenamer(i));
             let chapter = try!(self.render_chapter(v));
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
@@ -413,7 +412,7 @@ impl<'a> EpubRenderer<'a> {
                                     r#"epub:type="footnote""#,
                                         number,
                                         inner_content);
-                    html.footnotes.push((note_number, inner));
+                    html.add_footnote(note_number, inner);
                     
                     Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
                                "epub:type = \"noteref\"",

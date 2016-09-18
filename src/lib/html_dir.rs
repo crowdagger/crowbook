@@ -110,8 +110,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut chapters = vec!();
         let mut titles = vec!();
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
-            self.html.chapter_config(i, n);
-            
+            self.html.chapter_config(i, n, filenamer(i));
             let mut title = String::new();
             for token in v {
                 match *token {

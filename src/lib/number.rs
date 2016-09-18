@@ -21,7 +21,7 @@ impl Number {
     /// Returns true if number is numbered
     pub fn is_numbered(&self) -> bool {
         match *self {
-            Hidden | Unnumbered => false,
+            Number::Hidden | Number::Unnumbered => false,
             _ => true,
         }
     }
