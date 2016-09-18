@@ -291,10 +291,4 @@ fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.html", i)
 }
 
-derive_html!{HtmlDirRenderer<'a>}
-
-impl<'a> Renderer for HtmlDirRenderer<'a> {
-    fn render_token(&mut self, token: &Token) -> Result<String> {
-        HtmlRenderer::static_render_token(self, token)
-    }
-}
+derive_html!{HtmlDirRenderer<'a>, HtmlRenderer::static_render_token}

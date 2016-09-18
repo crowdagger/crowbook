@@ -206,10 +206,5 @@ impl<'a> HtmlSingleRenderer<'a> {
     }
 }
 
-derive_html!{HtmlSingleRenderer<'a>}
+derive_html!{HtmlSingleRenderer<'a>, HtmlSingleRenderer::static_render_token}
 
-impl<'a> Renderer for HtmlSingleRenderer<'a> {
-    fn render_token(&mut self, token: &Token) -> Result<String> {
-        HtmlSingleRenderer::static_render_token(self, token)
-    }
-}

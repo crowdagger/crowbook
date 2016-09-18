@@ -439,12 +439,5 @@ fn filenamer(i: usize) -> String {
 }
 
 
-derive_html!{EpubRenderer<'a>}
+derive_html!{EpubRenderer<'a>, EpubRenderer::static_render_token}
 
-
-
-impl<'a> Renderer for EpubRenderer<'a> {
-    fn render_token(&mut self, token: &Token) -> Result<String> {
-        EpubRenderer::static_render_token(self, token)
-    }
-}

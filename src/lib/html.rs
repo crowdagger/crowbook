@@ -433,7 +433,7 @@ impl<'a> Renderer for HtmlRenderer<'a> {
 /// for a type, to itself and to HtmlRenderer. Type must have a .html element
 /// and use a <'a> lifetime parameter.
 macro_rules! derive_html {
-    {$t:ty} => (
+    {$t:ty, $f:path} => (
         impl<'a> AsRef<HtmlRenderer<'a>> for $t {
             fn as_ref(&self) -> &HtmlRenderer<'a> {
                 &self.html
@@ -455,6 +455,12 @@ macro_rules! derive_html {
         impl<'a> AsMut<$t> for $t {
             fn as_mut(&mut self) -> &mut $t {
                 self
+            }
+        }
+
+        impl<'a> Renderer for $t {
+            fn render_token(&mut self, token: &Token) -> Result<String> {
+                $f(self, token)
             }
         }
 
