@@ -21,7 +21,7 @@ nav {
     overflow-y: auto;
     font-size: 80%;
     margin-left: 0;
-    background: black;
+    background: #252525;
     color: white;
 }
 
@@ -85,8 +85,9 @@ nav {
 }
 
 #book-button {
-    width: 1.5em;
+    height: 1.5em;
     padding: 0.5em;
+    float: left;
 }
 
 /* Hide navigation bar */
@@ -142,11 +143,18 @@ blockquote {
     text-align: justify;
 }
 
+#nav-container {
+    top: 0;
+    width: 100%;
+}
+
+#nav-title {
+    top: 0;
+}
 
 #toolbar {
-    background: silver;
-    padding-top: 2px;
-    right: 0;
+    top: 0;
+    float: left;
 }
 
 #toolbar img {
@@ -162,7 +170,7 @@ blockquote {
     height: 2em;
     width: auto;
     text-align: center;
-    background-color: #474747;
+    background-color: #252525;
     color: white;
     transition: left 1s;
 }
@@ -178,7 +186,7 @@ blockquote {
 }
 
 footer {
-    background-color: #474747;
+    background-color: #252525;
     margin-top: 2em;
     text-align: center;
     color: white;
