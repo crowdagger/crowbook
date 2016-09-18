@@ -179,7 +179,11 @@ impl BookOptions {
             if let Yaml::String(value) = value {
                 if &key == "import_config" {
                     // special case, not a real option
-                    let book = try!(Book::new_from_file(&value, InfoLevel::Info, &[]));
+                    let book = try!(Book::new_from_file(try!(self.root.join(&value)
+                                                             .to_str()
+                                                             .ok_or(Error::BookOption(self.source.clone(),
+                                                                                      format!("'{}''s path contains invalid UTF-8 code", &value)))),
+                                                        InfoLevel::Info, &[]));
                     try!(self.merge(book.options));
                     Ok(None)
                 } else {
