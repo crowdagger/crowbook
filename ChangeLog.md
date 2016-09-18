@@ -7,7 +7,10 @@ This release adds support for syntax higlighting in code blocks and
 provide better error messages.
 
 * New options:
-  * `use_initials` (set to false by default) make Crowbook use
+  * `import_config`is not really an option, but allows to import
+    another configuration file, useful if you share a same set of
+    options between multiple books.
+  * `use_initials` (set to false by default) makes Crowbook use
     initials ("lettrines") at start of each chapter. Support is still
     experimental.
   * `html.highlight_code` (set to true by default) allows syntax
