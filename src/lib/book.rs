@@ -4,7 +4,7 @@ use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
 use epub::EpubRenderer;
-use html::HtmlRenderer;
+use html_single::HtmlSingleRenderer;
 use html_dir::HtmlDirRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
@@ -384,7 +384,7 @@ impl Book {
     /// Render book to html according to book options
     pub fn render_html<T: Write>(&self, f: &mut T) -> Result<()> {
         self.logger.debug("Attempting to generate HTML...");
-        let mut html = HtmlRenderer::new(&self);
+        let mut html = HtmlSingleRenderer::new(&self);
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::Render(format!("problem when writing to HTML file: {}", e))));
         if let Ok(file) = self.options.get_path("output.html") {
