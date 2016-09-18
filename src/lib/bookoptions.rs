@@ -1,10 +1,13 @@
 use error::{Error,Result, Source};
 use bookoption::BookOption;
+use book::Book;
+use logger::InfoLevel;
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::env;
+use std::mem;
 
 static OPTIONS:&'static str = "
 # Metadata
@@ -29,6 +32,7 @@ display_toc:bool:false              # Display a table of content in the document
 use_initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
 toc_name:str:Table of contents      # Name of the table of contents if it is displayed in document
 verbose:bool:false                  # Make Crowbook display more messages
+import_config:path                  # Import another book configuration file
 
 # HTML options
 html.highlight_code:bool:true            # Provides syntax highlighting for code blocks (using highlight.js) 
@@ -96,7 +100,7 @@ pub struct BookOptions {
     valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
 
-    /// Source for errors
+    /// Source for errors (unnecessary copy :/)
     pub source: Source,
 
     /// Root path of the book (unnecessary copy :/)
@@ -162,7 +166,7 @@ impl BookOptions {
         } else {
             return Err(Error::BookOption(self.source.clone(), format!("Expected a String as a key, found {:?}", key)));
         };
-        
+
         if self.valid_strings.contains(&key.as_ref()) {
             // value is a string
             if let Yaml::String(value) = value {
@@ -173,7 +177,14 @@ impl BookOptions {
         } else if self.valid_paths.contains(&key.as_ref()) {
             // value is a path
             if let Yaml::String(value) = value {
-                Ok(self.options.insert(key, BookOption::Path(value)))
+                if &key == "import_config" {
+                    // special case, not a real option
+                    let book = try!(Book::new_from_file(&value, InfoLevel::Info, &[]));
+                    try!(self.merge(book.options));
+                    Ok(None)
+                } else {
+                    Ok(self.options.insert(key, BookOption::Path(value)))
+                }
             } else {
                 Err(Error::BookOption(self.source.clone(), format!("Expected a string as value for key {}, found {:?}", &key, &value)))
             }
@@ -323,6 +334,27 @@ impl BookOptions {
         try!(self.get(key)).as_i32()
     }
 
+
+    /// Merges the other list of options to the first one
+    pub fn merge(&mut self, mut other: BookOptions) -> Result<()> {
+        let other_root = mem::replace(&mut other.root, PathBuf::new());
+        for (key, value) in other.options.into_iter() {
+            // If it's a path, get the corrected path
+            if let BookOption::Path(ref path) = value {
+                let new_path:PathBuf = other_root.join(path);
+                let s = if let Some(path) = new_path.to_str() {
+                    path.to_owned()
+                } else {
+                    return Err(Error::BookOption(Source::new(other_root.to_str().unwrap()),
+                                                 format!("'{}''s path contains invalid UTF-8 code", key)));
+                };
+                self.options.insert(key, BookOption::Path(s));
+            } else {
+                self.options.insert(key, value);
+            }
+        }
+        Ok(())
+    }
 
 
     /// Returns a description of all options valid to pass to a book.
