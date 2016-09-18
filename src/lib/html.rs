@@ -28,15 +28,13 @@ use lang;
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
 
-/// Renders HTML document in a standalone file.
+/// Base structure for rendering HTML files
 ///
-/// Also used by `EpubRenderer` and `HtmlDirRenderer`.
+/// Used by EpubRenderer, HtmlSingleRenderer, HtmlDirRenderer
 pub struct HtmlRenderer<'a> {
     table_head: bool,
     verbatim: bool,
-    link_number: u32,
     current_par: u32,
-    current_chapter_internal: i32,
     first_letter: bool,
     first_paragraph: bool,
     footnotes: Vec<(String, String)>,
@@ -58,10 +56,11 @@ pub struct HtmlRenderer<'a> {
     pub source: Source,
     /// Table of contents
     pub toc: Toc,
+    /// Current link number
+    pub link_number: u32,
 
-    #[doc(hidden)]
-    pub add_script: bool,
 }
+
 
 impl<'a> HtmlRenderer<'a> {
     /// Creates a new HTML renderer
@@ -71,10 +70,8 @@ impl<'a> HtmlRenderer<'a> {
             toc: Toc::new(),
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
-            current_chapter_internal: -1,
             current_numbering: book.options.get_i32("numbering").unwrap(),
             current_par: 0,
-            add_script: false,
             current_hide: false,
             table_head: false,
             footnote_number: 0,
@@ -128,15 +125,47 @@ impl<'a> HtmlRenderer<'a> {
         Ok(res)
     }
 
+    /// Renders a title (without <h1> tags), increasing header number beforehand
+    pub fn render_title(&mut self, n: i32, vec: &[Token]) -> Result<String> {
+        self.inc_header(n);
+        let s = if n == 1 && self.current_numbering >= 1 {
+            let chapter = self.current_chapter[0];
+            try!(self.book.get_header(chapter, &try!(self.render_vec(vec))))
+        } else if self.current_numbering >= n {
+            format!("{} {}", self.get_numbers(), try!(self.render_vec(vec)))
+        } else {
+            try!(self.render_vec(vec))
+        };
+        Ok(s)
+    }
 
-    /// Increase a header
-    fn inc_header(&mut self, n: i32) {
-        let n = n as usize;
-        assert!(n < self.current_chapter.len());
-        self.current_chapter[n] += 1;
-        for i in n+1..self.current_chapter.len() {
-            self.current_chapter[i] = 0;
+    /// Renders a title, including <h1> tags and appropriate links
+    pub fn render_title_full(&mut self, n: i32, inner: String) -> String {
+        if n == 1 && self.current_hide {
+            format!("<h1 id = \"link-{}\"></h1>", self.link_number)
+        } else {
+            format!("<h{} id = \"link-{}\">{}</h{}>\n",
+                    n, self.link_number, inner, n)
         }
+    }
+    
+    /// Increases a header if it needs to be
+    ///
+    /// Also sets up first_paragraph, link stuff and so on
+    fn inc_header(&mut self, n: i32) {
+        if n == 1 {
+            self.first_paragraph = true;
+        }
+        if self.current_numbering >= n {
+            assert!(n >= 1);
+            let n = (n - 1) as usize;
+            assert!(n < self.current_chapter.len());
+            self.current_chapter[n] += 1;
+            for i in n+1..self.current_chapter.len() {
+                self.current_chapter[i] = 0;
+            }
+        }
+        self.link_number += 1;
     }
 
     /// Returns a "x.y.z" corresponding to current chapter/section/...
@@ -240,41 +269,14 @@ impl<'a> HtmlRenderer<'a> {
                            content))
             },
             Token::Header(n, ref vec) => {
-                if n == 1 {
-                    this.as_mut().current_chapter_internal += 1;
-                    this.as_mut().first_paragraph = true;
-                }
-                if this.as_ref().current_numbering >= n {
-                    this.as_mut().inc_header(n - 1);
-                }
-                this.as_mut().link_number += 1;
-                let s = if n == 1 && this.as_ref().current_numbering >= 1 {
-                    let chapter = this.as_ref().current_chapter[0];
-                    try!(this.as_ref().book.get_header(chapter, &try!(this.render_vec(vec))))
-                } else if this.as_ref().current_numbering >= n {
-                    format!("{} {}", this.as_ref().get_numbers(), try!(this.render_vec(vec)))
-                } else {
-                    try!(this.render_vec(vec))
-                };
+                let s = try!(this.as_mut().render_title(n, vec));
                 if n <= this.as_ref().book.options.get_i32("numbering").unwrap() {
-                    let url = if this.as_ref().add_script {
-                        format!("{}#link-{}\" onclick = \"javascript:showChapter({})",
-                                this.as_ref().filename,
-                                this.as_ref().link_number,
-                                this.as_ref().current_chapter_internal)
-                    } else {
-                        format!("{}#link-{}",
-                                this.as_ref().filename,
-                                this.as_ref().link_number)
-                    };
+                    let url = format!("{}#link-{}",
+                                      this.as_ref().filename,
+                                      this.as_ref().link_number);
                     this.as_mut().toc.add(n, url, s.clone());
                 }
-                if n == 1 && this.as_ref().current_hide {
-                    Ok(format!("<h1 id = \"link-{}\"></h1>", this.as_ref().link_number))
-                } else {
-                    Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",
-                            n, this.as_ref().link_number, s, n))
-                }
+                Ok(this.as_mut().render_title_full(n, s))
             },
             Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", try!(this.render_vec(vec)))),
             Token::Strong(ref vec) => Ok(format!("<b>{}</b>", try!(this.render_vec(vec)))),

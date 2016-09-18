@@ -32,7 +32,9 @@ use std::convert::{AsMut, AsRef};
 ///
 /// Renders a standalone, self-contained HTML file
 pub struct HtmlSingleRenderer<'a> {
-    html: HtmlRenderer<'a>
+    html: HtmlRenderer<'a>,
+    add_script: bool,
+    current_chapter_internal: i32,
 }
 
 impl<'a> HtmlSingleRenderer<'a> {
@@ -42,7 +44,9 @@ impl<'a> HtmlSingleRenderer<'a> {
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
         HtmlSingleRenderer {
-            html: html
+            html: html,
+            add_script: false,
+            current_chapter_internal: -1,
         }
     }
 
@@ -56,12 +60,34 @@ impl<'a> HtmlSingleRenderer<'a> {
     where T: AsMut<HtmlSingleRenderer<'a>>+AsRef<HtmlSingleRenderer<'a>> +
         AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer
     {
-        HtmlRenderer::static_render_token(this, token)
+        match *token {
+            Token::Header(n, ref vec) => {
+                let single: &mut HtmlSingleRenderer = this.as_mut();
+                if n == 1 {
+                    single.current_chapter_internal += 1;
+                }
+                let ref mut html = single.html;
+                let title = try!(html.render_title(n, vec));
+                if n <= html.book.options.get_i32("numbering").unwrap() {
+                    let url = if single.add_script {
+                        format!("#link-{}\" onclick = \"javascript:showChapter({})",
+                                html.link_number,
+                                single.current_chapter_internal)
+                    } else {
+                        format!("#link-{}",
+                                html.link_number)
+                    };
+                    html.toc.add(n, url, title.clone());
+                }
+                Ok(html.render_title_full(n, title))
+            }
+            _ => HtmlRenderer::static_render_token(this, token),
+        }
     }
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
-        self.html.add_script = self.html.book.options.get_bool("html.display_chapter").unwrap();
+        self.add_script = self.html.book.options.get_bool("html.display_chapter").unwrap();
         let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
         let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
 
