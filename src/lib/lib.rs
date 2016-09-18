@@ -124,6 +124,7 @@ pub use html_dir::HtmlDirRenderer;
 pub use html_single::HtmlSingleRenderer;
 pub use renderer::Renderer;
 
+#[macro_use]
 mod html;
 mod html_dir;
 mod error;

@@ -206,30 +206,7 @@ impl<'a> HtmlSingleRenderer<'a> {
     }
 }
 
-
-impl<'a> AsRef<HtmlRenderer<'a>> for HtmlSingleRenderer<'a> {
-    fn as_ref(&self) -> &HtmlRenderer<'a> {
-        &self.html
-    }
-}
-
-impl<'a> AsMut<HtmlRenderer<'a>> for HtmlSingleRenderer<'a> {
-    fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
-        &mut self.html
-    }
-}
-
-impl<'a> AsRef<HtmlSingleRenderer<'a>> for HtmlSingleRenderer<'a> {
-    fn as_ref(&self) -> &HtmlSingleRenderer<'a> {
-        self
-    }
-}
-
-impl<'a> AsMut<HtmlSingleRenderer<'a>> for HtmlSingleRenderer<'a> {
-    fn as_mut(&mut self) -> &mut HtmlSingleRenderer<'a> {
-        self
-    }
-}
+derive_html!{HtmlSingleRenderer<'a>}
 
 impl<'a> Renderer for HtmlSingleRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {

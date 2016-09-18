@@ -291,29 +291,7 @@ fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.html", i)
 }
 
-impl<'a> AsRef<HtmlRenderer<'a>> for HtmlDirRenderer<'a> {
-    fn as_ref(&self) -> &HtmlRenderer<'a> {
-        &self.html
-    }
-}
-
-impl<'a> AsMut<HtmlRenderer<'a>> for HtmlDirRenderer<'a> {
-    fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
-        &mut self.html
-    }
-}
-
-impl<'a> AsRef<HtmlDirRenderer<'a>> for HtmlDirRenderer<'a> {
-    fn as_ref(&self) -> &HtmlDirRenderer<'a> {
-        self
-    }
-}
-
-impl<'a> AsMut<HtmlDirRenderer<'a>> for HtmlDirRenderer<'a> {
-    fn as_mut(&mut self) -> &mut HtmlDirRenderer<'a> {
-        self
-    }
-}
+derive_html!{HtmlDirRenderer<'a>}
 
 impl<'a> Renderer for HtmlDirRenderer<'a> {
     fn render_token(&mut self, token: &Token) -> Result<String> {

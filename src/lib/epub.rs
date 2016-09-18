@@ -438,29 +438,9 @@ fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.xhtml", i)
 }
 
-impl<'a> AsRef<HtmlRenderer<'a>> for EpubRenderer<'a> {
-    fn as_ref(&self) -> &HtmlRenderer<'a> {
-        &self.html
-    }
-}
 
-impl<'a> AsMut<HtmlRenderer<'a>> for EpubRenderer<'a> {
-    fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
-        &mut self.html
-    }
-}
+derive_html!{EpubRenderer<'a>}
 
-impl<'a> AsRef<EpubRenderer<'a>> for EpubRenderer<'a> {
-    fn as_ref(&self) -> &EpubRenderer<'a> {
-        self
-    }
-}
-
-impl<'a> AsMut<EpubRenderer<'a>> for EpubRenderer<'a> {
-    fn as_mut(&mut self) -> &mut EpubRenderer<'a> {
-        self
-    }
-}
 
 
 impl<'a> Renderer for EpubRenderer<'a> {

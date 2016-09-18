@@ -428,6 +428,38 @@ impl<'a> Renderer for HtmlRenderer<'a> {
     }
 }
 
+
+/// This macro automatically generates AsRef and AsMut implementations
+/// for a type, to itself and to HtmlRenderer. Type must have a .html element
+/// and use a <'a> lifetime parameter.
+macro_rules! derive_html {
+    {$t:ty} => (
+        impl<'a> AsRef<HtmlRenderer<'a>> for $t {
+            fn as_ref(&self) -> &HtmlRenderer<'a> {
+                &self.html
+            }
+        }
+
+        impl<'a> AsMut<HtmlRenderer<'a>> for $t {
+            fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
+                &mut self.html
+            }
+        }
+
+        impl<'a> AsRef<$t> for $t {
+            fn as_ref(&self) -> &$t {
+                self
+            }
+        }
+        
+        impl<'a> AsMut<$t> for $t {
+            fn as_mut(&mut self) -> &mut $t {
+                self
+            }
+        }
+
+    );
+}
     
 
 
