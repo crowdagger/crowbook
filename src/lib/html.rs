@@ -396,7 +396,7 @@ impl<'a> HtmlRenderer<'a> {
         if content.is_empty() {
             content
         } else {
-            format!("<footer><p>{}</p></footer>", content)
+            format!("<footer id = \"footer\"><p>{}</p></footer>", content)
         }
     }
 

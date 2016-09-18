@@ -14,6 +14,7 @@ p.first-para:first-letter {
 /* The nav element corresponding to the navigation menu */
 nav {
     position: fixed;
+    border-right: solid thin black;
     left: 0;
     top: 0;
     bottom: 0;
@@ -188,8 +189,10 @@ blockquote {
 footer {
     background-color: #252525;
     margin-top: 2em;
+    margin-left: 0;
     text-align: center;
     color: white;
+    transition: margin-left 1s;
 }
 
 footer a, #top a {
@@ -204,6 +207,8 @@ footer a:hover, #top a:hover  {
 footer p {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
     width: 70%;
 }
 

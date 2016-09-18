@@ -8,6 +8,9 @@ function toggle() {
         if(document.getElementById("top")) {
             document.getElementById("top").style.left = "0";
         }
+        if(document.getElementById("footer")) {
+            document.getElementById("footer").style.marginLeft = "0%";
+        }
     } else {
         display_menu = true;
         document.getElementById("nav").style.left = "0";
@@ -15,6 +18,9 @@ function toggle() {
         document.getElementById("menu").style.left = "20%";
         if(document.getElementById("top")) {
             document.getElementById("top").style.left = "20%";
+        }
+        if(document.getElementById("footer")) {
+            document.getElementById("footer").style.marginLeft = "20%";
         }
     }
 }
