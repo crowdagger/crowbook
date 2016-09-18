@@ -126,7 +126,7 @@ impl<'a> HtmlRenderer<'a> {
         Ok(res)
     }
 
-    /// Renders a title (without <h1> tags), increasing header number beforehand
+    /// Renders a title (without `<h1>` tags), increasing header number beforehand
     pub fn render_title(&mut self, n: i32, vec: &[Token]) -> Result<String> {
         self.inc_header(n);
         let s = if n == 1 && self.current_numbering >= 1 {
@@ -140,7 +140,7 @@ impl<'a> HtmlRenderer<'a> {
         Ok(s)
     }
 
-    /// Renders a title, including <h1> tags and appropriate links
+    /// Renders a title, including `<h1>` tags and appropriate links
     pub fn render_title_full(&mut self, n: i32, inner: String) -> String {
         if n == 1 && self.current_hide {
             format!("<h1 id = \"link-{}\"></h1>", self.link_number)

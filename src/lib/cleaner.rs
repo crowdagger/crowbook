@@ -15,26 +15,60 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
+//! This module contains the `Cleaner` traits and various implementations of it.
+
+
 /// Custom function because we don't really want to touch \t or \n
 fn is_whitespace(c: char) -> bool {
     c == ' ' || c == ' ' || c == ' '
 }
 
 /// Trait for cleaning a string.
-/// This trait should be called for text that is e.g. in a paragraph, a title,
+///
+/// This trait must be called for text that is e.g. in a paragraph, a title,
 /// NOT for code blocks, hyperlinks and so on!
 pub trait Cleaner: Sync {
     /// Cleans a string. The default implementation is to remove multiple consecutive whitespaces
-    fn clean(&self, _: &mut String, _: bool) {}
+    ///
+    /// # Argumets
+    ///
+    /// * `str`: the string that must be cleaned
+    /// * `latex`: a bool specifying whether output is Latex code or not
+    fn clean(&self, _str: &mut String, _latex: bool) {}
 }
 
-
+/// Cleaner implementation that does nothing
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::Cleaner;
+/// use crowbook::cleaner::Off;
+/// let off = Off;
+/// let mut s = "  A string   that won't be cleaned ".to_owned();
+/// off.clean(&mut s, false);
+/// assert_eq!(&s, "  A string   that won't be cleaned ");
+/// ```
 pub struct Off;
 impl Cleaner for Off {}
 
+/// Default implementation of cleaner trait.
+///
+/// Only removes unnecessary whitespaces.
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::Cleaner;
+/// use crowbook::cleaner::Default;
+/// let default = Default;
+/// let mut s = "  A  string   with   more   whitespaces  than  needed   ".to_owned();
+/// default.clean(&mut s, false);
+/// assert_eq!(&s, " A string with more whitespaces than needed ");
+/// ```
 pub struct Default;
 impl Cleaner for Default {
-    // Remove unnecessary whitespaces
+    /// Remove unnecessary whitespaces
     fn clean(&self, s: &mut String, _: bool) {
         if s.contains(is_whitespace) { // if not, no need to do anything
             let mut new_s = String::with_capacity(s.len());
@@ -59,10 +93,23 @@ impl Cleaner for Default {
 }
 
 /// Implementation for french 'cleaning'
+///
+/// This implementation replaces spaces before some characters (e.g. `?` or `;` with non-breaking spaces
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::Cleaner;
+/// use crowbook::cleaner::French;
+/// let french = French;
+/// let mut s = "  Bonjour ! Comment allez-vous   ?   ".to_owned();
+/// french.clean(&mut s, true); // clean for latex so we see the non-breaking spaces easily
+/// assert_eq!(&s, " Bonjour~! Comment allez-vous~? ");
+/// ```
 pub struct French;
 
 impl Cleaner for French {
-    // puts non breaking spaces between :, ;, ?, !, «, »
+    /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
     fn clean(&self, s: &mut String, latex: bool) {
         fn is_trouble(c: char) -> bool {
             match c {
@@ -138,5 +185,4 @@ impl Cleaner for French {
         *s = new_s
     }
 }
-            
 

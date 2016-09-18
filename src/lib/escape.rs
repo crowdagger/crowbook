@@ -15,7 +15,18 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-/// Escape characters <, >, and &
+//! Provides utility functions for escaping text to HTML or LaTeX
+
+
+/// Escape characters `<`, `>`, and `&`
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::escape::escape_html;
+/// let s = escape_html("<foo> & <bar>");
+/// assert_eq!(&s, "&lt;foo&gt; &amp; &lt;bar&gt;");
+/// ```
 pub fn escape_html(input: &str) -> String {
     let mut output = String::new();
     for c in input.chars() {
@@ -30,7 +41,15 @@ pub fn escape_html(input: &str) -> String {
     output
 }
 
-/// Escape characters for tex file
+/// Escape characters for LaTeX
+///
+/// # Examples
+///
+/// ```
+/// use crowbook::escape::escape_tex;
+/// let s = escape_tex("command --foo # calls command with option foo");
+/// assert_eq!(&s, r"command -{}-foo \# calls command with option foo");
+/// ```
 pub fn escape_tex(input: &str) -> String {
     let mut output = String::new();
     let mut chars:Vec<char> = input.chars().collect();

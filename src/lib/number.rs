@@ -1,24 +1,24 @@
 /// Numbering for a given chapter
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Number {
-    /// chapter's title is hidden
+    /// Chapter's title is hidden
     Hidden,
-    /// chapter is not numbered
+    /// Chapter is not numbered
     Unnumbered,
-    /// chapter follows books numbering, number is given automatically
+    /// Chapter follows books numbering, number is given automatically
     Default,
-    /// chapter number set to specified number
+    /// Chapter number set to specified number
     Specified(i32), 
 }
 
 
 impl Number {
-    /// Returns true if number is hidden
+    /// Returns true if self is hidden
     pub fn is_hidden(&self) -> bool {
         *self == Number::Hidden
     }
 
-    /// Returns true if number is numbered
+    /// Returns true if self is numbered
     pub fn is_numbered(&self) -> bool {
         match *self {
             Number::Hidden | Number::Unnumbered => false,

@@ -106,6 +106,9 @@ extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
 
+pub mod cleaner;
+pub mod escape;
+
 pub use parser::Parser;
 pub use book::Book;
 pub use bookoption::BookOption;
@@ -116,13 +119,15 @@ pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
 pub use error::{Result, Error, Source};
 pub use token::Token;
-pub use cleaner::{Cleaner, French};
+pub use cleaner::{Cleaner};
 pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
 pub use html_dir::HtmlDirRenderer;
 pub use html_single::HtmlSingleRenderer;
 pub use renderer::Renderer;
+
+
 
 #[macro_use]
 mod html;
@@ -134,7 +139,7 @@ mod latex;
 mod odt;
 mod parser;
 mod token;
-mod cleaner;
+
 mod number;
 mod resource_handler;
 mod logger;
@@ -143,7 +148,6 @@ mod lang;
 mod renderer;
 mod html_single;
 
-mod escape;
 mod toc;
 mod zipper;
 mod templates;

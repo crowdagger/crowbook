@@ -32,7 +32,7 @@ pub enum Token {
     Strong(Vec<Token>),
     /// `Code`, a.k.a. verbatim
     Code(Vec<Token>),
-    /// > A quote
+    /// A quote
     BlockQuote(Vec<Token>),
     /// Code block with language and content
     CodeBlock(String, Vec<Token>), 
