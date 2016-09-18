@@ -133,7 +133,7 @@ impl<'a> HtmlSingleRenderer<'a> {
   {}
 </div>",
                 i,
-                try!(self.html.render_html(v))));
+                try!(HtmlRenderer::render_html(self, v))));
         }
         self.html.source = Source::empty();
 

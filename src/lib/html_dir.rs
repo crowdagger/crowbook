@@ -31,6 +31,7 @@ use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
 use std::borrow::Cow;
+use std::convert::{AsRef, AsMut};
 
 
 /// Multiple files HTML renderer
@@ -147,7 +148,7 @@ impl<'a> HtmlDirRenderer<'a> {
             }
             titles.push(title);
             
-            let chapter = self.html.render_html(v);
+            let chapter = HtmlRenderer::render_html(self, v);
             chapters.push(chapter);
         }
         self.html.source = Source::empty();
@@ -288,4 +289,34 @@ impl<'a> HtmlDirRenderer<'a> {
 /// Generate a file name given an int   
 fn filenamer(i: usize) -> String {
     format!("chapter_{:03}.html", i)
+}
+
+impl<'a> AsRef<HtmlRenderer<'a>> for HtmlDirRenderer<'a> {
+    fn as_ref(&self) -> &HtmlRenderer<'a> {
+        &self.html
+    }
+}
+
+impl<'a> AsMut<HtmlRenderer<'a>> for HtmlDirRenderer<'a> {
+    fn as_mut(&mut self) -> &mut HtmlRenderer<'a> {
+        &mut self.html
+    }
+}
+
+impl<'a> AsRef<HtmlDirRenderer<'a>> for HtmlDirRenderer<'a> {
+    fn as_ref(&self) -> &HtmlDirRenderer<'a> {
+        self
+    }
+}
+
+impl<'a> AsMut<HtmlDirRenderer<'a>> for HtmlDirRenderer<'a> {
+    fn as_mut(&mut self) -> &mut HtmlDirRenderer<'a> {
+        self
+    }
+}
+
+impl<'a> Renderer for HtmlDirRenderer<'a> {
+    fn render_token(&mut self, token: &Token) -> Result<String> {
+        HtmlRenderer::static_render_token(self, token)
+    }
 }
