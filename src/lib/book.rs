@@ -24,7 +24,7 @@ use std::iter::IntoIterator;
 use crossbeam;
 use mustache;
 use mustache::MapBuilder;
-use yaml_rust::YamlLoader;
+use yaml_rust::{YamlLoader, Yaml};
 
 
 /// A Book.
@@ -207,13 +207,14 @@ impl Book {
         match YamlLoader::load_from_str(&yaml) {
             Err(err) => return Err(Error::ConfigParser(self.source.clone(),
                                                        format!("YAML block was not valid Yaml: {}", err))),
-            Ok(docs) => {
+            Ok(mut docs) => {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
-                    for (key,value) in docs[0].as_hash().unwrap() {
-                        let opt = try!(self.options.set_yaml(key.clone(), value.clone())); //todo: remove clone
-                        if let Some(previous) = opt {
-                            self.logger.warning(format!("Key {:?} was already set to {:?}, replacing it with {:?}", key, previous, value));
+                    if let Yaml::Hash(hash) = docs.pop().unwrap() {
+                        for (key,value) in hash.into_iter() {
+                            try!(self.options.set_yaml(key, value)); 
                         }
+                    } else {
+                        unreachable!();
                     }
                 } else {
                     return Err(Error::ConfigParser(self.source.clone(),
