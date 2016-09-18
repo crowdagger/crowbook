@@ -123,7 +123,8 @@ table.notes td {
 .table table {
     width: 60%;
     margin: 0 auto;
-    border-style: solid thin;
+    border-style: solid;
+    border-width: thin;
     border-color: black;
     border-collapse: collapse;
 }

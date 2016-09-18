@@ -38,7 +38,7 @@
              onclick="javascript:switchAll()">
       </div>
       {{/display_chapter}}
-      <h2>{{{title}}}</h2>
+      <h2><a href = "#link-0">{{{title}}}</a></h2>
       {{{toc}}}
     </nav>
 
@@ -52,7 +52,7 @@
                  alt = "{{{loc_menu}}}" title = "{{{loc_menu}}}" />
             
           </div>
-          <h1 class="title">{{title}}</h1>
+          <h1 id = "link-0" class="title" >{{title}}</h1>
           <h2 class="author">{{author}}</h2>
         </header>
         {{{content}}}

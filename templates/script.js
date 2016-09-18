@@ -27,7 +27,10 @@ function showChapter(chap, noreset){
 }
 
 function getChapter(elem) {
-    if (elem.className == "chapter") {
+    if(!elem) {
+        return 0;
+    }
+    if(elem.className == "chapter") {
         return parseInt(elem.id.substr("chapter-".length));
     } else {
         return getChapter(elem.parentElement);
@@ -59,10 +62,9 @@ function switchAll() {
     }
 }
 
-window.onload = function(){
-    displayAll = false;
+window.onhashchange = function() {
     var hash = document.location.hash;
-    if (!hash) {
+    if(!hash) {
         showChapter(0, true);
     } else {
         var element = document.getElementById(hash.substr(1));
@@ -70,4 +72,26 @@ window.onload = function(){
         showChapter(chap, true);
     }
 };
+
+window.onload = function(){
+    displayAll = false;
+    var hash = document.location.hash;
+    if(!hash) {
+        showChapter(0, true);
+    } else {
+        var element = document.getElementById(hash.substr(1));
+        var chap = getChapter(element);
+        showChapter(chap, true);
+    }
+
+};
+//insérez ce bout de code au début de votre code pour observer les changements de hash dans l'URL
+if(!window.HashChangeEvent)(function(){
+	var lastURL=document.URL;
+	window.addEventListener("hashchange",function(event){
+		Object.defineProperty(event,"oldURL",{enumerable:true,configurable:true,value:lastURL});
+		Object.defineProperty(event,"newURL",{enumerable:true,configurable:true,value:document.URL});
+		lastURL=document.URL;
+	});
+}());
 {{/display_chapter}}

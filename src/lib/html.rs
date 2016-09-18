@@ -68,7 +68,7 @@ impl<'a> HtmlRenderer<'a> {
         let mut html = HtmlRenderer {
             book: book,
             toc: Toc::new(),
-            link_number: 0,
+            link_number: 1,
             current_chapter: [0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("numbering").unwrap(),
             current_par: 0,
