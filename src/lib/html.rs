@@ -45,6 +45,7 @@ pub struct HtmlRenderer<'a> {
     first_letter: bool,
     first_paragraph: bool,
     footnotes: Vec<(String, String)>,
+    filename: String,
 
     /// Current chapter (and subsection, subsubsection and so on)
     pub current_chapter: [i32;6],
@@ -52,7 +53,6 @@ pub struct HtmlRenderer<'a> {
     pub current_numbering: i32,
     /// Whether current chapter's title must be displayed
     pub current_hide: bool,
-    filename: String,
     /// Resource handler
     pub handler: ResourceHandler<'a>,
     /// Current footnote number
