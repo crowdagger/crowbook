@@ -158,6 +158,30 @@ impl Book {
 
         Ok(book)
     }
+
+    /// Sets options from a YAML block
+    fn set_options_from_yaml(&mut self, yaml: &str) -> Result<()> {
+        self.options.source = self.source.clone();
+        match YamlLoader::load_from_str(&yaml) {
+            Err(err) => return Err(Error::ConfigParser(self.source.clone(),
+                                                       format!("YAML block was not valid Yaml: {}", err))),
+            Ok(mut docs) => {
+                if docs.len() == 1 && docs[0].as_hash().is_some() {
+                    if let Yaml::Hash(hash) = docs.pop().unwrap() {
+                        for (key,value) in hash.into_iter() {
+                            try!(self.options.set_yaml(key, value)); 
+                        }
+                        Ok(())
+                    } else {
+                        unreachable!();
+                    }
+                } else {
+                    return Err(Error::ConfigParser(self.source.clone(),
+                                                   "YAML part of the book is not a valid hashmap".to_owned()));
+                }
+            }
+        }
+    }
     
     /// Sets options and load chapters according to configuration file
     ///
@@ -187,6 +211,7 @@ impl Book {
         let mut line;
 
         let mut line_number = 0;
+        let mut is_next_line_ok: bool;
         
         loop {
             if let Some(next_line) = lines.peek() {
@@ -195,33 +220,63 @@ impl Book {
                     _ => c.is_digit(10)
                 }) {
                     break;
-                }
+                } 
             } else {
                 break;
             }
             line = lines.next().unwrap();
+            self.source.set_line(line_number);
             line_number += 1;
             yaml.push_str(line);
             yaml.push_str("\n");
-        }
-        match YamlLoader::load_from_str(&yaml) {
-            Err(err) => return Err(Error::ConfigParser(self.source.clone(),
-                                                       format!("YAML block was not valid Yaml: {}", err))),
-            Ok(mut docs) => {
-                if docs.len() == 1 && docs[0].as_hash().is_some() {
-                    if let Yaml::Hash(hash) = docs.pop().unwrap() {
-                        for (key,value) in hash.into_iter() {
-                            try!(self.options.set_yaml(key, value)); 
-                        }
-                    } else {
-                        unreachable!();
-                    }
+
+            if line.trim().ends_with(|c| match c {
+                '>' | '|' | ':' | '-' => true,
+                _ => false
+            }) {
+                // line ends with the start of a block indicator
+                continue;
+            }
+            
+            if let Some(next_line) = lines.peek() {
+                let doc = YamlLoader::load_from_str(next_line);
+                if !doc.is_ok() {
+                    is_next_line_ok = false;
                 } else {
-                    return Err(Error::ConfigParser(self.source.clone(),
-                                                   "YAML part of the book is not a valid hashmap".to_owned()));
+                    let doc = doc.unwrap();
+                    if doc.len() > 0 && doc[0].as_hash().is_some() {
+                        is_next_line_ok = true;
+                    } else {
+                        is_next_line_ok = false;
+                    }
                 }
+            } else {
+                break;
+            }
+            if !is_next_line_ok {
+                // If next line is not valid yaml, probably means we are in a multistring
+                continue;
+            }
+//            println!("trying to read yaml on {}", &yaml);
+            let result = self.set_options_from_yaml(&yaml);
+            match result {
+                Ok(_) => {
+                    // Fine, we can remove previous lines
+                    yaml = String::new();
+                },
+                Err(err @ Error::BookOption(..)) => {
+                    // BookOption error: we abort now
+                    // Todo: add line number
+                    return Err(err);
+                },
+                Err(_) => {
+//                    println!("{} was not valid, try again with another line", yaml);
+                    // Other error: we do nothing, hoping it will work
+                    // itself out when more lines are added to yaml
+                },
             }
         }
+        try!(self.set_options_from_yaml(&yaml));
 
         // Update cleaner according to options (autoclean/lang)
         self.update_cleaner();
