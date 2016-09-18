@@ -36,6 +36,9 @@ provide better error messages.
     and HTML. This allow to delimit a chapter break even if nothing is
     displayed.
 * Bugfixes:
+  * Navigation menu of standalone HTML didn't include a call to
+    javascript when `html.display_chapter` was set to true, meaning it
+    didn't display the chapter correctly.
   * Implementations of `Image` and `StandaloneImage` were reversed in
     LaTeX.
   * `StandaloneImage` urls were not adjusted (meanning that running
