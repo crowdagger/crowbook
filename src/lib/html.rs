@@ -37,8 +37,6 @@ use rustc_serialize::base64::{self, ToBase64};
 /// Also used by `EpubRenderer` and `HtmlDirRenderer`.
 pub struct HtmlRenderer<'a> {
     table_head: bool,
-    footnote_number: u32,
-    epub3: bool,
     verbatim: bool,
     link_number: u32,
     add_script: bool,
@@ -47,13 +45,13 @@ pub struct HtmlRenderer<'a> {
     first_letter: bool,
     first_paragraph: bool,
 
-
-    // fields used by EpubRenderer so marked public but hidden
-    #[doc(hidden)]
+    /// Current footnote number
+    pub footnote_number: u32,
+    /// Book that must be renderer
     pub book: &'a Book,
-    #[doc(hidden)]
+    /// Source for error messages
     pub source: Source,
-    #[doc(hidden)]
+    /// Table of contents
     pub toc: Toc,
     #[doc(hidden)]
     pub footnotes: Vec<(String, String)>,
@@ -85,7 +83,6 @@ impl<'a> HtmlRenderer<'a> {
             table_head: false,
             footnote_number: 0,
             footnotes: vec!(),
-            epub3: false,
             verbatim: false,
             filename: String::new(),
             handler: ResourceHandler::new(&book.logger),
@@ -519,14 +516,13 @@ impl<'a> HtmlRenderer<'a> {
   <a href = \"#note-source-{}\">[{}]</a>
 </p>", number, number);
 
-                let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
-                                    if this.as_ref().epub3 {r#"epub:type="footnote"#}else{""},
-                                    number, try!(this.render_vec(vec)));
+                let inner = format!("<aside id = \"note-dest-{}\">{}</aside>",
+                                    number,
+                                    try!(this.render_vec(vec)));
                 this.as_mut().footnotes.push((note_number, inner));
                 
-                Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
-                        if this.as_ref().epub3 {"epub:type = \"noteref\""} else {""},
-                        number, number, number))
+                Ok(format!("<a href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
+                           number, number, number))
             },
         }
     }

@@ -3,6 +3,8 @@ title: Test
 # Make nb_char visible
 lang: fr
 
+epub.version: 3
+
 output.pdf: test_result.pdf
 output.html: test_result.html
 output.epub: test_result.epub

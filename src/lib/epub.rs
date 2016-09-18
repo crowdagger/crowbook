@@ -384,13 +384,46 @@ impl<'a> EpubRenderer<'a> {
     ///
     /// See http://lise-henry.github.io/articles/rust_inheritance.html
     pub fn static_render_token<T>(this: &mut T, token: &Token) -> Result<String>
-    where T: AsMut<EpubRenderer<'a>>+AsRef<EpubRenderer<'a>> + Renderer {
+    where T: AsMut<EpubRenderer<'a>>+AsRef<EpubRenderer<'a>> +
+        AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer
+    {
         match *token {
             Token::Header(1, ref vec) => {
-                try!(this.as_mut().find_title(vec));
-                HtmlRenderer::static_render_token(this.as_mut(), token)
+                {
+                    let epub: &mut EpubRenderer = this.as_mut();
+                    try!(epub.find_title(vec));
+                }
+                HtmlRenderer::static_render_token(this, token)
             },
-            _ => HtmlRenderer::static_render_token(this.as_mut(), token)
+            Token::Footnote(ref vec) => {
+                let epub_version = (this.as_ref() as &HtmlRenderer).book.options.get_i32("epub.version").unwrap();
+                if epub_version == 3 {
+                    let inner_content = try!(this.render_vec(vec));
+                    let html: &mut HtmlRenderer = this.as_mut();
+                    html.footnote_number += 1;
+                    let number = html.footnote_number;
+                    assert!(!vec.is_empty());
+                    let note_number = format!("<p class = \"note-number\">
+  <a href = \"#note-source-{}\">[{}]</a>
+</p>",
+                                              number,
+                                              number);
+                    
+                    let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
+                                    r#"epub:type="footnote""#,
+                                        number,
+                                        inner_content);
+                    html.footnotes.push((note_number, inner));
+                    
+                    Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
+                               "epub:type = \"noteref\"",
+                               number, number, number))
+                } else {
+                    HtmlRenderer::static_render_token(this, token)
+                }
+            },
+
+            _ => HtmlRenderer::static_render_token(this, token)
         }
     }
 }
