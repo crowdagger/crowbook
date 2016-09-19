@@ -115,7 +115,7 @@ impl Parser {
                         *content = in_vec.clone();
                     } else {
                         return Err(Error::parser(&self.source,
-                                                     format!("footnote reference {} does not have a matching definition", &reference)));
+                                                 format!("footnote reference {} does not have a matching definition", &reference)));
                     }
                 },
                 Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)
