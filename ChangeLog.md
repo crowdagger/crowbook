@@ -1,10 +1,12 @@
 ChangeLog
 =========
 
-unreleased
-----------
-This release adds support for syntax higlighting in code blocks and
-provide better error messages.
+0.8.0 (2016-09-19)
+------------------
+This release adds support for syntax higlighting in code blocks,
+customized top and footer blocks for HTML rendering, and the special
+`import_config` option that allows to import options from another book
+file. It also provides (hopefully) better error messages.
 
 * New options:
   * `import_config`is not really an option, but allows to import
@@ -54,6 +56,7 @@ provide better error messages.
     refactor the `Error` type, and make more methods return
     `Result<X>` instead of `X`. The API is, therefore, quite modified.
   * Added a `Renderer` trait used by the various renderers.
+  * Removed some methods from public API.
 
 0.7.0 (2016-09-11)
 ------------------
