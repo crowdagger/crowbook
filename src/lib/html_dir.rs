@@ -93,11 +93,10 @@ impl<'a> HtmlDirRenderer<'a> {
         }
         
         // Write all images (including cover)
-        let images_path = PathBuf::from(&self.html.book.options.get_path("resources.base_path.images").unwrap());
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(images_path.join(source)).map_err(|_| Error::FileNotFound(self.html.book.source.clone(),
-                                                                                                  "image or cover".to_owned(),
-                                                                                                  source.to_owned())));
+            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.html.book.source.clone(),
+                                                                                "image or cover".to_owned(),
+                                                                                source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
             try!(self.write_file(dest, &content));
