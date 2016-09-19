@@ -40,12 +40,6 @@ impl Source {
         Source { file: Some(s.into()), line: None }
     }
 
-    /// Sets line number of a source
-    pub fn line(mut self, line: u32) -> Source {
-        self.line = Some(line);
-        self
-    }
-
     /// Sets line number of a source (with &mut self)
     pub fn set_line(&mut self, line: u32) {
         self.line = Some(line);
