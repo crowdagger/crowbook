@@ -63,18 +63,21 @@ impl<'a> HtmlDirRenderer<'a> {
         let dest_path = try!(self.html.book.options.get_path("output.html_dir"));
         match fs::metadata(&dest_path) {
             Ok(metadata) => if metadata.is_file() {
-                return Err(Error::Render(format!("{} already exists and is not a directory", &dest_path)));
+                return Err(Error::render(&self.html.book.source,
+                                         format!("{} already exists and is not a directory", &dest_path)));
             } else if metadata.is_dir() {
                 self.html.book.logger.warning(format!("{} already exists, deleting it", &dest_path));
                 try!(fs::remove_dir_all(&dest_path)
-                     .map_err(|e| Error::Render(format!("error deleting directory {}: {}", &dest_path, e))));
+                     .map_err(|e| Error::render(&self.html.book.source,
+                                                format!("error deleting directory {}: {}", &dest_path, e))));
             },
             Err(_) => (),
         }
         try!(fs::DirBuilder::new()
              .recursive(true)
              .create(&dest_path)
-             .map_err(|e| Error::Render(format!("could not create HTML directory {}:{}", &dest_path, e))));
+             .map_err(|e| Error::render(&self.html.book.source,
+                                        format!("could not create HTML directory {}:{}", &dest_path, e))));
 
         // Write CSS
         try!(self.write_css());
@@ -94,11 +97,12 @@ impl<'a> HtmlDirRenderer<'a> {
         
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.html.book.source.clone(),
-                                                                                "image or cover".to_owned(),
-                                                                                source.to_owned())));
+            let mut f = try!(File::open(source).map_err(|_| Error::file_not_found(&self.html.book.source,
+                                                                                  "image or cover",
+                                                                                  source.clone())));
             let mut content = vec!();
-            try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file {}: {}", source, e))));
+            try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.book.source,
+                                                                       format!("error while reading image file {}: {}", source, e))));
             try!(self.write_file(dest, &content));
         }
 
@@ -110,11 +114,12 @@ impl<'a> HtmlDirRenderer<'a> {
             for path in list {
                 let abs_path = Path::new(&files_path).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(self.html.book.source.clone(),
-                                                                  "additional resource from resources.files".to_owned(),
-                                                                  abs_path.to_string_lossy().into_owned())));
+                                 .map_err(|_| Error::file_not_found(&self.html.book.source,
+                                                                    "additional resource from resources.files",
+                                                                    abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
-                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
+                try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.book.source,
+                                                                           format!("error while reading resource file: {}", e))));
                 try!(self.write_file(data_path.join(&path).to_str().unwrap(), &content));
             }
         }
@@ -206,9 +211,9 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut content = if let Ok(cover) = self.html.book.options.get_path("cover") {
             // checks first that cover exists
             if fs::metadata(&cover).is_err() {
-                return Err(Error::FileNotFound(self.html.book.source.clone(),
-                                               "cover".to_owned(),
-                                               cover));
+                return Err(Error::file_not_found(&self.html.book.source,
+                                               "cover",
+                                                 cover));
                 
             }
             format!("<div id = \"cover\">
@@ -276,12 +281,15 @@ impl<'a> HtmlDirRenderer<'a> {
             try!(fs::DirBuilder::new()
                  .recursive(true)
                  .create(&dest_dir)
-                 .map_err(|e| Error::Render(format!("could not create directory in {}:{}", dest_dir.display(), e))));
+                 .map_err(|e| Error::render(&self.html.book.source,
+                                            format!("could not create directory in {}:{}", dest_dir.display(), e))));
         }
         let mut f = try!(File::create(&dest_file)
-                         .map_err(|e| Error::Render(format!("could not create file {}:{}", dest_file.display(), e))));
+                         .map_err(|e| Error::render(&self.html.book.source,
+                                                   format!("could not create file {}:{}", dest_file.display(), e))));
         f.write_all(content)
-            .map_err(|e| Error::Render(format!("could not write to file {}:{}", dest_file.display(), e)))
+            .map_err(|e| Error::render(&self.html.book.source,
+                                       format!("could not write to file {}:{}", dest_file.display(), e)))
     }
 }
 

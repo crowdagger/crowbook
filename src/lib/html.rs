@@ -230,8 +230,8 @@ impl<'a> HtmlRenderer<'a> {
                         // Use initial
                         let mut chars = content.chars();
                         let initial = try!(chars.next()
-                                          .ok_or(Error::Parser(this.as_ref().book.source.clone(),
-                                                               "empty str token, could not find initial".to_owned())));
+                                          .ok_or(Error::parser(&this.as_ref().book.source,
+                                                                   "empty str token, could not find initial")));
                         let mut new_content = if initial.is_alphanumeric() {
                             format!("<span class = \"initial\">{}</span>", initial)
                         } else {

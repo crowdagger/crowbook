@@ -67,9 +67,9 @@ impl<'r> ResourceHandler<'r> {
         
         // Check exisence of the file
         if fs::metadata(file.as_ref()).is_err() {
-            return Err(Error::FileNotFound(source.clone(),
-                                           "image".to_owned(),
-                                           format!("{}", file)));
+            return Err(Error::file_not_found(source,
+                                             "image",
+                                             format!("{}", file)));
         }
         
         // if image mapping is not activated do nothing else
@@ -95,9 +95,9 @@ impl<'r> ResourceHandler<'r> {
             let mut f = match fs::File::open(file.as_ref()) {
                 Ok(f) => f,
                 Err(_) => {
-                    return Err(Error::FileNotFound(source.clone(),
-                                                   "image".to_owned(),
-                                                   format!("{}", file)));
+                    return Err(Error::file_not_found(source,
+                                                     "image",
+                                                     format!("{}", file)));
                 }
             };
             let mut content: Vec<u8> = vec!();
@@ -192,7 +192,8 @@ impl<'r> ResourceHandler<'r> {
             let abs_path = base.join(&path);
             let res= fs::metadata(&abs_path);
             match res {
-                Err(err) => return Err(Error::Render(format!("error reading file {}: {}", abs_path.display(), err))),
+                Err(err) => return Err(Error::render(Source::empty(),
+                                                         format!("error reading file {}: {}", abs_path.display(), err))),
                 Ok(metadata) => {
                     if metadata.is_file() {
                         out.push(path);
@@ -208,7 +209,8 @@ impl<'r> ResourceHandler<'r> {
                             out.push(file.to_string_lossy().into_owned());
                         }
                     } else {
-                        return Err(Error::Render(format!("error in epub rendering: {} is neither a file nor a directory", &path)));
+                        return Err(Error::render(Source::empty(),
+                                                     format!("error in epub rendering: {} is neither a file nor a directory", &path)));
                     }
                 }
             }

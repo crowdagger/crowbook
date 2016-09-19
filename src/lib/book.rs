@@ -118,9 +118,9 @@ impl Book {
         book.logger.set_verbosity(verbosity);
         
         let path = Path::new(filename);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(Source::empty(),
-                                                                           "book".to_owned(),
-                                                                           String::from(filename))));
+        let mut f = try!(File::open(&path).map_err(|_| Error::file_not_found(Source::empty(),
+                                                                             "book",
+                                                                             filename.to_owned())));
         // Set book path to book's directory
         if let Some(parent) = path.parent() {
             book.root = parent.to_owned();
@@ -128,8 +128,8 @@ impl Book {
         }
         
         let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| Error::ConfigParser(Source::new(filename),
-                                                                      "file contains invalid UTF-8, could not parse it".to_owned())));
+        try!(f.read_to_string(&mut s).map_err(|_| Error::config_parser(Source::new(filename),
+                                                                       "file contains invalid UTF-8, could not parse it")));
                                             
         
         try!(book.set_from_config(&s));
@@ -163,8 +163,8 @@ impl Book {
     fn set_options_from_yaml(&mut self, yaml: &str) -> Result<()> {
         self.options.source = self.source.clone();
         match YamlLoader::load_from_str(&yaml) {
-            Err(err) => return Err(Error::ConfigParser(self.source.clone(),
-                                                       format!("YAML block was not valid Yaml: {}", err))),
+            Err(err) => return Err(Error::config_parser(&self.source,
+                                                        format!("YAML block was not valid Yaml: {}", err))),
             Ok(mut docs) => {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
                     if let Yaml::Hash(hash) = docs.pop().unwrap() {
@@ -176,7 +176,7 @@ impl Book {
                         unreachable!();
                     }
                 } else {
-                    return Err(Error::ConfigParser(self.source.clone(),
+                    return Err(Error::config_parser(&self.source,
                                                    "YAML part of the book is not a valid hashmap".to_owned()));
                 }
             }
@@ -196,10 +196,10 @@ impl Book {
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
             let words:Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
-                return Err(Error::ConfigParser(source.clone(),
-                                               "chapter filenames must not contain whitespace".to_owned()));
+                return Err(Error::config_parser(source,
+                                                "chapter filenames must not contain whitespace".to_owned()));
             } else if words.len() < 1 {
-                return Err(Error::ConfigParser(source.clone(),
+                return Err(Error::config_parser(source,
                                                "no chapter name specified".to_owned()));
             }
             Ok(words[0])
@@ -264,15 +264,16 @@ impl Book {
                     // Fine, we can remove previous lines
                     yaml = String::new();
                 },
-                Err(err @ Error::BookOption(..)) => {
-                    // BookOption error: we abort now
-                    // Todo: add line number
-                    return Err(err);
-                },
-                Err(_) => {
-//                    println!("{} was not valid, try again with another line", yaml);
-                    // Other error: we do nothing, hoping it will work
-                    // itself out when more lines are added to yaml
+                Err(err) => {
+                    if err.is_book_option() {
+                        // book option error: abort
+                        return Err(err);
+                    } else {
+                        //                    println!("{} was not valid, try again with another line", yaml);
+                        // Other error: we do nothing, hoping it will work
+                        // itself out when more lines are added to yaml
+                    }
+                    
                 },
             }
         }
@@ -305,16 +306,16 @@ impl Book {
                 // chapter with specific number
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
                 if parts.len() != 2 {
-                    return Err(Error::ConfigParser(self.source.clone(),
-                                                   "ill-formatted line specifying chapter number".to_owned()));
+                    return Err(Error::config_parser(&self.source,
+                                                   "ill-formatted line specifying chapter number"));
                 } 
                 let file = try!(get_filename(&self.source, parts[1]));
-                let number = try!(parts[0].parse::<i32>().map_err(|_| Error::ConfigParser(self.source.clone(),
-                                                                                          "Error parsing chapter number".to_owned())));
+                let number = try!(parts[0].parse::<i32>().map_err(|_| Error::config_parser(&self.source,
+                                                                                           "Error parsing chapter number")));
                 try!(self.add_chapter(Number::Specified(number), file));
             } else {
-                return Err(Error::ConfigParser(self.source.clone(),
-                                               "found invalid chapter definition in the chapter list".to_owned()));
+                return Err(Error::config_parser(&self.source,
+                                                "found invalid chapter definition in the chapter list"));
             }
         }
 
@@ -442,7 +443,8 @@ impl Book {
         self.logger.debug("Attempting to generate HTML...");
         let mut html = HtmlSingleRenderer::new(&self);
         let result = try!(html.render_book());
-        try!(f.write_all(&result.as_bytes()).map_err(|e| Error::Render(format!("problem when writing to HTML file: {}", e))));
+        try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
+                                                                       format!("problem when writing to HTML file: {}", e))));
         if let Ok(file) = self.options.get_path("output.html") {
             self.logger.info(format!("Successfully generated HTML file: {}", file));
         } else {
@@ -457,7 +459,8 @@ impl Book {
 
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
-        try!(f.write_all(&result.as_bytes()).map_err(|e| Error::Render(format!("problem when writing to LaTeX file: {}", e))));
+        try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
+                                                                       format!("problem when writing to LaTeX file: {}", e))));
         if let Ok(file) = self.options.get_path("output.tex") {
             self.logger.info(format!("Successfully generated LaTeX file: {}", file));
         } else {
@@ -487,11 +490,11 @@ impl Book {
 
         // try to open file
         let path = self.root.join(file);
-        let mut f = try!(File::open(&path).map_err(|_| Error::FileNotFound(self.source.clone(),
-                                                                           "book chapter".to_owned(),
-                                                                           format!("{}", path.display()))));
+        let mut f = try!(File::open(&path).map_err(|_| Error::file_not_found(&self.source,
+                                                                             "book chapter",
+                                                                             format!("{}", path.display()))));
         let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(self.source.clone(),
+        try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
                                                                 format!("file {} contains invalid UTF-8", path.display()))));    
             
         // Ignore YAML blocks
@@ -586,17 +589,17 @@ impl Book {
             "html.highlight.js" => highlight::JS,
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
-            _ => return Err(Error::ConfigParser(self.source.clone(),
+            _ => return Err(Error::config_parser(&self.source,
                                                 format!("invalid template {}", template))),
         };
         if let Ok (ref s) = option {
-            let mut f = try!(File::open(s).map_err(|_| Error::FileNotFound(self.source.clone(),
-                                                                           format!("template {}", template),
-                                                                           s.to_owned())));
+            let mut f = try!(File::open(s).map_err(|_| Error::file_not_found(&self.source,
+                                                                             format!("template {}", template),
+                                                                             s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)
-                 .map_err(|_| Error::ConfigParser(self.source.clone(),
-                                                  format!("file '{}' could not be read", s))));
+                 .map_err(|_| Error::config_parser(&self.source,
+                                                   format!("file '{}' could not be read", s))));
             Ok(Cow::Owned(res))
         } else {
             Ok(Cow::Borrowed(fallback))

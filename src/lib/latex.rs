@@ -67,18 +67,20 @@ impl<'a> LatexRenderer<'a> {
 
             // write image files
             for (source, dest) in self.handler.images_mapping() {
-                let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.source.clone(),
-                                                                                    "image".to_owned(),
-                                                                                    source.to_owned())));
+                let mut f = try!(File::open(source).map_err(|_| Error::file_not_found(&self.source,
+                                                                                          "image",
+                                                                                          source.to_owned())));
                 let mut content = vec!();
-                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
+                try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.source,
+                                                                               format!("error while reading image file: {}", e))));
                 try!(zipper.write(dest, &content, true));
             }
         
             
             zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
-            Err(Error::Render("no output pdf file specified in book config".to_owned()))
+            Err(Error::render(&self.source,
+                                  "no output pdf file specified in book config"))
         }
     }
 
@@ -190,8 +192,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     if self.book.options.get_bool("use_initials").unwrap() {
                         let mut chars = content.chars().peekable();
                         let initial = try!(chars.next()
-                                           .ok_or(Error::Parser(self.book.source.clone(),
-                                                                "empty str token, could not find initial".to_owned())));
+                                           .ok_or(Error::parser(&self.book.source,
+                                                                    "empty str token, could not find initial")));
                         let mut first_word = String::new();
                         loop  {
                             let c = if let Some(next_char) = chars.peek() {

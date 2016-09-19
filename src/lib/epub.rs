@@ -117,11 +117,12 @@ impl<'a> EpubRenderer<'a> {
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(source).map_err(|_| Error::FileNotFound(self.html.source.clone(),
-                                                                                "image or cover".to_owned(),
-                                                                                source.to_owned())));
+            let mut f = try!(File::open(source).map_err(|_| Error::file_not_found(&self.html.source,
+                                                                                  "image or cover",
+                                                                                  source.to_owned())));
             let mut content = vec!();
-            try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading image file: {}", e))));
+            try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.source,
+                                                                       format!("error while reading image file: {}", e))));
             try!(zipper.write(dest, &content, true));
         }
 
@@ -133,11 +134,12 @@ impl<'a> EpubRenderer<'a> {
             for path in list{
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
-                                 .map_err(|_| Error::FileNotFound(self.html.book.source.clone(),
-                                                                  "additional resource from resources.files".to_owned(),
-                                                                  abs_path.to_string_lossy().into_owned())));
+                                 .map_err(|_| Error::file_not_found(&self.html.book.source,
+                                                                        "additional resource from resources.files",
+                                                                        abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
-                try!(f.read_to_end(&mut content).map_err(|e| Error::Render(format!("error while reading resource file: {}", e))));
+                try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.book.source,
+                                                                               format!("error while reading resource file: {}", e))));
                 try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
             }
         }
@@ -146,7 +148,8 @@ impl<'a> EpubRenderer<'a> {
             let res = try!(zipper.generate_epub(self.html.book.options.get_str("zip.command").unwrap(), &epub_file));
             Ok(res)
         } else {
-            Err(Error::Render(String::from("no output epub file specified in book config")))
+            Err(Error::render(&self.html.book.source,
+                                  "no output epub file specified in book config"))
         }
     }
     
@@ -274,9 +277,9 @@ impl<'a> EpubRenderer<'a> {
         if let Ok(cover) = self.html.book.options.get_path("cover") {
             // Check that cover can be found
             if fs::metadata(&cover).is_err() {
-                return Err(Error::FileNotFound(self.html.book.source.clone(),
-                                               "cover".to_owned(),
-                                               cover));
+                return Err(Error::file_not_found(&self.html.book.source,
+                                                     "cover",
+                                                     cover));
 
             }
             let template = mustache::compile_str(if self.html.book.options.get_i32("epub.version").unwrap() == 3 {epub3::COVER} else {COVER});

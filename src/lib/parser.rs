@@ -74,13 +74,13 @@ impl Parser {
     /// Parse a file and returns an AST or an error
     pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
-        let mut f = try!(File::open(path).map_err(|_| Error::FileNotFound(self.source.clone(),
-                                                                          "markdown file".to_owned(),
-                                                                          format!("{}", path.display()))));
+        let mut f = try!(File::open(path).map_err(|_| Error::file_not_found(&self.source,
+                                                                                "markdown file",
+                                                                                format!("{}", path.display()))));
         let mut s = String::new();
 
-        try!(f.read_to_string(&mut s).map_err(|_| Error::Parser(self.source.clone(),
-                                                                format!("file {} contains invalid UTF-8, could not parse it", path.display()))));
+        try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
+                                                                    format!("file {} contains invalid UTF-8, could not parse it", path.display()))));
         self.parse(&s)
     }
 
@@ -114,8 +114,8 @@ impl Parser {
                     if let Some(in_vec) = self.footnotes.get(&reference) {
                         *content = in_vec.clone();
                     } else {
-                        return Err(Error::Parser(self.source.clone(),
-                                                 format!("footnote reference {} does not have a matching definition", &reference)));
+                        return Err(Error::parser(&self.source,
+                                                     format!("footnote reference {} does not have a matching definition", &reference)));
                     }
                 },
                 Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)

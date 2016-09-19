@@ -42,7 +42,7 @@ impl Zipper {
         try!(DirBuilder::new()
              .recursive(true)
              .create(&zipper_path)
-             .map_err(|_| Error::Zipper(format!("could not create temporary directory in {}", path))));
+             .map_err(|_| Error::zipper(format!("could not create temporary directory in {}", path))));
 
         Ok(Zipper {
             args: vec!(),
@@ -54,7 +54,7 @@ impl Zipper {
     pub fn write(&mut self, file: &str, content: &[u8], add_args: bool) -> Result<()> {
         let path = Path::new(file);
         if path.starts_with("..") || path.is_absolute() {
-            return Err(Error::Zipper(format!("file {} refers to an absolute or a parent path.
+            return Err(Error::zipper(format!("file {} refers to an absolute or a parent path.
 This is forbidden because we are supposed to create a temporary file in a temporary dir.", file)));
         }
         let dest_file = self.path.join(path);
@@ -63,7 +63,7 @@ This is forbidden because we are supposed to create a temporary file in a tempor
             try!(DirBuilder::new()
                  .recursive(true)
                  .create(&dest_dir)
-                 .map_err(|_| Error::Zipper(format!("could not create temporary directory in {}", dest_dir.display()))));
+                 .map_err(|_| Error::zipper(format!("could not create temporary directory in {}", dest_dir.display()))));
         }
         
         
@@ -74,10 +74,10 @@ This is forbidden because we are supposed to create a temporary file in a tempor
                 }
                 Ok(())
             } else {
-                Err(Error::Zipper(format!("could not write to temporary file {}", file)))
+                Err(Error::zipper(format!("could not write to temporary file {}", file)))
             }
         } else {
-            Err(Error::Zipper(format!("could not create temporary file {}", file)))
+            Err(Error::zipper(format!("could not create temporary file {}", file)))
         }
     }
 
@@ -87,12 +87,12 @@ This is forbidden because we are supposed to create a temporary file in a tempor
             .current_dir(&self.path)
             .arg(file)
             .output()
-            .map_err(|e| Error::Zipper(format!("failed to execute unzip  on {}: {}", file, e)));
+            .map_err(|e| Error::zipper(format!("failed to execute unzip  on {}: {}", file, e)));
 
         try!(output);
 
         fs::remove_file(self.path.join(file))
-            .map_err(|_| Error::Zipper(format!("failed to remove file {}", file)))
+            .map_err(|_| Error::zipper(format!("failed to remove file {}", file)))
     }
 
     /// run command and copy file name (supposed to result from the command) to current dir
@@ -100,11 +100,11 @@ This is forbidden because we are supposed to create a temporary file in a tempor
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
             .output()
-            .map_err(|e| Error::Zipper(format!("failed to execute process: {}", e)));
+            .map_err(|e| Error::zipper(format!("failed to execute process: {}", e)));
         let output = try!(res_output);
         try!(fs::copy(self.path.join(in_file), out_file).map_err(|_| {
             println!("{}", &String::from_utf8_lossy(&output.stdout));
-            Error::Zipper(format!("could not copy file {} to {}", in_file, out_file))
+            Error::zipper(format!("could not copy file {} to {}", in_file, out_file))
         }));
         Ok(String::from_utf8_lossy(&output.stdout).into_owned())
     }
