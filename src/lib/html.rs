@@ -110,6 +110,7 @@ impl<'a> HtmlRenderer<'a> {
                 self.current_numbering = 0;
                 self.current_hide = true;
             },
+            _ => panic!("Parts are not supported yet"),
         }
         self.filename = filename;
     }

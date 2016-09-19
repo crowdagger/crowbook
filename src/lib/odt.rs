@@ -82,6 +82,7 @@ impl<'a> OdtRenderer<'a> {
                     self.current_numbering = 0;
                     self.current_hide = true;
                 },
+                _ => panic!("Parts are not supported yet")
             }
             for token in v {
                 content.push_str(&self.parse_token(token));
