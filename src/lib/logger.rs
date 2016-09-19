@@ -33,11 +33,6 @@ impl Logger {
         }
     }
 
-    /// Gets verbosity
-    pub fn verbosity(&self)-> InfoLevel {
-        self.verbosity
-    }
-
     /// Sets verbosity
     pub fn set_verbosity(&mut self, verbosity: InfoLevel) {
         self.verbosity = verbosity;
