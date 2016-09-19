@@ -561,9 +561,8 @@ impl Book {
 
     /// Either clean a string or does nothing,
     /// according to book `lang` and `autoclean` options
-    pub fn clean(&self, mut text:String, tex: bool) -> String  {
-        self.cleaner.clean(&mut text, tex);
-        text
+    pub fn clean<'s, S: Into<Cow<'s, str>>>(&self, text: S, tex: bool) -> Cow<'s, str>  {
+        self.cleaner.clean(text.into(), tex)
     }
 
     

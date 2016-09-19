@@ -27,6 +27,7 @@ use renderer::Renderer;
 use std::iter::Iterator;
 use std::fs::File;
 use std::io::Read;
+use std::borrow::Cow;
 
 use mustache;
 
@@ -182,9 +183,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.escape {
-                    self.book.clean(escape_tex(text.as_ref()).into_owned(), true)
+                    self.book.clean(escape_tex(text.as_ref()), true)
                 } else {
-                    text.clone()
+                    Cow::Borrowed(text.as_ref())
                 };
                 if self.first_letter {
                     self.first_letter = false;
@@ -216,10 +217,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             Ok(format!("{}{}{}", initial, first_word, rest))
                         }
                     } else {
-                        Ok(content)
+                        Ok(content.into_owned())
                     }
                 } else {
-                    Ok(content)
+                    Ok(content.into_owned())
                 }
             }
             Token::Paragraph(ref vec) => {

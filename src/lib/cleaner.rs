@@ -17,6 +17,7 @@
 
 //! This module contains the `Cleaner` traits and various implementations of it.
 
+use std::borrow::Cow;
 
 /// Custom function because we don't really want to touch \t or \n
 fn is_whitespace(c: char) -> bool {
@@ -34,7 +35,9 @@ pub trait Cleaner: Sync {
     ///
     /// * `str`: the string that must be cleaned
     /// * `latex`: a bool specifying whether output is Latex code or not
-    fn clean(&self, _str: &mut String, _latex: bool) {}
+    fn clean<'a>(&self, str: Cow<'a, str>, _latex: bool) -> Cow<'a, str> {
+        str
+    }
 }
 
 /// Cleaner implementation that does nothing
@@ -69,7 +72,7 @@ impl Cleaner for Off {}
 pub struct Default;
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
-    fn clean(&self, s: &mut String, _: bool) {
+    fn clean<'a>(&self, s: Cow<'a, str>, _: bool) -> Cow<'a, str> {
         if s.contains(is_whitespace) { // if not, no need to do anything
             let mut new_s = String::with_capacity(s.len());
             let mut previous_space = false;
@@ -87,7 +90,9 @@ impl Cleaner for Default {
                 }
             }
             
-            *s = new_s
+            Cow::Owned(new_s)
+        } else {
+            s
         }
     }
 }
@@ -110,14 +115,16 @@ pub struct French;
 
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
-    fn clean(&self, s: &mut String, latex: bool) {
+    fn clean<'a>(&self, s: Cow<'a, str>, latex: bool) -> Cow<'a, str> {
         fn is_trouble(c: char) -> bool {
             match c {
                 '?'|'!'|';'|':'|'»'|'«'|'—' => true,
                 _ => false
             }
         }
-
+        if !s.contains(is_trouble) { // if not, no need to do anything
+            return Default.clean(s, latex);
+        }
         let nb_char = if latex {
             '~'
         } else {
@@ -134,11 +141,7 @@ impl Cleaner for French {
             '\u{2002}' // demi em space
         };
 
-        
-        if !s.contains(is_trouble) { // if not, no need to do anything
-            return;
-        }
-        Default.clean(s, latex); // first pass with default impl
+        let s = Default.clean(s, latex); // first pass with default impl
         let mut new_s = String::with_capacity(s.len());
         {
             let mut chars = s.chars();
@@ -182,7 +185,7 @@ impl Cleaner for French {
             }
         }
 
-        *s = new_s
+        Cow::Owned(new_s)
     }
 }
 

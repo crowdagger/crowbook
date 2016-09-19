@@ -222,7 +222,7 @@ impl<'a> HtmlRenderer<'a> {
                 let content = if this.as_ref().verbatim {
                     escape_html(text.as_ref())
                 } else {
-                    escape_html(this.as_ref().book.clean(text.clone(), false))
+                    escape_html(this.as_ref().book.clean(text.as_ref(), false))
                 };
                 if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
