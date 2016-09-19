@@ -116,7 +116,6 @@ pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
 pub use error::{Result, Error, Source};
 pub use token::Token;
-pub use cleaner::{Cleaner};
 pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};

@@ -95,7 +95,7 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Configure the Renderer for this chapter
     pub fn chapter_config(&mut self, i: usize, n: Number, filename: String) {
-        self.source = Source::new(&self.book.filenames[i]);
+        self.source = Source::new(self.book.filenames[i].as_ref());
         self.first_paragraph = true;
         self.current_hide = false;
         let book_numbering = self.book.options.get_i32("numbering").unwrap();
@@ -446,7 +446,6 @@ impl<'a> Renderer for HtmlRenderer<'a> {
 /// derive_html!{Foo<'a>, HtmlRenderer::static_render_token}
 /// fn main() {}
 /// ```
-#[macro_export]
 macro_rules! derive_html {
     {$t:ty, $f:path} => (
         impl<'a> AsRef<HtmlRenderer<'a>> for $t {

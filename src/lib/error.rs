@@ -36,8 +36,8 @@ impl Source {
     }
 
     /// Create a new source pointing to file
-    pub fn new(s: &str) -> Source {
-        Source { file: Some(String::from(s)), line: None }
+    pub fn new<S: Into<String>>(s: S) -> Source {
+        Source { file: Some(s.into()), line: None }
     }
 
     /// Sets line number of a source
@@ -66,7 +66,7 @@ impl<'a> From<&'a Source> for Source {
 /// Crowbook Error type
 pub struct Error {
     /// Origin (file, line) of the error, if there is one
-    pub source: Source,
+    source: Source,
     inner: Inner,
 }
 
