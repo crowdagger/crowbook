@@ -22,7 +22,7 @@ use book::Book;
 use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;
-use resource_handler::ResourceHandler;
+use resource_handler;
 use renderer::Renderer;
 
 use mustache;
@@ -129,7 +129,7 @@ impl<'a> EpubRenderer<'a> {
         // Write additional resources
         if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
             let base_path_files = self.html.book.options.get_path("resources.base_path.files").unwrap();
-            let list = try!(ResourceHandler::get_files(list, &base_path_files));
+            let list = try!(resource_handler::get_files(list, &base_path_files));
             let data_path = Path::new(try!(self.html.book.options.get_relative_path("resources.out_path")));
             for path in list{
                 let abs_path = Path::new(&base_path_files).join(&path);
@@ -241,7 +241,7 @@ impl<'a> EpubRenderer<'a> {
 
         // and additional files too
         if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
-            let list = try!(ResourceHandler::get_files(list, &self.html.book.options.get_path("resources.base_path.files").unwrap()));
+            let list = try!(resource_handler::get_files(list, &self.html.book.options.get_path("resources.base_path.files").unwrap()));
             let data_path = Path::new(self.html.book.options.get_relative_path("resources.out_path").unwrap());
             for path in list {
                 let format = self.get_format(&path);

@@ -20,7 +20,7 @@ use html::HtmlRenderer;
 use book::Book;
 use token::Token;
 use templates::{html};
-use resource_handler::ResourceHandler;
+use resource_handler;
 use renderer::Renderer;
 
 use mustache;
@@ -110,7 +110,7 @@ impl<'a> HtmlDirRenderer<'a> {
         if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
             let files_path = self.html.book.options.get_path("resources.base_path.files").unwrap();
             let data_path = Path::new(self.html.book.options.get_relative_path("resources.out_path").unwrap());
-            let list = try!(ResourceHandler::get_files(list, &files_path));
+            let list = try!(resource_handler::get_files(list, &files_path));
             for path in list {
                 let abs_path = Path::new(&files_path).join(&path);
                 let mut f = try!(File::open(&abs_path)
