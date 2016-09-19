@@ -132,8 +132,20 @@ impl Book {
                                                                        "file contains invalid UTF-8, could not parse it")));
                                             
         
-        try!(book.set_from_config(&s));
-        Ok(book)
+        let result = book.set_from_config(&s);
+        match result {
+            Ok(..) => Ok(book),
+            Err(err) => {
+                if err.is_config_parser() && filename.ends_with(".md") {
+                    let err = Error::default(Source::empty(),
+                                             format!("could not parse {} as a book file.\nMaybe you meant to run crowbook with the --single argument?",
+                                                     &filename));
+                    Err(err)
+                } else {
+                    Err(err)
+                }
+            }
+        }
     }
 
     /// Creates a book from a single markdown file
