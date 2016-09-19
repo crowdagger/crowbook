@@ -150,10 +150,66 @@ impl Error {
         self
     }
 
-    /// Returns true if error is a book option error
+    /// Returns true if self is a default option error, false else
+    pub fn is_default(&self) -> bool {
+        match self.inner {
+            Inner::Default(..) => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if self is a parser error, false else
+    pub fn is_parser(&self) -> bool {
+        match self.inner {
+            Inner::Parser(..) => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if self is a config parser error, false else
+    pub fn is_config_parser(&self) -> bool {
+        match self.inner {
+            Inner::ConfigParser(..) => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if self is a file not found error, false else
+    pub fn is_file_not_found(&self) -> bool {
+        match self.inner {
+            Inner::FileNotFound(..) => true,
+            _ => false,
+        }
+    }
+    
+    /// Returns true if self is a render error, false else
+    pub fn is_render(&self) -> bool {
+        match self.inner {
+            Inner::Render(..) => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if self is a zipper error, false else
+    pub fn is_zipper(&self) -> bool {
+        match self.inner {
+            Inner::Zipper(..) => true,
+            _ => false,
+        }
+    }
+    
+    /// Returns true if self is a book option error, false else
     pub fn is_book_option(&self) -> bool {
         match self.inner {
             Inner::BookOption(..) => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if self is an invalid option error, false else
+    pub fn is_invalid_option(&self) -> bool {
+        match self.inner {
+            Inner::InvalidOption(..) => true,
             _ => false,
         }
     }
