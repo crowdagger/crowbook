@@ -47,9 +47,9 @@ pub trait Cleaner: Sync {
 /// ```
 /// use crowbook::Cleaner;
 /// use crowbook::cleaner::Off;
+/// use std::borrow::Cow;
 /// let off = Off;
-/// let mut s = "  A string   that won't be cleaned ".to_owned();
-/// off.clean(&mut s, false);
+/// let s = off.clean(Cow::Borrowed("  A string   that won't be cleaned "), false);
 /// assert_eq!(&s, "  A string   that won't be cleaned ");
 /// ```
 pub struct Off;
@@ -64,9 +64,8 @@ impl Cleaner for Off {}
 /// ```
 /// use crowbook::Cleaner;
 /// use crowbook::cleaner::Default;
-/// let default = Default;
-/// let mut s = "  A  string   with   more   whitespaces  than  needed   ".to_owned();
-/// default.clean(&mut s, false);
+/// use std::borrow::Cow;
+/// let s = Default.clean(Cow::Borrowed("  A  string   with   more   whitespaces  than  needed   "), false);
 /// assert_eq!(&s, " A string with more whitespaces than needed ");
 /// ```
 pub struct Default;
@@ -106,9 +105,8 @@ impl Cleaner for Default {
 /// ```
 /// use crowbook::Cleaner;
 /// use crowbook::cleaner::French;
-/// let french = French;
-/// let mut s = "  Bonjour ! Comment allez-vous   ?   ".to_owned();
-/// french.clean(&mut s, true); // clean for latex so we see the non-breaking spaces easily
+/// use std::borrow::Cow;
+/// let s =  French.clean(Cow::Borrowed("  Bonjour ! Comment allez-vous   ?   "), true);
 /// assert_eq!(&s, " Bonjour~! Comment allez-vous~? ");
 /// ```
 pub struct French;
