@@ -58,8 +58,9 @@ impl<'r> ResourceHandler<'r> {
 
     /// Add a local image file and get the resulting transformed
     /// file name
-    pub fn map_image<'a>(&'a mut self, source: &Source, file: Cow<'a, str>) -> Result<Cow<'a, str>> {
+    pub fn map_image<'a, S: Into<Cow<'a, str>>>(&'a mut self, source: &Source, file: S) -> Result<Cow<'a, str>> {
         // If image is not local, do nothing much
+        let file = file.into();
         if !Self::is_local(file.as_ref()) {
             self.logger.warning(format!("Resources: book includes non-local image {}, which might cause problem for proper inclusion.", file));
             return Ok(file);

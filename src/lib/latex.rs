@@ -26,7 +26,6 @@ use renderer::Renderer;
 
 use std::iter::Iterator;
 use std::fs::File;
-use std::borrow::Cow;
 use std::io::Read;
 
 use mustache;
@@ -303,7 +302,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     let img = try!(self.handler.map_image(&self.source,
-                                                          Cow::Borrowed(url)));
+                                                          url.as_ref()));
                     Ok(format!("\\begin{{center}}
   \\includegraphics[width=0.8\\linewidth]{{{}}}
 \\end{{center}}",
@@ -318,7 +317,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 if ResourceHandler::is_local(url) {
                     Ok(format!("\\includegraphics{{{}}}",
                             try!(self.handler.map_image(&self.source,
-                                                        Cow::Borrowed(url)))))
+                                                        url.as_ref()))))
                 } else {
                     self.book.logger.error(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it in Latex output.", url));
                     Ok(String::new())

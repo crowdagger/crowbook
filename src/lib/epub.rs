@@ -207,7 +207,7 @@ impl<'a> EpubRenderer<'a> {
         if let Ok(ref s) = self.html.book.options.get_path("cover") {
             optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n",
                                        try!(self.html.handler.map_image(&self.html.source,
-                                                                        Cow::Borrowed(s)))));
+                                                                        s.as_ref()))));
             cover_xhtml.push_str("<reference type=\"cover\" title=\"Cover\" href=\"cover.xhtml\" />");
         }
 

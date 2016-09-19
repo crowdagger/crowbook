@@ -327,7 +327,7 @@ impl<'a> HtmlRenderer<'a> {
                     let content = try!(this.render_vec(alt));
                     let html: &mut HtmlRenderer = this.as_mut();
                     let url = try!(html.handler.map_image(&html.source,
-                                                          Cow::Borrowed(url)));
+                                                          url.as_ref()));
 
                     if token.is_image() {
                         Ok(format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
