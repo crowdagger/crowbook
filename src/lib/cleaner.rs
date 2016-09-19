@@ -45,7 +45,7 @@ pub trait Cleaner: Sync {
 /// # Examples
 ///
 /// ```
-/// use crowbook::Cleaner;
+/// use crowbook::cleaner::Cleaner;
 /// use crowbook::cleaner::Off;
 /// use std::borrow::Cow;
 /// let off = Off;
@@ -62,7 +62,7 @@ impl Cleaner for Off {}
 /// # Examples
 ///
 /// ```
-/// use crowbook::Cleaner;
+/// use crowbook::cleaner::Cleaner;
 /// use crowbook::cleaner::Default;
 /// use std::borrow::Cow;
 /// let s = Default.clean(Cow::Borrowed("  A  string   with   more   whitespaces  than  needed   "), false);
@@ -103,7 +103,7 @@ impl Cleaner for Default {
 /// # Examples
 ///
 /// ```
-/// use crowbook::Cleaner;
+/// use crowbook::cleaner::Cleaner;
 /// use crowbook::cleaner::French;
 /// use std::borrow::Cow;
 /// let s =  French.clean(Cow::Borrowed("  Bonjour ! Comment allez-vous   ?   "), true);
