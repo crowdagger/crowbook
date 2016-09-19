@@ -15,7 +15,6 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-
 //!  Note: this documentation is relative to `crowbook` *as a library*.
 //!  For documentation regarding the *program* `crowbook`, see
 //!  [the Github page](https://github.com/lise-henry/crowbook).
@@ -93,8 +92,6 @@
 //! let ast = parser.parse(md).unwrap();
 //! assert_eq!(count(&ast), 2);
 //! ```
-
-#![deny(missing_docs)]
 
 extern crate pulldown_cmark as cmark;
 extern crate mustache;

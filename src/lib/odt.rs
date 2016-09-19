@@ -114,7 +114,7 @@ impl<'a> OdtRenderer<'a> {
     
     fn parse_token(&mut self, token: &Token) -> String {
         match *token {
-            Token::Str(ref text) => escape_html(&*text),
+            Token::Str(ref text) => escape_html(text.as_ref()).into_owned(),
             Token::Paragraph(ref vec) => format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n", self.book.clean(self.render_vec(vec), false)),
             Token::Header(n, ref vec) => {
                 if n == 1 && self.current_hide {
@@ -128,7 +128,7 @@ impl<'a> OdtRenderer<'a> {
                     self.render_vec(vec)
                 };
                 format!("<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
-                        n, escape_html(&self.book.clean(s, false)))
+                        n, escape_html(self.book.clean(s, false)))
             },
             Token::Emphasis(ref vec) => format!("<text:span text:style-name=\"T1\">{}</text:span>", self.render_vec(vec)),
             Token::Strong(ref vec) => format!("<text:span text:style-name=\"T2\">{}</text:span>", self.render_vec(vec)),

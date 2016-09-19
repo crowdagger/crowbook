@@ -62,28 +62,6 @@ impl<'a> From<&'a Source> for Source {
         s.clone()
     }
 }
-
-#[derive(Debug, PartialEq)]
-enum Inner {
-    /// Default variant
-    Default(Cow<'static, str>),
-    /// An error in Parsing markdown file
-    Parser(Cow<'static, str>),
-    /// An error in parsing a book configuration file
-    ConfigParser(Cow<'static, str>), 
-    /// An error when a file is not found
-    FileNotFound(Cow<'static, str>, Cow<'static, str>), //description, file
-    /// An error in a renderer
-    Render(Cow<'static, str>),
-    /// An error during "zipping" processus
-    Zipper(Cow<'static, str>),
-    /// An error relative to BookOption convertion (usually a type error)
-    BookOption(Cow<'static, str>),
-    /// An invalid option
-    InvalidOption(Cow<'static, str>),
-}
-
-
 #[derive(Debug, PartialEq)]
 /// Crowbook Error type
 pub struct Error {
@@ -251,3 +229,24 @@ impl fmt::Display for Error {
 
 /// Crowbook's Result type, used by many methods that can fail
 pub type Result<T> = result::Result<T, Error>;
+
+
+#[derive(Debug, PartialEq)]
+enum Inner {
+    /// Default variant
+    Default(Cow<'static, str>),
+    /// An error in Parsing markdown file
+    Parser(Cow<'static, str>),
+    /// An error in parsing a book configuration file
+    ConfigParser(Cow<'static, str>), 
+    /// An error when a file is not found
+    FileNotFound(Cow<'static, str>, Cow<'static, str>), //description, file
+    /// An error in a renderer
+    Render(Cow<'static, str>),
+    /// An error during "zipping" processus
+    Zipper(Cow<'static, str>),
+    /// An error relative to BookOption convertion (usually a type error)
+    BookOption(Cow<'static, str>),
+    /// An invalid option
+    InvalidOption(Cow<'static, str>),
+}

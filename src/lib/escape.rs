@@ -17,6 +17,8 @@
 
 //! Provides utility functions for escaping text to HTML or LaTeX
 
+use std::borrow::Cow;
+
 
 /// Escape characters `<`, `>`, and `&`
 ///
@@ -27,18 +29,26 @@
 /// let s = escape_html("<foo> & <bar>");
 /// assert_eq!(&s, "&lt;foo&gt; &amp; &lt;bar&gt;");
 /// ```
-pub fn escape_html(input: &str) -> String {
-    let mut output = String::new();
-    for c in input.chars() {
-        match c {
-            '<' => output.push_str("&lt;"),
-            '>' => output.push_str("&gt;"),
-            '&' => output.push_str("&amp;"),
-            _ => output.push(c),
+pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
+    let input = input.into();
+    if input.contains(|c| match c {
+        '<'|'>'|'&' => true,
+        _ => false
+    }) {
+        let mut output = String::with_capacity(input.len());
+        for c in input.chars() {
+            match c {
+                '<' => output.push_str("&lt;"),
+                '>' => output.push_str("&gt;"),
+                '&' => output.push_str("&amp;"),
+                _ => output.push(c),
+            }
         }
-    }
 
-    output
+        Cow::Owned(output)
+    } else {
+        input.into()
+    }
 }
 
 /// Escape characters for LaTeX
@@ -50,34 +60,42 @@ pub fn escape_html(input: &str) -> String {
 /// let s = escape_tex("command --foo # calls command with option foo");
 /// assert_eq!(&s, r"command -{}-foo \# calls command with option foo");
 /// ```
-pub fn escape_tex(input: &str) -> String {
-    let mut output = String::new();
-    let mut chars:Vec<char> = input.chars().collect();
-    chars.push(' '); // add a dummy char for call to .windows()
-    // for &[c, next] in chars.windows(2) { // still experimental, uncomment when stable
-    for win in chars.windows(2) { 
-        let c = win[0];
-        let next = win[1];
-        match c {
-            '-' => {
-                if next == '-' {
-                    output.push_str(r"-{}"); // if next char is also a -, to avoid tex ligatures
-                } else {
-                    output.push(c);
-                }
-            },
-            '&' => output.push_str(r"\&"),
-            '%' => output.push_str(r"\%"),
-            '$' => output.push_str(r"\$"),
-            '#' => output.push_str(r"\#"),
-            '_' => output.push_str(r"\_"),
-            '{' => output.push_str(r"\{"),
-            '}' => output.push_str(r"\}"),
-            '~' => output.push_str(r"\textasciitilde{}" ),
-            '^' => output.push_str(r"\textasciicircum{}"),
-            '\\' => output.push_str(r"\textbackslash{}"),
-            _  => output.push(c)
+pub fn escape_tex<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
+    let input = input.into();
+    if input.contains(|c| match c {
+        '&'|'%'|'$'|'#'|'_'|'{'|'}'|'~'|'^'|'\\'|'-' => true,
+        _ => false
+    }) {
+        let mut output = String::with_capacity(input.len());
+        let mut chars:Vec<char> = input.chars().collect();
+        chars.push(' '); // add a dummy char for call to .windows()
+        // for &[c, next] in chars.windows(2) { // still experimental, uncomment when stable
+        for win in chars.windows(2) { 
+            let c = win[0];
+            let next = win[1];
+            match c {
+                '-' => {
+                    if next == '-' {
+                        output.push_str(r"-{}"); // if next char is also a -, to avoid tex ligatures
+                    } else {
+                        output.push(c);
+                    }
+                },
+                '&' => output.push_str(r"\&"),
+                '%' => output.push_str(r"\%"),
+                '$' => output.push_str(r"\$"),
+                '#' => output.push_str(r"\#"),
+                '_' => output.push_str(r"\_"),
+                '{' => output.push_str(r"\{"),
+                '}' => output.push_str(r"\}"),
+                '~' => output.push_str(r"\textasciitilde{}" ),
+                '^' => output.push_str(r"\textasciicircum{}"),
+                '\\' => output.push_str(r"\textbackslash{}"),
+                _  => output.push(c)
+            }
         }
+        Cow::Owned(output)
+    } else {
+        input
     }
-    output
 }

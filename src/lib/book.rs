@@ -636,10 +636,18 @@ impl Book {
         fn clone(x:&str) -> String {
             x.to_owned()
         }
+        fn escape_html(s: &str) -> String {
+            escape::escape_html(s).into_owned()
+        }
+        fn escape_tex(s: &str) -> String {
+            escape::escape_tex(s).into_owned()
+        }
+        
+        
         let f:fn(&str)->String = match format {
             "none" => clone,
-            "html" => escape::escape_html,
-            "tex" => escape::escape_tex,
+            "html" => escape_html,
+            "tex" => escape_tex,
             _ => panic!("get mapbuilder called with invalid escape format")
         };
         let mut mapbuilder = MapBuilder::new()

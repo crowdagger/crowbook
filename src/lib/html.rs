@@ -220,9 +220,9 @@ impl<'a> HtmlRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if this.as_ref().verbatim {
-                    escape_html(text)
+                    escape_html(text.as_ref())
                 } else {
-                    escape_html(&this.as_ref().book.clean(text.clone(), false))
+                    escape_html(this.as_ref().book.clean(text.clone(), false))
                 };
                 if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
@@ -242,10 +242,10 @@ impl<'a> HtmlRenderer<'a> {
                         }
                         Ok(new_content)
                     } else {
-                        Ok(content)
+                        Ok(content.into_owned())
                     }
                 } else {
-                    Ok(content)
+                    Ok(content.into_owned())
                 }
             },
             Token::Paragraph(ref vec) => {
@@ -307,20 +307,20 @@ impl<'a> HtmlRenderer<'a> {
                                                       try!(this.render_vec(vec)))),
             Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", try!(this.render_vec(vec)))),
             Token::Link(ref url, ref title, ref vec) => {
-                let url = escape_html(url);
+                let url = escape_html(url.as_ref());
                 let url = if ResourceHandler::is_local(&url) {
-                    this.as_ref().handler.get_link(&url).to_owned()
+                    Cow::Owned(this.as_ref().handler.get_link(&url).to_owned())
                 } else {
                     url
                 };
                 
                 Ok(format!("<a href = \"{}\"{}>{}</a>", url,
-                        if title.is_empty() {
-                            String::new()
-                        } else {
-                            format!(" title = \"{}\"", title)
-                        },
-                        try!(this.render_vec(vec))))
+                           if title.is_empty() {
+                               String::new()
+                           } else {
+                               format!(" title = \"{}\"", title)
+                           },
+                           try!(this.render_vec(vec))))
             },
             Token::Image(ref url, ref title, ref alt)
                 | Token::StandaloneImage(ref url, ref title, ref alt) => {

@@ -183,7 +183,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.escape {
-                    self.book.clean(escape_tex(text), true)
+                    self.book.clean(escape_tex(text.as_ref()).into_owned(), true)
                 } else {
                     text.clone()
                 };
@@ -288,8 +288,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             content))
                 }
                 else {
-                    let url = escape_tex(url);
-                    if content == url {
+                    let url = escape_tex(url.as_ref());
+                    if &content == &url {
                         Ok(format!("\\url{{{}}}", content))
                     } else {
                         if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
