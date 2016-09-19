@@ -182,8 +182,9 @@ impl fmt::Display for Error {
         if let Some(ref file) = source.file {
             try!(write!(f, "Error in file {}", file));
             if let Some(line) = source.line {
-                try!(write!(f, " line {}\n", line));
+                try!(write!(f, " line {}", line));
             }
+            try!(write!(f, "\n"));
         }
         
         match self.inner {
