@@ -432,6 +432,21 @@ impl<'a> Renderer for HtmlRenderer<'a> {
 /// This macro automatically generates AsRef and AsMut implementations
 /// for a type, to itself and to HtmlRenderer. Type must have a .html element
 /// and use a <'a> lifetime parameter.
+///
+/// # Example
+///
+/// ```
+/// #[macro_use]
+/// extern crate crowbook;
+/// use crowbook::{HtmlRenderer, Renderer, Token, Result};
+/// struct Foo<'a> {
+///     html: HtmlRenderer<'a>,
+/// }
+///
+/// derive_html!{Foo<'a>, HtmlRenderer::static_render_token}
+/// fn main() {}
+/// ```
+#[macro_export]
 macro_rules! derive_html {
     {$t:ty, $f:path} => (
         impl<'a> AsRef<HtmlRenderer<'a>> for $t {
