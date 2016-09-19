@@ -237,8 +237,8 @@ impl Book {
                 break;
             }
             line = lines.next().unwrap();
-            self.source.set_line(line_number);
             line_number += 1;
+            self.source.set_line(line_number);
             yaml.push_str(line);
             yaml.push_str("\n");
 
@@ -269,7 +269,6 @@ impl Book {
                 // If next line is not valid yaml, probably means we are in a multistring
                 continue;
             }
-//            println!("trying to read yaml on {}", &yaml);
             let result = self.set_options_from_yaml(&yaml);
             match result {
                 Ok(_) => {
@@ -281,11 +280,9 @@ impl Book {
                         // book option error: abort
                         return Err(err);
                     } else {
-                        //                    println!("{} was not valid, try again with another line", yaml);
                         // Other error: we do nothing, hoping it will work
                         // itself out when more lines are added to yaml
                     }
-                    
                 },
             }
         }
