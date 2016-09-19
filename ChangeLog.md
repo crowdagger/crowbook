@@ -46,6 +46,9 @@ provide better error messages.
     LaTeX.
   * `StandaloneImage` urls were not adjusted (meanning that running
     `crowbook` from another directory failed).
+  * Image paths are now found correctly in HtmlDir rendering
+    even if `crowbook` is called from another directory (same fix
+    as 0.6's for Epub and LaTeX, which was forgotten for HtmlDir).
 * Internal/API:
   * In order to have better error messages, there was a need to
     refactor the `Error` type, and make more methods return
