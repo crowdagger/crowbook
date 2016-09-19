@@ -13,6 +13,7 @@ cover: img/cover.png
 numbering: 2
 
 html.crowbook_link: true
+html.display_chapter: true
 
 use_initials: true
 
