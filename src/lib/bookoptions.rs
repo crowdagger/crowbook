@@ -213,7 +213,7 @@ impl BookOptions {
                 }
             } else {
                 Err(Error::book_option(&self.source,
-                                           format!("Expected a string as value for key {}, found {:?}", &key, &value)))
+                                           format!("expected a string as value for key '{}', found {:?}", &key, &value)))
             }
         } else if self.valid_chars.contains(&key.as_ref()) {
             // value is a char
@@ -221,12 +221,12 @@ impl BookOptions {
                 let chars: Vec<_> = value.chars().collect();
                 if chars.len() != 1 {
                     return Err(Error::book_option(&self.source,
-                                                      format!("could not parse {} as a char: does not contain exactly one char", &value)));
+                                                      format!("could not parse '{}' as a char: does not contain exactly one char", &value)));
                 }
                 Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])))
             } else {
                 Err(Error::book_option(&self.source,
-                                      format!("Expected a string as value containing a char for key {}, found {:?}", &key, &value)))
+                                      format!("expected a string as value containing a char for key '{}', found {:?}", &key, &value)))
             }
         } else if self.valid_bools.contains(&key.as_ref()) {
             // value is a bool
@@ -234,7 +234,7 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::Bool(value)))
             } else {
                 Err(Error::book_option(&self.source,
-                                           format!("Expected a boolean as value for key {}, found {:?}", &key, &value)))
+                                           format!("expected a boolean as value for key '{}', found {:?}", &key, &value)))
             }
         } else if self.valid_ints.contains(&key.as_ref()) {
             // value is an int
@@ -242,7 +242,7 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::Int(value as i32)))
             } else {
                 Err(Error::book_option(&self.source,
-                                           format!("Expected an integer as value for key {}, found {:?}", &key, &value)))
+                                           format!("expected an integer as value for key '{}', found {:?}", &key, &value)))
             }
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
@@ -252,6 +252,15 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(self.source.clone(),
                                            format!("key '{}' has been deprecated.", &key)))
+            }
+        } else if key.starts_with("metadata.") {
+            // key is a custom metadata
+            // value must be a string
+            if let Yaml::String(value) = value {
+                Ok(self.options.insert(key, BookOption::String(value)))
+            } else {
+                Err(Error::book_option(&self.source,
+                                           format!("expected a string as value for key '{}', found {:?}", &key, &value)))
             }
         } else {
             // key not recognized
