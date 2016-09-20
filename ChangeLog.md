@@ -16,8 +16,12 @@ unreleased
     with `metadata.foo: bar` you can access it in your templates with
     `{{{metadata_foo}}}`.
 * Rendering:
-  * `html.top` and `hstml.footer` are now considered as templates, so
-    you can use some `{{{metadata}}}` in it.
+  * HTML:
+    * `html.top` and `hstml.footer` are now considered as templates, so
+      you can use some `{{{metadata}}}` in it.
+  * LaTeX:
+    * If `tex.short` is set to `true`, chapters will be displayed as
+      `\sections` since `article` class doesn't handle chapters.
 * Crowbook program:
   * Still working to improve error messages.
 * Internal/API:
