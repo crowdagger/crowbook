@@ -50,8 +50,10 @@ impl Logger {
                                   s.as_ref())
                     .unwrap(),
                 Info => writeln!(&mut io::stderr(),
-                                 "{}{}",
+                                 "{}{}{}{}",
+                                 SHELL_COLOUR_GREEN,
                                  "Info: ",
+                                 SHELL_COLOUR_OFF,
                                  s.as_ref())
                     .unwrap(),
                 Warning => writeln!(&mut io::stderr(),
@@ -95,6 +97,7 @@ impl Logger {
 
 // Code to end shell colouring
 const SHELL_COLOUR_OFF: &'static str = "\x1B[0m";
-const SHELL_COLOUR_RED: &'static str = "\x1B[31m";
-const SHELL_COLOUR_BLUE: &'static str = "\x1B[36m";
-const SHELL_COLOUR_ORANGE: &'static str = "\x1B[33m";
+const SHELL_COLOUR_RED: &'static str = "\x1B[1m\x1B[31m";
+const SHELL_COLOUR_BLUE: &'static str = "\x1B[1m\x1B[36m";
+const SHELL_COLOUR_ORANGE: &'static str = "\x1B[1m\x1B[33m";
+const SHELL_COLOUR_GREEN: &'static str = "\x1B[1m\x1B[32m";
