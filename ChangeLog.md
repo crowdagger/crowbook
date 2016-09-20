@@ -16,7 +16,7 @@ unreleased
     with `metadata.foo: bar` you can access it in your templates with
     `{{{metadata_foo}}}`.
 * Rendering:
-  * `html.top` and `html.footer` are now considered as templates, so
+  * `html.top` and `hstml.footer` are now considered as templates, so
     you can use some `{{{metadata}}}` in it.
 * Crowbook program:
   * Still working to improve error messages.
