@@ -40,6 +40,7 @@ pub struct LatexRenderer<'a> {
     escape: bool,
     first_letter: bool,
     first_paragraph: bool,
+    is_short: bool,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -55,6 +56,7 @@ impl<'a> LatexRenderer<'a> {
             escape: true,
             first_letter: false,
             first_paragraph: true,
+            is_short: book.options.get_bool("tex.short").unwrap(),
         }
     }
 
@@ -239,7 +241,11 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 if n == 1 {
                     self.first_paragraph = true;
                     if self.current_chapter == Number::Hidden {
-                        return Ok(r#"\chapter*{}"#.to_owned());
+                        if !self.is_short {
+                            return Ok(r#"\chapter*{}"#.to_owned());
+                        } else {
+                            return Ok(r#"\section*{}"#.to_owned());
+                        }
                     } else {
                         if let Number::Specified(n) = self.current_chapter {
                             content.push_str(r"\setcounter{chapter}{");
@@ -249,7 +255,14 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     }
                 }
                 match n {
-                    1 => content.push_str(r"\chapter"),
+                    1 => {
+                        if !self.is_short {
+                            content.push_str(r"\chapter");
+                        } else {
+                            // Chapters aren't handlled for class article
+                            content.push_str(r"\section");
+                        }
+                    },
                     2 => content.push_str(r"\section"),
                     3 => content.push_str(r"\subsection"),
                     4 => content.push_str(r"\subsubsection"),
