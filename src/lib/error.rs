@@ -245,7 +245,7 @@ impl fmt::Display for Error {
 
         try!(match self.inner {
             Inner::Default(ref s) => {
-                write!(f, "Error: {}", s)
+                write!(f, "{}", s)
             },
             Inner::Parser(ref s) => {
                 write!(f, "Error parsing markdown: {}", s)
