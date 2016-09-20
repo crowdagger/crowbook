@@ -17,6 +17,12 @@ lang:str:en                         # Language of the book
 subject:str                         # Subject of the book (used for EPUB metadata)
 description:str                     # Description of the book (used for EPUB metadata)
 cover:path                          # Path to the cover of the book 
+
+# Metadata (additional)
+license:str                         # License of the book
+version:str                         # Version of the book
+date:str                            # Date the book was revised
+
 # Output options
 output.epub:path                    # Output file name for EPUB rendering
 output.html:path                    # Output file name for HTML rendering
@@ -99,6 +105,7 @@ pub struct BookOptions {
     valid_strings: Vec<&'static str>,
     valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
+    metadata: Vec<&'static str>,
 
     /// Source for errors (unnecessary copy :/)
     pub source: Source,
@@ -118,17 +125,30 @@ impl BookOptions {
             valid_ints:vec!(),
             valid_strings:vec!(),
             valid_paths:vec!(),
+            metadata: vec!(),
             root: PathBuf::new(),
             source: Source::empty(),
         };
-            
-        for (_, key, option_type, default_value) in Self::options_to_vec() {
+
+        // Load default options and types from OPTIONS
+        let mut is_metadata = false;
+        for (comment, key, option_type, default_value) in Self::options_to_vec() {
             if key.is_none() {
+                if comment.contains("Metadata") || comment.contains("metadata") {
+                    is_metadata = true;
+                } else {
+                    is_metadata = false;
+                }
                 continue;
             }
             let key = key.unwrap();
             match option_type.unwrap() {
-                "str" => options.valid_strings.push(key),
+                "str" => {
+                    if is_metadata {
+                        options.metadata.push(key);
+                    }
+                    options.valid_strings.push(key);
+                },
                 "bool" => options.valid_bools.push(key),
                 "int" => options.valid_ints.push(key),
                 "char" => options.valid_chars.push(key),
@@ -276,6 +296,11 @@ impl BookOptions {
             Err(Error::book_option(&self.source,
                                    format!("could not parse '{}' as a valid YAML value", value)))
         }
+    }
+
+    /// Return the list of keys that are metadata
+    pub fn get_metadata(&self) -> &[&'static str] {
+        &self.metadata
     }
         
     /// Gets an option

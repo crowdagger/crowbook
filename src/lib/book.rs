@@ -658,10 +658,13 @@ impl Book {
             "tex" => escape_tex,
             _ => panic!("get mapbuilder called with invalid escape format")
         };
-        let mut mapbuilder = MapBuilder::new()
-            .insert_str("author", f(self.options.get_str("author").unwrap()))
-            .insert_str("title", f(&self.options.get_str("title").unwrap()))
-            .insert_str("lang", self.options.get_str("lang").unwrap().to_owned());
+        let mut mapbuilder = MapBuilder::new();
+        for key in self.options.get_metadata() {
+            if let Ok(s) = self.options.get_str(key) {
+                mapbuilder = mapbuilder.insert_str(key, f(s));
+                mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+            }
+        }
         let hash = lang::get_hash(self.options.get_str("lang").unwrap());
         for (key, value) in hash.into_iter() {
             let key = format!("loc_{}", key.as_str().unwrap());

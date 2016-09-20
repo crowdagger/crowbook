@@ -7,9 +7,9 @@ use std::io::Write;
 pub enum InfoLevel {
     /// Debug: the lowest level
     Debug = 0,
-    /// Info: won't be displayed by default
+    /// Warning: won't be displayed by default
     Warning,
-    /// Warning: the default level
+    /// Info: won't be displayed by default
     Info,
     /// Error
     Error
