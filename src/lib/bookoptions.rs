@@ -1,7 +1,7 @@
 use error::{Error,Result, Source};
 use bookoption::BookOption;
 use book::Book;
-use logger::InfoLevel;
+use logger::{Logger, InfoLevel};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
@@ -247,7 +247,7 @@ impl BookOptions {
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
             if let Some(new_key) = opt {
-                println!("WARNING: '{}' has been deprecated, you should now use '{}'", &key, &new_key);
+                Logger::display_warning(format!("'{}' has been deprecated, you should now use '{}'", &key, &new_key));
                 self.set_yaml(Yaml::String(new_key), value)
             } else {
                 Err(Error::book_option(self.source.clone(),

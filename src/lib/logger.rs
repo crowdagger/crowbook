@@ -37,39 +37,60 @@ impl Logger {
     pub fn set_verbosity(&mut self, verbosity: InfoLevel) {
         self.verbosity = verbosity;
     }
-    
+
+    /// Prints a debug message 
+    pub fn display_debug<S: AsRef<str>>(s: S) {
+        writeln!(&mut io::stderr(),
+                     "{}{}{}{}",
+                     SHELL_COLOUR_BLUE,
+                     "Debug: ",
+                     SHELL_COLOUR_OFF,
+                     s.as_ref())
+            .unwrap();
+    }
+
+    /// Prints an info message
+    pub fn display_info<S: AsRef<str>>(s: S) {
+        writeln!(&mut io::stderr(),
+                 "{}{}{}{}",
+                 SHELL_COLOUR_GREEN,
+                 "Info: ",
+                 SHELL_COLOUR_OFF,
+                 s.as_ref())
+            .unwrap();
+    }
+
+    /// Prints a warning message
+    pub fn display_warning<S: AsRef<str>>(s: S) {
+        writeln!(&mut io::stderr(),
+                 "{}{}{}{}",
+                 SHELL_COLOUR_ORANGE,
+                 "Warning: ",
+                 SHELL_COLOUR_OFF,
+                 s.as_ref())
+            .unwrap();
+    }
+
+    /// Prints an error message
+    pub fn display_error<S: AsRef<str>>(s: S) {
+        writeln!(&mut io::stderr(),
+                 "{}{}{}{}",
+                 SHELL_COLOUR_RED,
+                 "Error: ",
+                 SHELL_COLOUR_OFF,
+                 s.as_ref())
+            .unwrap();
+    }
+
+        
     /// Prints a message if logger's verbosity <= level
     pub fn log<S: AsRef<str>>(&self, level: InfoLevel, s: S) {
         if level >= self.verbosity {
             match level {
-                Debug => writeln!(&mut io::stderr(),
-                                  "{}{}{}{}",
-                                  SHELL_COLOUR_BLUE,
-                                  "Debug: ",
-                                  SHELL_COLOUR_OFF,
-                                  s.as_ref())
-                    .unwrap(),
-                Info => writeln!(&mut io::stderr(),
-                                 "{}{}{}{}",
-                                 SHELL_COLOUR_GREEN,
-                                 "Info: ",
-                                 SHELL_COLOUR_OFF,
-                                 s.as_ref())
-                    .unwrap(),
-                Warning => writeln!(&mut io::stderr(),
-                                    "{}{}{}{}",
-                                    SHELL_COLOUR_ORANGE,
-                                    "Warning: ",
-                                    SHELL_COLOUR_OFF,
-                                    s.as_ref())
-                    .unwrap(),
-                Error => writeln!(&mut io::stderr(),
-                                  "{}{}{}{}",
-                                  SHELL_COLOUR_RED,
-                                  "Error: ",
-                                  SHELL_COLOUR_OFF,
-                                  s.as_ref())
-                    .unwrap()
+                Debug => Self::display_debug(s),
+                Info => Self::display_info(s),
+                Warning => Self::display_warning(s),
+                Error => Self::display_error(s)
             }
         }
     }
