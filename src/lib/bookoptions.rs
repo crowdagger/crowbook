@@ -398,17 +398,16 @@ impl BookOptions {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(&key) {
                 let previous_opt = self.options.get(&key);
-                let default = self.defaults.get(&key);
+                let default = self.defaults.get(&key).unwrap();
                 // If new value is equal to default, don't insert it
-                if &value == default.unwrap()  {
+                if &value == default {
                     continue;
                 }
-                match (previous_opt, default) {
-                    (Some(previous_opt), Some(default)) => if previous_opt != default {
+                if let Some(previous_opt) = previous_opt {
+                    if previous_opt != default {
                         // Previous value is other than default, don't merge
                         continue;
-                    },
-                    _ => (),
+                    }
                 }
             }
             // If it's a path, get the corrected path
