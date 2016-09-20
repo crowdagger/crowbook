@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+unreleased
+----------
+* Crowbook program:
+  * Still working to improve error messages.
+
 0.8.0 (2016-09-19)
 ------------------
 This release adds support for syntax higlighting in code blocks,

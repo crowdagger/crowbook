@@ -12,6 +12,8 @@ List of features needed for 1.0 release:
 
 Not really blocking (can happen after 1.0 without being breaking):
 
+* Demo as webservice
+* Support for internationalization
 * Real support for ODT
 * Download external images and embed them
 * Tex-like ligatures (see issue
