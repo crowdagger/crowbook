@@ -105,7 +105,7 @@ pub struct BookOptions {
     valid_strings: Vec<&'static str>,
     valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
-    metadata: Vec<&'static str>,
+    metadata: Vec<String>,
 
     /// Source for errors (unnecessary copy :/)
     pub source: Source,
@@ -145,7 +145,7 @@ impl BookOptions {
             match option_type.unwrap() {
                 "str" => {
                     if is_metadata {
-                        options.metadata.push(key);
+                        options.metadata.push(key.to_owned());
                     }
                     options.valid_strings.push(key);
                 },
@@ -257,6 +257,7 @@ impl BookOptions {
             // key is a custom metadata
             // value must be a string
             if let Yaml::String(value) = value {
+                self.metadata.push(key.clone());
                 Ok(self.options.insert(key, BookOption::String(value)))
             } else {
                 Err(Error::book_option(&self.source,
@@ -308,7 +309,7 @@ impl BookOptions {
     }
 
     /// Return the list of keys that are metadata
-    pub fn get_metadata(&self) -> &[&'static str] {
+    pub fn get_metadata(&self) -> &[String] {
         &self.metadata
     }
         

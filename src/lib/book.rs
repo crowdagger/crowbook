@@ -661,7 +661,8 @@ impl Book {
         let mut mapbuilder = MapBuilder::new();
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
-                mapbuilder = mapbuilder.insert_str(key, f(s));
+                let key = key.replace(".", "_");
+                mapbuilder = mapbuilder.insert_str(&key, f(s));
                 mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
             }
         }
