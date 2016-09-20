@@ -80,7 +80,9 @@ impl Token {
             Rule
                 | SoftBreak
                 | HardBreak
-                | Str(_) => None,
+                | Str(_)
+                => None,
+            
             Paragraph(ref v) 
                 | Header(_, ref v)
                 | Emphasis(ref v)
@@ -98,7 +100,8 @@ impl Token {
                 | Footnote(ref v)
                 | Link(_,_,ref v)
                 | Image(_,_,ref v)
-                | StandaloneImage(_,_,ref v) => Some(v)
+                | StandaloneImage(_,_,ref v)
+                => Some(v)
         }
     }
 
@@ -108,7 +111,9 @@ impl Token {
             Rule
                 | SoftBreak
                 | HardBreak
-                | Str(_) => None,
+                | Str(_)
+                => None,
+            
             Paragraph(ref mut v) 
                 | Header(_, ref mut v)
                 | Emphasis(ref mut v)
@@ -126,7 +131,8 @@ impl Token {
                 | Footnote(ref mut v)
                 | Link(_,_,ref mut v)
                 | Image(_,_,ref mut v)
-                | StandaloneImage(_,_,ref mut v) => Some(v)
+                | StandaloneImage(_,_,ref mut v)
+                => Some(v)
         }
     }
 
