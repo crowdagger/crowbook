@@ -15,6 +15,9 @@ unreleased
     templates, with dots ('.') replaced by underscores ('_'). E.g.,
     with `metadata.foo: bar` you can access it in your templates with
     `{{{metadata_foo}}}`.
+* Rendering:
+  * `html.top` and `html.footer` are now considered as templates, so
+    you can use some `{{{metadata}}}` in it.
 * Crowbook program:
   * Still working to improve error messages.
 * Internal/API:
