@@ -659,6 +659,7 @@ impl Book {
             _ => panic!("get mapbuilder called with invalid escape format")
         };
         let mut mapbuilder = MapBuilder::new();
+        mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
                 let key = key.replace(".", "_");
