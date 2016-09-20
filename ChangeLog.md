@@ -22,6 +22,11 @@ unreleased
   * LaTeX:
     * If `tex.short` is set to `true`, chapters will be displayed as
       `\sections` since `article` class doesn't handle chapters.
+* Bugfixes:
+  * `import_config` only import options from another book file that
+    are not equal to the default ones and that haven't already been
+    set by the caller. E.g., `author: foo` then `import_config:
+    bar.book` won't erase the author previously set.
 * Crowbook program:
   * Still working to improve error messages.
 * Internal/API:
