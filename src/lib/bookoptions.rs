@@ -99,6 +99,7 @@ nb_char:alias # Removed
 #[derive(Debug)]
 pub struct BookOptions {
     options: HashMap<String, BookOption>,
+    defaults: HashMap<String, BookOption>,
     deprecated: HashMap<String, Option<String>>,
     valid_bools: Vec<&'static str>,
     valid_chars: Vec<&'static str>,
@@ -120,6 +121,7 @@ impl BookOptions {
         let mut options = BookOptions {
             options: HashMap::new(),
             deprecated: HashMap::new(),
+            defaults: HashMap::new(),
             valid_bools:vec!(),
             valid_chars:vec!(),
             valid_ints:vec!(),
@@ -166,6 +168,9 @@ impl BookOptions {
             }
             if let Some(value) = default_value {
                 options.set(key, value).unwrap();
+                // hack to get the BookOption without changing the API
+                let option = options.set(key, value).unwrap();
+                options.defaults.insert(key.to_owned(), option.unwrap());
             }
         }
         options
@@ -178,8 +183,11 @@ impl BookOptions {
     /// * `key`: the identifier of the option, must be Yaml::String(_)
     /// * `value`: the value of the option
     ///
-    /// **Returns** an error if `key` is not a String, not a valid option, of if
-    /// the value is not of the right type.
+    /// **Returns**
+    /// * an error either if `key` is not a valid option or if the
+    ///   value is not of the right type.
+    /// * an option containing None if key was
+    ///   not set, and Some(previous_value) if key was already present.
     pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<Option<BookOption>> {
         let key:String = if let Yaml::String(key) = key {
             key
@@ -276,9 +284,11 @@ impl BookOptions {
     /// * `key`: the identifier of the option, e.g.: "author"
     /// * `value`: the value of the option as a string
     ///
-    /// **Returns** an error either if `key` is not a valid option or if the
-    /// value is not of the right type. An option containing None if key was
-    /// not set, and Some(previous_value) if key was already present.
+    /// **Returns**
+    /// * an error either if `key` is not a valid option or if the
+    ///   value is not of the right type.
+    /// * an option containing None if key was
+    ///   not set, and Some(previous_value) if key was already present.
     ///
     /// # Examples
     /// ```
@@ -379,9 +389,23 @@ impl BookOptions {
 
 
     /// Merges the other list of options to the first one
+    ///
+    /// If option is already set in self, don't add it, unless it was the default
     pub fn merge(&mut self, mut other: BookOptions) -> Result<()> {
         let other_root = mem::replace(&mut other.root, PathBuf::new());
         for (key, value) in other.options.into_iter() {
+            println!("key: {}, value: {:?}", &key, &value);
+            // Check if option was already set, and if it was to default or to something else
+            {
+                let previous_opt = self.options.get(&key);
+                let default = self.defaults.get(&key);
+                match (previous_opt, default) {
+                    (Some(previous_opt), Some(default)) => if previous_opt != default { continue; },
+                    (Some(_), None) => continue,
+                    _ => (),
+                }
+            }
+            println!("inserting!");
             // If it's a path, get the corrected path
             if let BookOption::Path(ref path) = value {
                 let new_path:PathBuf = other_root.join(path);
