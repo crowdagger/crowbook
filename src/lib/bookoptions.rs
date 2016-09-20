@@ -167,7 +167,6 @@ impl BookOptions {
                 continue;
             }
             if let Some(value) = default_value {
-                println!("inserting ({}: {}) to defaults", key, value);
                 options.set(key, value).unwrap();
                 // hack to get the BookOption without changing the API
                 let option = options.set(key, value).unwrap();
@@ -399,20 +398,17 @@ impl BookOptions {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(&key) {
                 let previous_opt = self.options.get(&key);
-                let new_opt = self.options.get(&key);
                 let default = self.defaults.get(&key);
                 // If new value is equal to default, don't insert it
-                if let (Some(new_opt), Some(default)) = (new_opt, default) {
-                    if new_opt == default {
-                        continue;
-                    }
+                if &value == default.unwrap()  {
+                    continue;
                 }
                 match (previous_opt, default) {
                     (Some(previous_opt), Some(default)) => if previous_opt != default {
                         // Previous value is other than default, don't merge
                         continue;
                     },
-                    _ => println!("merging key: {}, value: {:?} (no prev)", &key, &value),
+                    _ => (),
                 }
             }
             // If it's a path, get the corrected path
