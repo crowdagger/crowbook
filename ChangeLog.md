@@ -3,8 +3,23 @@ ChangeLog
 
 unreleased
 ----------
+* New options:
+  * More metadata: `license`, `version` and `date`. These metadata are
+    not treated by the renderers, but they are exported to the
+    templates: `{{{metadata}}}` allows to access the content. If they
+    are present, a `has_metadata` is also set to true, allowing to do
+    something like `{{{title}}} {{#has_version}}version {{{version}}}
+    {{/has_version}}`.
+  * Yet more metadata: it is possible to add custom metadata by
+    prefixing it with `metadata.`. They will then be accessible in the
+    templates, with dots ('.') replaced by underscores ('_'). E.g.,
+    with `metadata.foo: bar` you can access it in your templates with
+    `{{{metadata_foo}}}`.
 * Crowbook program:
   * Still working to improve error messages.
+* Internal/API:
+  * Added static methods to `Logger` to allows displaying messages
+    more easily/prettily. 
 
 0.8.0 (2016-09-19)
 ------------------
