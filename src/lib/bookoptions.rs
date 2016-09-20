@@ -227,16 +227,16 @@ impl BookOptions {
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
             if let Some(new_key) = opt {
-                println!("WARNING: {} has been deprecated, you should now use {}", &key, &new_key);
+                println!("WARNING: '{}' has been deprecated, you should now use '{}'", &key, &new_key);
                 self.set_yaml(Yaml::String(new_key), value)
             } else {
                 Err(Error::book_option(self.source.clone(),
-                                           format!("key {} has been deprecated.", &key)))
+                                           format!("key '{}' has been deprecated.", &key)))
             }
         } else {
             // key not recognized
             Err(Error::book_option(self.source.clone(),
-                                       format!("Unrecognized key: {}", &key)))
+                                       format!("unrecognized key '{}'", &key)))
         }
     }
     
@@ -270,25 +270,25 @@ impl BookOptions {
                 self.set_yaml(Yaml::String(key.to_owned()), yaml_value)
             } else {
                 Err(Error::book_option(&self.source,
-                                       format!("value {} for key {} does not contain one and only one YAML value", value, key)))
+                                       format!("value '{}' for key '{}' does not contain one and only one YAML value", value, key)))
             }
         } else {
             Err(Error::book_option(&self.source,
-                                   format!("could not parse {} as a valid YAML value", value)))
+                                   format!("could not parse '{}' as a valid YAML value", value)))
         }
     }
         
     /// Gets an option
     pub fn get(&self, key: &str) -> Result<&BookOption> {
         self.options.get(key).ok_or_else(|| Error::invalid_option(&self.source,
-                                                                  format!("option {} is not present", key)))
+                                                                  format!("option '{}' is not present", key)))
     }
 
     /// Gets a list of path. Only used for resources.files.
     pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
         if key != "resources.files" {
             return Err(Error::book_option(&self.source,
-                                          format!("Can't get {} as a list of files, only valid if key is resources.files", key)));
+                                          format!("can't get '{}' as a list of files, only valid if key is resources.files", key)));
         }
 
         let list = try!(try!(self.get(key))

@@ -236,14 +236,14 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let source = &self.source;
         if let Some(ref file) = source.file {
-            try!(write!(f, "Error in file {}", file));
+            try!(write!(f, "{}", file));
             if let Some(line) = source.line {
-                try!(write!(f, " line {}", line));
+                try!(write!(f, ":{}", line));
             }
-            try!(write!(f, "\n"));
+            try!(write!(f, ": "));
         }
-        
-        match self.inner {
+
+        try!(match self.inner {
             Inner::Default(ref s) => {
                 write!(f, "Error: {}", s)
             },
@@ -255,8 +255,7 @@ impl fmt::Display for Error {
                 f.write_str(s)
             },
             Inner::FileNotFound(ref description, ref file) => {
-                try!(write!(f, "File not found ({}):", description));
-                f.write_str(file)
+                write!(f, "Could not find file '{}' for {}", file, description)
             },
             Inner::Render(ref s) => {
                 try!(f.write_str("Error during rendering: "));
@@ -274,7 +273,8 @@ impl fmt::Display for Error {
                 try!(f.write_str("Error accessing book option: "));
                 f.write_str(s)
             },
-        }
+        });
+        Ok(())
     }
 }
 

@@ -42,10 +42,32 @@ impl Logger {
     pub fn log<S: AsRef<str>>(&self, level: InfoLevel, s: S) {
         if level >= self.verbosity {
             match level {
-                Debug => writeln!(&mut io::stderr(), "{}{}{}", SHELL_COLOUR_BLUE,s.as_ref(), SHELL_COLOUR_OFF).unwrap(),
-                Info => writeln!(&mut io::stderr(), "{}", s.as_ref()).unwrap(),
-                Warning => writeln!(&mut io::stderr(), "{}{}{}", SHELL_COLOUR_ORANGE, s.as_ref(), SHELL_COLOUR_OFF).unwrap(),
-                Error => writeln!(&mut io::stderr(), "{}{}{}", SHELL_COLOUR_RED, s.as_ref(), SHELL_COLOUR_OFF).unwrap(),
+                Debug => writeln!(&mut io::stderr(),
+                                  "{}{}{}{}",
+                                  SHELL_COLOUR_BLUE,
+                                  "Debug: ",
+                                  SHELL_COLOUR_OFF,
+                                  s.as_ref())
+                    .unwrap(),
+                Info => writeln!(&mut io::stderr(),
+                                 "{}{}",
+                                 "Info: ",
+                                 s.as_ref())
+                    .unwrap(),
+                Warning => writeln!(&mut io::stderr(),
+                                    "{}{}{}{}",
+                                    SHELL_COLOUR_ORANGE,
+                                    "Warning: ",
+                                    SHELL_COLOUR_OFF,
+                                    s.as_ref())
+                    .unwrap(),
+                Error => writeln!(&mut io::stderr(),
+                                  "{}{}{}{}",
+                                  SHELL_COLOUR_RED,
+                                  "Error: ",
+                                  SHELL_COLOUR_OFF,
+                                  s.as_ref())
+                    .unwrap()
             }
         }
     }

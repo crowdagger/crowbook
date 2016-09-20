@@ -342,7 +342,7 @@ impl Book {
                 handles.push(scope.spawn(|| {
                     let result = self.render_epub();
                     if let Err(err) = result {
-                        self.logger.error(format!("Error rendering EPUB:\n{}", err));
+                        self.logger.error(format!("rendering EPUB:\n{}", err));
                     }
                 }));
             }
@@ -351,7 +351,7 @@ impl Book {
                 handles.push(scope.spawn(move || {
                     let result = self.render_html_dir();
                     if let Err(err) = result {
-                        self.logger.error(format!("Error rendering HTML directory:\n{}", err));
+                        self.logger.error(format!("rendering HTML directory:\n{}", err));
                     }
                 }));
             }
@@ -361,10 +361,10 @@ impl Book {
                     if let Ok(mut f) = File::create(&file) {
                         let result = self.render_html(&mut f);
                         if let Err(err) = result {
-                            self.logger.error(format!("Error rendering HTML:\n{}", err));
+                            self.logger.error(format!("rendering HTML:\n{}", err));
                         }
                     } else {
-                        self.logger.error(format!("Could not create HTML file '{}'", &file));
+                        self.logger.error(format!("could not create HTML file '{}'", &file));
                     }
                 }));
             }
@@ -373,11 +373,11 @@ impl Book {
                     if let Ok(mut f) = File::create(&file) {
                         let result = self.render_tex(&mut f);
                         if let Err(err) = result {
-                            self.logger.error(format!("Error rendering LaTeX:\n{}", err));
+                            self.logger.error(format!("rendering LaTeX:\n{}", err));
                         }
                     }
                     else {
-                        self.logger.error(format!("Could not create LaTeX file '{}'", &file));
+                        self.logger.error(format!("could not create LaTeX file '{}'", &file));
                     }
                 }));
             }
@@ -385,7 +385,7 @@ impl Book {
                 handles.push(scope.spawn(|| {
                     let result = self.render_pdf();
                     if let Err(err) = result {
-                        self.logger.error(format!("Error rendering PDF:\n{}", err));
+                        self.logger.error(format!("rendering PDF:\n{}", err));
                     }
                 }));
             }
@@ -393,7 +393,7 @@ impl Book {
                 handles.push(scope.spawn(|| {
                     let result = self.render_odt();
                     if let Err(err) = result {
-                        self.logger.error(format!("Error rendering PDF:\n{}", err));
+                        self.logger.error(format!("rendering PDF:\n{}", err));
                     }
                 }));
             }
@@ -598,11 +598,11 @@ impl Book {
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::config_parser(&self.source,
-                                                format!("invalid template {}", template))),
+                                                format!("invalid template '{}'", template))),
         };
         if let Ok (ref s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::file_not_found(&self.source,
-                                                                             format!("template {}", template),
+                                                                             format!("template '{}'", template),
                                                                              s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)

@@ -6,7 +6,7 @@ use crowbook::Book;
 
 /// Prints an error on stderr and exit the program
 pub fn print_error(s: &str) -> ! {
-    writeln!(&mut io::stderr(), "{} {}", Format::Error("error:"), s).unwrap();
+    writeln!(&mut io::stderr(), "{} {}", Format::Error("Error:"), s).unwrap();
     exit(0);
 }
 
