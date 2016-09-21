@@ -129,8 +129,8 @@ impl<'r> ResourceHandler<'r> {
     }
 
     /// Add a match between an original file and a dest file
-    pub fn add_link(&mut self, from: String, to: String) {
-        self.links.insert(from, to);
+    pub fn add_link<S: Into<String>>(&mut self, from: S, to: S) {
+        self.links.insert(from.into(), to.into());
     }
 
     /// Get a destination link from an original link
