@@ -17,12 +17,12 @@
 
 use error::{Result, Source};
 use html::HtmlRenderer;
-use book::Book;
+use book::{Book, compile_str};
 use token::Token;
 use templates::{html};
 use renderer::Renderer;
+use parser::Parser;
 
-use mustache;
 use rustc_serialize::base64::{self, ToBase64};
 
 use std::convert::{AsMut, AsRef};
@@ -156,8 +156,10 @@ impl<'a> HtmlSingleRenderer<'a> {
         }
 
         // Render the CSS
-        let template_css = mustache::compile_str(try!(self.html.book.get_template("html.css")).as_ref());
-        let data = self.html.book.get_mapbuilder("none")
+        let template_css = try!(compile_str(try!(self.html.book.get_template("html.css")).as_ref(),
+                                            &self.html.book.source,
+                                            "could not compile template 'html.css'"));
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
         let mut res:Vec<u8> = vec!();
@@ -165,8 +167,10 @@ impl<'a> HtmlSingleRenderer<'a> {
         let css = String::from_utf8_lossy(&res);
 
         // Render the JS
-        let template_js = mustache::compile_str(try!(self.html.book.get_template("html.script")).as_ref());
-        let data = self.html.book.get_mapbuilder("none")
+        let template_js = try!(compile_str(try!(self.html.book.get_template("html.script")).as_ref(),
+                                           &self.html.book.source,
+                                           "could not compile template 'html.script'"));
+        let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
             .insert_bool("display_chapter", self.html.book.options.get_bool("html.display_chapter").unwrap())
@@ -176,7 +180,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let js = String::from_utf8_lossy(&res);
 
         // Render the HTML document
-        let mut mapbuilder = self.html.book.get_mapbuilder("none")
+        let mut mapbuilder = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .insert_str("toc", toc)
             .insert_str("script", js)
@@ -186,8 +190,8 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("print_style", self.html.book.get_template("html.print_css").unwrap())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
-            .insert_str("footer", self.html.get_footer())
-            .insert_str("top", self.html.get_top())
+            .insert_str("footer", try!(self.html.get_footer()))
+            .insert_str("top", try!(self.html.get_header()))
             .insert_str("pages_svg", pages_svg);
         if self.html.book.options.get_bool("html.highlight_code") == Ok(true) {
             let highlight_js = try!(self.html.book.get_template("html.highlight.js"))
@@ -199,7 +203,9 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .insert_str("highlight_js", highlight_js);
         }
         let data = mapbuilder.build();
-        let template = mustache::compile_str(try!(self.html.book.get_template("html.template")).as_ref());        
+        let template = try!(compile_str(try!(self.html.book.get_template("html.template")).as_ref(),
+                                        &self.html.book.source,
+                                        "could not compile template 'html.template'"));
         let mut res = vec!();
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())

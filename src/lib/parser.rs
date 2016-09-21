@@ -101,6 +101,30 @@ impl Parser {
         Ok(res)
     }
 
+    /// Parse an inline string and returns a list of `Token`.
+    ///
+    /// This function removes the outermost `Paragraph` in most of the
+    /// cases, as it is meant to be used for an inline string (e.g. metadata)
+    pub fn parse_inline(&mut self, s: &str) -> Result<Vec<Token>> {
+        let mut tokens = try!(self.parse(s));
+        // Unfortunately, parser will put all this in a paragraph, so we might need to remove it.
+        if tokens.len() == 1 {
+            let res = match tokens[0] {
+                Token::Paragraph(ref mut v) => {
+                    Some(mem::replace(v, vec!()))
+                },
+                _ => None,
+            };
+            match res {
+                Some(tokens) => Ok(tokens),
+                _ => Ok(tokens),
+            }
+        } else {
+            Ok(tokens)
+        }
+    }
+
+
     /// Replace footnote reference with their definition
     fn parse_footnotes(&mut self, v: &mut Vec<Token>) ->Result<()> {
         for token in v {

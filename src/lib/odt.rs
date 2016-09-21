@@ -1,12 +1,10 @@
 use escape::escape_html;
 use token::Token;
-use book::Book;
+use book::{Book, compile_str};
 use number::Number;
 use error::Result;
 use templates::odt;
 use zipper::Zipper;
-
-use mustache;
 
 /// Rendererer for ODT
 ///
@@ -89,8 +87,10 @@ impl<'a> OdtRenderer<'a> {
             }
         }
         
-        let template = mustache::compile_str(odt::CONTENT);
-        let data = self.book.get_mapbuilder("none")
+        let template = try!(compile_str(odt::CONTENT,
+                                        &self.book.source,
+                                        "could not compile template for content.xml"));
+        let data = try!(self.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("content", content)
             .insert_str("automatic_styles", &self.automatic_styles)
             .build();

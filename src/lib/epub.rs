@@ -24,6 +24,7 @@ use templates::epub::*;
 use templates::epub3;
 use resource_handler;
 use renderer::Renderer;
+use parser::Parser;
 
 use chrono;
 use uuid;
@@ -89,7 +90,10 @@ impl<'a> EpubRenderer<'a> {
         let template_css = try!(compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
                                             &self.html.book.source,
                                             "could not compile template 'epub.css'"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| {
+            let mut parser = Parser::new();
+            let tokens = try!(parser.parse_inline(s));
+            self.render_vec(&tokens)}))
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
         let mut res:Vec<u8> = vec!();
@@ -155,12 +159,12 @@ impl<'a> EpubRenderer<'a> {
     }
     
     /// Render the titlepgae
-    fn render_titlepage(&self) -> Result<String> {
+    fn render_titlepage(&mut self) -> Result<String> {
         let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
         let template = try!(compile_str(if epub3 { epub3::TITLE } else { TITLE },
                                    &self.html.book.source,
                                    "could not compile template for title page"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
@@ -171,7 +175,7 @@ impl<'a> EpubRenderer<'a> {
     }
     
     /// Render toc.ncx
-    fn render_toc(&self) -> Result<String> {
+    fn render_toc(&mut self) -> Result<String> {
         let mut nav_points = String::new();
 
         for (n, ref title) in self.toc.iter().enumerate() {
@@ -188,7 +192,7 @@ impl<'a> EpubRenderer<'a> {
         let template = try!(compile_str(TOC,
                                    &self.html.book.source,
                                    "could not render template for toc.ncx"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("nav_points", nav_points)
             .build();
         let mut res:Vec<u8> = vec!();
@@ -264,7 +268,7 @@ impl<'a> EpubRenderer<'a> {
         let template = try!(compile_str(if epub3 { epub3::OPF } else { OPF },
                                         &self.html.book.source,
                                         "could not compile template for content.opf"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("optional", optional)
             .insert_str("items", items)
             .insert_str("itemrefs", itemrefs)
@@ -295,7 +299,7 @@ impl<'a> EpubRenderer<'a> {
             let template = try!(compile_str(if epub3 { epub3::COVER } else { COVER },
                                             &self.html.book.source,
                                             "could not compile template for cover.xhtml"));
-            let data = self.html.book.get_mapbuilder("none")
+            let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
                 .insert_str("cover", try!(self.html.handler.map_image(&self.html.source,
                                                                       Cow::Owned(cover))).into_owned())
                 .build();
@@ -311,14 +315,14 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render nav.xhtml
-    fn render_nav(&self) -> Result<String> {
+    fn render_nav(&mut self) -> Result<String> {
         let content = self.html.toc.render();
 
         let template = if self.html.book.options.get_i32("epub.version").unwrap() == 3 { epub3::NAV}  else { NAV };
         let template = try!(compile_str(template,
                                         &self.html.book.source,
                                         "could not compile template for nav.xhtml"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .build();
         let mut res:Vec<u8> = vec!();
@@ -349,7 +353,7 @@ impl<'a> EpubRenderer<'a> {
         let template = try!(compile_str(try!(self.html.book.get_template("epub.template")).as_ref(),
                                         &self.html.book.source,
                                         "could not compile template 'epub.template'"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .insert_str("chapter_title", mem::replace(&mut self.chapter_title, String::new()))
             .build();

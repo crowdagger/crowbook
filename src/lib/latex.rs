@@ -23,6 +23,7 @@ use zipper::Zipper;
 use escape::escape_tex;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
+use parser::Parser;
 
 use std::iter::Iterator;
 use std::fs::File;
@@ -161,7 +162,9 @@ impl<'a> LatexRenderer<'a> {
         let template = try!(compile_str(try!(self.book.get_template("tex.template")).as_ref(),
                                         &self.book.source,
                                         "could not compile template 'tex.template'"));
-        let mut data = self.book.get_mapbuilder("tex")
+        let mut data = try!(self.book.get_metadata(|s| {
+            let tokens = try!(Parser::new().parse_inline(s));
+            self.render_vec(&tokens)}))
             .insert_str("content", content)
             .insert_str("tex_lang", tex_lang);
         if self.book.options.get_bool("tex.short") == Ok(true) {

@@ -9,7 +9,6 @@ use html_dir::HtmlDirRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
 use templates::{epub, html, epub3, latex, html_dir, highlight};
-use escape;
 use number::Number;
 use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
@@ -634,51 +633,45 @@ impl Book {
     }
 
     /// Returns a `MapBuilder` (used by `Mustache` for templating), to be used (and completed)
-    /// by renderers. It fills it with the followings strings, corresponding to the matching
-    /// `Book` options:
-    ///
-    /// * "author"
-    /// * "title"
-    /// * "lang"
+    /// by renderers. It fills it with the metadata options.
     ///
     /// It also uses the lang/xx.yaml file corresponding to the language and fills
-    /// `loc_xxx` fiels with it that corresponds to translated versions
-    pub fn get_mapbuilder(&self, format: &str) -> MapBuilder {
-        fn clone(x:&str) -> String {
-            x.to_owned()
-        }
-        fn escape_html(s: &str) -> String {
-            escape::escape_html(s).into_owned()
-        }
-        fn escape_tex(s: &str) -> String {
-            escape::escape_tex(s).into_owned()
-        }
-        
-        
-        let f:fn(&str)->String = match format {
-            "none" => clone,
-            "html" => escape_html,
-            "tex" => escape_tex,
-            _ => panic!("get mapbuilder called with invalid escape format")
-        };
+    /// `loc_xxx` fiels with it that corresponds to translated versions.
+    ///
+    /// This method treats the metadata as Markdown and thus calls `f` to render it.
+    pub fn get_metadata<F>(&self, mut f: F) -> Result<MapBuilder>
+        where F:FnMut(&str)->Result<String> {
         let mut mapbuilder = MapBuilder::new();
         mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
+
+        // Add metadata to mapbuilder
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
                 let key = key.replace(".", "_");
-                mapbuilder = mapbuilder.insert_str(&key, f(s));
-                mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                let content = f(s);
+                match content {
+                    Ok(content) => {
+                        mapbuilder = mapbuilder.insert_str(&key, content);
+                        mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                    },
+                    Err(err) => {
+                        return Err(Error::render(&self.source,
+                                                 format!("could not render `{}` for metadata:\n{}", &key, err)));
+                    },
+                }
             }
         }
+
+        // Add localization strings
         let hash = lang::get_hash(self.options.get_str("lang").unwrap());
         for (key, value) in hash.into_iter() {
             let key = format!("loc_{}", key.as_str().unwrap());
             let value = value.as_str().unwrap();
-            mapbuilder = mapbuilder.insert_str(&key, f(value));
+            mapbuilder = mapbuilder.insert_str(&key, value);
         }
-        mapbuilder
+        Ok(mapbuilder)
     }
-
+        
     /// Remove YAML blocks from a string and try to parse them to set options
     ///
     /// YAML blocks start with
@@ -775,6 +768,7 @@ impl Book {
         }
     }
 }
+
 
 /// Calls mustache::compile_str but catches panics and returns a result
 pub fn compile_str<O, S>(template: &str, source: O, error_msg: S)  -> Result<mustache::Template>

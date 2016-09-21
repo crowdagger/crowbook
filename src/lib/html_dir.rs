@@ -22,6 +22,7 @@ use token::Token;
 use templates::{html};
 use resource_handler;
 use renderer::Renderer;
+use parser::Parser;
 
 use std::io::{Read,Write};
 use std::fs;
@@ -183,7 +184,7 @@ impl<'a> HtmlDirRenderer<'a> {
 
             
             // Render each HTML document
-            let mut mapbuilder = self.html.book.get_mapbuilder("none")
+            let mut mapbuilder = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
                 .insert_str("content", try!(content))
                 .insert_str("chapter_title", format!("{} – {}",
                                              self.html.book.options.get_str("title").unwrap(),
@@ -191,8 +192,8 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("toc", toc.clone())
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
-                .insert_str("footer", self.html.get_footer())
-                .insert_str("top", self.html.get_top())
+                .insert_str("footer", try!(self.html.get_footer()))
+                .insert_str("top", try!(self.html.get_header()))
                 .insert_str("script", self.html.book.get_template("html_dir.script").unwrap())
                 .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
             
@@ -235,10 +236,10 @@ impl<'a> HtmlDirRenderer<'a> {
                         titles[0]));
         }
         // Render index.html and write it too
-        let mut mapbuilder = self.html.book.get_mapbuilder("none")
+        let mut mapbuilder = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
-            .insert_str("top", self.html.get_top())
-            .insert_str("footer", self.html.get_footer())
+            .insert_str("top", try!(self.html.get_header()))
+            .insert_str("footer", try!(self.html.get_footer()))
             .insert_str("toc", toc.clone())
             .insert_str("script", self.html.book.get_template("html_dir.script").unwrap())
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
@@ -262,7 +263,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let template_css = try!(compile_str(try!(self.html.book.get_template("html_dir.css")).as_ref(),
                                             &self.html.book.source,
                                             "could not compile template 'html_dir.css"));
-        let data = self.html.book.get_mapbuilder("none")
+        let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .build();
         let mut res:Vec<u8> = vec!();
         template_css.render_data(&mut res, &data);
