@@ -49,6 +49,7 @@ impl Source {
     }
 
     /// Unsets a line number of a source
+    #[doc(hidden)]
     pub fn unset_line(&mut self) {
         self.line = None;
     }
