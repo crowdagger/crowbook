@@ -110,9 +110,11 @@ pub struct BookOptions {
     metadata: Vec<String>,
 
     /// Source for errors (unnecessary copy :/)
+    #[doc(hidden)]
     pub source: Source,
 
     /// Root path of the book (unnecessary copy :/)
+    #[doc(hidden)]
     pub root: PathBuf,
 }
 
@@ -184,11 +186,11 @@ impl BookOptions {
     /// * `key`: the identifier of the option, must be Yaml::String(_)
     /// * `value`: the value of the option
     ///
-    /// **Returns**
-    /// * an error either if `key` is not a valid option or if the
-    ///   value is not of the right type.
-    /// * an option containing None if key was
-    ///   not set, and Some(previous_value) if key was already present.
+    /// # Returns
+    /// 
+    /// * an error either if `key` is not a valid option or if the value is not of the right type.
+    /// * an option containing None if key was not set, and Some(previous_value) if key was already present.
+    #[doc(hidden)]
     pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<Option<BookOption>> {
         let key:String = if let Yaml::String(key) = key {
             key
@@ -285,7 +287,7 @@ impl BookOptions {
     /// * `key`: the identifier of the option, e.g.: "author"
     /// * `value`: the value of the option as a string
     ///
-    /// **Returns**
+    /// # Returns
     /// * an error either if `key` is not a valid option or if the
     ///   value is not of the right type.
     /// * an option containing None if key was
@@ -320,17 +322,20 @@ impl BookOptions {
     }
 
     /// Return the list of keys that are metadata
+    #[doc(hidden)]
     pub fn get_metadata(&self) -> &[String] {
         &self.metadata
     }
         
     /// Gets an option
+    #[doc(hidden)]
     pub fn get(&self, key: &str) -> Result<&BookOption> {
         self.options.get(key).ok_or_else(|| Error::invalid_option(&self.source,
                                                                   format!("option '{}' is not present", key)))
     }
 
     /// Gets a list of path. Only used for resources.files.
+    #[doc(hidden)]
     pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
         if key != "resources.files" {
             return Err(Error::book_option(&self.source,
@@ -393,6 +398,7 @@ impl BookOptions {
     ///
     /// If option is already set in self, don't add it, unless it was the default.
     /// Option is not inserted either if new value is equal to default.
+    #[doc(hidden)]
     pub fn merge(&mut self, mut other: BookOptions) -> Result<()> {
         let other_root = mem::replace(&mut other.root, PathBuf::new());
         for (key, value) in other.options.into_iter() {

@@ -53,20 +53,27 @@ use yaml_rust::{YamlLoader, Yaml};
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if
     /// you are writing a new renderer.
+    #[doc(hidden)]
     pub chapters: Vec<(Number, Vec<Token>)>,
+    
     /// A list of the filenames of the chapters
+    #[doc(hidden)]
     pub filenames: Vec<String>,
 
     /// Options of the book
+    #[doc(hidden)]
     pub options: BookOptions,
 
     /// Root path of the book
+    #[doc(hidden)]
     pub root: PathBuf,
 
     /// Logger
+    #[doc(hidden)]
     pub logger: Logger,
 
     /// Source for error files
+    #[doc(hidden)]
     pub source: Source,
     
     cleaner: Box<Cleaner>,
@@ -570,13 +577,19 @@ impl Book {
 
     /// Either clean a string or does nothing,
     /// according to book `lang` and `autoclean` options
+    #[doc(hidden)]
     pub fn clean<'s, S: Into<Cow<'s, str>>>(&self, text: S, tex: bool) -> Cow<'s, str>  {
         self.cleaner.clean(text.into(), tex)
     }
 
     
     
-    /// Returns the template (default or modified version)
+    /// Returns a template
+    ///
+    /// Returns the default one if no option was set, or the one set by the user.
+    /// 
+    /// Returns an error if `template` isn't a valid template name.
+    #[doc(hidden)]
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
         let option = self.options.get_path(template);
         let fallback = match template {
@@ -616,6 +629,7 @@ impl Book {
 
 
     /// Returns the string corresponding to a number, title, and the numbering template
+    #[doc(hidden)]
     pub fn get_header(&self, n: i32, title: &str) -> Result<String> {
         let template = try!(compile_str(self.options.get_str("numbering_template").unwrap(),
                                         &self.source,
@@ -639,6 +653,7 @@ impl Book {
     /// `loc_xxx` fiels with it that corresponds to translated versions.
     ///
     /// This method treats the metadata as Markdown and thus calls `f` to render it.
+    #[doc(hidden)]
     pub fn get_metadata<F>(&self, mut f: F) -> Result<MapBuilder>
         where F:FnMut(&str)->Result<String> {
         let mut mapbuilder = MapBuilder::new();

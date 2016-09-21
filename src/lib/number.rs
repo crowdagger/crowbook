@@ -1,19 +1,33 @@
-/// Numbering for a given chapter
+/// Numbering for a given chapter or part
+///
+/// This Enum is only public so it can be passed to `Book` methods, but
+/// library users should **not** do exhaustive matchs on the variants,
+/// since it is possible new variants will be added without being
+/// considered a breaking change
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Number {
     /// Chapter's title is hidden
     Hidden,
+
     /// Chapter is not numbered
     Unnumbered,
+
     /// Chapter follows books numbering, number is given automatically
     Default,
+
     /// Chapter number set to specified number
     Specified(i32),
+
     /// Chapter is actually an unnumbered part
+    #[doc(hidden)]
     UnnumberedPart,
+
     /// Chapter is actually a part following book numbering
+    #[doc(hidden)]
     DefaultPart,
+    
     /// Chapter is actually a part whose number is specified
+    #[doc(hidden)]
     SpecifiedPart(i32)
 }
 
