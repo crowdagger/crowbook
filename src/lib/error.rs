@@ -24,8 +24,11 @@ use std::borrow::Cow;
 /// Source of an error file
 pub struct Source {
     /// File name of the source
+    #[doc(hidden)]
     pub file: Option<String>,
+    
     /// Line number of the source
+    #[doc(hidden)]
     pub line: Option<u32>,
 }
 

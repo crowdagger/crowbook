@@ -21,12 +21,14 @@ pub struct ResourceHandler<'r> {
     /// Maps an original url (e.g.) "foo/Readme.md" to a valid link
     /// (e.g.) chapter3.html
     links: HashMap<String, String>,
-    /// Maps an original (local) file name to a new file name. Allows to
-    // make sure all image files will be included in e.g. the Epub document.
-    pub images: HashMap<String, String>,
     map_images: bool,
     logger: &'r Logger,
     base64: bool,
+
+    /// Maps an original (local) file name to a new file name. Allows to
+    /// make sure all image files will be included in e.g. the Epub document.
+    #[doc(hidden)]
+    pub images: HashMap<String, String>,
 }
 
 impl<'r> ResourceHandler<'r> {
@@ -121,6 +123,7 @@ impl<'r> ResourceHandler<'r> {
     }
 
     /// Returns an iterator the the images files mapping
+    #[doc(hidden)]
     pub fn images_mapping(&self) -> &HashMap<String,String> {
         &self.images
     }

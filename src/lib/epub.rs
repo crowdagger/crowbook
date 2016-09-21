@@ -406,6 +406,7 @@ impl<'a> EpubRenderer<'a> {
     /// because we need to be able to call it from other renderers.
     ///
     /// See http://lise-henry.github.io/articles/rust_inheritance.html
+    #[doc(hidden)]
     pub fn static_render_token<T>(this: &mut T, token: &Token) -> Result<String>
     where T: AsMut<EpubRenderer<'a>>+AsRef<EpubRenderer<'a>> +
         AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer
