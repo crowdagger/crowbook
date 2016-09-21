@@ -16,6 +16,9 @@ unreleased
     with `metadata.foo: bar` you can access it in your templates with
     `{{{metadata_foo}}}`.
 * Rendering:
+  * Metadata can now contain Markdown and will be rendered by the
+    renderers. This might not be a good idea for common fields
+    (e.g. "title"), though. Use with caution.
   * HTML:
     * `html.top` and `hstml.footer` are now considered as templates, so
       you can use some `{{{metadata}}}` in it.
