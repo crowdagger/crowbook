@@ -18,14 +18,13 @@
 use error::{Error,Result,Source};
 use token::Token;
 use html::HtmlRenderer;
-use book::Book;
+use book::{Book, compile_str};
 use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;
 use resource_handler;
 use renderer::Renderer;
 
-use mustache;
 use chrono;
 use uuid;
 
@@ -87,7 +86,9 @@ impl<'a> EpubRenderer<'a> {
         self.html.source = Source::empty();
         
         // Render the CSS file and write it
-        let template_css = mustache::compile_str(try!(self.html.book.get_template("epub.css")).as_ref());
+        let template_css = try!(compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
+                                            &self.html.book.source,
+                                            "could not compile template 'epub.css'"));
         let data = self.html.book.get_mapbuilder("none")
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
@@ -155,7 +156,10 @@ impl<'a> EpubRenderer<'a> {
     
     /// Render the titlepgae
     fn render_titlepage(&self) -> Result<String> {
-        let template = mustache::compile_str(if self.html.book.options.get_i32("epub.version").unwrap() == 3 {epub3::TITLE} else {TITLE});
+        let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
+        let template = try!(compile_str(if epub3 { epub3::TITLE } else { TITLE },
+                                   &self.html.book.source,
+                                   "could not compile template for title page"));
         let data = self.html.book.get_mapbuilder("none")
             .build();
         let mut res:Vec<u8> = vec!();
@@ -181,7 +185,9 @@ impl<'a> EpubRenderer<'a> {
       <content src = \"{}\" />
     </navPoint>\n", id, title, filename));
         }
-        let template = mustache::compile_str(TOC);
+        let template = try!(compile_str(TOC,
+                                   &self.html.book.source,
+                                   "could not render template for toc.ncx"));
         let data = self.html.book.get_mapbuilder("none")
             .insert_str("nav_points", nav_points)
             .build();
@@ -254,7 +260,10 @@ impl<'a> EpubRenderer<'a> {
             }
         }
 
-        let template = mustache::compile_str(if self.html.book.options.get_i32("epub.version").unwrap() == 3 {epub3::OPF} else {OPF});
+        let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
+        let template = try!(compile_str(if epub3 { epub3::OPF } else { OPF },
+                                        &self.html.book.source,
+                                        "could not compile template for content.opf"));
         let data = self.html.book.get_mapbuilder("none")
             .insert_str("optional", optional)
             .insert_str("items", items)
@@ -282,7 +291,10 @@ impl<'a> EpubRenderer<'a> {
                                                      cover));
 
             }
-            let template = mustache::compile_str(if self.html.book.options.get_i32("epub.version").unwrap() == 3 {epub3::COVER} else {COVER});
+            let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
+            let template = try!(compile_str(if epub3 { epub3::COVER } else { COVER },
+                                            &self.html.book.source,
+                                            "could not compile template for cover.xhtml"));
             let data = self.html.book.get_mapbuilder("none")
                 .insert_str("cover", try!(self.html.handler.map_image(&self.html.source,
                                                                       Cow::Owned(cover))).into_owned())
@@ -301,8 +313,11 @@ impl<'a> EpubRenderer<'a> {
     /// Render nav.xhtml
     fn render_nav(&self) -> Result<String> {
         let content = self.html.toc.render();
-        
-        let template = mustache::compile_str(if self.html.book.options.get_i32("epub.version").unwrap() == 3 {epub3::NAV} else {NAV});
+
+        let template = if self.html.book.options.get_i32("epub.version").unwrap() == 3 { epub3::NAV}  else { NAV };
+        let template = try!(compile_str(template,
+                                        &self.html.book.source,
+                                        "could not compile template for nav.xhtml"));
         let data = self.html.book.get_mapbuilder("none")
             .insert_str("content", content)
             .build();
@@ -330,8 +345,10 @@ impl<'a> EpubRenderer<'a> {
             self.chapter_title = try!(self.html.book.get_header(number, ""));
         }
         self.toc.push(self.chapter_title.clone());
-        
-        let template = mustache::compile_str(try!(self.html.book.get_template("epub.template")).as_ref());
+
+        let template = try!(compile_str(try!(self.html.book.get_template("epub.template")).as_ref(),
+                                        &self.html.book.source,
+                                        "could not compile template 'epub.template'"));
         let data = self.html.book.get_mapbuilder("none")
             .insert_str("content", content)
             .insert_str("chapter_title", mem::replace(&mut self.chapter_title, String::new()))

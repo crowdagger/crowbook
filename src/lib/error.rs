@@ -114,6 +114,16 @@ impl Error {
         }
     }
 
+    /// Creates a new template error
+    ///
+    /// Error when compiling a mustache template
+    pub fn template<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
+        Error {
+            source: source.into(),
+            inner: Inner::Template(msg.into())
+        }
+    }
+
     /// Creates a new invalid option error
     ///
     /// Error when trying to set an option
@@ -225,6 +235,7 @@ impl error::Error for Error {
                 | Inner::ConfigParser(ref s)
                 | Inner::InvalidOption(ref s)
                 | Inner::Render(ref s)
+                | Inner::Template(ref s)
                 => s.as_ref(),
             
             Inner::FileNotFound(..) => "File not found",
@@ -257,6 +268,9 @@ impl fmt::Display for Error {
             Inner::FileNotFound(ref description, ref file) => {
                 write!(f, "Could not find file '{}' for {}", file, description)
             },
+            Inner::Template(ref s) => {
+                write!(f, "Error compiling template: {}", s)
+            }
             Inner::Render(ref s) => {
                 try!(f.write_str("Error during rendering: "));
                 f.write_str(s)
@@ -300,4 +314,6 @@ enum Inner {
     BookOption(Cow<'static, str>),
     /// An invalid option
     InvalidOption(Cow<'static, str>),
+    /// Error when compiling template
+    Template(Cow<'static, str>),
 }

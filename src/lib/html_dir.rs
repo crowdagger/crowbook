@@ -17,13 +17,11 @@
 
 use error::{Error,Result, Source};
 use html::HtmlRenderer;
-use book::Book;
+use book::{Book, compile_str};
 use token::Token;
 use templates::{html};
 use resource_handler;
 use renderer::Renderer;
-
-use mustache;
 
 use std::io::{Read,Write};
 use std::fs;
@@ -202,7 +200,9 @@ impl<'a> HtmlDirRenderer<'a> {
                 mapbuilder = mapbuilder.insert_bool("highlight_code", true);
             }
             let data = mapbuilder.build();
-            let template = mustache::compile_str(try!(self.html.book.get_template("html_dir.chapter.html")).as_ref());        
+            let template = try!(compile_str(try!(self.html.book.get_template("html_dir.chapter.html")).as_ref(),
+                                            &self.html.book.source,
+                                            "could not compile template 'html_dir.chapter.html"));
             let mut res = vec!();
             template.render_data(&mut res, &data);
             try!(self.write_file(&filenamer(i), &res));
@@ -246,7 +246,9 @@ impl<'a> HtmlDirRenderer<'a> {
             mapbuilder = mapbuilder.insert_bool("highlight_code", true);
         }
         let data = mapbuilder.build();
-        let template = mustache::compile_str(try!(self.html.book.get_template("html_dir.index.html")).as_ref());        
+        let template = try!(compile_str(try!(self.html.book.get_template("html_dir.index.html")).as_ref(),
+                                        &self.html.book.source,
+                                        "could not compile template 'html_dir.index.html"));
         let mut res = vec!();
         template.render_data(&mut res, &data);
         try!(self.write_file("index.html", &res));
@@ -257,9 +259,10 @@ impl<'a> HtmlDirRenderer<'a> {
     // Render the CSS file and write it
     fn write_css(&self) -> Result<()> {
         // Render the CSS 
-        let template_css = mustache::compile_str(try!(self.html.book.get_template("html_dir.css")).as_ref());
+        let template_css = try!(compile_str(try!(self.html.book.get_template("html_dir.css")).as_ref(),
+                                            &self.html.book.source,
+                                            "could not compile template 'html_dir.css"));
         let data = self.html.book.get_mapbuilder("none")
-            .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
         let mut res:Vec<u8> = vec!();
         template_css.render_data(&mut res, &data);

@@ -18,7 +18,7 @@
 use error::{Result, Error, Source};
 use escape::escape_html;
 use token::Token;
-use book::Book;
+use book::{Book, compile_str};
 use number::Number;
 use toc::Toc;
 use resource_handler::ResourceHandler;
@@ -27,8 +27,6 @@ use lang;
 
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
-
-use mustache;
 
 /// Base structure for rendering HTML files
 ///
@@ -383,13 +381,13 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Consider the html as a template
-    fn templatize(&self, s: &str) -> String {
+    fn templatize(&self, s: &str) -> Result<String> {
         let mapbuilder = self.book.get_mapbuilder("html");
         let data = mapbuilder.build();
-        let template = mustache::compile_str(s);
+        let template = try!(compile_str(s, &self.book.source, "could not compile template"));
         let mut res = vec!();
         template.render_data(&mut res, &data);
-        String::from_utf8_lossy(&res).into_owned()
+        Ok(String::from_utf8_lossy(&res).into_owned())
     }
     
 
@@ -398,7 +396,13 @@ impl<'a> HtmlRenderer<'a> {
     pub fn get_footer(&self) -> String {
         let content =
             if let Ok(footer) = self.book.options.get_str("html.footer") {
-                self.templatize(footer)
+                match self.templatize(footer) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        self.book.logger.error(format!("rendering 'html.footer' template:\n{}", err));
+                        String::new()
+                    }
+                }
             } else {
                 if self.book.options.get_bool("html.crowbook_link") == Ok(true) {
                     lang::get_str(self.book.options.get_str("lang").unwrap(), "generated_by_crowbook")
@@ -416,7 +420,13 @@ impl<'a> HtmlRenderer<'a> {
     /// Renders a header
     pub fn get_top(&self) -> String {
         if let Ok(top) = self.book.options.get_str("html.top") {
-            format!("<div id = \"top\"><p>{}</p></div>", self.templatize(top))
+            match self.templatize(top) {
+                Ok(content) => format!("<div id = \"top\"><p>{}</p></div>", content),
+                Err(err) => {
+                    self.book.logger.error(format!("rendering 'html.top' template:\n{}", err));
+                    String::new()
+                },
+            }
         } else {
             String::new()
         }

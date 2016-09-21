@@ -20,6 +20,7 @@ use std::io::{Write, Read};
 use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::iter::IntoIterator;
+use std::thread;
 
 use crossbeam;
 use mustache;
@@ -617,7 +618,9 @@ impl Book {
 
     /// Returns the string corresponding to a number, title, and the numbering template
     pub fn get_header(&self, n: i32, title: &str) -> Result<String> {
-        let template = mustache::compile_str(self.options.get_str("numbering_template").unwrap());
+        let template = try!(compile_str(self.options.get_str("numbering_template").unwrap(),
+                                        &self.source,
+                                        "could not compile template 'numbering template'"));
         let data = MapBuilder::new()
             .insert_str("title", String::from(title))
             .insert_str("number", format!("{}", n))
@@ -773,3 +776,16 @@ impl Book {
     }
 }
 
+/// Calls mustache::compile_str but catches panics and returns a result
+pub fn compile_str<O, S>(template: &str, source: O, error_msg: S)  -> Result<mustache::Template>
+    where O: Into<Source>,
+          S: Into<Cow<'static, str>>
+{
+    let input: String = template.to_owned();
+    let result = thread::spawn(move || mustache::compile_str(&input)).join();
+    match result {
+        Ok(result) => Ok(result),
+        Err(_) => Err(Error::template(source,
+                                      error_msg))
+    }
+}

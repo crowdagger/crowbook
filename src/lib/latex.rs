@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use book::Book;
+use book::{Book, compile_str};
 use number::Number;
 use error::{Error,Result, Source};
 use token::Token;
@@ -28,8 +28,6 @@ use std::iter::Iterator;
 use std::fs::File;
 use std::io::Read;
 use std::borrow::Cow;
-
-use mustache;
 
 /// LaTeX renderer
 pub struct LatexRenderer<'a> {
@@ -160,7 +158,9 @@ impl<'a> LatexRenderer<'a> {
             }
         });
 
-        let template = mustache::compile_str(try!(self.book.get_template("tex.template")).as_ref());
+        let template = try!(compile_str(try!(self.book.get_template("tex.template")).as_ref(),
+                                        &self.book.source,
+                                        "could not compile template 'tex.template'"));
         let mut data = self.book.get_mapbuilder("tex")
             .insert_str("content", content)
             .insert_str("tex_lang", tex_lang);
