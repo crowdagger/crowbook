@@ -36,7 +36,9 @@ unreleased
     instead of panicking.
 * Internal/API:
   * Added static methods to `Logger` to allows displaying messages
-    more easily/prettily. 
+    more easily/prettily.
+  * Reduce pubic API's surface so less changes will need to be
+    considered breaking in the future. 
 
 0.8.0 (2016-09-19)
 ------------------
