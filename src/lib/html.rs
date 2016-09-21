@@ -401,6 +401,7 @@ impl<'a> HtmlRenderer<'a> {
                 Ok(format!("<a href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
                            number, number, number))
             },
+            Token::__NonExhaustive => unreachable!()
         }
     }
 

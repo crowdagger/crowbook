@@ -5,8 +5,7 @@ use std::io::Write;
 /// The level of information to display to a logger
 ///
 /// This enum should only be used as parameters for `Logger` or `Book` methods. Library
-/// users must **not** do exhaustive pattern matching on the variants of the enums, at
-/// it *won't* be considered a breaking change to the library to add variants.
+/// users should **not** do exhaustive pattern matching on the variants of the enums, as it might grow variants later.
 #[derive(Debug, PartialEq, Eq, PartialOrd, Clone, Copy)]
 pub enum InfoLevel {
     /// Debug: the lowest level
@@ -16,7 +15,11 @@ pub enum InfoLevel {
     /// Info: won't be displayed by default
     Info,
     /// Error
-    Error
+    Error,
+
+    /// Hint that destructuring should not be exhaustive
+    #[doc(hidden)]
+    __NonExhaustive,
 }
 
 use self::InfoLevel::*;
@@ -94,7 +97,8 @@ impl Logger {
                 Debug => Self::display_debug(s),
                 Info => Self::display_info(s),
                 Warning => Self::display_warning(s),
-                Error => Self::display_error(s)
+                Error => Self::display_error(s),
+                __NonExhaustive => unreachable!()
             }
         }
     }

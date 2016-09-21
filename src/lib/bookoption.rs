@@ -1,6 +1,9 @@
 use error::{Error,Result, Source};
 
 /// Structure for storing a book option
+///
+/// This Enum might grow additional variants, so library users should
+/// **not** count on exhaustive matching.
 #[derive(Debug, PartialEq)]
 pub enum BookOption {
     /// Stores a String
@@ -18,7 +21,11 @@ pub enum BookOption {
     /// Stores a path
     ///
     /// Stored the same way as a string, but some base path is usually prepended to it
-    Path(String), 
+    Path(String),
+
+    /// Hint that destructuring should not be exhaustive
+    #[doc(hidden)]
+    __NonExhaustive,
 }
 
 impl BookOption {

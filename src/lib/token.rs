@@ -18,6 +18,9 @@
 /// A single token representing a Markdown element.
 ///
 /// A Markdown document is, thus, a Vec of `Token`s.
+///
+/// This Enum might grow additional variants, so library users should
+/// **not** count on exhaustive matching.
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     /// The most simple element, containing a String
@@ -69,6 +72,10 @@ pub enum Token {
     Image(String, String, Vec<Token>),
     /// Similar to previous, but when image is in a standalone paragraph
     StandaloneImage(String, String, Vec<Token>),
+
+    /// Hint that destructuring should not be exhaustive
+    #[doc(hidden)]
+    __NonExhaustive,
 }
 
 use Token::*;
@@ -101,7 +108,9 @@ impl Token {
                 | Link(_,_,ref v)
                 | Image(_,_,ref v)
                 | StandaloneImage(_,_,ref v)
-                => Some(v)
+                => Some(v),
+
+            __NonExhaustive => unreachable!(),
         }
     }
 
@@ -132,7 +141,9 @@ impl Token {
                 | Link(_,_,ref mut v)
                 | Image(_,_,ref mut v)
                 | StandaloneImage(_,_,ref mut v)
-                => Some(v)
+                => Some(v),
+
+            __NonExhaustive => unreachable!()
         }
     }
 
