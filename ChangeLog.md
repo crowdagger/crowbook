@@ -29,6 +29,8 @@ unreleased
     bar.book` won't erase the author previously set.
 * Crowbook program:
   * Still working to improve error messages.
+  * Display an error message when mustache can't compile a template,
+    instead of panicking.
 * Internal/API:
   * Added static methods to `Logger` to allows displaying messages
     more easily/prettily. 
