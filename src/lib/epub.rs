@@ -90,10 +90,7 @@ impl<'a> EpubRenderer<'a> {
         let template_css = try!(compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
                                             &self.html.book.source,
                                             "could not compile template 'epub.css'"));
-        let data = try!(self.html.book.get_metadata(|s| {
-            let mut parser = Parser::new();
-            let tokens = try!(parser.parse_inline(s));
-            self.render_vec(&tokens)}))
+        let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
         let mut res:Vec<u8> = vec!();
