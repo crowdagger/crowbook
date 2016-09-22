@@ -112,7 +112,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         self.html.source = Source::empty();
 
         for (i, chapter) in chapters.iter().enumerate() {
-            if self.html.book.options.get_bool("html.display_chapter").unwrap()
+            if self.html.book.options.get_bool("html_single.one_chapter").unwrap()
                 && i != 0 {
                 content.push_str(&format!(
                     "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls prev_chapter chapter-{}\">
@@ -126,7 +126,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                     titles[i -1]));
             }
             content.push_str(chapter);
-            if self.html.book.options.get_bool("html.display_chapter").unwrap()
+            if self.html.book.options.get_bool("html_single.one_chapter").unwrap()
                 && i < titles.len() - 1 {
                 content.push_str(&format!(
                     "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls next_chapter chapter-{}\">
@@ -174,7 +174,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
-            .insert_bool("display_chapter", self.html.book.options.get_bool("html.display_chapter").unwrap())
+            .insert_bool("display_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
             .build();
         let mut res:Vec<u8> = vec!();
         template_js.render_data(&mut res, &data);
@@ -186,7 +186,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("toc", toc)
             .insert_str("script", js)
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
-            .insert_bool("display_chapter", self.html.book.options.get_bool("html.display_chapter").unwrap())
+            .insert_bool("display_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
             .insert_str("style", css.as_ref())
             .insert_str("print_style", self.html.book.get_template("html.print_css").unwrap())
             .insert_str("menu_svg", menu_svg)
