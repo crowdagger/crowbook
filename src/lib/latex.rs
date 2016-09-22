@@ -55,7 +55,7 @@ impl<'a> LatexRenderer<'a> {
             escape: true,
             first_letter: false,
             first_paragraph: true,
-            is_short: book.options.get_bool("tex.short").unwrap(),
+            is_short: book.options.get_str("tex.class").unwrap() == "article",
         }
     }
 
@@ -166,9 +166,11 @@ impl<'a> LatexRenderer<'a> {
             let tokens = try!(Parser::new().parse_inline(s));
             self.render_vec(&tokens)}))
             .insert_str("content", content)
+            .insert_str("class", self.book.options.get_str("tex.class").unwrap())
             .insert_str("tex_lang", tex_lang);
-        if self.book.options.get_bool("tex.short") == Ok(true) {
-            data = data.insert_bool("short", true);
+        // If class isn't book, set open_any to true, so margins are symetric.
+        if self.book.options.get_str("tex.class").unwrap() != "book" {
+            data = data.insert_bool("open_any", true);
         }
         if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);

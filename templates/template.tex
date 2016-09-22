@@ -1,5 +1,5 @@
 {{=<< >>=}}
-\documentclass{<<#short>>article<</short>><<^short>>book<</short>>}
+\documentclass{<<&class>>}
 \usepackage[T1]{fontenc}
 \usepackage[<<&tex_lang>>]{babel}
 \usepackage[utf8]{inputenc}
@@ -15,8 +15,8 @@
 
 
 % TODO: provide a way to configure
-\usepackage[a5paper, top=2cm,
-  left=2.5cm,bottom=1.5cm,right=1.5cm]{geometry}%A5 by default
+\usepackage[a5paper, top=2cm, bottom=1.5cm,
+  <<^open_any>> left=2.5cm,right=1.5cm<</open_any>><<#open_any>> left=2cm,right=2cm<</open_any>>]{geometry}%A5 by default
 
 % Even with inputenc, not all unicode chars are recognized. This a
 % listof some I stumbled upon and manually added to fix

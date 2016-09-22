@@ -80,6 +80,7 @@ tex.short:bool:false                # Use article class instead of book, and the
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
 tex.command:str:pdflatex            # LaTeX command to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
+tex.class:str:book                  # LaTeX class to use
 
 # Crowbook options
 crowbook.temp_dir:path:             # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
@@ -113,6 +114,7 @@ temp_dir:alias:crowbook.temp_dir                  # Renamed
 zip.command:alias:crowbook.zip.command            # Renamed
 verbose:alias:crowbook.verbose                    # Renamed
 nb_char:alias                                     # Removed
+tex.short:alias             # Removed, use tex.class instead
 ";
 
 

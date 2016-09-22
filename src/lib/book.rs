@@ -167,7 +167,7 @@ impl Book {
             book.root = parent.to_owned();
             book.options.root = book.root.clone();
         }
-        book.options.set("tex.short", "true").unwrap();
+        book.options.set("tex.class", "article").unwrap();
         book.options.set("input.yaml_blocks", "true").unwrap();
 
         // Add the file as chapter with hidden title
