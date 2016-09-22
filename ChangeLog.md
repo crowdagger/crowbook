@@ -3,6 +3,15 @@ ChangeLog
 
 unreleased
 ----------
+The main objective of this release is to clean public interfaces, in
+order to limit breaking changes in the future. *Ideally*, all pre-1.0
+releases should thus be 0.9.x. Concretely, this meant three things:
+* reducing the surface of Crowbook's library API;
+* cleaning options names
+* cleaning the names exported in templates and document them, in order
+  not to break user-defined templates in future (non-breaking)
+  releases.
+More detailed changes for this release:
 * **Breaking change for users**: removed `tex.short` option, replaced
   by a more generic `tex.class` (default being
   `book`). `html.crowbook_link` has also been removed.
@@ -40,6 +49,8 @@ unreleased
   * Metadata can now contain Markdown and will be rendered by the
     renderers. This might not be a good idea for common fields
     (e.g. "title"), though. Use with caution.
+  * `rendering.inline_toc.name` can use `{{{loc_toc}}}` to specify a
+    localized name.
   * HTML:
     * `html.top` and `hstml.footer` are now considered as templates, so
       you can use some `{{{metadata}}}` in it.
