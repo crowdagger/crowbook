@@ -19,14 +19,14 @@ pub fn get_hash(lang: &str) -> Hash {
 }
 
 
-/// Get a string for a given language
-pub fn get_str(lang: &str, s: &str) -> String {
-    let hash = get_hash(lang);
-    let yaml = hash.get(&Yaml::String(s.to_owned()))
-        .expect(&format!("Could not find translation for {} in language {}", s, lang));
-    if let &Yaml::String(ref result) = yaml {
-        result.clone()
-    } else {
-        panic!("Yaml for {} in lang {} is not a String!", s, lang);
-    }
-}
+// /// Get a string for a given language
+// pub fn get_str(lang: &str, s: &str) -> String {
+//     let hash = get_hash(lang);
+//     let yaml = hash.get(&Yaml::String(s.to_owned()))
+//         .expect(&format!("Could not find translation for {} in language {}", s, lang));
+//     if let &Yaml::String(ref result) = yaml {
+//         result.clone()
+//     } else {
+//         panic!("Yaml for {} in lang {} is not a String!", s, lang);
+//     }
+// }

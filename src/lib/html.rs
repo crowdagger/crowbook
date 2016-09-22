@@ -23,7 +23,6 @@ use number::Number;
 use toc::Toc;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
-use lang;
 use parser::Parser;
 
 use std::borrow::Cow;
@@ -431,11 +430,7 @@ impl<'a> HtmlRenderer<'a> {
                                                          format!("rendering 'html.footer' template:\n{}", err))),
                 }
             } else {
-                if self.book.options.get_bool("html.crowbook_link") == Ok(true) {
-                    lang::get_str(self.book.options.get_str("lang").unwrap(), "generated_by_crowbook")
-                } else {
-                    String::new()
-                }
+                String::new()
             };
         if content.is_empty() {
             Ok(content)
