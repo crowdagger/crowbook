@@ -5,7 +5,7 @@ description: >-
  Crowbook allows to render a book written in Markdown in various
  formats. This is some kind of manual for it, and a way to
  demonstrate and test it.
-lang: en
+lang: fr
 cover: img/cover.png
 version: 0.9.0
 license: LGPL-2.1
@@ -17,8 +17,13 @@ tex.class: book
 ## Number chapters and sections, but not below that
 numbering: 2
 
-html.display_chapter: true
+html_single.one_chapter: true
 html.header: "{{{title}}} {{{crowbook_version}}}"
+
+rendering.inline_toc: true
+rendering.chapter_template: |
+ {{{loc_chapter}}} {{{number}}}{{#has_chapter_title}}\
+ {{{chapter_title}}}{{/has_chapter_title}}
 
 use_initials: true
 
@@ -29,11 +34,11 @@ tex.links_as_footnotes: false
 epub.version: 3
 
 # Options for generating files
-output.epub: docs/book/book.epub
-output.html: docs/book/book.html
-output.html_dir: docs/book/html
-output.pdf: docs/book/book.pdf
-output.odt: docs/book/book.odt
+output.epub: book_example/book.epub
+output.html: book_example/book.html
+output.html_dir: book_example/book/html
+output.pdf: book_example/book.pdf
+output.odt: book_example/book.odt
 
 # Finally, our files.
 # Paths are relative to the directory where this file is
