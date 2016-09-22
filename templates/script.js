@@ -1,5 +1,5 @@
 /* Builtin script also includes html_dir.script */
-{{#display_chapter}}
+{{#one_chapter}}
 function showChapter(chap, noreset){
     if (!displayAll) {
         var chapters = document.getElementsByClassName("chapter");
@@ -94,4 +94,4 @@ if(!window.HashChangeEvent)(function(){
 		lastURL=document.URL;
 	});
 }());
-{{/display_chapter}}
+{{/one_chapter}}

@@ -174,7 +174,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
-            .insert_bool("display_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
+            .insert_bool("one_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
             .build();
         let mut res:Vec<u8> = vec!();
         template_js.render_data(&mut res, &data);
