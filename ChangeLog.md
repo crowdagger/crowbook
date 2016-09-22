@@ -3,6 +3,8 @@ ChangeLog
 
 unreleased
 ----------
+* **Breaking change for users**: removed `tex.short` option, replaced
+  by a more generic `tex.class` (default being `book`).
 * Renamed options. Using the old name will print a deprecation warning
   but will still work for a while.
   * `temp_dir` -> `crowbook.temp_dir`
@@ -36,8 +38,10 @@ unreleased
     * `html.top` and `hstml.footer` are now considered as templates, so
       you can use some `{{{metadata}}}` in it.
   * LaTeX:
-    * If `tex.short` is set to `true`, chapters will be displayed as
+    * If `tex.class` is set to `article`, chapters will be displayed as
       `\sections` since `article` class doesn't handle chapters.
+    * Except if `tex.class` is set to `book`, margins are now
+      symmetrical. 
 * Bugfixes:
   * `import_config` only import options from another book file that
     are not equal to the default ones and that haven't already been
