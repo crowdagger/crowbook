@@ -112,6 +112,7 @@ td.note-number {
 div.notes {
     text-align: justify;
     border-top: thin dashed black;
+    margin-top: 1em;
 }
 
 table.notes {
@@ -127,6 +128,10 @@ table.notes tr td {
 
 table.notes tr:first-child td {
     border-top: 0;
+}
+
+table.notes tr td p {
+    text-indent: 0;
 }
                  
 /* Every markdown table is included in a <div class = "table"> */

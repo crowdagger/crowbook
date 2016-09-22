@@ -142,6 +142,7 @@ blockquote {
 #page {
     display: inline-block;
     text-align: justify;
+    max-width: 33em;
 }
 
 #nav-container {
