@@ -343,7 +343,9 @@ impl<'a> EpubRenderer<'a> {
 
         if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
             let number = self.html.current_chapter[0] + 1;
-            self.chapter_title = try!(self.html.book.get_header(number, ""));
+            self.chapter_title = try!(self.html.book.get_chapter_header(number,
+                                                                        "".to_owned(),
+                                                                        |s| self.render_vec(&try!(Parser::new().parse_inline(s))) ));
         }
         self.toc.push(self.chapter_title.clone());
 
@@ -372,8 +374,9 @@ impl<'a> EpubRenderer<'a> {
                 self.html.book.logger.warning("EPUB: ...in a file where chapter titles are not even rendered.");
             }
         } else {
-            let res = self.html.book.get_header(self.html.current_chapter[0] + 1,
-                                           &try!(self.html.render_vec(vec)));
+            let res = self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
+                                                        try!(self.html.render_vec(vec)),
+                                                        |s| self.render_vec(&try!(Parser::new().parse_inline(s))));
             let s = res.unwrap();
             if self.chapter_title.is_empty() {
                 self.chapter_title = s;

@@ -5,6 +5,7 @@ use number::Number;
 use error::Result;
 use templates::odt;
 use zipper::Zipper;
+use parser::Parser;
 
 /// Rendererer for ODT
 ///
@@ -124,7 +125,10 @@ impl<'a> OdtRenderer<'a> {
                 let s = if n == 1 && self.current_numbering >= 1 {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
-                    self.book.get_header(chapter, &self.render_vec(vec)).unwrap()
+                    let res = self.book.get_chapter_header(chapter,
+                                                           self.render_vec(vec),
+                                                           |s| Ok(self.render_vec(&try!(Parser::new().parse_inline(s)))));
+                    res.unwrap()
                 } else {
                     self.render_vec(vec)
                 };

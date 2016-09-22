@@ -151,7 +151,11 @@ impl<'a> HtmlRenderer<'a> {
         self.inc_header(n);
         let s = if n == 1 && self.current_numbering >= 1 {
             let chapter = self.current_chapter[0];
-            try!(self.book.get_header(chapter, &try!(self.render_vec(vec))))
+            let c_title = try!(self.render_vec(vec));
+            let res = self.book.get_chapter_header(chapter,
+                                                   c_title,
+                                                   |s| self.render_vec(&try!(Parser::new().parse_inline(s))));
+            try!(res)
         } else if self.current_numbering >= n {
             format!("{} {}", self.get_numbers(), try!(self.render_vec(vec)))
         } else {

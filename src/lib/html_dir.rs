@@ -139,8 +139,9 @@ impl<'a> HtmlDirRenderer<'a> {
                         if self.html.current_hide || self.html.current_numbering == 0 {
                             title = try!(self.html.render_vec(vec));
                         } else {
-                            title = try!(self.html.book.get_header(self.html.current_chapter[0] + 1,
-                                                              &try!(self.html.render_vec(vec))));
+                            title = try!(self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
+                                                                           try!(self.html.render_vec(vec)),
+                                                                           |s| self.render_vec(&try!(Parser::new().parse_inline(s)))));
                         }
                         break;
                     },
