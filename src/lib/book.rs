@@ -168,7 +168,7 @@ impl Book {
             book.options.root = book.root.clone();
         }
         book.options.set("tex.short", "true").unwrap();
-        book.options.set("enable_yaml_blocks", "true").unwrap();
+        book.options.set("input.yaml_blocks", "true").unwrap();
 
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md
@@ -718,7 +718,7 @@ impl Book {
                                     // Use this yaml block to set options only if 1) it is valid
                                     // 2) the option is activated
                                     if docs.len() == 1 && docs[0].as_hash().is_some()
-                                        && self.options.get_bool("enable_yaml_blocks") == Ok(true) {
+                                        && self.options.get_bool("input.yaml_blocks") == Ok(true) {
                                         let hash = docs[0].as_hash().unwrap();
                                         for (key, value) in hash {
                                             match self.options.set_yaml(key.clone(), value.clone()) { //todo: remove clone
@@ -770,7 +770,7 @@ impl Book {
 
     // Update the cleaner according to autoclean and lang options
     fn update_cleaner(&mut self) {
-        if self.options.get_bool("autoclean").unwrap() {
+        if self.options.get_bool("input.autoclean").unwrap() {
             let lang = self.options.get_str("lang").unwrap().to_lowercase();
             let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
                 Box::new(French)

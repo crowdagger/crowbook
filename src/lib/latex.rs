@@ -170,7 +170,7 @@ impl<'a> LatexRenderer<'a> {
         if self.book.options.get_bool("tex.short") == Ok(true) {
             data = data.insert_bool("short", true);
         }
-        if self.book.options.get_bool("use_initials") == Ok(true) {
+        if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);
         }
         let data = data.build();
@@ -194,7 +194,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 };
                 if self.first_letter {
                     self.first_letter = false;
-                    if self.book.options.get_bool("use_initials").unwrap() {
+                    if self.book.options.get_bool("rendering.initials").unwrap() {
                         let mut chars = content.chars().peekable();
                         let initial = try!(chars.next()
                                            .ok_or(Error::parser(&self.book.source,

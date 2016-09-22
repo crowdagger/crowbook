@@ -251,7 +251,7 @@ impl<'a> HtmlRenderer<'a> {
                 };
                 if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
-                    if this.as_ref().book.options.get_bool("use_initials").unwrap() {
+                    if this.as_ref().book.options.get_bool("rendering.initials").unwrap() {
                         // Use initial
                         let mut chars = content.chars();
                         let initial = try!(chars.next()
@@ -281,7 +281,7 @@ impl<'a> HtmlRenderer<'a> {
                         this.as_mut().first_letter = true;
                     }
                 }
-                let class = if this.as_ref().first_letter && this.as_ref().book.options.get_bool("use_initials").unwrap() {
+                let class = if this.as_ref().first_letter && this.as_ref().book.options.get_bool("rendering.initials").unwrap() {
                     " class = \"first-para\""
                 } else {
                     ""

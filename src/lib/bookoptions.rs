@@ -31,11 +31,18 @@ output.tex:path                     # Output file name for LaTeX rendering
 output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
 
+# Input options
+input.autoclean:bool:true          # Toggle cleaning of input markdown according to lang
+input.yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
+
+# Rendering options
+rendering.initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
+
 # Misc options
 numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
 numbering:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
 display_toc:bool:false              # Display a table of content in the document
-use_initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
+
 toc_name:str:Table of contents      # Name of the table of contents if it is displayed in document
 verbose:bool:false                  # Make Crowbook display more messages
 import_config:path                  # Import another book configuration file
@@ -72,9 +79,8 @@ tex.command:str:pdflatex            # LaTeX command to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
 
 # Advanced options
-enable_yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
 zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
-autoclean:bool:true                 # Toggle cleaning of input markdown according to lang
+
 temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 
 # Resources option
@@ -82,16 +88,19 @@ resources.base_path:path                 # Path where to find resources (in the 
 resources.base_path.links:path           # Set base path but only for links. Useless if resources.base_path is set.
 resources.base_path.images:path:.        # Set base path but only for images. Useless if resources.base_path is set.
 resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
-resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
-resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file ; useful for including additional fonts
+resources.out_path:path:data             # Paths where additional resources should be copied in the EPUB file or HTML directory 
+resources.files:str                      # Whitespace-separated list of files to embed in e.g. EPUB file ; useful for including additional fonts
 
 # Deprecated options
-base_path:alias:resources.base_path  # Renamed
-base_path.links:alias:resources.base_path.links  # Renamed
-base_path.images:alias:resources.base_path.images  # Renamed
-side_notes:alias:html.side_notes # Renamed
-html.top:alias:html.header # Renamed
-nb_char:alias # Removed
+base_path:alias:resources.base_path               # Renamed
+base_path.links:alias:resources.base_path.links   # Renamed
+base_path.images:alias:resources.base_path.images # Renamed
+side_notes:alias:html.side_notes                  # Renamed
+html.top:alias:html.header                        # Renamed
+autoclean:alias:input.autoclean                   # Renamed
+enable_yaml_blocks:alias:input.yaml_blocks        # Renamed
+use_initials:alias:rendering.initials             # Renamed
+nb_char:alias                                     # Removed
 ";
 
 
