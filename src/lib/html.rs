@@ -410,10 +410,7 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Consider the html as a template
     fn templatize(&mut self, s: &str) -> Result<String> {
-        let mapbuilder = try!(self.book.get_metadata(|s| {
-            let tokens = try!(Parser::new().parse_inline(s));
-            self.render_vec(&tokens)
-        }));
+        let mapbuilder = try!(self.book.get_metadata(|s| Ok(s.to_owned())));
         let data = mapbuilder.build();
         let template = try!(compile_str(s, &self.book.source, "could not compile template"));
         let mut res = vec!();
