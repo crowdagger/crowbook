@@ -38,7 +38,7 @@ input.yaml_blocks:bool:false       # Enable inline YAML blocks to override optio
 # Rendering options
 rendering.initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
 rendering.inline_toc:bool:false              # Display a table of content in the document
-rendering.inline_toc.name:str:Table of contents  # Name of the table of contents if it is displayed in document
+rendering.inline_toc.name:str:\"{{{loc_toc}}}\"  # Name of the table of contents if it is displayed in document
 rendering.num_depth:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
 rendering.chapter_template:str:\"{{{number}}}. {{{chapter_title}}}\" # Format of numbered titles
 

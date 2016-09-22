@@ -140,18 +140,19 @@ impl<'a> HtmlSingleRenderer<'a> {
                     titles[i + 1]));
             }
         }
-        
-        let toc = self.html.toc.render();
 
+        let toc = self.html.toc.render();
         // If display_toc, display the toc inline
+        println!("inline_toc: {}",self.html.book.options.get_bool("rendering.inline_toc").unwrap());
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
+
             content = format!(
                 "<h1>{}</h1>
 <div id = \"toc\">
 {}
 </div>
 {}",
-                self.html.book.options.get_str("rendering.inline_toc.name").unwrap(),
+                try!(self.html.get_toc_name()),
                 &toc,
                 content);
         }

@@ -227,6 +227,20 @@ impl<'a> HtmlDirRenderer<'a> {
         } else {
             String::new()
         };
+
+        // Insert toc inline if option is set
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
+            
+            content.push_str(&format!(
+                "<h1>{}</h1>
+<div id = \"toc\">
+{}
+</div>
+",
+                try!(self.html.get_toc_name()),
+                &toc));
+        }
+        
         if titles.len() > 1 {
             content.push_str(&format!("<p class = \"next_chapter\">
   <a href = \"{}\">
