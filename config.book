@@ -29,11 +29,11 @@ tex.links_as_footnotes: false
 epub.version: 3
 
 # Options for generating files
-output.epub: book_example/book.epub
-output.html: book_example/book.html
-output.html_dir: book_example/html
-output.pdf: book_example/book.pdf
-output.odt: book_example/book.odt
+output.epub: docs/book/book.epub
+output.html: docs/book/book.html
+output.html_dir: docs/book/html
+output.pdf: docs/book/book.pdf
+output.odt: docs/book/book.odt
 
 # Finally, our files.
 # Paths are relative to the directory where this file is
