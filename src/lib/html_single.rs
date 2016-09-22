@@ -192,9 +192,9 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("print_style", self.html.book.get_template("html.css.print").unwrap())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
+            .insert_str("pages_svg", pages_svg)
             .insert_str("footer", try!(self.html.get_footer()))
-            .insert_str("top", try!(self.html.get_header()))
-            .insert_str("pages_svg", pages_svg);
+            .insert_str("header", try!(self.html.get_header()));
         if self.html.book.options.get_bool("html.highlight_code") == Ok(true) {
             let highlight_js = try!(self.html.book.get_template("html.highlight.js"))
                 .as_bytes()
