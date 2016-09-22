@@ -69,6 +69,8 @@ More detailed changes for this release:
     are not equal to the default ones and that haven't already been
     set by the caller. E.g., `author: foo` then `import_config:
     bar.book` won't erase the author previously set.
+  * `import_config` now correctly translates the imported book's
+    paths. 
 * Crowbook program:
   * Still working to improve error messages.
   * Display an error message when mustache can't compile a template,
