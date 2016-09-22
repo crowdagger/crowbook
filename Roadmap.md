@@ -5,6 +5,7 @@ List of features needed for 1.0 release:
 
 * Stable option names
 * Stable API
+* Documented and stable exported names accessible from templates
 * Complete documentation
 * A french version of the documentation
 * Support for parts (see issue
