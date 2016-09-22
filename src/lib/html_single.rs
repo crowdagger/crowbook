@@ -168,9 +168,9 @@ impl<'a> HtmlSingleRenderer<'a> {
         let css = String::from_utf8_lossy(&res);
 
         // Render the JS
-        let template_js = try!(compile_str(try!(self.html.book.get_template("html.script")).as_ref(),
+        let template_js = try!(compile_str(try!(self.html.book.get_template("html_single.js")).as_ref(),
                                            &self.html.book.source,
-                                           "could not compile template 'html.script'"));
+                                           "could not compile template 'html_single.js'"));
         let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)

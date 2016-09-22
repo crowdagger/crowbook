@@ -54,13 +54,13 @@ html.highlight.css:path             # Set another highlight.js CSS theme than th
 html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet for HTML rendering
 html.print_css:path                 # Path of a media print stylesheet for HTML rendering
-html.script:path                    # Path of a javascript file
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
 html.header:str                        # Custom header to display at the beginning of html file(s) 
 html.footer:str                     # Custom footer to display at the end of HTML file(s)
 
 # Standalone HTML options
 html_single.one_chapter:bool:false     # Display only one chapter at a time (with a button to display all)
+html_single.js:path                    # Path of a javascript file
 
 
 # Multifile HTML options
@@ -111,6 +111,7 @@ html.display_chapter:alias:html_single.one_chapter # Renamed
 temp_dir:alias:crowbook.temp_dir                  # Renamed
 zip.command:alias:crowbook.zip.command            # Renamed
 verbose:alias:crowbook.verbose                    # Renamed
+html.script:alias:html_singe.js                   # Renamed
 nb_char:alias                                     # Removed
 tex.short:alias                                   # Removed
 html.crowbook_link:alias                          # Removed
