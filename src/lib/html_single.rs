@@ -78,6 +78,7 @@ impl<'a> HtmlSingleRenderer<'a> {
 
         let mut titles = vec!();
         let mut chapters = vec!();
+        let render_notes_chapter = self.html.book.options.get_bool("html_single.one_chapter").unwrap();
 
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
             self.html.chapter_config(i, n, String::new());
@@ -107,7 +108,7 @@ impl<'a> HtmlSingleRenderer<'a> {
   {}
 </div>",
                 i,
-                try!(HtmlRenderer::render_html(self, v))));
+                try!(HtmlRenderer::render_html(self, v, render_notes_chapter))));
         }
         self.html.source = Source::empty();
 
@@ -140,6 +141,8 @@ impl<'a> HtmlSingleRenderer<'a> {
                     titles[i + 1]));
             }
         }
+        self.html.render_end_notes(&mut content);
+
 
         let toc = self.html.toc.render();
         // If display_toc, display the toc inline

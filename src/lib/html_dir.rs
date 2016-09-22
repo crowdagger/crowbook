@@ -152,7 +152,7 @@ impl<'a> HtmlDirRenderer<'a> {
             }
             titles.push(title);
             
-            let chapter = HtmlRenderer::render_html(self, v);
+            let chapter = HtmlRenderer::render_html(self, v, true);
             chapters.push(chapter);
         }
         self.html.source = Source::empty();

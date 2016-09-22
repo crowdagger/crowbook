@@ -135,14 +135,16 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Renders a chapter to HTML
-    pub fn render_html<T>(this: &mut T, tokens: &[Token])-> Result<String>
+    pub fn render_html<T>(this: &mut T, tokens: &[Token], render_end_notes: bool)-> Result<String>
         where T: AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer {
         let mut res = String::new();
         for token in tokens {
             res.push_str(&try!(this.render_token(token)));
             this.as_mut().render_side_notes(&mut res);
         }
-        this.as_mut().render_end_notes(&mut res);
+        if render_end_notes {
+            this.as_mut().render_end_notes(&mut res);
+        }
         Ok(res)
     }
 

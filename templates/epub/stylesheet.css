@@ -123,11 +123,6 @@ table.notes {
 table.notes tr td {
     margin-left: 1em;
     margin-right: 1em;
-    border-top: thin dashed gray;
-}
-
-table.notes tr:first-child td {
-    border-top: 0;
 }
 
 table.notes tr td p {
