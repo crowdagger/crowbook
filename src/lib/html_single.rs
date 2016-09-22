@@ -143,7 +143,6 @@ impl<'a> HtmlSingleRenderer<'a> {
 
         let toc = self.html.toc.render();
         // If display_toc, display the toc inline
-        println!("inline_toc: {}",self.html.book.options.get_bool("rendering.inline_toc").unwrap());
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
 
             content = format!(
