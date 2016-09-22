@@ -420,33 +420,29 @@ impl<'a> EpubRenderer<'a> {
                 HtmlRenderer::static_render_token(this, token)
             },
             Token::Footnote(ref vec) => {
-                let epub_version = (this.as_ref() as &HtmlRenderer).book.options.get_i32("epub.version").unwrap();
-                if epub_version == 3 {
-                    let inner_content = try!(this.render_vec(vec));
-                    let html: &mut HtmlRenderer = this.as_mut();
-                    html.footnote_number += 1;
-                    let number = html.footnote_number;
-                    assert!(!vec.is_empty());
-                    let note_number = format!("<p class = \"note-number\">
+                let epub3 = (this.as_ref() as &HtmlRenderer).book.options.get_i32("epub.version").unwrap() == 3;
+                let inner_content = try!(this.render_vec(vec));
+                let html: &mut HtmlRenderer = this.as_mut();
+                html.footnote_number += 1;
+                let number = html.footnote_number;
+                let note_number = format!("<p class = \"note-number\">
   <a href = \"#note-source-{}\">[{}]</a>
-</p>",
-                                              number,
-                                              number);
-                    
-                    let inner = format!("<aside {} id = \"note-dest-{}\">{}</aside>",
-                                    r#"epub:type="footnote""#,
-                                        number,
-                                        inner_content);
-                    html.add_footnote(note_number, inner);
-                    
-                    Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
-                               "epub:type = \"noteref\"",
-                               number, number, number))
+</p>\n", number, number);
+                let inner = if epub3 {
+                    format!("<aside epub:type = \"footnote\" id = \"note-dest-{}\">{}</aside>",
+                            number,
+                            inner_content)
                 } else {
-                    HtmlRenderer::static_render_token(this, token)
-                }
-            },
+                    format!("<a id = \"note-dest-{}\" />{}",
+                            number,
+                            inner_content)
+                };
+                html.add_footnote(note_number, inner);
 
+                Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
+                           if epub3 { "epub:type = \"noteref\"" } else { "" },
+                           number, number, number))
+            },
             _ => HtmlRenderer::static_render_token(this, token)
         }
     }

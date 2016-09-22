@@ -668,7 +668,12 @@ impl Book {
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
                 let key = key.replace(".", "_");
-                let content = f(s);
+
+                // Only render some metadata as markdown
+                let content = match key.as_ref() {
+                    "author" | "title" | "lang" => Ok(s.to_owned()),
+                    _ => f(s)
+                };
                 match content {
                     Ok(content) => {
                         mapbuilder = mapbuilder.insert_str(&key, content);
