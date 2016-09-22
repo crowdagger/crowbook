@@ -12,7 +12,7 @@ license = "LGPL-2.1+"
 [lib]
 name = "crowbook"
 path = "src/lib/lib.rs"
-doctest = true
+doctest = false
 
 [[bin]]
 name = "crowbook"
