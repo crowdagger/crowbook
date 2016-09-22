@@ -600,7 +600,7 @@ impl Book {
                 epub::TEMPLATE
             },
             "html.css" => html::CSS,
-            "html.print_css" => html::PRINT_CSS,
+            "html.css.print" => html::PRINT_CSS,
             "html.template" => html::TEMPLATE,
             "html_single.js" => html::SCRIPT,
             "html_dir.script" => html_dir::SCRIPT,

@@ -82,7 +82,7 @@ impl<'a> HtmlDirRenderer<'a> {
         try!(self.write_css());
         // Write print.css
         try!(self.write_file("print.css",
-                             &self.html.book.get_template("html.print_css").unwrap().as_bytes()));
+                             &self.html.book.get_template("html.css.print").unwrap().as_bytes()));
         // Write index.html and chapter_xxx.html
         try!(self.write_html());
         // Write menu.svg

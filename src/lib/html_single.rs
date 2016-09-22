@@ -188,7 +188,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .insert_bool("one_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
             .insert_str("style", css.as_ref())
-            .insert_str("print_style", self.html.book.get_template("html.print_css").unwrap())
+            .insert_str("print_style", self.html.book.get_template("html.css.print").unwrap())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
             .insert_str("footer", try!(self.html.get_footer()))
