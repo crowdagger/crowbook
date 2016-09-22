@@ -183,9 +183,9 @@ already renders and correctly escapes the variables it sets for use in
 templates.
 
 
-[^2]: `<<foo>>` might also works, but the ampersand is required to
+[^2]: `<<foo>>` might also work, but the ampersand is required to
 prevent mustache HTML-escaping the value. This is not good because:
-1) escaping is already done by Crowbook before setting variables content;
+1) escaping is already done by Crowbook before setting variable content;
 2) escaping HTML in a LaTeX document won't probably look good.
 
 
