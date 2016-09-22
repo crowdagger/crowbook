@@ -87,7 +87,7 @@ impl<'a> HtmlRenderer<'a> {
             toc: Toc::new(),
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0],
-            current_numbering: book.options.get_i32("numbering").unwrap(),
+            current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_par: 0,
             current_hide: false,
             table_head: false,
@@ -117,7 +117,7 @@ impl<'a> HtmlRenderer<'a> {
         self.source = Source::new(self.book.filenames[i].as_ref());
         self.first_paragraph = true;
         self.current_hide = false;
-        let book_numbering = self.book.options.get_i32("numbering").unwrap();
+        let book_numbering = self.book.options.get_i32("rendering.num_depth").unwrap();
         match n {
             Number::Unnumbered => self.current_numbering = 0,
             Number::Default => self.current_numbering = book_numbering,
@@ -296,7 +296,7 @@ impl<'a> HtmlRenderer<'a> {
             },
             Token::Header(n, ref vec) => {
                 let s = try!(this.as_mut().render_title(n, vec));
-                if n <= this.as_ref().book.options.get_i32("numbering").unwrap() {
+                if n <= this.as_ref().book.options.get_i32("rendering.num_depth").unwrap() {
                     let url = format!("{}#link-{}",
                                       this.as_ref().filename,
                                       this.as_ref().link_number);

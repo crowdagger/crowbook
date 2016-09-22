@@ -93,7 +93,7 @@ impl<'a> LatexRenderer<'a> {
         }
 
         // set tex numbering and toc display to book's parameters
-        let numbering = self.book.options.get_i32("numbering").unwrap() - 1;
+        let numbering = self.book.options.get_i32("rendering.num_depth").unwrap() - 1;
         content.push_str(&format!("\\setcounter{{tocdepth}}{{{}}}
 \\setcounter{{secnumdepth}}{{{}}}\n",
                                   numbering, numbering));

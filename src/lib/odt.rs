@@ -23,7 +23,7 @@ impl<'a> OdtRenderer<'a> {
         OdtRenderer {
             book: book,
             current_chapter: 1,
-            current_numbering: book.options.get_i32("numbering").unwrap(),
+            current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_hide: false,
             automatic_styles: String::from("
 <style:style style:name=\"T1\" style:family=\"text\">
@@ -71,7 +71,7 @@ impl<'a> OdtRenderer<'a> {
             self.current_hide = false;
             match n {
                 Number::Unnumbered => self.current_numbering = 0,
-                Number::Default => self.current_numbering = self.book.options.get_i32("numbering").unwrap(),
+                Number::Default => self.current_numbering = self.book.options.get_i32("rendering.num_depth").unwrap(),
                 Number::Specified(n) => {
                     self.current_numbering = self.book.options.get_i32("numbering").unwrap();
                     self.current_chapter = n;

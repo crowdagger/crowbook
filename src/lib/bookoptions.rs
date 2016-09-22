@@ -39,10 +39,12 @@ input.yaml_blocks:bool:false       # Enable inline YAML blocks to override optio
 rendering.initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
 rendering.inline_toc:bool:false              # Display a table of content in the document
 rendering.inline_toc.name:str:Table of contents  # Name of the table of contents if it is displayed in document
+rendering.num_depth:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
+rendering.chapter_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
+
+
 
 # Misc options
-numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
-numbering:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
 
 
 
@@ -104,6 +106,8 @@ enable_yaml_blocks:alias:input.yaml_blocks        # Renamed
 use_initials:alias:rendering.initials             # Renamed
 toc_name:alias:rendering.inline_toc.name          # Renamed
 display_toc:alias:rendering.inline_toc            # Renamed
+numbering:alias:rendering.num_depth               # Renamed
+numbering_template:alias:rendering.chapter_template # Renamed
 nb_char:alias                                     # Removed
 ";
 
@@ -311,11 +315,11 @@ impl BookOptions {
     /// use crowbook::Book;
     /// let mut book = Book::new(&[]);
     /// book.options.set("author", "Joan Doe").unwrap(); // ok
-    /// book.options.set("numbering", "2").unwrap(); // sets numbering to chapters and subsections
+    /// book.options.set("rendering.num_depth", "2").unwrap(); // sets numbering to chapters and subsections
     /// let result = book.options.set("autor", "John Smith"); 
     /// assert!(result.is_err()); // error: "author" was mispelled "autor"
     ///
-    /// let result = book.options.set("numbering", "foo"); 
+    /// let result = book.options.set("rendering.num_depth", "foo"); 
     /// assert!(result.is_err()); // error: numbering must be an int
     /// ```
     pub fn set(&mut self, key: &str, value: &str) -> Result<Option<BookOption>> {

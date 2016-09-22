@@ -631,9 +631,9 @@ impl Book {
     /// Returns the string corresponding to a number, title, and the numbering template
     #[doc(hidden)]
     pub fn get_header(&self, n: i32, title: &str) -> Result<String> {
-        let template = try!(compile_str(self.options.get_str("numbering_template").unwrap(),
+        let template = try!(compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
                                         &self.source,
-                                        "could not compile template 'numbering template'"));
+                                        "could not compile template 'rendering.chapter template'"));
         let data = MapBuilder::new()
             .insert_str("title", String::from(title))
             .insert_str("number", format!("{}", n))
