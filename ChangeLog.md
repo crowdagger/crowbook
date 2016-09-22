@@ -3,6 +3,19 @@ ChangeLog
 
 unreleased
 ----------
+* Renamed options. Using the old name will print a deprecation warning
+  but will still work for a while.
+  * `temp_dir` -> `crowbook.temp_dir`
+  * `zip.command` -> `crowbook.zip.command`
+  * `verbose` -> `crowbook.verbose`
+  * `html.display_chapter` -> `html_single.one_chapter`
+  * `numbering` -> `rendering.num_depth`
+  * `numbering_template` -> `rendering.chapter_template`
+  * `display_toc` -> `rendering.inline_toc`
+  * `toc_name` -> `rendering.inline_toc.name`
+  * `enable_yaml_blocks` -> `input.yaml_blocks`
+  * `use_initials` -> `rendering.initials`
+  * `autoclean` -> `input.autoclean`
 * New options:
   * More metadata: `license`, `version` and `date`. These metadata are
     not treated by the renderers, but they are exported to the
