@@ -9,7 +9,7 @@ use std::path::PathBuf;
 use std::env;
 use std::mem;
 
-static OPTIONS:&'static str = "
+static OPTIONS:&'static str = r#"
 # Metadata
 author:str:Anonymous                # Author of the book
 title:str:Untitled                  # Title of the book
@@ -18,7 +18,7 @@ subject:str                         # Subject of the book (used for EPUB metadat
 description:str                     # Description of the book (used for EPUB metadata)
 cover:path                          # Path to the cover of the book 
 
-# Metadata (additional)
+# Additional metadata 
 license:str                         # License of the book
 version:str                         # Version of the book
 date:str                            # Date the book was revised
@@ -31,38 +31,32 @@ output.tex:path                     # Output file name for LaTeX rendering
 output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
 
-# Input options
-input.autoclean:bool:true          # Toggle cleaning of input markdown according to lang
-input.yaml_blocks:bool:false       # Enable inline YAML blocks to override options set in config file
-
 # Rendering options
-rendering.initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
-rendering.inline_toc:bool:false              # Display a table of content in the document
-rendering.inline_toc.name:str:\"{{{loc_toc}}}\"  # Name of the table of contents if it is displayed in document
-rendering.num_depth:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
-rendering.chapter_template:str:\"{{{number}}}\\\\. {{{chapter_title}}}\" # Format of numbered titles
+rendering.initials:bool:false                                        # Use initials ('lettrines') for first letter of a chapter (experimental)
+rendering.inline_toc:bool:false                                      # Display a table of content in the document
+rendering.inline_toc.name:str:"{{{loc_toc}}}"                        # Name of the table of contents if it is displayed in document
+rendering.num_depth:int:1                                            # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
+rendering.chapter_template:str:"{{{number}}}\\. {{{chapter_title}}}" # Naming scheme of chapters
 
-
-
-# Misc options
+# Special option
 import_config:path                  # Import another book configuration file
 
 # HTML options
-html.highlight_code:bool:true            # Provides syntax highlighting for code blocks (using highlight.js) 
-html.highlight.js:path              # Set another highlight.js version than the included one
-html.highlight.css:path             # Set another highlight.js CSS theme than the default one
+html.header:str                     # Custom header to display at the beginning of html file(s) 
+html.footer:str                     # Custom footer to display at the end of HTML file(s)
 html.css:path                       # Path of a stylesheet for HTML rendering
 html.js:path                        # Path of a javascript file
-
 html.css.print:path                 # Path of a media print stylesheet for HTML rendering
+html.highlight_code:bool:true       # Provides syntax highlighting for code blocks (using highlight.js) 
+html.highlight.js:path              # Set another highlight.js version than the bundled one
+html.highlight.css:path             # Set another highlight.js CSS theme than the default one
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
-html.header:str                        # Custom header to display at the beginning of html file(s) 
-html.footer:str                     # Custom footer to display at the end of HTML file(s)
+
 
 # Standalone HTML options
-html_single.one_chapter:bool:false     # Display only one chapter at a time (with a button to display all)
-html_single.html:path              # Path of an HTML template
-html_single.js:path                    # Path of a javascript file
+html_single.one_chapter:bool:false  # Display only one chapter at a time (with a button to display all)
+html_single.html:path               # Path of an HTML template
+html_single.js:path                 # Path of a javascript file
 
 
 # Multifile HTML options
@@ -72,7 +66,7 @@ html_dir.chapter.html:path          # Path of a chapter.html template
 # EPUB options
 epub.version:int:2                  # EPUB version to generate (2 or 3)
 epub.css:path                       # Path of a stylesheet for EPUB
-epub.chapter.xhtml:path                  # Path of an xhtml template for each chapter
+epub.chapter.xhtml:path             # Path of an xhtml template for each chapter
 
 # LaTeX options
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
@@ -80,47 +74,53 @@ tex.command:str:pdflatex            # LaTeX command to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
 tex.class:str:book                  # LaTeX class to use
 
+# Resources option
+resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+resources.base_path:path            # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
+resources.base_path.links:path      # Set base path but only for links. Useless if resources.base_path is set.
+resources.base_path.images:path:.   # Set base path but only for images. Useless if resources.base_path is set.
+resources.base_path.files:path:.    # Set base path but only for additional files. Useless if resources.base_path is set.
+resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
+
+
+# Input options
+input.autoclean:bool:true           # Toggle cleaning of input markdown according to lang
+input.yaml_blocks:bool:false        # Enable inline YAML blocks to override options set in config file
+
+
 # Crowbook options
 crowbook.temp_dir:path:             # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 crowbook.zip.command:str:zip        # Command to use to zip files (for EPUB/ODT)
 crowbook.verbose:bool:false         # Make Crowbook display more messages
 
 
-# Resources option
-resources.base_path:path                 # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
-resources.base_path.links:path           # Set base path but only for links. Useless if resources.base_path is set.
-resources.base_path.images:path:.        # Set base path but only for images. Useless if resources.base_path is set.
-resources.base_path.files:path:.         # Set base path but only for additional files. Useless if resources.base_path is set.
-resources.out_path:path:data             # Paths where additional resources should be copied in the EPUB file or HTML directory 
-resources.files:str                      # Whitespace-separated list of files to embed in e.g. EPUB file ; useful for including additional fonts
-
 # Deprecated options
-base_path:alias:resources.base_path               # Renamed
-base_path.links:alias:resources.base_path.links   # Renamed
-base_path.images:alias:resources.base_path.images # Renamed
-side_notes:alias:html.side_notes                  # Renamed
-html.top:alias:html.header                        # Renamed
-autoclean:alias:input.autoclean                   # Renamed
-enable_yaml_blocks:alias:input.yaml_blocks        # Renamed
-use_initials:alias:rendering.initials             # Renamed
-toc_name:alias:rendering.inline_toc.name          # Renamed
-display_toc:alias:rendering.inline_toc            # Renamed
-numbering:alias:rendering.num_depth               # Renamed
+base_path:alias:resources.base_path                 # Renamed
+base_path.links:alias:resources.base_path.links     # Renamed
+base_path.images:alias:resources.base_path.images   # Renamed
+side_notes:alias:html.side_notes                    # Renamed
+html.top:alias:html.header                          # Renamed
+autoclean:alias:input.autoclean                     # Renamed
+enable_yaml_blocks:alias:input.yaml_blocks          # Renamed
+use_initials:alias:rendering.initials               # Renamed
+toc_name:alias:rendering.inline_toc.name            # Renamed
+display_toc:alias:rendering.inline_toc              # Renamed
+numbering:alias:rendering.num_depth                 # Renamed
 numbering_template:alias:rendering.chapter_template # Renamed
-html.display_chapter:alias:html_single.one_chapter # Renamed
-temp_dir:alias:crowbook.temp_dir                  # Renamed
-zip.command:alias:crowbook.zip.command            # Renamed
-verbose:alias:crowbook.verbose                    # Renamed
-html.script:alias:html_singe.js                   # Renamed
-html.print_css:alias:html.css.print               # Renamed
-html.template:alias:html_single.html              # Renamed
-html_dir.script:alias:html_dir.js                 # Renamed
-epub.template:alias:epub.chapter.xhtml            # Renamed
-html_dir.css:alias:html.css                       # Renamed
-nb_char:alias                                     # Removed
-tex.short:alias                                   # Removed
-html.crowbook_link:alias                          # Removed
-";
+html.display_chapter:alias:html_single.one_chapter  # Renamed
+temp_dir:alias:crowbook.temp_dir                    # Renamed
+zip.command:alias:crowbook.zip.command              # Renamed
+verbose:alias:crowbook.verbose                      # Renamed
+html.script:alias:html_singe.js                     # Renamed
+html.print_css:alias:html.css.print                 # Renamed
+html.template:alias:html_single.html                # Renamed
+html_dir.script:alias:html_dir.js                   # Renamed
+epub.template:alias:epub.chapter.xhtml              # Renamed
+html_dir.css:alias:html.css                         # Renamed
+nb_char:alias                                       # Removed
+tex.short:alias                                     # Removed
+html.crowbook_link:alias                            # Removed
+"#;
 
 
 
