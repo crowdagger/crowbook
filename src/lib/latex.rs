@@ -63,7 +63,7 @@ impl<'a> LatexRenderer<'a> {
     pub fn render_pdf(&mut self) -> Result<String> {
         if let Ok(pdf_file) = self.book.options.get_path("output.pdf") {
             let content = try!(self.render_book());
-            let mut zipper = try!(Zipper::new(&self.book.options.get_path("temp_dir").unwrap()));
+            let mut zipper = try!(Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap()));
             try!(zipper.write("result.tex", &content.as_bytes(), false));
 
             // write image files

@@ -45,10 +45,6 @@ rendering.chapter_template:str:\"{{number}}. {{title}}\" # Format of numbered ti
 
 
 # Misc options
-
-
-
-verbose:bool:false                  # Make Crowbook display more messages
 import_config:path                  # Import another book configuration file
 
 # HTML options
@@ -85,10 +81,11 @@ tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are 
 tex.command:str:pdflatex            # LaTeX command to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
 
-# Advanced options
-zip.command:str:zip                 # Command to use to zip files (for EPUB/ODT)
+# Crowbook options
+crowbook.temp_dir:path:             # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
+crowbook.zip.command:str:zip        # Command to use to zip files (for EPUB/ODT)
+crowbook.verbose:bool:false         # Make Crowbook display more messages
 
-temp_dir:path:                      # Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
 
 # Resources option
 resources.base_path:path                 # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
@@ -112,6 +109,9 @@ display_toc:alias:rendering.inline_toc            # Renamed
 numbering:alias:rendering.num_depth               # Renamed
 numbering_template:alias:rendering.chapter_template # Renamed
 html.display_chapter:alias:html_single.one_chapter # Renamed
+temp_dir:alias:crowbook.temp_dir                  # Renamed
+zip.command:alias:crowbook.zip.command            # Renamed
+verbose:alias:crowbook.verbose                    # Renamed
 nb_char:alias                                     # Removed
 ";
 
@@ -185,7 +185,7 @@ impl BookOptions {
                 }
                 _ => panic!(format!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
             }
-            if key == "temp_dir" {
+            if key == "crowbook.temp_dir" {
                 // "temp_dir" has a special default value that depends on the environment
                 options.set(key, &env::temp_dir().to_string_lossy()).unwrap();
                 continue;

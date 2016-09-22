@@ -67,7 +67,7 @@ impl<'a> EpubRenderer<'a> {
             self.html.handler.add_link(filename.clone(), filenamer(i));
         }
 
-        let mut zipper = try!(Zipper::new(&self.html.book.options.get_path("temp_dir").unwrap()));
+        let mut zipper = try!(Zipper::new(&self.html.book.options.get_path("crowbook.temp_dir").unwrap()));
         
         // Write mimetype
         try!(zipper.write("mimetype", b"application/epub+zip", true));
@@ -150,7 +150,7 @@ impl<'a> EpubRenderer<'a> {
         }
         
         if let Ok(epub_file) = self.html.book.options.get_path("output.epub") {
-            let res = try!(zipper.generate_epub(self.html.book.options.get_str("zip.command").unwrap(), &epub_file));
+            let res = try!(zipper.generate_epub(self.html.book.options.get_str("crowbook.zip.command").unwrap(), &epub_file));
             Ok(res)
         } else {
             Err(Error::render(&self.html.book.source,
