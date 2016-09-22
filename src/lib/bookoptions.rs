@@ -76,7 +76,6 @@ epub.css:path                       # Path of a stylesheet for EPUB
 epub.template:path                  # Path of an xhtml template for each chapter
 
 # LaTeX options
-tex.short:bool:false                # Use article class instead of book, and the default `\\maketitle` command
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
 tex.command:str:pdflatex            # LaTeX command to use for generating PDF
 tex.template:path                   # Path of a LaTeX template file
@@ -114,7 +113,7 @@ temp_dir:alias:crowbook.temp_dir                  # Renamed
 zip.command:alias:crowbook.zip.command            # Renamed
 verbose:alias:crowbook.verbose                    # Renamed
 nb_char:alias                                     # Removed
-tex.short:alias             # Removed, use tex.class instead
+tex.short:alias                                   # Removed
 ";
 
 
