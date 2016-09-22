@@ -83,13 +83,111 @@ contains the XHTML template that will be used for each chapter.
 This template is used by the Epub renderer and contains the style
 sheet.
 
+### Inline templates ###
 
-Create a new template 
----------------------
+Crowbook also has some inline templates, that are set in the book configuration file:
 
+* `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
+* `rendering.chapter_template` sets the naming scheme for chapters.
+
+
+Create and edit template 
+------------------------
+
+Except for inline templates, which are set directly in the book configuration file:
+
+```yaml
+rendering.chapter_template: "{{{loc_chapter}}} {{{number}}}: {{{chapter_title}}}"
+```
+
+most templates must be in a separate file:
+
+```yaml
+tex.template: my_template.tex
+```
 ### `--print-template` argument ###
 
+The easiest way to create a new template is to start with the default one used by Crowbook. In order to do so, you can use the `--print-template` argument:
+
+```bash
+$ crowbook --print-template tex.template > my_template.tex
+```
+
+In order to get the `chapter.xhtml` template for EPUB3, you'll also have to use `--set epub.version 3`:
+
+```bash
+$ crowbook --print-template epub.chapter.xhtml --set epub.version 3 > my_epub3_template.xhtml
+```
+
 ### Mustache syntax ###
+
+Crowbook uses [rust-mustache](https://crates.io/crates/mustache) as
+its templating engine, which allows to use
+[Mustache](http://mustache.github.io/) syntax in the templates. 
+
+It mainly boils down to using `{{{foo}}}`[^1] to insert the value of
+variable `foo` in the document:
+
+```html
+<h1 class = "title" >{{{title}}}<h1>
+<h2 class = "author">{{{author}}}</h2>
+```
+
+Mustache also provides the possibility of checking whether a variable
+is set:
+
+```
+{{#foo}}
+Foo exists
+{{/foo}}
+{{^foo}}
+Foo does not exist
+{{^foo}}
+```
+
+Crowbook uses this and sets some variables to `true` to allow
+templates to conditionally include some portions. E.g., in `html.css`:
+
+```css
+{{#fr}}
+/* Make list displays '–' instead of bullets */
+ul li {
+    list-style-type: '–';
+    padding-left: .5em;
+}
+{{/fr}}
+```
+
+In this case, Crowbook sets a variable whose name is equal to the
+`lang` value to `true`, allowing to have different styles for some
+elements according to the language.
+
+For more information about Mustache syntax, see
+[Mustache manual](http://mustache.github.io/mustache.5.html).
+
+#### Syntax in LaTeX ####
+
+Since LaTeX already uses a lot of curly brackets, the default template
+sets an altenative syntax to access variables, with `<<&foo>>`[^2]:
+
+```latex
+\title{<<&title>>}
+\author{<<&author>>}
+<<#has_date>>\date{<<&date>>}<</has_date>
+```
+
+
+[^1]: Mustache also provides the `{{foo}}` variant, which HTML-escapes
+the content of the variable. You should not use this, as Crowbook
+already renders and correctly escapes the variables it sets for use in
+templates.
+
+
+[^2]: `<<foo>>` might also works, but the ampersand is required to
+prevent mustache HTML-escaping the value. This is not good because:
+1) escaping is already done by Crowbook before setting variables content;
+2) escaping HTML in a LaTeX document won't probably look good.
+
 
 List of accessible variables 
 ----------------------------
@@ -116,9 +214,28 @@ bad idea to insert Markdown into `author` or `title` fields, and it
 certainly is for `lang`, but it an be useful for custom metadata or
 for fields like `description`).
 
+For each metadata `foo` that is set, Crowbook also inserts a `has_foo` bool set to true. This allows to use Mustache's section for some logic, e.g.:
+
+```
+{{{title}}}
+{{#has_version}}, version {{{version}}}{{/has_version}}
+```
+
+will avoid rendering ", version" when `version` is not set.
+
+
 ### Localisation strings ###
 
-For all templates, Crowbook also exports some localisation strings.
+For all templates, Crowbook also exports some localisation strings `loc_foo`. They currently include:
+
+
+| Localisation key            | Value in english             |
+|-----------------------------|------------------------------|
+| `loc_toc`                   | Table of contents            |
+| `loc_chapter`               | Chapter                      |
+| `loc_display_all`           | Display all chapters         |
+| `loc_display_one`           | Display one chapter          |
+
 
 ### Template-dependent values ###
 
@@ -134,7 +251,7 @@ below.
 | `script` | The javascript file for this HTML document | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html_single.html` |
 | A variable whose whose name corresponds to `lang` in book options | `true`  | `html.css`, `epub.css` |
-| `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml` |
+| `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml`, `rendering.chapter_template` |
 | `highlight_code` | True if `html.highlight_code` is true | `html_single.html`, `html_dir.chapter.html` |
 | `highlight_css` | The content of `html.highlight.css` | `html_single.html` |
 | `highlight_js` | The base64-encoded content of `html.highlight.js` | `html_single.html` |
@@ -148,7 +265,4 @@ below.
 | `class` | The content of `tex.class` | `tex.template` |
 | `book`  | True if `tex.class` is `book`, not set else | `tex.template` |
 | `tex_lang` | The babel equivalent of `lang` | `tex.template` |
-| `initials` | True if `rendering.initials` is true, not set else | `tex.template` |
-
-
-
+| `initials` | True if `rendering.initials` is true, not set else | `tex.template` | 
