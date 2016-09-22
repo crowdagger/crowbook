@@ -1,4 +1,5 @@
-/* Builtin script also includes html_dir.script */
+{{{common_script}}}
+
 {{#one_chapter}}
 function showChapter(chap, noreset){
     if (!displayAll) {

@@ -8,7 +8,7 @@ use html_single::HtmlSingleRenderer;
 use html_dir::HtmlDirRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
-use templates::{epub, html, epub3, latex, html_dir, highlight};
+use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
 use number::Number;
 use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
@@ -594,17 +594,16 @@ impl Book {
         let option = self.options.get_path(template);
         let fallback = match template {
             "epub.css" => epub::CSS,
-            "epub.template" => if try!(self.options.get_i32("epub.version")) == 3 {
+            "epub.chapter.xhtml" => if try!(self.options.get_i32("epub.version")) == 3 {
                 epub3::TEMPLATE
             } else {
                 epub::TEMPLATE
             },
             "html.css" => html::CSS,
             "html.css.print" => html::PRINT_CSS,
-            "html.template" => html::TEMPLATE,
-            "html_single.js" => html::SCRIPT,
-            "html_dir.script" => html_dir::SCRIPT,
-            "html_dir.css" => html_dir::CSS,
+            "html_single.html" => html_single::HTML,
+            "html_single.js" => html_single::JS,
+            "html.js" => html::JS,
             "html_dir.index.html" => html_dir::INDEX_HTML,
             "html_dir.chapter.html" => html_dir::CHAPTER_HTML,
             "html.highlight.js" => highlight::JS,

@@ -51,8 +51,9 @@ import_config:path                  # Import another book configuration file
 html.highlight_code:bool:true            # Provides syntax highlighting for code blocks (using highlight.js) 
 html.highlight.js:path              # Set another highlight.js version than the included one
 html.highlight.css:path             # Set another highlight.js CSS theme than the default one
-html.template:path                  # Path of an HTML template
 html.css:path                       # Path of a stylesheet for HTML rendering
+html.js:path                        # Path of a javascript file
+
 html.css.print:path                 # Path of a media print stylesheet for HTML rendering
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
 html.header:str                        # Custom header to display at the beginning of html file(s) 
@@ -60,19 +61,18 @@ html.footer:str                     # Custom footer to display at the end of HTM
 
 # Standalone HTML options
 html_single.one_chapter:bool:false     # Display only one chapter at a time (with a button to display all)
+html_single.html:path              # Path of an HTML template
 html_single.js:path                    # Path of a javascript file
 
 
 # Multifile HTML options
-html_dir.script:path                # Path of a javascript file
-html_dir.css:path                   # Path of a CSS template
 html_dir.index.html:path            # Path of index.html template
 html_dir.chapter.html:path          # Path of a chapter.html template
 
 # EPUB options
 epub.version:int:2                  # EPUB version to generate (2 or 3)
 epub.css:path                       # Path of a stylesheet for EPUB
-epub.template:path                  # Path of an xhtml template for each chapter
+epub.chapter.xhtml:path                  # Path of an xhtml template for each chapter
 
 # LaTeX options
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
@@ -113,6 +113,10 @@ zip.command:alias:crowbook.zip.command            # Renamed
 verbose:alias:crowbook.verbose                    # Renamed
 html.script:alias:html_singe.js                   # Renamed
 html.print_css:alias:html.css.print               # Renamed
+html.template:alias:html_single.html              # Renamed
+html_dir.script:alias:html_dir.js                 # Renamed
+epub.template:alias:epub.chapter.xhtml            # Renamed
+html_dir.css:alias:html.css                       # Renamed
 nb_char:alias                                     # Removed
 tex.short:alias                                   # Removed
 html.crowbook_link:alias                          # Removed

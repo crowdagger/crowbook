@@ -350,9 +350,9 @@ impl<'a> EpubRenderer<'a> {
         }
         self.toc.push(self.chapter_title.clone());
 
-        let template = try!(compile_str(try!(self.html.book.get_template("epub.template")).as_ref(),
+        let template = try!(compile_str(try!(self.html.book.get_template("epub.chapter.xhtml")).as_ref(),
                                         &self.html.book.source,
-                                        "could not compile template 'epub.template'"));
+                                        "could not compile template 'epub.chapter.xhtml'"));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .insert_str("chapter_title", mem::replace(&mut self.chapter_title, String::new()))

@@ -11,7 +11,9 @@ unreleased
   * `temp_dir` -> `crowbook.temp_dir`
   * `zip.command` -> `crowbook.zip.command`
   * `verbose` -> `crowbook.verbose`
+  * `html.print_css` -> `html.css.print`
   * `html.display_chapter` -> `html_single.one_chapter`
+  * `html.script` -> `html_single.js`
   * `numbering` -> `rendering.num_depth`
   * `numbering_template` -> `rendering.chapter_template`
   * `display_toc` -> `rendering.inline_toc`
@@ -19,6 +21,9 @@ unreleased
   * `enable_yaml_blocks` -> `input.yaml_blocks`
   * `use_initials` -> `rendering.initials`
   * `autoclean` -> `input.autoclean`
+  * `html_dir.css` -> `html.css` (not really renamed, `html_dir.css`
+    isactually removed as there is no point in having different CSS
+    for standalone and multifile HTML rendering, is it?)
 * New options:
   * More metadata: `license`, `version` and `date`. These metadata are
     not treated by the renderers, but they are exported to the

@@ -19,7 +19,7 @@ use error::{Result, Source};
 use html::HtmlRenderer;
 use book::{Book, compile_str};
 use token::Token;
-use templates::{html};
+use templates::img;
 use renderer::Renderer;
 use parser::Parser;
 
@@ -62,13 +62,13 @@ impl<'a> HtmlSingleRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
-        let menu_svg = html::MENU_SVG.to_base64(base64::STANDARD);
+        let menu_svg = img::MENU_SVG.to_base64(base64::STANDARD);
         let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
 
-        let book_svg = html::BOOK_SVG.to_base64(base64::STANDARD);
+        let book_svg = img::BOOK_SVG.to_base64(base64::STANDARD);
         let book_svg = format!("data:image/svg+xml;base64,{}", book_svg);
 
-        let pages_svg = html::PAGES_SVG.to_base64(base64::STANDARD);
+        let pages_svg = img::PAGES_SVG.to_base64(base64::STANDARD);
         let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
 
         for (i, filename) in self.html.book.filenames.iter().enumerate() {
@@ -175,6 +175,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
             .insert_bool("one_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
+            .insert_str("common_script", self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
         let mut res:Vec<u8> = vec!();
         template_js.render_data(&mut res, &data);
@@ -204,9 +205,9 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .insert_str("highlight_js", highlight_js);
         }
         let data = mapbuilder.build();
-        let template = try!(compile_str(try!(self.html.book.get_template("html.template")).as_ref(),
+        let template = try!(compile_str(try!(self.html.book.get_template("html_single.html")).as_ref(),
                                         &self.html.book.source,
-                                        "could not compile template 'html.template'"));
+                                        "could not compile template 'html_single.html'"));
         let mut res = vec!();
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())

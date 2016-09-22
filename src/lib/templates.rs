@@ -21,24 +21,30 @@ pub mod highlight {
 }
 
 pub mod html {
-    pub static TEMPLATE:&'static str = include_str!("../../templates/template.html");
-    pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
-    pub static PRINT_CSS:&'static str = include_str!("../../templates/print.css");
-    pub static SCRIPT:&'static str = concat!(include_str!("../../templates/html_dir/script.js"), include_str!("../../templates/script.js"));
+    pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/html/template.css"));
+    pub static PRINT_CSS:&'static str = include_str!("../../templates/html/print.css");
+    pub static JS:&'static str = include_str!("../../templates/html/script.js");
+
+}
+
+pub mod img {
     pub static MENU_SVG:&'static [u8] = include_bytes!("../../templates/img/menu.svg");
     pub static BOOK_SVG:&'static [u8] = include_bytes!("../../templates/img/book.svg");
     pub static PAGES_SVG:&'static [u8] = include_bytes!("../../templates/img/pages.svg");
 }
 
+pub mod html_single {
+    pub static HTML:&'static str = include_str!("../../templates/html_single/template.html");
+    pub static JS:&'static str = include_str!("../../templates/html_single/script.js");
+}
+
 pub mod html_dir {
-    pub static SCRIPT:&'static str = include_str!("../../templates/html_dir/script.js");
     pub static INDEX_HTML: &'static str = include_str!("../../templates/html_dir/index.html");
     pub static CHAPTER_HTML: &'static str = include_str!("../../templates/html_dir/chapter.html");
-    pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/template.css"));
 }
 
 pub mod latex {
-    pub static TEMPLATE:&'static str = include_str!("../../templates/template.tex");
+    pub static TEMPLATE:&'static str = include_str!("../../templates/latex/template.tex");
 }
 
 pub mod epub {

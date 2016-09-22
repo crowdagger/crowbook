@@ -19,7 +19,7 @@ use error::{Error,Result, Source};
 use html::HtmlRenderer;
 use book::{Book, compile_str};
 use token::Token;
-use templates::{html};
+use templates::img;
 use resource_handler;
 use renderer::Renderer;
 use parser::Parser;
@@ -86,7 +86,7 @@ impl<'a> HtmlDirRenderer<'a> {
         // Write index.html and chapter_xxx.html
         try!(self.write_html());
         // Write menu.svg
-        try!(self.write_file("menu.svg", html::MENU_SVG));
+        try!(self.write_file("menu.svg", img::MENU_SVG));
 
         // Write highlight files if they are needed
         if self.html.book.options.get_bool("html.highlight_code") == Ok(true) {
@@ -194,7 +194,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("next_chapter", next_chapter)
                 .insert_str("footer", try!(self.html.get_footer()))
                 .insert_str("top", try!(self.html.get_header()))
-                .insert_str("script", self.html.book.get_template("html_dir.script").unwrap())
+                .insert_str("script", self.html.book.get_template("html.js").unwrap())
                 .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
             
             if self.html.book.options.get_bool("html.highlight_code").unwrap() == true {
@@ -241,7 +241,7 @@ impl<'a> HtmlDirRenderer<'a> {
             .insert_str("top", try!(self.html.get_header()))
             .insert_str("footer", try!(self.html.get_footer()))
             .insert_str("toc", toc.clone())
-            .insert_str("script", self.html.book.get_template("html_dir.script").unwrap())
+            .insert_str("script", self.html.book.get_template("html.js").unwrap())
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
         if self.html.book.options.get_bool("html.highlight_code").unwrap() == true {
             mapbuilder = mapbuilder.insert_bool("highlight_code", true);
@@ -260,9 +260,9 @@ impl<'a> HtmlDirRenderer<'a> {
     // Render the CSS file and write it
     fn write_css(&self) -> Result<()> {
         // Render the CSS 
-        let template_css = try!(compile_str(try!(self.html.book.get_template("html_dir.css")).as_ref(),
+        let template_css = try!(compile_str(try!(self.html.book.get_template("html.css")).as_ref(),
                                             &self.html.book.source,
-                                            "could not compile template 'html_dir.css"));
+                                            "could not compile template 'html.css"));
         let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .build();
         let mut res:Vec<u8> = vec!();
