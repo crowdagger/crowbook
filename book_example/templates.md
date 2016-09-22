@@ -149,7 +149,6 @@ below.
 | `book`  | True if `tex.class` is `book`, not set else | `tex.template` |
 | `tex_lang` | The babel equivalent of `lang` | `tex.template` |
 | `initials` | True if `rendering.initials` is true, not set else | `tex.template` |
-|--------------------|---------------|----------------------|
 
 
 
