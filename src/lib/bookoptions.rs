@@ -429,6 +429,10 @@ impl BookOptions {
     #[doc(hidden)]
     pub fn merge(&mut self, mut other: BookOptions) -> Result<()> {
         let other_root = mem::replace(&mut other.root, PathBuf::new());
+        let relative_path = match other_root.strip_prefix(&self.root) {
+            Ok(path) => path,
+            Err(_) => &other_root,
+        };
         for (key, value) in other.options.into_iter() {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(&key) {
@@ -447,14 +451,14 @@ impl BookOptions {
             }
             // If it's a path, get the corrected path
             if let BookOption::Path(ref path) = value {
-                let new_path:PathBuf = other_root.join(path);
-                let s = if let Some(path) = new_path.to_str() {
+                let new_path:PathBuf = relative_path.join(path);
+                let new_path = if let Some(path) = new_path.to_str() {
                     path.to_owned()
                 } else {
                     return Err(Error::book_option(Source::new(other_root.to_str().unwrap()),
                                                   format!("'{}''s path contains invalid UTF-8 code", key)));
                 };
-                self.options.insert(key, BookOption::Path(s));
+                self.options.insert(key, BookOption::Path(new_path));
             } else {
                 self.options.insert(key, value);
             }
