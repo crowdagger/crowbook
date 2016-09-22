@@ -4,6 +4,86 @@ Templates
 List of templates 
 -----------------
 
+Crowbook allows the user to specify a number of templates. Some of
+them, though are not "real" templates, they are just files that are
+inserted, but can't contain mustache tags. This will probably evolve
+in future versions.
+
+### html.js ###
+
+The javascript file used by both the standalone HTML renderer and the multiple files HTML renderer.
+
+This is not currently an actual template, just a plain
+javascript file which cannot contain `mustache` tags.
+
+### html.css ###
+
+The main CSS file used by both the standalone HTML renderer and the
+multiple files HTML renderer.
+
+### html.css.print ###
+
+An additional CSS file used by both the standalone HTML renderer and
+the multiple files HTML renderer. Its purpose is to provide CSS
+instructions for printing (i.e., when the user clicks the `print`
+button in her browser).
+
+This is not currently an actual template, just a plain
+CSS file which cannot contain `mustache` tags.
+
+### html.highlight.js ###
+
+A javascript file used by both HTML renderers to highlight codes in
+code blocks. It should be a variant of
+[highlight.js](https://highlightjs.org/).
+
+This is not an actual template, just a plain javascript file.
+
+### html.highlight.css ###
+
+A CSS file used by both HTML renderers to set the theme of
+[highlight.js](https://highlightjs.org/). It should, though, be an
+highlight.js theme. 
+
+This is not an actual template, just a plain CSS file.
+
+### html_single.js ###
+
+A javascript file used only by the standalone HTML renderer. Its main
+purpose is to handle the displaying of a single chapter at a time when
+`one_chapter` is set to true.
+
+
+### html_single.html ###
+
+The main template for standalone HTML renderer.
+
+### html_dir.chapter.html ###
+
+The main template for multiple files HTML renderer. It is the template
+for rendering each chapter. 
+
+### html_dir.index.html ###
+
+The template used by multiple files HTML renderer to render the
+`index.html` file.
+
+### tex.template ###
+
+The main (and currently only) template used by the LaTeX renderer.
+
+
+### epub.chapter.xhtml ###
+
+This template is the main template used by the Epub renderer. It
+contains the XHTML template that will be used for each chapter.
+
+### epub.css ###
+
+This template is used by the Epub renderer and contains the style
+sheet.
+
+
 Create a new template 
 ---------------------
 
@@ -45,169 +125,31 @@ For all templates, Crowbook also exports some localisation strings.
 Crowbook also exports some additional fields for some templates, see
 below.
 
-Templates
----------
+|    Mustache tag     |    Value    |   Available in...   |
+|---------------------|-------------|---------------------|
+| `content` | A rendered version of the book or chapter's content | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html`, `tex.temlplate`, `epub.chapter.xhtml` |
+| `toc` | A rendered vesion of the table of contents | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
+| `footer` | The content of `html.footer` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
+| `header` | The content of `html.header` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
+| `script` | The javascript file for this HTML document | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
+| `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html_single.html` |
+| A variable whose whose name corresponds to `lang` in book options | `true`  | `html.css`, `epub.css` |
+| `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml` |
+| `highlight_code` | True if `html.highlight_code` is true | `html_single.html`, `html_dir.chapter.html` |
+| `highlight_css` | The content of `html.highlight.css` | `html_single.html` |
+| `highlight_js` | The base64-encoded content of `html.highlight.js` | `html_single.html` |
+| `common_script` | The content of `html.js` | `html_single.js` |
+| `one_chapter`   | True if `html_single.one_chapter` is true, else not present | `html_single.html`, `html_single.js` |
+| `book.svg` | The base64-encoded image of the button to display all chapters | `html_single.js`, `html_single.html` |
+| `pages.svg` | The base64-encoded image of the button to display one chapter at a time | `html_single.js`, `html_single.html` |
+| `menu_svg` | The base64-encoded image of the hamburger menu image | `hml_single.html` |
+| `prev_chapter` | Title and a link of previous chapter | `html_dir.chapter.html` |
+| `next_chapter` | Title and a link of nexts chapter | `html_dir.chapter.html` |
+| `class` | The content of `tex.class` | `tex.template` |
+| `book`  | True if `tex.class` is `book`, not set else | `tex.template` |
+| `tex_lang` | The babel equivalent of `lang` | `tex.template` |
+| `initials` | True if `rendering.initials` is true, not set else | `tex.template` |
+|--------------------|---------------|----------------------|
 
-Crowbook allows the user to specify a number of templates. Some of
-them, though are not "real" templates, they are just files that are
-inserted, but can't contain mustache tags. This will probably evolve
-in future versions.
 
-### html.js ###
 
-The javascript file used by both the standalone HTML renderer and the multiple files HTML renderer.
-
-This is not currently an actual template, just a plain
-javascript file which cannot contain `mustache` tags.
-
-### html.css ###
-
-The main CSS file used by both the standalone HTML renderer and the
-multiple files HTML renderer.
-
-Besides the default elements available in all templates, it
-contains the following one:
-
-* A variable whose name corresponds to the `lang` option is set to
-  `true`. This means that it is possible to use `{{#foo}}...{{/foo}}`
-  to have a CSS block that will only be inserted for language
-  `foo`. This is used e.g. to render lists differently if `lang` is
-  set to `fr`. 
-
-### html.css.print ###
-
-An additional CSS file used by both the standalone HTML renderer and
-the multiple files HTML renderer. Its purpose is to provide CSS
-instructions for printing (i.e., when the user clicks the `print`
-button in her browser).
-
-This is not currently an actual template, just a plain
-CSS file which cannot contain `mustache` tags.
-
-### html.highlight.js ###
-
-A javascript file used by both HTML renderers to highlight codes in
-code blocks. It should be a variant of
-[highlight.js](https://highlightjs.org/).
-
-This is not an actual template, just a plain javascript file.
-
-### html.highlight.css ###
-
-A CSS file used by both HTML renderers to set the theme of
-[highlight.js](https://highlightjs.org/). It should, though, be an
-highlight.js theme. 
-
-This is not an actual template, just a plain CSS file.
-
-### html_single.js ###
-
-A javascript file used only by the standalone HTML renderer. Its main
-purpose is to handle the displaying of a single chapter at a time when
-`one_chapter` is set to true.
-
-Besides the default elements available in all templates, it contains
-the following ones:
-
-* `common_script` contains the `html.js` file.
-* `one_chapter` is set to true if `html_single.one_chapter` is true,
-  else it is not present.
-* `book_svg` and `pages_svg` are set to contain the (base64-encoded)
-  images that serve as buttons to switch between displaying one
-  chapter at a time or displaying all the chapters, when
-  `html_single.one_chapter` is set to `true`.
-
-### html_single.html ###
-
-The main template for standalone HTML renderer.
-
-Besides the default elements available in all templates, it contains
-the following ones:
-
-* A variable whose name corresponds to the `lang` option is set to
-  `true`.
-* `one_chapter` is set to true if `html_single.one_chapter` is true,
-  else it is not present.
-* `content` contains the book content, rendered as HTML.
-* `toc` contains the table of content, rendeded as HTML.
-* `script` contains the javascript file (that is, a rendered version
-  of `html_single.js`).
-* `style` contains the CSS file (that is, a rendered version
-  of `html.css`).
-* `print_style` contains the CSS file for print media (that is, html.css.print).
-* `menu_svg` contains the (base64-encoded) hamburger-menu image.
-* `book_svg` and `pages_svg` are set to contain the (base64-encoded)
-  images that serve as buttons to switch between displaying one
-  chapter at a time or displaying all the chapters, when
-  `html_single.one_chapter` is set to `true`.
-* `footer` and `header` contains the contents of options `html.footer`
-  and `html.header`.
-* If `html.highlight_code` is set to true in the book file, this
-  template also has `highlight_code` set to true, `higlight_css` set
-  to the content of `html.highlight.css` and `highlight_js` set to the
-  base64-encoded content of `html.highlight.js`.
-
-  
-### html_dir.chapter.html ###
-
-The main template for multiple files HTML renderer. It is the template
-for rendering each chapter. 
-
-Besides the default elements available in all templates, it contains
-the following ones:
-
-* `content` contains the chapter's content, rendered as HTML.
-* `script` contains the `html.js` file.
-* `chapter_title` contains the chapter's title.
-* `toc` contains the table of content, rendeded as HTML.
-* `prev_chapter` and `next_chapter` contains the titles of
-  previous and next chapters, with a link to them.
-* `footer` and `header` contains the contents of options `html.footer`
-  and `html.header`.
-* If `html.highlight_code` is set to true in the book file, this
-  template also has `highlight_code` set to true.
-
-### html_dir.index.html ###
-
-The template used by multiple files HTML renderer to render the
-`index.html` file.
-
-Besides the default elements available in all templates, it contains
-the following ones:
-
-* `content` contains the title page's content, which will typically
-  include the cover.
-* `script`, `header`, `footer`, `toc`, `script`, `lang`,
-`highlight_code` are similar to `html_dir.chapter.html`.
-
-### tex.template ###
-
-This template is used by the LaTeX renderer.
-
-Besides the default elements available in all templates, it contains
-the following ones:
-
-* `content`.
-* `class` contains the `tex.class` option.
-* If `tex.class` is set to `book`, this template has the variable
-  `book` set to true.
-* `tex_lang` is set to the latex string corresponding to `lang` that
-  must be used with babel.
-* If `rendering.initials` is true, the variable `initials` is set to
-true.
-
-### epub.chapter.xhtml ###
-
-This template is the main template used by the Epub renderer. It
-contains the XHTML template that will be used for each chapter.
-
-* `content`
-* `chapter_title`
-
-### epub.css ###
-
-This template is used by the Epub renderer and contains the style
-sheet.
-
-* A variable whose name corresponds to the `lang` option is set to
-  `true`.

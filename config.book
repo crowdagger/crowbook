@@ -1,5 +1,5 @@
 # Metadata
-author: Élisabeth Henry
+author: "Élisabeth Henry"
 title: Crowbook User Guide
 description: >-
  Crowbook allows to render a book written in Markdown in various
@@ -7,13 +7,18 @@ description: >-
  demonstrate and test it.
 lang: en
 cover: img/cover.png
+version: 0.9.0
+license: LGPL-2.1
+date: "20th of **september**"
+
+tex.class: book
 
 # Generic options (though not used with LaTeX)
 ## Number chapters and sections, but not below that
 numbering: 2
 
-html.crowbook_link: true
 html.display_chapter: true
+html.header: "{{{title}}} {{{crowbook_version}}}"
 
 use_initials: true
 
@@ -35,5 +40,6 @@ output.odt: book_example/book.odt
 + README.md
 + book_example/arguments.md
 + book_example/config.md
++ book_example/templates.md
 - ChangeLog.md
 - LICENSE.md
