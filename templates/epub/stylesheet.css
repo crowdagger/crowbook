@@ -111,12 +111,22 @@ td.note-number {
 /* The div class displaying notes at the end of a chapter */
 div.notes {
     text-align: justify;
+    border-top: thin dashed black;
+}
+
+table.notes {
+    bordel-collapse: collapse;
+    border-style: hidden;
+}
+
+table.notes tr td {
+    margin-left: 1em;
+    margin-right: 1em;
     border-top: thin dashed gray;
 }
 
-table.notes td {
-    margin-left: 1em;
-    margin-right: 1em;
+table.notes tr:first-child td {
+    border-top: 0;
 }
                  
 /* Every markdown table is included in a <div class = "table"> */

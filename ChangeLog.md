@@ -54,6 +54,7 @@ More detailed changes for this release:
   * HTML:
     * `html.top` and `hstml.footer` are now considered as templates, so
       you can use some `{{{metadata}}}` in it.
+    * Improved the way footnotes are displayed.
   * LaTeX:
     * If `tex.class` is set to `article`, chapters will be displayed as
       `\sections` since `article` class doesn't handle chapters.
