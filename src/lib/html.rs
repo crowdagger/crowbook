@@ -24,6 +24,7 @@ use toc::Toc;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
+use lang;
 
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
@@ -227,12 +228,33 @@ impl<'a> HtmlRenderer<'a> {
     #[doc(hidden)]
     pub fn render_end_notes(&mut self, res: &mut String) {
         if !self.footnotes.is_empty() {
-            res.push_str("<h2 class = \"notes\">Notes</h2>");
-            res.push_str("<table class = \"notes\">");
+
+//             for (note_number, footnote) in self.footnotes.drain(..) {
+//                 res.push_str(&format!("<div class = \"note\">
+//  <p>{}</p>
+// {}
+// </div>\n",
+//                                       note_number,
+//                                       footnote));
+//             }
+
+
+            res.push_str(&format!("<div class = \"notes\">
+ <h2 class = \"notes\">{}</h2>\n",
+                                  lang::get_str(self.book.options.get_str("lang").unwrap(), "notes")));
+            res.push_str("<table class = \"notes\">\n");
             for (note_number, footnote) in self.footnotes.drain(..) {
-                res.push_str(&format!("<tr class = \"notes\"><td class = \"notes\">{}</td><td class = \"notes\">{}</td></tr>\n", note_number, footnote));
+                res.push_str(&format!("<tr class = \"notes\">
+ <td class = \"note-number\">
+  {}
+ </td>
+ <td class = \"note\">
+  {}
+  </td>
+</tr>\n", note_number, footnote));
             }
-            res.push_str("</table>");
+            res.push_str("</table>\n");
+            res.push_str("</div>\n");
         }
     }
 
@@ -394,14 +416,14 @@ impl<'a> HtmlRenderer<'a> {
 
                 let note_number = format!("<p class = \"note-number\">
   <a href = \"#note-source-{}\">[{}]</a>
-</p>", number, number);
+</p>\n", number, number);
 
                 let inner = format!("<aside id = \"note-dest-{}\">{}</aside>",
                                     number,
                                     try!(this.render_vec(vec)));
                 this.as_mut().footnotes.push((note_number, inner));
                 
-                Ok(format!("<a href = \"#note-dest-{}\"><sup id = \"note-source-{}\">{}</sup></a>",
+                Ok(format!("<a href = \"#note-dest-{}\"><sup id = \"note-source-{}\">[{}]</sup></a>",
                            number, number, number))
             },
             Token::__NonExhaustive => unreachable!()

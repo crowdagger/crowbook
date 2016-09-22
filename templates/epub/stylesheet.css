@@ -89,6 +89,10 @@ h2.author {
     margin-right: 1em;
 }
 
+td.note-number {
+    vertical-align: top;
+}
+
 /* When footnotes (try to) be diplayed as margin notes */
 .sidenote {
     display: block;
@@ -105,9 +109,9 @@ h2.author {
 }
 
 /* The div class displaying notes at the end of a chapter */
-.notes {
+div.notes {
     text-align: justify;
-    border: none;
+    border-top: thin dashed gray;
 }
 
 table.notes td {
@@ -141,7 +145,7 @@ table.notes td {
 }
 
 {{#fr}}
-/* Make list displays '–' instead of puces */
+/* Make list displays '–' instead of bullets */
 ul li {
     list-style-type: '–';
     padding-left: .5em;
