@@ -169,8 +169,8 @@ impl<'a> LatexRenderer<'a> {
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
             .insert_str("tex_lang", tex_lang);
         // If class isn't book, set open_any to true, so margins are symetric.
-        if self.book.options.get_str("tex.class").unwrap() != "book" {
-            data = data.insert_bool("open_any", true);
+        if self.book.options.get_str("tex.class").unwrap() == "book" {
+            data = data.insert_bool("book", true);
         }
         if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);

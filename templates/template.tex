@@ -16,7 +16,7 @@
 
 % TODO: provide a way to configure
 \usepackage[a5paper, top=2cm, bottom=1.5cm,
-  <<^open_any>> left=2.5cm,right=1.5cm<</open_any>><<#open_any>> left=2cm,right=2cm<</open_any>>]{geometry}%A5 by default
+  <<#book>> left=2.5cm,right=1.5cm<</book>><<^book>> left=2cm,right=2cm<</book>>]{geometry}%A5 by default
 
 % Even with inputenc, not all unicode chars are recognized. This a
 % listof some I stumbled upon and manually added to fix
@@ -40,7 +40,7 @@
 
 
 % Title
-<<^short>>
+<<#book>>
 \renewcommand{\maketitle}{
   \thispagestyle{empty}
   \vspace*{\stretch{1}}
@@ -84,7 +84,7 @@
   \pagebreak
   \newpage
 }
-<</short>>
+<</book>>
 
 % Headers
 \pagestyle{fancyplain} 
