@@ -98,7 +98,7 @@ impl<'a> LatexRenderer<'a> {
 \\setcounter{{secnumdepth}}{{{}}}\n",
                                   numbering, numbering));
         
-        if self.book.options.get_bool("display_toc").unwrap() {
+        if self.book.options.get_bool("rendering.inline_toc").unwrap() {
             content.push_str("\\tableofcontents\n");
         }
 

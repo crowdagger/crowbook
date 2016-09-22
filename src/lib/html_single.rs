@@ -144,14 +144,14 @@ impl<'a> HtmlSingleRenderer<'a> {
         let toc = self.html.toc.render();
 
         // If display_toc, display the toc inline
-        if self.html.book.options.get_bool("display_toc").unwrap() {
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
             content = format!(
                 "<h1>{}</h1>
 <div id = \"toc\">
 {}
 </div>
 {}",
-                self.html.book.options.get_str("toc_name").unwrap(),
+                self.html.book.options.get_str("rendering.inline_toc.name").unwrap(),
                 &toc,
                 content);
         }

@@ -37,13 +37,15 @@ input.yaml_blocks:bool:false       # Enable inline YAML blocks to override optio
 
 # Rendering options
 rendering.initials:bool:false             # Use initals ('lettrines') for first letter of a chapter (experimental)
+rendering.inline_toc:bool:false              # Display a table of content in the document
+rendering.inline_toc.name:str:Table of contents  # Name of the table of contents if it is displayed in document
 
 # Misc options
 numbering_template:str:\"{{number}}. {{title}}\" # Format of numbered titles
 numbering:int:1                     # The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
-display_toc:bool:false              # Display a table of content in the document
 
-toc_name:str:Table of contents      # Name of the table of contents if it is displayed in document
+
+
 verbose:bool:false                  # Make Crowbook display more messages
 import_config:path                  # Import another book configuration file
 
@@ -100,6 +102,8 @@ html.top:alias:html.header                        # Renamed
 autoclean:alias:input.autoclean                   # Renamed
 enable_yaml_blocks:alias:input.yaml_blocks        # Renamed
 use_initials:alias:rendering.initials             # Renamed
+toc_name:alias:rendering.inline_toc.name          # Renamed
+display_toc:alias:rendering.inline_toc            # Renamed
 nb_char:alias                                     # Removed
 ";
 
