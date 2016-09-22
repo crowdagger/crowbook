@@ -193,8 +193,8 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("toc", toc.clone())
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
-                .insert_str("footer", try!(self.html.get_footer()))
-                .insert_str("header", try!(self.html.get_header()))
+                .insert_str("footer", try!(HtmlRenderer::get_footer(self)))
+                .insert_str("header", try!(HtmlRenderer::get_header(self)))
                 .insert_str("script", self.html.book.get_template("html.js").unwrap())
                 .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
             
@@ -253,8 +253,8 @@ impl<'a> HtmlDirRenderer<'a> {
         // Render index.html and write it too
         let mut mapbuilder = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
-            .insert_str("header", try!(self.html.get_header()))
-            .insert_str("footer", try!(self.html.get_footer()))
+            .insert_str("header", try!(HtmlRenderer::get_header(self)))
+            .insert_str("footer", try!(HtmlRenderer::get_footer(self)))
             .insert_str("toc", toc.clone())
             .insert_str("script", self.html.book.get_template("html.js").unwrap())
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
