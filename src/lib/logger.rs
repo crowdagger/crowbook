@@ -125,8 +125,8 @@ impl Logger {
 }
 
 // Code to end shell colouring
-const SHELL_COLOUR_OFF: &'static str = "\x1B[0m";
-const SHELL_COLOUR_RED: &'static str = "\x1B[1m\x1B[31m";
-const SHELL_COLOUR_BLUE: &'static str = "\x1B[1m\x1B[36m";
-const SHELL_COLOUR_ORANGE: &'static str = "\x1B[1m\x1B[33m";
-const SHELL_COLOUR_GREEN: &'static str = "\x1B[1m\x1B[32m";
+pub const SHELL_COLOUR_OFF: &'static str = "\x1B[0m";
+pub const SHELL_COLOUR_RED: &'static str = "\x1B[1m\x1B[31m";
+pub const SHELL_COLOUR_BLUE: &'static str = "\x1B[1m\x1B[36m";
+pub const SHELL_COLOUR_ORANGE: &'static str = "\x1B[1m\x1B[33m";
+pub const SHELL_COLOUR_GREEN: &'static str = "\x1B[1m\x1B[32m";

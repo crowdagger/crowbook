@@ -1,12 +1,13 @@
 use error::{Error,Result, Source};
 use bookoption::BookOption;
 use book::Book;
-use logger::{Logger, InfoLevel};
+use logger::{Logger, InfoLevel, SHELL_COLOUR_OFF, SHELL_COLOUR_RED, SHELL_COLOUR_BLUE, SHELL_COLOUR_ORANGE, SHELL_COLOUR_GREEN};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
 use std::path::{PathBuf, Path};
 use std::env;
+
 
 static OPTIONS:&'static str = r#"
 # Metadata
@@ -551,7 +552,16 @@ impl BookOptions {
                     out.push_str("\n");
                     previous_is_comment = true;
                 }
-                out.push_str(&format!("### {} ###\n", comment.trim()));
+                let header = format!("### {} ###\n", comment.trim());
+                let header = if md {
+                    header
+                } else {
+                    format!("{}{}{}",
+                            SHELL_COLOUR_RED,
+                            header,
+                            SHELL_COLOUR_OFF)
+                };
+                out.push_str(&header);
                 continue;
             }
             previous_is_comment = false;
@@ -576,7 +586,17 @@ impl BookOptions {
     - **default value**: `{}`
     - {}\n", key.unwrap(), o_type, def, comment));
             } else {
-                out.push_str(&format!("- {} (type: {}) (default: {}) {}\n", key.unwrap(), o_type, def,comment));
+                out.push_str(&format!("{}{}{} ({}{}{}) (default: {}{}{})\n  {}\n",
+                                      SHELL_COLOUR_ORANGE,
+                                      key.unwrap(),
+                                      SHELL_COLOUR_OFF,
+                                      SHELL_COLOUR_BLUE,
+                                      o_type,
+                                      SHELL_COLOUR_OFF,
+                                      SHELL_COLOUR_GREEN,
+                                      def,
+                                      SHELL_COLOUR_OFF,
+                                      comment.trim()));
             }
         }
         out
