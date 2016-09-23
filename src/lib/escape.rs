@@ -52,7 +52,7 @@ pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
                                                match c {
                                                    NB_CHAR => "#ffff66",
                                                    NB_CHAR_NARROW => "#9999ff",
-                                                   NB_CHAR_EM => "#ffcccc",
+                                                   NB_CHAR_EM => "#ff9999",
                                                    _ => unreachable!()
                                                },
                                                 c)),
