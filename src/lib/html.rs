@@ -29,6 +29,8 @@ use lang;
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
 
+use caribon::Parser as Caribon;
+
 /// Base structure for rendering HTML files
 ///
 /// Used by EpubRenderer, HtmlSingleRenderer, HtmlDirRenderer
@@ -40,6 +42,7 @@ pub struct HtmlRenderer<'a> {
     first_paragraph: bool,
     footnotes: Vec<(String, String)>,
     filename: String,
+    parser: Option<Caribon>,
 
     /// Book that must be rendered
     pub book: &'a Book,
@@ -78,10 +81,20 @@ pub struct HtmlRenderer<'a> {
 
 }
 
-
 impl<'a> HtmlRenderer<'a> {
     /// Creates a new HTML renderer
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
+        let lang = book.options.get_str("lang").unwrap();
+        let caribon = match Caribon::new(&lang) {
+            Ok(parser) => Some(parser.with_fuzzy(Some(0.2))
+                               .with_html(true)
+                               .with_ignore_proper(true)),
+            Err(err) => {
+                book.logger.error(format!("could not create caribon parser: {}", err));
+                None
+            }
+        };
+        
         let mut html = HtmlRenderer {
             book: book,
             toc: Toc::new(),
@@ -99,12 +112,26 @@ impl<'a> HtmlRenderer<'a> {
             source: Source::empty(),
             first_letter: false,
             first_paragraph: true,
+            parser: caribon,
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
         html
     }
 
+    // Detect the repetitions
+    fn detect_repetitions(&mut self, s: &str) -> String {
+        if let Some(ref mut parser) = self.parser {
+            let mut ast = parser.tokenize(s).unwrap();
+            parser.detect_local(&mut ast, 1.5);
+            parser.ast_to_html(&mut ast, false)
+        } else {
+            s.to_owned()
+        }
+    }
+
+
+    
     /// Add a footnote which will be renderer later on
     #[doc(hidden)]
     pub fn add_footnote(&mut self, number: String, content: String) {
@@ -314,6 +341,7 @@ impl<'a> HtmlRenderer<'a> {
                     ""
                 };
                 let content = try!(this.render_vec(vec));
+                let content = this.as_mut().detect_repetitions(&content);
                 this.as_mut().current_par += 1;
                 let par = this.as_ref().current_par;
                 Ok(format!("<p id = \"para-{}\"{}>{}</p>\n",
