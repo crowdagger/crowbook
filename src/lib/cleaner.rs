@@ -111,12 +111,15 @@ impl Cleaner for Default {
 /// ```
 pub struct French;
 
+const THRESHOLD_QUOTE: usize = 23; // after that, assume it's a dialogue
+const THRESHOLD_REAL_WORD: usize = 3; // after that, can be reasonably sure it is not an abbreviation
+
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
     fn clean<'a>(&self, s: Cow<'a, str>, latex: bool) -> Cow<'a, str> {
         fn is_trouble(c: char) -> bool {
             match c {
-                '?'|'!'|';'|':'|'»'|'«'|'—' => true,
+                '?'|'!'|';'|':'|'»'|'«'|'—'|'–' | '0'...'9' => true,
                 _ => false
             }
         }
@@ -126,7 +129,7 @@ impl Cleaner for French {
         let nb_char = if latex {
             '~'
         } else {
-            ' '
+            ' ' // non breaking space
         };
         let nb_char_narrow = if latex {
             '~'
@@ -139,51 +142,179 @@ impl Cleaner for French {
             '\u{2002}' // demi em space
         };
 
-        let s = Default.clean(s, latex); // first pass with default impl
-        let mut new_s = String::with_capacity(s.len());
-        {
-            let mut chars = s.chars();
-            if let Some(mut current) = chars.next() {
-                while let Some(next) = chars.next() {
-                    if is_whitespace(current) {
-                        match next {
-                            // handle narrow nb space before char
-                            '?' | '!' | ';' => new_s.push(nb_char_narrow),
-                            ':' | '»' => new_s.push(nb_char),
-                            _ => new_s.push(current)
-                        }
-                    } else {
-                        new_s.push(current);
-                        match current {
-                            // handle nb space after char
-                            '—' | '«' => {
-                                if is_whitespace(next) {
-                                    let replacing_char = match current {
-                                        '—' => nb_char_em,
-                                        '«' => nb_char,
-                                        _ => unreachable!(),
-                                    };
-                                    if let Some(next) = chars.next() {
-                                        new_s.push(replacing_char);
-                                        current = next;
-                                        continue;
-                                    } else {
-                                        // current will be added after the loop, do don't do it now
-                                        current = replacing_char;
-                                        break;
-                                    }
-                                }
-                            },
-                            _ => (),
-                        }
-                    }
-                    current = next;
-                }
-                new_s.push(current);
+        // Find first char `c` in slice `v` after index `n`
+        fn find_next(v: &[char], c: char, n: usize) -> Option<usize> {
+            for i in n..v.len() {
+                if v[i] == c  {
+                    return Some(i);
+                } 
             }
+            None
         }
 
-        Cow::Owned(new_s)
+        // Return true if next non whitespace char in `v` after index `n` is uppercase
+        fn is_next_char_uppercase(v: &[char], n: usize)-> bool {
+            for i in n..v.len() {
+                if v[i].is_whitespace() {
+                    continue;
+                }
+                if v[i].is_uppercase() {
+                    return true;
+                }
+                if v[i].is_lowercase() {
+                    return false;
+                }
+            }
+            false
+        }
+
+        // Return true(some) if a closing dash was found before what looks like the end of a sentence, None else
+        fn find_closing_dash(v: &[char], n: usize) -> Option<usize> {
+            let mut word = String::new();
+            for j in n..v.len() {
+                match v[j] {
+                    
+                    '!' | '?' => if is_next_char_uppercase(v, j+1) {
+                        return None;
+                    },
+                    '-' | '–' | '—' => if v[j-1].is_whitespace() {
+                        return Some(j-1);
+                    },
+                    '.' => if !is_next_char_uppercase(v, j+1) {
+                        continue;
+                    } else {
+                        if let Some(c) = word.chars().next() {
+                            if !c.is_uppercase() {
+                                return None;
+                            } else {
+                                if word.len() > THRESHOLD_REAL_WORD {
+                                    return None;
+                                }
+                            }
+                        } 
+                    },
+                    c if c.is_whitespace() => word = String::new(),
+                    c => word.push(c),
+                }
+            }
+            return None;
+        }
+
+
+
+        let s = Default.clean(s, latex); // first pass with default impl
+        let mut found_opening_quote = false; // we didn't find an opening quote yet
+        let mut chars = s.chars().collect::<Vec<_>>();
+        let mut is_number_series = false;
+
+        for i in 0..(chars.len()-1) {
+            // Handle numbers (that's easy)
+
+            let current = chars[i];
+            let next = chars[i+1];
+
+            match current {
+                '0'...'9' => if i == 0 {
+                    is_number_series = true;
+                } else if chars[i-1].is_whitespace() {
+                    is_number_series = true;
+                },
+                c if c.is_whitespace() => {
+                    if is_number_series && next.is_digit(10) {
+                        chars[i] = nb_char_narrow;
+                    }
+                },
+                _ => { is_number_series = false; }
+            }
+
+        }
+        
+        for i in 0..(chars.len()-1) {
+            let current = chars[i];
+            let next = chars[i+1];
+
+            
+            // Handle the rest (that's hard)
+            if is_whitespace(current) {
+                match next {
+                    // handle narrow nb space before char
+                    '?' | '!' | ';' => chars[i] = nb_char_narrow,
+                    ':' => chars[i] = nb_char,
+                    '»' => if current == ' ' {
+                        // Assumne that if it isn't a normal space it was used here for good reason, don't replace it
+                        if found_opening_quote {
+                            // not the end of a dialogue
+                            chars[i] = nb_char;
+                        } else {
+                            chars[i] = nb_char;
+                        }
+                    },
+                    _ => (),
+                }
+            } else {
+                match current {
+                    // handle nb space after char
+                    '—' | '«' | '-' | '–' => {
+                        if is_whitespace(next) {
+                            let replacing_char = match current {
+                                '—' | '-' | '–' => {
+                                    if i <= 1 {
+                                        nb_char_em
+                                    } else {
+                                        if chars[i-1] == nb_char {
+                                            // non breaking space before, so probably should have a breakable one after
+                                            ' '
+                                        } else {
+                                            if let Some(closing) = find_closing_dash(&chars, i+1) {
+                                                chars[closing] = nb_char;
+                                            }
+                                            nb_char
+                                        }
+                                    }
+                                },
+                                '«' => {
+                                    found_opening_quote = true;
+                                    if i <= 1 {
+                                        nb_char
+                                    } else {
+                                        let j = find_next(&chars, '»', i);
+                                        if let Some(j) = j {
+                                            if chars[j-1].is_whitespace() {
+                                                if j == chars.len() {
+                                                    // » is at the end, assume it is a dialogue
+                                                    chars[j-1] = nb_char;
+                                                    nb_char
+                                                } else {
+                                                    if j - i > THRESHOLD_QUOTE {
+                                                        // It's a quote, so use large space?
+                                                        chars[j-1] = nb_char;
+                                                        nb_char
+                                                    } else {
+                                                        // Not long enough to be a quote, use narrow nb char
+                                                        chars[j-1] = nb_char_narrow;
+                                                        nb_char_narrow
+                                                    }
+                                                }
+                                            } else {
+                                                // wtf formatting?
+                                                nb_char
+                                            }
+                                        } else {
+                                            // No ending quote found, assume is a dialogue
+                                            nb_char
+                                        }
+                                    }
+                                }, // TODO: better heuristic: use narrow nb_char if not at front???
+                                _ => unreachable!(),
+                            };
+                            chars[i+1] = replacing_char;
+                        }
+                    }
+                    _ => (),
+                }
+            }
+        }
+        Cow::Owned(chars.into_iter().collect())
     }
 }
 
