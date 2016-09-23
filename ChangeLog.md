@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-----------
+0.9.0 (2016-09-23)
+------------------
 The main objective of this release is to clean public interfaces, in
 order to limit breaking changes in the future. *Ideally*, all pre-1.0
 releases should thus be 0.9.x. Concretely, this meant three things:
@@ -77,6 +77,7 @@ More detailed changes for this release:
     paths. 
 * Crowbook program:
   * Still working to improve error messages.
+  * `crowbook --list-options` uses colours. This might hurt your eyes.
   * Display an error message when mustache can't compile a template,
     instead of panicking.
 * Internal/API:
