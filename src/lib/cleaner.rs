@@ -200,6 +200,26 @@ impl Cleaner for French {
             return None;
         }
 
+        /// Return true if the character is a symbol that is used after number and should have a nb_char before
+        fn char_is_symbol(v: &[char], i: usize) -> bool {
+            let is_next_letter = if i < v.len() - 1 {
+                v[i+1].is_alphabetic()
+            } else {
+                false
+            };
+            if is_next_letter {
+                match v[i] {
+                    '°' => true,
+                    _ => false
+                }
+            } else {
+                match v[i] {
+                    c if (!c.is_alphabetic() && !c.is_whitespace()) => true,
+                    c if c.is_uppercase() => true,
+                    _ => false,
+                }
+            }
+        }
 
 
         let s = Default.clean(s, latex); // first pass with default impl
@@ -220,13 +240,13 @@ impl Cleaner for French {
                     is_number_series = true;
                 },
                 c if c.is_whitespace() => {
-                    if is_number_series && next.is_digit(10) {
+                    if is_number_series && (next.is_digit(10) || char_is_symbol(&chars, i+1)) {
+                        // Next char is a number or symbol such as $, and previous was number
                         chars[i] = nb_char_narrow;
                     }
                 },
                 _ => { is_number_series = false; }
             }
-
         }
         
         for i in 0..(chars.len()-1) {

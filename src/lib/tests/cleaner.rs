@@ -36,4 +36,28 @@ fn cleaner_french_numbers() {
     let s = Cow::Borrowed("10 000");
     let res = French.clean(s, true);
     test_eq(&res, "10~000");
+
+    let s = Cow::Borrowed("10 000 €");
+    let res = French.clean(s, true);
+    test_eq(&res, "10~000~€");
+    
+    let s = Cow::Borrowed("10 000 euros");
+    let res = French.clean(s, true);
+    test_eq(&res, "10~000 euros");
+
+    let s = Cow::Borrowed("50 %");
+    let res = French.clean(s, true);
+    test_eq(&res, "50~%");
+
+    let s = Cow::Borrowed("20 °C");
+    let res = French.clean(s, true);
+    test_eq(&res, "20~°C");
+
+    let s = Cow::Borrowed("20 F");
+    let res = French.clean(s, true);
+    test_eq(&res, "20~F");
+
+    let s = Cow::Borrowed("20 BALLES");
+    let res = French.clean(s, true);
+    test_eq(&res, "20 BALLES");
 }
