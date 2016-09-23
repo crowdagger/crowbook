@@ -216,7 +216,7 @@ impl Cleaner for French {
 
             for i in beginning..v.len() {
                 if v[i].is_whitespace() {
-                    end = i;
+                    end = i-1;
                     break;
                 }
             }
