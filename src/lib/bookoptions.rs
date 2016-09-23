@@ -542,12 +542,16 @@ impl BookOptions {
         let mut out = String::new();
         let mut previous_is_comment = true;
         for (comment, key, o_type, default) in Self::options_to_vec() {
+            // Don't display deprecated options if md is not set
+            if !md && comment.trim() == "Deprecated options" {
+                return out;
+            }
             if key.is_none() {
                 if !previous_is_comment {
                     out.push_str("\n");
                     previous_is_comment = true;
                 }
-                out.push_str(&format!("### {} ###\n", comment));
+                out.push_str(&format!("### {} ###\n", comment.trim()));
                 continue;
             }
             previous_is_comment = false;
@@ -557,6 +561,7 @@ impl BookOptions {
                 "char" => "char",
                 "str" => "string",
                 "path" => "path",
+                "tpl" => "template path",
                 "alias" => "DEPRECATED",
                 _ => unreachable!()
             };
