@@ -229,14 +229,13 @@ impl Cleaner for French {
 
         for i in 0..(chars.len()-1) {
             // Handle numbers (that's easy)
-
             let current = chars[i];
             let next = chars[i+1];
 
             match current {
                 '0'...'9' => if i == 0 {
                     is_number_series = true;
-                } else if chars[i-1].is_whitespace() {
+                } else if !chars[i-1].is_alphabetic() {
                     is_number_series = true;
                 },
                 c if c.is_whitespace() => {
