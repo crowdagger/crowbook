@@ -44,6 +44,15 @@ fn main() {
     let s = Cow::Borrowed("10 000 €");
     display_spaces(French.clean(s, false).as_ref());
 
+    let s = Cow::Borrowed("10 000 EUR");
+    display_spaces(French.clean(s, false).as_ref());
+
+    let s = Cow::Borrowed("10 000 EUROS");
+    display_spaces(French.clean(s, false).as_ref());
+
+    let s = Cow::Borrowed("10 000 fr");
+    display_spaces(French.clean(s, false).as_ref());
+
     let s = Cow::Borrowed("tiret cadratin en début : espace insécable non justifiante, pour que les dialogues restent alignés");
     display_spaces(French.clean(s, false).as_ref());
 
@@ -64,6 +73,9 @@ syntaxique assez poussée – ce qui va au-delà des prétentions de mon logicie
     let s = Cow::Borrowed(r#"« en début : on pourrait aussi avoir une espace insécable non justifiante, mais de fait l'alignement sera de toute façon rompu car
 suivi en général par tiret cadratin. Il faut juste éviter l'espace
 fine, qui colle un peu trop le guillemet au dialogue..."#);
+    display_spaces(French.clean(s, false).as_ref());
+
+    let s = Cow::Borrowed(r#"— par contre », objecta-t-elle, « il serait bien que si le premier guillemet fermant apparaît sans ouvrant, on en conclut qu'il s'agissait d'un dialogue »"#);
     display_spaces(French.clean(s, false).as_ref());
 
     let s = Cow::Borrowed(r#"Un « guillemet » pas en début : là, par contre, l'espace insécable fine est bien,

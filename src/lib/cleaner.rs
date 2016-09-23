@@ -111,6 +111,7 @@ impl Cleaner for Default {
 /// ```
 pub struct French;
 
+const THRESHOLD_CURRENCY: usize = 3; // after that, assume it's not a currency
 const THRESHOLD_QUOTE: usize = 23; // after that, assume it's a dialogue
 const THRESHOLD_REAL_WORD: usize = 3; // after that, can be reasonably sure it is not an abbreviation
 
@@ -200,6 +201,29 @@ impl Cleaner for French {
             return None;
         }
 
+        /// Returns the next word in `v` starting from index `n`
+        fn get_next_word(v: &[char], n: usize) -> &[char] {
+            let mut beginning = n;
+            let mut end = v.len();
+
+            for i in n..v.len() {
+                if v[i].is_alphabetic() {
+                    beginning = i;
+                    break;
+                }
+            }
+
+            for i in beginning..v.len() {
+                if v[i].is_whitespace() {
+                    end = i;
+                    break;
+                }
+            }
+
+            &v[beginning..end]
+        }
+        
+
         /// Return true if the character is a symbol that is used after number and should have a nb_char before
         fn char_is_symbol(v: &[char], i: usize) -> bool {
             let is_next_letter = if i < v.len() - 1 {
@@ -210,12 +234,22 @@ impl Cleaner for French {
             if is_next_letter {
                 match v[i] {
                     '°' => true,
+                    c if c.is_uppercase() => {
+                        let word = get_next_word(v, i);
+                        if word.len() > THRESHOLD_CURRENCY {
+                            // not a currency
+                            false
+                        } else {
+                            // if all uppercase and less than 3 letters, must e a currency
+                            word.iter().all(|c| c.is_uppercase())
+                        }
+                    }
                     _ => false
                 }
             } else {
                 match v[i] {
-                    c if (!c.is_alphabetic() && !c.is_whitespace()) => true,
-                    c if c.is_uppercase() => true,
+                    c if (!c.is_alphabetic() && !c.is_whitespace()) => true, // special symbol
+                    c if c.is_uppercase() => true, //single uppercase letter
                     _ => false,
                 }
             }
