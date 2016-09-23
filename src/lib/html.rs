@@ -172,6 +172,10 @@ impl<'a> HtmlRenderer<'a> {
         if render_end_notes {
             this.as_mut().render_end_notes(&mut res);
         }
+        if this.as_ref().parser.is_some() {
+            res = this.as_mut().detect_repetitions(&res);
+        }
+
         Ok(res)
     }
 
@@ -341,7 +345,6 @@ impl<'a> HtmlRenderer<'a> {
                     ""
                 };
                 let content = try!(this.render_vec(vec));
-                let content = this.as_mut().detect_repetitions(&content);
                 this.as_mut().current_par += 1;
                 let par = this.as_ref().current_par;
                 Ok(format!("<p id = \"para-{}\"{}>{}</p>\n",
