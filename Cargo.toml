@@ -14,6 +14,9 @@ exclude = [
     "img/*",
     "config.book",
     "book_example/*",
+    "ci/*",
+    ".travis.yml",
+    "appveyor.yml",
 ]
     
 
