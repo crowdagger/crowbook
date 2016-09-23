@@ -30,9 +30,13 @@ use std::borrow::Cow;
 /// assert_eq!(&s, "&lt;foo&gt; &amp; &lt;bar&gt;");
 /// ```
 pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
+    const NB_CHAR:char = ' '; // non breaking space
+    const NB_CHAR_NARROW:char = '\u{202F}'; // narrow non breaking space
+    const NB_CHAR_EM:char = '\u{2002}'; // demi em space
+
     let input = input.into();
     if input.contains(|c| match c {
-        '<'|'>'|'&' => true,
+        '<'|'>'|'&'| NB_CHAR_NARROW | NB_CHAR_EM | NB_CHAR  => true,
         _ => false
     }) {
         let mut output = String::with_capacity(input.len());
@@ -41,6 +45,18 @@ pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
                 '<' => output.push_str("&lt;"),
                 '>' => output.push_str("&gt;"),
                 '&' => output.push_str("&amp;"),
+                NB_CHAR_NARROW
+                    | NB_CHAR_EM
+                    | NB_CHAR
+                    => output.push_str(&format!("<span style = \"background-color: {}\">{}</span>",
+                                               match c {
+                                                   NB_CHAR => "#ffff66",
+                                                   NB_CHAR_NARROW => "#9999ff",
+                                                   NB_CHAR_EM => "#ffcccc",
+                                                   _ => unreachable!()
+                                               },
+                                                c)),
+                
                 _ => output.push(c),
             }
         }
