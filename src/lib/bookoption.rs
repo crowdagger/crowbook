@@ -4,7 +4,7 @@ use error::{Error,Result, Source};
 ///
 /// This Enum might grow additional variants, so library users should
 /// **not** count on exhaustive matching.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum BookOption {
     /// Stores a String
     String(String),
