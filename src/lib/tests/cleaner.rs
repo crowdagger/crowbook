@@ -51,6 +51,10 @@ fn cleaner_french_numbers() {
     let res = cleaner.clean(s, true);
     test_eq(&res, "10~000~EUR");
 
+    let s = Cow::Borrowed("50 km");
+    let res = cleaner.clean(s, true);
+    test_eq(&res, "50~km");
+
     let s = Cow::Borrowed("50 %");
     let res = cleaner.clean(s, true);
     test_eq(&res, "50~%");
