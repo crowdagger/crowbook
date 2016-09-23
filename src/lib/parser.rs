@@ -97,6 +97,8 @@ impl Parser {
 
         try!(self.parse_footnotes(&mut res));
 
+        collapse(&mut res);
+
         find_standalone(&mut res);
         Ok(res)
     }
@@ -222,6 +224,46 @@ impl Parser {
         };
         v.push(token);
         Ok(())
+    }
+}
+
+/// Replace consecutives Strs by a Str of both, collapse soft breaks to previous std and so on
+fn collapse(ast: &mut Vec<Token>) {
+    if ast.len() < 2 {
+        return;
+    }
+        
+    let mut i = 0;
+    while i < ast.len() {
+        if ast[i].is_str() {
+            if i < ast.len() - 1 {
+                if ast[i+1].is_str() {
+                    // Two consecutives Str, concatenate them
+                    let token = ast.remove(i+1);
+                    if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i], token) {
+                        dest.push(' ');
+                        dest.push_str(source);
+                        continue;
+                    } else {
+                        unreachable!();
+                    }
+                } else if ast[i+1] == Token::SoftBreak {
+                    ast.remove(i+1);
+                    if let &mut Token::Str(ref mut dest) = &mut ast[i] {
+                        dest.push(' ');
+                        continue;
+                    } else {
+                        unreachable!();
+                    }
+                }
+            }
+        }
+
+        // If token is containing others, recurse into them
+        if let Some(ref mut inner) = ast[i].inner_mut() {
+            collapse(inner);
+        }
+        i += 1;
     }
 }
 

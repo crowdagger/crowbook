@@ -339,7 +339,7 @@ impl Cleaner for French {
                                         let j = find_next(&chars, '»', i);
                                         if let Some(j) = j {
                                             if chars[j-1].is_whitespace() {
-                                                if j == chars.len() {
+                                                if j >= chars.len() - 1 {
                                                     // » is at the end, assume it is a dialogue
                                                     chars[j-1] = nb_char;
                                                     nb_char
