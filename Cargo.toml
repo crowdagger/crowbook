@@ -30,6 +30,11 @@ name = "crowbook"
 path = "src/bin/main.rs"
 doc = false
 
+[[bin]]
+name = "test_cleaner"
+path = "src/bin/test_cleaner.rs"
+doc = false
+
 [dependencies]
 mime_guess = "1"
 pulldown-cmark = "0.0.8"
