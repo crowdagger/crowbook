@@ -113,7 +113,7 @@ pub struct French;
 
 const THRESHOLD_CURRENCY: usize = 3; // after that, assume it's not a currency
 const THRESHOLD_UNIT: usize = 2; // after that, assume it's not a unit
-const THRESHOLD_QUOTE: usize = 25; // after that, assume it's a dialogue
+const THRESHOLD_QUOTE: usize = 27; // after that, assume it's a dialogue
 const THRESHOLD_REAL_WORD: usize = 3; // after that, can be reasonably sure it is not an abbreviation
 
 impl Cleaner for French {
