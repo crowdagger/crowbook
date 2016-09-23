@@ -293,7 +293,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             },
             Token::Rule => Ok(String::from("\\HRule\n")),
             Token::SoftBreak => Ok(String::from(" ")),
-            Token::HardBreak => Ok(String::from("\n")),
+            Token::HardBreak => Ok(String::from("\\\n")),
             Token::List(ref vec) => Ok(format!("\\begin{{itemize}}\n{}\\end{{itemize}}", try!(self.render_vec(vec)))),
             Token::OrderedList(_, ref vec) => Ok(format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n", try!(self.render_vec(vec)))),
             Token::Item(ref vec) => Ok(format!("\\item {}\n", try!(self.render_vec(vec)))),
