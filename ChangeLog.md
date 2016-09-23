@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+unreleased
+----------
+* Rendering:
+  * Improved french cleaner. 
+
 0.9.0 (2016-09-23)
 ------------------
 The main objective of this release is to clean public interfaces, in
