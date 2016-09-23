@@ -45,6 +45,10 @@ More detailed changes for this release:
     templates, with dots ('.') replaced by underscores ('_'). E.g.,
     with `metadata.foo: bar` you can access it in your templates with
     `{{{metadata_foo}}}`.
+  * `output.base_path` specifies a directory where the output files (set
+    by `output.FORMAT` will be written.
+  * `resources.base_path.templates` specifies where templates can be
+    found. 
 * Rendering:
   * Metadata can now contain Markdown and will be rendered by the
     renderers. This might not be a good idea for common fields

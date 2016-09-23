@@ -5,9 +5,8 @@ use logger::{Logger, InfoLevel};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use std::env;
-use std::mem;
 
 static OPTIONS:&'static str = r#"
 # Metadata
@@ -30,6 +29,7 @@ output.html_dir:path                # Output directory name for HTML rendering
 output.tex:path                     # Output file name for LaTeX rendering
 output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
+output.base_path:path:""            # Directory where those output files will we written
 
 # Rendering options
 rendering.initials:bool:false                                        # Use initials ('lettrines') for first letter of a chapter (experimental)
@@ -44,34 +44,34 @@ import_config:path                  # Import another book configuration file
 # HTML options
 html.header:str                     # Custom header to display at the beginning of html file(s) 
 html.footer:str                     # Custom footer to display at the end of HTML file(s)
-html.css:path                       # Path of a stylesheet for HTML rendering
-html.js:path                        # Path of a javascript file
-html.css.print:path                 # Path of a media print stylesheet for HTML rendering
+html.css:tpl                        # Path of a stylesheet for HTML rendering
+html.js:tpl                         # Path of a javascript file
+html.css.print:tpl                  # Path of a media print stylesheet for HTML rendering
 html.highlight_code:bool:true       # Provides syntax highlighting for code blocks (using highlight.js) 
-html.highlight.js:path              # Set another highlight.js version than the bundled one
-html.highlight.css:path             # Set another highlight.js CSS theme than the default one
+html.highlight.js:tpl               # Set another highlight.js version than the bundled one
+html.highlight.css:tpl              # Set another highlight.js CSS theme than the default one
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
 
 
 # Standalone HTML options
 html_single.one_chapter:bool:false  # Display only one chapter at a time (with a button to display all)
-html_single.html:path               # Path of an HTML template
-html_single.js:path                 # Path of a javascript file
+html_single.html:tpl                # Path of an HTML template
+html_single.js:tpl                  # Path of a javascript file
 
 
 # Multifile HTML options
-html_dir.index.html:path            # Path of index.html template
-html_dir.chapter.html:path          # Path of a chapter.html template
+html_dir.index.html:tpl             # Path of index.html template
+html_dir.chapter.html:tpl           # Path of a chapter.html template
 
 # EPUB options
 epub.version:int:2                  # EPUB version to generate (2 or 3)
-epub.css:path                       # Path of a stylesheet for EPUB
-epub.chapter.xhtml:path             # Path of an xhtml template for each chapter
+epub.css:tpl                        # Path of a stylesheet for EPUB
+epub.chapter.xhtml:tpl              # Path of an xhtml template for each chapter
 
 # LaTeX options
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
 tex.command:str:pdflatex            # LaTeX command to use for generating PDF
-tex.template:path                   # Path of a LaTeX template file
+tex.template:tpl                    # Path of a LaTeX template file
 tex.class:str:book                  # LaTeX class to use
 
 # Resources option
@@ -80,6 +80,7 @@ resources.base_path:path            # Path where to find resources (in the sourc
 resources.base_path.links:path      # Set base path but only for links. Useless if resources.base_path is set.
 resources.base_path.images:path:.   # Set base path but only for images. Useless if resources.base_path is set.
 resources.base_path.files:path:.    # Set base path but only for additional files. Useless if resources.base_path is set.
+resources.base_path.templates:path:. # Set base path but only for templates files. Useless if resources.base_path is set.
 resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
 
 
@@ -130,6 +131,7 @@ pub struct BookOptions {
     options: HashMap<String, BookOption>,
     defaults: HashMap<String, BookOption>,
     deprecated: HashMap<String, Option<String>>,
+    valid_tpls: Vec<&'static str>,
     valid_bools: Vec<&'static str>,
     valid_chars: Vec<&'static str>,
     valid_strings: Vec<&'static str>,
@@ -158,6 +160,7 @@ impl BookOptions {
             valid_ints:vec!(),
             valid_strings:vec!(),
             valid_paths:vec!(),
+            valid_tpls:vec!(),
             metadata: vec!(),
             root: PathBuf::new(),
             source: Source::empty(),
@@ -186,6 +189,10 @@ impl BookOptions {
                 "int" => options.valid_ints.push(key),
                 "char" => options.valid_chars.push(key),
                 "path" => options.valid_paths.push(key),
+                "tpl" => {
+                    options.valid_tpls.push(key);
+                    options.valid_paths.push(key);
+                },
                 "alias" => {
                     options.deprecated.insert(key.to_owned(), default_value.map(|s| s.to_owned()));
                     continue;
@@ -387,10 +394,61 @@ impl BookOptions {
 
     /// Get a path option
     ///
-    /// Adds book's root path before it
+    /// Adds the correct path correction before it
     pub fn get_path(&self, key: &str) -> Result<String> {
         let path: &str = try!(try!(self.get(key)).as_path());
-        let new_path:PathBuf = self.root.join(path);
+
+        if Path::new(path).is_absolute() {
+            // path is absolute, do nothing
+            return Ok(path.to_owned());
+        }
+
+        let new_path:PathBuf = match key {
+            "resources.base_path.links"
+                | "resources.base_path.images"
+                | "resources.base_path.files"
+                | "resources.pase_path.templates"
+                => {
+                    // If resources.base_path is set, return it, else return itself
+                    let base_path = self.get_path("resources.base_path");
+                    if base_path.is_ok() {
+                        return base_path;
+                    }
+                    self.root.join(path)
+                },
+            
+            "cover"
+                => {
+                    // Translate according to resources.base_path.images
+                    let base = self.get_path("resources.base_path.images").unwrap();
+                    let new_path = Path::new(&base).join(path);
+                    new_path
+                },
+
+            "output.epub"
+                | "output.html"
+                | "output.html_dir"
+                | "output.pdf"
+                | "output.tex"
+                | "output.odt"
+                => {
+                    // Translate according to output.base_path
+                    let base = self.get_path("output.base_path").unwrap();
+                    let new_path = Path::new(&base).join(path);
+                    new_path
+                },
+
+            key if self.valid_tpls.contains(&key)
+                => {
+                    // Translate according to resources.base_path.template
+                    let base = self.get_path("resources.base_path.templates").unwrap();
+                    let new_path = Path::new(&base).join(path);
+                    new_path
+                },
+
+
+            _ => self.root.join(path)
+        };
         if let Some(path) = new_path.to_str() {
             Ok(path.to_owned())
         } else {
@@ -427,19 +485,18 @@ impl BookOptions {
     /// If option is already set in self, don't add it, unless it was the default.
     /// Option is not inserted either if new value is equal to default.
     #[doc(hidden)]
-    pub fn merge(&mut self, mut other: BookOptions) -> Result<()> {
-        let other_root = mem::replace(&mut other.root, PathBuf::new());
-        let relative_path = match other_root.strip_prefix(&self.root) {
+    pub fn merge(&mut self, other: BookOptions) -> Result<()> {
+        let relative_path = match other.root.strip_prefix(&self.root) {
             Ok(path) => path,
-            Err(_) => &other_root,
+            Err(_) => &other.root,
         };
-        for (key, value) in other.options.into_iter() {
+        for (key, value) in &other.options {
             // Check if option was already set, and if it was to default or to something else
-            if self.defaults.contains_key(&key) {
-                let previous_opt = self.options.get(&key);
-                let default = self.defaults.get(&key).unwrap();
+            if self.defaults.contains_key(key) {
+                let previous_opt = self.options.get(key);
+                let default = self.defaults.get(key).unwrap();
                 // If new value is equal to default, don't insert it
-                if &value == default {
+                if value == default {
                     continue;
                 }
                 if let Some(previous_opt) = previous_opt {
@@ -450,17 +507,27 @@ impl BookOptions {
                 }
             }
             // If it's a path, get the corrected path
-            if let BookOption::Path(ref path) = value {
-                let new_path:PathBuf = relative_path.join(path);
+            if let &BookOption::Path(ref path) = value {
+                let new_path:PathBuf = if other.valid_tpls.contains(&key.as_ref()) {
+                    // If key is a template, sets it with an absolute path so it won't be messed up if
+                    // resources.base_path.templates is redefined later on
+                    let path = other.get_path(&key).unwrap();
+                    let new_path = try!(::std::env::current_dir().map_err(|_|
+                                                                          Error::default(Source::empty(), "could not get current directory!!!")))
+                        .join(&path);
+                    new_path
+                } else {
+                    relative_path.join(path)
+                };
                 let new_path = if let Some(path) = new_path.to_str() {
                     path.to_owned()
                 } else {
-                    return Err(Error::book_option(Source::new(other_root.to_str().unwrap()),
+                    return Err(Error::book_option(Source::new(other.root.to_str().unwrap()),
                                                   format!("'{}''s path contains invalid UTF-8 code", key)));
                 };
-                self.options.insert(key, BookOption::Path(new_path));
+                self.options.insert(key.clone(), BookOption::Path(new_path));
             } else {
-                self.options.insert(key, value);
+                self.options.insert(key.clone(), value.clone());
             }
         }
         Ok(())
