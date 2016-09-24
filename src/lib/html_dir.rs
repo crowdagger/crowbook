@@ -158,6 +158,10 @@ impl<'a> HtmlDirRenderer<'a> {
         self.html.source = Source::empty();
         let toc = self.html.toc.render();
 
+        // render all chapters
+        let template = try!(compile_str(try!(self.html.book.get_template("html_dir.chapter.html")).as_ref(),
+                                        &self.html.book.source,
+                                        "could not compile template 'html_dir.chapter.html"));
         for (i, content) in chapters.into_iter().enumerate() {
             let prev_chapter = if i > 0 {
                 format!("<p class = \"prev_chapter\">
@@ -202,9 +206,6 @@ impl<'a> HtmlDirRenderer<'a> {
                 mapbuilder = mapbuilder.insert_bool("highlight_code", true);
             }
             let data = mapbuilder.build();
-            let template = try!(compile_str(try!(self.html.book.get_template("html_dir.chapter.html")).as_ref(),
-                                            &self.html.book.source,
-                                            "could not compile template 'html_dir.chapter.html"));
             let mut res = vec!();
             template.render_data(&mut res, &data);
             try!(self.write_file(&filenamer(i), &res));
