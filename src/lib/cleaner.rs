@@ -116,7 +116,7 @@ impl Cleaner for French {
     fn clean<'a>(&self, s: Cow<'a, str>, latex: bool) -> Cow<'a, str> {
         fn is_trouble(c: char) -> bool {
             match c {
-                '?'|'!'|';'|':'|'»'|'«'|'—'|'–' | '0'...'9' => true,
+                '?'|'!'|';'|':'|'»'|'«'|'—'|'–' => true,
                 _ => false
             }
         }
@@ -124,10 +124,11 @@ impl Cleaner for French {
         let input = Default.clean(s, latex); // first pass with default impl
         // Find first character that is trouble
         let first = input.chars().position(is_trouble);
-        if first.is_none() {
+        let first_number = input.chars().position(|c| c.is_digit(10));
+        if first.is_none() && first_number.is_none() {
             return input;
         }
-        let first = first.unwrap();
+        
         let nb_char = if latex {
             '~'
         } else {
@@ -267,84 +268,92 @@ impl Cleaner for French {
         let mut chars = input.chars().collect::<Vec<_>>();
         let mut is_number_series = false;
 
-        // Get back one step
-        let first = if first > 1 {
-            first - 1
-        } else {
-            0
-        };
-        
-        for i in first..(chars.len()-1) {
-            // Handle numbers (that's easy)
-            let current = chars[i];
-            let next = chars[i+1];
+        if let Some(first) = first_number {
+            // Go back one step
+            let first = if first > 1 {
+                first - 1
+            } else {
+                0
+            };
+            for i in first..(chars.len()-1) {
+                // Handle numbers (that's easy)
+                let current = chars[i];
+                let next = chars[i+1];
 
-            match current {
-                '0'...'9' => if i == 0 {
-                    is_number_series = true;
-                } else if !chars[i-1].is_alphabetic() {
-                    is_number_series = true;
-                },
-                c if c.is_whitespace() => {
-                    if is_number_series && (next.is_digit(10) || char_is_symbol(&chars, i+1)) {
-                        // Next char is a number or symbol such as $, and previous was number
-                        chars[i] = nb_char_narrow;
-                    }
-                },
-                _ => { is_number_series = false; }
-            }
-        }
-        
-        for i in first..(chars.len()-1) {
-            let current = chars[i];
-            let next = chars[i+1];
-
-            
-            // Handle the rest (that's hard)
-            if is_whitespace(current) {
-                match next {
-                    // handle narrow nb space before char
-                    '?' | '!' | ';' => chars[i] = nb_char_narrow,
-                    ':' => chars[i] = nb_char,
-                    '»' => if current == ' ' {
-                        // Assumne that if it isn't a normal space it was used here for good reason, don't replace it
-                        if found_opening_quote {
-                            // not the end of a dialogue
-                            chars[i] = nb_char;
-                        } else {
-                            chars[i] = nb_char;
+                match current {
+                    '0'...'9' => if i == 0 {
+                        is_number_series = true;
+                    } else if !chars[i-1].is_alphabetic() {
+                        is_number_series = true;
+                    },
+                    c if c.is_whitespace() => {
+                        if is_number_series && (next.is_digit(10) || char_is_symbol(&chars, i+1)) {
+                            // Next char is a number or symbol such as $, and previous was number
+                            chars[i] = nb_char_narrow;
                         }
                     },
-                    _ => (),
+                    _ => { is_number_series = false; }
                 }
+            }
+        }
+
+        if let Some(first) = first {
+            // Go back one step
+            let first = if first > 1 {
+                first - 1
             } else {
-                match current {
-                    // handle nb space after char
-                    '—' | '«' | '-' | '–' => {
-                        if is_whitespace(next) {
-                            let replacing_char = match current {
-                                '—' | '-' | '–' => {
-                                    if i <= 1 {
-                                        nb_char_em
-                                    } else {
-                                        if chars[i-1] == nb_char {
-                                            // non breaking space before, so probably should have a breakable one after
-                                            ' '
+                0
+            };
+            for i in first..(chars.len()-1) {
+                let current = chars[i];
+                let next = chars[i+1];
+                
+                
+                // Handle the rest (that's hard)
+                if is_whitespace(current) {
+                    match next {
+                        // handle narrow nb space before char
+                        '?' | '!' | ';' => chars[i] = nb_char_narrow,
+                        ':' => chars[i] = nb_char,
+                        '»' => if current == ' ' {
+                            // Assumne that if it isn't a normal space it was used here for good reason, don't replace it
+                            if found_opening_quote {
+                                // not the end of a dialogue
+                                chars[i] = nb_char;
+                            } else {
+                                chars[i] = nb_char;
+                            }
+                        },
+                        _ => (),
+                    }
+                } else {
+                    match current {
+                        // handle nb space after char
+                        '—' | '«' | '-' | '–' => {
+                            if is_whitespace(next) {
+                                let replacing_char = match current {
+                                    '—' | '-' | '–' => {
+                                        if i <= 1 {
+                                            nb_char_em
                                         } else {
-                                            if let Some(closing) = find_closing_dash(&chars, i+1) {
-                                                chars[closing] = nb_char;
+                                            if chars[i-1] == nb_char {
+                                                // non breaking space before, so probably should have a breakable one after
+                                                ' '
+                                            } else {
+                                                if let Some(closing) = find_closing_dash(&chars, i+1) {
+                                                    chars[closing] = nb_char;
+                                                }
+                                                nb_char
                                             }
-                                            nb_char
                                         }
-                                    }
-                                },
-                                '«' => {
-                                    found_opening_quote = true;
-                                    if i <= 1 {
-                                        nb_char
-                                    } else {
-                                        let j = find_next(&chars, '»', i);
-                                        if let Some(j) = j {
+                                    },
+                                    '«' => {
+                                        found_opening_quote = true;
+                                        if i <= 1 {
+                                            nb_char
+                                        } else {
+                                            let j = find_next(&chars, '»', i);
+                                            if let Some(j) = j {
                                             if chars[j-1].is_whitespace() {
                                                 if j >= chars.len() - 1 {
                                                     // » is at the end, assume it is a dialogue
@@ -366,17 +375,18 @@ impl Cleaner for French {
                                                 nb_char
                                             }
                                         } else {
-                                            // No ending quote found, assume is a dialogue
-                                            nb_char
+                                                // No ending quote found, assume is a dialogue
+                                                nb_char
+                                            }
                                         }
-                                    }
-                                }, // TODO: better heuristic: use narrow nb_char if not at front???
-                                _ => unreachable!(),
-                            };
-                            chars[i+1] = replacing_char;
+                                    }, // TODO: better heuristic: use narrow nb_char if not at front???
+                                    _ => unreachable!(),
+                                };
+                                chars[i+1] = replacing_char;
+                            }
                         }
+                        _ => (),
                     }
-                    _ => (),
                 }
             }
         }
