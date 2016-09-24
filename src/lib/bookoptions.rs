@@ -71,7 +71,7 @@ epub.chapter.xhtml:tpl              # Path of an xhtml template for each chapter
 
 # LaTeX options
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
-tex.command:str:pdflatex            # LaTeX command to use for generating PDF
+tex.command:str:xelatex            # LaTeX command to use for generating PDF
 tex.template:tpl                    # Path of a LaTeX template file
 tex.class:str:book                  # LaTeX class to use
 
