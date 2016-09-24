@@ -3,6 +3,18 @@ ChangeLog
 
 unreleased
 ----------
+* New options:
+  * Proofread options, `proofread.repetitions` and
+    `proofread.nb_spaces` have been added. These two change html
+    output, by displaying repetitions or by making non breaking spaces
+    visible, so it is easier to check that the formatting of a
+    document is correct.
+     * `proofread.repetitions.fuzzy`,
+       `proofread.repetitions.max_distance`,
+       `proofread.repetitions.threshold`,
+       `proofread.repetitions.fuzzy.threshold`,
+       `proofread.repetitions.ignore_proper` allow to configure
+       repetition detection settings.
 * Performances:
   * Cache `chapter_template` so it is compiled once and for all.
 * Rendering:
