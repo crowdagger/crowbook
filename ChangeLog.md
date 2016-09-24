@@ -18,6 +18,8 @@ unreleased
 * Performances:
   * Cache `chapter_template` so it is compiled once and for all.
 * Rendering:
+  * LaTeX:
+    * Add support for xelatex in the default template. 
   * Improved french cleaner (see [an article (in french)](https://crowdagger.github.io/textes/articles/heuristique.html)
     that talks about what it does.
 
