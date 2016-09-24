@@ -72,9 +72,8 @@ pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     });
     if let Some(first) = first {
         let mut chars = input.chars().collect::<Vec<_>>();
-        let mut output = String::with_capacity(chars.len());
         let rest = chars.split_off(first);
-        output.push_str(&chars.into_iter().collect::<String>());
+        let mut output = chars.into_iter().collect::<String>();
         for c in rest {
             match c {
                 '<' => output.push_str("&lt;"),
