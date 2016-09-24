@@ -17,6 +17,9 @@ pub enum BookOption {
 
     /// Stores an int
     Int(i32),
+
+    /// Stores a float
+    Float(f32),
     
     /// Stores a path
     ///
@@ -79,6 +82,14 @@ impl BookOption {
             BookOption::Int(i) => Ok(i),
             _ => Err(Error::book_option(Source::empty(), format!("{:?} is not an i32", self)))
 
+        }
+    }
+
+    /// Returns the BookOption as an f32, or an error if it isn't a `Float` variant.
+    pub fn as_f32(&self) -> Result<f32> {
+        match *self {
+            BookOption::Float(f) => Ok(f),
+            _ => Err(Error::book_option(Source::empty(), format!("{:?} is not a f32", self)))
         }
     }
 }

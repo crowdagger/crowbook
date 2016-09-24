@@ -43,7 +43,9 @@ pub struct HtmlRenderer<'a> {
     first_paragraph: bool,
     footnotes: Vec<(String, String)>,
     filename: String,
+    
     parser: Option<Caribon>,
+    repetition_threshold: f32,
 
     /// Book that must be rendered
     pub book: &'a Book,
@@ -86,14 +88,31 @@ impl<'a> HtmlRenderer<'a> {
     /// Creates a new HTML renderer
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         let lang = book.options.get_str("lang").unwrap();
-        let caribon = match Caribon::new(&lang) {
-            Ok(parser) => Some(parser.with_fuzzy(Some(0.2))
-                               .with_html(true)
-                               .with_ignore_proper(true)),
-            Err(err) => {
-                book.logger.error(format!("could not create caribon parser: {}", err));
-                None
+
+        let threshold = book.options.get_f32("proofread.repetitions.threshold").unwrap();
+        let caribon = if book.options.get_bool("proofread.repetitions").unwrap() {
+            match Caribon::new(&lang) {
+                Ok(parser) => {
+                    let fuzzy = if book.options.get_bool("proofread.repetitions.fuzzy").unwrap() {
+                        Some(book.options.get_f32("proofread.repetitions.fuzzy.threshold").unwrap())
+                    } else {
+                        None
+                    };
+                    let ignore_proper = book.options.get_bool("proofread.repetitions.ignore_proper").unwrap();
+                    let dist = book.options.get_i32("proofread.repetitions.max_distance").unwrap();
+
+                    Some(parser.with_fuzzy(fuzzy)
+                         .with_html(true)
+                         .with_ignore_proper(ignore_proper)
+                         .with_max_distance(dist as u32))
+                },
+                Err(err) => {
+                    book.logger.error(format!("could not create caribon parser: {}", err));
+                    None
+                }
             }
+        } else {
+            None
         };
         
         let mut html = HtmlRenderer {
@@ -114,6 +133,7 @@ impl<'a> HtmlRenderer<'a> {
             first_letter: false,
             first_paragraph: true,
             parser: caribon,
+            repetition_threshold: threshold,
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
@@ -124,7 +144,7 @@ impl<'a> HtmlRenderer<'a> {
     fn detect_repetitions(&mut self, s: &str) -> String {
         if let Some(ref mut parser) = self.parser {
             let mut ast = parser.tokenize(s).unwrap();
-            parser.detect_local(&mut ast, 1.5);
+            parser.detect_local(&mut ast, self.repetition_threshold);
             parser.ast_to_html(&mut ast, false)
         } else {
             s.to_owned()
@@ -308,7 +328,7 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     escape_html(this.as_ref().book.clean(text.as_ref(), false))
                 };
-                let content = if this.as_ref().first_letter {
+                let mut content = if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
                     if this.as_ref().book.options.get_bool("rendering.initials").unwrap() {
                         // Use initial
@@ -331,7 +351,9 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     content
                 };
-                let content = escape_nb_spaces(content);
+                if this.as_ref().book.options.get_bool("proofread.nb_spaces").unwrap() {
+                    content = escape_nb_spaces(content);
+                }
                 Ok(content.into_owned())
             },
             Token::Paragraph(ref vec) => {

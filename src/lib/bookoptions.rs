@@ -95,6 +95,15 @@ crowbook.temp_dir:path:             # Path where to create a temporary directory
 crowbook.zip.command:str:zip        # Command to use to zip files (for EPUB/ODT)
 crowbook.verbose:bool:false         # Make Crowbook display more messages
 
+# Proofreading options
+proofread.nb_spaces:bool:false      # If set to true, will highlight non breaking spaces so it is easier to see if it is ok
+proofread.repetitions:bool:false    # If set to true, use Caribon to detect repetitions
+proofread.repetitions.max_distance:int:25 # Max distance between two occurences so it is considered a repetition
+proofread.repetitions.fuzzy:bool:true  # Enable fuzzy string matching
+proofread.repetitions.fuzzy.threshold:f32:0.2 # Max threshold of differences to consider two strings a repetition
+proofread.repetitions.ignore_proper:bool:true # Ignore proper nouns for repetitions 
+proofread.repetitions.threshold:f32:2.0 # Threshold to detect a repetition
+
 
 # Deprecated options
 base_path:alias:resources.base_path                 # Renamed
@@ -478,6 +487,11 @@ impl BookOptions {
     /// gets an int  option
     pub fn get_i32(&self, key: &str) -> Result<i32> {
         try!(self.get(key)).as_i32()
+    }
+
+    /// gets a float option
+    pub fn get_f32(&self, key: &str) -> Result<f32> {
+        try!(self.get(key)).as_f32()
     }
 
 
