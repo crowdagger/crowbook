@@ -160,15 +160,7 @@ impl Parser {
         while let Some(event) = p.next() {
             match event {
                 Event::Html(text) | Event::InlineHtml(text) | Event::Text(text) => {
-                    if let Some(&Token::Str(_)) = v.last() {
-                        if let Token::Str(ref mut s) = *v.last_mut().unwrap() {
-                            s.push_str(text.as_ref());
-                        } else {
-                            unreachable!();
-                        }
-                    } else {
-                        v.push(Token::Str(text.into_owned()));
-                    }
+                    v.push(Token::Str(text.into_owned()));
                 },
                 Event::Start(tag) => try!(self.parse_tag(p, v, tag)),
                 Event::End(tag) => {
