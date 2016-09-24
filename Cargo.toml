@@ -36,6 +36,7 @@ doc = false
 # doc = false
 
 [features]
+default = ["clap"]
 repetitions = ["caribon"]
 
 [dependencies]
@@ -45,8 +46,8 @@ yaml-rust = "0.3"
 mustache = "0.7"
 chrono = "0.2"
 uuid = { version = "0.3", features = ["v4"] }
-clap = "2"
 walkdir = "0.1"
 rustc-serialize = "0.3"
 crossbeam = "0.2"
 caribon = { version = "0.7", optional = true }
+clap = { version = "2", optional = true }

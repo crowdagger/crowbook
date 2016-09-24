@@ -18,7 +18,6 @@
 extern crate crowbook;
 extern crate clap;
 
-mod helpers;
 use helpers::*;
 
 use crowbook::{Book,BookOptions, InfoLevel};
@@ -89,8 +88,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     }
 }
 
-
-fn main() {
+pub fn real_main() {
     let matches = create_matches();
 
     if matches.is_present("list-options") {
