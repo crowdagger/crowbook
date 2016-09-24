@@ -125,9 +125,14 @@ impl Cleaner for French {
                 _ => false
             }
         }
-        if !s.contains(is_trouble) { // if not, no need to do anything
-            return Default.clean(s, latex);
+
+        let input = Default.clean(s, latex); // first pass with default impl
+        // Find first character that is trouble
+        let first = input.chars().position(is_trouble);
+        if first.is_none() {
+            return input;
         }
+        let first = first.unwrap();
         let nb_char = if latex {
             '~'
         } else {
@@ -262,12 +267,19 @@ impl Cleaner for French {
         }
 
 
-        let s = Default.clean(s, latex); // first pass with default impl
+
         let mut found_opening_quote = false; // we didn't find an opening quote yet
-        let mut chars = s.chars().collect::<Vec<_>>();
+        let mut chars = input.chars().collect::<Vec<_>>();
         let mut is_number_series = false;
 
-        for i in 0..(chars.len()-1) {
+        // Get back one step
+        let first = if first > 1 {
+            first - 1
+        } else {
+            0
+        };
+        
+        for i in first..(chars.len()-1) {
             // Handle numbers (that's easy)
             let current = chars[i];
             let next = chars[i+1];
@@ -288,7 +300,7 @@ impl Cleaner for French {
             }
         }
         
-        for i in 0..(chars.len()-1) {
+        for i in first..(chars.len()-1) {
             let current = chars[i];
             let next = chars[i+1];
 
