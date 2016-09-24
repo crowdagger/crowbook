@@ -233,7 +233,7 @@ fn collapse(ast: &mut Vec<Token>) {
                     // Two consecutives Str, concatenate them
                     let token = ast.remove(i+1);
                     if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i], token) {
-                        dest.push(' ');
+//                        dest.push(' ');
                         dest.push_str(source);
                         continue;
                     } else {
