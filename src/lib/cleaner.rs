@@ -72,13 +72,10 @@ pub struct Default;
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, s: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        if let Some(first) = s.chars().position(is_whitespace) { // if not, no need to do anything
-            let mut chars = s.chars().collect::<Vec<_>>();
-            let mut new_s = String::with_capacity(chars.len());
-            let rest = chars.split_off(first);
-            new_s.push_str(&chars.into_iter().collect::<String>());
+        if s.contains(is_whitespace) { // if not, no need to do anything
+            let mut new_s = String::with_capacity(s.len());
             let mut previous_space = false;
-            for c in rest {
+            for c in s.chars() {
                 if is_whitespace(c) {
                     if previous_space {
                         // previous char already a space, don't copy it
