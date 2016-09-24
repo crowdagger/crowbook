@@ -175,6 +175,10 @@ impl<'a> LatexRenderer<'a> {
         if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);
         }
+        // Insert xelatex if tex.command is set to xelatex
+        if self.book.options.get_str("tex.command") == Ok("xelatex") {
+            data = data.insert_bool("xelatex", true);
+        }
         let data = data.build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
