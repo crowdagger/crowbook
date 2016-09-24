@@ -4,24 +4,38 @@ ChangeLog
 unreleased
 ----------
 * New options:
-  * Proofread options, `proofread.repetitions` and
-    `proofread.nb_spaces` have been added. These two change html
-    output, by displaying repetitions or by making non breaking spaces
-    visible, so it is easier to check that the formatting of a
-    document is correct.
-     * `proofread.repetitions.fuzzy`,
+  * `html.escape_nb_spaces`, if set to true (by default), will replace
+    unicode non breaking spaces with HTML entites and CSS so it can
+    work on any(?) system. 
+  * Proofread options `proofread.repetitions` and
+  `proofread.nb_spaces` have been added.
+     * `proofread.nb_spaces`, if set to true, highlights non-breaking spaces so it is
+     easier to check the correct typography of a book. Note that it
+     requires that `html.escape_nb_spaces` be set to true (default) to
+     work. 
+     * `proofread.reppetitions`, if set to true, uses
+       [Caribon](https://github.com/lise-henry/caribon) to highlight
+       repetitions in a document. It also uses the settings `proofread.repetitions.fuzzy`,
        `proofread.repetitions.max_distance`,
-       `proofread.repetitions.threshold`,
+       `proofread.repetitions.threshold`, 
        `proofread.repetitions.fuzzy.threshold`,
-       `proofread.repetitions.ignore_proper` allow to configure
-       repetition detection settings.
-* Performances:
-  * Cache `chapter_template` so it is compiled once and for all.
+       `proofread.repetitions.ignore_proper`. Note that this feature
+       is not built by default, you'll have to build crowbook with
+       `cargo build --release --features "repetitions"`.
+* New default settings for options:
+  * `tex.command` is now `xelatex` by default. 
 * Rendering:
   * LaTeX:
     * Add support for xelatex in the default template. 
   * Improved french cleaner (see [an article (in french)](https://crowdagger.github.io/textes/articles/heuristique.html)
-    that talks about what it does.
+    that talks about what it does).
+* Performances:
+  * Avoid compiling some templates every time they are used. 
+* API:
+  * `clap` dependency is now optional, people who want to use Crowbook
+    as a library should include it with `crowbook = { version = "0.9",
+    default-features = false }`. (`clap` is still required to build a
+    working binary).
 
 0.9.0 (2016-09-23)
 ------------------
