@@ -28,6 +28,7 @@ use parser::Parser;
 
 use chrono;
 use uuid;
+use mustache::Template;
 
 use std::io::{Read};
 use std::convert::{AsRef,AsMut};
@@ -77,10 +78,13 @@ impl<'a> EpubRenderer<'a> {
             try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
         }
 
-        // Write chapters        
+        // Write chapters
+        let template_chapter = try!(compile_str(try!(self.html.book.get_template("epub.chapter.xhtml")).as_ref(),
+                                        &self.html.book.source,
+                                        "could not compile template 'epub.chapter.xhtml'"));
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
             self.html.chapter_config(i, n, filenamer(i));
-            let chapter = try!(self.render_chapter(v));
+            let chapter = try!(self.render_chapter(v, &template_chapter));
 
             try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
         }
@@ -331,7 +335,7 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render a chapter
-    pub fn render_chapter(&mut self, v: &[Token]) -> Result<String> {
+    pub fn render_chapter(&mut self, v: &[Token], template: &Template) -> Result<String> {
         let mut content = String::new();
 
         for token in v {
@@ -349,9 +353,6 @@ impl<'a> EpubRenderer<'a> {
         }
         self.toc.push(self.chapter_title.clone());
 
-        let template = try!(compile_str(try!(self.html.book.get_template("epub.chapter.xhtml")).as_ref(),
-                                        &self.html.book.source,
-                                        "could not compile template 'epub.chapter.xhtml'"));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .insert_str("chapter_title", mem::replace(&mut self.chapter_title, String::new()))
