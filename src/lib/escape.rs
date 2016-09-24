@@ -24,28 +24,22 @@ const NB_CHAR_NARROW:char = '\u{202F}'; // narrow non breaking space
 const NB_CHAR_EM:char = '\u{2002}'; // demi em space
 
 
-/// Escape non breaking spaces for HTML, so they are visible.
-#[doc(hidden)]
+/// Escape non breaking spaces for HTML, so there is no problem for displaying them if the font or browser
+/// doesn't know what to do with them
 pub fn escape_nb_spaces<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     let input = input.into();
-    if input.contains(|c| match c {
+    if let Some(first) = input.chars().position(|c| match c {
         NB_CHAR | NB_CHAR_NARROW | NB_CHAR_EM => true,
         _ => false
     }) {
-        let mut output = String::with_capacity(input.len());
-        for c in input.chars() {
+        let mut chars = input.chars().collect::<Vec<_>>();
+        let rest = chars.split_off(first);
+        let mut output = chars.into_iter().collect::<String>();
+        for c in rest {
             match c {
-                NB_CHAR_NARROW
-                    | NB_CHAR_EM
-                    | NB_CHAR
-                    => output.push_str(&format!("<span style = \"background-color: {}\">{}</span>",
-                                                match c {
-                                                    NB_CHAR => "#ffff66",
-                                                    NB_CHAR_NARROW => "#9999ff",
-                                                    NB_CHAR_EM => "#ff9999",
-                                                    _ => unreachable!()
-                                                },
-                                                c)),
+                NB_CHAR_NARROW  => output.push_str(r#"<span class = "nnbsp">&thinsp;</span>"#),
+                NB_CHAR_EM => output.push_str(r#"<span class = "ensp">&ensp;</span>"#),
+                NB_CHAR => output.push_str(r#"<span class = "nbsp">&nbsp;</span>"#),
                 _ => output.push(c),
             }
         }

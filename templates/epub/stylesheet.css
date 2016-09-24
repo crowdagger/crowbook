@@ -174,4 +174,21 @@ p.first-para {
     text-indent: 0;
 }
 
-                           
+/* Use this for escape narrow space so it is non-breaking */
+.nnbsp {
+    white-space: nowrap;
+}
+
+{{#display_spaces}}
+.nnbsp {
+    background-color: #9999ff;
+}
+
+.ensp {
+    background-color: #ff9999;
+}
+
+.nbsp {
+    background-color: #ffff66;
+}
+{{/display_spaces}}

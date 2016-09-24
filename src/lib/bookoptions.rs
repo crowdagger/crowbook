@@ -52,7 +52,7 @@ html.highlight_code:bool:true       # Provides syntax highlighting for code bloc
 html.highlight.js:tpl               # Set another highlight.js version than the bundled one
 html.highlight.css:tpl              # Set another highlight.js CSS theme than the default one
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
-
+html.escape_nb_spaces:bool:true     # Replace unicode non breaking spaces with  HTML entities and CSS
 
 # Standalone HTML options
 html_single.one_chapter:bool:false  # Display only one chapter at a time (with a button to display all)

@@ -390,7 +390,8 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     content
                 };
-                if this.as_ref().book.options.get_bool("proofread.nb_spaces").unwrap() {
+
+                if this.as_ref().book.options.get_bool("html.escape_nb_spaces").unwrap() {
                     content = escape_nb_spaces(content);
                 }
                 Ok(content.into_owned())
