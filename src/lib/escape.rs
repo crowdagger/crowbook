@@ -66,12 +66,16 @@ pub fn escape_nb_spaces<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
 /// ```
 pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     let input = input.into();
-    if input.contains(|c| match c {
-        '<'|'>'|'&' => true,
+    let first = input.chars().position(|c| match c {
+        '<'| '>'| '&' => true,
         _ => false
-    }) {
-        let mut output = String::with_capacity(input.len());
-        for c in input.chars() {
+    });
+    if let Some(first) = first {
+        let mut chars = input.chars().collect::<Vec<_>>();
+        let mut output = String::with_capacity(chars.len());
+        let rest = chars.split_off(first);
+        output.push_str(&chars.into_iter().collect::<String>());
+        for c in rest {
             match c {
                 '<' => output.push_str("&lt;"),
                 '>' => output.push_str("&gt;"),
