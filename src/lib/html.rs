@@ -17,6 +17,7 @@
 
 use error::{Result, Error, Source};
 use escape::escape_html;
+use escape::escape_nb_spaces;
 use token::Token;
 use book::{Book, compile_str};
 use number::Number;
@@ -307,7 +308,7 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     escape_html(this.as_ref().book.clean(text.as_ref(), false))
                 };
-                if this.as_ref().first_letter {
+                let content = if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
                     if this.as_ref().book.options.get_bool("rendering.initials").unwrap() {
                         // Use initial
@@ -323,13 +324,15 @@ impl<'a> HtmlRenderer<'a> {
                         for c in chars {
                             new_content.push(c);
                         }
-                        Ok(new_content)
+                        Cow::Owned(new_content)
                     } else {
-                        Ok(content.into_owned())
+                        content
                     }
                 } else {
-                    Ok(content.into_owned())
-                }
+                    content
+                };
+                let content = escape_nb_spaces(content);
+                Ok(content.into_owned())
             },
             Token::Paragraph(ref vec) => {
                 if this.as_ref().first_paragraph {
