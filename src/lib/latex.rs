@@ -104,7 +104,7 @@ impl<'a> LatexRenderer<'a> {
 
         let mut i = 0;
         for &(n, ref v) in &self.book.chapters {
-            self.source = Source::new(self.book.filenames[i].as_ref());
+            self.source = Source::new(&self.book.filenames[i] as &str);
             content.push_str(&format!("\\label{{chapter-{}}}", i));
             self.current_chapter = n;
             content.push_str(&try!(self.render_vec(v)));

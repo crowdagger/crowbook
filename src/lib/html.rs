@@ -162,7 +162,7 @@ impl<'a> HtmlRenderer<'a> {
     /// Configure the Renderer for this chapter
     #[doc(hidden)]
     pub fn chapter_config(&mut self, i: usize, n: Number, filename: String) {
-        self.source = Source::new(self.book.filenames[i].as_ref());
+        self.source = Source::new(&self.book.filenames[i] as &str);
         self.first_paragraph = true;
         self.current_hide = false;
         let book_numbering = self.book.options.get_i32("rendering.num_depth").unwrap();
