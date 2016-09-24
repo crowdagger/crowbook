@@ -102,6 +102,7 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
+#[cfg(feature = "repetitions")]
 extern crate caribon;
 
 pub mod cleaner;

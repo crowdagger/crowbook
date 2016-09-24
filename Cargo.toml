@@ -20,7 +20,6 @@ exclude = [
     "appveyor.yml",
 ]
     
-
 [lib]
 name = "crowbook"
 path = "src/lib/lib.rs"
@@ -36,6 +35,9 @@ doc = false
 # path = "src/bin/test_cleaner.rs"
 # doc = false
 
+[features]
+repetitions = ["caribon"]
+
 [dependencies]
 mime_guess = "1"
 pulldown-cmark = "0.0.8"
@@ -47,4 +49,4 @@ clap = "2"
 walkdir = "0.1"
 rustc-serialize = "0.3"
 crossbeam = "0.2"
-caribon = "0.7"
+caribon = { version = "0.7", optional = true }

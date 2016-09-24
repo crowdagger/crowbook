@@ -30,6 +30,7 @@ use lang;
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
 
+#[cfg(feature = "repetitions")]
 use caribon::Parser as Caribon;
 
 /// Base structure for rendering HTML files
@@ -44,9 +45,6 @@ pub struct HtmlRenderer<'a> {
     footnotes: Vec<(String, String)>,
     filename: String,
     
-    parser: Option<Caribon>,
-    repetition_threshold: f32,
-
     /// Book that must be rendered
     pub book: &'a Book,
     
@@ -82,15 +80,19 @@ pub struct HtmlRenderer<'a> {
     #[doc(hidden)]
     pub link_number: u32,
 
+    #[cfg(feature = "repetitions")]
+    parser: Option<Caribon>,
+    #[cfg(feature  = "repetitions")]
+    repetition_threshold: f32,
+
 }
 
 impl<'a> HtmlRenderer<'a> {
-    /// Creates a new HTML renderer
-    pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        let lang = book.options.get_str("lang").unwrap();
+    #[cfg(feature = "repetitions")]
+    fn init_caribon(book: &Book) -> Option<Caribon> {
+        if book.options.get_bool("proofread.repetitions").unwrap() {
+            let lang = book.options.get_str("lang").unwrap();
 
-        let threshold = book.options.get_f32("proofread.repetitions.threshold").unwrap();
-        let caribon = if book.options.get_bool("proofread.repetitions").unwrap() {
             match Caribon::new(&lang) {
                 Ok(parser) => {
                     let fuzzy = if book.options.get_bool("proofread.repetitions.fuzzy").unwrap() {
@@ -109,12 +111,18 @@ impl<'a> HtmlRenderer<'a> {
                 Err(err) => {
                     book.logger.error(format!("could not create caribon parser: {}", err));
                     None
-                }
+                },
             }
         } else {
             None
-        };
-        
+        }
+    }
+
+    /// Creates a new HTML renderer
+    #[cfg(feature = "repetitions")]
+    pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
+        let parser = Self::init_caribon(&book);
+
         let mut html = HtmlRenderer {
             book: book,
             toc: Toc::new(),
@@ -132,25 +140,58 @@ impl<'a> HtmlRenderer<'a> {
             source: Source::empty(),
             first_letter: false,
             first_paragraph: true,
-            parser: caribon,
-            repetition_threshold: threshold,
+            parser: parser,
+            repetition_threshold: book.options.get_f32("proofread.repetitions.threshold").unwrap(),
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
         html
     }
-
+    
+    #[cfg(not(feature = "repetitions"))]
+    pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
+        if book.options.get_bool("proofread.repetitions").unwrap() {
+            book.logger.error("This binary was not build with support for Caribon for detecting repetitions");
+        }
+        let mut html = HtmlRenderer {
+            book: book,
+            toc: Toc::new(),
+            link_number: 0,
+            current_chapter: [0, 0, 0, 0, 0, 0],
+            current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
+            current_par: 0,
+            current_hide: false,
+            table_head: false,
+            footnote_number: 0,
+            footnotes: vec!(),
+            verbatim: false,
+            filename: String::new(),
+            handler: ResourceHandler::new(&book.logger),
+            source: Source::empty(),
+            first_letter: false,
+            first_paragraph: true,
+        };
+        html.handler.set_images_mapping(true);
+        html.handler.set_base64(true);
+        html
+    }
+      
     // Detect the repetitions
-    fn detect_repetitions(&mut self, s: &str) -> String {
+    #[cfg(feature = "repetitions")]
+    fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
         if let Some(ref mut parser) = self.parser {
-            let mut ast = parser.tokenize(s).unwrap();
+            let mut ast = parser.tokenize(s.into().as_ref()).unwrap();
             parser.detect_local(&mut ast, self.repetition_threshold);
             parser.ast_to_html(&mut ast, false)
         } else {
-            s.to_owned()
+            s.into().into_owned()
         }
     }
 
+    #[cfg(not(feature = "repetitions"))]
+    fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
+        s.into().into_owned()
+    }
 
     
     /// Add a footnote which will be renderer later on
@@ -193,9 +234,7 @@ impl<'a> HtmlRenderer<'a> {
         if render_end_notes {
             this.as_mut().render_end_notes(&mut res);
         }
-        if this.as_ref().parser.is_some() {
-            res = this.as_mut().detect_repetitions(&res);
-        }
+        let res = this.as_mut().detect_repetitions(res);
 
         Ok(res)
     }
