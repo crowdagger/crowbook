@@ -3,8 +3,11 @@ ChangeLog
 
 unreleased
 ----------
+* Performances:
+  * Cache `chapter_template` so it is compiled once and for all.
 * Rendering:
-  * Improved french cleaner. 
+  * Improved french cleaner (see [an article (in french)](https://crowdagger.github.io/textes/articles/heuristique.html)
+    that talks about what it does.
 
 0.9.0 (2016-09-23)
 ------------------
