@@ -100,9 +100,9 @@ proofread.nb_spaces:bool:false      # If set to true, will highlight non breakin
 proofread.repetitions:bool:false    # If set to true, use Caribon to detect repetitions
 proofread.repetitions.max_distance:int:25 # Max distance between two occurences so it is considered a repetition
 proofread.repetitions.fuzzy:bool:true  # Enable fuzzy string matching
-proofread.repetitions.fuzzy.threshold:f32:0.2 # Max threshold of differences to consider two strings a repetition
+proofread.repetitions.fuzzy.threshold:float:0.2 # Max threshold of differences to consider two strings a repetition
 proofread.repetitions.ignore_proper:bool:true # Ignore proper nouns for repetitions 
-proofread.repetitions.threshold:f32:2.0 # Threshold to detect a repetition
+proofread.repetitions.threshold:float:2.0 # Threshold to detect a repetition
 
 
 # Deprecated options
@@ -147,6 +147,7 @@ pub struct BookOptions {
     valid_strings: Vec<&'static str>,
     valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
+    valid_floats: Vec<&'static str>,
     metadata: Vec<String>,
 
     /// Source for errors (unnecessary copy :/)
@@ -165,12 +166,13 @@ impl BookOptions {
             options: HashMap::new(),
             deprecated: HashMap::new(),
             defaults: HashMap::new(),
-            valid_bools:vec!(),
-            valid_chars:vec!(),
-            valid_ints:vec!(),
-            valid_strings:vec!(),
-            valid_paths:vec!(),
-            valid_tpls:vec!(),
+            valid_bools: vec!(),
+            valid_chars: vec!(),
+            valid_ints: vec!(),
+            valid_floats: vec!(),
+            valid_strings: vec!(),
+            valid_paths: vec!(),
+            valid_tpls: vec!(),
             metadata: vec!(),
             root: PathBuf::new(),
             source: Source::empty(),
@@ -197,6 +199,7 @@ impl BookOptions {
                 },
                 "bool" => options.valid_bools.push(key),
                 "int" => options.valid_ints.push(key),
+                "float" => options.valid_floats.push(key),
                 "char" => options.valid_chars.push(key),
                 "path" => options.valid_paths.push(key),
                 "tpl" => {
@@ -299,6 +302,18 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(&self.source,
                                            format!("expected an integer as value for key '{}', found {:?}", &key, &value)))
+            }
+        } else if self.valid_floats.contains(&key.as_ref()) {
+            // value is a float
+            if let Yaml::Real(value) = value {
+                match value.parse::<f32>() {
+                    Ok(value) => Ok(self.options.insert(key, BookOption::Float(value))),
+                    Err(_) => Err(Error::book_option(&self.source,
+                                           format!("could not parse '{}' as a float for key '{}'", &value, &key)))
+                }
+            } else {
+                Err(Error::book_option(&self.source,
+                                           format!("expected a float as value for key '{}', found {:?}", &key, &value)))
             }
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
@@ -581,6 +596,7 @@ impl BookOptions {
             previous_is_comment = false;
             let o_type = match o_type.unwrap() {
                 "bool" => "boolean",
+                "float" => "float",
                 "int" => "integer",
                 "char" => "char",
                 "str" => "string",
