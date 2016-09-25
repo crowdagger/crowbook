@@ -238,6 +238,7 @@ impl<'a> HtmlRenderer<'a> {
         }
         let res = this.as_mut().detect_repetitions(res);
 
+
         Ok(res)
     }
 
@@ -369,8 +370,6 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     let text = escape_html(this.as_ref().book.clean(text.as_str(), false));
 
-                    let text = grammar_check(text);
-                    
                     text
                 };
                 let mut content = if this.as_ref().first_letter {
@@ -416,6 +415,8 @@ impl<'a> HtmlRenderer<'a> {
                     ""
                 };
                 let content = try!(this.render_vec(vec));
+                let content = grammar_check(content);
+
                 this.as_mut().current_par += 1;
                 let par = this.as_ref().current_par;
                 Ok(format!("<p id = \"para-{}\"{}>{}</p>\n",
@@ -425,6 +426,7 @@ impl<'a> HtmlRenderer<'a> {
             },
             Token::Header(n, ref vec) => {
                 let s = try!(this.as_mut().render_title(n, vec));
+                let s = grammar_check(s).into_owned();
                 if n <= this.as_ref().book.options.get_i32("rendering.num_depth").unwrap() {
                     let url = format!("{}#link-{}",
                                       this.as_ref().filename,
@@ -433,8 +435,8 @@ impl<'a> HtmlRenderer<'a> {
                 }
                 Ok(this.as_mut().render_title_full(n, s))
             },
-            Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", try!(this.render_vec(vec)))),
-            Token::Strong(ref vec) => Ok(format!("<b>{}</b>", try!(this.render_vec(vec)))),
+            Token::Emphasis(ref vec) => this.render_vec(vec),
+            Token::Strong(ref vec) => this.render_vec(vec),
             Token::Code(ref vec) => Ok(format!("<code>{}</code>", try!(this.render_vec(vec)))),
             Token::BlockQuote(ref vec) => Ok(format!("<blockquote>{}</blockquote>\n", try!(this.render_vec(vec)))),
             Token::CodeBlock(ref language, ref vec) => {
@@ -460,22 +462,7 @@ impl<'a> HtmlRenderer<'a> {
                                                          },
                                                          try!(this.render_vec(vec)))),
             Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", try!(this.render_vec(vec)))),
-            Token::Link(ref url, ref title, ref vec) => {
-                let url = escape_html(url.as_ref());
-                let url = if ResourceHandler::is_local(&url) {
-                    Cow::Owned(this.as_ref().handler.get_link(&url).to_owned())
-                } else {
-                    url
-                };
-                
-                Ok(format!("<a href = \"{}\"{}>{}</a>", url,
-                           if title.is_empty() {
-                               String::new()
-                           } else {
-                               format!(" title = \"{}\"", title)
-                           },
-                           try!(this.render_vec(vec))))
-            },
+            Token::Link(ref url, ref title, ref vec) => this.render_vec(vec),
             Token::Image(ref url, ref title, ref alt)
                 | Token::StandaloneImage(ref url, ref title, ref alt) => {
                     let content = try!(this.render_vec(alt));

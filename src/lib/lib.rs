@@ -153,7 +153,7 @@ mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
-pub mod grammar_check;
+mod grammar_check;
 
 
 #[cfg(test)]

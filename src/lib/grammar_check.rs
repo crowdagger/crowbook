@@ -44,7 +44,6 @@ fn escape_query<'a>(s: &str) -> Cow<'a, str> {
 /// Send a query to LanguageTools server
 pub fn get_errors(text: &str) -> Check {
     let query = format!("language=fr&text={}", escape_query(text));
-    println!("{}", query);
     
     let client = Client::new();
 
@@ -54,7 +53,6 @@ pub fn get_errors(text: &str) -> Check {
     assert_eq!(res.status, hyper::Ok);
     res.read_to_string(&mut s).unwrap();
     let reponse: Check = json::decode(&s).unwrap();
-    println!("{:?}", reponse);
     return reponse;
 }
 
