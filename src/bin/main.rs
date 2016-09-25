@@ -17,3 +17,4 @@ fn main() {
     println!("Clap dependency is required to build the binary.");
 }
     
+

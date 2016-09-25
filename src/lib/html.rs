@@ -26,6 +26,8 @@ use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
 use lang;
+use grammar_check::grammar_check;
+
 
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
@@ -365,7 +367,11 @@ impl<'a> HtmlRenderer<'a> {
                 let content = if this.as_ref().verbatim {
                     escape_html(text.as_ref())
                 } else {
-                    escape_html(this.as_ref().book.clean(text.as_ref(), false))
+                    let text = escape_html(this.as_ref().book.clean(text.as_str(), false));
+
+                    let text = grammar_check(text);
+                    
+                    text
                 };
                 let mut content = if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
