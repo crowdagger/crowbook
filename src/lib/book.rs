@@ -347,6 +347,14 @@ impl Book {
     pub fn render_all(&self) -> () {
         let mut handles = vec!();
         crossbeam::scope(|scope| {
+            if self.options.get("output.pdf").is_ok() {
+                handles.push(scope.spawn(|| {
+                    let result = self.render_pdf();
+                    if let Err(err) = result {
+                        self.logger.error(format!("rendering PDF:\n{}", err));
+                    }
+                }));
+            }
             if self.options.get("output.epub").is_ok() {
                 handles.push(scope.spawn(|| {
                     let result = self.render_epub();
@@ -387,14 +395,6 @@ impl Book {
                     }
                     else {
                         self.logger.error(format!("could not create LaTeX file '{}'", &file));
-                    }
-                }));
-            }
-            if self.options.get("output.pdf").is_ok() {
-                handles.push(scope.spawn(|| {
-                    let result = self.render_pdf();
-                    if let Err(err) = result {
-                        self.logger.error(format!("rendering PDF:\n{}", err));
                     }
                 }));
             }
