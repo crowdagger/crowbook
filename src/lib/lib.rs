@@ -102,6 +102,9 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
+extern crate hyper;
+extern crate url;
+
 #[cfg(feature = "repetitions")]
 extern crate caribon;
 
@@ -150,6 +153,7 @@ mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
+pub mod grammar_check;
 
 
 #[cfg(test)]
