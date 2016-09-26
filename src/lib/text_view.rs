@@ -40,14 +40,12 @@ pub fn view_as_text(tokens: &[Token]) -> String {
 
 /// Insert a comment at the given pos in the text_view
 pub fn insert_at(tokens: &mut Vec<Token>, comment: &str, pos: usize) -> Option<usize> {
-    println!("looking for pos {}", pos);
     let mut pos = pos;
     let mut found = None;
     for i in 0..tokens.len() {
         let recurse  = match tokens[i] {
             Token::Str(ref s) => {
                 let len = s.chars().count();
-                println!("i: {}, pos: {}, len: {}", i, pos, len);
                 if pos < len {
                     found = Some(i);
                     break;
@@ -69,22 +67,27 @@ pub fn insert_at(tokens: &mut Vec<Token>, comment: &str, pos: usize) -> Option<u
                         false
                     }
                 }
+            Token::Comment(_) => {
+                false
+            },
+                
             _ => true
         };
+
+        // Moved out of the match 'thanks' to borrowcheck
         if recurse {
-            println!("recursing from i: {}, pos: {}", i, pos);
-            if let Some(new_pos) = insert_at(tokens[i].inner_mut().unwrap(), comment, pos) {
-                pos = new_pos;
-            } else {
-                return None;
+            if let Some(ref mut inner) = tokens[i].inner_mut() {
+                if let Some(new_pos) = insert_at(inner, comment, pos) {
+                    pos = new_pos;
+                } else {
+                    return None;
+                }
             }
         }
     }
 
     let new_token = Token::Comment(comment.to_owned());
     if let Some(i) = found {
-        println!("position found: {}", i);
-        // do something
         if !tokens[i].is_str() {
             if i >= tokens.len() - 1 {
                 tokens.push(new_token);

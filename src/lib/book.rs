@@ -13,6 +13,7 @@ use number::Number;
 use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
 use lang;
+use grammar_check::check_grammar;
 
 use std::fs::File;
 use std::io::{Write, Read};
@@ -342,6 +343,7 @@ impl Book {
         Ok(())
     }
 
+
     fn render_one(&self, s: &str) -> () {
         if self.options.get(s).is_ok() {
             let (result, name) = match s {
@@ -575,6 +577,16 @@ impl Book {
         }
         // add offset
         ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut v);
+
+        // If one of the renderers requires it, perform grammarcheck
+        if self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok() {
+            for mut token in &mut v {
+                match *token {
+                    Token::Paragraph(ref mut v) => try!(check_grammar(v)),
+                    _ => (),
+                }
+            }
+        }
         
         self.chapters.push((number, v));
         Ok(())

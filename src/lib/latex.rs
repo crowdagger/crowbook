@@ -373,9 +373,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 Ok(res)
             }
             Token::TableCell(ref vec) => self.render_vec(vec),
-            Token::__NonExhaustive
-                | Token::Comment(_)
-                => unreachable!()
+            Token::Comment(_) => Ok(String::new()),
+            Token::__NonExhaustive => unreachable!()
         }
     }    
 }
