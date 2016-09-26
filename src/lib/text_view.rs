@@ -18,27 +18,154 @@
 use std::mem;
 
 use token::Token;
+use std::default::Default;
+
+pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
+    where F1: Fn(&str) -> R,
+          R: Default,
+          F2: Fn(R, R) -> R
+{
+    match token {
+        &Token::Str(ref s) => f(s),
+        
+        &Token::Rule
+            | &Token::SoftBreak
+            | &Token::HardBreak
+            => f("\n"),
+        
+        & Token::Comment(..)
+            | & Token::Image(..)
+            | & Token::StandaloneImage(..)
+            | & Token::Footnote(..)
+            | & Token::Table(..)
+            | & Token::TableHead(..)
+            | & Token::TableRow(..)
+            | & Token::TableCell(..)
+            => f(""),
+        
+        _ => traverse_vec(token.inner().unwrap(), f, add),
+    }
+}
+
+
+
+
+/// Traverse a vector of tokens
+#[doc(hidden)]    
+pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f:&F1, add: &F2) -> R
+    where F1: Fn(&str) -> R,
+          F2: Fn(R, R) -> R,
+          R: Default
+{
+    tokens.iter()
+        .map(|t| traverse_token(t, f, add))
+        .fold(R::default(), |r1, r2| add(r1, r2))
+}
+
 
 /// Returns the content of an AST as raw text, without any formatting
 /// Useful for tools like grammar checks
 pub fn view_as_text(tokens: &[Token]) -> String {
-    let mut output = String::new();
-
-    for token in tokens {
-        match token {
-            &Token::Str(ref s) => output.push_str(s),
-            &Token::Rule
-                | &Token::SoftBreak
-                | &Token::HardBreak
-                => output.push('\n'),
-
-            _ => output.push_str(&view_as_text(token.inner().unwrap()))
-        }
-    }
-    output
+    traverse_vec(tokens,
+                 &|s| s.to_owned(),
+                 &|s1, s2| s1 + &s2)
 }
+   
+
+// /// Insert an annotation at begin and end pos begin+len in the text_view
+// #[doc(hidden)]
+// pub fn insert_annotation(tokens: &mut Vec<Token>, comment: &str, pos: usize, length: usize) -> Option<usize> {
+//     let mut pos = pos;
+//     let mut found_left = None;
+//     let mut found_right = None;
+//     for i in 0..tokens.len() {
+//         let recurse  = match tokens[i] {
+//             Token::Str(ref s) => {
+//                 let len = s.chars().count();
+//                 if pos < len {
+//                     // We found the first element
+//                     if found_left.is_some() {
+//                         found_right = Some(i);
+//                         break;
+//                     }
+//                     found_left = Some(i);
+//                     pos += length;
+//                     if pos < len {
+//                         found_right = Some(i);
+//                         break;
+//                     }
+//                 } else {
+//                     pos = pos - len;
+//                     false
+//                 }
+//             },
+            
+//             Token::Rule
+//                 | Token::SoftBreak
+//                 | Token::HardBreak
+//                 => {
+//                     if pos < 1 {
+//                         found = Some(i);
+//                         break;
+//                     } else {
+//                         pos -= 1;
+//                         false
+//                     }
+//                 }
+//             Token::Comment(_) => {
+//                 false
+//             },
+                
+//             _ => true
+//         };
+
+//         // Moved out of the match 'thanks' to borrowcheck
+//         if recurse {
+//             if let Some(ref mut inner) = tokens[i].inner_mut() {
+//                 if let Some(new_pos) = insert_at(inner, comment, pos) {
+//                     pos = new_pos;
+//                 } else {
+//                     return None;
+//                 }
+//             }
+//         }
+//     }
+
+//     let new_token = Token::Comment(comment.to_owned());
+//     if let Some(i) = found {
+//         if !tokens[i].is_str() {
+//             if i >= tokens.len() - 1 {
+//                 tokens.push(new_token);
+//             } else {
+//                 tokens.insert(i+1, new_token);
+//             }
+//         } else {
+//             let old_token = mem::replace(&mut tokens[i], Token::Str(String::new()));
+//             if let Token::Str(old_str) = old_token {
+//                 let mut chars_left:Vec<char> = old_str.chars().collect();
+//                 let chars_right = chars_left.split_off(pos);
+//                 let str_left:String = chars_left.into_iter().collect();
+//                 let str_right:String = chars_right.into_iter().collect();
+//                 tokens[i] = Token::Str(str_left);
+//                 if i >= tokens.len() - 1 {
+//                     tokens.push(new_token);
+//                     tokens.push(Token::Str(str_right));
+//                 } else {
+//                     tokens.insert(i+1, new_token);
+//                     tokens.insert(i+2, Token::Str(str_right));
+//                 }   
+//             }
+//         }
+//         return None;
+//     } else {
+//         return Some(pos);
+//     }
+// }
+
+
 
 /// Insert a comment at the given pos in the text_view
+#[doc(hidden)]
 pub fn insert_at(tokens: &mut Vec<Token>, comment: &str, pos: usize) -> Option<usize> {
     let mut pos = pos;
     let mut found = None;
@@ -115,7 +242,6 @@ pub fn insert_at(tokens: &mut Vec<Token>, comment: &str, pos: usize) -> Option<u
     } else {
         return Some(pos);
     }
-
 }
 
 
