@@ -150,7 +150,10 @@ mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
+mod text_view;
 
+pub use text_view::view_as_text;
+pub use text_view::insert_at;
 
 #[cfg(test)]
 mod tests;

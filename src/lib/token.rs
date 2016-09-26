@@ -65,6 +65,8 @@ pub enum Token {
     SoftBreak,
     /// Hardbreak
     HardBreak,
+    /// A comment (HTML code)
+    Comment(String),
 
     /// A link with an url, a title, and the linked text
     Link(String, String, Vec<Token>),
@@ -88,6 +90,7 @@ impl Token {
                 | SoftBreak
                 | HardBreak
                 | Str(_)
+                | Comment(_)
                 => None,
             
             Paragraph(ref v) 
@@ -121,6 +124,7 @@ impl Token {
                 | SoftBreak
                 | HardBreak
                 | Str(_)
+                | Comment(_)
                 => None,
             
             Paragraph(ref mut v) 

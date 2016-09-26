@@ -369,6 +369,7 @@ impl<'a> HtmlRenderer<'a> {
     pub fn static_render_token<T>(this: &mut T, token: &Token) -> Result<String>
         where T: AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer {
         match *token {
+            Token::Comment(ref text) => Ok(text.to_owned()),
             Token::Str(ref text) => {
                 let content = if this.as_ref().verbatim {
                     escape_html(text.as_ref())
