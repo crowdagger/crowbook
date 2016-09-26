@@ -36,7 +36,7 @@ pub struct HtmlSingleRenderer<'a> {
 }
 
 impl<'a> HtmlSingleRenderer<'a> {
-    /// Cretaes a new HtmlSingleRenderer
+    /// Creates a new HtmlSingleRenderer
     pub fn new(book: &'a Book) -> HtmlSingleRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.handler.set_images_mapping(true);
@@ -44,6 +44,12 @@ impl<'a> HtmlSingleRenderer<'a> {
         HtmlSingleRenderer {
             html: html,
         }
+    }
+
+    /// Set aproofreading to true
+    pub fn proofread(mut self) -> HtmlSingleRenderer<'a> {
+        self.html.proofread = true;
+        self
     }
 
     /// Renders a token
@@ -165,7 +171,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                                             "could not compile template 'html.css'"));
         let mut data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
-        if self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
+        if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }
         let data = data.build();

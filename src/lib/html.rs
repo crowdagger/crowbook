@@ -47,6 +47,9 @@ pub struct HtmlRenderer<'a> {
     
     /// Book that must be rendered
     pub book: &'a Book,
+
+    /// Proofread or not
+    pub proofread: bool,
     
     /// Current chapter (and subsection, subsubsection and so on)
     #[doc(hidden)]
@@ -140,6 +143,7 @@ impl<'a> HtmlRenderer<'a> {
             source: Source::empty(),
             first_letter: false,
             first_paragraph: true,
+            proofread: false,
             parser: parser,
             repetition_threshold: book.options.get_f32("proofread.repetitions.threshold").unwrap(),
         };
@@ -170,6 +174,7 @@ impl<'a> HtmlRenderer<'a> {
             source: Source::empty(),
             first_letter: false,
             first_paragraph: true,
+            proofread: false,
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
@@ -179,6 +184,9 @@ impl<'a> HtmlRenderer<'a> {
     // Detect the repetitions
     #[cfg(feature = "repetitions")]
     fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
+        if !self.proofread {
+            return s.into().into_owned();
+        }
         if let Some(ref mut parser) = self.parser {
             let mut ast = parser.tokenize(s.into().as_ref()).unwrap();
             parser.detect_local(&mut ast, self.repetition_threshold);

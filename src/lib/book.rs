@@ -373,6 +373,15 @@ impl Book {
                 }));
             }
             
+            if self.options.get("output.proofread.html_dir").is_ok() {
+                handles.push(scope.spawn(move || {
+                    let result = self.render_proof_html_dir();
+                    if let Err(err) = result {
+                        self.logger.error(format!("rendering HTML directory:\n{}", err));
+                    }
+                }));
+            }
+            
             if let Ok(file) = self.options.get_path("output.html") {
                 handles.push(scope.spawn(move || {
                     if let Ok(mut f) = File::create(&file) {
@@ -385,6 +394,20 @@ impl Book {
                     }
                 }));
             }
+
+            if let Ok(file) = self.options.get_path("output.proofread.html") {
+                handles.push(scope.spawn(move || {
+                    if let Ok(mut f) = File::create(&file) {
+                        let result = self.render_proof_html(&mut f);
+                        if let Err(err) = result {
+                            self.logger.error(format!("rendering HTML:\n{}", err));
+                        }
+                    } else {
+                        self.logger.error(format!("could not create HTML file '{}'", &file));
+                    }
+                }));
+            }
+            
             if let Ok(file) = self.options.get_path("output.tex") {
                 handles.push(scope.spawn(move || {
                     if let Ok(mut f) = File::create(&file) {
@@ -445,6 +468,15 @@ impl Book {
         Ok(())
     }
 
+    /// Render book to HTML directory according to book options (proofread version)
+    pub fn render_proof_html_dir(&self) -> Result<()> {
+        self.logger.debug("Attempting to generate html directory for proofreading...");
+        let mut html = HtmlDirRenderer::new(&self).proofread();
+        try!(html.render_book());
+        self.logger.info(&format!("Successfully generated html directory: {}", self.options.get_path("output.proofread.html_dir").unwrap()));
+        Ok(())
+    }
+
     /// Render book to odt according to book options
     pub fn render_odt(&self) -> Result<()> {
         self.logger.debug("Attempting to generate Odt...");
@@ -464,6 +496,21 @@ impl Book {
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
                                                                        format!("problem when writing to HTML file: {}", e))));
         if let Ok(file) = self.options.get_path("output.html") {
+            self.logger.info(format!("Successfully generated HTML file: {}", file));
+        } else {
+            self.logger.info("Successfully generated HTML");
+        }
+        Ok(())
+    }
+
+    /// Render book to html according to book options (proofread version)
+    pub fn render_proof_html<T: Write>(&self, f: &mut T) -> Result<()> {
+        self.logger.debug("Attempting to generate HTML for proofreading...");
+        let mut html = HtmlSingleRenderer::new(&self).proofread();
+        let result = try!(html.render_book());
+        try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
+                                                                       format!("problem when writing to HTML file: {}", e))));
+        if let Ok(file) = self.options.get_path("output.proofread.html") {
             self.logger.info(format!("Successfully generated HTML file: {}", file));
         } else {
             self.logger.info("Successfully generated HTML");

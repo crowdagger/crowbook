@@ -32,6 +32,11 @@ output.pdf:path                     # Output file name for PDF rendering
 output.odt:path                     # Output file name for ODT rendering
 output.base_path:path:""            # Directory where those output files will we written
 
+# Output options (for proofreading)
+output.proofread.html:path          # Output file name for HTML rendering with proofread features
+output.proofread.html_dir:path      # Output directory name for HTML rendering with proofread features
+
+
 # Rendering options
 rendering.initials:bool:false                                        # Use initials ('lettrines') for first letter of a chapter (experimental)
 rendering.inline_toc:bool:false                                      # Display a table of content in the document
@@ -71,18 +76,18 @@ epub.chapter.xhtml:tpl              # Path of an xhtml template for each chapter
 
 # LaTeX options
 tex.links_as_footnotes:bool:true    # Add foontotes to URL of links so they are readable when printed
-tex.command:str:xelatex            # LaTeX command to use for generating PDF
+tex.command:str:xelatex             # LaTeX command to use for generating PDF
 tex.template:tpl                    # Path of a LaTeX template file
 tex.class:str:book                  # LaTeX class to use
 
 # Resources option
-resources.files:str                 # Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
-resources.base_path:path            # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
-resources.base_path.links:path      # Set base path but only for links. Useless if resources.base_path is set.
-resources.base_path.images:path:.   # Set base path but only for images. Useless if resources.base_path is set.
-resources.base_path.files:path:.    # Set base path but only for additional files. Useless if resources.base_path is set.
+resources.files:str                  # Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+resources.base_path:path             # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
+resources.base_path.links:path       # Set base path but only for links. Useless if resources.base_path is set.
+resources.base_path.images:path:.    # Set base path but only for images. Useless if resources.base_path is set.
+resources.base_path.files:path:.     # Set base path but only for additional files. Useless if resources.base_path is set.
 resources.base_path.templates:path:. # Set base path but only for templates files. Useless if resources.base_path is set.
-resources.out_path:path:data        # Paths where additional resources should be copied in the EPUB file or HTML directory 
+resources.out_path:path:data         # Paths where additional resources should be copied in the EPUB file or HTML directory 
 
 
 # Input options
@@ -95,14 +100,14 @@ crowbook.temp_dir:path:             # Path where to create a temporary directory
 crowbook.zip.command:str:zip        # Command to use to zip files (for EPUB/ODT)
 crowbook.verbose:bool:false         # Make Crowbook display more messages
 
-# Proofreading options
-proofread.nb_spaces:bool:false      # If set to true, will highlight non breaking spaces so it is easier to see if it is ok
-proofread.repetitions:bool:false    # If set to true, use Caribon to detect repetitions
-proofread.repetitions.max_distance:int:25 # Max distance between two occurences so it is considered a repetition
-proofread.repetitions.fuzzy:bool:true  # Enable fuzzy string matching
-proofread.repetitions.fuzzy.threshold:float:0.2 # Max threshold of differences to consider two strings a repetition
-proofread.repetitions.ignore_proper:bool:true # Ignore proper nouns for repetitions 
-proofread.repetitions.threshold:float:2.0 # Threshold to detect a repetition
+# Proofreading options (only for output.proofread.* targets)
+proofread.nb_spaces:bool:true                     # Highlight non breaking spaces so it is easier to see if typography is correct
+proofread.repetitions:bool:false                  # If set to true, use Caribon to detect repetitions
+proofread.repetitions.max_distance:int:25         # Max distance between two occurences so it is considered a repetition
+proofread.repetitions.fuzzy:bool:true             # Enable fuzzy string matching
+proofread.repetitions.fuzzy.threshold:float:0.2   # Max threshold of differences to consider two strings a repetition
+proofread.repetitions.ignore_proper:bool:true     # Ignore proper nouns for repetitions 
+proofread.repetitions.threshold:float:2.0         # Threshold to detect a repetition
 
 
 # Deprecated options
@@ -456,6 +461,8 @@ impl BookOptions {
                 | "output.pdf"
                 | "output.tex"
                 | "output.odt"
+                | "output.proofread.html"
+                | "output.proofread.html_dir"
                 => {
                     // Translate according to output.base_path
                     let base = self.get_path("output.base_path").unwrap();

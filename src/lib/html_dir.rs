@@ -51,6 +51,12 @@ impl<'a> HtmlDirRenderer<'a> {
         }
     }
 
+    /// Set aproofreading to true
+    pub fn proofread(mut self) -> HtmlDirRenderer<'a> {
+        self.html.proofread = true;
+        self
+    }
+
     /// Render a book
     pub fn render_book(&mut self) -> Result<()> {
         // Add internal files to resource handler
@@ -58,8 +64,12 @@ impl<'a> HtmlDirRenderer<'a> {
             self.html.handler.add_link(filename.clone(), filenamer(i));
         }
 
-        // Create the directory 
-        let dest_path = try!(self.html.book.options.get_path("output.html_dir"));
+        // Create the directory
+        let dest_path = if self.html.proofread {
+            try!(self.html.book.options.get_path("output.proofread.html_dir"))
+        } else {
+            try!(self.html.book.options.get_path("output.html_dir"))
+        };
         match fs::metadata(&dest_path) {
             Ok(metadata) => if metadata.is_file() {
                 return Err(Error::render(&self.html.book.source,
@@ -280,7 +290,7 @@ impl<'a> HtmlDirRenderer<'a> {
                                             &self.html.book.source,
                                             "could not compile template 'html.css"));
         let mut data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())));
-        if self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
+        if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }
          let data = data.build();
@@ -294,7 +304,12 @@ impl<'a> HtmlDirRenderer<'a> {
 
     // Write content to a file
     fn write_file(&self, file: &str, content: &[u8]) -> Result<()> {
-        let dest_path = PathBuf::from(&self.html.book.options.get_path("output.html_dir").unwrap());
+        let dir_name = if self.html.proofread {
+            self.html.book.options.get_path("output.proofread.html_dir").unwrap()
+        } else {
+            self.html.book.options.get_path("output.html_dir").unwrap()
+        };
+        let dest_path = PathBuf::from(&dir_name);
         if dest_path.starts_with("..") {
             panic!("html dir is asked to create a file outside of its directory, no way!");
         }
