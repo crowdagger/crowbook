@@ -342,99 +342,75 @@ impl Book {
         Ok(())
     }
 
+    fn render_one(&self, s: &str) -> () {
+        if self.options.get(s).is_ok() {
+            let (result, name) = match s {
+                "output.pdf" => (self.render_pdf(), "PDF"),
+                "output.epub" => (self.render_epub(), "EPUB"),
+                "output.html_dir" => (self.render_html_dir(), "HTML directory"),
+                "output.proofread.html_dir" => (self.render_proof_html_dir(), "HTML directory (for proofreading)"),
+                "output.odt" => (self.render_odt(), "ODT"),
+                _ => unreachable!()
+            };
+            if let Err(err) = result {
+                self.logger.error(format!("Error rendering {}: {}", name, err));
+            }
+        }
+    }
+
+    fn render_one_file(&self, s: &str) -> () {
+        if let Ok(file) = self.options.get_path(s) {
+            if let Ok(mut f) = File::create(&file) {
+                let (result, name) = match s {
+                    "output.html" => (self.render_html(&mut f), "HTML"),
+                    "output.tex" => (self.render_tex(&mut f), "LaTeX"),
+                    "output.proofread.html" => (self.render_proof_html(&mut f), "HTML (for proofreading)"),
+                    _ => unreachable!()
+                };
+                if let Err(err) = result {
+                    self.logger.error(format!("rendering {}:{}", name, err));
+                }
+            } else {
+                self.logger.error(format!("could not create file '{}'", &file));
+            }
+        }
+    }
+    
     
     /// Generates output files acccording to book options
     pub fn render_all(&self) -> () {
         let mut handles = vec!();
         crossbeam::scope(|scope| {
             if self.options.get("output.pdf").is_ok() {
-                handles.push(scope.spawn(|| {
-                    let result = self.render_pdf();
-                    if let Err(err) = result {
-                        self.logger.error(format!("rendering PDF:\n{}", err));
-                    }
-                }));
+                handles.push(scope.spawn(|| self.render_one("output.pdf")));
             }
             if self.options.get("output.epub").is_ok() {
-                handles.push(scope.spawn(|| {
-                    let result = self.render_epub();
-                    if let Err(err) = result {
-                        self.logger.error(format!("rendering EPUB:\n{}", err));
-                    }
-                }));
+                handles.push(scope.spawn(|| self.render_one("output.epub")));
             }
-            
             if self.options.get("output.html_dir").is_ok() {
-                handles.push(scope.spawn(move || {
-                    let result = self.render_html_dir();
-                    if let Err(err) = result {
-                        self.logger.error(format!("rendering HTML directory:\n{}", err));
-                    }
-                }));
-            }
-            
-            if self.options.get("output.proofread.html_dir").is_ok() {
-                handles.push(scope.spawn(move || {
-                    let result = self.render_proof_html_dir();
-                    if let Err(err) = result {
-                        self.logger.error(format!("rendering HTML directory:\n{}", err));
-                    }
-                }));
-            }
-            
-            if let Ok(file) = self.options.get_path("output.html") {
-                handles.push(scope.spawn(move || {
-                    if let Ok(mut f) = File::create(&file) {
-                        let result = self.render_html(&mut f);
-                        if let Err(err) = result {
-                            self.logger.error(format!("rendering HTML:\n{}", err));
-                        }
-                    } else {
-                        self.logger.error(format!("could not create HTML file '{}'", &file));
-                    }
-                }));
-            }
-
-            if let Ok(file) = self.options.get_path("output.proofread.html") {
-                handles.push(scope.spawn(move || {
-                    if let Ok(mut f) = File::create(&file) {
-                        let result = self.render_proof_html(&mut f);
-                        if let Err(err) = result {
-                            self.logger.error(format!("rendering HTML:\n{}", err));
-                        }
-                    } else {
-                        self.logger.error(format!("could not create HTML file '{}'", &file));
-                    }
-                }));
-            }
-            
-            if let Ok(file) = self.options.get_path("output.tex") {
-                handles.push(scope.spawn(move || {
-                    if let Ok(mut f) = File::create(&file) {
-                        let result = self.render_tex(&mut f);
-                        if let Err(err) = result {
-                            self.logger.error(format!("rendering LaTeX:\n{}", err));
-                        }
-                    }
-                    else {
-                        self.logger.error(format!("could not create LaTeX file '{}'", &file));
-                    }
-                }));
+                handles.push(scope.spawn(|| self.render_one("output.html_dir")));
             }
             if self.options.get("output.odt").is_ok() {
-                handles.push(scope.spawn(|| {
-                    let result = self.render_odt();
-                    if let Err(err) = result {
-                        self.logger.error(format!("rendering PDF:\n{}", err));
-                    }
-                }));
+                handles.push(scope.spawn(|| self.render_one("output.odt")));
             }
-            if handles.is_empty() {
-                self.logger.info("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
+            if self.options.get("output.proofread.html_dir").is_ok() {
+                handles.push(scope.spawn(|| self.render_one("output.proofread.html_dir")));
+            }
+            if self.options.get_path("output.html").is_ok() {
+                handles.push(scope.spawn(|| self.render_one_file("output.html")));
+            }
+            if self.options.get_path("output.proofread.html").is_ok() {
+                handles.push(scope.spawn(|| self.render_one_file("output.proofread.html")));
+            }            
+            if self.options.get_path("output.tex").is_ok() {
+                handles.push(scope.spawn(|| self.render_one_file("output.tex")));
             }
         });
-    }
 
+        if handles.is_empty() { 
+            self.logger.info("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
+        }
+    }
 
     
     /// Render book to pdf according to book options
