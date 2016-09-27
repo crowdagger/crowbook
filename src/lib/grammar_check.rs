@@ -33,31 +33,48 @@ pub struct GrammarCheck {
     pub matches: Vec<GrammarError>,
 }
 
-impl GrammarCheck {
+/// GrammarChecker
+pub struct GrammarChecker {
+    lang: String,
+    port: usize,
+}
+
+impl GrammarChecker {
+    /// Initialize the grammarchecker
+    pub fn new<S:Into<String>>(port: usize, lang: S) -> Result<GrammarChecker> {
+        let mut checker = GrammarChecker {
+            lang: lang.into(),
+            port: port
+        };
+
+        // Todo: try to connect to the server
+        Ok(checker)
+    }
+    
     /// Send a query to LanguageTools server and get back a list of errors
-    pub fn new(text: &str, port: usize, lang: &str) -> Result<GrammarCheck> {
+    pub fn check(&self, text: &str) -> Result<GrammarCheck> {
         let query: String = form_urlencoded::Serializer::new(String::new())
-            .append_pair("language", lang)
+            .append_pair("language", &self.lang)
             .append_pair("text", text)
             .finish();
         
         let client = Client::new();
         
-        let mut res = try!(client.post(&format!("http://localhost:{}/v2/check", port))
+        let mut res = try!(client.post(&format!("http://localhost:{}/v2/check", self.port))
                            .body(&query)
                            .send()
-                           .map_err(|e| Error::default(Source::empty(),
-                                                       format!("could not send request to server: {}", e))));
+                           .map_err(|e| Error::grammar_check(Source::empty(),
+                                                             format!("could not send request to server: {}", e))));
 
         if res.status != hyper::Ok {
-            return Err(Error::default(Source::empty(),
+            return Err(Error::grammar_check(Source::empty(),
                                       format!("server didn't respond with a OK status code")));
         }
         
         let mut s = String::new();
         try!(res.read_to_string(&mut s)
-             .map_err(|e| Error::default(Source::empty(),
-                                         format!("could not read response: {}", e))));
+             .map_err(|e| Error::grammar_check(Source::empty(),
+                                               format!("could not read response: {}", e))));
         let reponse: GrammarCheck = try!(json::decode(&s).map_err(|e| Error::default(Source::empty(),
                                                                                      format!("could not decode JSON: {}", e))));
         Ok(reponse)
@@ -70,7 +87,8 @@ impl GrammarCheck {
 /// This modifies the AST
 pub fn check_grammar(tokens: &mut Vec<Token>, lang: &str) -> Result<()> {
     let input = view_as_text(tokens);
-    let check = try!(GrammarCheck::new(&input, 8081, lang));
+    let checker = try!(GrammarChecker::new(8081, lang));
+    let check = try!(checker.check(&input));
     
     for error in check.matches {
         insert_annotation(tokens, &Data::GrammarError(error.message.clone()), error.offset, error.length);
