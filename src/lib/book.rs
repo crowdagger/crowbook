@@ -615,14 +615,19 @@ impl Book {
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") &&
             (self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok()) {
-            self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
-            self.check_grammar(&mut v);
-//             let len = v.len();
-//             let (v1, v2) = v.split_at_mut(len / 2);
+                self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
 
-//             crossbeam::scope(|scope| {
-//                 scope.spawn(|| self.check_grammar(v1));
-//                 scope.spawn(|| self.check_grammar(v2));
+                let n_threads = 4; // seems to give best results but quite random
+                let len = v.len();
+                let subvecs = v.chunks_mut(len / n_threads);
+
+                let lang = self.options.get_str("lang").unwrap();
+                crossbeam::scope(|scope| {
+                    for subvec in subvecs {
+                        scope.spawn(move || Self::check_grammar(lang, subvec));
+                    }
+//                    scope.spawn(|| self.check_grammar(v2));
+                });
 // //                scope.spawn(|| self.check_grammar(v3));
 // //                scope.spawn(|| self.check_grammar(v4));
 //             });
@@ -633,28 +638,34 @@ impl Book {
     }
 
     #[cfg(feature = "proofread")]
-    fn check_grammar(&self, tokens: &mut Vec<Token>) {
-        match check_grammar(tokens, self.options.get_str("lang").unwrap()) {
-            Ok(..) => (),
-            Err(err) => self.logger.error(format!("trying to run language tool: {}", err)),
-        }
-        
-        // for mut token in tokens {
-        //     match *token {
-        //         Token::Paragraph(ref mut v) => {
-        //             match check_grammar(v) {
-        //                 Ok(..) => (),
-        //                 Err(err) => self.logger.error(format!("trying to run language tool: {}", err)),
-        //             }
-        //                     },
-        //         _ => (),
-        //     }
+    fn check_grammar(lang: &str, tokens: &mut [Token]) {
+        // match check_grammar(tokens, self.options.get_str("lang").unwrap()) {
+        //     Ok(..) => (),
+        //     Err(err) => self.logger.error(format!("trying to run language tool: {}", err)),
         // }
+
+        // Only check some blocks
+        for mut token in tokens {
+            match *token {
+                Token::Paragraph(ref mut v)
+                    | Token::Header(_, ref mut v)
+                    | Token::BlockQuote(ref mut v) 
+                    | Token::List(ref mut v)
+                    | Token::OrderedList(_, ref mut v)
+                    => {
+                    match check_grammar(v, lang) {
+                        Ok(..) => (),
+                        Err(err) => Logger::display_error(format!("trying to run language tool: {}", err)),
+                    }
+                },
+                _ => (),
+            }
+        }
     }
 
     #[cfg(not(feature = "proofread"))]
-    fn check_grammar(&self, _: &mut Vec<Token>) {
-        self.logger.error("This binary hasn't been compiled with the 'proofread' feature, can't check grammar.");
+    fn check_grammar(_: &str, _: &mut [Token]) {
+        Logger::display_error("This binary hasn't been compiled with the 'proofread' feature, can't check grammar.");
     }
 
     /// Adds a chapter, as a string, to the book
