@@ -416,7 +416,7 @@ impl Book {
         });
 
         if handles.is_empty() { 
-            self.logger.info("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
+            Logger::display_warning("Crowbook generated no file because no output file speficied. Add output.{{format}} to your config file.");
         }
     }
 
@@ -457,7 +457,7 @@ impl Book {
     pub fn render_proof_html_dir(&self) -> Result<()> {
         let dir_name = self.options.get_path("output.proofread.html_dir").unwrap();
         if !cfg!(feature = "proofread") {
-            self.logger.info(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
+            Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
                                      dir_name));
             return Ok(())
         }
@@ -472,7 +472,7 @@ impl Book {
     pub fn render_proof_pdf(&self) -> Result<()> {
         let file_name = self.options.get_path("output.proofread.pdf").unwrap();
         if !cfg!(feature = "proofread") {
-            self.logger.info(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
+            Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
                                      file_name));
             return Ok(())
         }
@@ -517,7 +517,7 @@ impl Book {
             String::new()
         };
         if !cfg!(feature = "proofread") {
-            self.logger.info(format!("this version of Crowbook has been compiled without support for proofreading, not generating HTML file {}",
+            Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating HTML file {}",
                                      file_name));
             return Ok(())
         }
