@@ -65,16 +65,6 @@ impl GrammarCheck {
     }
 }
 
-fn escape_query<'a>(s: &str) -> Cow<'a, str> {
-    let mut res = String::with_capacity(s.len());
-    for c in s.chars() {
-        match c {
-            '&' => res.push_str("%26"),
-            _ => res.push(c),
-        }
-    }
-    Cow::Owned(res)
-}
 
 /// Check the grammar in a chapter
 ///
