@@ -16,10 +16,11 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::mem;
+use std::default::Default;
 
 use token::Token;
 use token::Data;
-use std::default::Default;
+use logger::Logger;
 
 pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
     where F1: Fn(&str) -> R,
@@ -131,7 +132,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                         if found_left.is_none() {
                             true
                         } else {
-                            println!("!!!!!! beginning and end of annatotation are not at the same level!!! ABORTING!!!!!");
+                            Logger::display_warning("ignored annotation as it wasn't compatible with the Markdown structure");
                             return None;
                         }
                     } else {
@@ -254,6 +255,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
         if found_left.is_none() && found_right.is_none() {
             return Some(pos);
         } else {
+            Logger::display_warning("ignored annotation as it wasn't compatible with the Markdown structure");
             return None;
         }
     }
