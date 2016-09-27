@@ -103,6 +103,8 @@ crowbook.verbose:bool:false         # Make Crowbook display more messages
 
 # Proofreading options (only for output.proofread.* targets)
 proofread.nb_spaces:bool:true                     # Highlight non breaking spaces so it is easier to see if typography is correct
+proofread.languagetool:bool:false                 # If true, try to use language tool server to grammar check the book
+proofread.languagetool.port:int:8081              # Port to connect to languagetool-server
 proofread.repetitions:bool:false                  # If set to true, use Caribon to detect repetitions
 proofread.repetitions.max_distance:int:25         # Max distance between two occurences so it is considered a repetition
 proofread.repetitions.fuzzy:bool:true             # Enable fuzzy string matching

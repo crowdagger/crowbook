@@ -42,12 +42,12 @@ pub struct GrammarChecker {
 impl GrammarChecker {
     /// Initialize the grammarchecker
     pub fn new<S:Into<String>>(port: usize, lang: S) -> Result<GrammarChecker> {
-        let mut checker = GrammarChecker {
+        let checker = GrammarChecker {
             lang: lang.into(),
             port: port
         };
 
-        let mut res = try!(Client::new()
+        let res = try!(Client::new()
                            .get(&format!("http://localhost:{}/v2/languages", port))
                            .send()
                            .map_err(|e| Error::grammar_check(Source::empty(),
@@ -87,20 +87,47 @@ impl GrammarChecker {
                                                                                      format!("could not decode JSON: {}", e))));
         Ok(reponse)
     }
+ 
 }
 
 
-/// Check the grammar in a chapter
-///
-/// This modifies the AST
-pub fn check_grammar(tokens: &mut Vec<Token>, lang: &str) -> Result<()> {
-    let input = view_as_text(tokens);
-    let checker = try!(GrammarChecker::new(8081, lang));
-    let check = try!(checker.check(&input));
+impl GrammarChecker {
+    /// Check the grammar in a vector of tokens. 
+    ///
+    /// This modifies the AST
+    pub fn check_chapter(&self, tokens: &mut Vec<Token>) -> Result<()> {
+//        let n_threads = 4; // seems to give best results but quite random
+//        let len = tokens.len();
+//        let subvecs = tokens.chunks_mut(len / n_threads);
+        
+        for mut token in tokens.iter_mut() {
+            match *token {
+                Token::Paragraph(ref mut v)
+                    | Token::Header(_, ref mut v)
+                    | Token::BlockQuote(ref mut v) 
+                    | Token::List(ref mut v)
+                    | Token::OrderedList(_, ref mut v)
+                    => {
+                        let check = try!(self.check(&view_as_text(v)));
     
-    for error in check.matches {
-        insert_annotation(tokens, &Data::GrammarError(error.message.clone()), error.offset, error.length);
+                        for error in check.matches {
+                            insert_annotation(v, &Data::GrammarError(error.message.clone()), error.offset, error.length);
+                        }
+                },
+                _ => (),
+            }
+        }
+
+        
+        // crossbeam::scope(|scope| {
+        //     for subvec in subvecs {
+        //         scope.spawn(|| Self::check_grammar(lang, subvec)
+        //     }
+        // });
+        
+
+        Ok(())
     }
-    Ok(())
 }
+
 

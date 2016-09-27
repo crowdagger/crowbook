@@ -19,11 +19,13 @@ output.odt: book.odt
  
 output.base_path: docs/book/
 output.proofread.html: book.proof.html
+output.proofread.pdf: book.proof.pdf
 
 # Resources options
 resources.base_path.images: img/  # where to find the cover
 
 proofread.repetitions: true
+proofread.languagetool: true
 
 # Rendering options
 rendering.num_depth: 2

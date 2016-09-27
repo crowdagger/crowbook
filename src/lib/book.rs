@@ -15,7 +15,19 @@ use logger::{Logger, InfoLevel};
 use lang;
 
 #[cfg(feature = "proofread")]
-use grammar_check::check_grammar;
+use grammar_check::GrammarChecker;
+#[cfg(not(feature = "proofread"))]
+struct GrammarChecker {}
+
+#[cfg(not(feature = "proofread"))]
+impl GrammarChecker {
+    fn new(_:usize, _:&str) -> Result<GrammarChecker> {
+        Ok(GrammarChecker{})
+    }
+    fn check_chapter(&self,_:&[Token]) -> Result<()> {
+        Ok(())
+    }
+}
 
 use std::fs::File;
 use std::io::{Write, Read};
@@ -81,6 +93,7 @@ pub struct Book {
     
     cleaner: Box<Cleaner>,
     chapter_template: Option<Template>,
+    checker: Option<GrammarChecker>,
 }
 
 impl Book {
@@ -89,7 +102,7 @@ impl Book {
     /// # Arguments
     /// *`options` a list (or other iterator) of (key, value) tuples. Can be &[].
     pub fn new<'a,I>(options: I) -> Book
-    where I: IntoIterator<Item=&'a(&'a str, &'a str)> {
+        where I: IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book {
             source: Source::empty(),
             chapters: vec!(),
@@ -99,6 +112,7 @@ impl Book {
             options: BookOptions::new(),
             logger: Logger::new(InfoLevel::Info),
             chapter_template: None,
+            checker: None,
         };
 
         // set options
@@ -121,7 +135,7 @@ impl Book {
     /// * `verbosity: sets the book verbosity
     /// * `options`: a list of (key, value) options to pass to the book
     pub fn new_from_file<'a, I> (filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
-    where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
+        where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book::new(options);
         book.source = Source::new(filename);
         book.options.source = Source::new(filename);
@@ -140,7 +154,7 @@ impl Book {
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::config_parser(Source::new(filename),
                                                                        "file contains invalid UTF-8, could not parse it")));
-                                            
+        
         
         let result = book.set_from_config(&s);
         match result {
@@ -160,7 +174,7 @@ impl Book {
 
     /// Creates a book from a single markdown file
     pub fn new_from_markdown_file<'a, I>(filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
-    where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
+        where I:IntoIterator<Item=&'a(&'a str, &'a str)> {
         let mut book = Book::new(options);
         book.source = Source::new(filename);
         book.logger.set_verbosity(verbosity);
@@ -199,7 +213,7 @@ impl Book {
                     }
                 } else {
                     return Err(Error::config_parser(&self.source,
-                                                   "YAML part of the book is not a valid hashmap".to_owned()));
+                                                    "YAML part of the book is not a valid hashmap".to_owned()));
                 }
             }
         }
@@ -215,6 +229,7 @@ impl Book {
     ///
     /// 3. chapter_name.md adds the (custom numbered) chapter
     pub fn set_from_config(&mut self, s: &str) -> Result<()> {
+        
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
             let words:Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
@@ -222,12 +237,13 @@ impl Book {
                                                 "chapter filenames must not contain whitespace".to_owned()));
             } else if words.len() < 1 {
                 return Err(Error::config_parser(source,
-                                               "no chapter name specified".to_owned()));
+                                                "no chapter name specified".to_owned()));
             }
             Ok(words[0])
         }
 
         // Parse the YAML block, that is, until first chapter
+    
         let mut yaml = String::new();
         let mut lines = s.lines().peekable();
         let mut line;
@@ -326,7 +342,7 @@ impl Book {
                 let parts:Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+').collect();
                 if parts.len() != 2 {
                     return Err(Error::config_parser(&self.source,
-                                                   "ill-formatted line specifying chapter number"));
+                                                    "ill-formatted line specifying chapter number"));
                 } 
                 let file = try!(get_filename(&self.source, parts[1]));
                 let number = try!(parts[0].parse::<i32>().map_err(|_| Error::config_parser(&self.source,
@@ -339,12 +355,29 @@ impl Book {
         }
 
         self.source.unset_line();
-
         try!(self.set_chapter_template());
-
+        Ok(())
+    }
+    
+    /// Initialize the grammar checker if it needs to be
+    #[cfg(feature = "proofread")]
+    fn init_checker(&mut self) -> Result<()> {
+        if self.options.get_bool("proofread.languagetool").unwrap() &&
+            (self.options.get("output.proofread.html").is_ok() ||
+             self.options.get("output.proofread.html_dir").is_ok() ||
+             self.options.get("output.proofread.pdf").is_ok()) {
+                let port = self.options.get_i32("proofread.languagetool.port").unwrap() as usize;
+                let lang = self.options.get_str("lang").unwrap();
+                let checker = try!(GrammarChecker::new(port, lang));
+                self.checker = Some(checker);
+            }
         Ok(())
     }
 
+    #[cfg(not(feature = "proofread"))]
+    fn init_checker(&mut self) -> Result<()> {
+        Ok(())
+    }
 
     fn render_one(&self, s: &str) -> () {
         if self.options.get(s).is_ok() {
@@ -458,7 +491,7 @@ impl Book {
         let dir_name = self.options.get_path("output.proofread.html_dir").unwrap();
         if !cfg!(feature = "proofread") {
             Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
-                                     dir_name));
+                                            dir_name));
             return Ok(())
         }
         self.logger.debug("Attempting to generate html directory for proofreading...");
@@ -473,7 +506,7 @@ impl Book {
         let file_name = self.options.get_path("output.proofread.pdf").unwrap();
         if !cfg!(feature = "proofread") {
             Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
-                                     file_name));
+                                            file_name));
             return Ok(())
         }
         self.logger.debug("Attempting to generate PDF for proofreading...");
@@ -518,7 +551,7 @@ impl Book {
         };
         if !cfg!(feature = "proofread") {
             Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating HTML file {}",
-                                     file_name));
+                                            file_name));
             return Ok(())
         }
         self.logger.debug("Attempting to generate HTML for proofreading...");
@@ -545,7 +578,7 @@ impl Book {
         }
         Ok(())
     }
-        
+    
     /// Adds a chapter, as a file name, to the book
     ///
     /// `Book` will then parse the file and store the AST (i.e., a vector
@@ -573,7 +606,7 @@ impl Book {
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
                                                                 format!("file {} contains invalid UTF-8", path.display()))));    
-            
+        
         // Ignore YAML blocks
         self.parse_yaml(&mut s);
         
@@ -616,56 +649,18 @@ impl Book {
         if cfg!(feature = "proofread") &&
             (self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok()) {
                 self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
-
-                let n_threads = 4; // seems to give best results but quite random
-                let len = v.len();
-                let subvecs = v.chunks_mut(len / n_threads);
-
-                let lang = self.options.get_str("lang").unwrap();
-                crossbeam::scope(|scope| {
-                    for subvec in subvecs {
-                        scope.spawn(move || Self::check_grammar(lang, subvec));
+                if self.checker.is_none() {
+                    self.init_checker();
+                }
+                if let Some(ref checker) = self.checker {
+                    if let Err(err) = checker.check_chapter(&mut v) {
+                        self.logger.error(format!("Error running grammar check on {}: {}", file, err));
                     }
-//                    scope.spawn(|| self.check_grammar(v2));
-                });
-// //                scope.spawn(|| self.check_grammar(v3));
-// //                scope.spawn(|| self.check_grammar(v4));
-//             });
-        }
+                }
+            }
         
         self.chapters.push((number, v));
         Ok(())
-    }
-
-    #[cfg(feature = "proofread")]
-    fn check_grammar(lang: &str, tokens: &mut [Token]) {
-        // match check_grammar(tokens, self.options.get_str("lang").unwrap()) {
-        //     Ok(..) => (),
-        //     Err(err) => self.logger.error(format!("trying to run language tool: {}", err)),
-        // }
-
-        // Only check some blocks
-        for mut token in tokens {
-            match *token {
-                Token::Paragraph(ref mut v)
-                    | Token::Header(_, ref mut v)
-                    | Token::BlockQuote(ref mut v) 
-                    | Token::List(ref mut v)
-                    | Token::OrderedList(_, ref mut v)
-                    => {
-                    match check_grammar(v, lang) {
-                        Ok(..) => (),
-                        Err(err) => Logger::display_error(format!("trying to run language tool: {}", err)),
-                    }
-                },
-                _ => (),
-            }
-        }
-    }
-
-    #[cfg(not(feature = "proofread"))]
-    fn check_grammar(_: &str, _: &mut [Token]) {
-        Logger::display_error("This binary hasn't been compiled with the 'proofread' feature, can't check grammar.");
     }
 
     /// Adds a chapter, as a string, to the book
@@ -723,7 +718,7 @@ impl Book {
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::config_parser(&self.source,
-                                                format!("invalid template '{}'", template))),
+                                                 format!("invalid template '{}'", template))),
         };
         if let Ok (ref s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::file_not_found(&self.source,
@@ -788,44 +783,44 @@ impl Book {
     ///
     /// This method treats the metadata as Markdown and thus calls `f` to render it.
     #[doc(hidden)]
-    pub fn get_metadata<F>(&self, mut f: F) -> Result<MapBuilder>
+        pub fn get_metadata<F>(&self, mut f: F) -> Result<MapBuilder>
         where F:FnMut(&str)->Result<String> {
-        let mut mapbuilder = MapBuilder::new();
-        mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
+            let mut mapbuilder = MapBuilder::new();
+            mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
 
-        // Add metadata to mapbuilder
-        for key in self.options.get_metadata() {
-            if let Ok(s) = self.options.get_str(key) {
-                let key = key.replace(".", "_");
+            // Add metadata to mapbuilder
+            for key in self.options.get_metadata() {
+                if let Ok(s) = self.options.get_str(key) {
+                    let key = key.replace(".", "_");
 
-                // Only render some metadata as markdown
-                let content = match key.as_ref() {
-                    "author" | "title" | "lang" => Ok(s.to_owned()),
-                    _ => f(s)
-                };
-                match content {
-                    Ok(content) => {
-                        mapbuilder = mapbuilder.insert_str(&key, content);
-                        mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
-                    },
-                    Err(err) => {
-                        return Err(Error::render(&self.source,
-                                                 format!("could not render `{}` for metadata:\n{}", &key, err)));
-                    },
+                    // Only render some metadata as markdown
+                    let content = match key.as_ref() {
+                        "author" | "title" | "lang" => Ok(s.to_owned()),
+                        _ => f(s)
+                    };
+                    match content {
+                        Ok(content) => {
+                            mapbuilder = mapbuilder.insert_str(&key, content);
+                            mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                        },
+                        Err(err) => {
+                            return Err(Error::render(&self.source,
+                                                     format!("could not render `{}` for metadata:\n{}", &key, err)));
+                        },
+                    }
                 }
             }
-        }
 
-        // Add localization strings
-        let hash = lang::get_hash(self.options.get_str("lang").unwrap());
-        for (key, value) in hash.into_iter() {
-            let key = format!("loc_{}", key.as_str().unwrap());
-            let value = value.as_str().unwrap();
-            mapbuilder = mapbuilder.insert_str(&key, value);
+            // Add localization strings
+            let hash = lang::get_hash(self.options.get_str("lang").unwrap());
+            for (key, value) in hash.into_iter() {
+                let key = format!("loc_{}", key.as_str().unwrap());
+                let value = value.as_str().unwrap();
+                mapbuilder = mapbuilder.insert_str(&key, value);
+            }
+            Ok(mapbuilder)
         }
-        Ok(mapbuilder)
-    }
-        
+    
     /// Remove YAML blocks from a string and try to parse them to set options
     ///
     /// YAML blocks start with
@@ -835,27 +830,27 @@ impl Book {
     /// or
     /// ... 
     fn parse_yaml(&mut self, content: &mut String) {
-        if !(content.starts_with("---\n") || content.contains("\n---\n")
-             || content.starts_with("---\r\n") || content.contains("\n---\r\n")) {
-            // Content can't contain YAML, so aborting early
-            return;
-        }
-        let mut new_content = String::new();
-        let mut previous_empty = true;
-        {
-            let mut lines = content.lines();
-            while let Some(line) = lines.next() {
-                if line == "---" && previous_empty {
-                    previous_empty = false;
-                    let mut yaml_block = String::new();
-                    let mut valid_block = false;
-                    while let Some(new_line) = lines.next() {
-                        if new_line == "---" || new_line == "..." {
-                            // Checks that this is valid YAML
-                            match YamlLoader::load_from_str(&yaml_block) {
-                                Ok(docs) => {
-                                    // Use this yaml block to set options only if 1) it is valid
-                                    // 2) the option is activated
+            if !(content.starts_with("---\n") || content.contains("\n---\n")
+                 || content.starts_with("---\r\n") || content.contains("\n---\r\n")) {
+                // Content can't contain YAML, so aborting early
+                return;
+            }
+            let mut new_content = String::new();
+            let mut previous_empty = true;
+            {
+                let mut lines = content.lines();
+                while let Some(line) = lines.next() {
+                    if line == "---" && previous_empty {
+                        previous_empty = false;
+                        let mut yaml_block = String::new();
+                        let mut valid_block = false;
+                        while let Some(new_line) = lines.next() {
+                            if new_line == "---" || new_line == "..." {
+                                // Checks that this is valid YAML
+                                match YamlLoader::load_from_str(&yaml_block) {
+                                    Ok(docs) => {
+                                        // Use this yaml block to set options only if 1) it is valid
+                                        // 2) the option is activated
                                     if docs.len() == 1 && docs[0].as_hash().is_some()
                                         && self.options.get_bool("input.yaml_blocks") == Ok(true) {
                                         let hash = docs[0].as_hash().unwrap();
