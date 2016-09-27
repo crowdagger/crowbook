@@ -47,7 +47,15 @@ impl GrammarChecker {
             port: port
         };
 
-        // Todo: try to connect to the server
+        let mut res = try!(Client::new()
+                           .get(&format!("http://localhost:{}/v2/languages", port))
+                           .send()
+                           .map_err(|e| Error::grammar_check(Source::empty(),
+                                                             format!("could not connect to language tool server: {}", e))));
+        if res.status != hyper::Ok {
+            return Err(Error::grammar_check(Source::empty(),
+                                            format!("server didn't respond with a OK status code")));
+        }
         Ok(checker)
     }
     
