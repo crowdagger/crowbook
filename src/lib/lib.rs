@@ -102,9 +102,12 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
+
+#[cfg(feature = "proofread")]
 extern crate hyper;
+#[cfg(feature = "proofread")]
 extern crate url;
-#[cfg(feature = "repetitions")]
+#[cfg(feature = "proofread")]
 extern crate caribon;
 
 pub mod cleaner;
@@ -153,6 +156,8 @@ mod zipper;
 mod templates;
 mod bookoption;
 mod text_view;
+
+#[cfg(feature = "proofread")]
 mod grammar_check;
 
 pub use token::Data;

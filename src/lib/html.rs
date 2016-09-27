@@ -31,7 +31,7 @@ use lang;
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
 
-#[cfg(feature = "repetitions")]
+#[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;
 
 /// Base structure for rendering HTML files
@@ -84,15 +84,15 @@ pub struct HtmlRenderer<'a> {
     #[doc(hidden)]
     pub link_number: u32,
 
-    #[cfg(feature = "repetitions")]
+    #[cfg(feature = "proofread")]
     parser: Option<Caribon>,
-    #[cfg(feature  = "repetitions")]
+    #[cfg(feature  = "proofread")]
     repetition_threshold: f32,
 
 }
 
 impl<'a> HtmlRenderer<'a> {
-    #[cfg(feature = "repetitions")]
+    #[cfg(feature = "proofread")]
     fn init_caribon(book: &Book) -> Option<Caribon> {
         if book.options.get_bool("proofread.repetitions").unwrap() {
             let lang = book.options.get_str("lang").unwrap();
@@ -123,7 +123,7 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Creates a new HTML renderer
-    #[cfg(feature = "repetitions")]
+    #[cfg(feature = "proofread")]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         let parser = Self::init_caribon(&book);
 
@@ -153,7 +153,7 @@ impl<'a> HtmlRenderer<'a> {
         html
     }
     
-    #[cfg(not(feature = "repetitions"))]
+    #[cfg(not(feature = "proofread"))]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         if book.options.get_bool("proofread.repetitions").unwrap() {
             book.logger.error("This binary was not build with support for Caribon for detecting repetitions");
@@ -183,7 +183,7 @@ impl<'a> HtmlRenderer<'a> {
     }
       
     // Detect the repetitions
-    #[cfg(feature = "repetitions")]
+    #[cfg(feature = "proofread")]
     fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
         if !self.proofread {
             return s.into().into_owned();
@@ -197,7 +197,7 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
-    #[cfg(not(feature = "repetitions"))]
+    #[cfg(not(feature = "proofread"))]
     fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
         s.into().into_owned()
     }

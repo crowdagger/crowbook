@@ -4,7 +4,6 @@ use hyper::{Client};
 use url::form_urlencoded;
 
 use std::io::Read;
-use std::borrow::Cow;
 
 use text_view::view_as_text;
 use text_view::insert_annotation;

@@ -13,9 +13,9 @@ use number::Number;
 use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
 use lang;
+
+#[cfg(feature = "proofread")]
 use grammar_check::check_grammar;
-use text_view::view_as_text;
-use text_view::count_length;
 
 use std::fs::File;
 use std::io::{Write, Read};
@@ -450,10 +450,16 @@ impl Book {
 
     /// Render book to HTML directory according to book options (proofread version)
     pub fn render_proof_html_dir(&self) -> Result<()> {
+        let dir_name = self.options.get_path("output.proofread.html_dir").unwrap();
+        if !cfg!(feature = "proofread") {
+            self.logger.info(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
+                                     dir_name));
+            return Ok(())
+        }
         self.logger.debug("Attempting to generate html directory for proofreading...");
         let mut html = HtmlDirRenderer::new(&self).proofread();
         try!(html.render_book());
-        self.logger.info(&format!("Successfully generated html directory: {}", self.options.get_path("output.proofread.html_dir").unwrap()));
+        self.logger.info(&format!("Successfully generated html directory: {}", dir_name));
         Ok(())
     }
 
@@ -485,16 +491,22 @@ impl Book {
 
     /// Render book to html according to book options (proofread version)
     pub fn render_proof_html<T: Write>(&self, f: &mut T) -> Result<()> {
+        let file_name = if let Ok(file) = self.options.get_path("output.proofread.html") {
+            file.to_owned()
+        } else {
+            String::new()
+        };
+        if !cfg!(feature = "proofread") {
+            self.logger.info(format!("this version of Crowbook has been compiled without support for proofreading, not generating HTML file {}",
+                                     file_name));
+            return Ok(())
+        }
         self.logger.debug("Attempting to generate HTML for proofreading...");
         let mut html = HtmlSingleRenderer::new(&self).proofread();
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
                                                                        format!("problem when writing to HTML file: {}", e))));
-        if let Ok(file) = self.options.get_path("output.proofread.html") {
-            self.logger.info(format!("Successfully generated HTML file: {}", file));
-        } else {
-            self.logger.info("Successfully generated HTML");
-        }
+        self.logger.info(format!("Successfully generated HTML file {}", file_name));
         Ok(())
     }
 
@@ -581,7 +593,8 @@ impl Book {
         ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut v);
 
         // If one of the renderers requires it, perform grammarcheck
-        if self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok() {
+        if cfg!(feature = "proofread") &&
+            (self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok()) {
             self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
             self.check_grammar(&mut v);
 //             let len = v.len();
@@ -599,6 +612,7 @@ impl Book {
         Ok(())
     }
 
+    #[cfg(feature = "proofread")]
     fn check_grammar(&self, tokens: &mut Vec<Token>) {
         match check_grammar(tokens, self.options.get_str("lang").unwrap()) {
             Ok(..) => (),
@@ -616,6 +630,11 @@ impl Book {
         //         _ => (),
         //     }
         // }
+    }
+
+    #[cfg(not(feature = "proofread"))]
+    fn check_grammar(&self, _: &mut Vec<Token>) {
+        self.logger.error("This binary hasn't been compiled with the 'proofread' feature, can't check grammar.");
     }
 
     /// Adds a chapter, as a string, to the book

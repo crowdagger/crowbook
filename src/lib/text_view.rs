@@ -158,7 +158,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
     }
 
     if let (Some((i, pos_left)), Some((j, pos_right))) = (found_left, found_right) {
-        let mut pos_right = pos_right;
+        let pos_right = pos_right;
         let mut vec = vec!();
 
         // Beginning token: keep the left part in the str, put the right one in our vec
@@ -196,7 +196,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                     return None;
                 }
                 
-                let mut str_right:String = chars_right.into_iter().collect();
+                let str_right:String = chars_right.into_iter().collect();
                 vec.push(Token::Str(str_right));
             } else {
                 unreachable!();
