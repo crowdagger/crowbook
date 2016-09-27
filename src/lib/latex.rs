@@ -19,6 +19,7 @@ use book::{Book, compile_str};
 use number::Number;
 use error::{Error,Result, Source};
 use token::Token;
+use token::Data;
 use zipper::Zipper;
 use escape::escape_tex;
 use resource_handler::ResourceHandler;
@@ -373,7 +374,16 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 Ok(res)
             }
             Token::TableCell(ref vec) => self.render_vec(vec),
-            Token::Annotation(_, ref vec) => self.render_vec(vec),
+            Token::Annotation(ref annotation, ref vec) => {
+                let content = try!(self.render_vec(vec));
+                match annotation {
+                    &Data::GrammarError(ref s) => Ok(format!("\\underline{{{}}}\\footnote{{{}}}",
+                                                             content,
+                                                             s)),
+                    }
+
+            },
+                
             Token::__NonExhaustive => unreachable!()
         }
     }    

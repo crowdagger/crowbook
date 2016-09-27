@@ -52,3 +52,4 @@ crossbeam = "0.2"
 caribon = { version = "0.7", optional = true }
 clap = { version = "2", optional = true }
 hyper = "0.9"
+url = "1.2"

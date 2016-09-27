@@ -375,7 +375,8 @@ impl<'a> HtmlRenderer<'a> {
                 if this.as_ref().proofread {
                     match annotation {
                         &Data::GrammarError(ref s) => Ok(format!("<span title = \"{}\" style = \"background: red\">{}</span>",
-                                                                 s, content))
+                                                                 s,
+                                                                 content))
                     }
                 } else{
                     Ok(content)

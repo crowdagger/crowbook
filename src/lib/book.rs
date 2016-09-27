@@ -582,19 +582,41 @@ impl Book {
 
         // If one of the renderers requires it, perform grammarcheck
         if self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok() {
-            for mut token in &mut v {
-                match *token {
-                    Token::Paragraph(ref mut v) => {
-                        try!(check_grammar(v));
-                    },
-                    _ => (),
-                }
-            }
+            self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
+            self.check_grammar(&mut v);
+//             let len = v.len();
+//             let (v1, v2) = v.split_at_mut(len / 2);
+
+//             crossbeam::scope(|scope| {
+//                 scope.spawn(|| self.check_grammar(v1));
+//                 scope.spawn(|| self.check_grammar(v2));
+// //                scope.spawn(|| self.check_grammar(v3));
+// //                scope.spawn(|| self.check_grammar(v4));
+//             });
         }
         
         self.chapters.push((number, v));
         Ok(())
-    }     
+    }
+
+    fn check_grammar(&self, tokens: &mut Vec<Token>) {
+        match check_grammar(tokens, self.options.get_str("lang").unwrap()) {
+            Ok(..) => (),
+            Err(err) => self.logger.error(format!("trying to run language tool: {}", err)),
+        }
+        
+        // for mut token in tokens {
+        //     match *token {
+        //         Token::Paragraph(ref mut v) => {
+        //             match check_grammar(v) {
+        //                 Ok(..) => (),
+        //                 Err(err) => self.logger.error(format!("trying to run language tool: {}", err)),
+        //             }
+        //                     },
+        //         _ => (),
+        //     }
+        // }
+    }
 
     /// Adds a chapter, as a string, to the book
     ///

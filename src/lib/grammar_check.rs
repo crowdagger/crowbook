@@ -1,6 +1,7 @@
 use rustc_serialize::json;
 use hyper;
 use hyper::{Client};
+use url::form_urlencoded;
 
 use std::io::Read;
 use std::borrow::Cow;
@@ -19,6 +20,8 @@ pub struct GrammarError {
     pub message: String,
     pub offset: usize,
     pub length: usize,
+    pub short_message: Option<String>,
+    pub issue_type: Option<String>,
 }
 
 /// Contains a list of matches to errors
@@ -33,8 +36,11 @@ pub struct GrammarCheck {
 
 impl GrammarCheck {
     /// Send a query to LanguageTools server and get back a list of errors
-    pub fn new(text: &str, port: usize) -> Result<GrammarCheck> {
-        let query = format!("language=en&text={}", escape_query(text));
+    pub fn new(text: &str, port: usize, lang: &str) -> Result<GrammarCheck> {
+        let query: String = form_urlencoded::Serializer::new(String::new())
+            .append_pair("language", lang)
+            .append_pair("text", text)
+            .finish();
         
         let client = Client::new();
         
@@ -73,9 +79,9 @@ fn escape_query<'a>(s: &str) -> Cow<'a, str> {
 /// Check the grammar in a chapter
 ///
 /// This modifies the AST
-pub fn check_grammar(tokens: &mut Vec<Token>) -> Result<()> {
+pub fn check_grammar(tokens: &mut Vec<Token>, lang: &str) -> Result<()> {
     let input = view_as_text(tokens);
-    let check = try!(GrammarCheck::new(&input, 8081));
+    let check = try!(GrammarCheck::new(&input, 8081, lang));
     
     for error in check.matches {
         insert_annotation(tokens, &Data::GrammarError(error.message.clone()), error.offset, error.length);

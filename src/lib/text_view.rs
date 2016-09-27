@@ -177,14 +177,18 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                     if length != chars_right.len() {
                         let inline_token = chars_right.split_off(length);
                         let inline_token = Token::Str(inline_token.into_iter().collect());
-                        if i == tokens.len() {
+                        if pos_left == 0 {
+                            tokens.insert(i, inline_token)
+                        } else if i == tokens.len() {
                             tokens.push(inline_token);
                         } else {
                             tokens.insert(i+1, inline_token);
                         }
                     }
                     let annot = Token::Annotation(annotation.clone(), vec!(Token::Str(chars_right.into_iter().collect())));
-                    if i == tokens.len() {
+                    if pos_left == 0 {
+                        tokens.insert(i, annot)
+                    } else if i == tokens.len() {
                         tokens.push(annot);
                     } else {
                         tokens.insert(i+1, annot);
@@ -238,10 +242,10 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
             }
         }
         let new_token = Token::Annotation(annotation.clone(), vec);
-        if i >= tokens.len() - 1 {
-            tokens.push(new_token);
-        } else if pos_left == 0 {
+        if pos_left == 0 {
             tokens.insert(i, new_token);
+        }  else if i >= tokens.len() - 1 {
+            tokens.push(new_token);
         } else {
             tokens.insert(i+1, new_token);
         }
@@ -256,88 +260,6 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
 }
 
 
-
-// /// Insert a comment at the given pos in the text_view
-// #[doc(hidden)]
-// pub fn insert_at(tokens: &mut Vec<Token>, comment: &str, pos: usize) -> Option<usize> {
-//     let mut pos = pos;
-//     let mut found = None;
-//     for i in 0..tokens.len() {
-//         let recurse  = match tokens[i] {
-//             Token::Str(ref s) => {
-//                 let len = s.chars().count();
-//                 if pos < len {
-//                     found = Some(i);
-//                     break;
-//                 } else {
-//                     pos = pos - len;
-//                     false
-//                 }
-//             },
-
-//             Token::Rule
-//                 | Token::SoftBreak
-//                 | Token::HardBreak
-//                 => {
-//                     if pos < 1 {
-//                         found = Some(i);
-//                         break;
-//                     } else {
-//                         pos -= 1;
-//                         false
-//                     }
-//                 }
-//             Token::Comment(_) => {
-//                 false
-//             },
-
-//             _ => true
-//         };
-
-//         // Moved out of the match 'thanks' to borrowcheck
-//         if recurse {
-//             if let Some(ref mut inner) = tokens[i].inner_mut() {
-//                 if let Some(new_pos) = insert_at(inner, comment, pos) {
-//                     pos = new_pos;
-//                 } else {
-//                     return None;
-//                 }
-//             }
-//         }
-//     }
-
-//     let new_token = Token::Comment(comment.to_owned());
-//     if let Some(i) = found {
-//         if !tokens[i].is_str() {
-//             if i >= tokens.len() - 1 {
-//                 tokens.push(new_token);
-//             } else {
-//                 tokens.insert(i+1, new_token);
-//             }
-//         } else {
-//             let old_token = mem::replace(&mut tokens[i], Token::Str(String::new()));
-//             if let Token::Str(old_str) = old_token {
-//                 let mut chars_left:Vec<char> = old_str.chars().collect();
-//                 let chars_right = chars_left.split_off(pos);
-//                 let str_left:String = chars_left.into_iter().collect();
-//                 let str_right:String = chars_right.into_iter().collect();
-//                 tokens[i] = Token::Str(str_left);
-//                 if i >= tokens.len() - 1 {
-//                     tokens.push(new_token);
-//                     tokens.push(Token::Str(str_right));
-//                 } else {
-//                     tokens.insert(i+1, new_token);
-//                     tokens.insert(i+2, Token::Str(str_right));
-//                 }   
-//             }
-//         }
-//         return None;
-//     } else {
-//         return Some(pos);
-//     }
-// }
-
-
 #[test]
 fn test_text_view() {
     let ast = vec!(Token::Str("123".to_owned()),
@@ -346,16 +268,16 @@ fn test_text_view() {
     assert_eq!(view_as_text(&ast), "123456789");
 }
 
-#[test]
-fn test_text_insert() {
-    let mut ast = vec!(Token::Str("123".to_owned()),
-                       Token::Emphasis(vec!(Token::Str("456".to_owned()))),
-                       Token::Str("789".to_owned()));
-    insert_at(&mut ast, "!!!", 5);
-    let expected = vec!(Token::Str("123".to_owned()),
-                        Token::Emphasis(vec!(Token::Str("45".to_owned()),
-                                             Token::Comment("!!!".to_owned()),
-                                             Token::Str("6".to_owned()))),
-                        Token::Str("789".to_owned()));
-    assert_eq!(expected, ast);
-}
+// #[test]
+// fn test_text_insert() {
+//     let mut ast = vec!(Token::Str("123".to_owned()),
+//                        Token::Emphasis(vec!(Token::Str("456".to_owned()))),
+//                        Token::Str("789".to_owned()));
+//     insert_at(&mut ast, "!!!", 5);
+//     let expected = vec!(Token::Str("123".to_owned()),
+//                         Token::Emphasis(vec!(Token::Str("45".to_owned()),
+//                                              Token::Comment("!!!".to_owned()),
+//                                              Token::Str("6".to_owned()))),
+//                         Token::Str("789".to_owned()));
+//     assert_eq!(expected, ast);
+// }

@@ -103,6 +103,7 @@ extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
 extern crate hyper;
+extern crate url;
 #[cfg(feature = "repetitions")]
 extern crate caribon;
 
