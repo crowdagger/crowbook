@@ -106,7 +106,11 @@ This is forbidden because we are supposed to create a temporary file in a tempor
             println!("{}", &String::from_utf8_lossy(&output.stdout));
             Error::zipper(format!("could not copy file {} to {}", in_file, out_file))
         }));
-        Ok(String::from_utf8_lossy(&output.stdout).into_owned())
+        if output.status.success() {
+            Ok(String::from_utf8_lossy(&output.stdout).into_owned())
+        } else {
+            Err(Error::zipper(format!("command didn't return succes:{}", String::from_utf8_lossy(&output.stdout))))
+        }
     }
 
     /// zip all files in zipper's tmp dir to a given file name and return odt file
