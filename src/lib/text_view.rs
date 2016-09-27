@@ -43,22 +43,22 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
             | &Token::TableRow(..)
             | &Token::TableCell(..)
             => f(""),
-        
+
         _ => traverse_vec(token.inner().unwrap(), f, add),
     }
 }
 
 /// Traverse a vector of tokens
 #[doc(hidden)]    
-    pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f:&F1, add: &F2) -> R
+pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f:&F1, add: &F2) -> R
     where F1: Fn(&str) -> R,
           F2: Fn(R, R) -> R,
           R: Default
 {
-        tokens.iter()
-            .map(|t| traverse_token(t, f, add))
-            .fold(R::default(), |r1, r2| add(r1, r2))
-    }
+    tokens.iter()
+        .map(|t| traverse_token(t, f, add))
+        .fold(R::default(), |r1, r2| add(r1, r2))
+}
 
 
 
