@@ -326,7 +326,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         Ok(format!("\\url{{{}}}", content))
                     } else {
                         if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
-                            Ok(format!("\\href{{{}}}{{{}}}\\footnote{{\\url{{{}}}}}", url, content, url))
+                            Ok(format!("\\href{{{}}}{{{}}}\\protect\\footnote{{\\url{{{}}}}}", url, content, url))
                         } else {
                             Ok(format!("\\href{{{}}}{{{}}}", url, content))
                         }
@@ -357,7 +357,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     Ok(String::new())
                 }                                
             },
-            Token::Footnote(ref vec) => Ok(format!("\\footnote{{{}}}", try!(self.render_vec(vec)))),
+            Token::Footnote(ref vec) => Ok(format!("\\protect\\footnote{{{}}}", try!(self.render_vec(vec)))),
             Token::Table(n, ref vec) => {
                 let mut cols = String::new();
                 for _ in 0..n {
@@ -388,7 +388,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 let content = try!(self.render_vec(vec));
                 if self.proofread {
                     match annotation {
-                        &Data::GrammarError(ref s) => Ok(format!("\\underline{{{}}}\\footnote{{{}}}",
+                        &Data::GrammarError(ref s) => Ok(format!("\\underline{{{}}}\\protect\\footnote{{{}}}",
                                                                  content,
                                                                  escape_tex(s.as_str()))),
                     }
