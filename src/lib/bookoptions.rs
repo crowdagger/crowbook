@@ -35,6 +35,7 @@ output.base_path:path:""            # Directory where those output files will we
 # Output options (for proofreading)
 output.proofread.html:path          # Output file name for HTML rendering with proofread features
 output.proofread.html_dir:path      # Output directory name for HTML rendering with proofread features
+output.proofread.pdf:path           # Output file name for PDF rendering with proofread features
 
 
 # Rendering options
@@ -463,6 +464,7 @@ impl BookOptions {
                 | "output.odt"
                 | "output.proofread.html"
                 | "output.proofread.html_dir"
+                | "output.proofread.pdf"
                 => {
                     // Translate according to output.base_path
                     let base = self.get_path("output.base_path").unwrap();

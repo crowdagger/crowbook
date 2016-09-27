@@ -41,6 +41,7 @@ pub struct LatexRenderer<'a> {
     first_letter: bool,
     first_paragraph: bool,
     is_short: bool,
+    proofread: bool,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -57,12 +58,21 @@ impl<'a> LatexRenderer<'a> {
             first_letter: false,
             first_paragraph: true,
             is_short: book.options.get_str("tex.class").unwrap() == "article",
+            proofread: false,
         }
     }
 
+    /// Set proofreading to true
+    #[doc(hidden)]
+    pub fn proofread(mut self) -> Self {
+        self.proofread = true;
+        self
+    }
+    
     /// Render pdf in a file
     pub fn render_pdf(&mut self) -> Result<String> {
-        if let Ok(pdf_file) = self.book.options.get_path("output.pdf") {
+        let output = if self.proofread { "output.proofread.pdf" } else { "output.pdf" };
+        if let Ok(pdf_file) = self.book.options.get_path(output) {
             let content = try!(self.render_book());
             let mut zipper = try!(Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap()));
             try!(zipper.write("result.tex", &content.as_bytes(), false));
@@ -82,7 +92,7 @@ impl<'a> LatexRenderer<'a> {
             zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
             Err(Error::render(&self.source,
-                                  "no output pdf file specified in book config"))
+                                  format!("no output pdf file specified '{}' in book config", output)))
         }
     }
 
@@ -376,12 +386,15 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::TableCell(ref vec) => self.render_vec(vec),
             Token::Annotation(ref annotation, ref vec) => {
                 let content = try!(self.render_vec(vec));
-                match annotation {
-                    &Data::GrammarError(ref s) => Ok(format!("\\underline{{{}}}\\footnote{{{}}}",
-                                                             content,
-                                                             s)),
+                if self.proofread {
+                    match annotation {
+                        &Data::GrammarError(ref s) => Ok(format!("\\underline{{{}}}\\footnote{{{}}}",
+                                                                 content,
+                                                                 escape_tex(s.as_str()))),
                     }
-
+                } else {
+                    Ok(content)
+                }
             },
                 
             Token::__NonExhaustive => unreachable!()

@@ -3,10 +3,18 @@ ChangeLog
 
 unreleased
 ----------
+This release mainly introduces generation of proofreading copies,
+allowing, if they are set (and `crowbook` was compiled with the
+`proofread` feature) to generate proofreading copies, using tools to
+check grammar and detect repetitions. These features are currently
+experimental.
 * New options:
   * `html.escape_nb_spaces`, if set to true (by default), will replace
     unicode non breaking spaces with HTML entites and CSS so it can
-    work on any(?) system. 
+    display correctly even if reader's don't have a browser/font
+    supporting these unicode symbols.
+  * Output files for proofread documents: `output.proofread.html`,
+    `output.proofread.html_dir` and `output.proofread.pdf`.
   * Proofread options `proofread.repetitions` and
   `proofread.nb_spaces` have been added.
      * `proofread.nb_spaces`, if set to true, highlights non-breaking spaces so it is
@@ -29,8 +37,6 @@ unreleased
     * Add support for xelatex in the default template. 
   * Improved french cleaner (see [an article (in french)](https://crowdagger.github.io/textes/articles/heuristique.html)
     that talks about what it does).
-* Performances:
-  * Avoid compiling some templates every time they are used. 
 * API:
   * `clap` dependency is now optional, people who want to use Crowbook
     as a library should include it with `crowbook = { version = "0.9",

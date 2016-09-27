@@ -353,6 +353,7 @@ impl Book {
                 "output.epub" => (self.render_epub(), "EPUB"),
                 "output.html_dir" => (self.render_html_dir(), "HTML directory"),
                 "output.proofread.html_dir" => (self.render_proof_html_dir(), "HTML directory (for proofreading)"),
+                "output.proofread.pdf" => (self.render_proof_pdf(), "PDF (for proofreading)"),
                 "output.odt" => (self.render_odt(), "ODT"),
                 _ => unreachable!()
             };
@@ -387,6 +388,9 @@ impl Book {
         crossbeam::scope(|scope| {
             if self.options.get("output.pdf").is_ok() {
                 handles.push(scope.spawn(|| self.render_one("output.pdf")));
+            }
+            if self.options.get("output.proofread.pdf").is_ok() {
+                handles.push(scope.spawn(|| self.render_one("output.proofread.pdf")));
             }
             if self.options.get("output.epub").is_ok() {
                 handles.push(scope.spawn(|| self.render_one("output.epub")));
@@ -424,7 +428,7 @@ impl Book {
         let result = try!(latex.render_pdf());
         self.logger.debug("Output of latex command:");
         self.logger.debug(result);
-        self.logger.info(format!("Successfully generated pdf file: {}", self.options.get_path("output.pdf").unwrap()));
+        self.logger.info(format!("Successfully generated PDF file: {}", self.options.get_path("output.pdf").unwrap()));
         Ok(())
     }
 
@@ -448,6 +452,7 @@ impl Book {
         Ok(())
     }
 
+
     /// Render book to HTML directory according to book options (proofread version)
     pub fn render_proof_html_dir(&self) -> Result<()> {
         let dir_name = self.options.get_path("output.proofread.html_dir").unwrap();
@@ -460,6 +465,21 @@ impl Book {
         let mut html = HtmlDirRenderer::new(&self).proofread();
         try!(html.render_book());
         self.logger.info(&format!("Successfully generated html directory: {}", dir_name));
+        Ok(())
+    }
+
+    /// Render book to PDF according to book options (proofread version)
+    pub fn render_proof_pdf(&self) -> Result<()> {
+        let file_name = self.options.get_path("output.proofread.pdf").unwrap();
+        if !cfg!(feature = "proofread") {
+            self.logger.info(format!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
+                                     file_name));
+            return Ok(())
+        }
+        self.logger.debug("Attempting to generate PDF for proofreading...");
+        let mut latex = LatexRenderer::new(&self).proofread();
+        try!(latex.render_pdf());
+        self.logger.info(&format!("Successfully generated PDF file for proofreading: {}", file_name));
         Ok(())
     }
 
@@ -514,7 +534,7 @@ impl Book {
     pub fn render_tex<T:Write>(&self, f: &mut T) -> Result<()> {
         self.logger.debug("Attempting to generate LaTeX...");
 
-        let mut latex = LatexRenderer::new(&self);
+        let mut latex = LatexRenderer::new(&self).proofread();
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
                                                                        format!("problem when writing to LaTeX file: {}", e))));
