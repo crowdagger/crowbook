@@ -155,9 +155,6 @@ impl<'a> HtmlRenderer<'a> {
     
     #[cfg(not(feature = "proofread"))]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        if book.options.get_bool("proofread.repetitions").unwrap() {
-            book.logger.error("This binary was not build with support for Caribon for detecting repetitions");
-        }
         let mut html = HtmlRenderer {
             book: book,
             toc: Toc::new(),
