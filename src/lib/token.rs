@@ -15,6 +15,11 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum Data {
+    GrammarError(String),
+}
+
 /// A single token representing a Markdown element.
 ///
 /// A Markdown document is, thus, a Vec of `Token`s.
@@ -65,8 +70,6 @@ pub enum Token {
     SoftBreak,
     /// Hardbreak
     HardBreak,
-    /// A comment (HTML code)
-    Comment(String),
 
     /// A link with an url, a title, and the linked text
     Link(String, String, Vec<Token>),
@@ -74,6 +77,9 @@ pub enum Token {
     Image(String, String, Vec<Token>),
     /// Similar to previous, but when image is in a standalone paragraph
     StandaloneImage(String, String, Vec<Token>),
+
+    /// An annotation inserted by crowbook for e.g. grammar checking
+    Annotation(Data, Vec<Token>),
 
     /// Hint that destructuring should not be exhaustive
     #[doc(hidden)]
@@ -90,7 +96,6 @@ impl Token {
                 | SoftBreak
                 | HardBreak
                 | Str(_)
-                | Comment(_)
                 => None,
             
             Paragraph(ref v) 
@@ -111,6 +116,7 @@ impl Token {
                 | Link(_,_,ref v)
                 | Image(_,_,ref v)
                 | StandaloneImage(_,_,ref v)
+                | Annotation(_, ref v)
                 => Some(v),
 
             __NonExhaustive => unreachable!(),
@@ -124,10 +130,10 @@ impl Token {
                 | SoftBreak
                 | HardBreak
                 | Str(_)
-                | Comment(_)
                 => None,
             
-            Paragraph(ref mut v) 
+            Paragraph(ref mut v)
+                | Annotation(_, ref mut v)
                 | Header(_, ref mut v)
                 | Emphasis(ref mut v)
                 | Strong(ref mut v)
@@ -163,4 +169,5 @@ impl Token {
         if let Token::Image(_, _, _) = *self { true } else { false }
     }
 }
+
 

@@ -14,6 +14,8 @@ use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
 use lang;
 use grammar_check::check_grammar;
+use text_view::view_as_text;
+use text_view::count_length;
 
 use std::fs::File;
 use std::io::{Write, Read};
@@ -582,7 +584,9 @@ impl Book {
         if self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok() {
             for mut token in &mut v {
                 match *token {
-                    Token::Paragraph(ref mut v) => try!(check_grammar(v)),
+                    Token::Paragraph(ref mut v) => {
+                        try!(check_grammar(v));
+                    },
                     _ => (),
                 }
             }

@@ -19,6 +19,7 @@ use error::{Result, Error, Source};
 use escape::escape_html;
 use escape::escape_nb_spaces;
 use token::Token;
+use token::Data;
 use book::{Book, compile_str};
 use number::Number;
 use toc::Toc;
@@ -369,7 +370,17 @@ impl<'a> HtmlRenderer<'a> {
     pub fn static_render_token<T>(this: &mut T, token: &Token) -> Result<String>
         where T: AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer {
         match *token {
-            Token::Comment(ref text) => Ok(text.to_owned()),
+            Token::Annotation(ref annotation, ref v) => {
+                let content = try!(this.as_mut().render_vec(v));
+                if this.as_ref().proofread {
+                    match annotation {
+                        &Data::GrammarError(ref s) => Ok(format!("<span title = \"{}\" style = \"background: red\">{}</span>",
+                                                                 s, content))
+                    }
+                } else{
+                    Ok(content)
+                }
+            },
             Token::Str(ref text) => {
                 let content = if this.as_ref().verbatim {
                     escape_html(text.as_ref())

@@ -6,8 +6,9 @@ use std::io::Read;
 use std::borrow::Cow;
 
 use text_view::view_as_text;
-use text_view::insert_at;
+use text_view::insert_annotation;
 use token::Token;
+use token::Data;
 use error::{Error, Result, Source};
 
 /// Represents a grammar error from language tool
@@ -74,14 +75,12 @@ fn escape_query<'a>(s: &str) -> Cow<'a, str> {
 /// This modifies the AST
 pub fn check_grammar(tokens: &mut Vec<Token>) -> Result<()> {
     let input = view_as_text(tokens);
+    println!("{}", input);
     let check = try!(GrammarCheck::new(&input, 8081));
     
     for error in check.matches {
-        let msg_left = format!("<span title = \"{}\" style = \"background: red\">",
-                               &error.message);
-        let msg_right = "</span>";
-        insert_at(tokens, msg_right, error.offset + error.length);
-        insert_at(tokens, &msg_left, error.offset);
+        println!("annotating {}:{}", error.offset, error.length);
+        insert_annotation(tokens, &Data::GrammarError(error.message.clone()), error.offset, error.length);
     }
     Ok(())
 }

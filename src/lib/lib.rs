@@ -154,8 +154,10 @@ mod bookoption;
 mod text_view;
 mod grammar_check;
 
+pub use token::Data;
 pub use text_view::view_as_text;
-pub use text_view::insert_at;
+//pub use text_view::insert_at;
+pub use text_view::insert_annotation;
 
 #[cfg(test)]
 mod tests;

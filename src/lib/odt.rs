@@ -163,7 +163,7 @@ impl<'a> OdtRenderer<'a> {
                 self.book.logger.warning(format!("ODT: footnotes are not yet implemented in this format, ignoring {:?}", token));
                 String::new()
             },
-            Token::Comment(_) => String::new(),
+            Token::Annotation(_, ref vec) => self.render_vec(vec),
             Token::__NonExhaustive => unreachable!()
         }
     }
