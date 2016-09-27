@@ -316,6 +316,9 @@ impl Book {
 
         // Update cleaner according to options (autoclean/lang)
         self.update_cleaner();
+
+        // Update grammar checker according to options (proofread.*)
+        self.init_checker();
         
         // Parse chapters
         while let Some(line) = lines.next() {
@@ -361,22 +364,23 @@ impl Book {
     
     /// Initialize the grammar checker if it needs to be
     #[cfg(feature = "proofread")]
-    fn init_checker(&mut self) -> Result<()> {
+    fn init_checker(&mut self)  {
         if self.options.get_bool("proofread.languagetool").unwrap() &&
             (self.options.get("output.proofread.html").is_ok() ||
              self.options.get("output.proofread.html_dir").is_ok() ||
              self.options.get("output.proofread.pdf").is_ok()) {
                 let port = self.options.get_i32("proofread.languagetool.port").unwrap() as usize;
                 let lang = self.options.get_str("lang").unwrap();
-                let checker = try!(GrammarChecker::new(port, lang));
-                self.checker = Some(checker);
+                let checker = GrammarChecker::new(port, lang);
+                match checker {
+                    Ok(checker) => self.checker = Some(checker),
+                    Err(e) => self.logger.error(format!("{}", e)),
+                }
             }
-        Ok(())
     }
 
     #[cfg(not(feature = "proofread"))]
-    fn init_checker(&mut self) -> Result<()> {
-        Ok(())
+    fn init_checker(&mut self) {
     }
 
     fn render_one(&self, s: &str) -> () {
@@ -648,11 +652,8 @@ impl Book {
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") &&
             (self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok()) {
-                self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
-                if self.checker.is_none() {
-                    self.init_checker();
-                }
                 if let Some(ref checker) = self.checker {
+                    self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
                     if let Err(err) = checker.check_chapter(&mut v) {
                         self.logger.error(format!("Error running grammar check on {}: {}", file, err));
                     }
