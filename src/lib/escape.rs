@@ -83,6 +83,26 @@ pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     }
 }
 
+
+/// Escape quotes
+///
+/// Replace `"` by `'`
+pub fn escape_quotes<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
+    let input = input.into();
+    if input.contains('"') {
+        let mut output = String::with_capacity(input.len());
+        for c in input.chars() {
+            match c {
+                '"' => output.push('\''),
+                _ => output.push(c)
+            }
+        }
+        Cow::Owned(output)
+    } else {
+        input
+    }
+}
+
 /// Escape characters for LaTeX
 ///
 /// # Examples

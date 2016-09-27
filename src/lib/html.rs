@@ -18,6 +18,7 @@
 use error::{Result, Error, Source};
 use escape::escape_html;
 use escape::escape_nb_spaces;
+use escape::escape_quotes;
 use token::Token;
 use token::Data;
 use book::{Book, compile_str};
@@ -372,7 +373,7 @@ impl<'a> HtmlRenderer<'a> {
                 if this.as_ref().proofread {
                     match annotation {
                         &Data::GrammarError(ref s) => Ok(format!("<span title = \"{}\" style = \"background: red\">{}</span>",
-                                                                 s,
+                                                                 escape_quotes(s.as_str()),
                                                                  content))
                     }
                 } else{
