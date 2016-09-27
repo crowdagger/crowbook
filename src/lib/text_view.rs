@@ -49,32 +49,32 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
 
 /// Traverse a vector of tokens
 #[doc(hidden)]    
-pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f:&F1, add: &F2) -> R
+    pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f:&F1, add: &F2) -> R
     where F1: Fn(&str) -> R,
           F2: Fn(R, R) -> R,
           R: Default
 {
-    tokens.iter()
-        .map(|t| traverse_token(t, f, add))
-        .fold(R::default(), |r1, r2| add(r1, r2))
-}
+        tokens.iter()
+            .map(|t| traverse_token(t, f, add))
+            .fold(R::default(), |r1, r2| add(r1, r2))
+    }
 
 
 
 /// Returns the content of an AST as raw text, without any formatting
 /// Useful for tools like grammar checks
 pub fn view_as_text(tokens: &[Token]) -> String {
-    traverse_vec(tokens,
-                 &|s| s.to_owned(),
-                 &|s1, s2| s1 + &s2)
-}
+        traverse_vec(tokens,
+                     &|s| s.to_owned(),
+                     &|s1, s2| s1 + &s2)
+    }
 
 pub fn count_length(tokens: &[Token]) -> usize {
     traverse_vec(tokens,
                  &|s| s.chars().count(),
                  &|s1, s2| s1 + s2)
 }
-   
+
 
 /// Insert an annotation at begin and end pos begin+len in the text_view
 #[doc(hidden)]
@@ -82,15 +82,12 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
     let mut pos = pos;
     let mut found_left = None;
     let mut found_right = None;
-//    println!("try to insert annotation {}:{}", pos, length);
     for i in 0..tokens.len() {
-//        println!("token {}: {:?}", i, tokens[i]);
         let recurse  = match tokens[i] {
             Token::Str(ref s) => {
                 let len = s.chars().count();
                 if pos < len || (pos == len && found_left.is_some()) {
                     // We found the first element already, so now it's the right
-//                    println!("we have a match");
                     if found_left.is_some() {
                         found_right = Some((i, pos));
                         break;
@@ -125,11 +122,10 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                     pos -= 1;
                     false
                 },
-                
+            
             _ => {
                 if let Some(ref inner) = tokens[i].inner() {
                     let len = count_length(inner);
-//                    println!("inner element has count {}, pos: {}", len, pos);
                     // Only recurse if the two is in this subtree
                     if pos < len {
                         if found_left.is_none() {
@@ -151,7 +147,6 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
 
         // Moved out of the match 'thanks' to borrowcheck
         if recurse {
-//            println!("recurse is true");
             if let Some(ref mut inner) = tokens[i].inner_mut() {
                 if let Some(new_pos) = insert_annotation(inner, annotation, pos, length) {
                     pos = new_pos;
@@ -163,9 +158,6 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
     }
 
     if let (Some((i, pos_left)), Some((j, pos_right))) = (found_left, found_right) {
-        println!("i: {}, j: {}, pos_left: {}, pos_right: {}", i, j, pos_left, pos_right);
-        println!("tokens[{}]:{:?}", i, tokens[i]);
-
         let mut pos_right = pos_right;
         let mut vec = vec!();
 
@@ -193,7 +185,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                     }
                     let annot = Token::Annotation(annotation.clone(), vec!(Token::Str(chars_right.into_iter().collect())));
                     if i == tokens.len() {
-                            tokens.push(annot);
+                        tokens.push(annot);
                     } else {
                         tokens.insert(i+1, annot);
                     }
@@ -234,11 +226,10 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                 let old_token = mem::replace(&mut tokens[j], Token::Rule);
                 if let Token::Str(old_str) = old_token {
                     let mut chars_left:Vec<char> = old_str.chars().collect();
-                    println!("chars of token[{}]: {:?}, pos_right: {}", j, chars_left, pos_right);
                     let chars_right = chars_left.split_off(pos_right);
                     let str_left:String = chars_left.into_iter().collect();
                     let str_right:String = chars_right.into_iter().collect();
-                tokens[j] = Token::Str(str_right);
+                    tokens[j] = Token::Str(str_right);
                     // todo: if only one token, maybe concat the strings
                     vec.push(Token::Str(str_left));
                 } else {
@@ -259,7 +250,6 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
         if found_left.is_none() && found_right.is_none() {
             return Some(pos);
         } else {
-//            println!("!!!");
             return None;
         }
     }
@@ -284,7 +274,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
 //                     false
 //                 }
 //             },
-            
+
 //             Token::Rule
 //                 | Token::SoftBreak
 //                 | Token::HardBreak
@@ -300,7 +290,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
 //             Token::Comment(_) => {
 //                 false
 //             },
-                
+
 //             _ => true
 //         };
 
@@ -366,6 +356,6 @@ fn test_text_insert() {
                         Token::Emphasis(vec!(Token::Str("45".to_owned()),
                                              Token::Comment("!!!".to_owned()),
                                              Token::Str("6".to_owned()))),
-                       Token::Str("789".to_owned()));
+                        Token::Str("789".to_owned()));
     assert_eq!(expected, ast);
 }

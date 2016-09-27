@@ -75,11 +75,9 @@ fn escape_query<'a>(s: &str) -> Cow<'a, str> {
 /// This modifies the AST
 pub fn check_grammar(tokens: &mut Vec<Token>) -> Result<()> {
     let input = view_as_text(tokens);
-    println!("{}", input);
     let check = try!(GrammarCheck::new(&input, 8081));
     
     for error in check.matches {
-        println!("annotating {}:{}", error.offset, error.length);
         insert_annotation(tokens, &Data::GrammarError(error.message.clone()), error.offset, error.length);
     }
     Ok(())

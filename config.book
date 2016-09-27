@@ -16,14 +16,18 @@ output.html: book.html
 output.html_dir: html
 output.pdf: book.pdf
 output.odt: book.odt
+ 
 output.base_path: docs/book/
+output.proofread.html: book.proof.html
 
 # Resources options
 resources.base_path.images: img/  # where to find the cover
 
+proofread.repetitions: true
+
 # Rendering options
 rendering.num_depth: 2
-rendering.initials: true
+rendering.initials: false
 rendering.inline_toc: false
 rendering.chapter_template: "**{{{number}}}.** {{{chapter_title}}}"
 
