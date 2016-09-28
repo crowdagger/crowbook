@@ -40,7 +40,7 @@ html.highlight_code:bool:true       # Provides syntax highlighting for code bloc
 html.highlight.js:tpl               # Set another highlight.js version than the bundled one
 html.highlight.css:tpl              # Set another highlight.js CSS theme than the default one
 html.side_notes:bool:false          # Display footnotes as side notes in HTML/Epub (experimental)
-html.escape_nb_spaces:bool:true     # Replace unicode non breaking spaces with  HTML entities and CSS
+html.escape_nb_spaces:bool:true     # Replace unicode non breaking spaces with HTML entities and CSS
 
 # Standalone HTML options
 html_single.one_chapter:bool:false  # Display only one chapter at a time (with a button to display all)
@@ -64,13 +64,15 @@ tex.template:tpl                    # Path of a LaTeX template file
 tex.class:str:book                  # LaTeX class to use
 
 # Resources option
-resources.files:str                  # Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+resources.files:str                  # Whitespace-separated list of
+files to embed in e.g. EPUB file; useful for including e.g. fonts
+resources.out_path:path:data         # Paths where additional resources should be copied in the EPUB file or HTML directory 
 resources.base_path:path             # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
 resources.base_path.links:path       # Set base path but only for links. Useless if resources.base_path is set.
 resources.base_path.images:path:.    # Set base path but only for images. Useless if resources.base_path is set.
 resources.base_path.files:path:.     # Set base path but only for additional files. Useless if resources.base_path is set.
 resources.base_path.templates:path:. # Set base path but only for templates files. Useless if resources.base_path is set.
-resources.out_path:path:data         # Paths where additional resources should be copied in the EPUB file or HTML directory 
+
 
 
 # Input options
