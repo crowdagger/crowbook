@@ -101,7 +101,7 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .arg_from_usage("-c, --create [FILES]... 'Creates a new book with existing markdown files'")
         .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file'")
              .requires("to"))
-        .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format")
+        .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
              .possible_values(&["epub", "pdf", "html", "tex", "odt", "proofread.html", "proofread.html_dir", "proofread.pdf", "proofread.tex"]))
         .arg(Arg::from_usage("--set [KEY_VALUES] 'Sets a list of book options'")
              .min_values(2))
