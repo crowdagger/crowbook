@@ -37,6 +37,8 @@ experimental.
     * Add support for xelatex in the default template. 
   * Improved french cleaner (see [an article (in french)](https://crowdagger.github.io/textes/articles/heuristique.html)
     that talks about what it does).
+* Crowbook user guide: documentation has been updated to correctly
+  reflect 0.9.x options.
 * API:
   * `clap` dependency is now optional, people who want to use Crowbook
     as a library should include it with `crowbook = { version = "0.9",
