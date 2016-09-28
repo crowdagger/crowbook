@@ -359,14 +359,20 @@ impl Book {
         try!(self.set_chapter_template());
         Ok(())
     }
+
+    /// Determine whether proofreading is activated or not
+    fn is_proofread(&self) -> bool {
+        self.options.get_bool("proofread").unwrap() &&
+            (self.options.get("output.proofread.html").is_ok() ||
+             self.options.get("output.proofread.html_dir").is_ok() ||
+             self.options.get("output.proofread.pdf").is_ok())
+    }
     
     /// Initialize the grammar checker if it needs to be
     #[cfg(feature = "proofread")]
     fn init_checker(&mut self)  {
         if self.options.get_bool("proofread.languagetool").unwrap() &&
-            (self.options.get("output.proofread.html").is_ok() ||
-             self.options.get("output.proofread.html_dir").is_ok() ||
-             self.options.get("output.proofread.pdf").is_ok()) {
+            self.is_proofread() {
                 let port = self.options.get_i32("proofread.languagetool.port").unwrap() as usize;
                 let lang = self.options.get_str("lang").unwrap();
                 let checker = GrammarChecker::new(port, lang);
@@ -424,9 +430,6 @@ impl Book {
             if self.options.get("output.pdf").is_ok() {
                 handles.push(scope.spawn(|| self.render_one("output.pdf")));
             }
-            if self.options.get("output.proofread.pdf").is_ok() {
-                handles.push(scope.spawn(|| self.render_one("output.proofread.pdf")));
-            }
             if self.options.get("output.epub").is_ok() {
                 handles.push(scope.spawn(|| self.render_one("output.epub")));
             }
@@ -436,17 +439,22 @@ impl Book {
             if self.options.get("output.odt").is_ok() {
                 handles.push(scope.spawn(|| self.render_one("output.odt")));
             }
-            if self.options.get("output.proofread.html_dir").is_ok() {
-                handles.push(scope.spawn(|| self.render_one("output.proofread.html_dir")));
-            }
             if self.options.get_path("output.html").is_ok() {
                 handles.push(scope.spawn(|| self.render_one_file("output.html")));
             }
-            if self.options.get_path("output.proofread.html").is_ok() {
-                handles.push(scope.spawn(|| self.render_one_file("output.proofread.html")));
-            }            
             if self.options.get_path("output.tex").is_ok() {
                 handles.push(scope.spawn(|| self.render_one_file("output.tex")));
+            }
+            if self.is_proofread() {
+                if self.options.get("output.proofread.pdf").is_ok() {
+                    handles.push(scope.spawn(|| self.render_one("output.proofread.pdf")));
+                }
+                if self.options.get("output.proofread.html_dir").is_ok() {
+                    handles.push(scope.spawn(|| self.render_one("output.proofread.html_dir")));
+                }
+                if self.options.get_path("output.proofread.html").is_ok() {
+                    handles.push(scope.spawn(|| self.render_one_file("output.proofread.html")));
+                }            
             }
         });
 
@@ -673,8 +681,7 @@ impl Book {
         ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut v);
 
         // If one of the renderers requires it, perform grammarcheck
-        if cfg!(feature = "proofread") &&
-            (self.options.get("output.proofread.html").is_ok() || self.options.get("output.proofread.html_dir").is_ok()) {
+        if cfg!(feature = "proofread") && self.is_proofread() {
                 if let Some(ref checker) = self.checker {
                     self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
                     if let Err(err) = checker.check_chapter(&mut v) {
