@@ -12,6 +12,7 @@ USAGE:
 FLAGS:
     -h, --help            Prints help information
     -l, --list-options    Lists all possible option
+    -p, --proofread       Enable roofreading
     -s, --single          Use a single Markdown file instead of a book configuration file
     -V, --version         Prints version information
     -v, --verbose         Print warnings in parsing/rendering
@@ -21,7 +22,8 @@ OPTIONS:
     -o, --output <FILE>                Specifies output file
         --print-template <TEMPLATE>    Displays the default value of a template
         --set <KEY_VALUES>             Sets a list of book options
-    -t, --to <FORMAT>                  Generate specific forma [values: epub, pdf, html, tex, odt]
+    -t, --to <FORMAT>
+            Generate specific format [values: epub, pdf, html, tex, odt, proofread.html, proofread.html_dir, proofread.pdf, proofread.tex]
 
 ARGS:
     <BOOK>    File containing the book configuration, or a Markdown file when called with --single
@@ -32,7 +34,6 @@ where <BOOK> is[^1]:
 
 [^1]: Unless the option `output.base_path` is set, see
 [the configuration file](config.md).
-
 
 
 ```bash
@@ -175,6 +176,11 @@ $ crowbook foo.book --set author Foo --title Bar
 ```
 
 will override the book title to `Bar` and its author to `Foo`.
+
+`--proofread`
+-------------
+
+Equivalent to `--set proofread true`. Enable proofreading. See [Proofreading](proofreading.md).
 
 `--list-options`
 ----------------

@@ -408,6 +408,10 @@ usage of some of them is detailed later on.
     -  Output file name for PDF rendering with proofread features
 
 ### Proofreading options (only for output.proofread.* targets) ###
+- **`proofread`**
+    - **type**: boolean
+    - **default value**: `false`
+    - Activate generation of proofreading copies
 - **`proofread.nb_spaces`**
     - **type**: boolean
     - **default value**: `true`

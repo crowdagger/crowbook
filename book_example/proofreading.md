@@ -35,6 +35,35 @@ $ cargo build --release --features "proofread"
 > in the source directory.
 
 
+Enabling proofreading
+---------------------
+
+Since proofreading can take quite a lot of time, particularly for long
+book, it is disabled by default. You'll have to run
+
+```bash
+$ crowbook --proofread my.book
+```
+
+or
+
+```bash
+$ crowbook -p my.book
+```
+
+to generate proofreading copies. Alternatively, if you want it to be
+activated each time you run `crowbook` on this book (which is *not*
+recommanded for long books, particularly if you want to perform a
+grammar check), you can set 
+
+```yaml
+proofread: true
+```
+
+in the book configuration file.
+
+
+
 Repetition detection 
 --------------------
 
