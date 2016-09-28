@@ -31,7 +31,7 @@ Note that Crowbook generates output files relatively to the directory
 where <BOOK> is[^1]:
 
 [^1]: Unless the option `output.base_path` is set, see
-[the configuration file](book_example/config.md).
+[the configuration file](config.md).
 
 
 

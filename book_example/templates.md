@@ -4,10 +4,13 @@ Templates
 List of templates 
 -----------------
 
-Crowbook allows the user to specify a number of templates. Some of
-them, though are not "real" templates, they are just files that are
-inserted, but can't contain mustache tags. This will probably evolve
-in future versions.
+Crowbook allows the user to specify a number of templates.[^1]
+
+[^1]: Some of them, though, are not "real" templates, they are just
+files that are inserted, but can't contain mustache tags. This will
+probably evolve in future versions.
+
+
 
 ### html.js ###
 

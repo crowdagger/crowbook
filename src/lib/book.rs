@@ -372,7 +372,7 @@ impl Book {
                 let checker = GrammarChecker::new(port, lang);
                 match checker {
                     Ok(checker) => self.checker = Some(checker),
-                    Err(e) => self.logger.error(format!("{}", e)),
+                    Err(e) => self.logger.error(format!("{}. Proceeding without checking grammar.", e)),
                 }
             }
     }

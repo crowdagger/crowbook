@@ -278,6 +278,10 @@ usage of some of them is detailed later on.
     - **type**: boolean
     - **default value**: `false`
     -  Display footnotes as side notes in HTML/Epub (experimental)
+- **`html.escape_nb_spaces`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Replace unicode non breaking spaces with  HTML entities and CSS
 
 ### Standalone HTML options ###
 - **`html_single.one_chapter`**
@@ -324,7 +328,7 @@ usage of some of them is detailed later on.
     -  Add foontotes to URL of links so they are readable when printed
 - **`tex.command`**
     - **type**: string
-    - **default value**: `pdflatex`
+    - **default value**: `xelatex`
     -  LaTeX command to use for generating PDF
 - **`tex.template`**
     - **type**: template path
@@ -389,13 +393,127 @@ usage of some of them is detailed later on.
     - **default value**: `false`
     -  Make Crowbook display more messages
 
+### Output options (for proofreading) ###
+- **`output.proofread.html`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Output file name for HTML rendering with proofread features
+- **`output.proofread.html_dir`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Output directory name for HTML rendering with proofread features
+- **`output.proofread.pdf`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Output file name for PDF rendering with proofread features
+
+### Proofreading options (only for output.proofread.* targets) ###
+- **`proofread.nb_spaces`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Highlight non breaking spaces so it is easier to see if typography is correct
+- **`proofread.languagetool`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If true, try to use language tool server to grammar check the book
+- **`proofread.languagetool.port`**
+    - **type**: integer
+    - **default value**: `8081`
+    -  Port to connect to languagetool-server
+- **`proofread.repetitions`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If set to true, use Caribon to detect repetitions
+- **`proofread.repetitions.max_distance`**
+    - **type**: integer
+    - **default value**: `25`
+    -  Max distance between two occurences so it is considered a repetition
+- **`proofread.repetitions.fuzzy`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Enable fuzzy string matching
+- **`proofread.repetitions.fuzzy.threshold`**
+    - **type**: float
+    - **default value**: `0.2`
+    -  Max threshold of differences to consider two strings a repetition
+- **`proofread.repetitions.ignore_proper`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  Ignore proper nouns for repetitions
+- **`proofread.repetitions.threshold`**
+    - **type**: float
+    - **default value**: `2.0`
+    -  Threshold to detect a repetition
+
+
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
-must be composed a number, a string is, well, any string). The `path`
+must be composed by a number, a string is, well, any string). The `path`
 type might puzzle you a 
 bit, but it's equivalent to a string, except Crowbook will consider it
 relatively to the book file. The `template path` type is just the
 `path` of a template.
+
+### Metadata ###
+
+Metadata are data about the book. Except for `cover`, which points to
+an image file, all its fields are strings. The main metadata are:
+
+* `author`: the author(s) of the book.
+* `title`: the title of the book.
+* `lang`: the language of the book. The unicode language code should
+be used, e.g. `en_GB` or `en`, `fr_FR`, ...
+* `cover`: path to an image file for the cover of the book (notdisplayed in all output formats).
+
+There are also additional metadata:
+
+* `subject`
+* `description`
+* `license`
+* `version`
+* `date`
+
+You can define your own metadata by starting an option name with
+`metadata.foo`.
+
+All metadata are accessible from templates, see
+[Templates](templates.md).
+
+### The `import_config` special option ###
+
+The special `import_config` option allows you to include the options
+of another book configuration file in this file. E.g., assuming that
+you some common options that you want to be applied to both `foo.book`
+and `bar.book`, you can create a `common.book` file:
+
+```yaml
+author: Joan Doe
+lang: en
+license: "Copyright (C) Joan Doe. All rights reserved."
+
+html.header: "[Joan Doe's website](http://joan-doe.com)"
+tex.template: my_template.tex
+```
+
+You can then include this file in `foo.book`:
+
+```yaml
+import_config: common.book
+title: Foo
+
++ foo_01.md
++ foo_02.md
+```
+
+Or include it in `bar.book`, but overriding some of its features:
+
+```yaml
+import_config: common.book
+title: Bar
+license: CC-BY-SA  # Override the license from common.book
+
++ bar_01.md
+```
 
 ### Output options ###
 
@@ -430,7 +548,7 @@ format, and only this one, by using the `--to` argument on the command
 line).
 
 Note that some formats depend on some commands being installed on your
-system. Most notably, Crowbook depends on LaTeX (`pdflatex` by
+system. Most notably, Crowbook depends on LaTeX (`xelatex` by
 default, though you can specify the command to use with `tex.command`) to generate a PDF file,
 so PDF rendering won't work if it is not installed on your
 system. Crowbook also uses the `zip` command to generate the EPUB and
@@ -444,9 +562,65 @@ Current output options are:
 * `output.tex`: renders a LaTeX file;
 * `output.pdf`: renders a PDF file (using `tex.command`).
 
+(There are other output options for generating proofreading files, see
+[Proofreading](proofreading.md).)
+
+#### `output.base_path` ####
+
+Additionally, the `output.base_path` option allows you to set where
+the output files will be written (relatively to the book configuration
+file). E.g.,
+
+```yaml
+output.base_path: docs/book
+output.epub: book.epub
+```
+
+will render the EPUB file in `docs/book/book.epub`.
+
+### Generic options for rendering  ###
+
+These options allow to configure the rendering for all formats.
+
+#### rendering.num_depth ####
+
+An integer that represents the maximum level of numbering for your
+book. E.g., `1` will only number chapters, while `2` will number
+chapters, sections, but not anything below that. `6` is the maximum  level
+and turns numbering on for all headers.
+
+**default**: `1`
+
+
+#### rendering.chapter_template ####
+
+A string that will be used for chapter titles. You can use `{{{number}}}` and
+`{{{title}}}` in this string, e.g.:
+
+```yaml
+numbering_template: "Chapter {{{number}} {{title}}}"
+```
+
+Note that:
+* in this case, quoting is necessary because `{` and `}` have special
+  meaning in YAML;
+* this string won't be used for unnumbered chapters;
+* this string isn't currently used by LaTeX, either.
+
+
+#### rendering.inline_toc ####
+
+If set to true, Crowbook will include a table of contents at the
+beginning of the document.
+
+#### rendering.initials ####
+
+If set to true, Crowbook will use initials, or "lettrines", displaying
+the first letter of each chapter bigger than the others.
+
 ### Resources options ###
 
-These two options allow to embed additional files for some formats
+These options allow to embed additional files for some formats
 (currently, only EPUB). This can be useful for embedding fonts.
 
 #### resources.files ####
@@ -475,7 +649,7 @@ resources.files: fonts/font1.otf fonts/font2.otf
 
 **default**: not set
 
-#### resources.path ####
+#### resources.out_path ####
 
 This option determine where (in which directory), *in the resulting
 document*, will those files be copied. The default is `data`, so by
@@ -506,44 +680,4 @@ resources.files: fonts/font1.otf fonts/font2.otf
 will yield the same result.
 
 **default**: `data`
-
-### Generic options for rendering  ###
-
-#### numbering ####
-
-An integer that represents the maximum level of numbering for your
-book. E.g., `1` will only number chapters, while `2` will number
-chapters, sections, but not anything below that. `6` is the maximum  level
-and turns numbering on for all headers.
-
-**default**: `1`
-
-
-#### numbering_template ####
-
-A string that will be used for chapter titles. You can use `{{number}}` and
-`{{title}}` in this string, e.g.:
-
-```yaml
-numbering_template: "Chapter {{number}} {{title}}"
-```
-
-Note that:
-* in this case, quoting is necessary because `{` and `}` have special
-  meaning in YAML;
-* this string won't be used for unnumbered chapters;
-* this string isn't currently used by LaTeX, either.
-
-#### autoclean ####
-
-This option cleans a bit the input markdown. With the default
-implementation, it only removes consecutive spaces, which has not real
-impact (they are ignored anyway both by HTML viewers and by LaTeX).
-
-However, if `lang` is set to `fr`, it also tries to add non-breaking
-spaces in front (or after) characters like '?', '!', ';' to respect
-french typography.
-
-
-
 
