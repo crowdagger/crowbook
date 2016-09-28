@@ -128,7 +128,7 @@ Crowbook uses [rust-mustache](https://crates.io/crates/mustache) as
 its templating engine, which allows to use
 [Mustache](http://mustache.github.io/) syntax in the templates. 
 
-It mainly boils down to using `{{{foo}}}`[^1] to insert the value of
+It mainly boils down to using `{{{foo}}}`[^2] to insert the value of
 variable `foo` in the document:
 
 ```html
@@ -171,7 +171,7 @@ For more information about Mustache syntax, see
 #### Syntax in LaTeX ####
 
 Since LaTeX already uses a lot of curly brackets, the default template
-sets an altenative syntax to access variables, with `<<&foo>>`[^2]:
+sets an altenative syntax to access variables, with `<<&foo>>`[^3]:
 
 ```latex
 \title{<<&title>>}
@@ -180,13 +180,13 @@ sets an altenative syntax to access variables, with `<<&foo>>`[^2]:
 ```
 
 
-[^1]: Mustache also provides the `{{foo}}` variant, which HTML-escapes
+[^2]: Mustache also provides the `{{foo}}` variant, which HTML-escapes
 the content of the variable. You should not use this, as Crowbook
 already renders and correctly escapes the variables it sets for use in
 templates.
 
 
-[^2]: `<<foo>>` might also work, but the ampersand is required to
+[^3]: `<<foo>>` might also work, but the ampersand is required to
 prevent mustache HTML-escaping the value. This is not good because:
 1) escaping is already done by Crowbook before setting variable content;
 2) escaping HTML in a LaTeX document won't probably look good.
