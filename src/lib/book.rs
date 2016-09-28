@@ -16,14 +16,12 @@ use lang;
 
 #[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
+
+// Dummy grammarchecker thas does nothing to let the compiler compile
 #[cfg(not(feature = "proofread"))]
 struct GrammarChecker {}
-
 #[cfg(not(feature = "proofread"))]
 impl GrammarChecker {
-    fn new(_:usize, _:&str) -> Result<GrammarChecker> {
-        Ok(GrammarChecker{})
-    }
     fn check_chapter(&self,_:&[Token]) -> Result<()> {
         Ok(())
     }

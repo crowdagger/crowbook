@@ -2,6 +2,7 @@ use rustc_serialize::json;
 use hyper;
 use hyper::{Client};
 use url::form_urlencoded;
+use crossbeam;
 
 use std::io::Read;
 
@@ -96,28 +97,40 @@ impl GrammarChecker {
     ///
     /// This modifies the AST
     pub fn check_chapter(&self, tokens: &mut Vec<Token>) -> Result<()> {
-//        let n_threads = 4; // seems to give best results but quite random
-//        let len = tokens.len();
-//        let subvecs = tokens.chunks_mut(len / n_threads);
-        
-        for mut token in tokens.iter_mut() {
-            match *token {
-                Token::Paragraph(ref mut v)
-                    | Token::Header(_, ref mut v)
-                    | Token::BlockQuote(ref mut v) 
-                    | Token::List(ref mut v)
-                    | Token::OrderedList(_, ref mut v)
-                    => {
-                        let check = try!(self.check(&view_as_text(v)));
-    
-                        for error in check.matches {
-                            insert_annotation(v, &Data::GrammarError(error.message.clone()), error.offset, error.length);
-                        }
-                },
-                _ => (),
-            }
-        }
+        let n_threads = 4; // seems to give best results but quite random
+        let len = tokens.len();
+        let subvecs = tokens.chunks_mut(len / n_threads);
 
+        let mut result = Ok(());
+        crossbeam::scope(|scope| {
+            let mut handles = vec!();
+            for subvec in subvecs {
+                for mut token in subvec.iter_mut() {
+                    match *token {
+                        Token::Paragraph(ref mut v)
+                            | Token::Header(_, ref mut v)
+                            | Token::BlockQuote(ref mut v) 
+                            | Token::List(ref mut v)
+                            | Token::OrderedList(_, ref mut v)
+                            => handles.push(scope.spawn(move || {
+                                let check = try!(self.check(&view_as_text(v)));
+                                for error in check.matches {
+                                    insert_annotation(v, &Data::GrammarError(error.message.clone()), error.offset, error.length);
+                                }
+                                Ok(())
+                            })),
+                        _ => (),
+                    }
+                }
+            }
+            for handle in handles.into_iter() {
+                if let Err(err) = handle.join() {
+                    result = Err(err);
+                    break;
+                }
+            }
+        });
+        result
         
         // crossbeam::scope(|scope| {
         //     for subvec in subvecs {
@@ -125,8 +138,7 @@ impl GrammarChecker {
         //     }
         // });
         
-
-        Ok(())
+//        Ok(())
     }
 }
 
