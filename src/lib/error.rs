@@ -55,6 +55,20 @@ impl Source {
     }
 }
 
+impl fmt::Display for Source {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if let Some(ref file) = self.file {
+            try!(write!(f, "{}", file));
+            if let Some(line) = self.line {
+                try!(write!(f, ":{}", line));
+            }
+        } else {
+            try!(write!(f, "<UNKNOWN FILE>"));
+        }
+        Ok(())
+    }
+}
+
 impl<'a> From<&'a Source> for Source {
     fn from(s: &'a Source) -> Source {
         s.clone()

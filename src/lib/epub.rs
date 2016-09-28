@@ -371,8 +371,8 @@ impl<'a> EpubRenderer<'a> {
             if self.chapter_title.is_empty() {
                 self.chapter_title = try!(self.html.render_vec(vec));
             } else {
-                self.html.book.logger.warning("EPUB: detected two chapter titles inside the same markdown file...");
-                self.html.book.logger.warning("EPUB: ...in a file where chapter titles are not even rendered.");
+                self.html.book.logger.warning(format!("EPUB ({}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered.",
+                                                      self.html.source));
             }
         } else {
             let res = self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
@@ -382,8 +382,12 @@ impl<'a> EpubRenderer<'a> {
             if self.chapter_title.is_empty() {
                 self.chapter_title = s;
             } else {
-                self.html.book.logger.warning("EPUB: detected two chapters inside the same markdown file.");
-                self.html.book.logger.warning(format!("EPUB: conflict between: {} and {}", self.chapter_title, s));
+                self.html.book.logger.warning(format!("EPUB ({}): detected two chapters inside the same markdown file.",
+                                                      self.html.source));
+                self.html.book.logger.warning(format!("EPUB ({}): conflict between: {} and {}",
+                                                      self.html.source,
+                                                      self.chapter_title,
+                                                      s));
             }
         }
         Ok(())

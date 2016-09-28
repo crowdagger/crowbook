@@ -210,7 +210,7 @@ impl Parser {
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
                     Logger::display_warning(format!("in {}, found footnote definition for note '{}' but previous definition already exist, overriding it",
-                                                    if let Some(ref file) = self.source.file { file.as_str() } else { "<UNKNOWN MARKDOWN FILE>" },
+                                                    self.source,
                                                     reference));
                 }
                 self.footnotes.insert(reference.into_owned(), res);

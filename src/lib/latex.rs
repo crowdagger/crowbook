@@ -343,7 +343,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             img))
 
                 } else {
-                    self.book.logger.error(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it.", url));
+                    self.book.logger.error(&format!("LaTeX ({}): image '{}' doesn't seem to be local; ignoring it.",
+                                                    self.source,
+                                                    url));
                     Ok(String::new())
                 }
             },
@@ -353,7 +355,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             try!(self.handler.map_image(&self.source,
                                                         url.as_ref()))))
                 } else {
-                    self.book.logger.error(&format!("LaTeX: image '{}' doesn't seem to be local; ignoring it.", url));
+                    self.book.logger.error(&format!("LaTeX ({}): image '{}' doesn't seem to be local; ignoring it.",
+                                                    self.source,
+                                                    url));
                     Ok(String::new())
                 }                                
             },
