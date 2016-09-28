@@ -64,8 +64,7 @@ tex.template:tpl                    # Path of a LaTeX template file
 tex.class:str:book                  # LaTeX class to use
 
 # Resources option
-resources.files:str                  # Whitespace-separated list of
-files to embed in e.g. EPUB file; useful for including e.g. fonts
+resources.files:str                  # Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
 resources.out_path:path:data         # Paths where additional resources should be copied in the EPUB file or HTML directory 
 resources.base_path:path             # Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path. 
 resources.base_path.links:path       # Set base path but only for links. Useless if resources.base_path is set.
