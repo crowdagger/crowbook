@@ -25,6 +25,9 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
             output.push((key, value));
         }
     }
+    if matches.is_present("proofread") {
+        output.push(("proofread", "true"));
+    }
     output
 }
     
@@ -96,6 +99,7 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .about("Render a markdown book in Epub, PDF or HTML.")
         .arg_from_usage("-s, --single 'Use a single Markdown file instead of a book configuration file'")
         .arg_from_usage("-v, --verbose 'Print warnings in parsing/rendering'")
+        .arg_from_usage("-p, --proofread 'Enable roofreading'")
         .arg(Arg::from_usage("-d, --debug 'Print debugging information'")
              .hidden(true))
         .arg_from_usage("-c, --create [FILES]... 'Creates a new book with existing markdown files'")

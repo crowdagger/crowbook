@@ -91,7 +91,7 @@ output.proofread.html_dir:path      # Output directory name for HTML rendering w
 output.proofread.pdf:path           # Output file name for PDF rendering with proofread features
 
 # Proofreading options (only for output.proofread.* targets)
-proofread:bool:true                               # If set to false, will disactivate proofreading even if one of output.proofread.x is present
+proofread:bool:false                              # If set to false, will disactivate proofreading even if one of output.proofread.x is present
 proofread.nb_spaces:bool:true                     # Highlight non breaking spaces so it is easier to see if typography is correct
 proofread.languagetool:bool:false                 # If true, try to use language tool server to grammar check the book
 proofread.languagetool.port:int:8081              # Port to connect to languagetool-server
