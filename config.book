@@ -8,7 +8,7 @@ description: >-
 lang: en
 cover: cover.png
 version: 0.9.1
-date: "23th of september, 2016"
+date: "28th of september, 2016"
 
 # Options for generating files
 output.epub: book.epub
@@ -19,12 +19,13 @@ output.odt: book.odt
  
 output.base_path: docs/book/
 output.proofread.html: book.proof.html
+output.proofread.html_dir: html_proof
 output.proofread.pdf: book.proof.pdf
 
 # Resources options
 resources.base_path.images: img/  # where to find the cover
 
-proofread.repetitions: true
+proofread.repetitions: false
 proofread.languagetool: true
 
 # Rendering options
@@ -52,5 +53,6 @@ epub.version: 3
 + book_example/arguments.md
 + book_example/config.md
 + book_example/templates.md
++ book_example/proofreading.md
 - ChangeLog.md
 - LICENSE.md

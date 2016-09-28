@@ -28,14 +28,19 @@ ARGS:
 ```
 
 Note that Crowbook generates output files relatively to the directory
-where <BOOK> is:
+where <BOOK> is[^1]:
+
+[^1]: Unless the option `output.base_path` is set, see
+[the configuration file](book_example/config.md).
+
+
 
 ```bash
 $ crowbook foo/bar.book --to pdf --output baz.pdf
 ```
 will thus generate baz.pdf in directory foo and not in current directory.
 
-The most important option obviously <BOOK>, i.e. the file
+The most important option is obviously <BOOK>, i.e. the file
 configuration book. It is mandatory for most options: if you don't
 pass it, `crowbook` 
 will simply display this help message. In a normal use case this is
@@ -88,9 +93,9 @@ while
 crowbook --create README.md ChangeLog.md LICENSE.md
 ```
 
-will prints the same result, but to stdout (without creating a file).
+will print the same result, but to stdout (without creating a file).
 
-When `crowbook` is runned with `--create`, it can also uses the
+When `crowbook` is runned with `--create`, it can also use the
 keys/values set by `--set` (see below):
 
 ```bash
@@ -116,7 +121,7 @@ lang: fr
 
 (or `crowbook -s <FILE>`)
 
-This options allows to pass `crowbook` a single Markdown file. This
+This argument allows to give `crowbook` a single Markdown file. This
 file can contain an inline YAML block to set some book options. Inline
 YAML blocks must start and end with a line with `---` (three dashes). E.g:
 
@@ -124,6 +129,7 @@ YAML blocks must start and end with a line with `---` (three dashes). E.g:
 ---
 author: Joan Doe
 title: A short story
+output.html: short.html
 ---
 ```
 
@@ -141,8 +147,8 @@ configuration file containing:
 That is, the chapter heading (if any) won't be displayed in the output
 documents (though they still appear in the TOC).
 
-Note that by default, using `--single` sets the `tex.short` option to
-`true`, using the LaTeX class of `article` instead of `book`.
+> Note that by default, using `--single` sets the default LaTeX class
+> of the book to `article` instead of `book`.
 
 
 `--set` 
@@ -150,8 +156,8 @@ Note that by default, using `--single` sets the `tex.short` option to
 
 **usage**: `crowbook <BOOK> --set [KEY] [VALUE]...`
 
-This options takes a list `KEY` `VALUE` pairs and allows to set or
-override a book configuration option. All valid options in the
+This argument takes a list `KEY` `VALUE` pairs and allows setting or
+overriding a book configuration option. All valid options in the
 configuration files are valid as keys. For more information, see
 [the configuration file](config.md).
 
@@ -161,7 +167,8 @@ configuration files are valid as keys. For more information, see
 $ crowbook foo.book --set html.css style.css
 ```
 
-will override the CSS for HTML generation (the `html.css` key) to `style.css`.
+will override the CSS for HTML generation (the `html.css` key) to the
+file `style.css`.
 
 ```bash
 $ crowbook foo.book --set author Foo --title Bar
@@ -211,7 +218,7 @@ $ crowbook --print-template epub.template --set epub.version 3
 
 **usage**: `crowbook <BOOK> --verbose`
 
-If this flag is set, Crowbook will print the warnings it detect while
+If this flag is set, Crowbook will print the warnings it detects while
 parsing and rendering. These warnings are typically related to the
 inclusion of non-local images, linking to Markdown files that are not
 part of the book, and so on.
@@ -227,8 +234,8 @@ Generate only the specified format. `FORMAT` must be either `epub`,
 `pdf`, `html`, `odt` or `tex`.
 
 If an output file for the format is not specified in the book
-configuration file, `crowbook` will fail to render PDF, ODT and Epub
-(whereas it will print HTML and Tex files on stdout). It is however
+configuration file, `crowbook` will fail to render PDF, ODT and EPUB,
+whereas it will print HTML and Tex files on stdout. It is, however, 
 possible to specify a file with the `--output` option.
 
 ### Examples ###
@@ -256,7 +263,7 @@ will generate a `foo.pdf` file,.
 Specifies an output file. Only valid when `--to` is used.
 
 Note that Crowbook generates output files relatively to the directory
-where `BOOK` is:
+where `BOOK` is (unless the option `output.base_path` is set):
 
 ```bash
 $ crowbook foo/bar.book --to pdf --output baz.pdf

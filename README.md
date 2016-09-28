@@ -6,22 +6,33 @@ Crowbook
 Render a book written in markdown to HTML, Epub or PDF.
 
 Crowbook's purpose is to allow you to automatically generate multiple
-outputs formats from a book written in Markdown. Its main focus is
+outputs formats from a book written in Markdown. Its focus is
 novels, and the default settings should (hopefully) generate readable
-books with correct typography.
+books with correct typography (particularly for the french
+language[^1]).
+
+[^1]: I don't know the rules for other languages well
+enough; If you want more support for the correct typographic rules in
+your language, don't hesitate to open an issue on
+[Github](https://github.com/lise-henry/crowbook/issues), or to submit 
+a pull request.
+
+    
 
 Example
 -------
 
 To see what Crowbook's output looks like, you can read (a
 not-necessarily up-to-date version of) the Crowbook
-guide (containing this README.md file and additional documentation)
-rendered in [HTML](http://lise-henry.github.io/crowbook/book.html),
-[PDF](http://lise-henry.github.io/crowbook/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book.epub).
+guide rendered in
+[HTML](http://lise-henry.github.io/crowbook/book/book.html), 
+[PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub).
 
 
 Installing
 ----------
+
+There are three ways to install Crowbook:
 
 ### Packages ###
 
@@ -37,22 +48,44 @@ Linux, Windows and MacOSX). Just extract the archive and run
 `crowbook` (or `crowbook.exe` on Windows). You might also want to copy
 the binary somewhere in your `PATH` for later usage.
 
-### Building ###
+> Note: only the Linux binaries are really tested, please contact me
+> if there you have any trouble executing the Windows or Mac binaries.
 
-You'll need to have the [Rust](https://www.rust-lang.org/) compiler
-on your machine first; you can
-[download and install it here](https://www.rust-lang.org/downloads.html). Once
-it is down:
+### Using Cargo ###
+
+[Cargo](https://crates.io/) is the
+[Rust](https://www.rust-lang.org/)'s package manager. You can
+[install it here](https://www.rust-lang.org/downloads.html). Once
+it is down: 
 
 ```bash
 $ cargo install crowbook
 ```
 
 will automatically download the latest `crowbook` release on
-[crates.io](https://crates.io/crates/crowbook) and install it.
+[crates.io](https://crates.io/crates/crowbook), compile it, and
+install it on your system.
 
-Usage
------
+> By default, compiling Crowbook in this way doesn't activate the
+> proofreading features. If you want to use them, you'll have to run
+> `cargo install --features "proofread" crowbook`.
+
+Dependencies
+------------
+
+While there are, strictly speaking, no real dependencies to be able to
+run Crowbook (it is published a a statically compiled binary), some
+features require additional commands to work correctly:
+
+* EPUB rendering requires that the `zip` command be present on your system;
+* PDF rendering requires a working installation of LaTeX (preferably
+`xelatex`);
+* Grammar checking (for proofreading copies) requires [LanguageTool](https://languagetool.org/).
+
+
+
+Quick tour
+----------
 
 The simplest command is:
 
@@ -88,24 +121,20 @@ Current features
 
 ### Output formats ###
 
-Crowbook should correctly support HTML and EPUB (either
-version 2 or 3) as output formats: rendered files should pass
-respectively the [W3C validator](https://validator.w3.org/) and the
-[IDPF EPUB validator](http://validator.idpf.org/) for a wide range of
-(correctly Markdown formatted) input files. See the example book
-rendered in [HTML](http://lise-henry.github.io/crowbook/book.html) and
-[EPUB](http://lise-henry.github.io/crowbook/book.epub) on github.io.
+Crowbook supports HTML, PDF and EPUB (either
+version 2 or 3) as output formats. See the Crowbook User Guide 
+rendered in
+[HTML](http://lise-henry.github.io/crowbook/book/book.html),
+[EPUB](http://lise-henry.github.io/crowbook/book/book.epub) and
+[PDF](http://lise-henry.github.io/crowbook/book.pdf).
 
-LaTeX/PDF output is a bit more tricky: it should work reasonably well for
-novels (the primary target of Crowbook), but `pdflatex` might occasionally
-choke on some "weird" unicode character. See the example book rendered
-in [PDF](http://lise-henry.github.io/crowbook/book.pdf) on github.io.
+> Note: in order to be able to render your books as PDF, you'll need
+> to have a working installation of LaTeX (preferably `xelatex`) on
+> your system. 
 
-ODT output is currently experimental at best. It might work with very
-basic formatting but still needs a *lot* of work. You can still see
-the example book rendered in
-[ODT](http://lise-henry.github.io/crowbook/book.odt) on github.io to
-have an idea of the current status for this output format.
+Crowbook also provides some experimental support for rendering to ODT
+(Libre/Open/Office), but it needs more work.
+
 
 ### Input format ###
 
@@ -113,17 +142,20 @@ Crowbook uses
 [pulldown-cmark](https://crates.io/crates/pulldown-cmark) and thus
 should support most of CommonMark Markdown. Inline HTML, however, is
 not implemented, and probably won't be, as the goal is to have books
-that can also be generated in PDF (and maybe eventually ODT).
+that can also be generated in PDF (and maybe ODT).
+
+### Input cleaning ###
 
 Maybe the most specific "feature" of Crowbook is that (by default, it
-can be deactivated) it tries to "clean" the input files. By default this
-doesn't do much (except removing superfluous spaces), but if the
-book's language is set to french it tries to respect french
-typography, replacing spaces with non-breaking ones when it is
-appropriate (e.g. in french you are supposed to put a non-breaking
-space before '?', '!', ';' or ':'). This feature is relatively limited
-at the moment, but I might try to add more options and support for
-more languages.
+can be deactivated) it tries to "clean" the input files. By default,
+this doesn't do much (except removing superfluous spaces), but if the 
+book's language is set to frenc it tries its best to respect french
+typography by replacing spaces with non-breaking ones when it is
+appropriate (e.g. before '?', '!', ';' or ':').
+
+> This feature is currently limited to french language, but please
+> [open an issue](https://github.com/lise-henry/crowbook/issues/new) describing typographic rules if you want it to be
+> implemented for another language.
 
 ### Links handling ###
 
@@ -160,7 +192,16 @@ This is a very tiny book!
 
 can be processed with `crowbook --single foo.md` or `crowbook -s
 foo.md` to produce the `book.html` file. This is useful for short
-texts that typically only contain one "chapter".
+texts that only contain one "chapter".
+
+### Proofreading ###
+
+Crowbook can also generate "proofreading" copies in HTML or PDF,
+highlighting grammar errors and repetitions.
+
+> This feature has been introduced in version `0.9.1` and is still
+> experimental. For more information, see
+> [the proofreading chapter of the guide](book_example/proofreading.md). 
 
 ### Bugs ###
 
@@ -187,6 +228,9 @@ library, Crowbook uses the following libraries:
 * [crossbeam](https://crates.io/crates/crossbeam)
 * [walkdir](https://crates.io/crates/walkdir)
 * [rustc-serialize](https://crates.io/crates/rustc-serialize)
+* [caribon](https://crates.io/crates/caribon)
+* [hyper](https://crates.io/crates/hyper)
+* [url](https://crates.io/crates/url)
 
 It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
 to enable syntax highlighting for code blocks.
