@@ -36,6 +36,10 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
             "html" => book.options.set("output.html", file).unwrap(),
             "pdf" => book.options.set("output.pdf", file).unwrap(),
             "odt" => book.options.set("output.odt", file).unwrap(),
+            "proofread.html" => book.options.set("output.proofread.html", file).unwrap(),
+            "proofread.pdf" => book.options.set("output.proofread.pdf", file).unwrap(),
+            "proofread.tex" => book.options.set("output.proofead.tex", file).unwrap(),
+            "proofread.hml_dir" => book.options.set("output.proofread.html_dir", file).unwrap(),
             _ => unreachable!(),
         };
     }
@@ -46,13 +50,19 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
         "html" => book.options.get_path("output.html"),
         "pdf" => book.options.get_path("output.pdf"),
         "odt" => book.options.get_path("output.odt"),
+        "proofread.html" => book.options.get_path("output.proofread.html"),
+        "proofread.html_dir" => book.options.get_path("output.proofread.html_dir"),
+        "proofread.pdf" => book.options.get_path("output.proofread.pdf"),
+        "proofread.tex" => book.options.get_path("output.proofread.tex"),
         _ => unreachable!()
     };
     let result = match option {
         Err(_) => {
             match format {
                 "html" => book.render_html(&mut io::stdout()),
+                "proofread.html" => book.render_proof_html(&mut io::stdout()),
                 "tex" => book.render_tex(&mut io::stdout()),
+                "proofread.tex" => book.render_tex(&mut io::stdout()),
                 _ => print_error(&format!("No output file specified, and book doesn't specify an output file for {}", format)),
             }
         },
@@ -66,6 +76,13 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                         print_error(&format!("Could not create file '{}'", file));
                     }
                 },
+                "proofread.tex" => {
+                    if let Ok(mut f) = File::create(&file) {
+                        book.render_proof_tex(&mut f)
+                    } else {
+                        print_error(&format!("Could not create file '{}'", file));
+                    }
+                },
                 "html" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_html(&mut f)
@@ -73,7 +90,15 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                         print_error(&format!("Could not create file '{}'", file));
                     }
                 },
+                "proofread.html" => {
+                    if let Ok(mut f) = File::create(&file) {
+                        book.render_proof_html(&mut f)
+                    } else {
+                        print_error(&format!("Could not create file '{}'", file));
+                    }
+                },
                 "pdf" => book.render_pdf(),
+                "proofread.pdf" => book.render_proof_pdf(),
                 "odt" => book.render_odt(),
                 _ => unreachable!()
             }

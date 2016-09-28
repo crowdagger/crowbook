@@ -102,7 +102,7 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
         .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file'")
              .requires("to"))
         .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format")
-             .possible_values(&["epub", "pdf", "html", "tex", "odt"]))
+             .possible_values(&["epub", "pdf", "html", "tex", "odt", "proofread.html", "proofread.html_dir", "proofread.pdf", "proofread.tex"]))
         .arg(Arg::from_usage("--set [KEY_VALUES] 'Sets a list of book options'")
              .min_values(2))
         .arg_from_usage("-l --list-options 'Lists all possible options")

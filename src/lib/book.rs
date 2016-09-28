@@ -569,7 +569,7 @@ impl Book {
     pub fn render_tex<T:Write>(&self, f: &mut T) -> Result<()> {
         self.logger.debug("Attempting to generate LaTeX...");
 
-        let mut latex = LatexRenderer::new(&self).proofread();
+        let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
                                                                        format!("problem when writing to LaTeX file: {}", e))));
@@ -578,6 +578,31 @@ impl Book {
         } else {
             self.logger.info("Successfully generated LaTeX");
         }
+        Ok(())
+    }
+
+    /// Render book to pdf according to book options (proofread version)
+    pub fn render_proof_tex<T:Write>(&self, f: &mut T) -> Result<()> {
+        let file_name = if let Ok(file) = self.options.get_path("output.proofread.tex") {
+            file.to_owned()
+        } else {
+            String::new()
+        };
+        if !cfg!(feature = "proofread") {
+            Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {}",
+                                            file_name));
+            return Ok(())
+        }
+
+        
+        self.logger.debug("Attempting to generate LaTeX (for proofreading)...");
+        
+
+        let mut latex = LatexRenderer::new(&self).proofread();
+        let result = try!(latex.render_book());
+        try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
+                                                                       format!("problem when writing to LaTeX file: {}", e))));
+        self.logger.info(format!("Successfully generated LaTeX file {}", file_name));
         Ok(())
     }
     
