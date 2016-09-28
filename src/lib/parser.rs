@@ -17,6 +17,7 @@
 
 use token::Token;
 use error::{Result,Error, Source};
+use logger::Logger;
 
 use std::mem;
 use std::fs::File;
@@ -208,7 +209,9 @@ impl Parser {
             Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
-                    println!("Warning: footnote definition for {} but previous definition already exist, overriding it", reference);
+                    Logger::display_warning(format!("in {}, found footnote definition for note '{}' but previous definition already exist, overriding it",
+                                                    if let Some(ref file) = self.source.file { file.as_str() } else { "<UNKNOWN MARKDOWN FILE>" },
+                                                    reference));
                 }
                 self.footnotes.insert(reference.into_owned(), res);
                 Token::SoftBreak
