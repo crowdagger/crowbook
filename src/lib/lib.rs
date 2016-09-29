@@ -123,6 +123,7 @@ pub use latex::LatexRenderer;
 pub use odt::OdtRenderer;
 pub use error::{Result, Error, Source};
 pub use token::Token;
+pub use token::Data;
 pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
@@ -155,15 +156,11 @@ mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
-mod text_view;
 
 #[cfg(feature = "proofread")]
 mod grammar_check;
-
-pub use token::Data;
-pub use text_view::view_as_text;
-//pub use text_view::insert_at;
-pub use text_view::insert_annotation;
+#[cfg(feature = "proofread")]
+mod text_view;
 
 #[cfg(test)]
 mod tests;
