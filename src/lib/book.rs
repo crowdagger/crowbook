@@ -188,6 +188,8 @@ impl Book {
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md
         let relative_path = Path::new(Path::new(filename).components().last().unwrap().as_os_str());
+        
+        // Update grammar checker according to options 
         try!(book.add_chapter(Number::Hidden, &relative_path.to_string_lossy()));
 
         Ok(book)
@@ -205,7 +207,6 @@ impl Book {
                         for (key,value) in hash.into_iter() {
                             try!(self.options.set_yaml(key, value)); 
                         }
-                        Ok(())
                     } else {
                         unreachable!();
                     }
@@ -215,6 +216,7 @@ impl Book {
                 }
             }
         }
+        Ok(())
     }
     
     /// Sets options and load chapters according to configuration file
@@ -814,43 +816,43 @@ impl Book {
     ///
     /// This method treats the metadata as Markdown and thus calls `f` to render it.
     #[doc(hidden)]
-        pub fn get_metadata<F>(&self, mut f: F) -> Result<MapBuilder>
+    pub fn get_metadata<F>(&self, mut f: F) -> Result<MapBuilder>
         where F:FnMut(&str)->Result<String> {
-            let mut mapbuilder = MapBuilder::new();
-            mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
-
-            // Add metadata to mapbuilder
-            for key in self.options.get_metadata() {
-                if let Ok(s) = self.options.get_str(key) {
-                    let key = key.replace(".", "_");
-
-                    // Only render some metadata as markdown
-                    let content = match key.as_ref() {
-                        "author" | "title" | "lang" => Ok(s.to_owned()),
-                        _ => f(s)
-                    };
-                    match content {
-                        Ok(content) => {
-                            mapbuilder = mapbuilder.insert_str(&key, content);
-                            mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
-                        },
-                        Err(err) => {
-                            return Err(Error::render(&self.source,
-                                                     format!("could not render `{}` for metadata:\n{}", &key, err)));
-                        },
-                    }
+        let mut mapbuilder = MapBuilder::new();
+        mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
+        
+        // Add metadata to mapbuilder
+        for key in self.options.get_metadata() {
+            if let Ok(s) = self.options.get_str(key) {
+                let key = key.replace(".", "_");
+                
+                // Only render some metadata as markdown
+                let content = match key.as_ref() {
+                    "author" | "title" | "lang" => Ok(s.to_owned()),
+                    _ => f(s)
+                };
+                match content {
+                    Ok(content) => {
+                        mapbuilder = mapbuilder.insert_str(&key, content);
+                        mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                    },
+                    Err(err) => {
+                        return Err(Error::render(&self.source,
+                                                 format!("could not render `{}` for metadata:\n{}", &key, err)));
+                    },
                 }
             }
-
-            // Add localization strings
-            let hash = lang::get_hash(self.options.get_str("lang").unwrap());
-            for (key, value) in hash.into_iter() {
-                let key = format!("loc_{}", key.as_str().unwrap());
-                let value = value.as_str().unwrap();
-                mapbuilder = mapbuilder.insert_str(&key, value);
-            }
-            Ok(mapbuilder)
         }
+        
+        // Add localization strings
+        let hash = lang::get_hash(self.options.get_str("lang").unwrap());
+        for (key, value) in hash.into_iter() {
+            let key = format!("loc_{}", key.as_str().unwrap());
+            let value = value.as_str().unwrap();
+            mapbuilder = mapbuilder.insert_str(&key, value);
+        }
+        Ok(mapbuilder)
+    }
     
     /// Remove YAML blocks from a string and try to parse them to set options
     ///
@@ -861,46 +863,47 @@ impl Book {
     /// or
     /// ... 
     fn parse_yaml(&mut self, content: &mut String) {
-            if !(content.starts_with("---\n") || content.contains("\n---\n")
-                 || content.starts_with("---\r\n") || content.contains("\n---\r\n")) {
-                // Content can't contain YAML, so aborting early
-                return;
-            }
-            let mut new_content = String::new();
-            let mut previous_empty = true;
-            {
-                let mut lines = content.lines();
-                while let Some(line) = lines.next() {
-                    if line == "---" && previous_empty {
-                        previous_empty = false;
-                        let mut yaml_block = String::new();
-                        let mut valid_block = false;
-                        while let Some(new_line) = lines.next() {
-                            if new_line == "---" || new_line == "..." {
-                                // Checks that this is valid YAML
-                                match YamlLoader::load_from_str(&yaml_block) {
-                                    Ok(docs) => {
-                                        // Use this yaml block to set options only if 1) it is valid
-                                        // 2) the option is activated
+        if !(content.starts_with("---\n")
+             || content.contains("\n---\n")
+             || content.starts_with("---\r\n") || content.contains("\n---\r\n")) {
+            // Content can't contain YAML, so aborting early
+            return;
+        }
+        let mut new_content = String::new();
+        let mut previous_empty = true;
+        {
+            let mut lines = content.lines();
+            while let Some(line) = lines.next() {
+                if line == "---" && previous_empty {
+                    previous_empty = false;
+                    let mut yaml_block = String::new();
+                    let mut valid_block = false;
+                    while let Some(new_line) = lines.next() {
+                        if new_line == "---" || new_line == "..." {
+                            // Checks that this is valid YAML
+                            match YamlLoader::load_from_str(&yaml_block) {
+                                Ok(docs) => {
+                                    // Use this yaml block to set options only if 1) it is valid
+                                    // 2) the option is activated
                                     if docs.len() == 1 && docs[0].as_hash().is_some()
                                         && self.options.get_bool("input.yaml_blocks") == Ok(true) {
-                                        let hash = docs[0].as_hash().unwrap();
-                                        for (key, value) in hash {
-                                            match self.options.set_yaml(key.clone(), value.clone()) { //todo: remove clone
-                                                Ok(opt) => {
-                                                    if let Some(old_value) = opt {
-                                                        self.logger.debug(format!("Inline YAML block replaced {:?} previously set to {:?} to {:?}",
-                                                                                  key, old_value, value));
-                                                    } else {
-                                                        self.logger.debug(format!("Inline YAML block set {:?} to {:?}", key, value));
+                                            let hash = docs[0].as_hash().unwrap();
+                                            for (key, value) in hash {
+                                                match self.options.set_yaml(key.clone(), value.clone()) { //todo: remove clone
+                                                    Ok(opt) => {
+                                                            if let Some(old_value) = opt {
+                                                                self.logger.debug(format!("Inline YAML block replaced {:?} previously set to {:?} to {:?}",
+                                                                                          key, old_value, value));
+                                                            } else {
+                                                                self.logger.debug(format!("Inline YAML block set {:?} to {:?}", key, value));
+                                                            }
                                                     }
+                                                    Err(e) => self.logger.error(format!("Inline YAML block could not set {:?} to {:?}: {}", key, value, e)),
                                                 }
-                                                Err(e) => self.logger.error(format!("Inline YAML block could not set {:?} to {:?}: {}", key, value, e)),
                                             }
+                                        } else {
+                                            self.logger.debug(format!("Ignoring YAML block:\n---\n{}---", &yaml_block));
                                         }
-                                    } else {
-                                        self.logger.debug(format!("Ignoring YAML block:\n---\n{}---", &yaml_block));
-                                    }
                                     valid_block = true;
                                 },
                                 Err(err) => {
@@ -931,8 +934,10 @@ impl Book {
         }
         *content = new_content;
         self.update_cleaner();
+        self.init_checker();
     }
 
+    
     // Update the cleaner according to autoclean and lang options
     fn update_cleaner(&mut self) {
         if self.options.get_bool("input.autoclean").unwrap() {
