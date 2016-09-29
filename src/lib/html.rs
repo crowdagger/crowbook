@@ -374,7 +374,8 @@ impl<'a> HtmlRenderer<'a> {
                     match annotation {
                         &Data::GrammarError(ref s) => Ok(format!("<span title = \"{}\" class = \"grammar-error\">{}</span>",
                                                                  escape_quotes(s.as_str()),
-                                                                 content))
+                                                                 content)),
+                        _ => unreachable!(),
                     }
                 } else{
                     Ok(content)

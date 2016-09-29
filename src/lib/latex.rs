@@ -395,6 +395,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         &Data::GrammarError(ref s) => Ok(format!("\\underline{{{}}}\\protect\\footnote{{{}}}",
                                                                  content,
                                                                  escape_tex(s.as_str()))),
+                        _ => unreachable!(),
                     }
                 } else {
                     Ok(content)
