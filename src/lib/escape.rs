@@ -26,6 +26,7 @@ const NB_CHAR_EM:char = '\u{2002}'; // demi em space
 
 /// Escape non breaking spaces for HTML, so there is no problem for displaying them if the font or browser
 /// doesn't know what to do with them
+#[doc(hidden)]
 pub fn escape_nb_spaces<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     let input = input.into();
     if let Some(first) = input.chars().position(|c| match c {
@@ -87,6 +88,7 @@ pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
 /// Escape quotes
 ///
 /// Replace `"` by `'`
+#[doc(hidden)]
 pub fn escape_quotes<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     let input = input.into();
     if input.contains('"') {
