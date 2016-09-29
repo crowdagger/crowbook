@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="crowbook">
+    <meta name="author" content="Élisabeth Henry">
+    <meta name="viewport" content="width=device-width">
+    <title>Crowbook User Guide – ChangeLog</title>
+    <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
+          />
+    <link rel = "stylesheet" href = "print.css" type = "text/css"
+          media = "print" />
+    <link rel = "stylesheet" href = "highlight.css" type = "text/css"
+          />
+    <script src = "highlight.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+   <script>
+function on(name) {
+    var elements = document.getElementsByClassName(name);
+    for (var i = 0; i < elements.length; i++) {
+        var elem = elements[i];
+        elem.style.backgroundColor = "pink";
+    }
+}
+function off(name) {
+    var elements = document.getElementsByClassName(name);
+    for (var i = 0; i < elements.length; i++) {
+        var elem = elements[i];
+        elem.style.backgroundColor = "white";
+    }
+}
+
+var display_menu = false;
+function toggle() {
+    if (display_menu == true) {
+        display_menu = false;
+        document.getElementById("nav").style.left = "-20%";
+        document.getElementById("content").style.marginLeft = "10%";
+        document.getElementById("menu").style.left = "1em";
+        if(document.getElementById("top")) {
+            document.getElementById("top").style.left = "0";
+        }
+        if(document.getElementById("footer")) {
+            document.getElementById("footer").style.marginLeft = "0%";
+        }
+    } else {
+        display_menu = true;
+        document.getElementById("nav").style.left = "0";
+        document.getElementById("content").style.marginLeft = "30%";
+        document.getElementById("menu").style.left = "20%";
+        if(document.getElementById("top")) {
+            document.getElementById("top").style.left = "20%";
+        }
+        if(document.getElementById("footer")) {
+            document.getElementById("footer").style.marginLeft = "20%";
+        }
+    }
+}
+
+   </script>
+
+
+  </head>  
+  <body>
+
+  <nav id = "nav">
+    <h2><a href = "index.html">Crowbook User Guide</a></h2>
+    <ul>
+ <li><a href = "chapter_000.html#link-1"><b>1.</b> Crowbook</a>
+ <ul>
+  <li><a href = "chapter_000.html#link-2">1.1. Example</a>
+  </li>
+  <li><a href = "chapter_000.html#link-3">1.2. Installing</a>
+  </li>
+  <li><a href = "chapter_000.html#link-7">1.3. Dependencies</a>
+  </li>
+  <li><a href = "chapter_000.html#link-8">1.4. Quick tour</a>
+  </li>
+  <li><a href = "chapter_000.html#link-9">1.5. Current features</a>
+  </li>
+  <li><a href = "chapter_000.html#link-17">1.6. Contributors</a>
+  </li>
+  <li><a href = "chapter_000.html#link-18">1.7. Acknowledgements</a>
+  </li>
+  <li><a href = "chapter_000.html#link-19">1.8. ChangeLog</a>
+  </li>
+  <li><a href = "chapter_000.html#link-20">1.9. Library</a>
+  </li>
+  <li><a href = "chapter_000.html#link-21">1.10. License</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_001.html#link-22"><b>2.</b> Arguments</a>
+ <ul>
+  <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-25">2.2. <code>--single</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-26">2.3. <code>--set</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-28">2.4. <code>--proofread</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-29">2.5. <code>--list-options</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-30">2.6. <code>--print-template</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-31">2.7. <code>--verbose</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-32">2.8. <code>--to</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-34">2.9. <code>--output</code></a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_002.html#link-35"><b>3.</b> The configuration file</a>
+ <ul>
+  <li><a href = "chapter_002.html#link-36">3.1. The list of files</a>
+  </li>
+  <li><a href = "chapter_002.html#link-37">3.2. Crowbook options</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_003.html#link-65"><b>4.</b> Templates</a>
+ <ul>
+  <li><a href = "chapter_003.html#link-66">4.1. List of templates</a>
+  </li>
+  <li><a href = "chapter_003.html#link-80">4.2. Create and edit template</a>
+  </li>
+  <li><a href = "chapter_003.html#link-84">4.3. List of accessible variables</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_004.html#link-88"><b>5.</b> Proofreading with Crowbook</a>
+ <ul>
+  <li><a href = "chapter_004.html#link-89">5.1. Enabling proofreading</a>
+  </li>
+  <li><a href = "chapter_004.html#link-90">5.2. Repetition detection</a>
+  </li>
+  <li><a href = "chapter_004.html#link-91">5.3. Grammar checking</a>
+  </li>
+  <li><a href = "chapter_004.html#link-92">5.4. Highlighting non-breaking spaces</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_005.html#link-93">ChangeLog</a>
+ <ul>
+  <li><a href = "chapter_005.html#link-94">unreleased</a>
+  </li>
+  <li><a href = "chapter_005.html#link-95">0.9.0 (2016-09-23)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-96">0.8.0 (2016-09-19)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-97">0.7.0 (2016-09-11)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-98">0.6.0 (2016-09-09)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-99">0.5.1 (2016-04-14)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-100">0.5.0 (2016-04-02)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-101">0.4.0 (2016-03-01)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-102">0.3.0 (2016-02-27)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-103">0.2.2 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-104">0.2.1 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-105">0.2.0 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-106">0.1.0 (2016-02-21)</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_006.html#link-107">GNU LESSER GENERAL PUBLIC LICENSE</a>
+ </li>
+</ul>
+  </nav>
+
+  <div id = "content">
+    <div id = "page">
+      <header>
+        <div id = "top"><p id = "para-282">Crowbook User Guide 0.9.1</p>
+</div>
+          <div id = "menu">
+      <img id = "menu-button" onclick="toggle();"
+           src="menu.svg" alt = "Table of contents" title = "Table of contents" />
+          </div>
+    </header>
+      <p class = "prev_chapter">
+  <a href = "chapter_004.html">
+    « <b>5.</b> Proofreading with Crowbook
+  </a>
+</p>
+      <h1 id = "link-93">ChangeLog</h1>
+<h2 id = "link-94">unreleased</h2>
+<p id = "para-205">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
+<ul>
+<li>New options:<ul>
+<li><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entites and CSS so it can display correctly even if reader's don't have a browser/font supporting these unicode symbols.</li>
+<li>Output files for proofread documents: <code>output.proofread.html</code>, <code>output.proofread.html_dir</code> and <code>output.proofread.pdf</code>.</li>
+<li>Proofread options <code>proofread.repetitions</code> and <code>proofread.nb_spaces</code> have been added.<ul>
+<li><code>proofread.nb_spaces</code>, if set to true, highlights non-breaking spaces so it is easier to check the correct typography of a book. Note that it requires that <code>html.escape_nb_spaces</code> be set to true (default) to work.</li>
+<li><code>proofread.reppetitions</code>, if set to true, uses <a href = "https://github.com/lise-henry/caribon">Caribon</a> to highlight repetitions in a document. It also uses the settings <code>proofread.repetitions.fuzzy</code>, <code>proofread.repetitions.max_distance</code>, <code>proofread.repetitions.threshold</code>, <code>proofread.repetitions.fuzzy.threshold</code>, <code>proofread.repetitions.ignore_proper</code>. Note that this feature is not built by default, you'll have to build crowbook with <code>cargo build --release --features "repetitions"</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>New default settings for options:<ul>
+<li><code>tex.command</code> is now <code>xelatex</code> by default.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>LaTeX:<ul>
+<li>Add support for xelatex in the default template.</li>
+</ul>
+</li>
+<li>Improved french cleaner (see <a href = "https://crowdagger.github.io/textes/articles/heuristique.html">an article (in french)</a> that talks about what it does).</li>
+</ul>
+</li>
+<li>Crowbook user guide: documentation has been updated to correctly reflect 0.9.x options.</li>
+<li>API:<ul>
+<li><code>clap</code> dependency is now optional, people who want to use Crowbook as a library should include it with <code>crowbook = { version = "0.9", default-features = false }</code>. (<code>clap</code> is still required to build a working binary).</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-95">0.9.0 (2016-09-23)</h2>
+<p id = "para-206">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
+<ul>
+<li>reducing the surface of Crowbook's library API;</li>
+<li>cleaning options names</li>
+<li>cleaning the names exported in templates and document them, in order not to break user-defined templates in future (non-breaking) releases. More detailed changes for this release:</li>
+<li><b>Breaking change for users</b>: removed <code>tex.short</code> option, replaced by a more generic <code>tex.class</code> (default being <code>book</code>). <code>html.crowbook_link</code> has also been removed.</li>
+<li>Renamed options. Using the old name will print a deprecation warning but will still work for a while.<ul>
+<li><code>temp_dir</code> -&gt; <code>crowbook.temp_dir</code></li>
+<li><code>zip.command</code> -&gt; <code>crowbook.zip.command</code></li>
+<li><code>verbose</code> -&gt; <code>crowbook.verbose</code></li>
+<li><code>html.print_css</code> -&gt; <code>html.css.print</code></li>
+<li><code>html.display_chapter</code> -&gt; <code>html_single.one_chapter</code></li>
+<li><code>html.script</code> -&gt; <code>html_single.js</code></li>
+<li><code>numbering</code> -&gt; <code>rendering.num_depth</code></li>
+<li><code>numbering_template</code> -&gt; <code>rendering.chapter_template</code></li>
+<li><code>display_toc</code> -&gt; <code>rendering.inline_toc</code></li>
+<li><code>toc_name</code> -&gt; <code>rendering.inline_toc.name</code></li>
+<li><code>enable_yaml_blocks</code> -&gt; <code>input.yaml_blocks</code></li>
+<li><code>use_initials</code> -&gt; <code>rendering.initials</code></li>
+<li><code>autoclean</code> -&gt; <code>input.autoclean</code></li>
+<li><code>html_dir.css</code> -&gt; <code>html.css</code> (not really renamed, <code>html_dir.css</code> isactually removed as there is no point in having different CSS for standalone and multifile HTML rendering, is it?)</li>
+</ul>
+</li>
+<li>New options:<ul>
+<li>More metadata: <code>license</code>, <code>version</code> and <code>date</code>. These metadata are not treated by the renderers, but they are exported to the templates: <code>{{{metadata}}}</code> allows to access the content. If they are present, a <code>has_metadata</code> is also set to true, allowing to do something like <code>{{{title}}} {{#has_version}}version {{{version}}} {{/has_version}}</code>.</li>
+<li>Yet more metadata: it is possible to add custom metadata by prefixing it with <code>metadata.</code>. They will then be accessible in the templates, with dots ('.') replaced by underscores ('_'). E.g., with <code>metadata.foo: bar</code> you can access it in your templates with <code>{{{metadata_foo}}}</code>.</li>
+<li><code>output.base_path</code> specifies a directory where the output files (set by <code>output.FORMAT</code> will be written.</li>
+<li><code>resources.base_path.templates</code> specifies where templates can be found.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>Metadata can now contain Markdown and will be rendered by the renderers. This might not be a good idea for common fields (e.g. "title"), though. Use with caution.</li>
+<li><code>rendering.inline_toc.name</code> can use <code>{{{loc_toc}}}</code> to specify a localized name.</li>
+<li>HTML:<ul>
+<li><code>html.top</code> and <code>hstml.footer</code> are now considered as templates, so you can use some <code>{{{metadata}}}</code> in it.</li>
+<li>Improved the way footnotes are displayed.</li>
+<li>In standalone HTML, footnotes are rendered at the end of the document instead of at the end of the chapter, unless <code>html_single.one_chapter</code> is true.</li>
+</ul>
+</li>
+<li>LaTeX:<ul>
+<li>If <code>tex.class</code> is set to <code>article</code>, chapters will be displayed as <code>\sections</code> since <code>article</code> class doesn't handle chapters.</li>
+<li>Except if <code>tex.class</code> is set to <code>book</code>, margins are now symmetrical.</li>
+<li>LaTex template now uses <code>version</code> and <code>date</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Bugfixes:<ul>
+<li><code>import_config</code> only import options from another book file that are not equal to the default ones and that haven't already been set by the caller. E.g., <code>author: foo</code> then <code>import_config: bar.book</code> won't erase the author previously set.</li>
+<li><code>import_config</code> now correctly translates the imported book's paths.</li>
+</ul>
+</li>
+<li>Crowbook program:<ul>
+<li>Still working to improve error messages.</li>
+<li><code>crowbook --list-options</code> uses colours. This might hurt your eyes.</li>
+<li>Display an error message when mustache can't compile a template, instead of panicking.</li>
+</ul>
+</li>
+<li>Internal/API:<ul>
+<li>Added static methods to <code>Logger</code> to allows displaying messages more easily/prettily.</li>
+<li>Reduce pubic API's surface so less changes will need to be considered breaking in the future.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-96">0.8.0 (2016-09-19)</h2>
+<p id = "para-207">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
+<ul>
+<li>New options:<ul>
+<li><code>import_config</code>is not really an option, but allows to import another configuration file, useful if you share a same set of options between multiple books.</li>
+<li><code>use_initials</code> (set to false by default) makes Crowbook use initials ("lettrines") at start of each chapter. Support is still experimental.</li>
+<li><code>html.highlight_code</code> (set to true by default) allows syntax highlighting for code blocks, using highlight.js.</li>
+<li><code>html.higlight.css</code> and <code>html.highlight.js</code> can be used to provide other themes (default is default.css) and an highlight.js build that support other languages.</li>
+<li><code>html.footer</code> allows to specify custom footer. If not set, <code>html.crowbook_link</code> allows to disable "Generated by Crowbook" message.</li>
+<li><code>html.top</code> allows to specify a custom header that will be displayed at the top of HTML file(s).</li>
+</ul>
+</li>
+<li>Deprecated options:<ul>
+<li><code>side_notes</code> has been renamed <code>html.side_notes</code>.</li>
+</ul>
+</li>
+<li>Crowbook program:<ul>
+<li>All output formats are now rendered concurrently.</li>
+<li>Better error messages. Crowbook now tries to give more information when displaying an error, with the file name where a problem was found, and, in some cases, the line. It also tries to detect errors (such as files not found) sooner.</li>
+<li>Some "warning" messages have also been "moved" to error messages, to make sure they are displayed even when crowbook isn't runned with <code>--verbose</code>.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>Hidden chapter now produce empty <code>\chapter*{}</code> and <code>&lt;h1&gt;</code> in LaTeX and HTML. This allow to delimit a chapter break even if nothing is displayed.</li>
+</ul>
+</li>
+<li>Bugfixes:<ul>
+<li>Navigation menu of standalone HTML didn't include a call to javascript when <code>html.display_chapter</code> was set to true, meaning it didn't display the chapter correctly.</li>
+<li>Implementations of <code>Image</code> and <code>StandaloneImage</code> were reversed in LaTeX.</li>
+<li><code>StandaloneImage</code> urls were not adjusted (meanning that running <code>crowbook</code> from another directory failed).</li>
+<li>Image paths are now found correctly in HtmlDir rendering even if <code>crowbook</code> is called from another directory (same fix as 0.6's for Epub and LaTeX, which was forgotten for HtmlDir).</li>
+</ul>
+</li>
+<li>Internal/API:<ul>
+<li>In order to have better error messages, there was a need to refactor the <code>Error</code> type, and make more methods return <code>Result&lt;X&gt;</code> instead of <code>X</code>. The API is, therefore, quite modified.</li>
+<li>Added a <code>Renderer</code> trait used by the various renderers.</li>
+<li>Removed some methods from public API.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-97">0.7.0 (2016-09-11)</h2>
+<p id = "para-208">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
+<ul>
+<li>Internal/API:<ul>
+<li><code>Token</code> has a new variant, <code>StandaloneImage</code>. This is used to distinguish an image that is alone in a paragraph of an image that is inlined alongside text.</li>
+<li><code>Parser.parse</code> method now distingues between <code>Image</code> and <code>StandaloneImage</code>. Currently, an image is considered "standalone" if it is the sole element of a paragraph, even if it is among a link.</li>
+<li><code>Token</code> has a new <code>is_image</code> method.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>Standalone images are now rendered differently than inline images (80% of width VS original size) in HTML/EPUB and LaTeX.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-98">0.6.0 (2016-09-09)</h2>
+<ul>
+<li>Deprecated options:<ul>
+<li><code>nb_char</code>: since it was only used for french cleaner and for typography reasons it's better to use different non breaking spaces according to context, this option was not really useful anymore.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>Images are now displayed at 80% width of the page.</li>
+</ul>
+</li>
+<li>Bugfixes:<ul>
+<li>Image paths are now found correctly in LaTeX and EPUB rendering even if <code>crowbook</code> is called from another directory.</li>
+<li>Fixed a bug in <code>French</code> cleaner when a string to clean ended by a non-breaking space (space was doubled with a breaking one).</li>
+<li>LaTeX/PDF:<ul>
+<li>"Autocleaning" is now also activated (for french at least) for LaTeX rendering, since it doesn't correctly insert non-breaking spaces for e.g. '«' or '»'.</li>
+<li>Fixed escaping of <code>--</code> to <code>-{}-</code> to avoid tex ligatures.</li>
+</ul>
+</li>
+<li>HTML/EPUB:<ul>
+<li><code>html.display_chapter</code> now defaults to <code>false</code> (e.g., by default the HTML displays the entirety of a book).</li>
+<li>Fixed rendering of lists when <code>lang</code> is set to <code>fr</code>.</li>
+<li>Links are now HTML-escaped, fixing errors in XHTML (for EPUB rendering) when links contained '&amp;' character.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-99">0.5.1 (2016-04-14)</h2>
+<p id = "para-209">Mostly rendering fixes:</p>
+<ul>
+<li>Epub:<ul>
+<li>Fix a validation problem when book contained hidden chapters.</li>
+</ul>
+</li>
+<li>French cleaner:<ul>
+<li>Use semi-cadratine space instead of cadratine space for dialogs.</li>
+<li>Use non-narrow non-breaking spapce instead of narrow one for ':', '«' and '»' (following https://fr.wikipedia.org/wiki/Espace_ins%C3%A9cable#En_France).</li>
+</ul>
+</li>
+<li>HTML:<ul>
+<li>Add viewport meta tags.</li>
+<li>Standalone HTML:<ul>
+<li>Don't display the button to display chapter and the previous/next chapter link if <code>html.display_chapter</code> is set to <code>false</code>.</li>
+<li>Fix chapter displaying when some chapters are not numbered.</li>
+</ul>
+</li>
+<li>Multi-files HTML:<ul>
+<li>Fix previous/next chapter display to make it consistent with standalone HTML.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-100">0.5.0 (2016-04-02)</h2>
+<ul>
+<li>Crowbook now requires Rustc 1.7.0.</li>
+<li>It is now possible to render HTML in multiple files:<ul>
+<li><code>output.html_dir</code> will activate this renderer, and specify in which directory to render these files;</li>
+<li><code>html_dir.css</code> allows to override the CSS for this rendering;</li>
+<li><code>html_dir.index.html</code> allows to specify a template for the <code>index.html</code> page;</li>
+<li><code>html_dir.chapter.html</code> allows to specify a template for the chapters pages.</li>
+</ul>
+</li>
+<li>New book options:<ul>
+<li><code>tex.short</code>: if set to true, the LaTeX renderer will use <code>article</code> instead of <code>book</code> as document class, and will use the default <code>\maketitle</code> command for article. This option is by default set to false, except when Crowbook is called with <code>--single</code>.</li>
+<li><code>enable_yaml_blocks</code>: parsing YAML blocks is no longer activated by default, except when using <code>--single</code>. This is because you might want to have e.g. multiple short stories using YAML blocks to set their titles and so on, <em>and</em> a separate <code>.book</code> file to render a book as a collection of short stories. In this case, you wouldn't want the displayed title or the output.pdf/html/epub files be redefined by the short stories .md files.</li>
+<li><code>html.print_css</code>: allows to specify a stylesheet for media print</li>
+<li><code>html.display_chapter</code>: displays one chapter at a time in standalone HTML</li>
+<li><code>html.script</code>: allows to specify a custom javascript file for standalone HTML</li>
+<li><code>html_dir.script</code>: same thing for multipage HTML</li>
+<li><code>resources.base_path</code>: by default, Crowbook resolves local links in markdown files relatively to the markdown file. This option allows to resolve them relatively to a base path. This option comes with two variants, <code>resources.base_path.images</code> and <code>resources.base_path.links</code>, which only activate it for respectively images tags and links tags. These two options are ignored when <code>base_path</code> is set. There is also <code>resources.base_path.files</code> which specify where additional files (see below) should be read, but this is one is set to <code>.</code> (i.e., the directory where the <code>.book</code> file is) by default.</li>
+<li><code>resources.files</code>: indicate a (whitespace-separated) list of files that should be embedded. Currently only used with the EPUB renderer.</li>
+<li><code>resources.out_path</code>: indicate where <code>resources.files</code> should be copied in the final document. Default to <code>data</code>, meaning that files will be placed in a <code>data</code> directory in the EPUB.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>Templates can now use localized strings according to the <code>lang</code> option</li>
+<li>Standalone HTML now includes locale files using base64.</li>
+<li>Standalone HTML displays one chapter at a time, thouht it can be changed via a button in the menu.</li>
+<li>HTML/EPUB: default CSS now uses the <code>lang</code> value do determine how to display lists (currently the only difference is it uses "–" when <code>lang</code> is set to "fr" and standard bullets for other languages).</li>
+</ul>
+</li>
+<li>Bugfixes:<ul>
+<li>Fixed a bug of filename "resolution" when Crowbook was called with <code>--single</code> (e.g., <code>crowbook -s tests/test.md</code> would previously try to load `tests/tests/test.md).</li>
+<li>Epub renderer now uses the <code>mime_guess</code> library to guess the mime type based on extension, which should fix the mime type guessed for a wide range of extensions (e.g., svg).</li>
+</ul>
+</li>
+<li>Internal/API:<ul>
+<li>The <code>Book::new</code>, <code>new_from_file</code>, and <code>new_from_markdown_file</code> take an additional <code>options</code> parameter. To create a book with default options, set it to <code>&amp;[]</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-101">0.4.0 (2016-03-01)</h2>
+<ul>
+<li>Crowbook now internally uses a true YAML parser, <code>yaml_rust</code>, for its options. Since the "old" Crowbooks's config format was similar, but had some subtle differences, this is somewhat of a breaking change:<ul>
+<li>strings should now be escaped with "" in some cases (e.g. if it contains special characters). On the other hand, it <em>allows</em> to optionally escape a string with these quotes, which wasn't possible until then and might be useful in some cases.</li>
+<li>multiline strings now follow the YAML format, instead of the previous "YAML-ish" format. This can impact the way newlines are added at the end of a multiline string. See e.g. <a href = "http://stackoverflow.com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multiple-lines">this link</a> for the various ways to include mulitiline strings in Yaml.</li>
+</ul>
+</li>
+<li>Crowbook now parses YAML blocks (delimited by two lines with "---") in Markdown files, ignoring keys that it doesn't recognize. This allows crowbook to be compatible(-ish) with Markdown that contains YAML blocks for Jekyll or Pandoc.</li>
+<li>New option <code>--single</code> allows to give Crowbook a single Markdown file (which can contain options within an inline YAML block) instead of a book configuration file. This is useful for e.g. short stories.</li>
+<li>Enhanced the way debugging/warning/info messages are handled and displayed:<ul>
+<li>Added a <code>--debug</code> option to the binary.</li>
+<li>Internal: added a <code>Logger</code> struct.</li>
+<li>Different levels of information (debug/warning/info/error) get different colours.</li>
+</ul>
+</li>
+<li>Bugfixes:<ul>
+<li>Crowbook no longer crashes when called with the <code>--to</code> argument if it can't create a file.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-102">0.3.0 (2016-02-27)</h2>
+<ul>
+<li>Crowbook now tries to convert local links. That is, if you link to a Markdown file that is used in the book. (e.g. <a href = "chapter_000.html">README.md</a>), it <em>should</em> link to an appropriate inner reference inside the book.</li>
+<li>Latex renderer now supports (local) images.</li>
+<li>Epub renderer now embed (local) images in the EPUB file.</li>
+<li>Some changes to the HTML/Epub stylesheets.</li>
+<li>Internal (or usage as a library):<ul>
+<li>Crowbook no longer changes current directory, which worked in the binary but could cause problem if library was used in multithreaded environment (e.g. in <code>cargo test</code>).</li>
+<li>More modules and methods are now private.</li>
+<li>Improved documentation.</li>
+<li>Added more unit tests.</li>
+</ul>
+</li>
+<li>Bugfixes:<ul>
+<li>Epub renderer now correctly renders unnumbered chapter without a number in its toc.ncx file</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-103">0.2.2 (2016-02-25)</h2>
+<ul>
+<li>Bugfixes:<ul>
+<li>French cleaner now correctly replaces space after — (in e.g. dialogs) with "em space".</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-104">0.2.1 (2016-02-25)</h2>
+<ul>
+<li>Bugfixes:<ul>
+<li>HTML/Epub rendering no longer incorrectly increment chapter count for unnumbered chapters.</li>
+<li>Latex: makes what is possible to avoid orverflowing the page.</li>
+</ul>
+</li>
+<li>Minor changes:<ul>
+<li>Latex: improvement of the default way URLs are displayed.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-105">0.2.0 (2016-02-25)</h2>
+<ul>
+<li>Command line arguments:<ul>
+<li>New argument <code>--print-template</code> now allows to print a built-in template to stdout.</li>
+<li>New argument <code>--list-options</code> prints out all valid options in a config file (or in <code>set</code>), their type and default value.</li>
+<li>New argument <code>--set</code> allows to define or override whatever option set in a book configuration.</li>
+<li><code>--create</code> can now be used without specifying a <code>BOOK</code>, printing its result on <code>stdout</code>.</li>
+</ul>
+</li>
+<li>Configuration file:<ul>
+<li>Added support for multiline strings in <code>.book</code> files, with either '|' (preserving line returns) or '&gt;' (transforming line returns in spaces)</li>
+<li>New option <code>display_toc</code> allows to display the table of contents (whose name, at least for HTML, is specified by <code>toc_name</code>) in HTML and PDF documents.</li>
+<li>Option <code>numbering</code> now takes an int instead of a boolean, allowing to specify the maximum level to number (e.g. <code>1</code>: chapters only, <code>2</code>: chapters and sectino, ..., <code>6</code>: everything).</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>Added support for numbering all headers, not just level-1 (e.g., having a subsection numbered <code>2.3.1</code>).</li>
+<li>Tables and Footnotes are now implemented for HTML/Epub and LaTeX output.</li>
+</ul>
+</li>
+<li>Internal:<ul>
+<li>Refactored <code>Book</code> to use an HashMap of <code>BookOption</code>s instead of having like 42 fields.</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-106">0.1.0 (2016-02-21)</h2>
+<ul>
+<li>initial release</li>
+</ul>
+
+      <p class = "next_chapter">
+  <a href = "chapter_006.html">
+    GNU LESSER GENERAL PUBLIC LICENSE »
+  </a>
+</p>
+    </div>
+  </div>
+  <footer id = "footer"><p id = "para-281">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.9.1-unreleased</p>
+</footer>
+  </body>
+</html>

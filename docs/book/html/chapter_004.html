@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="crowbook">
+    <meta name="author" content="Élisabeth Henry">
+    <meta name="viewport" content="width=device-width">
+    <title>Crowbook User Guide – <b>5.</b> Proofreading with Crowbook</title>
+    <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
+          />
+    <link rel = "stylesheet" href = "print.css" type = "text/css"
+          media = "print" />
+    <link rel = "stylesheet" href = "highlight.css" type = "text/css"
+          />
+    <script src = "highlight.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+   <script>
+function on(name) {
+    var elements = document.getElementsByClassName(name);
+    for (var i = 0; i < elements.length; i++) {
+        var elem = elements[i];
+        elem.style.backgroundColor = "pink";
+    }
+}
+function off(name) {
+    var elements = document.getElementsByClassName(name);
+    for (var i = 0; i < elements.length; i++) {
+        var elem = elements[i];
+        elem.style.backgroundColor = "white";
+    }
+}
+
+var display_menu = false;
+function toggle() {
+    if (display_menu == true) {
+        display_menu = false;
+        document.getElementById("nav").style.left = "-20%";
+        document.getElementById("content").style.marginLeft = "10%";
+        document.getElementById("menu").style.left = "1em";
+        if(document.getElementById("top")) {
+            document.getElementById("top").style.left = "0";
+        }
+        if(document.getElementById("footer")) {
+            document.getElementById("footer").style.marginLeft = "0%";
+        }
+    } else {
+        display_menu = true;
+        document.getElementById("nav").style.left = "0";
+        document.getElementById("content").style.marginLeft = "30%";
+        document.getElementById("menu").style.left = "20%";
+        if(document.getElementById("top")) {
+            document.getElementById("top").style.left = "20%";
+        }
+        if(document.getElementById("footer")) {
+            document.getElementById("footer").style.marginLeft = "20%";
+        }
+    }
+}
+
+   </script>
+
+
+  </head>  
+  <body>
+
+  <nav id = "nav">
+    <h2><a href = "index.html">Crowbook User Guide</a></h2>
+    <ul>
+ <li><a href = "chapter_000.html#link-1"><b>1.</b> Crowbook</a>
+ <ul>
+  <li><a href = "chapter_000.html#link-2">1.1. Example</a>
+  </li>
+  <li><a href = "chapter_000.html#link-3">1.2. Installing</a>
+  </li>
+  <li><a href = "chapter_000.html#link-7">1.3. Dependencies</a>
+  </li>
+  <li><a href = "chapter_000.html#link-8">1.4. Quick tour</a>
+  </li>
+  <li><a href = "chapter_000.html#link-9">1.5. Current features</a>
+  </li>
+  <li><a href = "chapter_000.html#link-17">1.6. Contributors</a>
+  </li>
+  <li><a href = "chapter_000.html#link-18">1.7. Acknowledgements</a>
+  </li>
+  <li><a href = "chapter_000.html#link-19">1.8. ChangeLog</a>
+  </li>
+  <li><a href = "chapter_000.html#link-20">1.9. Library</a>
+  </li>
+  <li><a href = "chapter_000.html#link-21">1.10. License</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_001.html#link-22"><b>2.</b> Arguments</a>
+ <ul>
+  <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-25">2.2. <code>--single</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-26">2.3. <code>--set</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-28">2.4. <code>--proofread</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-29">2.5. <code>--list-options</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-30">2.6. <code>--print-template</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-31">2.7. <code>--verbose</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-32">2.8. <code>--to</code></a>
+  </li>
+  <li><a href = "chapter_001.html#link-34">2.9. <code>--output</code></a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_002.html#link-35"><b>3.</b> The configuration file</a>
+ <ul>
+  <li><a href = "chapter_002.html#link-36">3.1. The list of files</a>
+  </li>
+  <li><a href = "chapter_002.html#link-37">3.2. Crowbook options</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_003.html#link-65"><b>4.</b> Templates</a>
+ <ul>
+  <li><a href = "chapter_003.html#link-66">4.1. List of templates</a>
+  </li>
+  <li><a href = "chapter_003.html#link-80">4.2. Create and edit template</a>
+  </li>
+  <li><a href = "chapter_003.html#link-84">4.3. List of accessible variables</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_004.html#link-88"><b>5.</b> Proofreading with Crowbook</a>
+ <ul>
+  <li><a href = "chapter_004.html#link-89">5.1. Enabling proofreading</a>
+  </li>
+  <li><a href = "chapter_004.html#link-90">5.2. Repetition detection</a>
+  </li>
+  <li><a href = "chapter_004.html#link-91">5.3. Grammar checking</a>
+  </li>
+  <li><a href = "chapter_004.html#link-92">5.4. Highlighting non-breaking spaces</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_005.html#link-93">ChangeLog</a>
+ <ul>
+  <li><a href = "chapter_005.html#link-94">unreleased</a>
+  </li>
+  <li><a href = "chapter_005.html#link-95">0.9.0 (2016-09-23)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-96">0.8.0 (2016-09-19)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-97">0.7.0 (2016-09-11)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-98">0.6.0 (2016-09-09)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-99">0.5.1 (2016-04-14)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-100">0.5.0 (2016-04-02)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-101">0.4.0 (2016-03-01)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-102">0.3.0 (2016-02-27)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-103">0.2.2 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-104">0.2.1 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-105">0.2.0 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_005.html#link-106">0.1.0 (2016-02-21)</a>
+  </li>
+ </ul>
+ </li>
+ <li><a href = "chapter_006.html#link-107">GNU LESSER GENERAL PUBLIC LICENSE</a>
+ </li>
+</ul>
+  </nav>
+
+  <div id = "content">
+    <div id = "page">
+      <header>
+        <div id = "top"><p id = "para-280">Crowbook User Guide 0.9.1</p>
+</div>
+          <div id = "menu">
+      <img id = "menu-button" onclick="toggle();"
+           src="menu.svg" alt = "Table of contents" title = "Table of contents" />
+          </div>
+    </header>
+      <p class = "prev_chapter">
+  <a href = "chapter_003.html">
+    « <b>4.</b> Templates
+  </a>
+</p>
+      <h1 id = "link-88"><b>5.</b> Proofreading with Crowbook</h1>
+<p id = "para-184">Since version 0.9.1, Crowbook includes some proofreading features, that can be enabled if you set one of the</p>
+<ul>
+<li><code>output.proofread.html</code></li>
+<li><code>output.proofread.html_dir</code></li>
+<li><code>output.proofread.pdf</code></li>
+</ul>
+<p id = "para-185">output files. This allows you to generate different files for publishing and proofreading (you probably don't want to publish a version that highlights your grammar errors or your repetitions).</p>
+<p id = "para-186">Current proofreading features are:</p>
+<ul>
+<li>repetition detection;</li>
+<li>grammar check;</li>
+<li>highlighting non-breaking spaces.</li>
+</ul>
+<blockquote><p id = "para-187">Note that, by default, <code>cargo build</code> <em>won't</em> compile Crowbook with proofreading features. In order to enable them (at the cost of a bigger binary and a longer compilation time), you'll have to run:</p>
+</blockquote>
+<pre><code>$ cargo install --features "proofread" crowbook
+</code></pre>
+<blockquote><p id = "para-188">or:</p>
+</blockquote>
+<pre><code class = "language-bash">$ cargo build --release --features "proofread"
+</code></pre>
+<blockquote><p id = "para-189">in the source directory.</p>
+</blockquote>
+<h2 id = "link-89">5.1. Enabling proofreading</h2>
+<p id = "para-190">Since proofreading can take quite a lot of time, particularly for long book, it is disabled by default. You'll have to run</p>
+<pre><code class = "language-bash">$ crowbook --proofread my.book
+</code></pre>
+<p id = "para-191">or</p>
+<pre><code class = "language-bash">$ crowbook -p my.book
+</code></pre>
+<p id = "para-192">to generate proofreading copies. Alternatively, if you want it to be activated each time you run <code>crowbook</code> on this book (which is <em>not</em> recommanded for long books, particularly if you want to perform a grammar check), you can set</p>
+<pre><code class = "language-yaml">proofread: true
+</code></pre>
+<p id = "para-193">in the book configuration file.</p>
+<h2 id = "link-90">5.2. Repetition detection</h2>
+<p id = "para-194">Repetition detection is enabled with:</p>
+<pre><code class = "language-yaml">proofread.repetitions: true
+</code></pre>
+<p id = "para-195">It uses <a href = "https://github.com/lise-henry/caribon">Caribon</a> library to detect the repetition in your text. Since the notion of a repetition is relatively arbitrary, it is possible to adapt the settings. Default are:</p>
+<pre><code class = "language-yaml"># The maximum distance between two identical words to
+# consider them a repetition 
+proofread.repetitions.max_distance: 25
+# The minimal number of occurences to consider it a repetition
+proofread.repetitions.threshold: 2.0
+# Ignore proper nouns (words starting by a capital,
+# not at a beginning of a sentence)
+proofread.repetitions.ignore_proper: true
+
+# Activate fuzzy string matching
+proofread.repetitions.fuzzy: true
+# The maximal ratio of difference to consider
+# that two words are identical
+# (E.g., with 0.2, "Rust" and "Lust" won't be
+# considered as the same word, but they will be with 0.5)
+proofread.repetitions.fuzzy.threshold: 0.2
+</code></pre>
+<p id = "para-196">For more information, see <a href = "https://github.com/lise-henry/caribon">Caribon</a>'s documentation.</p>
+<blockquote><p id = "para-197">Currently, repetitions are not displayed in PDF proofreading output.</p>
+</blockquote>
+<h2 id = "link-91">5.3. Grammar checking</h2>
+<p id = "para-198">Crowbook can also use <a href = "https://languagetool.org/">LanguageTool</a> to detect grammar errors in your text. It is, however, a bit more difficult to activate.</p>
+<p id = "para-199">First, you'll have to activate this feature in your book configuration file:</p>
+<pre><code class = "language-yaml"># Activate language tool support
+proofread.languagetool: true
+# (Optional) Sets the port number to connect to (default below)
+proofread.languagetool.port: 8081
+</code></pre>
+<p id = "para-200">You'll then have to download the stand-alone version of <a href = "https://languagetool.org/">LanguageTool</a>. It includes a server mode, which you'll have to launch:</p>
+<pre><code class = "language-bash">$ java -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8081
+</code></pre>
+<p id = "para-201">You can also use the LanguageTool GUI (<code>languagetool.jar</code>) and start the server from the menu "Text Checking -&gt; Options". This also allows you to configure LanguageTool more precisely by activating or deactivating rules.</p>
+<p id = "para-202">You can then run Crowbook, and it will highlight grammar errors in HTML or PDF proofreading output files.</p>
+<blockquote><p id = "para-203">Note: running a grammar check on a long book (like a novel) can take up to a few minutes.</p>
+</blockquote>
+<h2 id = "link-92">5.4. Highlighting non-breaking spaces</h2>
+<p id = "para-204">The last proofreading feature is a bit less important, but it can be useful in some cases. It is is dis/activated by setting <code>proofread.nb_spaces</code> to "true" or false, and it will highlight different sort of non-breaking spaces in HTML proofreading output files. This can be useful in some cases, but it is mostly a debugging feature to check that the french cleaner of Crowbook correctly replaces spaces with correct non-breaking spaces in the relevant places.</p>
+
+      <p class = "next_chapter">
+  <a href = "chapter_005.html">
+    ChangeLog »
+  </a>
+</p>
+    </div>
+  </div>
+  <footer id = "footer"><p id = "para-279">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.9.1-unreleased</p>
+</footer>
+  </body>
+</html>
