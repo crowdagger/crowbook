@@ -4,7 +4,7 @@ BINARY = target/release/$(BINARYNAME)
 
 PKGNAME= $(BINARYNAME)
 MAINTAINER = "Élisabeth Henry \<liz.henry@ouvaton.org\>"
-PKGVERSION = "0.9.0"
+PKGVERSION = "0.9.1"
 PKGLICENSE = "LGPL-2.1+"
 
 default: $(BINARY)
@@ -13,7 +13,7 @@ clean:
 	cargo clean
 
 $(BINARY): src/lib/lib*.rs src/bin/*.rs Cargo.toml
-	cargo build --release
+	cargo build --release --features "proofread"
 
 package:
 	checkinstall -D --install=no --pkgname $(PKGNAME) --pkgversion $(PKGVERSION) --pkglicense $(PKGLICENSE) --maintainer $(MAINTAINER)

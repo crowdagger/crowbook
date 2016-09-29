@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-----------
+0.9.1 (2016-09-29)
+------------------
 This release mainly introduces generation of proofreading copies,
 allowing, if they are set (and `crowbook` was compiled with the
 `proofread` feature) to generate proofreading copies, using tools to
