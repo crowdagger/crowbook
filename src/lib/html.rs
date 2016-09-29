@@ -372,7 +372,7 @@ impl<'a> HtmlRenderer<'a> {
                 let content = try!(this.as_mut().render_vec(v));
                 if this.as_ref().proofread {
                     match annotation {
-                        &Data::GrammarError(ref s) => Ok(format!("<span title = \"{}\" style = \"background: red\">{}</span>",
+                        &Data::GrammarError(ref s) => Ok(format!("<span title = \"{}\" class = \"grammar-error\">{}</span>",
                                                                  escape_quotes(s.as_str()),
                                                                  content))
                     }

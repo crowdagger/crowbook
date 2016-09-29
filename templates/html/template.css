@@ -214,5 +214,7 @@ footer p {
     width: 70%;
 }
 
-
-                 
+/* Grammar error */
+.grammar-error {
+    background: #d966ff;
+}
