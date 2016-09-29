@@ -16,8 +16,13 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 #[derive(Debug, Clone, PartialEq)]
+/// The inner type for an annotation.
+///
+/// This Enum might grow additional variants, so library users should
+/// **not** rely on exhaustive matching.
 pub enum Data {
     GrammarError(String),
+    __NonExhaustive,
 }
 
 /// A single token representing a Markdown element.
@@ -25,7 +30,7 @@ pub enum Data {
 /// A Markdown document is, thus, a Vec of `Token`s.
 ///
 /// This Enum might grow additional variants, so library users should
-/// **not** count on exhaustive matching.
+/// **not** rely on exhaustive matching.
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     /// The most simple element, containing a String
