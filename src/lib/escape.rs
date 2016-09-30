@@ -38,9 +38,9 @@ pub fn escape_nb_spaces<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
         let mut output = chars.into_iter().collect::<String>();
         for c in rest {
             match c {
-                NB_CHAR_NARROW  => output.push_str(r#"<span class = "nnbsp">&thinsp;</span>"#),
-                NB_CHAR_EM => output.push_str(r#"<span class = "ensp">&ensp;</span>"#),
-                NB_CHAR => output.push_str(r#"<span class = "nbsp">&nbsp;</span>"#),
+                NB_CHAR_NARROW  => output.push_str(r#"<span class = "nnbsp">&#8201;</span>"#),
+                NB_CHAR_EM => output.push_str(r#"<span class = "ensp">&#8194;</span>"#),
+                NB_CHAR => output.push_str(r#"<span class = "nbsp">&#160;</span>"#),
                 _ => output.push(c),
             }
         }
