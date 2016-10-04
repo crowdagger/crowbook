@@ -7,12 +7,12 @@
 // by the Free Software Foundation, either version 2.1 of the License, or
 // (at your option) any later version.
 //
-// Caribon is distributed in the hope that it will be useful,
+// Crowbook is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
-// You should have received ba copy of the GNU Lesser General Public License
+// You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 //!  Note: this documentation is relative to `crowbook` *as a library*.
@@ -102,6 +102,8 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
+extern crate regex;
+#[macro_use] extern crate lazy_static;
 
 #[cfg(feature = "proofread")]
 extern crate hyper;

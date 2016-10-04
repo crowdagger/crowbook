@@ -18,10 +18,13 @@
 //! Provides utility functions for escaping text to HTML or LaTeX
 
 use std::borrow::Cow;
+use regex::Regex;
 
 const NB_CHAR:char = ' '; // non breaking space
 const NB_CHAR_NARROW:char = '\u{202F}'; // narrow non breaking space
 const NB_CHAR_EM:char = '\u{2002}'; // demi em space
+
+
 
 
 /// Escape non breaking spaces for HTML, so there is no problem for displaying them if the font or browser
@@ -60,15 +63,15 @@ pub fn escape_nb_spaces<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
 /// assert_eq!(&s, "&lt;foo&gt; &amp; &lt;bar&gt;");
 /// ```
 pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
+    lazy_static! {
+        static ref REGEX: Regex = Regex::new("[<>&]").unwrap();
+    }
     let input = input.into();
-    let first = input.chars().position(|c| match c {
-        '<'| '>'| '&' => true,
-        _ => false
-    });
-    if let Some(first) = first {
-        let mut chars = input.chars().collect::<Vec<_>>();
-        let rest = chars.split_off(first);
-        let mut output = chars.into_iter().collect::<String>();
+    let first = REGEX.find(&input);
+    if let Some((first, _)) = first {
+        let mut output = String::from(&input[0..first]);
+        output.reserve(input.len() - first);
+        let rest = input[first..].chars();
         for c in rest {
             match c {
                 '<' => output.push_str("&lt;"),
@@ -116,12 +119,16 @@ pub fn escape_quotes<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
 /// ```
 pub fn escape_tex<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     let input = input.into();
-    if input.contains(|c| match c {
-        '&'|'%'|'$'|'#'|'_'|'{'|'}'|'~'|'^'|'\\'|'-' => true,
-        _ => false
-    }) {
-        let mut output = String::with_capacity(input.len());
-        let mut chars:Vec<char> = input.chars().collect();
+    const REGEX_LITERAL:&'static str = r"[&%$#_\x7E\x2D\{\}\^\\]";
+    lazy_static! {
+       static ref REGEX: Regex = Regex::new(REGEX_LITERAL).unwrap();
+        
+    }
+    let first = REGEX.find(&input);
+    if let Some((first, _)) = first {
+        let mut output = String::from(&input[0..first]);
+        output.reserve(input.len() - first);
+        let mut chars:Vec<char> = input[first..].chars().collect();
         chars.push(' '); // add a dummy char for call to .windows()
         // for &[c, next] in chars.windows(2) { // still experimental, uncomment when stable
         for win in chars.windows(2) { 

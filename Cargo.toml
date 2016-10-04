@@ -49,7 +49,11 @@ uuid = { version = "0.3", features = ["v4"] }
 walkdir = "0.1"
 rustc-serialize = "0.3"
 crossbeam = "0.2"
-caribon = { git = "https://github.com/lise-henry/caribon", optional = true }
+regex = "0.1"
+lazy_static = "0.2"
+caribon = { version = "0.7", optional = true }
 clap = { version = "2", optional = true }
 hyper = { version = "0.9", optional = true }
 url =  { version = "1", optional = true }
+
+
