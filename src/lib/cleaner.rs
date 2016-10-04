@@ -18,6 +18,7 @@
 //! This module contains the `Cleaner` traits and various implementations of it.
 
 use std::borrow::Cow;
+use regex::Regex;
 
 /// Custom function because we don't really want to touch \t or \n
 fn is_whitespace(c: char) -> bool {
@@ -71,23 +72,32 @@ impl Cleaner for Off {}
 pub struct Default;
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
-    fn clean<'a>(&self, s: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        let mut new_s = String::with_capacity(s.len());
-        let mut previous_space = false;
-        for c in s.chars() {
-            if is_whitespace(c) {
-                if previous_space {
-                    // previous char already a space, don't copy it
-                } else {
-                    new_s.push(c);
-                    previous_space = true;
-                }
-            } else {
-                previous_space = false;
-                new_s.push(c);
-            }
+    fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
+        lazy_static! {
+            static ref REGEX: Regex = Regex::new(r"[  \x{202F}\x{2002}]{2,}?").unwrap();
         }
-        Cow::Owned(new_s)
+        let first = REGEX.find(&input);
+        if let Some((first, _)) = first {
+            let mut new_s = String::from(&input[0..first]);
+            new_s.reserve(input.len() - first);
+            let mut previous_space = false;
+            for c in input[first..].chars() {
+                if is_whitespace(c) {
+                    if previous_space {
+                        // previous char already a space, don't copy it
+                    } else {
+                        new_s.push(c);
+                        previous_space = true;
+                    }
+                } else {
+                    previous_space = false;
+                    new_s.push(c);
+                }
+            }
+            Cow::Owned(new_s)
+        } else {
+            input
+        }
     }
 }
 
