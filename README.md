@@ -22,8 +22,7 @@ a pull request.
 Example
 -------
 
-To see what Crowbook's output looks like, you can read (a
-not-necessarily up-to-date version of) the Crowbook
+To see what Crowbook's output looks like, you can read the Crowbook
 guide rendered in
 [HTML](http://lise-henry.github.io/crowbook/book/book.html), 
 [PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub).
@@ -110,11 +109,11 @@ complete. This configuration file contains some metadata, options, and lists the
 Markdown files. 
 
 For more information see
-[the configuration file](book_example/config.md).
+[the configuration file](guide/config.md).
 
 It is also possible to give additional parameters to `crowbook`;
 we have already seen `--create`, but if you want the full list, see
-[the arguments](book_example/arguments.md).
+[the arguments](guide/arguments.md).
 
 Current features
 ----------------
@@ -201,7 +200,7 @@ highlighting grammar errors and repetitions.
 
 > This feature has been introduced in version `0.9.1` and is still
 > experimental. For more information, see
-> [the proofreading chapter of the guide](book_example/proofreading.md). 
+> [the proofreading chapter of the guide](guide/proofreading.md). 
 
 ### Bugs ###
 
