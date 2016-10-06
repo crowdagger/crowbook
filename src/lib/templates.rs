@@ -22,6 +22,7 @@ pub mod highlight {
 
 pub mod html {
     pub static CSS:&'static str = concat!(include_str!("../../templates/epub/stylesheet.css"), include_str!("../../templates/html/template.css"));
+    pub static CSS_COLOURS: &'static str = include_str!("../../templates/html/colours.css");
     pub static PRINT_CSS:&'static str = include_str!("../../templates/html/print.css");
     pub static JS:&'static str = include_str!("../../templates/html/script.js");
 

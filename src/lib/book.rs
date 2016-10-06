@@ -741,6 +741,7 @@ impl Book {
                 epub::TEMPLATE
             },
             "html.css" => html::CSS,
+            "html.css.colours" => html::CSS_COLOURS,
             "html.css.print" => html::PRINT_CSS,
             "html_single.html" => html_single::HTML,
             "html_single.js" => html_single::JS,
@@ -820,6 +821,7 @@ impl Book {
         where F:FnMut(&str)->Result<String> {
         let mut mapbuilder = MapBuilder::new();
         mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
+        mapbuilder = mapbuilder.insert_bool(&format!("lang_{}", self.options.get_str("lang").unwrap()), true);
         
         // Add metadata to mapbuilder
         for key in self.options.get_metadata() {

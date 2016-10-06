@@ -290,10 +290,11 @@ impl<'a> HtmlDirRenderer<'a> {
                                             &self.html.book.source,
                                             "could not compile template 'html.css"));
         let mut data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())));
+        data = data.insert_str("colours", self.html.book.get_template("html.css.colours").unwrap());
         if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }
-         let data = data.build();
+        let data = data.build();
         let mut res:Vec<u8> = vec!();
         template_css.render_data(&mut res, &data);
         let css = String::from_utf8_lossy(&res);

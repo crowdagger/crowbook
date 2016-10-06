@@ -1,4 +1,7 @@
 /* Default  HTML CSS file includes default EPUB CSS file */
+
+{{{colours}}}
+
 span.initial {
     all: initial;
 }
@@ -14,7 +17,6 @@ p.first-para:first-letter {
 /* The nav element corresponding to the navigation menu */
 nav {
     position: fixed;
-    border-right: solid thin black;
     left: 0;
     top: 0;
     bottom: 0;
@@ -22,8 +24,6 @@ nav {
     overflow-y: auto;
     font-size: 80%;
     margin-left: 0;
-    background: #252525;
-    color: white;
 }
 
 #nav code {
@@ -31,12 +31,10 @@ nav {
 }
 
 #nav a:link {
-    color: white;
     text-decoration: none;
 }
 
 #nav a:visited {
-    color: white;
     text-decoration: none;
 }
 
@@ -172,8 +170,6 @@ blockquote {
     height: 2em;
     width: auto;
     text-align: center;
-    background-color: #252525;
-    color: white;
     transition: left 1s;
 }
 
@@ -184,25 +180,19 @@ blockquote {
     width: 70%;
     text-align: center;
     font-family: "Linux Biolinum";
+    font-weight: bold;
     font-variant: small-caps;
 }
 
 footer {
-    background-color: #252525;
     margin-top: 2em;
     margin-left: 0;
     text-align: center;
-    color: white;
     transition: margin-left 1s;
 }
 
 footer a, #top a {
-    color: #ef68ff;
     text-decoration: none;
-}
-
-footer a:hover, #top a:hover  {
-    color: #ca58d7;
 }
 
 footer p {
@@ -214,7 +204,3 @@ footer p {
     width: 70%;
 }
 
-/* Grammar error */
-.grammar-error {
-    background: #d966ff;
-}

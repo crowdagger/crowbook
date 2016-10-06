@@ -34,6 +34,7 @@ import_config:path                  # Import another book configuration file
 html.header:str                     # Custom header to display at the beginning of html file(s) 
 html.footer:str                     # Custom footer to display at the end of HTML file(s)
 html.css:tpl                        # Path of a stylesheet for HTML rendering
+html.css.colours:tpl                # Path of a stylesheet for the colours for HTML
 html.js:tpl                         # Path of a javascript file
 html.css.print:tpl                  # Path of a media print stylesheet for HTML rendering
 html.highlight_code:bool:true       # Provides syntax highlighting for code blocks (using highlight.js) 

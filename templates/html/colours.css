@@ -1,0 +1,38 @@
+/* Colours for the navigation menu (toc) */
+nav {
+    background: #F2D4F6;
+    color: black;
+}
+
+#nav a:link {
+    color: black;
+}
+
+#nav a:visited {
+    color: black;
+}
+
+/* Colours for top and footer */
+#top {
+    background-color: #d699ff;
+    color: black;
+}
+
+footer {
+    background-color: #d699ff;
+    color: black;
+}
+
+footer a, #top a {
+    color: #650303;
+}
+
+footer a:hover, #top a:hover {
+    color: #FF0000;
+}
+
+/* Additional elements */
+/* Grammar error */
+.grammar-error {
+    background: #d966ff;
+}
