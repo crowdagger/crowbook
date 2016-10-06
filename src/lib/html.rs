@@ -16,9 +16,6 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use error::{Result, Error, Source};
-use escape::escape_html;
-use escape::escape_nb_spaces;
-use escape::escape_quotes;
 use token::Token;
 use token::Data;
 use book::{Book, compile_str};
@@ -31,6 +28,8 @@ use lang;
 
 use std::borrow::Cow;
 use std::convert::{AsMut,AsRef};
+
+use crowbook_text_processing::escape::{escape_html, escape_nb_spaces, escape_quotes};
 
 #[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;

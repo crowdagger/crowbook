@@ -64,7 +64,7 @@ Some paragraph
 <p id = "para-4"><a href = "http://foo/bar?baz=42&amp;coin=plop">&amp; some link</a></p>
 "#;
     let actual = ast_to_html(&Parser::new().parse(doc).unwrap());
-    println!("ecpected:\n {}", expected);
+    println!("expected:\n {}", expected);
     println!("actual:\n {}", actual);
     test_eq(&actual, &expected);
 }

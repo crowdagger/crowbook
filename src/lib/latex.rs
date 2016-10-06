@@ -21,10 +21,11 @@ use error::{Error,Result, Source};
 use token::Token;
 use token::Data;
 use zipper::Zipper;
-use escape::escape_tex;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
+
+use crowbook_text_processing::escape::escape_tex;
 
 use std::iter::Iterator;
 use std::fs::File;

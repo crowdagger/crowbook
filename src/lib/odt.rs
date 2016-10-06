@@ -1,4 +1,3 @@
-use escape::escape_html;
 use token::Token;
 use book::{Book, compile_str};
 use number::Number;
@@ -6,6 +5,8 @@ use error::Result;
 use templates::odt;
 use zipper::Zipper;
 use parser::Parser;
+
+use crowbook_text_processing::escape::escape_html;
 
 /// Rendererer for ODT
 ///

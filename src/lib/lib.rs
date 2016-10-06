@@ -104,6 +104,7 @@ extern crate rustc_serialize;
 extern crate crossbeam;
 extern crate regex;
 #[macro_use] extern crate lazy_static;
+extern crate crowbook_text_processing;
 
 #[cfg(feature = "proofread")]
 extern crate hyper;
@@ -113,7 +114,6 @@ extern crate url;
 extern crate caribon;
 
 pub mod cleaner;
-pub mod escape;
 
 pub use parser::Parser;
 pub use book::Book;
