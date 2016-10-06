@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+unreleased
+----------
+* Performances: enhanced the performances of escape and cleaner functions. 
+* Bugfixes:
+  * Fix the escaping of non-breaking spaces in EPUB, as `&nbsp;` and
+    its friends aren't valid entities in XHTML, apparently.
+
 0.9.1 (2016-09-29)
 ------------------
 This release mainly introduces generation of proofreading copies,

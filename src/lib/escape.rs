@@ -63,27 +63,27 @@ pub fn escape_nb_spaces<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
 /// assert_eq!(&s, "&lt;foo&gt; &amp; &lt;bar&gt;");
 /// ```
 pub fn escape_html<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
-    lazy_static! {
+        lazy_static! {
         static ref REGEX: Regex = Regex::new("[<>&]").unwrap();
     }
     let input = input.into();
     let first = REGEX.find(&input);
     if let Some((first, _)) = first {
-        let mut output = String::from(&input[0..first]);
-        output.reserve(input.len() - first);
-        let rest = input[first..].chars();
+        let len = input.len();
+        let mut output = Vec::with_capacity(len + len /2);
+        output.extend_from_slice(input[0..first].as_bytes());
+        let rest = input[first..].bytes();
         for c in rest {
             match c {
-                '<' => output.push_str("&lt;"),
-                '>' => output.push_str("&gt;"),
-                '&' => output.push_str("&amp;"),
+                b'<' => output.extend_from_slice(b"&lt;"),
+                b'>' => output.extend_from_slice(b"&gt;"),
+                b'&' => output.extend_from_slice(b"&amp;"),
                 _ => output.push(c),
             }
         }
-
-        Cow::Owned(output)
+        Cow::Owned(String::from_utf8(output).unwrap())
     } else {
-        input.into()
+        input
     }
 }
 
@@ -126,36 +126,37 @@ pub fn escape_tex<'a, S: Into<Cow<'a, str>>>(input: S) -> Cow<'a, str> {
     }
     let first = REGEX.find(&input);
     if let Some((first, _)) = first {
-        let mut output = String::from(&input[0..first]);
-        output.reserve(input.len() - first);
-        let mut chars:Vec<char> = input[first..].chars().collect();
-        chars.push(' '); // add a dummy char for call to .windows()
+        let len = input.len();
+        let mut output = Vec::with_capacity(len + len/2);
+        output.extend_from_slice(input[0..first].as_bytes());
+        let mut bytes:Vec<_> = input[first..].bytes().collect();
+        bytes.push(b' '); // add a dummy char for call to .windows()
         // for &[c, next] in chars.windows(2) { // still experimental, uncomment when stable
-        for win in chars.windows(2) { 
+        for win in bytes.windows(2) { 
             let c = win[0];
             let next = win[1];
             match c {
-                '-' => {
-                    if next == '-' {
-                        output.push_str(r"-{}"); // if next char is also a -, to avoid tex ligatures
+                b'-' => {
+                    if next == b'-' {
+                        output.extend_from_slice(br"-{}"); // if next char is also a -, to avoid tex ligatures
                     } else {
                         output.push(c);
                     }
                 },
-                '&' => output.push_str(r"\&"),
-                '%' => output.push_str(r"\%"),
-                '$' => output.push_str(r"\$"),
-                '#' => output.push_str(r"\#"),
-                '_' => output.push_str(r"\_"),
-                '{' => output.push_str(r"\{"),
-                '}' => output.push_str(r"\}"),
-                '~' => output.push_str(r"\textasciitilde{}" ),
-                '^' => output.push_str(r"\textasciicircum{}"),
-                '\\' => output.push_str(r"\textbackslash{}"),
+                b'&' => output.extend_from_slice(br"\&"),
+                b'%' => output.extend_from_slice(br"\%"),
+                b'$' => output.extend_from_slice(br"\$"),
+                b'#' => output.extend_from_slice(br"\#"),
+                b'_' => output.extend_from_slice(br"\_"),
+                b'{' => output.extend_from_slice(br"\{"),
+                b'}' => output.extend_from_slice(br"\}"),
+                b'~' => output.extend_from_slice(br"\textasciitilde{}" ),
+                b'^' => output.extend_from_slice(br"\textasciicircum{}"),
+                b'\\' => output.extend_from_slice(br"\textbackslash{}"),
                 _  => output.push(c)
             }
         }
-        Cow::Owned(output)
+        Cow::Owned(String::from_utf8(output).unwrap())
     } else {
         input
     }
