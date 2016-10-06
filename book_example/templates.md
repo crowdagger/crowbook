@@ -24,6 +24,13 @@ javascript file which cannot contain `mustache` tags.
 The main CSS file used by both the standalone HTML renderer and the
 multiple files HTML renderer.
 
+### html.css.colours ###
+
+A CSS file containing only colour settings. Used by `html.css`.
+
+This is not currently an actual template, just a plain
+CSS file which cannot contain `mustache` tags.
+
 ### html.css.print ###
 
 An additional CSS file used by both the standalone HTML renderer and
@@ -214,7 +221,7 @@ These metadata can contain Markdown, which will be rendered. E.g.,
 setting `date: "20th of **september**"` will render `september` in
 bold, using `<b>` tag for HTML or `\textbf` for LaTeX. (It might be a
 bad idea to insert Markdown into `author` or `title` fields, and it
-certainly is for `lang`, but it an be useful for custom metadata or
+certainly is for `lang`, but it can be useful for custom metadata or
 for fields like `description`).
 
 For each metadata `foo` that is set, Crowbook also inserts a `has_foo` bool set to true. This allows to use Mustache's section for some logic, e.g.:
@@ -250,11 +257,12 @@ below.
 | `content` | A rendered version of the book or chapter's content | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html`, `tex.temlplate`, `epub.chapter.xhtml` |
 | `toc` | A rendered version of the table of contents | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
 | `has_toc`| Set to `true` if the table of contents is not empty | `html_single.html` |
+| `colours`| The content of `html.css.colours` | `html.css` |
 | `footer` | The content of `html.footer` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `header` | The content of `html.header` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `script` | The javascript file for this HTML document | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html_single.html` |
-| A variable whose whose name corresponds to `lang` in book options | `true`  | `html.css`, `epub.css` |
+| A variable whose name corresponds to `lang` in book options (e.g. `lang_en` if lang is set to "en", `lang_fr` if it is set to "fr", ... | `true`  | `html.css`, `epub.css` |
 | `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml`, `rendering.chapter_template` |
 | `highlight_code` | True if `html.highlight_code` is true | `html_single.html`, `html_dir.chapter.html` |
 | `highlight_css` | The content of `html.highlight.css` | `html_single.html` |
