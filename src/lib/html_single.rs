@@ -196,7 +196,6 @@ impl<'a> HtmlSingleRenderer<'a> {
         // Render the HTML document
         let mut mapbuilder = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
-            .insert_str("toc", toc)
             .insert_str("script", js)
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .insert_bool("one_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
@@ -207,6 +206,10 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("pages_svg", pages_svg)
             .insert_str("footer", try!(HtmlRenderer::get_footer(self)))
             .insert_str("header", try!(HtmlRenderer::get_header(self)));
+        if !self.html.toc.is_empty() {
+            mapbuilder = mapbuilder.insert_bool("has_toc", true);
+            mapbuilder = mapbuilder.insert_str("toc", toc)
+        }
         if self.html.book.options.get_bool("html.highlight_code") == Ok(true) {
             let highlight_js = try!(self.html.book.get_template("html.highlight.js"))
                 .as_bytes()

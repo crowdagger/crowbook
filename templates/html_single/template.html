@@ -28,7 +28,8 @@
 
   </head>
   <body>
-    
+
+    {{#has_toc}}
     <nav id = "nav">
       {{#one_chapter}}
       <div id = "nav-container">
@@ -45,16 +46,18 @@
       </div>
       {{{toc}}}
     </nav>
+    {{/has_toc}}
 
     <div id = "content">
       <div id = "page">
         <header>
           {{{header}}}
           <div id = "menu">
+	    {{#has_toc}}
             <img id = "menu-button" onclick="toggle();"
                  src="{{{menu_svg}}}"
                  alt = "{{{loc_toc}}}" title = "{{{loc_toc}}}" />
-            
+            {{/has_toc}}
           </div>
           <h1 id = "link-0" class="title" >{{{title}}}</h1>
           <h2 class="author">{{{author}}}</h2>

@@ -17,6 +17,14 @@ impl Toc {
         }
     }
 
+    /// Returns `true` if the toc is empty, `false` else.
+    ///
+    /// Note that `empty` here means that the the toc has zero *or one*
+    /// element, since it's still useless in this case.
+    pub fn is_empty(&self) -> bool {
+        self.elements.len() <= 1
+    }
+
     /// Sets numbering of the Toc
     ///
     /// Only affects whether the generated HTML code should be <ul> or <ol> (epub)
