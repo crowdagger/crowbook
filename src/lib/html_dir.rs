@@ -290,7 +290,7 @@ impl<'a> HtmlDirRenderer<'a> {
                                             &self.html.book.source,
                                             "could not compile template 'html.css"));
         let mut data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())));
-        data = data.insert_str("colours", self.html.book.get_template("html.css.colours").unwrap());
+        data = data.insert_str("colours", try!(self.html.book.get_template("html.css.colours")));
         if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }
