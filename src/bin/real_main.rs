@@ -107,7 +107,6 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     match result {
         Err(err) => print_error(&format!("{}", err)),
         Ok(_) => {
-                    println!("crowbook terminated successfully");
             exit(0);
         },
     }
@@ -157,6 +156,8 @@ pub fn real_main() {
         InfoLevel::Debug
     } else if matches.is_present("verbose") {
         InfoLevel::Warning
+    } else if matches.is_present("quiet") {
+        InfoLevel::Quiet
     } else {
         InfoLevel::Info
     };

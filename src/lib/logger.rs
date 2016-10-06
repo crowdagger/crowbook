@@ -16,6 +16,8 @@ pub enum InfoLevel {
     Info,
     /// Error
     Error,
+    /// Quiet
+    Quiet,
 
     /// Hint that destructuring should not be exhaustive
     #[doc(hidden)]
@@ -98,6 +100,7 @@ impl Logger {
                 Info => Self::display_info(s),
                 Warning => Self::display_warning(s),
                 Error => Self::display_error(s),
+                Quiet => unreachable!(),
                 __NonExhaustive => unreachable!()
             }
         }
