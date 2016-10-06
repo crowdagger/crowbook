@@ -3,6 +3,11 @@ ChangeLog
 
 unreleased
 ----------
+* **Breaking changes**:
+  * Templates:
+	* Conditional inclusion depending on `lang` must now be done using `lang_LANG` (e.g. 
+	`lang_fr`, `lang_en`, and so on). This might impact custom `epub.css` and `html.css` 
+	templates. 
 * Command line interface:
   * Added the `--quiet` (or `-q`) argument, that makes crowbook run without
     displaying any messages (except some error messages at this point).
