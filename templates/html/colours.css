@@ -1,6 +1,6 @@
 /* Colours for the navigation menu (toc) */
 nav {
-    background: #F2D4F6;
+    background: #CFB0D4;
     color: black;
 }
 
@@ -14,21 +14,21 @@ nav {
 
 /* Colours for top and footer */
 #top {
-    background-color: #d699ff;
+    background-color: #b743fe;
     color: black;
 }
 
 footer {
-    background-color: #d699ff;
+    background-color: #b743fe;
     color: black;
 }
 
 footer a, #top a {
-    color: #650303;
+    color: #040C62;
 }
 
 footer a:hover, #top a:hover {
-    color: #FF0000;
+    color: #00A8F6;
 }
 
 /* Additional elements */
