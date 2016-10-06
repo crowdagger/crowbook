@@ -3,11 +3,20 @@ ChangeLog
 
 unreleased
 ----------
-* **Breaking changes**:
+* **Breaking changes**: 
   * Templates:
 	* Conditional inclusion depending on `lang` must now be done using `lang_LANG` (e.g. 
 	`lang_fr`, `lang_en`, and so on). This might impact custom `epub.css` and `html.css` 
 	templates. 
+  * API:
+    * The `escape` module has been moved to a separate crate,
+      `crowbook_text_processing`. The `cleaner` module is no longer
+      public, but the features it provided are also available in
+      `crowbook_text_processing`. 
+* New options:
+  * `html.css.colours` allows to provide a CSS file that only redefine
+    the colour scheme. Such a file can be built from `crowbook
+    --print-template html.css.colours`.
 * Command line interface:
   * Added the `--quiet` (or `-q`) argument, that makes crowbook run without
     displaying any messages (except some error messages at this point).
@@ -18,7 +27,6 @@ unreleased
 * Bugfixes:
   * Fix the escaping of non-breaking spaces in EPUB, as `&nbsp;` and
     its friends aren't valid entities in XHTML, apparently.
-* Performances: enhanced the performances of escape and cleaner functions.
 
 0.9.1 (2016-09-29)
 ------------------
