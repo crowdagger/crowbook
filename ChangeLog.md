@@ -4,12 +4,16 @@ ChangeLog
 unreleased
 ----------
 * Command line interface:
-  * Added the `--quiet` (or `-q`) argument, that makes crowbook run without 
+  * Added the `--quiet` (or `-q`) argument, that makes crowbook run without
     displaying any messages (except some error messages at this point).
+* Rendering:
+  * HTML:
+    * The table of contents menu is no longer displayed in the HTML single renderer if
+      it doesn't contain at least two elements.
 * Bugfixes:
   * Fix the escaping of non-breaking spaces in EPUB, as `&nbsp;` and
     its friends aren't valid entities in XHTML, apparently.
-* Performances: enhanced the performances of escape and cleaner functions. 
+* Performances: enhanced the performances of escape and cleaner functions.
 
 0.9.1 (2016-09-29)
 ------------------
