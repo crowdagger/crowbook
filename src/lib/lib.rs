@@ -111,7 +111,6 @@ extern crate url;
 #[cfg(feature = "proofread")]
 extern crate caribon;
 
-pub mod cleaner;
 
 pub use parser::Parser;
 pub use book::Book;
@@ -133,8 +132,7 @@ pub use renderer::Renderer;
 
 
 
-#[macro_use]
-mod html;
+#[macro_use] mod html;
 mod html_dir;
 mod error;
 mod book;
@@ -143,6 +141,7 @@ mod latex;
 mod odt;
 mod parser;
 mod token;
+mod cleaner;
 
 mod number;
 mod resource_handler;
