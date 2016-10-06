@@ -1,34 +1,59 @@
 /* Colours for the navigation menu (toc) */
 nav {
-    background: #F2D4F6;
-    color: black;
+    background: #181818;
+    color: #cdd4da;
+}
+
+nav {
+    border-right: solid thin #cdd4da;
 }
 
 #nav a:link {
-    color: black;
+    color: #cdd4da;
 }
 
 #nav a:visited {
-    color: black;
+    color: #cdd4da;
+}
+
+a:link {
+    color: #3399ff;
+}
+
+a:visited {
+    color: #0066cc;
+}
+
+a:hover {
+    color: #66b3ff;
+}
+
+body {
+    background-color: #181818;
+    color: #cdd4da;
+}
+
+pre, code {
+    background-color: #1d1f21;
 }
 
 /* Colours for top and footer */
 #top {
-    background-color: #d699ff;
-    color: black;
+    background-color: #cdd4da;
+    color: #181818;
 }
 
 footer {
-    background-color: #d699ff;
-    color: black;
+    background-color: #cdd4da;
+    color: #181818;
 }
 
 footer a, #top a {
-    color: #650303;
+    color: #040C62;
 }
 
 footer a:hover, #top a:hover {
-    color: #FF0000;
+    color: #00A8F6;
 }
 
 /* Additional elements */
