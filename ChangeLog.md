@@ -3,10 +3,13 @@ ChangeLog
 
 unreleased
 ----------
-* Performances: enhanced the performances of escape and cleaner functions. 
+* Command line interface:
+  * Added the `--quiet` (or `-q`) argument, that makes crowbook run without 
+    displaying any messages (except some error messages at this point).
 * Bugfixes:
   * Fix the escaping of non-breaking spaces in EPUB, as `&nbsp;` and
     its friends aren't valid entities in XHTML, apparently.
+* Performances: enhanced the performances of escape and cleaner functions. 
 
 0.9.1 (2016-09-29)
 ------------------
