@@ -14,21 +14,21 @@ nav {
 
 /* Colours for top and footer */
 #top {
-    background-color: #b743fe;
-    color: black;
+    background-color: #444343;
+    color: white;
 }
 
 footer {
-    background-color: #b743fe;
-    color: black;
+    background-color: #444343;
+    color: white;
 }
 
 footer a, #top a {
-    color: #040C62;
+    color: #fc71ff;
 }
 
 footer a:hover, #top a:hover {
-    color: #00A8F6;
+    color: #b743fe;
 }
 
 /* Additional elements */
