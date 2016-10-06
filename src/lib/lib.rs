@@ -102,8 +102,6 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
-extern crate regex;
-#[macro_use] extern crate lazy_static;
 extern crate crowbook_text_processing;
 
 #[cfg(feature = "proofread")]

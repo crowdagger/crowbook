@@ -18,12 +18,8 @@
 //! This module contains the `Cleaner` traits and various implementations of it.
 
 use std::borrow::Cow;
-use regex::Regex;
+use crowbook_text_processing::clean::{remove_whitespaces};
 
-/// Custom function because we don't really want to touch \t or \n
-fn is_whitespace(c: char) -> bool {
-    c == ' ' || c == ' ' || c == ' '
-}
 
 /// Trait for cleaning a string.
 ///
@@ -73,31 +69,7 @@ pub struct Default;
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        lazy_static! {
-            static ref REGEX: Regex = Regex::new(r"[  \x{202F}\x{2002}]{2,}?").unwrap();
-        }
-        let first = REGEX.find(&input);
-        if let Some((first, _)) = first {
-            let mut new_s = String::with_capacity(input.len());
-            new_s.push_str(&input[0..first]);
-            let mut previous_space = false;
-            for c in input[first..].chars() {
-                if is_whitespace(c) {
-                    if previous_space {
-                        // previous char already a space, don't copy it
-                    } else {
-                        new_s.push(c);
-                        previous_space = true;
-                    }
-                } else {
-                    previous_space = false;
-                    new_s.push(c);
-                }
-            }
-            Cow::Owned(new_s)
-        } else {
-            input
-        }
+        remove_whitespaces(input)
     }
 }
 
@@ -120,6 +92,13 @@ const THRESHOLD_CURRENCY: usize = 3; // after that, assume it's not a currency
 const THRESHOLD_UNIT: usize = 2; // after that, assume it's not a unit
 const THRESHOLD_QUOTE: usize = 28; // after that, assume it's a dialogue
 const THRESHOLD_REAL_WORD: usize = 3; // after that, can be reasonably sure it is not an abbreviation
+
+/// Custom function because we don't really want to touch \t or \n
+///
+/// This function detects spaces and non breking spaces
+fn is_whitespace(c: char) -> bool {
+    c == ' ' || c == ' ' || c == ' '
+}
 
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
