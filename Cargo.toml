@@ -30,11 +30,6 @@ name = "crowbook"
 path = "src/bin/main.rs"
 doc = false
 
-# [[bin]]
-# name = "test_cleaner"
-# path = "src/bin/test_cleaner.rs"
-# doc = false
-
 [features]
 default = ["clap"]
 proofread = ["caribon", "hyper", "url"]
