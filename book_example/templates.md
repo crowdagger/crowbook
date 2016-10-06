@@ -248,7 +248,8 @@ below.
 |    Mustache tag     |    Value    |   Available in...   |
 |---------------------|-------------|---------------------|
 | `content` | A rendered version of the book or chapter's content | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html`, `tex.temlplate`, `epub.chapter.xhtml` |
-| `toc` | A rendered vesion of the table of contents | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
+| `toc` | A rendered version of the table of contents | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
+| `has_toc`| Set to `true` if the table of contents is not empty | `html_single.html` |
 | `footer` | The content of `html.footer` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `header` | The content of `html.header` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `script` | The javascript file for this HTML document | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
