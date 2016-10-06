@@ -78,8 +78,8 @@ impl Cleaner for Default {
         }
         let first = REGEX.find(&input);
         if let Some((first, _)) = first {
-            let mut new_s = String::from(&input[0..first]);
-            new_s.reserve(input.len() - first);
+            let mut new_s = String::with_capacity(input.len());
+            new_s.push_str(&input[0..first]);
             let mut previous_space = false;
             for c in input[first..].chars() {
                 if is_whitespace(c) {
