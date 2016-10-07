@@ -63,7 +63,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                 "proofread.html" => book.render_proof_html(&mut io::stdout()),
                 "tex" => book.render_tex(&mut io::stdout()),
                 "proofread.tex" => book.render_tex(&mut io::stdout()),
-                _ => print_error(&format!("No output file specified, and book doesn't specify an output file for {}", format)),
+                _ => print_error(&lformat!("No output file specified, and book doesn't specify an output file for {}", format)),
             }
         },
         Ok(file) => {
@@ -73,28 +73,28 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_tex(&mut f)
                     } else {
-                        print_error(&format!("Could not create file '{}'", file));
+                        print_error(&lformat!("Could not create file '{}'", file));
                     }
                 },
                 "proofread.tex" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_proof_tex(&mut f)
                     } else {
-                        print_error(&format!("Could not create file '{}'", file));
+                        print_error(&lformat!("Could not create file '{}'", file));
                     }
                 },
                 "html" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_html(&mut f)
                     } else {
-                        print_error(&format!("Could not create file '{}'", file));
+                        print_error(&lformat!("Could not create file '{}'", file));
                     }
                 },
                 "proofread.html" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_proof_html(&mut f)
                     } else {
-                        print_error(&format!("Could not create file '{}'", file));
+                        print_error(&lformat!("Could not create file '{}'", file));
                     }
                 },
                 "pdf" => book.render_pdf(),

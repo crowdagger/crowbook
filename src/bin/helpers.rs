@@ -16,7 +16,7 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
     if let Some(iter) = matches.values_of("set") {
         let v:Vec<_> = iter.collect();
         if v.len() %2 != 0 {
-            print_error("An odd number of arguments was passed to --set, but it takes a list of key value pairs.");
+            print_error(&lformat!("An odd number of arguments was passed to --set, but it takes a list of key value pairs."));
         }
 
         for i in 0..v.len()/2 {
@@ -43,7 +43,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     for (key, value) in options {
         let res = book.options.set(key, value);
         if let Err(err) = res {
-            print_error(&format!("Error in setting key {}: {}", key, err));
+            print_error(&lformat!("Error in setting key {}: {}", key, err));
         }
         output.push_str(&format!("{}: {}\n", key, value));
     }
@@ -55,7 +55,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 pub fn create_book(matches: &ArgMatches) -> ! {
     let mut f:Box<Write> = if let Some(book) = matches.value_of("BOOK") {
         if fs::metadata(book).is_ok() {
-            print_error(&format!("Could not create file {}: it already exists!", book));
+            print_error(&lformat!("Could not create file {}: it already exists!", book));
         }
         Box::new(fs::File::create(book).unwrap())
     } else {
@@ -85,7 +85,7 @@ lang: en
             f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
         }
         if let Some(s) = matches.value_of("BOOK") {
-            println!("Created {}, now you'll have to complete it!", s);
+            println!("{}", lformat!("Created {}, now you\'ll have to complete it!", s));
         }
         exit(0);
     } else {
@@ -131,6 +131,6 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
 /// Pre-check the matches to see if there isn't illegal options not detected by clap
 fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
-        print_error("A list of additional files is only valid with the --create option.");
+        print_error(&lformat!("A list of additional files is only valid with the --create option."));
     }
 }
