@@ -103,6 +103,7 @@ extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
 extern crate crowbook_text_processing;
+#[macro_use] extern crate lazy_static;
 
 #[cfg(feature = "proofread")]
 extern crate hyper;
@@ -129,9 +130,9 @@ pub use logger::{Logger, InfoLevel};
 pub use html_dir::HtmlDirRenderer;
 pub use html_single::HtmlSingleRenderer;
 pub use renderer::Renderer;
+pub use localize_macros::set_lang;
 
-
-
+#[macro_use] pub mod localize_macros;
 #[macro_use] mod html;
 mod html_dir;
 mod error;

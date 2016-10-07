@@ -15,16 +15,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate crowbook;
 extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Book,BookOptions, InfoLevel};
+use crowbook::{Book,BookOptions, InfoLevel, set_lang};
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
 use std::io;
+use std::env;
 
 
 /// Render a book to specific format
@@ -113,6 +113,15 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
 }
 
 pub fn real_main() {
+    match env::var("LANG") {
+        Ok(val) => if val.starts_with("fr") {
+            set_lang("fr");
+        } else {
+            set_lang("en");
+        },
+        Err(e) => println!("{}", lformat!("couldn't interpret LANG: {}", e))
+    }
+    
     let matches = create_matches();
 
     if matches.is_present("list-options") {
@@ -135,7 +144,7 @@ pub fn real_main() {
                 println!("{}", s);
                 exit(0);
             }
-            Err(_) => print_error(&format!("{} is not a valid template name.", template)),
+            Err(_) => print_error(&lformat!("{} is not a valid template name.", template)),
         }
     }
 
@@ -144,7 +153,7 @@ pub fn real_main() {
     }
 
     if !matches.is_present("BOOK") {
-        print_error(&format!("You must pass the file of a book configuration file.\n\n{}\n\nFor more information try --help.",
+        print_error(&lformat!("You must pass the file of a book configuration file.\n\n{}\n\nFor more information try --help.",
                             matches.usage()));
     }
 

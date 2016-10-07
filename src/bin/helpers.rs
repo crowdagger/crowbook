@@ -96,7 +96,7 @@ lang: en
 pub fn create_matches<'a>() -> ArgMatches<'a> {
     let app = App::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
-        .about("Render a markdown book in Epub, PDF or HTML.")
+        .about("Render a Markdown book in EPUB, PDF or HTML.")
         .arg_from_usage("-s, --single 'Use a single Markdown file instead of a book configuration file'")
         .arg_from_usage("-v, --verbose 'Print warnings in parsing/rendering'")
         .arg(Arg::from_usage("-q, --quiet 'Don't print info/error messages'")

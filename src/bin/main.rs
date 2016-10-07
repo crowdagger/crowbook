@@ -1,4 +1,4 @@
-extern crate crowbook;
+#[macro_use] extern crate crowbook;
 
 #[cfg(feature = "clap")]
 extern crate clap;

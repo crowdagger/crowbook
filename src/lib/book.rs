@@ -473,7 +473,7 @@ impl Book {
         let result = try!(latex.render_pdf());
         self.logger.debug("Output of latex command:");
         self.logger.debug(result);
-        self.logger.info(format!("Successfully generated PDF file: {}", self.options.get_path("output.pdf").unwrap()));
+        self.logger.info(lformat!("Successfully generated PDF file: {}", self.options.get_path("output.pdf").unwrap()));
         Ok(())
     }
 

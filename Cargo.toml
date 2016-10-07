@@ -9,6 +9,7 @@ readme = "README.md"
 keywords = ["markdown", "book"]
 license = "LGPL-2.1+"
 publish = false
+build = "build.rs"
 
 exclude = [
     "docs/*",
@@ -34,6 +35,9 @@ doc = false
 default = ["clap"]
 proofread = ["caribon", "hyper", "url"]
 
+[build-dependencies]
+crowbook-localize = "0.0.2"
+
 [dependencies]
 mime_guess = "1"
 pulldown-cmark = "0.0.8"
@@ -45,6 +49,7 @@ walkdir = "0.1"
 rustc-serialize = "0.3"
 crossbeam = "0.2"
 crowbook-text-processing = "^0.1.1"
+lazy_static = "0.2.1"
 caribon = { version = "0.7", optional = true }
 clap = { version = "2", optional = true }
 hyper = { version = "0.9", optional = true }
