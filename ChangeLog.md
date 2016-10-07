@@ -24,6 +24,7 @@ unreleased
   * HTML:
     * The table of contents menu is no longer displayed in the HTML single renderer if
       it doesn't contain at least two elements.
+	* The default colour theme has been modified a little.
 * Bugfixes:
   * Fix the escaping of non-breaking spaces in EPUB, as `&nbsp;` and
     its friends aren't valid entities in XHTML, apparently.
