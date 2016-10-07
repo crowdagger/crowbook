@@ -94,3 +94,30 @@ msgstr "cette version de Crowbook n'a pas été compilée avec le support de la 
 
 msgid "problem when writing to LaTeX file: {}"
 msgstr "problème en écrivant dans le fichier LaTeX : {}"
+
+msgid "Successfully generated LaTeX file: {}"
+msgstr "Fichier LaTeX généré avec succès : {}"
+
+msgid "Successfully generated LaTeX"
+msgstr "LaTeX généré avec succès"
+
+msgid "this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {}"
+msgstr "cette version de Crowbook a été compilée sans le support de la relecture, le fichier LaTeX {} ne sera pas généré"
+
+msgid "Parsing chapter: {}..."
+msgstr "Analyse du chapitre: {}..."
+
+msgid "file {} contains invalid UTF-8"
+msgstr "le fichier {} contient de l'UTF-8 invalide"
+
+msgid "Warning: book contains chapter '{}' in a directory above the book file, this might cause problems"
+msgstr "Avertissement: le livre contient un chapitre '{}' dans un répertoire au-dessus du fichier du livre, cela risque de causer des problèmes"
+
+msgid "Trying to run grammar check on {}, this might take a while..."
+msgstr "On essaie de vérifier la grammaire de {}, cela peut prendre un moment..."
+
+msgid "Error running grammar check on {}: {}"
+msgstr "Erreur dans la véfirication grammaticale de {} : {}"
+
+msgid "invalid template '{}'"
+msgstr "template invalile '{}'"

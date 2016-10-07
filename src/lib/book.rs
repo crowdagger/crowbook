@@ -582,11 +582,11 @@ impl Book {
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       format!("problem when writing to LaTeX file: {}", e))));
+                                                                       lformat!("problem when writing to LaTeX file: {}", e))));
         if let Ok(file) = self.options.get_path("output.tex") {
-            self.logger.info(format!("Successfully generated LaTeX file: {}", file));
+            self.logger.info(lformat!("Successfully generated LaTeX file: {}", file));
         } else {
-            self.logger.info("Successfully generated LaTeX");
+            self.logger.info(lformat!("Successfully generated LaTeX"));
         }
         Ok(())
     }
@@ -599,7 +599,7 @@ impl Book {
             String::new()
         };
         if !cfg!(feature = "proofread") {
-            Logger::display_warning(format!("this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {}",
+            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {}",
                                             file_name));
             return Ok(())
         }
@@ -611,8 +611,8 @@ impl Book {
         let mut latex = LatexRenderer::new(&self).proofread();
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       format!("problem when writing to LaTeX file: {}", e))));
-        self.logger.info(format!("Successfully generated LaTeX file {}", file_name));
+                                                                       lformat!("problem when writing to LaTeX file: {}", e))));
+        self.logger.info(lformat!("Successfully generated LaTeX file {}", file_name));
         Ok(())
     }
     
@@ -629,7 +629,7 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
-        self.logger.debug(&format!("Parsing chapter: {}...", file));
+        self.logger.debug(&lformat!("Parsing chapter: {}...", file));
         
         // add file to the list of file names
         self.filenames.push(file.to_owned());
@@ -642,7 +642,7 @@ impl Book {
                                                                              format!("{}", path.display()))));
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
-                                                                format!("file {} contains invalid UTF-8", path.display()))));    
+                                                                lformat!("file {} contains invalid UTF-8", path.display()))));    
         
         // Ignore YAML blocks
         self.parse_yaml(&mut s);
@@ -656,7 +656,7 @@ impl Book {
         // transform the AST to make local links and images relative to `book` directory
         let offset = Path::new(file).parent().unwrap();
         if offset.starts_with("..") {
-            self.logger.warning(format!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
+            self.logger.warning(lformat!("Warning: book contains chapter \'{}\' in a directory above the book file, this might cause problems", file));
         }
 
 
@@ -685,9 +685,9 @@ impl Book {
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
                 if let Some(ref checker) = self.checker {
-                    self.logger.info(format!("Trying to run grammar check on {}, this might take a while...", file));
+                    self.logger.info(lformat!("Trying to run grammar check on {}, this might take a while...", file));
                     if let Err(err) = checker.check_chapter(&mut v) {
-                        self.logger.error(format!("Error running grammar check on {}: {}", file, err));
+                        self.logger.error(lformat!("Error running grammar check on {}: {}", file, err));
                     }
                 }
             }
@@ -752,7 +752,7 @@ impl Book {
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::config_parser(&self.source,
-                                                 format!("invalid template '{}'", template))),
+                                                 lformat!("invalid template \'{}\'", template))),
         };
         if let Ok (ref s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::file_not_found(&self.source,
@@ -761,7 +761,7 @@ impl Book {
             let mut res = String::new();
             try!(f.read_to_string(&mut res)
                  .map_err(|_| Error::config_parser(&self.source,
-                                                   format!("file '{}' could not be read", s))));
+                                                   lformat!("file \'{}\' could not be read", s))));
             Ok(Cow::Owned(res))
         } else {
             Ok(Cow::Borrowed(fallback))
