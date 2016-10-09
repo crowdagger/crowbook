@@ -124,11 +124,11 @@ impl<'a> EpubRenderer<'a> {
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
             let mut f = try!(File::open(source).map_err(|_| Error::file_not_found(&self.html.source,
-                                                                                  "image or cover",
+                                                                                  lformat!("image or cover"),
                                                                                   source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.source,
-                                                                       format!("error while reading image file: {}", e))));
+                                                                       lformat!("error while reading image file: {}", e))));
             try!(zipper.write(dest, &content, true));
         }
 
@@ -141,11 +141,11 @@ impl<'a> EpubRenderer<'a> {
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = try!(File::open(&abs_path)
                                  .map_err(|_| Error::file_not_found(&self.html.book.source,
-                                                                        "additional resource from resources.files",
-                                                                        abs_path.to_string_lossy().into_owned())));
+                                                                    lformat!("additional resource from resources.files"),
+                                                                    abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.book.source,
-                                                                               format!("error while reading resource file: {}", e))));
+                                                                               lformat!("error while reading resource file: {}", e))));
                 try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
             }
         }
@@ -155,7 +155,7 @@ impl<'a> EpubRenderer<'a> {
             Ok(res)
         } else {
             Err(Error::render(&self.html.book.source,
-                                  "no output epub file specified in book config"))
+                              lformat!("no output epub file specified in book config")))
         }
     }
     
@@ -292,8 +292,8 @@ impl<'a> EpubRenderer<'a> {
             // Check that cover can be found
             if fs::metadata(&cover).is_err() {
                 return Err(Error::file_not_found(&self.html.book.source,
-                                                     "cover",
-                                                     cover));
+                                                 lformat!("cover"),
+                                                 cover));
 
             }
             let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
@@ -307,7 +307,7 @@ impl<'a> EpubRenderer<'a> {
             let mut res:Vec<u8> = vec!();
             template.render_data(&mut res, &data);
             match String::from_utf8(res) {
-                Err(_) => panic!("generated HTML for cover.xhtml was not utf-8 valid"),
+                Err(_) => panic!(lformat!("generated HTML for cover.xhtml was not utf-8 valid")),
                 Ok(res) => Ok(res)
             }
         } else {
@@ -371,7 +371,7 @@ impl<'a> EpubRenderer<'a> {
             if self.chapter_title.is_empty() {
                 self.chapter_title = try!(self.html.render_vec(vec));
             } else {
-                self.html.book.logger.warning(format!("EPUB ({}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered.",
+                self.html.book.logger.warning(lformat!("EPUB ({}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered.",
                                                       self.html.source));
             }
         } else {
@@ -382,9 +382,9 @@ impl<'a> EpubRenderer<'a> {
             if self.chapter_title.is_empty() {
                 self.chapter_title = s;
             } else {
-                self.html.book.logger.warning(format!("EPUB ({}): detected two chapters inside the same markdown file.",
+                self.html.book.logger.warning(lformat!("EPUB ({}): detected two chapters inside the same markdown file.",
                                                       self.html.source));
-                self.html.book.logger.warning(format!("EPUB ({}): conflict between: {} and {}",
+                self.html.book.logger.warning(lformat!("EPUB ({}): conflict between: {} and {}",
                                                       self.html.source,
                                                       self.chapter_title,
                                                       s));
@@ -399,7 +399,7 @@ impl<'a> EpubRenderer<'a> {
         match opt {
             Some(s) => s.to_string(),
             None => {
-                self.html.book.logger.error(format!("EPUB: could not guess the format of {} based on extension. Assuming png.", s));
+                self.html.book.logger.error(lformat!("EPUB: could not guess the format of {} based on extension. Assuming png.", s));
                 String::from("png")
             }
         }

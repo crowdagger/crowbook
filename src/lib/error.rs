@@ -287,35 +287,35 @@ impl fmt::Display for Error {
                 write!(f, "{}", s)
             },
             Inner::GrammarCheck(ref s) => {
-                write!(f, "Error connecting to language tool server: {}", s)
+                write!(f, "{}", lformat!("Error connecting to language tool server: {}", s))
             },
             Inner::Parser(ref s) => {
-                write!(f, "Error parsing markdown: {}", s)
+                write!(f, "{}", lformat!("Error parsing markdown: {}", s))
             },
             Inner::ConfigParser(ref s) => {
-                try!(f.write_str("Error parsing configuration file: "));
+                try!(f.write_str(&lformat!("Error parsing configuration file: ")));
                 f.write_str(s)
             },
             Inner::FileNotFound(ref description, ref file) => {
-                write!(f, "Could not find file '{}' for {}", file, description)
+                write!(f, "{}", lformat!("Could not find file '{}' for {}", file, description))
             },
             Inner::Template(ref s) => {
-                write!(f, "Error compiling template: {}", s)
+                write!(f, "{}", lformat!("Error compiling template: {}", s))
             }
             Inner::Render(ref s) => {
-                try!(f.write_str("Error during rendering: "));
+                try!(f.write_str(&lformat!("Error during rendering: ")));
                 f.write_str(s)
             },
             Inner::Zipper(ref s) => {
-                try!(f.write_str("Error during temporary files editing: "));
+                try!(f.write_str(&lformat!("Error during temporary files editing: ")));
                 f.write_str(s)
             },
             Inner::BookOption(ref s) => {
-                try!(f.write_str("Error converting BookOption: "));
+                try!(f.write_str(&lformat!("Error converting BookOption: ")));
                 f.write_str(s)
             },
             Inner::InvalidOption(ref s) => {
-                try!(f.write_str("Error accessing book option: "));
+                try!(f.write_str(&lformat!("Error accessing book option: ")));
                 f.write_str(s)
             },
         });
