@@ -419,7 +419,7 @@ impl Book {
                     self.logger.error(lformat!("rendering {}:{}", name, err));
                 }
             } else {
-                self.logger.error(lformat!("could not create file \'{}\'", &file));
+                self.logger.error(lformat!("could not create file '{}'", &file));
             }
         }
     }
@@ -656,7 +656,7 @@ impl Book {
         // transform the AST to make local links and images relative to `book` directory
         let offset = Path::new(file).parent().unwrap();
         if offset.starts_with("..") {
-            self.logger.warning(lformat!("Warning: book contains chapter \'{}\' in a directory above the book file, this might cause problems", file));
+            self.logger.warning(lformat!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
         }
 
 
@@ -752,7 +752,7 @@ impl Book {
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::config_parser(&self.source,
-                                                 lformat!("invalid template \'{}\'", template))),
+                                                 lformat!("invalid template '{}'", template))),
         };
         if let Ok (ref s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::file_not_found(&self.source,
@@ -761,7 +761,7 @@ impl Book {
             let mut res = String::new();
             try!(f.read_to_string(&mut res)
                  .map_err(|_| Error::config_parser(&self.source,
-                                                   lformat!("file \'{}\' could not be read", s))));
+                                                   lformat!("file '{}' could not be read", s))));
             Ok(Cow::Owned(res))
         } else {
             Ok(Cow::Borrowed(fallback))

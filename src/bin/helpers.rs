@@ -85,7 +85,7 @@ lang: en
             f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
         }
         if let Some(s) = matches.value_of("BOOK") {
-            println!("{}", lformat!("Created {}, now you\'ll have to complete it!", s));
+            println!("{}", lformat!("Created {}, now you'll have to complete it!", s));
         }
         exit(0);
     } else {
