@@ -132,7 +132,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
                         if found_left.is_none() {
                             true
                         } else {
-                            Logger::display_warning(format!("ignored annotation {:?} as it wasn't compatible with the Markdown structure", annotation));
+                            Logger::display_warning(lformat!("ignored annotation {:?} as it wasn't compatible with the Markdown structure", annotation));
                             return None;
                         }
                     } else {
@@ -255,7 +255,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>, annotation: &Data, pos: usize,
         if found_left.is_none() && found_right.is_none() {
             return Some(pos);
         } else {
-            Logger::display_warning(format!("ignored annotation {:?} as it wasn't compatible with the Markdown structure", annotation));
+            Logger::display_warning(lformat!("ignored annotation {:?} as it wasn't compatible with the Markdown structure", annotation));
             return None;
         }
     }
