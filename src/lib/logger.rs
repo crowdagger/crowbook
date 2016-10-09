@@ -50,11 +50,11 @@ impl Logger {
     /// Prints a debug message 
     pub fn display_debug<S: AsRef<str>>(s: S) {
         writeln!(&mut io::stderr(),
-                     "{}{}{}{}",
-                     SHELL_COLOUR_BLUE,
-                     "Debug: ",
-                     SHELL_COLOUR_OFF,
-                     s.as_ref())
+                 "{}{}{}{}",
+                 SHELL_COLOUR_BLUE,
+                 lformat!("Debug: "),
+                 SHELL_COLOUR_OFF,
+                 s.as_ref())
             .unwrap();
     }
 
@@ -63,7 +63,7 @@ impl Logger {
         writeln!(&mut io::stderr(),
                  "{}{}{}{}",
                  SHELL_COLOUR_GREEN,
-                 "Info: ",
+                 lformat!("Info: "),
                  SHELL_COLOUR_OFF,
                  s.as_ref())
             .unwrap();
@@ -74,7 +74,7 @@ impl Logger {
         writeln!(&mut io::stderr(),
                  "{}{}{}{}",
                  SHELL_COLOUR_ORANGE,
-                 "Warning: ",
+                 lformat!("Warning: "),
                  SHELL_COLOUR_OFF,
                  s.as_ref())
             .unwrap();
@@ -85,7 +85,7 @@ impl Logger {
         writeln!(&mut io::stderr(),
                  "{}{}{}{}",
                  SHELL_COLOUR_RED,
-                 "Error: ",
+                 lformat!("Error: "),
                  SHELL_COLOUR_OFF,
                  s.as_ref())
             .unwrap();

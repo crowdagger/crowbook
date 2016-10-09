@@ -687,3 +687,19 @@ msgstr "le HTML généré pour cover.xhtml contient de l'UTF-8 invalide"
 #: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:64
 msgid "odt.render_book called while book.output_odt is not set"
 msgstr "odt.render_book appelée alors que book.output.odt n'est pas initialisé"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:88
+msgid "Error: "
+msgstr "Erreur : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:77
+msgid "Warning: "
+msgstr "Avertissement : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:66
+msgid "Info: "
+msgstr "Info : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:55
+msgid "Debug: "
+msgstr "Debug : "
