@@ -52,10 +52,10 @@ impl GrammarChecker {
                            .get(&format!("http://localhost:{}/v2/languages", port))
                            .send()
                            .map_err(|e| Error::grammar_check(Source::empty(),
-                                                             format!("could not connect to language tool server: {}", e))));
+                                                             lformat!("could not connect to language tool server: {}", e))));
         if res.status != hyper::Ok {
             return Err(Error::grammar_check(Source::empty(),
-                                            format!("server didn't respond with a OK status code")));
+                                            lformat!("server didn't respond with a OK status code")));
         }
         Ok(checker)
     }
@@ -73,19 +73,19 @@ impl GrammarChecker {
                            .body(&query)
                            .send()
                            .map_err(|e| Error::grammar_check(Source::empty(),
-                                                             format!("could not send request to server: {}", e))));
+                                                             lformat!("could not send request to server: {}", e))));
 
         if res.status != hyper::Ok {
             return Err(Error::grammar_check(Source::empty(),
-                                      format!("server didn't respond with a OK status code")));
+                                      lformat!("server didn't respond with a OK status code")));
         }
         
         let mut s = String::new();
         try!(res.read_to_string(&mut s)
              .map_err(|e| Error::grammar_check(Source::empty(),
-                                               format!("could not read response: {}", e))));
+                                               lformat!("could not read response: {}", e))));
         let reponse: GrammarCheck = try!(json::decode(&s).map_err(|e| Error::default(Source::empty(),
-                                                                                     format!("could not decode JSON: {}", e))));
+                                                                                     lformat!("could not decode JSON: {}", e))));
         Ok(reponse)
     }
  

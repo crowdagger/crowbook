@@ -81,7 +81,7 @@ impl Parser {
         let mut s = String::new();
 
         try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
-                                                                    format!("file {} contains invalid UTF-8, could not parse it", path.display()))));
+                                                                    lformat!("file {} contains invalid UTF-8, could not parse it", path.display()))));
         self.parse(&s)
     }
 
@@ -142,7 +142,7 @@ impl Parser {
                         *content = in_vec.clone();
                     } else {
                         return Err(Error::parser(&self.source,
-                                                 format!("footnote reference {} does not have a matching definition", &reference)));
+                                                 lformat!("footnote reference {} does not have a matching definition", &reference)));
                     }
                 },
                 Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)
@@ -209,7 +209,7 @@ impl Parser {
             Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
-                    Logger::display_warning(format!("in {}, found footnote definition for note '{}' but previous definition already exist, overriding it",
+                    Logger::display_warning(lformat!("in {}, found footnote definition for note '{}' but previous definition already exist, overriding it",
                                                     self.source,
                                                     reference));
                 }
