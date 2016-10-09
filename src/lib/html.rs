@@ -113,7 +113,7 @@ impl<'a> HtmlRenderer<'a> {
                          .with_max_distance(dist as u32))
                 },
                 Err(err) => {
-                    book.logger.error(format!("could not create caribon parser: {}", err));
+                    book.logger.error(lformat!("could not create caribon parser: {}", err));
                     None
                 },
             }
@@ -393,7 +393,7 @@ impl<'a> HtmlRenderer<'a> {
                         let mut chars = content.chars();
                         let initial = try!(chars.next()
                                            .ok_or(Error::parser(&this.as_ref().book.source,
-                                                                "empty str token, could not find initial")));
+                                                                lformat!("empty str token, could not find initial"))));
                         let mut new_content = if initial.is_alphanumeric() {
                             format!("<span class = \"initial\">{}</span>", initial)
                         } else {
@@ -580,7 +580,7 @@ impl<'a> HtmlRenderer<'a> {
                 match this.as_mut().templatize(footer) {
                     Ok(content) => content,
                     Err(err) => return Err(Error::render(&this.as_ref().book.source,
-                                                         format!("rendering 'html.footer' template:\n{}", err))),
+                                                         lformat!("rendering 'html.footer' template:\n{}", err))),
                 }
             } else {
                 String::new()
@@ -604,7 +604,7 @@ impl<'a> HtmlRenderer<'a> {
                 Ok(content) => Ok(format!("<div id = \"top\">{}</div>",
                                           try!(this.render_vec(&try!(Parser::new().parse(&content)))))),
                 Err(err) => Err(Error::render(&this.as_ref().book.source,
-                                              (format!("rendering 'html.header' template:\n{}", err)))),
+                                              (lformat!("rendering 'html.header' template:\n{}", err)))),
             }
         } else {
             Ok(String::new())
