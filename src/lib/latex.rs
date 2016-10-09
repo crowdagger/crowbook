@@ -85,7 +85,7 @@ impl<'a> LatexRenderer<'a> {
                                                                                           source.to_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.source,
-                                                                               format!("error while reading image file: {}", e))));
+                                                                               lformat!("error while reading image file: {}", e))));
                 try!(zipper.write(dest, &content, true));
             }
         
@@ -93,7 +93,7 @@ impl<'a> LatexRenderer<'a> {
             zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(), "result.tex", &pdf_file)
         } else {
             Err(Error::render(&self.source,
-                                  format!("no output pdf file specified '{}' in book config", output)))
+                                  lformat!("no output pdf file specified '{}' in book config", output)))
         }
     }
 
@@ -166,7 +166,7 @@ impl<'a> LatexRenderer<'a> {
             "uk" => "ukrainian",
             "cy" => "welsh",
             _ => {
-                self.book.logger.error(format!("LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
+                self.book.logger.error(lformat!("LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english", self.book.options.get_str("lang").unwrap()));
                 "english"
             }
         });
@@ -344,7 +344,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             img))
 
                 } else {
-                    self.book.logger.error(&format!("LaTeX ({}): image '{}' doesn't seem to be local; ignoring it.",
+                    self.book.logger.error(lformat!("LaTeX ({}): image '{}' doesn't seem to be local; ignoring it.",
                                                     self.source,
                                                     url));
                     Ok(String::new())
@@ -356,7 +356,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             try!(self.handler.map_image(&self.source,
                                                         url.as_ref()))))
                 } else {
-                    self.book.logger.error(&format!("LaTeX ({}): image '{}' doesn't seem to be local; ignoring it.",
+                    self.book.logger.error(lformat!("LaTeX ({}): image '{}' doesn't seem to be local; ignoring it.",
                                                     self.source,
                                                     url));
                     Ok(String::new())
