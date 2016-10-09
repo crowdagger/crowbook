@@ -545,7 +545,7 @@ impl Book {
         let mut html = HtmlSingleRenderer::new(&self);
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       format!("problem when writing to HTML file: {}", e))));
+                                                                       lformat!("problem when writing to HTML file: {}", e))));
         if let Ok(file) = self.options.get_path("output.html") {
             self.logger.info(lformat!("Successfully generated HTML file: {}", file));
         } else {
@@ -570,7 +570,7 @@ impl Book {
         let mut html = HtmlSingleRenderer::new(&self).proofread();
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       format!("problem when writing to HTML file: {}", e))));
+                                                                       lformat!("problem when writing to HTML file: {}", e))));
         self.logger.info(lformat!("Successfully generated HTML file {}", file_name));
         Ok(())
     }
@@ -629,7 +629,7 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
-        self.logger.debug(&lformat!("Parsing chapter: {}...", file));
+        self.logger.debug(lformat!("Parsing chapter: {}...", file));
         
         // add file to the list of file names
         self.filenames.push(file.to_owned());
@@ -840,7 +840,7 @@ impl Book {
                     },
                     Err(err) => {
                         return Err(Error::render(&self.source,
-                                                 format!("could not render `{}` for metadata:\n{}", &key, err)));
+                                                 lformat!("could not render `{}` for metadata:\n{}", &key, err)));
                     },
                 }
             }
@@ -894,23 +894,23 @@ impl Book {
                                                 match self.options.set_yaml(key.clone(), value.clone()) { //todo: remove clone
                                                     Ok(opt) => {
                                                             if let Some(old_value) = opt {
-                                                                self.logger.debug(format!("Inline YAML block replaced {:?} previously set to {:?} to {:?}",
+                                                                self.logger.debug(lformat!("Inline YAML block replaced {:?} previously set to {:?} to {:?}",
                                                                                           key, old_value, value));
                                                             } else {
-                                                                self.logger.debug(format!("Inline YAML block set {:?} to {:?}", key, value));
+                                                                self.logger.debug(lformat!("Inline YAML block set {:?} to {:?}", key, value));
                                                             }
                                                     }
                                                     Err(e) => self.logger.error(format!("Inline YAML block could not set {:?} to {:?}: {}", key, value, e)),
                                                 }
                                             }
                                         } else {
-                                            self.logger.debug(format!("Ignoring YAML block:\n---\n{}---", &yaml_block));
+                                            self.logger.debug(lformat!("Ignoring YAML block:\n---\n{}---", &yaml_block));
                                         }
                                     valid_block = true;
                                 },
                                 Err(err) => {
-                                    self.logger.error(format!("Found something that looked like a YAML block:\n{}", &yaml_block));
-                                    self.logger.error(format!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
+                                    self.logger.error(lformat!("Found something that looked like a YAML block:\n{}", &yaml_block));
+                                    self.logger.error(lformat!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
                                 }
                             }
                             break;

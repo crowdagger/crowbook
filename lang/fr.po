@@ -5,129 +5,329 @@
 #
 #, fuzzy
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "Successfully generated PDF file: {}"
-msgstr "Fichier PDF généré avec succès: {}"
-
-msgid "You must pass the file of a book configuration file.\n\n{}\n\nFor more information try --help."
-msgstr "Vous devez passer le nom de fichier d'un livre.\n\n{}\n\nPour plus d'informations, essayez --help."
-
-msgid "{} is not a valid template name."
-msgstr "{} n'est pas un nom de template valide."
-
-msgid "Render a Markdown book in EPUB, PDF or HTML."
-msgstr "Génère des fichiers EPUB, PDF ou HTML à partir d'un livre écrit en Markdown."
-
-msgid "No output file specified, and book doesn't specify an output file for {}"
-msgstr "Pas de fichier de sortie spécifié, et le livre n'en spécifie pas pour {}"
-
-msgid "Could not create file '{}'"
-msgstr "Impossible de créer le fichier '{}'"
-
-msgid "An odd number of arguments was passed to --set, but it takes a list of key value pairs."
-msgstr "Un nombre impair d'arguments a été donné à --set, alors qu'il prend une liste de paires clé-valeur."
-
-msgid "Error in setting key {}: {}"
-msgstr "Erreur en initialisant la clé {}: {}"
-
-msgid "Could not create file {}: it already exists!"
-msgstr "Impossible de créer le fichier {} : il existe déjà !"
-
-msgid "Created {}, now you'll have to complete it!"
-msgstr "{} a été crée, maintenant vous n'avez plus qu'à le compléter !"
-
-msgid "A list of additional files is only valid with the --create option."
-msgstr "Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
-
-
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:119
 msgid "Error initializing book: could not set {} to {}: {}"
-msgstr "Erreur à l'initialisation du livre: impossible de positionner {} à {} : {}"
+msgstr ""
+"Erreur à l'initialisation du livre: impossible de positionner {} à {} : {}"
 
-msgid "could not parse {} as a book file.\nMaybe you meant to run crowbook with the --single argument?"
-msgstr "impossible d'analyser {} comme un ficher de livre.\nPeut-être que vous vouliez lancer crowbook avec l'argument --single ?"
-
-msgid "YAML block was not valid Yaml: {}"
-msgstr "Le bloc YAML n'était pas valide : {}"
-
-msgid "YAML part of the book is not a valid hashmap"
-msgstr "La partie YAML du livre n'est pas une hashmap valide"
-
-msgid "chapter filenames must not contain whitespace"
-msgstr "les noms de fichier des chapitres ne doivent pas contenir d'espace"
-
-msgid "no chapter name specified"
-msgstr "pas de nom de chapitre spécifié"
-
-msgid "ill-formatted line specifying chapter number"
-msgstr "line spécifiant un numéro de chapitre mal formattée"
-
-msgid "found invalid chapter definition in the chapter list"
-msgstr "définition de chapitre invalide trouvée dans la liste des chapitres"
-
-msgid "{}. Proceeding without checking grammar."
-msgstr "{}. On poursuit sans vérifier la grammaire."
-
-msgid "Error rendering {}: {}"
-msgstr "Erreur dans le rendu de {} : {}"
-
-msgid "rendering {}:{}"
-msgstr "dans le rendu de {} : {}"
-
-msgid "could not create file '{}'"
-msgstr "impossible de créer le fichier '{}'"
-
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:487
 msgid "Successfully generated EPUB file: {}"
 msgstr "Fichier EPUB généré avec succès : {}"
 
-msgid "Successfully generated HTML directory: {}"
-msgstr "Répertoire HTML généré avec succès : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:912
+msgid ""
+"Found something that looked like a YAML block:\n"
+"{}"
+msgstr ""
 
-msgid "this version of Crowbook has been compiled without support for proofreading, not generating {}"
-msgstr "cette version de Crowbook a été compilée sans le support pour la relecture, {} ne sera pas généré"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:602
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading, "
+"not generating LaTeX file {}"
+msgstr ""
+"cette version de Crowbook a été compilée sans le support de la relecture, le "
+"fichier LaTeX {} ne sera pas généré"
 
-msgid "Successfully generated PDF file for proofreading: {}"
-msgstr "Fichier PDF pour la relecture généré avec succès : {}"
-
-msgid "Successfully generated ODT file: {}"
-msgstr "Fichier ODT généré avec succès : {}"
-
-msgid "Successfully generated HTML file: {}"
-msgstr "Fichier HTML généré avec succès : {}"
-
-msgid "Successfully generated HTML"
-msgstr "HTML généré avec succès"
-
-msgid "this version of Crowbook has been compiled without support for proofreading, not generating HTML file {}"
-msgstr "cette version de Crowbook n'a pas été compilée avec le support de la relecture, le fichier HTML {} ne sera pas généré"
-
-msgid "problem when writing to LaTeX file: {}"
-msgstr "problème en écrivant dans le fichier LaTeX : {}"
-
-msgid "Successfully generated LaTeX file: {}"
-msgstr "Fichier LaTeX généré avec succès : {}"
-
-msgid "Successfully generated LaTeX"
-msgstr "LaTeX généré avec succès"
-
-msgid "this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {}"
-msgstr "cette version de Crowbook a été compilée sans le support de la relecture, le fichier LaTeX {} ne sera pas généré"
-
-msgid "Parsing chapter: {}..."
-msgstr "Analyse du chapitre: {}..."
-
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:645
 msgid "file {} contains invalid UTF-8"
 msgstr "le fichier {} contient de l'UTF-8 invalide"
 
-msgid "Warning: book contains chapter '{}' in a directory above the book file, this might cause problems"
-msgstr "Avertissement: le livre contient un chapitre '{}' dans un répertoire au-dessus du fichier du livre, cela risque de causer des problèmes"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:419
+msgid "rendering {}:{}"
+msgstr "dans le rendu de {} : {}"
 
-msgid "Trying to run grammar check on {}, this might take a while..."
-msgstr "On essaie de vérifier la grammaire de {}, cela peut prendre un moment..."
-
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:690
 msgid "Error running grammar check on {}: {}"
 msgstr "Erreur dans la véfirication grammaticale de {} : {}"
 
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:550
+msgid "Successfully generated HTML file: {}"
+msgstr "Fichier HTML généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:404
+msgid "Error rendering {}: {}"
+msgstr "Erreur dans le rendu de {} : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:58
+msgid "Could not create file {}: it already exists!"
+msgstr "Impossible de créer le fichier {} : il existe déjà !"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:755
 msgid "invalid template '{}'"
 msgstr "template invalile '{}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:150
+msgid "ODT: blockquotes and codeblocks are not currently implemented for ODT"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:19
+msgid ""
+"An odd number of arguments was passed to --set, but it takes a list of key "
+"value pairs."
+msgstr ""
+"Un nombre impair d'arguments a été donné à --set, alors qu'il prend une "
+"liste de paires clé-valeur."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:46
+msgid "Error in setting key {}: {}"
+msgstr "Erreur en initialisant la clé {}: {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:505
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:520
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading, "
+"not generating {}"
+msgstr ""
+"cette version de Crowbook a été compilée sans le support pour la relecture, "
+"{} ne sera pas généré"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:843
+msgid ""
+"could not render `{}` for metadata:\n"
+"{}"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:347
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:359
+msgid "LaTeX ({}): image '{}' doesn't seem to be local; ignoring it."
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:587
+msgid "Successfully generated LaTeX file: {}"
+msgstr "Fichier LaTeX généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:122
+msgid "couldn't interpret LANG: {}"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:565
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading, "
+"not generating HTML file {}"
+msgstr ""
+"cette version de Crowbook n'a pas été compilée avec le support de la "
+"relecture, le fichier HTML {} ne sera pas généré"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:203
+msgid "YAML block was not valid Yaml: {}"
+msgstr "Le bloc YAML n'était pas valide : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:615
+#, fuzzy
+msgid "Successfully generated LaTeX file {}"
+msgstr "Fichier LaTeX généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:143
+msgid ""
+"ODT: ordered list not currently implemented for this format, fallbacking to "
+"unordered one"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:589
+msgid "Successfully generated LaTeX"
+msgstr "LaTeX généré avec succès"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:64
+msgid "odt.render_book called while book.output_odt is not set"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:688
+msgid "Trying to run grammar check on {}, this might take a while..."
+msgstr ""
+"On essaie de vérifier la grammaire de {}, cela peut prendre un moment..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:897
+msgid "Inline YAML block replaced {:?} previously set to {:?} to {:?}"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:476
+msgid "Successfully generated PDF file: {}"
+msgstr "Fichier PDF généré avec succès: {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:538
+msgid "Successfully generated ODT file: {}"
+msgstr "Fichier ODT généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:147
+msgid "{} is not a valid template name."
+msgstr "{} n'est pas un nom de template valide."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:134
+msgid "A list of additional files is only valid with the --create option."
+msgstr ""
+"Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:422
+msgid "could not create file '{}'"
+msgstr "impossible de créer le fichier '{}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:900
+msgid "Inline YAML block set {:?} to {:?}"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:76
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:83
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:90
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:97
+msgid "Could not create file '{}'"
+msgstr "Impossible de créer le fichier '{}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:169
+msgid ""
+"LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:632
+msgid "Parsing chapter: {}..."
+msgstr "Analyse du chapitre: {}..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:907
+msgid ""
+"Ignoring YAML block:\n"
+"---\n"
+"{}---"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:88
+msgid "Created {}, now you'll have to complete it!"
+msgstr "{} a été crée, maintenant vous n'avez plus qu'à le compléter !"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:527
+msgid "Successfully generated PDF file for proofreading: {}"
+msgstr "Fichier PDF pour la relecture généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:237
+msgid "chapter filenames must not contain whitespace"
+msgstr "les noms de fichier des chapitres ne doivent pas contenir d'espace"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:764
+msgid "file '{}' could not be read"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:348
+msgid "ill-formatted line specifying chapter number"
+msgstr "line spécifiant un numéro de chapitre mal formattée"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:383
+msgid "{}. Proceeding without checking grammar."
+msgstr "{}. On poursuit sans vérifier la grammaire."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:356
+msgid "found invalid chapter definition in the chapter list"
+msgstr "définition de chapitre invalide trouvée dans la liste des chapitres"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:496
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:512
+msgid "Successfully generated HTML directory: {}"
+msgstr "Répertoire HTML généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:215
+msgid "YAML part of the book is not a valid hashmap"
+msgstr "La partie YAML du livre n'est pas une hashmap valide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:548
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:573
+#, fuzzy
+msgid "problem when writing to HTML file: {}"
+msgstr "problème en écrivant dans le fichier LaTeX : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:585
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:614
+msgid "problem when writing to LaTeX file: {}"
+msgstr "problème en écrivant dans le fichier LaTeX : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:574
+#, fuzzy
+msgid "Successfully generated HTML file {}"
+msgstr "Fichier HTML généré avec succès : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:659
+msgid ""
+"Warning: book contains chapter '{}' in a directory above the book file, this "
+"might cause problems"
+msgstr ""
+"Avertissement: le livre contient un chapitre '{}' dans un répertoire au-"
+"dessus du fichier du livre, cela risque de causer des problèmes"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:160
+msgid "ODT: tables are not currently implemented for this format"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:552
+msgid "Successfully generated HTML"
+msgstr "HTML généré avec succès"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:163
+msgid ""
+"could not parse {} as a book file.\n"
+"Maybe you meant to run crowbook with the --single argument?"
+msgstr ""
+"impossible d'analyser {} comme un ficher de livre.\n"
+"Peut-être que vous vouliez lancer crowbook avec l'argument --single ?"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:103
+msgid "generated content.xml was not utf-8 valid"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:88
+#, fuzzy
+msgid "error while reading image file: {}"
+msgstr "problème en écrivant dans le fichier LaTeX : {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:96
+msgid "no output pdf file specified '{}' in book config"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:240
+msgid "no chapter name specified"
+msgstr "pas de nom de chapitre spécifié"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:913
+msgid ""
+"... but it didn't parse correctly as YAML('{}'), so treating it like "
+"Markdown."
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:66
+msgid ""
+"No output file specified, and book doesn't specify an output file for {}"
+msgstr ""
+"Pas de fichier de sortie spécifié, et le livre n'en spécifie pas pour {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:156
+msgid "ODT: images not currently implemented for this format"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:85
+msgid "Parts are not supported yet"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:164
+msgid "ODT: footnotes are not yet implemented in this format, ignoring {:?}"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:156
+msgid ""
+"You must pass the file of a book configuration file.\n"
+"\n"
+"{}\n"
+"\n"
+"For more information try --help."
+msgstr ""
+"Vous devez passer le nom de fichier d'un livre.\n"
+"\n"
+"{}\n"
+"\n"
+"Pour plus d'informations, essayez --help."
+
+#, fuzzy
+#~ msgid "Inline YAML block could not set {:?} to {:?}: {}"
+#~ msgstr ""
+#~ "Erreur à l'initialisation du livre: impossible de positionner {} à {} : {}"
+
+#~ msgid "Render a Markdown book in EPUB, PDF or HTML."
+#~ msgstr ""
+#~ "Génère des fichiers EPUB, PDF ou HTML à partir d'un livre écrit en "
+#~ "Markdown."

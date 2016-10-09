@@ -61,7 +61,7 @@ impl<'a> OdtRenderer<'a> {
         if let Ok(ref file) = self.book.options.get_path("output.odt") {
             zipper.generate_odt(self.book.options.get_str("crowbook.zip.command").unwrap(), file)
         } else {
-            panic!("odt.render_book called while book.output_odt is not set");
+            panic!(lformat!("odt.render_book called while book.output_odt is not set"));
         }
     }
 
@@ -82,7 +82,7 @@ impl<'a> OdtRenderer<'a> {
                     self.current_numbering = 0;
                     self.current_hide = true;
                 },
-                _ => panic!("Parts are not supported yet")
+                _ => panic!(lformat!("Parts are not supported yet"))
             }
             for token in v {
                 content.push_str(&self.parse_token(token));
@@ -100,7 +100,7 @@ impl<'a> OdtRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => panic!("generated content.xml was not utf-8 valid"),
+            Err(_) => panic!(lformat!("generated content.xml was not utf-8 valid")),
             Ok(res) => Ok(res)
         }
     }
@@ -140,28 +140,28 @@ impl<'a> OdtRenderer<'a> {
             Token::Strong(ref vec) => format!("<text:span text:style-name=\"T2\">{}</text:span>", self.render_vec(vec)),
             Token::List(ref vec) => format!("<text:list>\n{}</text:list>\n", self.render_vec(vec)),
             Token::OrderedList(_, ref vec) => {
-                self.book.logger.warning("ODT: ordered list not currently implemented for this format, fallbacking to unordered one");
+                self.book.logger.warning(lformat!("ODT: ordered list not currently implemented for this format, fallbacking to unordered one"));
                 format!("<text:list>\n{}</text:list>\n", self.render_vec(vec))
             },
             Token::Item(ref vec) => format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>", self.book.clean(self.render_vec(vec), false)),
             Token::Link(ref url, _, ref vec) => format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>", url, self.render_vec(vec)),
             Token::Code(ref vec) => format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>", self.render_vec(vec)),
             Token::BlockQuote(ref vec) | Token::CodeBlock(_, ref vec) => {
-                self.book.logger.warning("ODT: blockquotes and codeblocks are not currently implemented for ODT");
+                self.book.logger.warning(lformat!("ODT: blockquotes and codeblocks are not currently implemented for ODT"));
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", self.book.clean(self.render_vec(vec), false))
             },
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),
             Token::Image(_,_,_) | Token::StandaloneImage(_,_,_) => {
-                self.book.logger.warning("ODT: images not currently implemented for this format");
+                self.book.logger.warning(lformat!("ODT: images not currently implemented for this format"));
                 String::from(" ")
             },
             Token::Table(_,_) | Token::TableHead(_) | Token::TableRow(_) | Token::TableCell(_) => {
-                self.book.logger.warning("ODT: tables are not currently implemented for this format");
+                self.book.logger.warning(lformat!("ODT: tables are not currently implemented for this format"));
                 String::from(" ")
             },
             Token::Footnote(_) => {
-                self.book.logger.warning(format!("ODT: footnotes are not yet implemented in this format, ignoring {:?}", token));
+                self.book.logger.warning(lformat!("ODT: footnotes are not yet implemented in this format, ignoring {:?}", token));
                 String::new()
             },
             Token::Annotation(_, ref vec) => self.render_vec(vec),
