@@ -36,7 +36,7 @@ default = ["clap"]
 proofread = ["caribon", "hyper", "url"]
 
 [build-dependencies]
-crowbook-localize = "0.0.4"
+crowbook-localize = "0.0.5"
 
 [dependencies]
 mime_guess = "1"
