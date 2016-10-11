@@ -4,8 +4,10 @@ ChangeLog
 unreleased
 ------------
 Well, I only managed one release without breaking changes, as this
-release contains (mostly for the API, which has been split in separate
-libraries).
+release contains some (mostly for the API, which has been split in separate
+libraries). It alse features some internationalization support, and
+the program should now be tranlated if your `LANG` environment
+variable is set to french.
 * **Breaking changes**: 
   * Templates:
 	* Conditional inclusion depending on `lang` must now be done using `lang_LANG` (e.g. 
