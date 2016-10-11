@@ -2,7 +2,10 @@ ChangeLog
 =========
 
 unreleased
-----------
+------------
+Well, I only managed one release without breaking changes, as this
+release contains (mostly for the API, which has been split in separate
+libraries).
 * **Breaking changes**: 
   * Templates:
 	* Conditional inclusion depending on `lang` must now be done using `lang_LANG` (e.g. 
@@ -18,6 +21,8 @@ unreleased
     the colour scheme. Such a file can be built from `crowbook
     --print-template html.css.colours`.
 * Command line interface:
+  * Crowbook is now (imperfectly) localized in french, and can be
+    translated to other languages.
   * Added the `--quiet` (or `-q`) argument, that makes crowbook run without
     displaying any messages (except some error messages at this point).
 * Rendering:
