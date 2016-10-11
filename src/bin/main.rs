@@ -8,6 +8,9 @@ mod real_main;
 mod helpers;
 
 #[cfg(feature = "clap")]
+#[macro_use] extern crate lazy_static;
+
+#[cfg(feature = "clap")]
 fn main() {
     real_main::real_main();
 }

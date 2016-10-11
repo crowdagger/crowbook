@@ -94,32 +94,63 @@ lang: en
 }
 
 pub fn create_matches<'a>() -> ArgMatches<'a> {
+    lazy_static! {
+        static ref ABOUT: String = lformat!("Render a Markdown book in EPUB, PDF or HTML.");
+        static ref SINGLE: String = lformat!("Use a single Markdown file instead of a book configuration file");
+        static ref VERBOSE: String = lformat!("Print warnings in parsing/rendering");
+        static ref QUIET: String = lformat!("Don't print info/error messages");
+        static ref PROOFREAD: String = lformat!("Enable proofreading");
+        static ref DEBUG: String = lformat!("Print debugging information");
+        static ref CREATE: String = lformat!("Create a new book with existing Markdown files");
+        static ref OUTPUT: String = lformat!("Specify output file");
+        static ref TO: String = lformat!("Generate specific format");
+        static ref SET: String = lformat!("Set a list of book options");
+        static ref LIST_OPTIONS: String = lformat!("List all possible options");
+        static ref LIST_OPTIONS_MD: String = lformat!("List all possible options, formatted in Markdown");
+        static ref PRINT_TEMPLATE: String = lformat!("Prints the default content of a template");
+        static ref BOOK: String = lformat!("File containing the book configuration file, or a Markdown file when called with --single");
+    }
+
+    
     let app = App::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
-        .about("Render a Markdown book in EPUB, PDF or HTML.")
-        .arg_from_usage("-s, --single 'Use a single Markdown file instead of a book configuration file'")
-        .arg_from_usage("-v, --verbose 'Print warnings in parsing/rendering'")
-        .arg(Arg::from_usage("-q, --quiet 'Don't print info/error messages'")
+        .author("Élisabeth Henry <liz.henry@ouvaton.org>")
+        .about(ABOUT.as_str())
+        .arg(Arg::from_usage("-s, --single")
+             .help(SINGLE.as_str()))
+        .arg(Arg::from_usage("-v, --verbose")
+             .help(VERBOSE.as_str()))
+        .arg(Arg::from_usage("-q, --quiet")
+             .help(QUIET.as_str())
              .conflicts_with("verbose")
              .conflicts_with("debug"))
-        .arg_from_usage("-p, --proofread 'Enable roofreading'")
-        .arg(Arg::from_usage("-d, --debug 'Print debugging information'")
+        .arg(Arg::from_usage("-p, --proofread")
+             .help(PROOFREAD.as_str()))
+        .arg(Arg::from_usage("-d, --debug")
+             .help(DEBUG.as_str())
              .conflicts_with("verbose")
              .hidden(true))
-        .arg_from_usage("-c, --create [FILES]... 'Creates a new book with existing markdown files'")
-        .arg(Arg::from_usage("-o, --output [FILE] 'Specifies output file'")
+        .arg(Arg::from_usage("-c, --create [FILES]...")
+             .help(CREATE.as_str()))
+        .arg(Arg::from_usage("-o, --output [FILE]")
+             .help(OUTPUT.as_str())
              .requires("to"))
-        .arg(Arg::from_usage("-t, --to [FORMAT] 'Generate specific format'")
+        .arg(Arg::from_usage("-t, --to [FORMAT]")
+             .help(TO.as_str())
              .possible_values(&["epub", "pdf", "html", "tex", "odt", "proofread.html", "proofread.html_dir", "proofread.pdf", "proofread.tex"]))
-        .arg(Arg::from_usage("--set [KEY_VALUES] 'Sets a list of book options'")
+        .arg(Arg::from_usage("--set [KEY_VALUES]")
+             .help(SET.as_str())
              .min_values(2))
-        .arg_from_usage("-l --list-options 'Lists all possible options")
-        .arg(Arg::from_usage("--list-options-md 'List all options, formatted in Markdown'")
+        .arg(Arg::from_usage("-l --list-options")
+             .help(LIST_OPTIONS.as_str()))
+        .arg(Arg::from_usage("--list-options-md")
+             .help(LIST_OPTIONS_MD.as_str())
              .hidden(true))
-        .arg_from_usage("--print-template [TEMPLATE] 'Displays the default value of a template'")
+        .arg(Arg::from_usage("--print-template [TEMPLATE]")
+             .help(PRINT_TEMPLATE.as_str()))
         .arg(Arg::with_name("BOOK")
              .index(1)
-             .help("File containing the book configuration, or a Markdown file when called with --single"));
+             .help(BOOK.as_str()));
 
     let matches = app.get_matches();
 
