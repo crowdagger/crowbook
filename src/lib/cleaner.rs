@@ -18,7 +18,6 @@
 //! This module contains the `Cleaner` traits and various implementations of it.
 
 use std::borrow::Cow;
-use crowbook_text_processing::escape::escape_nb_spaces_tex;
 use crowbook_text_processing::clean::remove_whitespaces;
 use crowbook_text_processing::french::FrenchFormatter;
 
@@ -88,17 +87,29 @@ impl Cleaner for Default {
 /// let s =  French.clean(Cow::Borrowed("  Bonjour ! Comment allez-vous   ?   "), true);
 /// assert_eq!(&s, " Bonjour~! Comment allez-vous~? ");
 /// ```
-pub struct French;
+pub struct French {
+    formatter: FrenchFormatter,
+}
+
+impl French {
+    /// Creates a new french cleaner
+    pub fn new() -> French {
+        French {
+            formatter: FrenchFormatter::new()
+        }
+    }
+}
+    
 
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
     fn clean<'a>(&self, s: Cow<'a, str>, latex: bool) -> Cow<'a, str> {
-        let s = FrenchFormatter::new().format(s);
-        if latex {
-            escape_nb_spaces_tex(s)
+        let s = if latex {
+            self.formatter.format_tex(s)
         } else {
-            s
-        }
+            self.formatter.format(s)
+        };
+        s
     }
 }
 
