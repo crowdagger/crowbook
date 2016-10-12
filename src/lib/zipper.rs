@@ -42,7 +42,8 @@ impl Zipper {
         try!(DirBuilder::new()
              .recursive(true)
              .create(&zipper_path)
-             .map_err(|_| Error::zipper(lformat!("could not create temporary directory in {}", path))));
+             .map_err(|_| Error::zipper(lformat!("could not create temporary directory in {path}",
+                                                 path = path))));
 
         Ok(Zipper {
             args: vec!(),
@@ -54,8 +55,9 @@ impl Zipper {
     pub fn write(&mut self, file: &str, content: &[u8], add_args: bool) -> Result<()> {
         let path = Path::new(file);
         if path.starts_with("..") || path.is_absolute() {
-            return Err(Error::zipper(lformat!("file {} refers to an absolute or a parent path.
-This is forbidden because we are supposed to create a temporary file in a temporary dir.", file)));
+            return Err(Error::zipper(lformat!("file {file} refers to an absolute or a parent path.
+This is forbidden because we are supposed to create a temporary file in a temporary dir.",
+                                              file = file)));
         }
         let dest_file = self.path.join(path);
         let dest_dir = dest_file.parent().unwrap();
@@ -63,7 +65,8 @@ This is forbidden because we are supposed to create a temporary file in a tempor
             try!(DirBuilder::new()
                  .recursive(true)
                  .create(&dest_dir)
-                 .map_err(|_| Error::zipper(lformat!("could not create temporary directory in {}", dest_dir.display()))));
+                 .map_err(|_| Error::zipper(lformat!("could not create temporary directory in {path}",
+                                                     path = dest_dir.display()))));
         }
         
         
@@ -74,10 +77,12 @@ This is forbidden because we are supposed to create a temporary file in a tempor
                 }
                 Ok(())
             } else {
-                Err(Error::zipper(lformat!("could not write to temporary file {}", file)))
+                Err(Error::zipper(lformat!("could not write to temporary file {file}",
+                                           file = file)))
             }
         } else {
-            Err(Error::zipper(lformat!("could not create temporary file {}", file)))
+            Err(Error::zipper(lformat!("could not create temporary file {file}",
+                                       file = file)))
         }
     }
 
@@ -87,12 +92,15 @@ This is forbidden because we are supposed to create a temporary file in a tempor
             .current_dir(&self.path)
             .arg(file)
             .output()
-            .map_err(|e| Error::zipper(lformat!("failed to execute unzip  on {}: {}", file, e)));
+            .map_err(|e| Error::zipper(lformat!("failed to execute unzip on {file}: {error}",
+                                                file = file,
+                                                error = e)));
 
         try!(output);
 
         fs::remove_file(self.path.join(file))
-            .map_err(|_| Error::zipper(lformat!("failed to remove file {}", file)))
+            .map_err(|_| Error::zipper(lformat!("failed to remove file {file}",
+                                                file = file)))
     }
 
     /// run command and copy file name (supposed to result from the command) to current dir
@@ -100,16 +108,20 @@ This is forbidden because we are supposed to create a temporary file in a tempor
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
             .output()
-            .map_err(|e| Error::zipper(lformat!("failed to execute process: {}", e)));
+            .map_err(|e| Error::zipper(lformat!("failed to execute process: {error}",
+                                                error = e)));
         let output = try!(res_output);
         try!(fs::copy(self.path.join(in_file), out_file).map_err(|_| {
             println!("{}", &String::from_utf8_lossy(&output.stdout));
-            Error::zipper(lformat!("could not copy file {} to {}", in_file, out_file))
+            Error::zipper(lformat!("could not copy file {input} to {output}",
+                                   input = in_file,
+                                   output = out_file))
         }));
         if output.status.success() {
             Ok(String::from_utf8_lossy(&output.stdout).into_owned())
         } else {
-            Err(Error::zipper(lformat!("command didn't return succes:{}", String::from_utf8_lossy(&output.stdout))))
+            Err(Error::zipper(lformat!("command didn't return succesfully: {output}",
+                                       output = String::from_utf8_lossy(&output.stdout))))
         }
     }
 
