@@ -622,8 +622,7 @@ impl Book {
             String::new()
         };
         if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, \
-                                              not generating LaTeX file {file}",
+            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {file}",
                                              file = file_name));
             return Ok(())
         }
@@ -682,8 +681,7 @@ impl Book {
         // transform the AST to make local links and images relative to `book` directory
         let offset = Path::new(file).parent().unwrap();
         if offset.starts_with("..") {
-            self.logger.warning(lformat!("Warning: book contains chapter '{file}' in a directory \
-                                          above the book file, this might cause problems",
+            self.logger.warning(lformat!("Warning: book contains chapter '{file}' in a directory above the book file, this might cause problems",
                                          file = file));
         }
 

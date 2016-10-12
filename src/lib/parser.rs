@@ -211,8 +211,7 @@ impl Parser {
             Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
-                    Logger::display_warning(lformat!("in {file}, found footnote definition for note '{reference}' \
-                                                      but previous definition already exist, overriding it",
+                    Logger::display_warning(lformat!("in {file}, found footnote definition for note '{reference}' but previous definition already exist, overriding it",
                                                      file = self.source,
                                                      reference = reference));
                 }

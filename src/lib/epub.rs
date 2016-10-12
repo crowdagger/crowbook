@@ -402,8 +402,7 @@ impl<'a> EpubRenderer<'a> {
         match opt {
             Some(s) => s.to_string(),
             None => {
-                self.html.book.logger.error(lformat!("EPUB: could not guess the format of {file} based on extension. \
-                                                      Assuming png.",
+                self.html.book.logger.error(lformat!("EPUB: could not guess the format of {file} based on extension. Assuming png.",
                                                      file = s));
                 String::from("png")
             }
