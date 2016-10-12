@@ -551,7 +551,7 @@ impl<'a> HtmlRenderer<'a> {
     fn templatize(&mut self, s: &str) -> Result<String> {
         let mapbuilder = try!(self.book.get_metadata(|s| Ok(s.to_owned())));
         let data = mapbuilder.build();
-        let template = try!(compile_str(s, &self.book.source, "could not compile template"));
+        let template = try!(compile_str(s, &self.book.source, lformat!("could not compile template")));
         let mut res = vec!();
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())
@@ -563,7 +563,7 @@ impl<'a> HtmlRenderer<'a> {
         let data = try!(self.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .build();
         let template = self.book.options.get_str("rendering.inline_toc.name").unwrap();
-        let template = try!(compile_str(template, &self.book.source, "could not compile template 'rendering.inline_toc'"));
+        let template = try!(compile_str(template, &self.book.source, lformat!("could not compile template 'rendering.inline_toc'")));
         let mut res = vec!();
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())

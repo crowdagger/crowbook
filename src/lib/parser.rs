@@ -76,7 +76,7 @@ impl Parser {
     pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
         let mut f = try!(File::open(path).map_err(|_| Error::file_not_found(&self.source,
-                                                                                "markdown file",
+                                                                                lformat!("markdown file"),
                                                                                 format!("{}", path.display()))));
         let mut s = String::new();
 

@@ -71,7 +71,7 @@ impl<'r> ResourceHandler<'r> {
         // Check exisence of the file
         if fs::metadata(file.as_ref()).is_err() {
             return Err(Error::file_not_found(source,
-                                             "image",
+                                             lformat!("image"),
                                              format!("{}", file)));
         }
         
@@ -99,7 +99,7 @@ impl<'r> ResourceHandler<'r> {
                 Ok(f) => f,
                 Err(_) => {
                     return Err(Error::file_not_found(source,
-                                                     "image",
+                                                     lformat!("image"),
                                                      format!("{}", file)));
                 }
             };

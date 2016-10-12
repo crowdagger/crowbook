@@ -81,7 +81,7 @@ impl<'a> LatexRenderer<'a> {
             // write image files
             for (source, dest) in self.handler.images_mapping() {
                 let mut f = try!(File::open(source).map_err(|_| Error::file_not_found(&self.source,
-                                                                                          "image",
+                                                                                          lformat!("image"),
                                                                                           source.to_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.source,
@@ -173,7 +173,7 @@ impl<'a> LatexRenderer<'a> {
 
         let template = try!(compile_str(try!(self.book.get_template("tex.template")).as_ref(),
                                         &self.book.source,
-                                        "could not compile template 'tex.template'"));
+                                        lformat!("could not compile template 'tex.template'")));
         let mut data = try!(self.book.get_metadata(|s| {
             let tokens = try!(Parser::new().parse_inline(s));
             self.render_vec(&tokens)}))
@@ -195,7 +195,7 @@ impl<'a> LatexRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => panic!("generated LaTeX was not valid utf-8"),
+            Err(_) => panic!(lformat!("generated LaTeX was not valid utf-8")),
             Ok(res) => Ok(res)
         }
     }
@@ -216,7 +216,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         let mut chars = content.chars().peekable();
                         let initial = try!(chars.next()
                                            .ok_or(Error::parser(&self.book.source,
-                                                                    "empty str token, could not find initial")));
+                                                                lformat!("empty str token, could not find initial"))));
                         let mut first_word = String::new();
                         loop  {
                             let c = if let Some(next_char) = chars.peek() {

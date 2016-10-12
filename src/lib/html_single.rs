@@ -168,7 +168,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         // Render the CSS
         let template_css = try!(compile_str(try!(self.html.book.get_template("html.css")).as_ref(),
                                             &self.html.book.source,
-                                            "could not compile template 'html.css'"));
+                                            lformat!("could not compile template 'html.css'")));
         let mut data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("colours", try!(self.html.book.get_template("html.css.colours")));
         if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
@@ -182,7 +182,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         // Render the JS
         let template_js = try!(compile_str(try!(self.html.book.get_template("html_single.js")).as_ref(),
                                            &self.html.book.source,
-                                           "could not compile template 'html_single.js'"));
+                                           lformat!("could not compile template 'html_single.js'")));
         let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
@@ -222,7 +222,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let data = mapbuilder.build();
         let template = try!(compile_str(try!(self.html.book.get_template("html_single.html")).as_ref(),
                                         &self.html.book.source,
-                                        "could not compile template 'html_single.html'"));
+                                        lformat!("could not compile template 'html_single.html'")));
         let mut res = vec!();
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())
