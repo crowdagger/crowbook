@@ -64,7 +64,8 @@ impl<'r> ResourceHandler<'r> {
         // If image is not local, do nothing much
         let file = file.into();
         if !Self::is_local(file.as_ref()) {
-            self.logger.warning(lformat!("Resources: book includes non-local image {}, which might cause problem for proper inclusion.", file));
+            self.logger.warning(lformat!("Resources: book includes non-local image {file}, which might cause problem for proper inclusion.",
+                                         file = file));
             return Ok(file);
         }
         
@@ -91,7 +92,8 @@ impl<'r> ResourceHandler<'r> {
             if let Some(extension) = Path::new(file.as_ref()).extension() {
                 format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
             } else {
-                self.logger.warning(lformat!("Resources: book includes image {} which doesn't have an extension", file));
+                self.logger.warning(lformat!("Resources: book includes image {file} which doesn't have an extension",
+                                             file = file));
                 format!("images/image_{}", self.images.len())
             }
         } else {
@@ -105,13 +107,15 @@ impl<'r> ResourceHandler<'r> {
             };
             let mut content: Vec<u8> = vec!();
             if f.read_to_end(&mut content).is_err() {
-                self.logger.error(lformat!("Resources: could not read file {}", file));
+                self.logger.error(lformat!("Resources: could not read file {file}",
+                                           file = file));
                 return Ok(file);
             }
             let base64 = content.to_base64(base64::STANDARD);
             match mime_guess::guess_mime_type_opt(file.as_ref()) {
                 None => {
-                    self.logger.error(lformat!("Resources: could not guess mime type of file {}", file));
+                    self.logger.error(lformat!("Resources: could not guess mime type of file {file}",
+                                               file = file));
                     return Ok(file);
                 },
                 Some(s) => format!("data:{};base64,{}", s.to_string(), base64)
@@ -138,7 +142,8 @@ impl<'r> ResourceHandler<'r> {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            self.logger.error(lformat!("Resources: could not find a in-book match for link {}", from));
+            self.logger.error(lformat!("Resources: could not find a in-book match for link {file}",
+                                       file = from));
             from
         }
     }
@@ -197,7 +202,9 @@ pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
         let res= fs::metadata(&abs_path);
         match res {
             Err(err) => return Err(Error::render(Source::empty(),
-                                                 lformat!("error reading file {}: {}", abs_path.display(), err))),
+                                                 lformat!("error reading file {file}: {error}",
+                                                          file = abs_path.display(),
+                                                          error = err))),
             Ok(metadata) => {
                     if metadata.is_file() {
                         out.push(path);
@@ -214,7 +221,8 @@ pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
                         }
                     } else {
                         return Err(Error::render(Source::empty(),
-                                                 lformat!("error in epub rendering: {} is neither a file nor a directory", &path)));
+                                                 lformat!("error in epub rendering: {path} is neither a file nor a directory",
+                                                          path = &path)));
                     }
             }
         }

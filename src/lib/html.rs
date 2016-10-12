@@ -113,7 +113,8 @@ impl<'a> HtmlRenderer<'a> {
                          .with_max_distance(dist as u32))
                 },
                 Err(err) => {
-                    book.logger.error(lformat!("could not create caribon parser: {}", err));
+                    book.logger.error(lformat!("could not create caribon parser: {error}",
+                                               error = err));
                     None
                 },
             }
@@ -580,7 +581,8 @@ impl<'a> HtmlRenderer<'a> {
                 match this.as_mut().templatize(footer) {
                     Ok(content) => content,
                     Err(err) => return Err(Error::render(&this.as_ref().book.source,
-                                                         lformat!("rendering 'html.footer' template:\n{}", err))),
+                                                         lformat!("rendering 'html.footer' template:\n{error}",
+                                                                  error = err))),
                 }
             } else {
                 String::new()
@@ -604,7 +606,8 @@ impl<'a> HtmlRenderer<'a> {
                 Ok(content) => Ok(format!("<div id = \"top\">{}</div>",
                                           try!(this.render_vec(&try!(Parser::new().parse(&content)))))),
                 Err(err) => Err(Error::render(&this.as_ref().book.source,
-                                              (lformat!("rendering 'html.header' template:\n{}", err)))),
+                                              (lformat!("rendering 'html.header' template:\n{error}",
+                                                        error = err)))),
             }
         } else {
             Ok(String::new())

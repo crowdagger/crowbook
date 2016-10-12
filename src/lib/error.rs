@@ -287,20 +287,25 @@ impl fmt::Display for Error {
                 write!(f, "{}", s)
             },
             Inner::GrammarCheck(ref s) => {
-                write!(f, "{}", lformat!("Error connecting to language tool server: {}", s))
+                write!(f, "{}", lformat!("Error connecting to language tool server: {error}",
+                                         error = s))
             },
             Inner::Parser(ref s) => {
-                write!(f, "{}", lformat!("Error parsing markdown: {}", s))
+                write!(f, "{}", lformat!("Error parsing markdown: {error}",
+                                         error = s))
             },
             Inner::ConfigParser(ref s) => {
                 try!(f.write_str(&lformat!("Error parsing configuration file: ")));
                 f.write_str(s)
             },
             Inner::FileNotFound(ref description, ref file) => {
-                write!(f, "{}", lformat!("Could not find file '{}' for {}", file, description))
+                write!(f, "{}", lformat!("Could not find file '{file}' for {description}",
+                                         file = file,
+                                         description = description))
             },
             Inner::Template(ref s) => {
-                write!(f, "{}", lformat!("Error compiling template: {}", s))
+                write!(f, "{}", lformat!("Error compiling template: {template}",
+                                         template = s))
             }
             Inner::Render(ref s) => {
                 try!(f.write_str(&lformat!("Error during rendering: ")));

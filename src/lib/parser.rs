@@ -81,7 +81,8 @@ impl Parser {
         let mut s = String::new();
 
         try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
-                                                                    lformat!("file {} contains invalid UTF-8, could not parse it", path.display()))));
+                                                                lformat!("file {file} contains invalid UTF-8, could not parse it",
+                                                                         file = path.display()))));
         self.parse(&s)
     }
 
@@ -142,7 +143,8 @@ impl Parser {
                         *content = in_vec.clone();
                     } else {
                         return Err(Error::parser(&self.source,
-                                                 lformat!("footnote reference {} does not have a matching definition", &reference)));
+                                                 lformat!("footnote reference {reference} does not have a matching definition",
+                                                          reference = &reference)));
                     }
                 },
                 Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)
@@ -209,9 +211,10 @@ impl Parser {
             Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
-                    Logger::display_warning(lformat!("in {}, found footnote definition for note '{}' but previous definition already exist, overriding it",
-                                                    self.source,
-                                                    reference));
+                    Logger::display_warning(lformat!("in {file}, found footnote definition for note '{reference}' \
+                                                      but previous definition already exist, overriding it",
+                                                     file = self.source,
+                                                     reference = reference));
                 }
                 self.footnotes.insert(reference.into_owned(), res);
                 Token::SoftBreak

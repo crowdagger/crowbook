@@ -116,7 +116,10 @@ impl Book {
         // set options
         for &(key, value) in options {
             if let Err(err) = book.options.set(key, value) {
-                book.logger.error(lformat!("Error initializing book: could not set {} to {}: {}", key, value, err));
+                book.logger.error(lformat!("Error initializing book: could not set {key} to {value}: {error}",
+                                           key = key,
+                                           value = value,
+                                           error = err));
             }
         }
         // set cleaner according to lang and autoclean settings
@@ -160,8 +163,8 @@ impl Book {
             Err(err) => {
                 if err.is_config_parser() && filename.ends_with(".md") {
                     let err = Error::default(Source::empty(),
-                                             lformat!("could not parse {} as a book file.\nMaybe you meant to run crowbook with the --single argument?",
-                                                     &filename));
+                                             lformat!("could not parse {file} as a book file.\nMaybe you meant to run crowbook with the --single argument?",
+                                                     file = &filename));
                     Err(err)
                 } else {
                     Err(err)
@@ -200,7 +203,8 @@ impl Book {
         self.options.source = self.source.clone();
         match YamlLoader::load_from_str(&yaml) {
             Err(err) => return Err(Error::config_parser(&self.source,
-                                                        lformat!("YAML block was not valid Yaml: {}", err))),
+                                                        lformat!("YAML block was not valid YAML: {error}",
+                                                                 error = err))),
             Ok(mut docs) => {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
                     if let Yaml::Hash(hash) = docs.pop().unwrap() {
@@ -349,7 +353,7 @@ impl Book {
                 } 
                 let file = try!(get_filename(&self.source, parts[1]));
                 let number = try!(parts[0].parse::<i32>().map_err(|_| Error::config_parser(&self.source,
-                                                                                           lformat!("Error parsing chapter number"))));
+                                                                                           lformat!("error parsing chapter number"))));
                 try!(self.add_chapter(Number::Specified(number), file));
             } else {
                 return Err(Error::config_parser(&self.source,
@@ -380,7 +384,8 @@ impl Book {
                 let checker = GrammarChecker::new(port, lang);
                 match checker {
                     Ok(checker) => self.checker = Some(checker),
-                    Err(e) => self.logger.error(lformat!("{}. Proceeding without checking grammar.", e)),
+                    Err(e) => self.logger.error(lformat!("{error}. Proceeding without checking grammar.",
+                                                         error = e)),
                 }
             }
     }
@@ -401,7 +406,9 @@ impl Book {
                 _ => unreachable!()
             };
             if let Err(err) = result {
-                self.logger.error(lformat!("Error rendering {}: {}", name, err));
+                self.logger.error(lformat!("Error rendering {name}: {error}",
+                                           name = name,
+                                           error = err));
             }
         }
     }
@@ -416,10 +423,13 @@ impl Book {
                     _ => unreachable!()
                 };
                 if let Err(err) = result {
-                    self.logger.error(lformat!("rendering {}:{}", name, err));
+                    self.logger.error(lformat!("rendering {name}: {error}",
+                                               name = name,
+                                               error = err));
                 }
             } else {
-                self.logger.error(lformat!("could not create file '{}'", &file));
+                self.logger.error(lformat!("could not create file '{file}'",
+                                           file = &file));
             }
         }
     }
@@ -473,7 +483,8 @@ impl Book {
         let result = try!(latex.render_pdf());
         self.logger.debug(lformat!("Output of latex command:"));
         self.logger.debug(result);
-        self.logger.info(lformat!("Successfully generated PDF file: {}", self.options.get_path("output.pdf").unwrap()));
+        self.logger.info(lformat!("Successfully generated PDF file: {file}",
+                                  file = self.options.get_path("output.pdf").unwrap()));
         Ok(())
     }
 
@@ -484,7 +495,8 @@ impl Book {
         let result = try!(epub.render_book());
         self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
-        self.logger.info(lformat!("Successfully generated EPUB file: {}", self.options.get_path("output.epub").unwrap()));
+        self.logger.info(lformat!("Successfully generated EPUB file: {file}",
+                                  file = self.options.get_path("output.epub").unwrap()));
         Ok(())
     }
 
@@ -493,7 +505,8 @@ impl Book {
         self.logger.debug(lformat!("Attempting to generate html directory..."));
         let mut html = HtmlDirRenderer::new(&self);
         try!(html.render_book());
-        self.logger.info(lformat!("Successfully generated HTML directory: {}", self.options.get_path("output.html_dir").unwrap()));
+        self.logger.info(lformat!("Successfully generated HTML directory: {path}",
+                                  path = self.options.get_path("output.html_dir").unwrap()));
         Ok(())
     }
 
@@ -502,14 +515,15 @@ impl Book {
     pub fn render_proof_html_dir(&self) -> Result<()> {
         let dir_name = self.options.get_path("output.proofread.html_dir").unwrap();
         if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
-                                            dir_name));
+            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating {path}",
+                                             path = dir_name));
             return Ok(())
         }
         self.logger.debug(lformat!("Attempting to generate html directory for proofreading..."));
         let mut html = HtmlDirRenderer::new(&self).proofread();
         try!(html.render_book());
-        self.logger.info(lformat!("Successfully generated HTML directory: {}", dir_name));
+        self.logger.info(lformat!("Successfully generated HTML directory: {path}",
+                                  path = dir_name));
         Ok(())
     }
 
@@ -517,14 +531,15 @@ impl Book {
     pub fn render_proof_pdf(&self) -> Result<()> {
         let file_name = self.options.get_path("output.proofread.pdf").unwrap();
         if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating {}",
-                                            file_name));
+            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating {file}",
+                                             file = file_name));
             return Ok(())
         }
         self.logger.debug(lformat!("Attempting to generate PDF for proofreading..."));
         let mut latex = LatexRenderer::new(&self).proofread();
         try!(latex.render_pdf());
-        self.logger.info(lformat!("Successfully generated PDF file for proofreading: {}", file_name));
+        self.logger.info(lformat!("Successfully generated PDF file for proofreading: {file}",
+                                  file = file_name));
         Ok(())
     }
 
@@ -535,7 +550,8 @@ impl Book {
         let result = try!(odt.render_book());
         self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
-        self.logger.info(lformat!("Successfully generated ODT file: {}", self.options.get_path("output.odt").unwrap()));
+        self.logger.info(lformat!("Successfully generated ODT file: {file}",
+                                  file = self.options.get_path("output.odt").unwrap()));
         Ok(())
     }
 
@@ -545,9 +561,11 @@ impl Book {
         let mut html = HtmlSingleRenderer::new(&self);
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       lformat!("problem when writing to HTML file: {}", e))));
+                                                                       lformat!("problem when writing to HTML file: {error}",
+                                                                                error = e))));
         if let Ok(file) = self.options.get_path("output.html") {
-            self.logger.info(lformat!("Successfully generated HTML file: {}", file));
+            self.logger.info(lformat!("Successfully generated HTML file: {file}",
+                                      file = file));
         } else {
             self.logger.info(lformat!("Successfully generated HTML"));
         }
@@ -562,16 +580,19 @@ impl Book {
             String::new()
         };
         if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating HTML file {}",
-                                            file_name));
+            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading,\
+                                              not generating HTML file {file}",
+                                             file = file_name));
             return Ok(())
         }
         self.logger.debug(lformat!("Attempting to generate HTML for proofreading..."));
         let mut html = HtmlSingleRenderer::new(&self).proofread();
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       lformat!("problem when writing to HTML file: {}", e))));
-        self.logger.info(lformat!("Successfully generated HTML file {}", file_name));
+                                                                       lformat!("problem when writing to HTML file: {error}",
+                                                                                error = e))));
+        self.logger.info(lformat!("Successfully generated HTML file {file}",
+                                  file = file_name));
         Ok(())
     }
 
@@ -582,9 +603,11 @@ impl Book {
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       lformat!("problem when writing to LaTeX file: {}", e))));
+                                                                       lformat!("problem when writing to LaTeX file: {error}",
+                                                                                error = e))));
         if let Ok(file) = self.options.get_path("output.tex") {
-            self.logger.info(lformat!("Successfully generated LaTeX file: {}", file));
+            self.logger.info(lformat!("Successfully generated LaTeX file: {file}",
+                                      file = file));
         } else {
             self.logger.info(lformat!("Successfully generated LaTeX"));
         }
@@ -599,8 +622,9 @@ impl Book {
             String::new()
         };
         if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, not generating LaTeX file {}",
-                                            file_name));
+            Logger::display_warning(lformat!("this version of Crowbook has been compiled without support for proofreading, \
+                                              not generating LaTeX file {file}",
+                                             file = file_name));
             return Ok(())
         }
 
@@ -609,8 +633,10 @@ impl Book {
         let mut latex = LatexRenderer::new(&self).proofread();
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
-                                                                       lformat!("problem when writing to LaTeX file: {}", e))));
-        self.logger.info(lformat!("Successfully generated LaTeX file {}", file_name));
+                                                                       lformat!("problem when writing to LaTeX file: {error}",
+                                                                                error = e))));
+        self.logger.info(lformat!("Successfully generated LaTeX file {file}",
+                                  file = file_name));
         Ok(())
     }
     
@@ -627,7 +653,8 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
-        self.logger.debug(lformat!("Parsing chapter: {}...", file));
+        self.logger.debug(lformat!("Parsing chapter: {file}...",
+                                   file = file));
         
         // add file to the list of file names
         self.filenames.push(file.to_owned());
@@ -636,11 +663,12 @@ impl Book {
         // try to open file
         let path = self.root.join(file);
         let mut f = try!(File::open(&path).map_err(|_| Error::file_not_found(&self.source,
-                                                                             "book chapter",
+                                                                             lformat!("book chapter"),
                                                                              format!("{}", path.display()))));
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
-                                                                lformat!("file {} contains invalid UTF-8", path.display()))));    
+                                                                lformat!("file {file} contains invalid UTF-8",
+                                                                         file = path.display()))));    
         
         // Ignore YAML blocks
         self.parse_yaml(&mut s);
@@ -654,7 +682,9 @@ impl Book {
         // transform the AST to make local links and images relative to `book` directory
         let offset = Path::new(file).parent().unwrap();
         if offset.starts_with("..") {
-            self.logger.warning(lformat!("Warning: book contains chapter '{}' in a directory above the book file, this might cause problems", file));
+            self.logger.warning(lformat!("Warning: book contains chapter '{file}' in a directory \
+                                          above the book file, this might cause problems",
+                                         file = file));
         }
 
 
@@ -683,9 +713,12 @@ impl Book {
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
                 if let Some(ref checker) = self.checker {
-                    self.logger.info(lformat!("Trying to run grammar check on {}, this might take a while...", file));
+                    self.logger.info(lformat!("Trying to run grammar check on {file}, this might take a while...",
+                                              file = file));
                     if let Err(err) = checker.check_chapter(&mut v) {
-                        self.logger.error(lformat!("Error running grammar check on {}: {}", file, err));
+                        self.logger.error(lformat!("Error running grammar check on {file}: {error}",
+                                                   file = file,
+                                                   error = err));
                     }
                 }
             }
@@ -750,16 +783,19 @@ impl Book {
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
             _ => return Err(Error::config_parser(&self.source,
-                                                 lformat!("invalid template '{}'", template))),
+                                                 lformat!("invalid template '{template}'",
+                                                          template = template))),
         };
         if let Ok (ref s) = option {
             let mut f = try!(File::open(s).map_err(|_| Error::file_not_found(&self.source,
-                                                                             format!("template '{}'", template),
+                                                                             format!("template '{template}'",
+                                                                                     template = template),
                                                                              s.to_owned())));
             let mut res = String::new();
             try!(f.read_to_string(&mut res)
                  .map_err(|_| Error::config_parser(&self.source,
-                                                   lformat!("file '{}' could not be read", s))));
+                                                   lformat!("file '{file}' could not be read",
+                                                            file = s))));
             Ok(Cow::Owned(res))
         } else {
             Ok(Cow::Borrowed(fallback))
@@ -838,7 +874,9 @@ impl Book {
                     },
                     Err(err) => {
                         return Err(Error::render(&self.source,
-                                                 lformat!("could not render `{}` for metadata:\n{}", &key, err)));
+                                                 lformat!("could not render `{key}` for metadata:\n{error}",
+                                                          key = &key,
+                                                          error = err)));
                     },
                 }
             }
@@ -902,13 +940,16 @@ impl Book {
                                                 }
                                             }
                                         } else {
-                                            self.logger.debug(lformat!("Ignoring YAML block:\n---\n{}---", &yaml_block));
+                                            self.logger.debug(lformat!("Ignoring YAML block:\n---\n{block}---",
+                                                                       block = &yaml_block));
                                         }
                                     valid_block = true;
                                 },
                                 Err(err) => {
-                                    self.logger.error(lformat!("Found something that looked like a YAML block:\n{}", &yaml_block));
-                                    self.logger.error(lformat!("... but it didn't parse correctly as YAML('{}'), so treating it like Markdown.", err));
+                                    self.logger.error(lformat!("Found something that looked like a YAML block:\n{block}",
+                                                               block = &yaml_block));
+                                    self.logger.error(lformat!("... but it didn't parse correctly as YAML('{error}'), so treating it like Markdown.",
+                                                               error = err));
                                 }
                             }
                             break;

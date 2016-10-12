@@ -128,7 +128,8 @@ impl<'a> EpubRenderer<'a> {
                                                                                   source.to_owned())));
             let mut content = vec!();
             try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.source,
-                                                                       lformat!("error while reading image file: {}", e))));
+                                                                       lformat!("error while reading image file: {error}",
+                                                                                error = e))));
             try!(zipper.write(dest, &content, true));
         }
 
@@ -145,7 +146,8 @@ impl<'a> EpubRenderer<'a> {
                                                                     abs_path.to_string_lossy().into_owned())));
                 let mut content = vec!();
                 try!(f.read_to_end(&mut content).map_err(|e| Error::render(&self.html.book.source,
-                                                                               lformat!("error while reading resource file: {}", e))));
+                                                                           lformat!("error while reading resource file: {error}",
+                                                                                    error = e))));
                 try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
             }
         }
@@ -371,8 +373,9 @@ impl<'a> EpubRenderer<'a> {
             if self.chapter_title.is_empty() {
                 self.chapter_title = try!(self.html.render_vec(vec));
             } else {
-                self.html.book.logger.warning(lformat!("EPUB ({}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered.",
-                                                       self.html.source));
+                self.html.book.logger.warning(lformat!("EPUB ({source}): detected two chapter titles \
+                                                        inside the same markdown file, in a file where chapter titles are not even rendered.",
+                                                       source = self.html.source));
             }
         } else {
             let res = self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
@@ -382,12 +385,12 @@ impl<'a> EpubRenderer<'a> {
             if self.chapter_title.is_empty() {
                 self.chapter_title = s;
             } else {
-                self.html.book.logger.warning(lformat!("EPUB ({}): detected two chapters inside the same markdown file.",
-                                                      self.html.source));
-                self.html.book.logger.warning(lformat!("EPUB ({}): conflict between: {} and {}",
-                                                      self.html.source,
-                                                      self.chapter_title,
-                                                      s));
+                self.html.book.logger.warning(lformat!("EPUB ({source}): detected two chapters inside the same markdown file.",
+                                                       source = self.html.source));
+                self.html.book.logger.warning(lformat!("EPUB ({source}): conflict between: {title1} and {title2}",
+                                                       source = self.html.source,
+                                                       title1 = self.chapter_title,
+                                                       title2 = s));
             }
         }
         Ok(())
@@ -399,7 +402,9 @@ impl<'a> EpubRenderer<'a> {
         match opt {
             Some(s) => s.to_string(),
             None => {
-                self.html.book.logger.error(lformat!("EPUB: could not guess the format of {} based on extension. Assuming png.", s));
+                self.html.book.logger.error(lformat!("EPUB: could not guess the format of {file} based on extension. \
+                                                      Assuming png.",
+                                                     file = s));
                 String::from("png")
             }
         }

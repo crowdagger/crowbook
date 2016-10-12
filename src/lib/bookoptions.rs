@@ -88,7 +88,8 @@ impl BookOptions {
                     options.deprecated.insert(key.to_owned(), default_value.map(|s| s.to_owned()));
                     continue;
                 }
-                _ => panic!(lformat!("Ill-formatted OPTIONS string: unrecognized type '{}'", option_type.unwrap())),
+                _ => panic!(lformat!("Ill-formatted OPTIONS string: unrecognized type '{option_type}'",
+                                     option_type = option_type.unwrap())),
             }
             if key == "crowbook.temp_dir" {
                 // "temp_dir" has a special default value that depends on the environment
@@ -141,7 +142,8 @@ impl BookOptions {
                     let book = try!(Book::new_from_file(try!(self.root.join(&value)
                                                              .to_str()
                                                              .ok_or(Error::book_option(&self.source,
-                                                                                           lformat!("'{}''s path contains invalid UTF-8 code", &value)))),
+                                                                                       lformat!("'{value}''s path contains invalid UTF-8 code",
+                                                                                                value = &value)))),
                                                         InfoLevel::Info, &[]));
                     try!(self.merge(book.options));
                     Ok(None)
@@ -158,7 +160,8 @@ impl BookOptions {
                 let chars: Vec<_> = value.chars().collect();
                 if chars.len() != 1 {
                     return Err(Error::book_option(&self.source,
-                                                      lformat!("could not parse '{}' as a char: does not contain exactly one char", &value)));
+                                                  lformat!("could not parse '{value}' as a char: does not contain exactly one char",
+                                                           value = &value)));
                 }
                 Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])))
             } else {
@@ -187,7 +190,9 @@ impl BookOptions {
                 match value.parse::<f32>() {
                     Ok(value) => Ok(self.options.insert(key, BookOption::Float(value))),
                     Err(_) => Err(Error::book_option(&self.source,
-                                           lformat!("could not parse '{}' as a float for key '{}'", &value, &key)))
+                                                     lformat!("could not parse '{value}' as a float for key '{key}'",
+                                                              value = &value,
+                                                              key = &key)))
                 }
             } else {
                 Err(Error::book_option(&self.source,
@@ -196,11 +201,14 @@ impl BookOptions {
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
             if let Some(new_key) = opt {
-                Logger::display_warning(lformat!("'{}' has been deprecated, you should now use '{}'", &key, &new_key));
+                Logger::display_warning(lformat!("'{old_key}' has been deprecated, you should now use '{new_key}'",
+                                                 old_key = &key,
+                                                 new_key = &new_key));
                 self.set_yaml(Yaml::String(new_key), value)
             } else {
                 Err(Error::book_option(self.source.clone(),
-                                           lformat!("key '{}' has been deprecated.", &key)))
+                                       lformat!("key '{key}' has been deprecated.",
+                                                key = &key)))
             }
         } else if key.starts_with("metadata.") {
             // key is a custom metadata
@@ -215,7 +223,8 @@ impl BookOptions {
         } else {
             // key not recognized
             Err(Error::book_option(self.source.clone(),
-                                       lformat!("unrecognized key '{}'", &key)))
+                                   lformat!("unrecognized key '{key}'",
+                                            key = &key)))
         }
     }
     
@@ -251,11 +260,14 @@ impl BookOptions {
                 self.set_yaml(Yaml::String(key.to_owned()), yaml_value)
             } else {
                 Err(Error::book_option(&self.source,
-                                       lformat!("value '{}' for key '{}' does not contain one and only one YAML value", value, key)))
+                                       lformat!("value '{value}' for key '{key}' does not contain one and only one YAML value",
+                                                value = value,
+                                                key = key)))
             }
         } else {
             Err(Error::book_option(&self.source,
-                                   lformat!("could not parse '{}' as a valid YAML value", value)))
+                                   lformat!("could not parse '{value}' as a valid YAML value",
+                                            value = value)))
         }
     }
 
@@ -269,7 +281,8 @@ impl BookOptions {
     #[doc(hidden)]
     pub fn get(&self, key: &str) -> Result<&BookOption> {
         self.options.get(key).ok_or_else(|| Error::invalid_option(&self.source,
-                                                                  lformat!("option '{}' is not present", key)))
+                                                                  lformat!("option '{key}' is not present",
+                                                                           key = key)))
     }
 
     /// Gets a list of path. Only used for resources.files.
@@ -277,7 +290,8 @@ impl BookOptions {
     pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
         if key != "resources.files" {
             return Err(Error::book_option(&self.source,
-                                          lformat!("can't get '{}' as a list of files, only valid if key is resources.files", key)));
+                                          lformat!("can't get '{key}' as a list of files, only valid if key is resources.files",
+                                                   key = key)));
         }
 
         let list = try!(try!(self.get(key))
@@ -359,7 +373,8 @@ impl BookOptions {
             Ok(path.to_owned())
         } else {
             Err(Error::book_option(&self.source,
-                                   lformat!("'{}''s path contains invalid UTF-8 code", key)))
+                                   lformat!("'{key}''s path contains invalid UTF-8 code",
+                                            key = key)))
         }
     }
 
@@ -435,7 +450,8 @@ impl BookOptions {
                     path.to_owned()
                 } else {
                     return Err(Error::book_option(Source::new(other.root.to_str().unwrap()),
-                                                  lformat!("'{}''s path contains invalid UTF-8 code", key)));
+                                                  lformat!("'{key}''s path contains invalid UTF-8 code",
+                                                           key = key)));
                 };
                 self.options.insert(key.clone(), BookOption::Path(new_path));
             } else {
@@ -493,23 +509,25 @@ impl BookOptions {
                 lformat!("not set")
             };
             if md {
-                out.push_str(&lformat!("- **`{}`**
-    - **type**: {}
-    - **default value**: `{}`
-    - {}\n", key.unwrap(), o_type, def, comment));
+                out.push_str(&lformat!("- **`{key}`**
+    - **type**: {option_type}
+    - **default value**: `{default}`
+    - {comment}\n",
+                                       key = key.unwrap(),
+                                       option_type = o_type,
+                                       default = def,
+                                       comment = comment));
             } else {
-                out.push_str(&format!("{}{}{} ({}{}{}) ({} {}{}{})\n  {}\n",
-                                      SHELL_COLOUR_ORANGE,
-                                      key.unwrap(),
-                                      SHELL_COLOUR_OFF,
-                                      SHELL_COLOUR_BLUE,
-                                      o_type,
-                                      SHELL_COLOUR_OFF,
-                                      lformat!("default:"),
-                                      SHELL_COLOUR_GREEN,
-                                      def,
-                                      SHELL_COLOUR_OFF,
-                                      comment.trim()));
+                out.push_str(&format!("{orange}{key}{off} ({blue}{option_type}{off}) ({msg} {green}{default}{off})\n  {comment}\n",
+                                      orange = SHELL_COLOUR_ORANGE,
+                                      key = key.unwrap(),
+                                      off = SHELL_COLOUR_OFF,
+                                      blue = SHELL_COLOUR_BLUE,
+                                      option_type = o_type,
+                                      msg = lformat!("default:"),
+                                      green = SHELL_COLOUR_GREEN,
+                                      default = def,
+                                      comment = comment.trim()));
             }
         }
         out
