@@ -7,42 +7,36 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:174
-msgid "could not compile template 'html_dir.chapter.html"
-msgstr "impossible de compiler le template 'html_dir.chapter.html"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:126
+msgid "Expected a String as a key, found {:?}"
+msgstr "Une String était attendue comme clé, pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:240
-msgid "no chapter name specified"
-msgstr "pas de nom de chapitre spécifié"
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:110
+msgid "Resources: could not read file {file}"
+msgstr "Ressources : impossible de lire le fichier {file}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:103
-msgid "failed to execute process: {}"
-msgstr "le processus n'a pas pu être exécuté : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:527
+msgid "default:"
+msgstr "défaut : "
 
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:107
-msgid "could not copy file {} to {}"
-msgstr "impossible de créer le fichier de {} à {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:555
+msgid "could not compile template"
+msgstr "impossible de compiler le template"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:81
-msgid "error deleting directory {}: {}"
-msgstr "erreur dans la suppression du répertoire {} : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:263
+msgid ""
+"value '{value}' for key '{key}' does not contain one and only one YAML value"
+msgstr ""
+"la valeur '{value}' pour la clé '{key}' ne contient pas une et une seule "
+"valeur YAML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:77
-msgid "could not write to temporary file {}"
-msgstr "impossible d'écrire dans le fichier temporaire {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:77
+msgid "could not send request to server: {error}"
+msgstr "impossible d'envoyer la requête au serveur : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:328
-msgid "could not create file {}:{}"
-msgstr "impossible de créer le fichier {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:127
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:110
-msgid "image or cover"
-msgstr "image ou couverture"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:103
-msgid "generated content.xml was not utf-8 valid"
-msgstr "le fichier content.xml généré contenait de l'UTF-8 invalide"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:637
+msgid "Successfully generated LaTeX file {file}"
+msgstr "Fichier LaTeX généré avec succès : {file}"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:116
 msgid ""
@@ -76,134 +70,399 @@ msgstr ""
 "ARGUMENTS:\n"
 "{{positionals}}\n"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:841
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:91
+msgid "Ill-formatted OPTIONS string: unrecognized type '{option_type}'"
+msgstr "Chaîne OPTIONS mal formatée : type non reconnu '{option_type}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:302
+msgid "Could not find file '{file}' for {description}"
+msgstr "Impossible de trouver le fichier '{file}' pour {description}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:284
+msgid "option '{key}' is not present"
+msgstr "l'option '{key}' n'est pas présente"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:333
+msgid "could not create directory in {path}: {error}"
+msgstr "impossible de créer un répertoire dans {path} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:426
+msgid "rendering {name}: {error}"
+msgstr "dans le rendu de {name} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:171
 msgid ""
-"could not render `{}` for metadata:\n"
-"{}"
+"LaTeX: can't find a tex equivalent for lang '{lang}', fallbacking on english"
 msgstr ""
-"impossible de faire le rendu de `{}` comme metadonnée :\n"
-"{}"
+"LaTeX: impossible de trouver un équivalent tex pour la langue '{lang}', "
+"utilisation de l'anglais par défaut"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:493
-msgid "Attempting to generate html directory..."
-msgstr "Tentative de générer le répertoire HTML..."
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:83
+msgid "{:?} is not an i32"
+msgstr "{:?} n'est pas un i32"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:116
-msgid "could not create caribon parser: {}"
-msgstr "impossible de créer l'analyseur caribon : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:310
-msgid "Error during temporary files editing: "
-msgstr "Erreur durant l'édition de fichiers temporaires :"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:602
-msgid ""
-"this version of Crowbook has been compiled without support for proofreading, "
-"not generating LaTeX file {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:204
+msgid "'{old_key}' has been deprecated, you should now use '{new_key}'"
 msgstr ""
-"cette version de Crowbook a été compilée sans le support de la relecture, le "
-"fichier LaTeX {} ne sera pas généré"
+"'{old_key}' a été déprécié, vous devriez maintenant utiliser '{new_key}'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/lang.rs:30
-msgid "Yaml for {} in lang {} is not a String!"
-msgstr "Le Yaml pour {} dans la langue {} n'est pas une String !"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:145
+msgid "'{value}''s path contains invalid UTF-8 code"
+msgstr "le chemin de '{value}' contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:300
-msgid "Could not find file '{}' for {}"
-msgstr "Impossible de trouver le fichier '{}' pour {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:365
+msgid "generated HTML was not utf-8 valid"
+msgstr "le HTML contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:550
-msgid "Successfully generated HTML file: {}"
-msgstr "Fichier HTML généré avec succès : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:376
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:453
+msgid "'{key}''s path contains invalid UTF-8 code"
+msgstr "le chemin de '{key}' contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:509
-msgid "Attempting to generate html directory for proofreading..."
-msgstr "Tentative de générer le répertoire HTML pour la relecture..."
+#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:146
+msgid "footnote reference {reference} does not have a matching definition"
+msgstr ""
+"la référence à la note de pas de page {reference} n'a pas de définition "
+"correspondante"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:548
+msgid "Attempting to generate ODT..."
+msgstr "Tentative de générer l'ODT..."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:114
+msgid "Prints the default content of a template"
+msgstr "Affiche le contenu par défaut d'un template"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:286
+msgid "generated HTML in content.opf was not valid utf-8"
+msgstr "le fichier content.opf généré contenait de l'UTF-8 invalide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:164
+msgid "ODT: footnotes are not yet implemented in this format, ignoring {:?}"
+msgstr ""
+"ODT: les notes de bas de page ne sont pas implémentées dans ce format, on "
+"ignore {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:169
+msgid "expected a string as value containing a char for key '{}', found {:?}"
+msgstr ""
+"une chaîne de caractère contenant un caractère comme valeur pour la clé "
+"'{}', pas {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:481
+msgid "Attempting to generate pdf..."
+msgstr "Tentative de générer le PDF..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:111
+msgid "failed to execute process: {error}"
+msgstr "le processus n'a pas pu être exécuté : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:177
+msgid "expected a boolean as value for key '{}', found {:?}"
+msgstr "un booléen était attendue comme valeur pour la clé '{}', pas {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:119
+msgid "Error initializing book: could not set {key} to {value}: {error}"
+msgstr ""
+"Erreur à l'initialisation du livre: impossible de positionner {key} à "
+"{value} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:147
+msgid "book"
+msgstr "livre"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:113
+msgid "List all possible options, formatted in Markdown"
+msgstr "Liste toutes les options possibles, formatées en Markdown"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:102
+msgid "Render a Markdown book in EPUB, PDF or HTML."
+msgstr "Fait le rendu en EPUB, PDF ou HTML d'un livre écrit en Markdown."
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:111
 msgid "Set a list of book options"
 msgstr "Règle une liste d'options pour le livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:125
-msgid "Expected a String as a key, found {:?}"
-msgstr "Une String était attendue comme clé, pas {:?}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:352
+msgid "ill-formatted line specifying chapter number"
+msgstr "line spécifiant un numéro de chapitre mal formattée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:630
-msgid "Parsing chapter: {}..."
-msgstr "Analyse du chapitre: {}..."
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:109
+msgid "Specify output file"
+msgstr "Spécifie un fichier de sortie"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:688
-msgid "Error running grammar check on {}: {}"
-msgstr "Erreur dans la véfirication grammaticale de {} : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:85
+msgid "Parts are not supported yet"
+msgstr "Les parties ne sont pas encore supportées"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:278
-msgid "could not compile template 'html_dir.index.html"
-msgstr "impossible de compiler le template 'html_dir.index.html'"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:505
+msgid "Attempting to generate html directory..."
+msgstr "Tentative de générer le répertoire HTML..."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:296
-msgid "Error parsing configuration file: "
-msgstr "Erreur dans l'analyse du fichier de configuration :"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:443
+msgid "could not get current directory!!!"
+msgstr "impossible d'obtenir le répertoire courant !!!"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:524
-msgid "Attempting to generate PDF for proofreading..."
-msgstr "Tentative de générer le PDF pour la relecture..."
+#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:116
+msgid "could not create caribon parser: {error}"
+msgstr "impossible de créer l'analyseur caribon : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:527
-msgid "Successfully generated PDF file for proofreading: {}"
-msgstr "Fichier PDF pour la relecture généré avec succès : {}"
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:115
+msgid ""
+"File containing the book configuration file, or a Markdown file when called "
+"with --single"
+msgstr ""
+"Fichier contenant la configuration du livre, ou un fichier Markdown avec "
+"l'argument --single"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:574
-msgid "Successfully generated HTML file {}"
-msgstr "Fichier HTML généré avec succès : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:201
+msgid "generated LaTeX was not valid utf-8"
+msgstr "le fichier LaTeX généré contenait de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:91
-msgid "Ill-formatted OPTIONS string: unrecognized type '{}'"
-msgstr "Chaîne OPTIONS mal formatée : type non reconnu '{}'"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:553
+msgid "Successfully generated ODT file: {file}"
+msgstr "Fichier ODT généré avec succès : {file}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:144
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:362
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:438
-msgid "'{}''s path contains invalid UTF-8 code"
-msgstr "le chemin de '{}' contient de l'UTF-8 invalide"
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:100
+msgid "Print help information"
+msgstr "Affiche l'aide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:306
-msgid "Error during rendering: "
-msgstr "Erreur dans le rendu : "
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:307
+msgid "Error compiling template: {template}"
+msgstr "Erreur dans la compilation du template : {template}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:185
-msgid "could not compile template 'html_single.js'"
-msgstr "impossible de compiler te template 'html_single.js'"
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:204
+msgid "generated HTML in toc.ncx was not valid utf-8"
+msgstr "le HTML généré pour toc.ncx contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:493
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:297
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:237
+msgid "cover"
+msgstr "couverture"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:509
 msgid "not set"
 msgstr "non défini"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:55
-msgid "Debug: "
-msgstr "Debug : "
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:518
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading, "
+"not generating {path}"
+msgstr ""
+"cette version de Crowbook a été compilée sans le support pour la relecture, "
+"{path} ne sera pas généré"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:144
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:127
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:76
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:83
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:90
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:97
+msgid "Could not create file '{}'"
+msgstr "Impossible de créer le fichier '{}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:387
+msgid "{error}. Proceeding without checking grammar."
+msgstr "{error}. On poursuit sans vérifier la grammaire."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:534
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading, "
+"not generating {file}"
+msgstr ""
+"cette version de Crowbook a été compilée sans le support pour la relecture, "
+"{file} ne sera pas généré"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:210
+msgid "key '{key}' has been deprecated."
+msgstr "la clé '{key}' a été dépréciée"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:606
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:635
+msgid "problem when writing to LaTeX file: {error}"
+msgstr "problème en écrivant dans le fichier LaTeX : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:684
+msgid ""
+"Warning: book contains chapter '{file}' in a directory above the book file, "
+"this might cause problems"
+msgstr ""
+"Avertissement: le livre contient un chapitre '{file}' dans un répertoire au-"
+"dessus du fichier du livre, cela risque de causer des problèmes"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:356
+msgid "error parsing chapter number"
+msgstr "erreur dans l'analyse du numéro de chapitre"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:655
+msgid "Parsing chapter: {file}..."
+msgstr "Analyse du chapitre: {file}..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:199
+msgid "expected a float as value for key '{}', found {:?}"
+msgstr "un flottant était attendu comme valeur pour la clé '{}', pas {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:512
+msgid ""
+"- **`{key}`**\n"
+"    - **type**: {option_type}\n"
+"    - **default value**: `{default}`\n"
+"    - {comment}\n"
+msgstr ""
+"- **`{key}`**\n"
+"    - **type** : {option_type}\n"
+"    - **valeur par défaut** : `{default}`\n"
+"    - {comment}\n"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:564
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:592
+msgid "problem when writing to HTML file: {error}"
+msgstr "problème en écrivant dans le fichier HTML : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:300
+msgid "could not compile template 'html.css"
+msgstr "impossible de compiler le template 'html.css'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:145
+msgid "Resources: could not find a in-book match for link {file}"
+msgstr ""
+"Ressources: impossible de trouver une correspondance à l'intérieur du livre "
+"pour le lien {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:625
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading, "
+"not generating LaTeX file {file}"
+msgstr ""
+"cette version de Crowbook a été compilée sans le support de la relecture, le "
+"fichier LaTeX {file} ne sera pas généré"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:127
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:116
+msgid "image or cover"
+msgstr "image ou couverture"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:77
+msgid "Warning: "
+msgstr "Avertissement : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:95
+msgid "failed to execute unzip on {file}: {error}"
+msgstr "impossible d'exécuter unzip sur {file} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:567
+msgid "could not compile template 'rendering.inline_toc'"
+msgstr "impossible de compiler le template 'rendering.inline_toc'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:92
+msgid "{:?} is not a f32"
+msgstr "{:?} n'est pas un f32"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:808
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:834
+msgid "could not compile template 'rendering.chapter_template'"
+msgstr "impossible de compiler le template 'rendering.chapter_template'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:166
+msgid ""
+"could not parse {file} as a book file.\n"
+"Maybe you meant to run crowbook with the --single argument?"
+msgstr ""
+"impossible d'analyser {file} comme un ficheir de livre.\n"
+"Peut-être que vous vouliez lancer crowbook avec l'argument --single ?"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:179
+msgid "could not compile template 'tex.template'"
+msgstr "impossible de compiler le template 'tex.template'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:570
+msgid "Successfully generated HTML"
+msgstr "HTML généré avec succès"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:104
+msgid "Print warnings in parsing/rendering"
+msgstr "Affiche les avertissements dans l'analyse et le rendu"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:200
+msgid "A list of additional files is only valid with the --create option."
+msgstr ""
+"Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:112
+msgid "List all possible options"
+msgstr "Liste toutes les options possibles"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:508
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:525
+msgid "Successfully generated HTML directory: {path}"
+msgstr "Répertoire HTML généré avec succès : {path}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:185
+msgid "expected an integer as value for key '{}', found {:?}"
+msgstr "un entier était attendu comme valeur pour la clé '{}', pas {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:405
+msgid ""
+"EPUB: could not guess the format of {file} based on extension. Assuming png."
+msgstr ""
+"EPUB: impossible de deviner le format de {} à partir de son extension. On "
+"part sur du png."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:360
+msgid "found invalid chapter definition in the chapter list"
+msgstr "définition de chapitre invalide trouvée dans la liste des chapitres"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:110
+msgid "Generate specific format"
+msgstr "Génère un format spécifique"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:156
+msgid "ODT: images not currently implemented for this format"
+msgstr "ODT: les images ne sont pas encore implémentées pour ce format"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:493
+msgid "Attempting to generate epub..."
+msgstr "Tentative de générer l'EPUB..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:205
+msgid "error reading file {file}: {error}"
+msgstr "Erreur en lisant le fichier {file} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:145
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:135
 msgid "additional resource from resources.files"
 msgstr "ressource additionnelle de resources.files"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:212
-msgid ""
-"in {}, found footnote definition for note '{}' but previous definition "
-"already exist, overriding it"
-msgstr ""
-"dans {}, une définition de note a été trouvée pour '{}' mais une définition "
-"précédente existait déjà, elle sera remplacée"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:541
+msgid "Successfully generated PDF file for proofreading: {file}"
+msgstr "Fichier PDF pour la relecture généré avec succès : {file}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:284
-msgid "generated HTML in content.opf was not valid utf-8"
-msgstr "le fichier content.opf généré contenait de l'UTF-8 invalide"
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:323
+msgid "Error accessing book option: "
+msgstr "Erreur en accèdant à l'option : "
 
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:66
-msgid ""
-"No output file specified, and book doesn't specify an output file for {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:344
+msgid "could not write to file {file}: {error}"
+msgstr "impossible d'écrire dans le fichier {file} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:931
+msgid "Inline YAML block replaced {:?} previously set to {:?} to {:?}"
 msgstr ""
-"Pas de fichier de sortie spécifié, et le livre n'en spécifie pas pour {}"
+"Le bloc YAML en ligne a remplacé {:?} qui était précédemment {:?} vers {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:91
+msgid "could not decode JSON: {error}"
+msgstr "impossible de créer le format JSON : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:101
+msgid "Print version information"
+msgstr "Affiche le numéro de version"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:498
+msgid "Successfully generated EPUB file: {file}"
+msgstr "Fichier EPUB généré avec succès : {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:304
+msgid "could not compile template for cover.xhtml"
+msgstr "impossible de compiler le template pour cover.xhtml"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:143
 msgid ""
@@ -213,86 +472,171 @@ msgstr ""
 "ODT: les listes ordonnées ne sont pas encore implémentées pour ce format, "
 "utilisation d'une liste non ordonnée à la place."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:302
-msgid "could not compile template for cover.xhtml"
-msgstr "impossible de compiler le template pour cover.xhtml"
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:75
+msgid "{:?} is not a char"
+msgstr "{:?} n'est pas un caractère"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:182
-msgid "expected an integer as value for key '{}', found {:?}"
-msgstr "un entier était attendu comme valeur pour la clé '{}', pas {:?}"
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:11
+msgid "Error:"
+msgstr "Erreur : "
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:200
-msgid "A list of additional files is only valid with the --create option."
-msgstr ""
-"Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:67
-msgid "{:?} is not a bool"
-msgstr "{:?} n'est pas un booléen"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:92
-msgid "{:?} is not a f32"
-msgstr "{:?} n'est pas un f32"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:496
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:512
-msgid "Successfully generated HTML directory: {}"
-msgstr "Répertoire HTML généré avec succès : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:385
-msgid "EPUB ({}): detected two chapters inside the same markdown file."
-msgstr ""
-"EPUB ({}) : deux chapitres détectés à l'intérieur du même fichier Markdown."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:324
-msgid "could not create directory in {}:{}"
-msgstr "impossible de créer un répertoire dans {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:144
-msgid "book"
-msgstr "livre"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:348
-msgid "ill-formatted line specifying chapter number"
-msgstr "line spécifiant un numéro de chapitre mal formattée"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:585
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:612
-msgid "problem when writing to LaTeX file: {}"
-msgstr "problème en écrivant dans le fichier LaTeX : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:665
+msgid "book chapter"
+msgstr "chapitre de livre"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:90
 msgid "Created {}, now you'll have to complete it!"
 msgstr "{} a été crée, maintenant vous n'avez plus qu'à le compléter !"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:774
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:800
-msgid "could not compile template 'rendering.chapter_template'"
-msgstr "impossible de compiler le template 'rendering.chapter_template'"
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:45
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:68
+msgid "could not create temporary directory in {path}"
+msgstr "impossible de créer le répertoire temporaire dans {path}'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:80
-msgid "could not create temporary file {}"
-msgstr "impossible de créer le fichier temporaire {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:64
+msgid "odt.render_book called while book.output_odt is not set"
+msgstr "odt.render_book appelée alors que book.output.odt n'est pas initialisé"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:554
-msgid "could not compile template"
-msgstr "impossible de compiler le template"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/lang.rs:26
-msgid "Could not find translation for {} in language {}"
-msgstr "Impossible de trouver une traduction pour {} dans la langue {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:112
-msgid "command didn't return succes:{}"
-msgstr "la commande ne s'est pas terminée avec succès : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:607
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:67
 msgid ""
-"rendering 'html.header' template:\n"
-"{}"
+"Resources: book includes non-local image {file}, which might cause problem "
+"for proper inclusion."
 msgstr ""
-"dans le rendu du template 'html.header' :\n"
-"{}"
+"Ressources : le livre inclut l'image non-locale {file}, ce qui risque de "
+"causer des problèmes pour une inclusion correcte"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:784
+msgid "invalid template '{template}'"
+msgstr "template invalide '{template}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:160
+msgid "ODT: tables are not currently implemented for this format"
+msgstr "ODT: les tableaux ne sont pas encore implémentés pour ce format"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:273
+msgid "could not compile template for content.opf"
+msgstr "impossible de compiler le template pour content.opf"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:147
+msgid "{} is not a valid template name."
+msgstr "{} n'est pas un nom de template valide."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:669
+msgid "file {file} contains invalid UTF-8"
+msgstr "le fichier {file} contient de l'UTF-8 invalide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:169
+msgid "could not compile template for title page"
+msgstr "impossible de compiler le template pour la page de titre"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:157
+msgid "file contains invalid UTF-8, could not parse it"
+msgstr "le fichier contient de l'UTF-8 invalide, impossible de l'analyser"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:59
+msgid "{:?} is not a path"
+msgstr "{:?} n'est pas un chemin de fichier"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:88
+msgid "could not read response: {error}"
+msgstr "impossible de lire la réponse : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:316
+msgid "Why is this method called if cover is None???"
+msgstr "Pourquoi cette méthode est-elle appelée si la couverture est None???"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:588
+msgid "Attempting to generate HTML for proofreading..."
+msgstr "Tentative de générer le HTML pour la relecture..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:312
+msgid "generated HTML for cover.xhtml was not utf-8 valid"
+msgstr "le HTML généré pour cover.xhtml contient de l'UTF-8 invalide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:484
+msgid "Output of latex command:"
+msgstr "Sortie de la commande latex : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:717
+msgid "Error running grammar check on {file}: {error}"
+msgstr "Erreur dans la véfirication grammaticale de {file} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:84
+msgid "could not compile template 'epub.chapter.xhtml'"
+msgstr "impossible de compiler le template 'epub.chapter.xhtml'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:93
+msgid "could not create HTML directory {path}: {error}"
+msgstr "impossible de créer le répertoire HTML {path} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:839
+msgid "header generated by mustache was not valid utf-8"
+msgstr "l'en-tête générée par mustache contenait de l'UTF-8 invalide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:225
+msgid "could not compile template 'html_single.html'"
+msgstr "impossible de compiler le template 'html_single.html'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:522
+msgid "Attempting to generate html directory for proofreading..."
+msgstr "Tentative de générer le répertoire HTML pour la relecture..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:160
+msgid "no output epub file specified in book config"
+msgstr "pas de fichier EPUB de sortie spécifié dans la configuration du livre"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:131
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:88
+msgid "error while reading image file: {error}"
+msgstr "erreur en lisant le fichier image : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:96
+msgid "could not compile template 'epub.css'"
+msgstr "impossible de compiler le template 'epub.css'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:496
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:551
+msgid "Output of zip command:"
+msgstr "Sortie de la commande zip : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:79
+msgid "markdown file"
+msgstr "fichier Markdown"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:947
+msgid ""
+"Found something that looked like a YAML block:\n"
+"{block}"
+msgstr ""
+"Trouvé quelque chose qui ressemblait à un bloc YAML :\n"
+"{block}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:83
+msgid "error deleting directory {path}: {error}"
+msgstr "erreur dans la suppression du répertoire {path} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:107
+msgid "Print debugging information"
+msgstr "Affiche des informations de débuggage"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:486
+msgid "Successfully generated PDF file: {file}"
+msgstr "Fichier PDF généré avec succès : {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:294
+msgid "Error parsing markdown: {error}"
+msgstr "Erreur dans l'analyse du Markdown : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:135
+msgid "Expected a string as value for key {}, found {:?}"
+msgstr "Une chaîne de caractères était attendue pour la clé {}, pas {:?}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:155
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:221
+msgid "expected a string as value for key '{}', found {:?}"
+msgstr ""
+"une chaîne de caractères était attendue comme valeur pour la clé '{}', pas "
+"{:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:21
 msgid ""
@@ -302,21 +646,9 @@ msgstr ""
 "Un nombre impair d'arguments a été donné à --set, alors qu'il prend une "
 "liste de paires clé-valeur."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:67
-msgid ""
-"Resources: book includes non-local image {}, which might cause problem for "
-"proper inclusion."
-msgstr ""
-"Ressources : le livre inclut l'image non-locale {}, ce qui risque de causer "
-"des problèmes pour une inclusion correcte"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:404
-msgid "Error rendering {}: {}"
-msgstr "Erreur dans le rendu de {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:112
-msgid "List all possible options"
-msgstr "Liste toutes les options possibles"
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:197
+msgid "could not render template for toc.ncx"
+msgstr "impossible de compiler le template pour toc.ncx"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:166
 msgid ""
@@ -332,519 +664,38 @@ msgstr ""
 "\n"
 "Pour plus d'informations, essayez --help."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:428
-msgid "could not get current directory!!!"
-msgstr "impossible d'obtenir le répertoire courant !!!"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:533
-msgid "Attempting to generate ODT..."
-msgstr "Tentative de générer l'ODT..."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:225
-msgid "could not compile template 'html_single.html'"
-msgstr "impossible de compiler le template 'html_single.html'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:905
-msgid ""
-"Ignoring YAML block:\n"
-"---\n"
-"{}---"
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:350
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:362
+msgid "LaTeX ({source}): image '{url}' doesn't seem to be local; ignoring it."
 msgstr ""
-"Bloc YAML ignoré:\n"
-"---\n"
-"{}---"
+"LaTeX ({source}) : l'image '{url}' n'a pas l'air d'être locale, elle sera "
+"ignorée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:156
-msgid "ODT: images not currently implemented for this format"
-msgstr "ODT: les images ne sont pas encore implémentées pour ce format"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:76
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:83
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:90
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:97
-msgid "Could not create file '{}'"
-msgstr "Impossible de créer le fichier '{}'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:59
-msgid "{:?} is not a path"
-msgstr "{:?} n'est pas un chemin de fichier"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:58
-#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:80
-msgid "server didn't respond with a OK status code"
-msgstr "le serveur n'a pas répondu avec un code de statut OK"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:895
-msgid "Inline YAML block replaced {:?} previously set to {:?} to {:?}"
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:224
+msgid "error in epub rendering: {path} is neither a file nor a directory"
 msgstr ""
-"Le bloc YAML en ligne a remplacé {:?} qui était précédemment {:?} vers {:?}"
+"erreur dans le rendu EPUB : {path} n'est ni un fichier ni un répertoire"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:601
+msgid "Attempting to generate LaTeX..."
+msgstr "Tentative de générer le LaTeX..."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:123
+msgid "command didn't return succesfully: {output}"
+msgstr "la commande ne s'est pas terminée avec succès : {output}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:714
+msgid "Trying to run grammar check on {file}, this might take a while..."
+msgstr ""
+"On essaie de vérifier la grammaire de {file}, cela peut prendre un moment..."
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:48
 msgid "Error in setting key {}: {}"
 msgstr "Erreur en initialisant la clé {}: {}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:94
-msgid "Resources: book includes image {} which doesn't have an extension"
-msgstr "Resources: le livre inclut l'image {} qui n'a pas d'extension"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:272
-msgid "option '{}' is not present"
-msgstr "l'option '{}' n'est pas présente"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:898
-msgid "Inline YAML block set {:?} to {:?}"
-msgstr "Le bloc YAML en ligne a positionné {:?} à {:?}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:383
-msgid "{}. Proceeding without checking grammar."
-msgstr "{}. On poursuit sans vérifier la grammaire."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:79
-msgid "markdown file"
-msgstr "fichier Markdown"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:84
-msgid "could not compile template 'epub.chapter.xhtml'"
-msgstr "impossible de compiler le template 'epub.chapter.xhtml'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:202
-msgid "generated HTML in toc.ncx was not valid utf-8"
-msgstr "le HTML généré pour toc.ncx contient de l'UTF-8 invalide"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:60
-msgid "Could not create file {}: it already exists!"
-msgstr "Impossible de créer le fichier {} : il existe déjà !"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:148
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:131
-msgid "error while reading resource file: {}"
-msgstr "erreur en lisant le fichier ressource : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:374
-msgid ""
-"EPUB ({}): detected two chapter titles inside the same markdown file, in a "
-"file where chapter titles are not even rendered."
-msgstr ""
-"EPUB ({}): deux titres de chapitre détectés à l'intérieur du même fichier "
-"Markdown, dans un fichier où les titres de chapitres ne sont même pas "
-"affichés."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:86
-msgid "could not read response: {}"
-msgstr "impossible de lire la réponse : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:103
-msgid "Use a single Markdown file instead of a book configuration file"
-msgstr ""
-"Utilise un simple fichier Markdown au lieu d'un fichier de configuration de "
-"livre"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:105
-msgid "Don't print info/error messages"
-msgstr "N'affiche pas les messages d'erreurs ou d'information"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:291
-msgid "could not compile template 'html.css"
-msgstr "impossible de compiler le template 'html.css'"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:106
-msgid "Enable proofreading"
-msgstr "Activer la génération de versions pour la relecture"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:474
-msgid "Output of latex command:"
-msgstr "Sortie de la commande latex : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:160
-msgid "ODT: tables are not currently implemented for this format"
-msgstr "ODT: les tableaux ne sont pas encore implémentés pour ce format"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:194
-msgid "expected a float as value for key '{}', found {:?}"
-msgstr "un flottant était attendu comme valeur pour la clé '{}', pas {:?}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:64
-msgid "odt.render_book called while book.output_odt is not set"
-msgstr "odt.render_book appelée alors que book.output.odt n'est pas initialisé"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:83
-msgid "{:?} is not an i32"
-msgstr "{:?} n'est pas un i32"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:114
-msgid "Prints the default content of a template"
-msgstr "Affiche le contenu par défaut d'un template"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:352
-msgid "Error parsing chapter number"
-msgstr "Erreur dans l'analyse du numéro de chapitre"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:100
-msgid "Print help information"
-msgstr "Affiche l'aide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:88
-msgid "could not decode JSON: {}"
-msgstr "impossible de créer le format JSON : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:643
-msgid "file {} contains invalid UTF-8"
-msgstr "le fichier {} contient de l'UTF-8 invalide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:85
-msgid "Parts are not supported yet"
-msgstr "Les parties ne sont pas encore supportées"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/lang.rs:17
-msgid "Yaml file for language {} didn't contain a hash"
-msgstr "Le fichier YAML pour le langage {} no contient pas de hashmap"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:150
-msgid "ODT: blockquotes and codeblocks are not currently implemented for ODT"
-msgstr ""
-"ODT: les blocs de citation et de code ne sont pas encore implémentés pour ODT"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:134
-msgid "Expected a string as value for key {}, found {:?}"
-msgstr "Une chaîne de caractères était attendue pour la clé {}, pas {:?}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:565
-msgid ""
-"this version of Crowbook has been compiled without support for proofreading, "
-"not generating HTML file {}"
-msgstr ""
-"cette version de Crowbook n'a pas été compilée avec le support de la "
-"relecture, le fichier HTML {} ne sera pas généré"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:88
-msgid "Error: "
-msgstr "Erreur : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:66
-msgid "Info: "
-msgstr "Info : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:325
-msgid "could not compile template for nav.xhtml"
-msgstr "impossible de compiler le template pour nav.xhtml"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:402
-msgid ""
-"EPUB: could not guess the format of {} based on extension. Assuming png."
-msgstr ""
-"EPUB: impossible de deviner le format de {} à partir de son extension. On "
-"part sur du png."
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:108
-msgid "Create a new book with existing Markdown files"
-msgstr "Crée un nouveau livre à partir de fichiers Markdown existants"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:57
-msgid ""
-"file {} refers to an absolute or a parent path.\n"
-"This is forbidden because we are supposed to create a temporary file in a "
-"temporary dir."
-msgstr ""
-"le fichier {} fait référence à un chemin parent ou absolu.\n"
-"C'est interdit car on est censé créer un fichier temporaire dans un "
-"répertoire temporaire."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:295
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:228
-msgid "cover"
-msgstr "couverture"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:310
-msgid "generated HTML for cover.xhtml was not utf-8 valid"
-msgstr "le HTML généré pour cover.xhtml contient de l'UTF-8 invalide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:318
-msgid "Error accessing book option: "
-msgstr "Erreur en accèdant à l'option : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:154
-msgid "file contains invalid UTF-8, could not parse it"
-msgstr "le fichier contient de l'UTF-8 invalide, impossible de l'analyser"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:254
-msgid "value '{}' for key '{}' does not contain one and only one YAML value"
-msgstr ""
-"la valeur '{}' pour la clé '{}' ne contient pas une et une seule valeur YAML"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:113
-msgid "List all possible options, formatted in Markdown"
-msgstr "Liste toutes les options possibles, formatées en Markdown"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:387
-msgid "EPUB ({}): conflict between: {} and {}"
-msgstr "EPUB ({}) : conflit entre {} et {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:75
-msgid "{:?} is not a char"
-msgstr "{:?} n'est pas un caractère"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:114
-msgid "error while reading image file {}: {}"
-msgstr "erreur en lisant le fichier image {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:131
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:88
-msgid "error while reading image file: {}"
-msgstr "erreur en lisant le fichier image : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:217
-msgid "error in epub rendering: {} is neither a file nor a directory"
-msgstr "erreur dans le rendu EPUB : {} n'est ni un fichier ni un répertoire"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:544
-msgid "Attempting to generate HTML..."
-msgstr "Tentative de générer le HTML..."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:190
-msgid "could not parse '{}' as a float for key '{}'"
-msgstr "impossible d'analyser '{}' comme un flottant pour la clé '{}'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:163
-msgid ""
-"could not parse {} as a book file.\n"
-"Maybe you meant to run crowbook with the --single argument?"
-msgstr ""
-"impossible d'analyser {} comme un ficheir de livre.\n"
-"Peut-être que vous vouliez lancer crowbook avec l'argument --single ?"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:290
-msgid "Error connecting to language tool server: {}"
-msgstr "Erreur dans la connexion au serveur languagetool : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:55
-msgid "could not connect to language tool server: {}"
-msgstr "impossible de se connecter au serveur languagetool : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:505
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:520
-msgid ""
-"this version of Crowbook has been compiled without support for proofreading, "
-"not generating {}"
-msgstr ""
-"cette version de Crowbook a été compilée sans le support pour la relecture, "
-"{} ne sera pas généré"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:51
-msgid "{:?} is not a string"
-msgstr "{:?} n'est pas une chaîne de caractères"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:203
-msgid "YAML block was not valid Yaml: {}"
-msgstr "Le bloc YAML n'était pas valide : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:356
-msgid "found invalid chapter definition in the chapter list"
-msgstr "définition de chapitre invalide trouvée dans la liste des chapitres"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:485
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:536
-msgid "Output of zip command:"
-msgstr "Sortie de la commande zip : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:171
-msgid "could not compile template 'html.css'"
-msgstr "impossible de compiler le template 'html.css'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:96
-msgid "could not compile template 'epub.css'"
-msgstr "impossible de compiler le template 'epub.css'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:303
-msgid "Error compiling template: {}"
-msgstr "Erreur dans la compilation du template : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:219
-#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:396
-msgid "empty str token, could not find initial"
-msgstr "jeton str vide, impossible de trouver la lettrine"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:258
-msgid "could not parse '{}' as a valid YAML value"
-msgstr "impossible d'analyser '{}' comme une valeur YAML valide"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:110
-msgid "Generate specific format"
-msgstr "Génère un format spécifique"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:314
-msgid "Why is this method called if cover is None???"
-msgstr "Pourquoi cette méthode est-elle appelée si la couverture est None???"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:613
-msgid "Successfully generated LaTeX file {}"
-msgstr "Fichier LaTeX généré avec succès : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:566
-msgid "could not compile template 'rendering.inline_toc'"
-msgstr "impossible de compiler le template 'rendering.inline_toc'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:237
-msgid "chapter filenames must not contain whitespace"
-msgstr "les noms de fichier des chapitres ne doivent pas contenir d'espace"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:164
-msgid "ODT: footnotes are not yet implemented in this format, ignoring {:?}"
-msgstr ""
-"ODT: les notes de bas de page ne sont pas implémentées dans ce format, on "
-"ignore {:?}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:77
-msgid "Warning: "
-msgstr "Avertissement : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:471
-msgid "Attempting to generate pdf..."
-msgstr "Tentative de générer le PDF..."
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:101
-msgid "Print version information"
-msgstr "Affiche le numéro de version"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:293
-msgid "Error parsing markdown: {}"
-msgstr "Erreur dans l'analyse du Markdown : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:115
-msgid ""
-"File containing the book configuration file, or a Markdown file when called "
-"with --single"
-msgstr ""
-"Fichier contenant la configuration du livre, ou un fichier Markdown avec "
-"l'argument --single"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:363
-msgid "generated HTML was not utf-8 valid"
-msgstr "le HTML contient de l'UTF-8 invalide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:482
-msgid "Attempting to generate epub..."
-msgstr "Tentative de générer l'EPUB..."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:84
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:74
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:102
-msgid "image"
-msgstr "image"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:161
-msgid "could not parse '{}' as a char: does not contain exactly one char"
-msgstr ""
-"impossible d'analyser '{}' comme un caractère : ne contient pas exactement "
-"un caractère "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:347
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:359
-msgid "LaTeX ({}): image '{}' doesn't seem to be local; ignoring it."
-msgstr ""
-"LaTeX ({}) : l'image '{}' n'a pas l'air d'être locale, elle sera ignorée"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:109
-msgid "Specify output file"
-msgstr "Spécifie un fichier de sortie"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:580
-msgid "Attempting to generate LaTeX..."
-msgstr "Tentative de générer le LaTeX..."
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:107
-msgid "Print debugging information"
-msgstr "Affiche des informations de débuggage"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:176
-msgid "could not compile template 'tex.template'"
-msgstr "impossible de compiler le template 'tex.template'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:198
-msgid "generated LaTeX was not valid utf-8"
-msgstr "le fichier LaTeX généré contenait de l'UTF-8 invalide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:45
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:66
-msgid "could not create temporary directory in {}"
-msgstr "impossible de créer le répertoire temporaire dans {}'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:215
-msgid "YAML part of the book is not a valid hashmap"
-msgstr "La partie YAML du livre n'est pas une hashmap valide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:314
-msgid "Error converting BookOption: "
-msgstr "Erreur en convertissant BookOption :"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:548
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:573
-msgid "problem when writing to HTML file: {}"
-msgstr "problème en écrivant dans le fichier HTML : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:11
-msgid "Error:"
-msgstr "Erreur : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:84
-msgid "file {} contains invalid UTF-8, could not parse it"
-msgstr "le fichier {} contient de l'UTF-8 invalide, impossible de l'analyser"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:508
-msgid "default:"
-msgstr "défaut : "
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:271
-msgid "could not compile template for content.opf"
-msgstr "impossible de compiler le template pour content.opf"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:552
-msgid "Successfully generated HTML"
-msgstr "HTML généré avec succès"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:199
-msgid "'{}' has been deprecated, you should now use '{}'"
-msgstr "'{}' a été déprécié, vous devriez maintenant utiliser '{}'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:90
-msgid "failed to execute unzip  on {}: {}"
-msgstr "impossible d'exécuter unzip sur {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:76
-msgid "{} already exists and is not a directory"
-msgstr "{} existe déjà et n'est pas un répertoire"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:169
-msgid ""
-"LaTeX: can't find a tex equivalent for lang '{}', fallbacking on english"
-msgstr ""
-"LaTeX: impossible de trouver un équivalent tex pour la langue '{}', "
-"utilisation de l'anglais par défaut"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:487
-msgid "Successfully generated EPUB file: {}"
-msgstr "Fichier EPUB généré avec succès : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:419
-msgid "rendering {}:{}"
-msgstr "dans le rendu de {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:657
-msgid ""
-"Warning: book contains chapter '{}' in a directory above the book file, this "
-"might cause problems"
-msgstr ""
-"Avertissement: le livre contient un chapitre '{}' dans un répertoire au-"
-"dessus du fichier du livre, cela risque de causer des problèmes"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:762
-msgid "file '{}' could not be read"
-msgstr "le fichier '{}' n'a pas pu être lu"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:141
-msgid "Resources: could not find a in-book match for link {}"
-msgstr ""
-"Ressources: impossible de trouver une correspondance à l'intérieur du livre "
-"pour le lien {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:538
+msgid "Attempting to generate PDF for proofreading..."
+msgstr "Tentative de générer le PDF pour la relecture..."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/text_view.rs:135
 #: /home/lise/Progs/rust/crowbook/src/lib/text_view.rs:258
@@ -852,184 +703,360 @@ msgid ""
 "ignored annotation {:?} as it wasn't compatible with the Markdown structure"
 msgstr "annotation {:?} ignorée car non compatible avec la structure Markdown"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:569
-msgid "Attempting to generate HTML for proofreading..."
-msgstr "Tentative de générer le HTML pour la relecture..."
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:934
+msgid "Inline YAML block set {:?} to {:?}"
+msgstr "Le bloc YAML en ligne a positionné {:?} à {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:910
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:875
 msgid ""
-"Found something that looked like a YAML block:\n"
-"{}"
+"could not render `{key}` for metadata:\n"
+"{error}"
 msgstr ""
-"Trouvé quelque chose qui ressemblait à un bloc YAML :\n"
-"{}"
+"impossible de faire le rendu de `{key}` comme metadonnée :\n"
+"{error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:218
-msgid "unrecognized key '{}'"
-msgstr "clé non reconnue '{}'"
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:315
+msgid "Error during temporary files editing: "
+msgstr "Erreur durant l'édition de fichiers temporaires :"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:422
-msgid "could not create file '{}'"
-msgstr "impossible de créer le fichier '{}'"
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:55
+msgid "Debug: "
+msgstr "Debug : "
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:78
-msgid "{} already exists, deleting it"
-msgstr "{} existe déjà, il sera supprimé"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:911
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:58
 msgid ""
-"... but it didn't parse correctly as YAML('{}'), so treating it like "
+"file {file} refers to an absolute or a parent path.\n"
+"This is forbidden because we are supposed to create a temporary file in a "
+"temporary dir."
+msgstr ""
+"le fichier {file} fait référence à un chemin parent ou absolu.\n"
+"C'est interdit car on est censé créer un fichier temporaire dans un "
+"répertoire temporaire."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:244
+msgid "no chapter name specified"
+msgstr "pas de nom de chapitre spécifié"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:117
+msgid "Resources: could not guess mime type of file {file}"
+msgstr "Ressources : impossible de deviner le type mime du fichier {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:163
+msgid "could not parse '{value}' as a char: does not contain exactly one char"
+msgstr ""
+"impossible d'analyser '{value}' comme un caractère : ne contient pas "
+"exactement un caractère "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:409
+msgid "Error rendering {name}: {error}"
+msgstr "Erreur dans le rendu de {name} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:311
+msgid "Error during rendering: "
+msgstr "Erreur dans le rendu : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:95
+msgid "Resources: book includes image {file} which doesn't have an extension"
+msgstr "Resources: le livre inclut l'image {file} qui n'a pas d'extension"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:226
+msgid "unrecognized key '{key}'"
+msgstr "clé '{key}' non reconnue"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:241
+msgid "chapter filenames must not contain whitespace"
+msgstr "les noms de fichier des chapitres ne doivent pas contenir d'espace"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:319
+msgid "Error converting BookOption: "
+msgstr "Erreur en convertissant BookOption :"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:102
+msgid "failed to remove file {file}"
+msgstr "Impossible de supprimer le fichier '{file}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:287
+msgid "could not compile template 'html_dir.index.html"
+msgstr "impossible de compiler le template 'html_dir.index.html'"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:66
+msgid ""
+"No output file specified, and book doesn't specify an output file for {}"
+msgstr ""
+"Pas de fichier de sortie spécifié, et le livre n'en spécifie pas pour {}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:120
+msgid "error while reading image file {file}: {error}"
+msgstr "erreur en lisant le fichier image {file} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:949
+msgid ""
+"... but it didn't parse correctly as YAML('{error}'), so treating it like "
 "Markdown."
 msgstr ""
-"... mais il n'a pas pu être analysé comme du YAML ('{}'), on le traite donc "
-"comme du Markdown."
+"... mais il n'a pas pu être analysé comme du YAML ('{error}'), on le traite "
+"donc comme du Markdown."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:108
-msgid "Resources: could not read file {}"
-msgstr "Ressources : impossible de lire le fichier {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:206
+msgid "YAML block was not valid YAML: {error}"
+msgstr "Le bloc YAML n'était pas valide : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:119
-msgid "Error initializing book: could not set {} to {}: {}"
-msgstr ""
-"Erreur à l'initialisation du livre: impossible de positionner {} à {} : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:66
+msgid "Info: "
+msgstr "Info : "
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:496
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:84
+msgid "could not create temporary file {file}"
+msgstr "impossible de créer le fichier temporaire {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:214
 msgid ""
-"- **`{}`**\n"
-"    - **type**: {}\n"
-"    - **default value**: `{}`\n"
-"    - {}\n"
+"in {file}, found footnote definition for note '{reference}' but previous "
+"definition already exist, overriding it"
 msgstr ""
-"- **`{}`**\n"
-"    - **type** : {}\n"
-"    - **valeur par défaut** : `{}`\n"
-"    - {}\n"
+"dans {file}, une définition de note a été trouvée pour '{reference}' mais "
+"une définition précédente existait déjà, elle sera remplacée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:76
-msgid "could not send request to server: {}"
-msgstr "impossible d'envoyer la requête au serveur : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:327
+msgid "could not compile template for nav.xhtml"
+msgstr "impossible de compiler le template pour nav.xhtml"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:153
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:213
-msgid "expected a string as value for key '{}', found {:?}"
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:103
+msgid "generated content.xml was not utf-8 valid"
+msgstr "le fichier content.xml généré contenait de l'UTF-8 invalide"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:105
+msgid "Don't print info/error messages"
+msgstr "N'affiche pas les messages d'erreurs ou d'information"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:80
+msgid "could not write to temporary file {file}"
+msgstr "impossible d'écrire dans le fichier temporaire {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:193
+msgid "could not parse '{value}' as a float for key '{key}'"
+msgstr "impossible d'analyser '{value}' comme un flottant pour la clé '{key}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:583
+msgid ""
+"this version of Crowbook has been compiled without support for proofreading,"
+"\\n                                              not generating HTML file "
+"{file}"
 msgstr ""
-"une chaîne de caractères était attendue comme valeur pour la clé '{}', pas "
-"{:?}"
+"cette version de Crowbook n'a pas été compilée avec le support de la "
+"relecture, le fichier HTML {file} ne sera pas généré"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:587
-msgid "Successfully generated LaTeX file: {}"
-msgstr "Fichier LaTeX généré avec succès : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/lang.rs:33
+msgid "Yaml for {key} in lang {lang} is not a String!"
+msgstr ""
+"Le Yaml pour {key} dans la langue {lang} n'est pas une chaîne de caractères !"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:612
+msgid "Successfully generated LaTeX"
+msgstr "LaTeX généré avec succès"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:388
+msgid "EPUB ({source}): detected two chapters inside the same markdown file."
+msgstr ""
+"EPUB ({source}) : deux chapitres détectés à l'intérieur du même fichier "
+"Markdown."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:103
+msgid "Use a single Markdown file instead of a book configuration file"
+msgstr ""
+"Utilise un simple fichier Markdown au lieu d'un fichier de configuration de "
+"livre"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:79
+msgid "{path} already exists, deleting it"
+msgstr "{path} existe déjà, il sera supprimé"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:84
+msgid "file {file} contains invalid UTF-8, could not parse it"
+msgstr ""
+"le fichier {file} contient de l'UTF-8 invalide, impossible de l'analyser"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/logger.rs:88
+msgid "Error: "
+msgstr "Erreur : "
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:376
+msgid ""
+"EPUB ({source}): detected two chapter titles "
+"\\n                                                        inside the same "
+"markdown file, in a file where chapter titles are not even rendered."
+msgstr ""
+"EPUB ({source}): deux titres de chapitre détectés à l'intérieur du même "
+"fichier Markdown, dans un fichier où les titres de chapitres ne sont même "
+"pas affichés."
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:609
+msgid ""
+"rendering 'html.header' template:\n"
+"{error}"
+msgstr ""
+"dans le rendu du template 'html.header' :\n"
+"{error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:150
+msgid "ODT: blockquotes and codeblocks are not currently implemented for ODT"
+msgstr ""
+"ODT: les blocs de citation et de code ne sont pas encore implémentés pour ODT"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:149
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:139
+msgid "error while reading resource file: {error}"
+msgstr "erreur en lisant le fichier ressource : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:67
+msgid "{:?} is not a bool"
+msgstr "{:?} n'est pas un booléen"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:59
+#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:82
+msgid "server didn't respond with a OK status code"
+msgstr "le serveur n'a pas répondu avec un code de statut OK"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:567
+msgid "Successfully generated HTML file: {file}"
+msgstr "Fichier HTML généré avec succès : {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:60
+msgid "Could not create file {}: it already exists!"
+msgstr "Impossible de créer le fichier {} : il existe déjà !"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:293
+msgid ""
+"can't get '{key}' as a list of files, only valid if key is resources.files"
+msgstr ""
+"impossible de traiter '{key}' comme une liste de fichiers, c'est seulement "
+"valide si la clé est resources.files"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:183
+msgid "could not compile template 'html_dir.chapter.html"
+msgstr "impossible de compiler le template 'html_dir.chapter.html"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:185
+msgid "could not compile template 'html_single.js'"
+msgstr "impossible de compiler te template 'html_single.js'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:431
+msgid "could not create file '{file}'"
+msgstr "impossible de créer le fichier '{file}'"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:51
+msgid "{:?} is not a string"
+msgstr "{:?} n'est pas une chaîne de caractères"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:106
+msgid "Enable proofreading"
+msgstr "Activer la génération de versions pour la relecture"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:76
+msgid "{path} already exists and is not a directory"
+msgstr "{path} existe déjà et n'est pas un répertoire"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:122
 msgid "couldn't interpret LANG: {}"
 msgstr "impossible d'interpéter LANG: {}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:96
-msgid "no output pdf file specified '{}' in book config"
-msgstr "pas de fichier pdf spécifié '{}' dans la configuration du livre"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:609
+msgid "Successfully generated LaTeX file: {file}"
+msgstr "Fichier LaTeX généré avec succès : {file}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:195
-msgid "could not render template for toc.ncx"
-msgstr "impossible de compiler le template pour toc.ncx"
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:298
+msgid "Error parsing configuration file: "
+msgstr "Erreur dans l'analyse du fichier de configuration :"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:104
-msgid "Print warnings in parsing/rendering"
-msgstr "Affiche les avertissements dans l'analyse et le rendu"
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:390
+msgid "EPUB ({source}): conflict between: {title1} and {title2}"
+msgstr "EPUB ({source}) : conflit entre {title1} et {title2}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:476
-msgid "Successfully generated PDF file: {}"
-msgstr "Fichier PDF généré avec succès: {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:941
+msgid ""
+"Ignoring YAML block:\n"
+"---\n"
+"{block}---"
+msgstr ""
+"Bloc YAML ignoré:\n"
+"---\n"
+"{block}---"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:331
-msgid "could not write to file {}:{}"
-msgstr "impossible d'écrire dans le fichier {} : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:171
+msgid "could not compile template 'html.css'"
+msgstr "impossible de compiler le template 'html.css'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:89
-msgid "could not create HTML directory {}:{}"
-msgstr "impossible de créer le répertoire HTML {} : {}"
+#: /home/lise/Progs/rust/crowbook/src/lib/lang.rs:17
+msgid "Yaml file for language {lang} didn't contain a hash"
+msgstr "Le fichier YAML pour le langage {lang} no contient pas de hashmap"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:332
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:84
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:75
+#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:104
+msgid "image"
+msgstr "image"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:97
+msgid "no output pdf file specified '{output}' in book config"
+msgstr "pas de fichier pdf spécifié '{output}' dans la configuration du livre"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:222
+#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:397
+msgid "empty str token, could not find initial"
+msgstr "jeton str vide, impossible de trouver la lettrine"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:795
+msgid "file '{file}' could not be read"
+msgstr "le fichier '{file}' n'a pas pu être lu"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:269
+msgid "could not parse '{value}' as a valid YAML value"
+msgstr "impossible d'analyser '{value}' comme une valeur YAML valide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:339
+msgid "could not create file {file}: {error}"
+msgstr "impossible de créer le fichier {file} : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:55
+msgid "could not connect to language tool server: {error}"
+msgstr "impossible de se connecter au serveur languagetool : {error}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:116
+msgid "could not copy file {input} to {output}"
+msgstr "impossible de créer le fichier de {input} à {output}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:560
+msgid "Attempting to generate HTML..."
+msgstr "Tentative de générer le HTML..."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:108
+msgid "Create a new book with existing Markdown files"
+msgstr "Crée un nouveau livre à partir de fichiers Markdown existants"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:594
+msgid "Successfully generated HTML file {file}"
+msgstr "Fichier HTML généré avec succès : {file}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/lang.rs:27
+msgid "Could not find translation for {key} in language {lang}"
+msgstr "Impossible de trouver une traduction pour {key} dans la langue {lang}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:219
+msgid "YAML part of the book is not a valid hashmap"
+msgstr "La partie YAML du livre n'est pas une hashmap valide"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:334
 msgid "generated HTML in nav.xhtml was not utf-8 valid"
 msgstr "le HTML généré pour nav.xhtml contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:203
-msgid "key '{}' has been deprecated."
-msgstr "la clé '{}' a été dépréciée"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:753
-msgid "invalid template '{}'"
-msgstr "template invalile '{}'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:114
-msgid "Resources: could not guess mime type of file {}"
-msgstr "Ressources : impossible de deviner le type mime du fichier {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:686
-msgid "Trying to run grammar check on {}, this might take a while..."
-msgstr ""
-"On essaie de vérifier la grammaire de {}, cela peut prendre un moment..."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:805
-msgid "header generated by mustache was not valid utf-8"
-msgstr "l'en-tête générée par mustache contenait de l'UTF-8 invalide"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:174
-msgid "expected a boolean as value for key '{}', found {:?}"
-msgstr "un booléen était attendue comme valeur pour la clé '{}', pas {:?}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:95
-msgid "failed to remove file {}"
-msgstr "Impossible de supprimer le fichier '{}'"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:167
-msgid "could not compile template for title page"
-msgstr "impossible de compiler le template pour la page de titre"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:166
-msgid "expected a string as value containing a char for key '{}', found {:?}"
-msgstr ""
-"une chaîne de caractère contenant un caractère comme valeur pour la clé "
-"'{}', pas {:?}"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:147
-msgid "{} is not a valid template name."
-msgstr "{} n'est pas un nom de template valide."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:583
+#: /home/lise/Progs/rust/crowbook/src/lib/html.rs:584
 msgid ""
 "rendering 'html.footer' template:\n"
-"{}"
+"{error}"
 msgstr ""
 "dans le rendu du template 'html.footer' :\n"
-"{}"
+"{error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:200
-msgid "error reading file {}: {}"
-msgstr "Erreur en lisant le fichier {} : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:102
-msgid "Render a Markdown book in EPUB, PDF or HTML."
-msgstr "Fait le rendu en EPUB, PDF ou HTML d'un livre écrit en Markdown."
-
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:280
-msgid "can't get '{}' as a list of files, only valid if key is resources.files"
-msgstr ""
-"impossible de traiter '{}' comme une liste de fichiers, c'est seulement "
-"valide si la clé est resources.files"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:589
-msgid "Successfully generated LaTeX"
-msgstr "LaTeX généré avec succès"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:538
-msgid "Successfully generated ODT file: {}"
-msgstr "Fichier ODT généré avec succès : {}"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:145
-msgid "footnote reference {} does not have a matching definition"
-msgstr ""
-"la référence à la note de pas de page {} n'a pas de définition correspondante"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:158
-msgid "no output epub file specified in book config"
-msgstr "pas de fichier EPUB de sortie spécifié dans la configuration du livre"
+#: /home/lise/Progs/rust/crowbook/src/lib/error.rs:290
+msgid "Error connecting to language tool server: {error}"
+msgstr "Erreur dans la connexion au serveur languagetool : {error}"
