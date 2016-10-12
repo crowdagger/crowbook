@@ -1,4 +1,4 @@
-use clap::{App, Arg, Format, ArgMatches};
+use clap::{App, Arg, Format, ArgMatches, AppSettings};
 use std::io::{self, Write};
 use std::process::exit;
 use std::fs;
@@ -113,12 +113,30 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref LIST_OPTIONS_MD: String = lformat!("List all possible options, formatted in Markdown");
         static ref PRINT_TEMPLATE: String = lformat!("Prints the default content of a template");
         static ref BOOK: String = lformat!("File containing the book configuration file, or a Markdown file when called with --single");
-    }
+        static ref TEMPLATE: String = lformat!("\
+{{bin}} {{version}} by {{author}}
+{{about}}
 
+USAGE:
+    {{usage}}
+
+FLAGS:
+{{flags}}
+
+OPTIONS:
+{{options}}
+
+ARGS:
+{{positionals}}
+");
+    }
     
-    let mut app = App::new("crowbook")
+    
+    let app = App::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Élisabeth Henry <liz.henry@ouvaton.org>")
+        .setting(AppSettings::UnifiedHelpMessage)
+        .setting(AppSettings::HidePossibleValuesInHelp)
         .about(ABOUT.as_str())
         .arg(Arg::from_usage("-s, --single")
              .help(SINGLE.as_str()))
@@ -158,7 +176,8 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
              .help(PRINT_TEMPLATE.as_str()))
         .arg(Arg::with_name("BOOK")
              .index(1)
-             .help(BOOK.as_str()));
+             .help(BOOK.as_str()))
+        .template(TEMPLATE.as_str());
 
     // Write help and version now since it `app` is moved when `get_matches` is run
     let mut help = vec!();
