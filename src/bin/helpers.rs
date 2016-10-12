@@ -4,6 +4,8 @@ use std::process::exit;
 use std::fs;
 use crowbook::Book;
 
+
+
 /// Prints an error on stderr and exit the program
 pub fn print_error(s: &str) -> ! {
     writeln!(&mut io::stderr(), "{} {}", Format::Error(lformat!("Error:")), s).unwrap();
@@ -93,8 +95,10 @@ lang: en
     }
 }
 
-pub fn create_matches<'a>() -> ArgMatches<'a> {
+pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
     lazy_static! {
+        static ref HELP: String = lformat!("Print help information");
+        static ref VERSION: String = lformat!("Print version information");
         static ref ABOUT: String = lformat!("Render a Markdown book in EPUB, PDF or HTML.");
         static ref SINGLE: String = lformat!("Use a single Markdown file instead of a book configuration file");
         static ref VERBOSE: String = lformat!("Print warnings in parsing/rendering");
@@ -112,7 +116,7 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
     }
 
     
-    let app = App::new("crowbook")
+    let mut app = App::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Élisabeth Henry <liz.henry@ouvaton.org>")
         .about(ABOUT.as_str())
@@ -124,6 +128,10 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
              .help(QUIET.as_str())
              .conflicts_with("verbose")
              .conflicts_with("debug"))
+        .arg(Arg::from_usage("-h, --help")
+             .help(HELP.as_str()))
+        .arg(Arg::from_usage("-V, --version")
+             .help(VERSION.as_str()))
         .arg(Arg::from_usage("-p, --proofread")
              .help(PROOFREAD.as_str()))
         .arg(Arg::from_usage("-d, --debug")
@@ -152,10 +160,18 @@ pub fn create_matches<'a>() -> ArgMatches<'a> {
              .index(1)
              .help(BOOK.as_str()));
 
+    // Write help and version now since it `app` is moved when `get_matches` is run
+    let mut help = vec!();
+    app.write_help(&mut help).unwrap();
+    let help = String::from_utf8(help).unwrap();
+    let mut version = vec!();
+    app.write_version(&mut version).unwrap();
+    let version = String::from_utf8(version).unwrap();
+    
     let matches = app.get_matches();
 
     pre_check(&matches);
-    matches
+    (matches, help, version)
 }
 
 

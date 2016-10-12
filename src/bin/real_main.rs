@@ -122,7 +122,7 @@ pub fn real_main() {
         Err(e) => println!("{}", lformat!("couldn't interpret LANG: {}", e))
     }
     
-    let matches = create_matches();
+    let (matches, help, version) = create_matches();
 
     if matches.is_present("list-options") {
         println!("{}", BookOptions::description(false));
@@ -146,6 +146,16 @@ pub fn real_main() {
             }
             Err(_) => print_error(&lformat!("{} is not a valid template name.", template)),
         }
+    }
+
+    if matches.is_present("help") {
+        println!("{}", help);
+        exit(0);
+    }
+
+    if matches.is_present("version") {
+        println!("{}", version);
+        exit(0);
     }
 
     if matches.is_present("create") {
