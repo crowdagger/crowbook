@@ -81,7 +81,7 @@ impl<'a> EpubRenderer<'a> {
         // Write chapters
         let template_chapter = try!(compile_str(try!(self.html.book.get_template("epub.chapter.xhtml")).as_ref(),
                                         &self.html.book.source,
-                                        "could not compile template 'epub.chapter.xhtml'"));
+                                        lformat!("could not compile template 'epub.chapter.xhtml'")));
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
             self.html.chapter_config(i, n, filenamer(i));
             let chapter = try!(self.render_chapter(v, &template_chapter));
@@ -93,7 +93,7 @@ impl<'a> EpubRenderer<'a> {
         // Render the CSS file and write it
         let template_css = try!(compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
                                             &self.html.book.source,
-                                            "could not compile template 'epub.css'"));
+                                            lformat!("could not compile template 'epub.css'")));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
@@ -164,7 +164,7 @@ impl<'a> EpubRenderer<'a> {
         let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
         let template = try!(compile_str(if epub3 { epub3::TITLE } else { TITLE },
                                    &self.html.book.source,
-                                   "could not compile template for title page"));
+                                   lformat!("could not compile template for title page")));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .build();
         let mut res:Vec<u8> = vec!();
@@ -192,14 +192,14 @@ impl<'a> EpubRenderer<'a> {
         }
         let template = try!(compile_str(TOC,
                                    &self.html.book.source,
-                                   "could not render template for toc.ncx"));
+                                   lformat!("could not render template for toc.ncx")));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("nav_points", nav_points)
             .build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => panic!("generated HTML in toc.ncx was not valid utf-8"),
+            Err(_) => panic!(lformat!("generated HTML in toc.ncx was not valid utf-8")),
             Ok(res) => Ok(res)
         }
     }
@@ -268,7 +268,7 @@ impl<'a> EpubRenderer<'a> {
         let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
         let template = try!(compile_str(if epub3 { epub3::OPF } else { OPF },
                                         &self.html.book.source,
-                                        "could not compile template for content.opf"));
+                                        lformat!("could not compile template for content.opf")));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("optional", optional)
             .insert_str("items", items)
@@ -281,7 +281,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => panic!("generated HTML in content.opf was not valid utf-8"),
+            Err(_) => panic!(lformat!("generated HTML in content.opf was not valid utf-8")),
             Ok(res) => Ok(res)
         }
     }
@@ -299,7 +299,7 @@ impl<'a> EpubRenderer<'a> {
             let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
             let template = try!(compile_str(if epub3 { epub3::COVER } else { COVER },
                                             &self.html.book.source,
-                                            "could not compile template for cover.xhtml"));
+                                            lformat!("could not compile template for cover.xhtml")));
             let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
                 .insert_str("cover", try!(self.html.handler.map_image(&self.html.source,
                                                                       Cow::Owned(cover))).into_owned())
@@ -311,7 +311,7 @@ impl<'a> EpubRenderer<'a> {
                 Ok(res) => Ok(res)
             }
         } else {
-            panic!("Why is this method called if cover is None???");
+            panic!(lformat!("Why is this method called if cover is None???"));
         }
     }
 
@@ -322,14 +322,14 @@ impl<'a> EpubRenderer<'a> {
         let template = if self.html.book.options.get_i32("epub.version").unwrap() == 3 { epub3::NAV}  else { NAV };
         let template = try!(compile_str(template,
                                         &self.html.book.source,
-                                        "could not compile template for nav.xhtml"));
+                                        lformat!("could not compile template for nav.xhtml")));
         let data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .build();
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => panic!("generated HTML in nav.xhtml was not utf-8 valid"),
+            Err(_) => panic!(lformat!("generated HTML in nav.xhtml was not utf-8 valid")),
             Ok(res) => Ok(res)
         }
     }
@@ -360,7 +360,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res:Vec<u8> = vec!();
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
-            Err(_) => panic!("generated HTML was not utf-8 valid"),
+            Err(_) => panic!(lformat!("generated HTML was not utf-8 valid")),
             Ok(res) => Ok(res)
         }
     }
@@ -372,7 +372,7 @@ impl<'a> EpubRenderer<'a> {
                 self.chapter_title = try!(self.html.render_vec(vec));
             } else {
                 self.html.book.logger.warning(lformat!("EPUB ({}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered.",
-                                                      self.html.source));
+                                                       self.html.source));
             }
         } else {
             let res = self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,

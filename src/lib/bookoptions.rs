@@ -424,7 +424,8 @@ impl BookOptions {
                     // resources.base_path.templates is redefined later on
                     let path = other.get_path(&key).unwrap();
                     let new_path = try!(::std::env::current_dir().map_err(|_|
-                                                                          Error::default(Source::empty(), "could not get current directory!!!")))
+                                                                          Error::default(Source::empty(),
+                                                                                         lformat!("could not get current directory!!!"))))
                         .join(&path);
                     new_path
                 } else {
@@ -487,23 +488,24 @@ impl BookOptions {
                 _ => unreachable!()
             };
             let def = if let Some(value) = default {
-                value
+                value.to_owned()
             } else {
-                "not set"
+                lformat!("not set")
             };
             if md {
-                out.push_str(&format!("- **`{}`**
+                out.push_str(&lformat!("- **`{}`**
     - **type**: {}
     - **default value**: `{}`
     - {}\n", key.unwrap(), o_type, def, comment));
             } else {
-                out.push_str(&format!("{}{}{} ({}{}{}) (default: {}{}{})\n  {}\n",
+                out.push_str(&format!("{}{}{} ({}{}{}) ({} {}{}{})\n  {}\n",
                                       SHELL_COLOUR_ORANGE,
                                       key.unwrap(),
                                       SHELL_COLOUR_OFF,
                                       SHELL_COLOUR_BLUE,
                                       o_type,
                                       SHELL_COLOUR_OFF,
+                                      lformat!("default:"),
                                       SHELL_COLOUR_GREEN,
                                       def,
                                       SHELL_COLOUR_OFF,

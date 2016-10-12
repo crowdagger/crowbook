@@ -141,7 +141,7 @@ impl Book {
         
         let path = Path::new(filename);
         let mut f = try!(File::open(&path).map_err(|_| Error::file_not_found(Source::empty(),
-                                                                             "book",
+                                                                             lformat!("book"),
                                                                              filename.to_owned())));
         // Set book path to book's directory
         if let Some(parent) = path.parent() {
@@ -151,7 +151,7 @@ impl Book {
         
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| Error::config_parser(Source::new(filename),
-                                                                       "file contains invalid UTF-8, could not parse it")));
+                                                                       lformat!("file contains invalid UTF-8, could not parse it"))));
         
         
         let result = book.set_from_config(&s);
@@ -349,7 +349,7 @@ impl Book {
                 } 
                 let file = try!(get_filename(&self.source, parts[1]));
                 let number = try!(parts[0].parse::<i32>().map_err(|_| Error::config_parser(&self.source,
-                                                                                           "Error parsing chapter number")));
+                                                                                           lformat!("Error parsing chapter number"))));
                 try!(self.add_chapter(Number::Specified(number), file));
             } else {
                 return Err(Error::config_parser(&self.source,
@@ -468,10 +468,10 @@ impl Book {
     
     /// Render book to pdf according to book options
     pub fn render_pdf(&self) -> Result<()> {
-        self.logger.debug("Attempting to generate pdf...");
+        self.logger.debug(lformat!("Attempting to generate pdf..."));
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_pdf());
-        self.logger.debug("Output of latex command:");
+        self.logger.debug(lformat!("Output of latex command:"));
         self.logger.debug(result);
         self.logger.info(lformat!("Successfully generated PDF file: {}", self.options.get_path("output.pdf").unwrap()));
         Ok(())
@@ -479,10 +479,10 @@ impl Book {
 
     /// Render book to epub according to book options
     pub fn render_epub(&self) -> Result<()> {
-        self.logger.debug("Attempting to generate epub...");
+        self.logger.debug(lformat!("Attempting to generate epub..."));
         let mut epub = EpubRenderer::new(&self);
         let result = try!(epub.render_book());
-        self.logger.debug("Output of zip command:");
+        self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
         self.logger.info(lformat!("Successfully generated EPUB file: {}", self.options.get_path("output.epub").unwrap()));
         Ok(())
@@ -490,7 +490,7 @@ impl Book {
 
     /// Render book to HTML directory according to book options
     pub fn render_html_dir(&self) -> Result<()> {
-        self.logger.debug("Attempting to generate html directory...");
+        self.logger.debug(lformat!("Attempting to generate html directory..."));
         let mut html = HtmlDirRenderer::new(&self);
         try!(html.render_book());
         self.logger.info(lformat!("Successfully generated HTML directory: {}", self.options.get_path("output.html_dir").unwrap()));
@@ -506,7 +506,7 @@ impl Book {
                                             dir_name));
             return Ok(())
         }
-        self.logger.debug("Attempting to generate html directory for proofreading...");
+        self.logger.debug(lformat!("Attempting to generate html directory for proofreading..."));
         let mut html = HtmlDirRenderer::new(&self).proofread();
         try!(html.render_book());
         self.logger.info(lformat!("Successfully generated HTML directory: {}", dir_name));
@@ -521,7 +521,7 @@ impl Book {
                                             file_name));
             return Ok(())
         }
-        self.logger.debug("Attempting to generate PDF for proofreading...");
+        self.logger.debug(lformat!("Attempting to generate PDF for proofreading..."));
         let mut latex = LatexRenderer::new(&self).proofread();
         try!(latex.render_pdf());
         self.logger.info(lformat!("Successfully generated PDF file for proofreading: {}", file_name));
@@ -530,10 +530,10 @@ impl Book {
 
     /// Render book to odt according to book options
     pub fn render_odt(&self) -> Result<()> {
-        self.logger.debug("Attempting to generate Odt...");
+        self.logger.debug(lformat!("Attempting to generate ODT..."));
         let mut odt = OdtRenderer::new(&self);
         let result = try!(odt.render_book());
-        self.logger.debug("Output of zip command:");
+        self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
         self.logger.info(lformat!("Successfully generated ODT file: {}", self.options.get_path("output.odt").unwrap()));
         Ok(())
@@ -541,7 +541,7 @@ impl Book {
 
     /// Render book to html according to book options
     pub fn render_html<T: Write>(&self, f: &mut T) -> Result<()> {
-        self.logger.debug("Attempting to generate HTML...");
+        self.logger.debug(lformat!("Attempting to generate HTML..."));
         let mut html = HtmlSingleRenderer::new(&self);
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
@@ -566,7 +566,7 @@ impl Book {
                                             file_name));
             return Ok(())
         }
-        self.logger.debug("Attempting to generate HTML for proofreading...");
+        self.logger.debug(lformat!("Attempting to generate HTML for proofreading..."));
         let mut html = HtmlSingleRenderer::new(&self).proofread();
         let result = try!(html.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
@@ -577,7 +577,7 @@ impl Book {
 
     /// Render book to pdf according to book options
     pub fn render_tex<T:Write>(&self, f: &mut T) -> Result<()> {
-        self.logger.debug("Attempting to generate LaTeX...");
+        self.logger.debug(lformat!("Attempting to generate LaTeX..."));
 
         let mut latex = LatexRenderer::new(&self);
         let result = try!(latex.render_book());
@@ -606,8 +606,6 @@ impl Book {
 
         
         self.logger.debug("Attempting to generate LaTeX (for proofreading)...");
-        
-
         let mut latex = LatexRenderer::new(&self).proofread();
         let result = try!(latex.render_book());
         try!(f.write_all(&result.as_bytes()).map_err(|e| Error::render(&self.source,
@@ -960,13 +958,13 @@ impl Book {
 /// Calls mustache::compile_str but catches panics and returns a result
 pub fn compile_str<O, S>(template: &str, source: O, error_msg: S)  -> Result<mustache::Template>
     where O: Into<Source>,
-          S: Into<Cow<'static, str>>
+          S: Into<String>,
 {
     let input: String = template.to_owned();
     let result = thread::spawn(move || mustache::compile_str(&input)).join();
     match result {
         Ok(result) => Ok(result),
         Err(_) => Err(Error::template(source,
-                                      error_msg))
+                                      error_msg.into()))
     }
 }
