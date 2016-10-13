@@ -448,7 +448,7 @@ usage of some of them is detailed later on.
     - **type**: float
     - **default value**: `2.0`
     -  Threshold to detect a repetition
-
+```
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
@@ -456,7 +456,7 @@ must be composed by a number, a string is, well, any string). The `path`
 type might puzzle you a 
 bit, but it's equivalent to a string, except Crowbook will consider it
 relatively to the book file. The `template path` type is just the
-`path` of a template.
+`path` of a template. Metadata are just strings.
 
 ### Metadata ###
 
