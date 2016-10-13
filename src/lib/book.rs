@@ -996,7 +996,7 @@ impl Book {
                                                 }
                                                 Err(e) => {
                                                     self.logger
-                                                        .error(format!("Inline YAML block could \
+                                                        .error(lformat!("Inline YAML block could \
                                                                         not set {:?} to {:?}: {}",
                                                                        key,
                                                                        value,
