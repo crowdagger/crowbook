@@ -12,17 +12,17 @@ use std::env;
 lazy_static! {
     static ref OPTIONS: String = format!("\
 # {metadata}
-author:str:Anonymous                # {author}
-title:str:Untitled                  # {title}
-lang:str:en                         # {lang}
-subject:str                         # {subject}
-description:str                     # {description}
+author:meta:Anonymous               # {author}
+title:meta:Untitled                 # {title}
+lang:meta:en                        # {lang}
+subject:meta                        # {subject}
+description:meta                    # {description}
 cover:path                          # {cover}
         
 # {metadata2}
-license:str                         # {license}
-version:str                         # {version}
-date:str                            # {date}
+license:meta                        # {license}
+version:meta                        # {version}
+date:meta                           # {date}
 
 # {output_opt}
 output.epub:path                    # {output_epub}
@@ -291,24 +291,19 @@ impl BookOptions {
         };
 
         // Load default options and types from OPTIONS
-        let mut is_metadata = false;
-        for (comment, key, option_type, default_value) in Self::options_to_vec() {
+        for (_, key, option_type, default_value) in Self::options_to_vec() {
             if key.is_none() {
-                if comment.contains("Metadata") || comment.contains("metadata") {
-                    is_metadata = true;
-                } else {
-                    is_metadata = false;
-                }
                 continue;
             }
             let key = key.unwrap();
             match option_type.unwrap() {
-                "str" => {
-                    if is_metadata {
-                        options.metadata.push(key.to_owned());
-                    }
+                "meta" => {
+                    options.metadata.push(key.to_owned());
                     options.valid_strings.push(key);
-                }
+                },
+                "str" => {
+                    options.valid_strings.push(key);
+                },
                 "bool" => options.valid_bools.push(key),
                 "int" => options.valid_ints.push(key),
                 "float" => options.valid_floats.push(key),
@@ -758,14 +753,15 @@ impl BookOptions {
             }
             previous_is_comment = false;
             let o_type = match o_type.unwrap() {
-                "bool" => "boolean",
-                "float" => "float",
-                "int" => "integer",
-                "char" => "char",
-                "str" => "string",
-                "path" => "path",
-                "tpl" => "template path",
-                "alias" => "DEPRECATED",
+                "bool" => lformat!("boolean"),
+                "float" => lformat!("float"),
+                "int" => lformat!("integer"),
+                "char" => lformat!("char"),
+                "str" => lformat!("string"),
+                "path" => lformat!("path"),
+                "tpl" => lformat!("template path"),
+                "meta" => lformat!("metadata"),
+                "alias" => lformat!("DEPRECATED"),
                 _ => unreachable!(),
             };
             let def = if let Some(value) = default {
