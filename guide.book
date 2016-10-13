@@ -32,7 +32,7 @@ proofread.languagetool: true
 rendering.num_depth: 2
 rendering.initials: false
 rendering.inline_toc: false
-rendering.chapter_template: "**{{{number}}}.** {{{chapter_title}}}"
+rendering.chapter_template: "{{{number}}}\\. {{{chapter_title}}}"
 
 # Html options
 html_single.one_chapter: true
