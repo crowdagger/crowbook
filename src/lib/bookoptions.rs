@@ -9,9 +9,242 @@ use std::collections::HashMap;
 use std::path::{PathBuf, Path};
 use std::env;
 
+lazy_static! {
+    static ref OPTIONS: String = format!("\
+# {metadata}
+author:str:Anonymous                # {author}
+title:str:Untitled                  # {title}
+lang:str:en                         # {lang}
+subject:str                         # {subject}
+description:str                     # {description}
+cover:path                          # {cover}
+        
+# {metadata2}
+license:str                         # {license}
+version:str                         # {version}
+date:str                            # {date}
 
-static OPTIONS: &'static str = include_str!("bookoptions.txt");
+# {output_opt}
+output.epub:path                    # {output_epub}
+output.html:path                    # {output_html}
+output.html_dir:path                # {output_html_dir}
+output.tex:path                     # {output_tex}
+output.pdf:path                     # {output_pdf}
+output.odt:path                     # {output_odt}
+output.base_path:path:\"\"            # {output_base_path}
 
+# {render_opt}
+rendering.initials:bool:false                                        # {rendering_initials}
+rendering.inline_toc:bool:false                                      # {inline_toc}
+rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
+rendering.num_depth:int:1                                            # {num_depth}
+rendering.chapter_template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+
+# {special_ops}
+import_config:path                  # {import_config}
+
+# {html_opt}
+html.header:str                     # {html_header}
+html.footer:str                     # {html_footer}
+html.css:tpl                        # {html_css}
+html.css.colours:tpl                # {css_colours}
+html.js:tpl                         # {html_js}
+html.css.print:tpl                  # {css_print}
+html.highlight_code:bool:true       # {highlight}
+html.highlight.js:tpl               # {highlight_js}
+html.highlight.css:tpl              # {highlight_css}
+html.side_notes:bool:false          # {side_notes}
+html.escape_nb_spaces:bool:true     # {nb_spaces}
+
+# {html_single_opt}
+html_single.one_chapter:bool:false  # {one_chapter}
+html_single.html:tpl                # {single_html}
+html_single.js:tpl                  # {single_js}
+
+
+# {html_dir_opt}
+html_dir.index.html:tpl             # {index_html}
+html_dir.chapter.html:tpl           # {chapter_html}
+
+# {epub_opt}
+epub.version:int:2                  # {epub_ver}
+epub.css:tpl                        # {epub_css}
+epub.chapter.xhtml:tpl              # {chapter_xhtml}
+
+# {tex_opt}
+tex.links_as_footnotes:bool:true    # {tex_links}
+tex.command:str:xelatex             # {tex_command}
+tex.template:tpl                    # {tex_tmpl}
+tex.class:str:book                  # {tex_class}
+
+# {rs_opt}
+resources.files:str                  # {rs_files}
+resources.out_path:path:data         # {rs_out}
+resources.base_path:path             # {rs_base}
+resources.base_path.links:path       # {rs_links}
+resources.base_path.images:path:.    # {rs_img}
+resources.base_path.files:path:.     # {rs_base_files}
+resources.base_path.templates:path:. # {rs_tmpl}
+
+# {input_opt}
+input.autoclean:bool:true           # {autoclean}
+input.yaml_blocks:bool:false        # {yaml}
+
+
+# {crowbook_opt}
+crowbook.temp_dir:path:             # {tmp_dir}
+crowbook.zip.command:str:zip        # {zip}
+crowbook.verbose:bool:false         # {verbose}
+
+
+# {prf_opt}
+output.proofread.html:path          # {prf_html}
+output.proofread.html_dir:path      # {prf_html_dir}
+output.proofread.pdf:path           # {prf_pdf}
+
+# {prf_opt2}
+proofread:bool:false                              # {prf}
+proofread.nb_spaces:bool:true                     # {prf_spaces}
+proofread.languagetool:bool:false                 # {prf_lng}
+proofread.languagetool.port:int:8081              # {prf_lng_port}
+proofread.repetitions:bool:false                  # {prf_repet}
+proofread.repetitions.max_distance:int:25         # {prf_max_dist}
+proofread.repetitions.fuzzy:bool:true             # {prf_fuzzy}
+proofread.repetitions.fuzzy.threshold:float:0.2   # {prf_fuzzy_t}
+proofread.repetitions.ignore_proper:bool:true     # {prf_ignore}
+proofread.repetitions.threshold:float:2.0         # {prf_threshold}
+
+# {deprecated_opt}
+base_path:alias:resources.base_path                 # {renamed}
+base_path.links:alias:resources.base_path.links     # {renamed}
+base_path.images:alias:resources.base_path.images   # {renamed}
+side_notes:alias:html.side_notes                    # {renamed}
+html.top:alias:html.header                          # {renamed}
+autoclean:alias:input.autoclean                     # {renamed}
+enable_yaml_blocks:alias:input.yaml_blocks          # {renamed}
+use_initials:alias:rendering.initials               # {renamed}
+toc_name:alias:rendering.inline_toc.name            # {renamed}
+display_toc:alias:rendering.inline_toc              # {renamed}
+numbering:alias:rendering.num_depth                 # {renamed}
+numbering_template:alias:rendering.chapter_template # {renamed}
+html.display_chapter:alias:html_single.one_chapter  # {renamed}
+temp_dir:alias:crowbook.temp_dir                    # {renamed}
+zip.command:alias:crowbook.zip.command              # {renamed}
+verbose:alias:crowbook.verbose                      # {renamed}
+html.script:alias:html_singe.js                     # {renamed}
+html.print_css:alias:html.css.print                 # {renamed}
+html.template:alias:html_single.html                # {renamed}
+html_dir.script:alias:html_dir.js                   # {renamed}
+epub.template:alias:epub.chapter.xhtml              # {renamed}
+html_dir.css:alias:html.css                         # {renamed}
+nb_char:alias                                       # {removed}
+tex.short:alias                                     # {removed}
+html.crowbook_link:alias                            # {removed}
+",
+                                         metadata = lformat!("Metadata"),
+                                         metadata2 = lformat!("Additional metadata"),
+                                         output_opt = lformat!("Output options"),
+                                         render_opt = lformat!("Rendering options"),
+                                         special_ops = lformat!("Special option"),
+                                         html_opt = lformat!("HTML options"),
+                                         html_single_opt = lformat!("Standalone HTML options"),
+                                         html_dir_opt = lformat!("Multifile HTML options"),
+                                         epub_opt = lformat!("EPUB options"),
+                                         tex_opt = lformat!("LaTeX options"),
+                                         rs_opt = lformat!("Resources option"),
+                                         input_opt = lformat!("Input options"),
+                                         crowbook_opt = lformat!("Crowbook options"),
+                                         prf_opt = lformat!("Output options (for proofreading)"),
+                                         prf_opt2 = lformat!("Proofreading options (only for output.proofread.* targets)"),
+                                         deprecated_opt = lformat!("Deprecated options"),
+                                         
+                                         author = lformat!("Author of the book"),
+                                         title = lformat!("Title of the book"),
+                                         lang = lformat!("Language of the book"),
+                                         subject = lformat!("Subject of the book (used for EPUB metadata"),
+                                         description = lformat!("Description of the book (used for EPUB metadata"),
+                                         cover = lformat!("Path to the cover of the book"),
+                                         
+                                         license = lformat!("License of the book"),
+                                         version = lformat!("Version of the book"),
+                                         date = lformat!("Date the book was revised"),
+                                         
+                                         output_epub = lformat!("Output file name for EPUB rendering"),
+                                         output_html = lformat!("Output file name for HTML rendering"),
+                                         output_tex = lformat!("Output file name for LaTeX rendering"),
+                                         output_pdf = lformat!("Output file name for PDF rendering"),
+                                         output_odt = lformat!("Output file name for ODT rendering"),
+                                         output_html_dir = lformat!("Output directory name for HTML rendering"),
+                                         output_base_path = lformat!("Directory where those output files will we written"),
+                                         
+                                         rendering_initials = lformat!("Use initials ('lettrines') for first letter of a chapter (experimental)"),
+                                         inline_toc = lformat!("Display a table of content in the document"),
+                                         toc_name = lformat!("Name of the table of contents if it is displayed in document"),
+                                         num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
+                                         chapter_template = lformat!("Naming scheme of chapters"),
+                                         
+                                         import_config = lformat!("Import another book configuration file"),
+                                         
+                                         html_header = lformat!("Custom header to display at the beginning of html file(s)"),
+                                         html_footer = lformat!("Custom footer to display at the end of HTML file(s)"),
+                                         html_css = lformat!("Path of a stylesheet for HTML rendering"),
+                                         css_colours = lformat!("Path of a stylesheet for the colours for HTML"),
+                                         html_js = lformat!("Path of a javascript file"),
+                                         css_print = lformat!("Path of a media print stylesheet for HTML rendering"),
+                                         highlight = lformat!("Provides syntax highlighting for code blocks (using highlight.js)"),
+                                         highlight_js = lformat!("Set another highlight.js version than the bundled one"),
+                                         highlight_css = lformat!("Set another highlight.js CSS theme than the default one"),
+                                         side_notes = lformat!("Display footnotes as side notes in HTML/Epub (experimental)"),
+                                         nb_spaces = lformat!("Replace unicode non breaking spaces with HTML entities and CSS"),
+                                         
+                                         one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
+                                         single_html = lformat!("Path of an HTML template"),
+                                         single_js = lformat!("Path of a javascript file"),
+                                         
+                                         index_html = lformat!("Path of index.html template"),
+                                         chapter_html = lformat!("Path of a chapter.html template"),
+                                         
+                                         epub_ver = lformat!("EPUB version to generate (2 or 3)"),
+                                         epub_css = lformat!("Path of a stylesheet for EPUB"),
+                                         chapter_xhtml = lformat!("Path of an xhtml template for each chapter"),
+                                         
+                                         tex_links = lformat!("Add foontotes to URL of links so they are readable when printed"),
+                                         tex_command = lformat!("LaTeX command to use for generating PDF"),
+                                         tex_tmpl = lformat!("Path of a LaTeX template file"),
+                                         tex_class = lformat!("LaTeX class to use"),
+                                         
+                                         rs_files = lformat!("Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts"),
+                                         rs_out = lformat!("Paths where additional resources should be copied in the EPUB file or HTML directory "),
+                                         rs_base = lformat!("Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path."),
+                                         rs_links = lformat!("Set base path but only for links. Useless if resources.base_path is set."),
+                                         rs_img = lformat!("Set base path but only for images. Useless if resources.base_path is set."),
+                                         rs_base_files = lformat!("Set base path but only for additional files. Useless if resources.base_path is set."),
+                                         rs_tmpl = lformat!("Set base path but only for templates files. Useless if resources.base_path is set."),
+                                         
+                                         autoclean = lformat!("Toggle cleaning of input markdown according to lang"),
+                                         yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
+                                         tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
+                                         zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
+                                         verbose = lformat!("Make Crowbook display more messages"),
+                                         
+                                         prf_html = lformat!("Output file name for HTML rendering with proofread features"),
+                                         prf_html_dir = lformat!("Output directory name for HTML rendering with proofread features"),
+                                         prf_pdf = lformat!("Output file name for PDF rendering with proofread features"),
+                                         prf = lformat!("If set to false, will disactivate proofreading even if one of output.proofread.x is present"),
+                                         prf_spaces = lformat!("Highlight non breaking spaces so it is easier to see if typography is correct"),
+                                         prf_lng = lformat!("If true, try to use language tool server to grammar check the book"),
+                                         prf_lng_port = lformat!("Port to connect to languagetool-server"),
+                                         prf_repet = lformat!("If set to true, use Caribon to detect repetitions"),
+                                         prf_max_dist = lformat!("Max distance between two occurences so it is considered a repetition"),
+                                         prf_fuzzy = lformat!("Enable fuzzy string matching"),
+                                         prf_fuzzy_t = lformat!("Max threshold of differences to consider two strings a repetition"),
+                                         prf_ignore = lformat!("Ignore proper nouns for repetitions"),
+                                         prf_threshold = lformat!("Threshold to detect a repetition"),
+                                         
+                                         renamed = lformat!("Renamed"),
+                                         removed = lformat!("Removed"),
+    );
+}
 
 
 /// Contains the options of a book.
