@@ -15,12 +15,12 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error,Result};
+use error::{Error, Result};
 
-use std::path::{Path,PathBuf};
+use std::path::{Path, PathBuf};
 use std::io::Write;
 use std::process::Command;
-use std::fs::{self, File,DirBuilder};
+use std::fs::{self, File, DirBuilder};
 use uuid;
 use std::ops::Drop;
 
@@ -31,22 +31,25 @@ pub struct Zipper {
 }
 
 impl Zipper {
-    /// creates new zipper
+    /// Creates new zipper
     ///
-    /// path: the path to a temporary directory (zipper will create a random dir in it and clean it later)
-    /// inner_dirs: a vec of inner directory to create in this directory
+    /// # Arguments
+    /// * `path`: the path to a temporary directory
+    /// (zipper will create a random dir in it and clean it later)
     pub fn new(path: &str) -> Result<Zipper> {
         let uuid = uuid::Uuid::new_v4();
         let zipper_path = Path::new(path).join(uuid.simple().to_string());
 
         try!(DirBuilder::new()
-             .recursive(true)
-             .create(&zipper_path)
-             .map_err(|_| Error::zipper(lformat!("could not create temporary directory in {path}",
-                                                 path = path))));
+            .recursive(true)
+            .create(&zipper_path)
+            .map_err(|_| {
+                Error::zipper(lformat!("could not create temporary directory in {path}",
+                                       path = path))
+            }));
 
         Ok(Zipper {
-            args: vec!(),
+            args: vec![],
             path: zipper_path,
         })
     }
@@ -55,21 +58,26 @@ impl Zipper {
     pub fn write(&mut self, file: &str, content: &[u8], add_args: bool) -> Result<()> {
         let path = Path::new(file);
         if path.starts_with("..") || path.is_absolute() {
-            return Err(Error::zipper(lformat!("file {file} refers to an absolute or a parent path.
-This is forbidden because we are supposed to create a temporary file in a temporary dir.",
+            return Err(Error::zipper(lformat!("file {file} refers to an absolute or a parent \
+                                               path.
+This is forbidden because we are supposed \
+                                               to create a temporary file in a temporary dir.",
                                               file = file)));
         }
         let dest_file = self.path.join(path);
         let dest_dir = dest_file.parent().unwrap();
-        if !fs::metadata(dest_dir).is_ok() { // dir does not exist, create it
+        if !fs::metadata(dest_dir).is_ok() {
+            // dir does not exist, create it
             try!(DirBuilder::new()
-                 .recursive(true)
-                 .create(&dest_dir)
-                 .map_err(|_| Error::zipper(lformat!("could not create temporary directory in {path}",
-                                                     path = dest_dir.display()))));
+                .recursive(true)
+                .create(&dest_dir)
+                .map_err(|_| {
+                    Error::zipper(lformat!("could not create temporary directory in {path}",
+                                           path = dest_dir.display()))
+                }));
         }
-        
-        
+
+
         if let Ok(mut f) = File::create(&dest_file) {
             if f.write_all(content).is_ok() {
                 if add_args {
@@ -81,8 +89,7 @@ This is forbidden because we are supposed to create a temporary file in a tempor
                                            file = file)))
             }
         } else {
-            Err(Error::zipper(lformat!("could not create temporary file {file}",
-                                       file = file)))
+            Err(Error::zipper(lformat!("could not create temporary file {file}", file = file)))
         }
     }
 
@@ -92,24 +99,28 @@ This is forbidden because we are supposed to create a temporary file in a tempor
             .current_dir(&self.path)
             .arg(file)
             .output()
-            .map_err(|e| Error::zipper(lformat!("failed to execute unzip on {file}: {error}",
-                                                file = file,
-                                                error = e)));
+            .map_err(|e| {
+                Error::zipper(lformat!("failed to execute unzip on {file}: {error}",
+                                       file = file,
+                                       error = e))
+            });
 
         try!(output);
 
         fs::remove_file(self.path.join(file))
-            .map_err(|_| Error::zipper(lformat!("failed to remove file {file}",
-                                                file = file)))
+            .map_err(|_| Error::zipper(lformat!("failed to remove file {file}", file = file)))
     }
 
     /// run command and copy file name (supposed to result from the command) to current dir
-    pub fn run_command(&mut self, mut command: Command, in_file: &str, out_file: &str) -> Result<String> {
+    pub fn run_command(&mut self,
+                       mut command: Command,
+                       in_file: &str,
+                       out_file: &str)
+                       -> Result<String> {
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
             .output()
-            .map_err(|e| Error::zipper(lformat!("failed to execute process: {error}",
-                                                error = e)));
+            .map_err(|e| Error::zipper(lformat!("failed to execute process: {error}", error = e)));
         let output = try!(res_output);
         try!(fs::copy(self.path.join(in_file), out_file).map_err(|_| {
             println!("{}", &String::from_utf8_lossy(&output.stdout));
@@ -133,10 +144,14 @@ This is forbidden because we are supposed to create a temporary file in a tempor
         command.arg(".");
         self.run_command(command, "result.odt", odt_file)
     }
-    
+
 
     /// generate a pdf file into given file name
-    pub fn generate_pdf(&mut self, command: &str, tex_file: &str, pdf_file: &str) -> Result<String> {
+    pub fn generate_pdf(&mut self,
+                        command: &str,
+                        tex_file: &str,
+                        pdf_file: &str)
+                        -> Result<String> {
         // first pass
         let _ = Command::new(command)
             .current_dir(&self.path)
@@ -148,7 +163,7 @@ This is forbidden because we are supposed to create a temporary file in a tempor
         command.arg(tex_file);
         self.run_command(command, "result.pdf", pdf_file)
     }
-    
+
     /// generate an epub into given file name
     pub fn generate_epub(&mut self, command: &str, file: &str) -> Result<String> {
         let mut command = Command::new(command);
@@ -161,7 +176,9 @@ This is forbidden because we are supposed to create a temporary file in a tempor
 impl Drop for Zipper {
     fn drop(&mut self) {
         if let Err(err) = fs::remove_dir_all(&self.path) {
-            println!("Error in zipper: could not delete temporary directory {}, error: {}", self.path.to_string_lossy(), err);
+            println!("Error in zipper: could not delete temporary directory {}, error: {}",
+                     self.path.to_string_lossy(),
+                     err);
         }
     }
 }

@@ -41,9 +41,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
-        HtmlSingleRenderer {
-            html: html,
-        }
+        HtmlSingleRenderer { html: html }
     }
 
     /// Set aproofreading to true
@@ -82,13 +80,14 @@ impl<'a> HtmlSingleRenderer<'a> {
         }
         let mut content = String::new();
 
-        let mut titles = vec!();
-        let mut chapters = vec!();
-        let render_notes_chapter = self.html.book.options.get_bool("html_single.one_chapter").unwrap();
+        let mut titles = vec![];
+        let mut chapters = vec![];
+        let render_notes_chapter =
+            self.html.book.options.get_bool("html_single.one_chapter").unwrap();
 
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
             self.html.chapter_config(i, n, String::new());
-            
+
             let mut title = String::new();
             for token in v {
                 match *token {
@@ -96,55 +95,60 @@ impl<'a> HtmlSingleRenderer<'a> {
                         if self.html.current_hide || self.html.current_numbering == 0 {
                             title = try!(self.html.render_vec(vec));
                         } else {
-                            title = try!(self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
-                                                                            try!(self.html.render_vec(vec)),
-                                                                            |s| self.render_vec(&try!(Parser::new().parse_inline(s))) ));
+                            title = try!(self.html
+                                .book
+                                .get_chapter_header(self.html.current_chapter[0] + 1,
+                                                    try!(self.html.render_vec(vec)),
+                                                    |s| {
+                                                        self.render_vec(&try!(Parser::new()
+                                                            .parse_inline(s)))
+                                                    }));
                         }
                         break;
-                    },
+                    }
                     _ => {
                         continue;
                     }
                 }
             }
             titles.push(title);
-            
-            chapters.push(format!(
-                "<div id = \"chapter-{}\" class = \"chapter\">
+
+            chapters.push(format!("<div id = \"chapter-{}\" class = \"chapter\">
   {}
 </div>",
-                i,
-                try!(HtmlRenderer::render_html(self, v, render_notes_chapter))));
+                                  i,
+                                  try!(HtmlRenderer::render_html(self, v, render_notes_chapter))));
         }
         self.html.source = Source::empty();
 
         for (i, chapter) in chapters.iter().enumerate() {
-            if self.html.book.options.get_bool("html_single.one_chapter").unwrap()
-                && i != 0 {
-                content.push_str(&format!(
-                    "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls prev_chapter chapter-{}\">
-  <a href = \"#chapter-{}\">
+            if self.html.book.options.get_bool("html_single.one_chapter").unwrap() && i != 0 {
+                content.push_str(&format!("<p onclick = \"javascript:showChapter({})\" class = \
+                                           \"chapterControls prev_chapter chapter-{}\">
+  <a \
+                                           href = \"#chapter-{}\">
   « {}
   </a>
 </p>",
-                    i - 1,
-                    i,
-                    i - 1,
-                    titles[i -1]));
+                                          i - 1,
+                                          i,
+                                          i - 1,
+                                          titles[i - 1]));
             }
             content.push_str(chapter);
-            if self.html.book.options.get_bool("html_single.one_chapter").unwrap()
-                && i < titles.len() - 1 {
-                content.push_str(&format!(
-                    "<p onclick = \"javascript:showChapter({})\" class = \"chapterControls next_chapter chapter-{}\">
-  <a href = \"#chapter-{}\">
+            if self.html.book.options.get_bool("html_single.one_chapter").unwrap() &&
+               i < titles.len() - 1 {
+                content.push_str(&format!("<p onclick = \"javascript:showChapter({})\" class = \
+                                           \"chapterControls next_chapter chapter-{}\">
+  <a \
+                                           href = \"#chapter-{}\">
   {} »
   </a>
 </p>",
-                    i + 1,
-                    i,
-                    i + 1,
-                    titles[i + 1]));
+                                          i + 1,
+                                          i,
+                                          i + 1,
+                                          titles[i + 1]));
             }
         }
         self.html.render_end_notes(&mut content);
@@ -154,53 +158,63 @@ impl<'a> HtmlSingleRenderer<'a> {
         // If display_toc, display the toc inline
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
 
-            content = format!(
-                "<h1>{}</h1>
+            content = format!("<h1>{}</h1>
 <div id = \"toc\">
 {}
 </div>
 {}",
-                try!(self.html.get_toc_name()),
-                &toc,
-                content);
+                              try!(self.html.get_toc_name()),
+                              &toc,
+                              content);
         }
 
         // Render the CSS
-        let template_css = try!(compile_str(try!(self.html.book.get_template("html.css")).as_ref(),
+        let template_css = try!(compile_str(try!(self.html.book.get_template("html.css"))
+                                                .as_ref(),
                                             &self.html.book.source,
                                             lformat!("could not compile template 'html.css'")));
-        let mut data = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
-            .insert_str("colours", try!(self.html.book.get_template("html.css.colours")));
+        let mut data = try!(self.html
+                .book
+                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+            .insert_str("colours",
+                        try!(self.html.book.get_template("html.css.colours")));
         if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }
         let data = data.build();
-        let mut res:Vec<u8> = vec!();
+        let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data);
         let css = String::from_utf8_lossy(&res);
 
         // Render the JS
-        let template_js = try!(compile_str(try!(self.html.book.get_template("html_single.js")).as_ref(),
-                                           &self.html.book.source,
-                                           lformat!("could not compile template 'html_single.js'")));
+        let template_js =
+            try!(compile_str(try!(self.html.book.get_template("html_single.js")).as_ref(),
+                             &self.html.book.source,
+                             lformat!("could not compile template 'html_single.js'")));
         let data = try!(self.html.book.get_metadata(|s| Ok(s.to_owned())))
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
-            .insert_bool("one_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
-            .insert_str("common_script", self.html.book.get_template("html.js").unwrap().as_ref())
+            .insert_bool("one_chapter",
+                         self.html.book.options.get_bool("html_single.one_chapter").unwrap())
+            .insert_str("common_script",
+                        self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
-        let mut res:Vec<u8> = vec!();
+        let mut res: Vec<u8> = vec![];
         template_js.render_data(&mut res, &data);
         let js = String::from_utf8_lossy(&res);
 
         // Render the HTML document
-        let mut mapbuilder = try!(self.html.book.get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+        let mut mapbuilder = try!(self.html
+                .book
+                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
             .insert_str("content", content)
             .insert_str("script", js)
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
-            .insert_bool("one_chapter", self.html.book.options.get_bool("html_single.one_chapter").unwrap())
+            .insert_bool("one_chapter",
+                         self.html.book.options.get_bool("html_single.one_chapter").unwrap())
             .insert_str("style", css.as_ref())
-            .insert_str("print_style", self.html.book.get_template("html.css.print").unwrap())
+            .insert_str("print_style",
+                        self.html.book.get_template("html.css.print").unwrap())
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
             .insert_str("pages_svg", pages_svg)
@@ -216,18 +230,19 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .to_base64(base64::STANDARD);
             let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
             mapbuilder = mapbuilder.insert_bool("highlight_code", true)
-                .insert_str("highlight_css", try!(self.html.book.get_template("html.highlight.css")))
+                .insert_str("highlight_css",
+                            try!(self.html.book.get_template("html.highlight.css")))
                 .insert_str("highlight_js", highlight_js);
         }
         let data = mapbuilder.build();
-        let template = try!(compile_str(try!(self.html.book.get_template("html_single.html")).as_ref(),
+        let template = try!(compile_str(try!(self.html.book.get_template("html_single.html"))
+                                            .as_ref(),
                                         &self.html.book.source,
                                         lformat!("could not compile template 'html_single.html'")));
-        let mut res = vec!();
+        let mut res = vec![];
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())
     }
 }
 
 derive_html!{HtmlSingleRenderer<'a>, HtmlSingleRenderer::static_render_token}
-

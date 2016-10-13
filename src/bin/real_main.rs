@@ -19,7 +19,7 @@ extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Book,BookOptions, InfoLevel, set_lang};
+use crowbook::{Book, BookOptions, InfoLevel, set_lang};
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
@@ -43,7 +43,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
             _ => unreachable!(),
         };
     }
-    
+
     let option = match format {
         "epub" => book.options.get_path("output.epub"),
         "tex" => book.options.get_path("output.tex"),
@@ -54,7 +54,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
         "proofread.html_dir" => book.options.get_path("output.proofread.html_dir"),
         "proofread.pdf" => book.options.get_path("output.proofread.pdf"),
         "proofread.tex" => book.options.get_path("output.proofread.tex"),
-        _ => unreachable!()
+        _ => unreachable!(),
     };
     let result = match option {
         Err(_) => {
@@ -63,9 +63,13 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                 "proofread.html" => book.render_proof_html(&mut io::stdout()),
                 "tex" => book.render_tex(&mut io::stdout()),
                 "proofread.tex" => book.render_tex(&mut io::stdout()),
-                _ => print_error(&lformat!("No output file specified, and book doesn't specify an output file for {}", format)),
+                _ => {
+                    print_error(&lformat!("No output file specified, and book doesn't specify an \
+                                           output file for {}",
+                                          format))
+                }
             }
-        },
+        }
         Ok(file) => {
             match format {
                 "epub" => book.render_epub(),
@@ -75,32 +79,32 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }
-                },
+                }
                 "proofread.tex" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_proof_tex(&mut f)
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }
-                },
+                }
                 "html" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_html(&mut f)
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }
-                },
+                }
                 "proofread.html" => {
                     if let Ok(mut f) = File::create(&file) {
                         book.render_proof_html(&mut f)
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }
-                },
+                }
                 "pdf" => book.render_pdf(),
                 "proofread.pdf" => book.render_proof_pdf(),
                 "odt" => book.render_odt(),
-                _ => unreachable!()
+                _ => unreachable!(),
             }
         }
     };
@@ -108,27 +112,29 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
         Err(err) => print_error(&format!("{}", err)),
         Ok(_) => {
             exit(0);
-        },
+        }
     }
 }
 
 pub fn real_main() {
     match env::var("LANG") {
-        Ok(val) => if val.starts_with("fr") {
-            set_lang("fr");
-        } else {
-            set_lang("en");
-        },
-        Err(e) => println!("{}", lformat!("couldn't interpret LANG: {}", e))
+        Ok(val) => {
+            if val.starts_with("fr") {
+                set_lang("fr");
+            } else {
+                set_lang("en");
+            }
+        }
+        Err(e) => println!("{}", lformat!("couldn't interpret LANG: {}", e)),
     }
-    
+
     let (matches, help, version) = create_matches();
 
     if matches.is_present("list-options") {
         println!("{}", BookOptions::description(false));
         exit(0);
     }
-    
+
     if matches.is_present("list-options-md") {
         println!("{}", BookOptions::description(true));
         exit(0);
@@ -163,8 +169,9 @@ pub fn real_main() {
     }
 
     if !matches.is_present("BOOK") {
-        print_error(&lformat!("You must pass the file of a book configuration file.\n\n{}\n\nFor more information try --help.",
-                            matches.usage()));
+        print_error(&lformat!("You must pass the file of a book configuration \
+                               file.\n\n{}\n\nFor more information try --help.",
+                              matches.usage()));
     }
 
 
@@ -186,12 +193,12 @@ pub fn real_main() {
     } else {
         Book::new_from_file(s, verbosity, &get_book_options(&matches))
     };
-            
+
     match book_res {
         Err(err) => print_error(&format!("{}", err)),
         Ok(mut book) => {
             set_book_options(&mut book, &matches);
-            
+
             if let Some(format) = matches.value_of("to") {
                 render_format(&mut book, &matches, format);
             } else {

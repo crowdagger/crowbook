@@ -1,7 +1,8 @@
-use error::{Error,Result, Source};
+use error::{Error, Result, Source};
 use bookoption::BookOption;
 use book::Book;
-use logger::{Logger, InfoLevel, SHELL_COLOUR_OFF, SHELL_COLOUR_RED, SHELL_COLOUR_BLUE, SHELL_COLOUR_ORANGE, SHELL_COLOUR_GREEN};
+use logger::{Logger, InfoLevel, SHELL_COLOUR_OFF, SHELL_COLOUR_RED, SHELL_COLOUR_BLUE,
+             SHELL_COLOUR_ORANGE, SHELL_COLOUR_GREEN};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
@@ -9,7 +10,7 @@ use std::path::{PathBuf, Path};
 use std::env;
 
 
-static OPTIONS:&'static str = include_str!("bookoptions.txt");
+static OPTIONS: &'static str = include_str!("bookoptions.txt");
 
 
 
@@ -44,14 +45,14 @@ impl BookOptions {
             options: HashMap::new(),
             deprecated: HashMap::new(),
             defaults: HashMap::new(),
-            valid_bools: vec!(),
-            valid_chars: vec!(),
-            valid_ints: vec!(),
-            valid_floats: vec!(),
-            valid_strings: vec!(),
-            valid_paths: vec!(),
-            valid_tpls: vec!(),
-            metadata: vec!(),
+            valid_bools: vec![],
+            valid_chars: vec![],
+            valid_ints: vec![],
+            valid_floats: vec![],
+            valid_strings: vec![],
+            valid_paths: vec![],
+            valid_tpls: vec![],
+            metadata: vec![],
             root: PathBuf::new(),
             source: Source::empty(),
         };
@@ -74,7 +75,7 @@ impl BookOptions {
                         options.metadata.push(key.to_owned());
                     }
                     options.valid_strings.push(key);
-                },
+                }
                 "bool" => options.valid_bools.push(key),
                 "int" => options.valid_ints.push(key),
                 "float" => options.valid_floats.push(key),
@@ -83,13 +84,16 @@ impl BookOptions {
                 "tpl" => {
                     options.valid_tpls.push(key);
                     options.valid_paths.push(key);
-                },
+                }
                 "alias" => {
                     options.deprecated.insert(key.to_owned(), default_value.map(|s| s.to_owned()));
                     continue;
                 }
-                _ => panic!(lformat!("Ill-formatted OPTIONS string: unrecognized type '{option_type}'",
-                                     option_type = option_type.unwrap())),
+                _ => {
+                    panic!(lformat!("Ill-formatted OPTIONS string: unrecognized type \
+                                     '{option_type}'",
+                                    option_type = option_type.unwrap()))
+                }
             }
             if key == "crowbook.temp_dir" {
                 // "temp_dir" has a special default value that depends on the environment
@@ -114,16 +118,17 @@ impl BookOptions {
     /// * `value`: the value of the option
     ///
     /// # Returns
-    /// 
+    ///
     /// * an error either if `key` is not a valid option or if the value is not of the right type.
-    /// * an option containing None if key was not set, and Some(previous_value) if key was already present.
+    /// * an option containing None if key was not set, and Some(previous_value) if key was
+    ///   already present.
     #[doc(hidden)]
     pub fn set_yaml(&mut self, key: Yaml, value: Yaml) -> Result<Option<BookOption>> {
-        let key:String = if let Yaml::String(key) = key {
+        let key: String = if let Yaml::String(key) = key {
             key
         } else {
             return Err(Error::book_option(&self.source,
-                                              lformat!("Expected a String as a key, found {:?}", key)));
+                                          lformat!("Expected a String as a key, found {:?}", key)));
         };
 
         if self.valid_strings.contains(&key.as_ref()) {
@@ -132,19 +137,25 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::String(value)))
             } else {
                 Err(Error::book_option(&self.source,
-                                           lformat!("Expected a string as value for key {}, found {:?}", &key, &value)))
+                                       lformat!("Expected a string as value for key {}, found \
+                                                 {:?}",
+                                                &key,
+                                                &value)))
             }
         } else if self.valid_paths.contains(&key.as_ref()) {
             // value is a path
             if let Yaml::String(value) = value {
                 if &key == "import_config" {
                     // special case, not a real option
-                    let book = try!(Book::new_from_file(try!(self.root.join(&value)
-                                                             .to_str()
-                                                             .ok_or(Error::book_option(&self.source,
-                                                                                       lformat!("'{value}''s path contains invalid UTF-8 code",
-                                                                                                value = &value)))),
-                                                        InfoLevel::Info, &[]));
+                    let tmp = self.root
+                        .join(&value);
+                    let file = try!(tmp
+                                    .to_str()
+                                    .ok_or(Error::book_option(&self.source,
+                                                              lformat!("'{value}''s path contains invalid \
+                                                                        UTF-8 code",
+                                                                       value = &value))));
+                    let book = try!(Book::new_from_file(file, InfoLevel::Info, &[]));
                     try!(self.merge(book.options));
                     Ok(None)
                 } else {
@@ -152,7 +163,10 @@ impl BookOptions {
                 }
             } else {
                 Err(Error::book_option(&self.source,
-                                           lformat!("expected a string as value for key '{}', found {:?}", &key, &value)))
+                                       lformat!("expected a string as value for key '{}', found \
+                                                 {:?}",
+                                                &key,
+                                                &value)))
             }
         } else if self.valid_chars.contains(&key.as_ref()) {
             // value is a char
@@ -160,13 +174,18 @@ impl BookOptions {
                 let chars: Vec<_> = value.chars().collect();
                 if chars.len() != 1 {
                     return Err(Error::book_option(&self.source,
-                                                  lformat!("could not parse '{value}' as a char: does not contain exactly one char",
+                                                  lformat!("could not parse '{value}' as a \
+                                                            char: does not contain exactly one \
+                                                            char",
                                                            value = &value)));
                 }
                 Ok(self.options.insert(key.to_owned(), BookOption::Char(chars[0])))
             } else {
                 Err(Error::book_option(&self.source,
-                                      lformat!("expected a string as value containing a char for key '{}', found {:?}", &key, &value)))
+                                       lformat!("expected a string as value containing a char \
+                                                 for key '{}', found {:?}",
+                                                &key,
+                                                &value)))
             }
         } else if self.valid_bools.contains(&key.as_ref()) {
             // value is a bool
@@ -174,7 +193,10 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::Bool(value)))
             } else {
                 Err(Error::book_option(&self.source,
-                                           lformat!("expected a boolean as value for key '{}', found {:?}", &key, &value)))
+                                       lformat!("expected a boolean as value for key '{}', \
+                                                 found {:?}",
+                                                &key,
+                                                &value)))
             }
         } else if self.valid_ints.contains(&key.as_ref()) {
             // value is an int
@@ -182,33 +204,42 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::Int(value as i32)))
             } else {
                 Err(Error::book_option(&self.source,
-                                           lformat!("expected an integer as value for key '{}', found {:?}", &key, &value)))
+                                       lformat!("expected an integer as value for key '{}', \
+                                                 found {:?}",
+                                                &key,
+                                                &value)))
             }
         } else if self.valid_floats.contains(&key.as_ref()) {
             // value is a float
             if let Yaml::Real(value) = value {
                 match value.parse::<f32>() {
                     Ok(value) => Ok(self.options.insert(key, BookOption::Float(value))),
-                    Err(_) => Err(Error::book_option(&self.source,
-                                                     lformat!("could not parse '{value}' as a float for key '{key}'",
-                                                              value = &value,
-                                                              key = &key)))
+                    Err(_) => {
+                        Err(Error::book_option(&self.source,
+                                               lformat!("could not parse '{value}' as a float \
+                                                         for key '{key}'",
+                                                        value = &value,
+                                                        key = &key)))
+                    }
                 }
             } else {
                 Err(Error::book_option(&self.source,
-                                           lformat!("expected a float as value for key '{}', found {:?}", &key, &value)))
+                                       lformat!("expected a float as value for key '{}', found \
+                                                 {:?}",
+                                                &key,
+                                                &value)))
             }
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated.get(&key).unwrap().clone();
             if let Some(new_key) = opt {
-                Logger::display_warning(lformat!("'{old_key}' has been deprecated, you should now use '{new_key}'",
+                Logger::display_warning(lformat!("'{old_key}' has been deprecated, you should \
+                                                  now use '{new_key}'",
                                                  old_key = &key,
                                                  new_key = &new_key));
                 self.set_yaml(Yaml::String(new_key), value)
             } else {
                 Err(Error::book_option(self.source.clone(),
-                                       lformat!("key '{key}' has been deprecated.",
-                                                key = &key)))
+                                       lformat!("key '{key}' has been deprecated.", key = &key)))
             }
         } else if key.starts_with("metadata.") {
             // key is a custom metadata
@@ -218,16 +249,18 @@ impl BookOptions {
                 Ok(self.options.insert(key, BookOption::String(value)))
             } else {
                 Err(Error::book_option(&self.source,
-                                           lformat!("expected a string as value for key '{}', found {:?}", &key, &value)))
+                                       lformat!("expected a string as value for key '{}', found \
+                                                 {:?}",
+                                                &key,
+                                                &value)))
             }
         } else {
             // key not recognized
             Err(Error::book_option(self.source.clone(),
-                                   lformat!("unrecognized key '{key}'",
-                                            key = &key)))
+                                   lformat!("unrecognized key '{key}'", key = &key)))
         }
     }
-    
+
     /// Sets an option
     ///
     /// # Arguments
@@ -244,12 +277,15 @@ impl BookOptions {
     /// ```
     /// use crowbook::Book;
     /// let mut book = Book::new(&[]);
-    /// book.options.set("author", "Joan Doe").unwrap(); // ok
-    /// book.options.set("rendering.num_depth", "2").unwrap(); // sets numbering to chapters and subsections
-    /// let result = book.options.set("autor", "John Smith"); 
+    /// // Set author
+    /// book.options.set("author", "Joan Doe").unwrap();
+    /// // Set numbering to chapters and subsections
+    /// book.options.set("rendering.num_depth", "2").unwrap();
+    /// // Try to set invalid key "autor"
+    /// let result = book.options.set("autor", "John Smith");
     /// assert!(result.is_err()); // error: "author" was mispelled "autor"
     ///
-    /// let result = book.options.set("rendering.num_depth", "foo"); 
+    /// let result = book.options.set("rendering.num_depth", "foo");
     /// assert!(result.is_err()); // error: numbering must be an int
     /// ```
     pub fn set(&mut self, key: &str, value: &str) -> Result<Option<BookOption>> {
@@ -260,7 +296,8 @@ impl BookOptions {
                 self.set_yaml(Yaml::String(key.to_owned()), yaml_value)
             } else {
                 Err(Error::book_option(&self.source,
-                                       lformat!("value '{value}' for key '{key}' does not contain one and only one YAML value",
+                                       lformat!("value '{value}' for key '{key}' does not \
+                                                 contain one and only one YAML value",
                                                 value = value,
                                                 key = key)))
             }
@@ -276,13 +313,14 @@ impl BookOptions {
     pub fn get_metadata(&self) -> &[String] {
         &self.metadata
     }
-        
+
     /// Gets an option
     #[doc(hidden)]
     pub fn get(&self, key: &str) -> Result<&BookOption> {
-        self.options.get(key).ok_or_else(|| Error::invalid_option(&self.source,
-                                                                  lformat!("option '{key}' is not present",
-                                                                           key = key)))
+        self.options.get(key).ok_or_else(|| {
+            Error::invalid_option(&self.source,
+                                  lformat!("option '{key}' is not present", key = key))
+        })
     }
 
     /// Gets a list of path. Only used for resources.files.
@@ -290,21 +328,20 @@ impl BookOptions {
     pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
         if key != "resources.files" {
             return Err(Error::book_option(&self.source,
-                                          lformat!("can't get '{key}' as a list of files, only valid if key is resources.files",
+                                          lformat!("can't get '{key}' as a list of files, only \
+                                                    valid if key is resources.files",
                                                    key = key)));
         }
 
-        let list = try!(try!(self.get(key))
-                        .as_str())
-            .split_whitespace();
-        let mut res = vec!();
+        let list = try!(try!(self.get(key)).as_str()).split_whitespace();
+        let mut res = vec![];
         for s in list {
             res.push(s.to_owned());
         }
         Ok(res)
     }
-    
-    /// Gets a string option 
+
+    /// Gets a string option
     pub fn get_str(&self, key: &str) -> Result<&str> {
         try!(self.get(key)).as_str()
     }
@@ -320,54 +357,49 @@ impl BookOptions {
             return Ok(path.to_owned());
         }
 
-        let new_path:PathBuf = match key {
-            "resources.base_path.links"
-                | "resources.base_path.images"
-                | "resources.base_path.files"
-                | "resources.pase_path.templates"
-                => {
-                    // If resources.base_path is set, return it, else return itself
-                    let base_path = self.get_path("resources.base_path");
-                    if base_path.is_ok() {
-                        return base_path;
-                    }
-                    self.root.join(path)
-                },
-            
-            "cover"
-                => {
-                    // Translate according to resources.base_path.images
-                    let base = self.get_path("resources.base_path.images").unwrap();
-                    let new_path = Path::new(&base).join(path);
-                    new_path
-                },
+        let new_path: PathBuf = match key {
+            "resources.base_path.links" |
+            "resources.base_path.images" |
+            "resources.base_path.files" |
+            "resources.pase_path.templates" => {
+                // If resources.base_path is set, return it, else return itself
+                let base_path = self.get_path("resources.base_path");
+                if base_path.is_ok() {
+                    return base_path;
+                }
+                self.root.join(path)
+            }
 
-            "output.epub"
-                | "output.html"
-                | "output.html_dir"
-                | "output.pdf"
-                | "output.tex"
-                | "output.odt"
-                | "output.proofread.html"
-                | "output.proofread.html_dir"
-                | "output.proofread.pdf"
-                => {
-                    // Translate according to output.base_path
-                    let base = self.get_path("output.base_path").unwrap();
-                    let new_path = Path::new(&base).join(path);
-                    new_path
-                },
+            "cover" => {
+                // Translate according to resources.base_path.images
+                let base = self.get_path("resources.base_path.images").unwrap();
+                let new_path = Path::new(&base).join(path);
+                new_path
+            }
 
-            key if self.valid_tpls.contains(&key)
-                => {
-                    // Translate according to resources.base_path.template
-                    let base = self.get_path("resources.base_path.templates").unwrap();
-                    let new_path = Path::new(&base).join(path);
-                    new_path
-                },
+            "output.epub" |
+            "output.html" |
+            "output.html_dir" |
+            "output.pdf" |
+            "output.tex" |
+            "output.odt" |
+            "output.proofread.html" |
+            "output.proofread.html_dir" |
+            "output.proofread.pdf" => {
+                // Translate according to output.base_path
+                let base = self.get_path("output.base_path").unwrap();
+                let new_path = Path::new(&base).join(path);
+                new_path
+            }
 
+            key if self.valid_tpls.contains(&key) => {
+                // Translate according to resources.base_path.template
+                let base = self.get_path("resources.base_path.templates").unwrap();
+                let new_path = Path::new(&base).join(path);
+                new_path
+            }
 
-            _ => self.root.join(path)
+            _ => self.root.join(path),
         };
         if let Some(path) = new_path.to_str() {
             Ok(path.to_owned())
@@ -434,13 +466,15 @@ impl BookOptions {
             }
             // If it's a path, get the corrected path
             if let &BookOption::Path(ref path) = value {
-                let new_path:PathBuf = if other.valid_tpls.contains(&key.as_ref()) {
-                    // If key is a template, sets it with an absolute path so it won't be messed up if
-                    // resources.base_path.templates is redefined later on
+                let new_path: PathBuf = if other.valid_tpls.contains(&key.as_ref()) {
+                    // If key is a template, sets it with an absolute path so it
+                    // won't be messed up if resources.base_path.templates is
+                    // redefined later on
                     let path = other.get_path(&key).unwrap();
-                    let new_path = try!(::std::env::current_dir().map_err(|_|
-                                                                          Error::default(Source::empty(),
-                                                                                         lformat!("could not get current directory!!!"))))
+                    let new_path = try!(::std::env::current_dir().map_err(|_| {
+                            Error::default(Source::empty(),
+                                           lformat!("could not get current directory!!!"))
+                        }))
                         .join(&path);
                     new_path
                 } else {
@@ -450,7 +484,8 @@ impl BookOptions {
                     path.to_owned()
                 } else {
                     return Err(Error::book_option(Source::new(other.root.to_str().unwrap()),
-                                                  lformat!("'{key}''s path contains invalid UTF-8 code",
+                                                  lformat!("'{key}''s path contains invalid \
+                                                            UTF-8 code",
                                                            key = key)));
                 };
                 self.options.insert(key.clone(), BookOption::Path(new_path));
@@ -483,10 +518,7 @@ impl BookOptions {
                 let header = if md {
                     header
                 } else {
-                    format!("{}{}{}",
-                            SHELL_COLOUR_RED,
-                            header,
-                            SHELL_COLOUR_OFF)
+                    format!("{}{}{}", SHELL_COLOUR_RED, header, SHELL_COLOUR_OFF)
                 };
                 out.push_str(&header);
                 continue;
@@ -501,7 +533,7 @@ impl BookOptions {
                 "path" => "path",
                 "tpl" => "template path",
                 "alias" => "DEPRECATED",
-                _ => unreachable!()
+                _ => unreachable!(),
             };
             let def = if let Some(value) = default {
                 value.to_owned()
@@ -518,7 +550,8 @@ impl BookOptions {
                                        default = def,
                                        comment = comment));
             } else {
-                out.push_str(&format!("{orange}{key}{off} ({blue}{option_type}{off}) ({msg} {green}{default}{off})\n  {comment}\n",
+                out.push_str(&format!("{orange}{key}{off} ({blue}{option_type}{off}) ({msg} \
+                                       {green}{default}{off})\n  {comment}\n",
                                       orange = SHELL_COLOUR_ORANGE,
                                       key = key.unwrap(),
                                       off = SHELL_COLOUR_OFF,
@@ -532,11 +565,13 @@ impl BookOptions {
         }
         out
     }
-    
+
     /// OPTIONS to a vec of tuples (comment, key, type, default value)
-    fn options_to_vec() -> Vec<(&'static str, Option<&'static str>,
-                                Option<&'static str>, Option<&'static str>)> {
-        let mut out = vec!();
+    fn options_to_vec
+        ()
+        -> Vec<(&'static str, Option<&'static str>, Option<&'static str>, Option<&'static str>)>
+    {
+        let mut out = vec![];
         for line in OPTIONS.lines() {
             let line = line.trim();
             if line.is_empty() {
@@ -546,17 +581,13 @@ impl BookOptions {
                 out.push((&line[1..], None, None, None));
                 continue;
             }
-            let v:Vec<_> = line.split('#').collect();
+            let v: Vec<_> = line.split('#').collect();
             let content = v[0];
             let comment = v[1];
-            let v:Vec<_> = content.split(':').collect();
+            let v: Vec<_> = content.split(':').collect();
             let key = Some(v[0].trim());
             let option_type = Some(v[1].trim());
-            let default_value = if v.len() > 2 {
-                Some(v[2].trim())
-            } else {
-                None
-            };
+            let default_value = if v.len() > 2 { Some(v[2].trim()) } else { None };
             out.push((comment, key, option_type, default_value));
         }
         out

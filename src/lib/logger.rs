@@ -5,7 +5,8 @@ use std::io::Write;
 /// The level of information to display to a logger
 ///
 /// This enum should only be used as parameters for `Logger` or `Book` methods. Library
-/// users should **not** do exhaustive pattern matching on the variants of the enums, as it might grow variants later.
+/// users should **not** do exhaustive pattern matching on the variants of the enums,
+/// as it might grow variants later.
 #[derive(Debug, PartialEq, Eq, PartialOrd, Clone, Copy)]
 pub enum InfoLevel {
     /// Debug: the lowest level
@@ -30,16 +31,14 @@ use self::InfoLevel::*;
 /// according to verbosity
 #[derive(Debug)]
 pub struct Logger {
-    verbosity: InfoLevel,        
+    verbosity: InfoLevel,
 }
 
 
 impl Logger {
     /// Creates a new logger with defined verbosity
     pub fn new(verbosity: InfoLevel) -> Logger {
-        Logger {
-            verbosity: verbosity
-        }
+        Logger { verbosity: verbosity }
     }
 
     /// Sets verbosity
@@ -47,7 +46,7 @@ impl Logger {
         self.verbosity = verbosity;
     }
 
-    /// Prints a debug message 
+    /// Prints a debug message
     pub fn display_debug<S: AsRef<str>>(s: S) {
         writeln!(&mut io::stderr(),
                  "{}{}{}{}",
@@ -91,7 +90,7 @@ impl Logger {
             .unwrap();
     }
 
-        
+
     /// Prints a message if logger's verbosity <= level
     pub fn log<S: AsRef<str>>(&self, level: InfoLevel, s: S) {
         if level >= self.verbosity {
@@ -101,7 +100,7 @@ impl Logger {
                 Warning => Self::display_warning(s),
                 Error => Self::display_error(s),
                 Quiet => unreachable!(),
-                __NonExhaustive => unreachable!()
+                __NonExhaustive => unreachable!(),
             }
         }
     }

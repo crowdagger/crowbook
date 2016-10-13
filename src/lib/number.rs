@@ -25,10 +25,10 @@ pub enum Number {
     /// Chapter is actually a part following book numbering
     #[doc(hidden)]
     DefaultPart,
-    
+
     /// Chapter is actually a part whose number is specified
     #[doc(hidden)]
-    SpecifiedPart(i32)
+    SpecifiedPart(i32),
 }
 
 
@@ -36,11 +36,13 @@ impl Number {
     /// Returns true if self is a part
     pub fn is_part(&self) -> bool {
         match *self {
-            Number::UnnumberedPart | Number::DefaultPart | Number::SpecifiedPart(..) => true,
-            _ => false
+            Number::UnnumberedPart |
+            Number::DefaultPart |
+            Number::SpecifiedPart(..) => true,
+            _ => false,
         }
     }
-    
+
     /// Returns true if self is hidden
     pub fn is_hidden(&self) -> bool {
         *self == Number::Hidden

@@ -26,7 +26,7 @@ pub struct Source {
     /// File name of the source
     #[doc(hidden)]
     pub file: Option<String>,
-    
+
     /// Line number of the source
     #[doc(hidden)]
     pub line: Option<u32>,
@@ -35,12 +35,18 @@ pub struct Source {
 impl Source {
     /// Create an empty source, with both fields set to None
     pub fn empty() -> Source {
-        Source { file: None, line: None }
+        Source {
+            file: None,
+            line: None,
+        }
     }
 
     /// Create a new source pointing to file
     pub fn new<S: Into<String>>(s: S) -> Source {
-        Source { file: Some(s.into()), line: None }
+        Source {
+            file: Some(s.into()),
+            line: None,
+        }
     }
 
     /// Sets line number of a source (with &mut self)
@@ -87,7 +93,7 @@ impl Error {
     pub fn default<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::Default(msg.into())
+            inner: Inner::Default(msg.into()),
         }
     }
 
@@ -97,7 +103,7 @@ impl Error {
     pub fn grammar_check<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::GrammarCheck(msg.into())
+            inner: Inner::GrammarCheck(msg.into()),
         }
     }
     /// Creates a new parser error
@@ -106,7 +112,7 @@ impl Error {
     pub fn parser<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::Parser(msg.into())
+            inner: Inner::Parser(msg.into()),
         }
     }
 
@@ -116,7 +122,7 @@ impl Error {
     pub fn config_parser<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::ConfigParser(msg.into())
+            inner: Inner::ConfigParser(msg.into()),
         }
     }
 
@@ -124,10 +130,14 @@ impl Error {
     ///
     /// * msg: description of why the file was needed
     /// * file: file name
-    pub fn file_not_found<S1: Into<Cow<'static, str>>, S2: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S1, file: S2) -> Error {
+    pub fn file_not_found<S1: Into<Cow<'static, str>>, S2: Into<Cow<'static, str>>, O: Into<Source>>
+        (source: O,
+         msg: S1,
+         file: S2)
+         -> Error {
         Error {
             source: source.into(),
-            inner: Inner::FileNotFound(msg.into(), file.into())
+            inner: Inner::FileNotFound(msg.into(), file.into()),
         }
     }
 
@@ -137,7 +147,7 @@ impl Error {
     pub fn render<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::Render(msg.into())
+            inner: Inner::Render(msg.into()),
         }
     }
 
@@ -147,7 +157,7 @@ impl Error {
     pub fn template<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::Template(msg.into())
+            inner: Inner::Template(msg.into()),
         }
     }
 
@@ -157,7 +167,7 @@ impl Error {
     pub fn invalid_option<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::InvalidOption(msg.into())
+            inner: Inner::InvalidOption(msg.into()),
         }
     }
 
@@ -167,7 +177,7 @@ impl Error {
     pub fn zipper<S: Into<Cow<'static, str>>>(msg: S) -> Error {
         Error {
             source: Source::empty(),
-            inner: Inner::Zipper(msg.into())
+            inner: Inner::Zipper(msg.into()),
         }
     }
 
@@ -177,7 +187,7 @@ impl Error {
     pub fn book_option<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
-            inner: Inner::BookOption(msg.into())
+            inner: Inner::BookOption(msg.into()),
         }
     }
 
@@ -218,7 +228,7 @@ impl Error {
             _ => false,
         }
     }
-    
+
     /// Returns true if self is a render error, false else
     pub fn is_render(&self) -> bool {
         match self.inner {
@@ -234,7 +244,7 @@ impl Error {
             _ => false,
         }
     }
-    
+
     /// Returns true if self is a book option error, false else
     pub fn is_book_option(&self) -> bool {
         match self.inner {
@@ -255,17 +265,16 @@ impl Error {
 impl error::Error for Error {
     fn description(&self) -> &str {
         match self.inner {
-            Inner::Default(ref s)
-                | Inner::Parser(ref s)
-                | Inner::Zipper(ref s)
-                | Inner::BookOption(ref s)
-                | Inner::ConfigParser(ref s)
-                | Inner::InvalidOption(ref s)
-                | Inner::Render(ref s)
-                | Inner::Template(ref s)
-                | Inner::GrammarCheck(ref s)
-                => s.as_ref(),
-            
+            Inner::Default(ref s) |
+            Inner::Parser(ref s) |
+            Inner::Zipper(ref s) |
+            Inner::BookOption(ref s) |
+            Inner::ConfigParser(ref s) |
+            Inner::InvalidOption(ref s) |
+            Inner::Render(ref s) |
+            Inner::Template(ref s) |
+            Inner::GrammarCheck(ref s) => s.as_ref(),
+
             Inner::FileNotFound(..) => "File not found",
         }
     }
@@ -283,46 +292,50 @@ impl fmt::Display for Error {
         }
 
         try!(match self.inner {
-            Inner::Default(ref s) => {
-                write!(f, "{}", s)
-            },
+            Inner::Default(ref s) => write!(f, "{}", s),
             Inner::GrammarCheck(ref s) => {
-                write!(f, "{}", lformat!("Error connecting to language tool server: {error}",
-                                         error = s))
-            },
+                write!(f,
+                       "{}",
+                       lformat!("Error connecting to language tool server: {error}",
+                                error = s))
+            }
             Inner::Parser(ref s) => {
-                write!(f, "{}", lformat!("Error parsing markdown: {error}",
-                                         error = s))
-            },
+                write!(f,
+                       "{}",
+                       lformat!("Error parsing markdown: {error}", error = s))
+            }
             Inner::ConfigParser(ref s) => {
                 try!(f.write_str(&lformat!("Error parsing configuration file: ")));
                 f.write_str(s)
-            },
+            }
             Inner::FileNotFound(ref description, ref file) => {
-                write!(f, "{}", lformat!("Could not find file '{file}' for {description}",
-                                         file = file,
-                                         description = description))
-            },
+                write!(f,
+                       "{}",
+                       lformat!("Could not find file '{file}' for {description}",
+                                file = file,
+                                description = description))
+            }
             Inner::Template(ref s) => {
-                write!(f, "{}", lformat!("Error compiling template: {template}",
-                                         template = s))
+                write!(f,
+                       "{}",
+                       lformat!("Error compiling template: {template}", template = s))
             }
             Inner::Render(ref s) => {
                 try!(f.write_str(&lformat!("Error during rendering: ")));
                 f.write_str(s)
-            },
+            }
             Inner::Zipper(ref s) => {
                 try!(f.write_str(&lformat!("Error during temporary files editing: ")));
                 f.write_str(s)
-            },
+            }
             Inner::BookOption(ref s) => {
                 try!(f.write_str(&lformat!("Error converting BookOption: ")));
                 f.write_str(s)
-            },
+            }
             Inner::InvalidOption(ref s) => {
                 try!(f.write_str(&lformat!("Error accessing book option: ")));
                 f.write_str(s)
-            },
+            }
         });
         Ok(())
     }
@@ -339,9 +352,9 @@ enum Inner {
     /// An error in Parsing markdown file
     Parser(Cow<'static, str>),
     /// An error in parsing a book configuration file
-    ConfigParser(Cow<'static, str>), 
+    ConfigParser(Cow<'static, str>),
     /// An error when a file is not found
-    FileNotFound(Cow<'static, str>, Cow<'static, str>), //description, file
+    FileNotFound(Cow<'static, str>, Cow<'static, str>), // description, file
     /// An error in a renderer
     Render(Cow<'static, str>),
     /// An error during "zipping" processus

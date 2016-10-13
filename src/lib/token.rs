@@ -48,7 +48,7 @@ pub enum Token {
     /// A quote
     BlockQuote(Vec<Token>),
     /// Code block with language and content
-    CodeBlock(String, Vec<Token>), 
+    CodeBlock(String, Vec<Token>),
 
     /// Unordered list, with a vector of `Item`s
     List(Vec<Token>),
@@ -97,32 +97,27 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any)
     pub fn inner(&self) -> Option<&[Token]> {
         match *self {
-            Rule
-                | SoftBreak
-                | HardBreak
-                | Str(_)
-                => None,
-            
-            Paragraph(ref v) 
-                | Header(_, ref v)
-                | Emphasis(ref v)
-                | Strong(ref v)
-                | Code(ref v)
-                | BlockQuote(ref v)
-                | CodeBlock(_, ref v)
-                | List(ref v)
-                | OrderedList(_, ref v)
-                | Item(ref v)
-                | Table(_, ref v)
-                | TableHead(ref v)
-                | TableRow(ref v)
-                | TableCell(ref v)
-                | Footnote(ref v)
-                | Link(_,_,ref v)
-                | Image(_,_,ref v)
-                | StandaloneImage(_,_,ref v)
-                | Annotation(_, ref v)
-                => Some(v),
+            Rule | SoftBreak | HardBreak | Str(_) => None,
+
+            Paragraph(ref v) |
+            Header(_, ref v) |
+            Emphasis(ref v) |
+            Strong(ref v) |
+            Code(ref v) |
+            BlockQuote(ref v) |
+            CodeBlock(_, ref v) |
+            List(ref v) |
+            OrderedList(_, ref v) |
+            Item(ref v) |
+            Table(_, ref v) |
+            TableHead(ref v) |
+            TableRow(ref v) |
+            TableCell(ref v) |
+            Footnote(ref v) |
+            Link(_, _, ref v) |
+            Image(_, _, ref v) |
+            StandaloneImage(_, _, ref v) |
+            Annotation(_, ref v) => Some(v),
 
             __NonExhaustive => unreachable!(),
         }
@@ -131,48 +126,50 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any) (mutable version)
     pub fn inner_mut(&mut self) -> Option<&mut Vec<Token>> {
         match *self {
-            Rule
-                | SoftBreak
-                | HardBreak
-                | Str(_)
-                => None,
-            
-            Paragraph(ref mut v)
-                | Annotation(_, ref mut v)
-                | Header(_, ref mut v)
-                | Emphasis(ref mut v)
-                | Strong(ref mut v)
-                | Code(ref mut v)
-                | BlockQuote(ref mut v)
-                | CodeBlock(_, ref mut v)
-                | List(ref mut v)
-                | OrderedList(_, ref mut v)
-                | Item(ref mut v)
-                | Table(_, ref mut v)
-                | TableHead(ref mut v)
-                | TableRow(ref mut v)
-                | TableCell(ref mut v)
-                | Footnote(ref mut v)
-                | Link(_,_,ref mut v)
-                | Image(_,_,ref mut v)
-                | StandaloneImage(_,_,ref mut v)
-                => Some(v),
+            Rule | SoftBreak | HardBreak | Str(_) => None,
 
-            __NonExhaustive => unreachable!()
+            Paragraph(ref mut v) |
+            Annotation(_, ref mut v) |
+            Header(_, ref mut v) |
+            Emphasis(ref mut v) |
+            Strong(ref mut v) |
+            Code(ref mut v) |
+            BlockQuote(ref mut v) |
+            CodeBlock(_, ref mut v) |
+            List(ref mut v) |
+            OrderedList(_, ref mut v) |
+            Item(ref mut v) |
+            Table(_, ref mut v) |
+            TableHead(ref mut v) |
+            TableRow(ref mut v) |
+            TableCell(ref mut v) |
+            Footnote(ref mut v) |
+            Link(_, _, ref mut v) |
+            Image(_, _, ref mut v) |
+            StandaloneImage(_, _, ref mut v) => Some(v),
+
+            __NonExhaustive => unreachable!(),
         }
     }
 
     /// Checks whether token is an str
     pub fn is_str(&self) -> bool {
-        if let Token::Str(_) = *self { true } else { false }
+        if let Token::Str(_) = *self {
+            true
+        } else {
+            false
+        }
     }
 
     /// Checks whether token is an image
     ///
-    /// **Returns** `true` if and only if token is Image variant (StandaloneImage returns *false*, like other variants)
+    /// **Returns** `true` if and only if token is Image variant
+    /// (StandaloneImage returns *false*, like other variants)
     pub fn is_image(&self) -> bool {
-        if let Token::Image(_, _, _) = *self { true } else { false }
+        if let Token::Image(_, _, _) = *self {
+            true
+        } else {
+            false
+        }
     }
 }
-
-

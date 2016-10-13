@@ -63,7 +63,8 @@ impl Cleaner for Off {}
 /// use crowbook::cleaner::Cleaner;
 /// use crowbook::cleaner::Default;
 /// use std::borrow::Cow;
-/// let s = Default.clean(Cow::Borrowed("  A  string   with   more   whitespaces  than  needed   "), false);
+/// let s = Default.clean(Cow::Borrowed("  A  string   with   more   whitespaces  than  needed   "),
+///                                     false);
 /// assert_eq!(&s, " A string with more whitespaces than needed ");
 /// ```
 pub struct Default;
@@ -76,7 +77,8 @@ impl Cleaner for Default {
 
 /// Implementation for french 'cleaning'
 ///
-/// This implementation replaces spaces before some characters (e.g. `?` or `;` with non-breaking spaces
+/// This implementation replaces spaces before some characters (e.g. `?` or `;`)
+/// with non-breaking spaces
 ///
 /// # Examples
 ///
@@ -94,12 +96,10 @@ pub struct French {
 impl French {
     /// Creates a new french cleaner
     pub fn new() -> French {
-        French {
-            formatter: FrenchFormatter::new()
-        }
+        French { formatter: FrenchFormatter::new() }
     }
 }
-    
+
 
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
@@ -112,4 +112,3 @@ impl Cleaner for French {
         s
     }
 }
-

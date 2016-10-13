@@ -16,7 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use token::Token;
-use error::{Result,Error, Source};
+use error::{Result, Error, Source};
 use logger::Logger;
 
 use std::mem;
@@ -75,14 +75,18 @@ impl Parser {
     /// Parse a file and returns an AST or an error
     pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
-        let mut f = try!(File::open(path).map_err(|_| Error::file_not_found(&self.source,
-                                                                                lformat!("markdown file"),
-                                                                                format!("{}", path.display()))));
+        let mut f = try!(File::open(path).map_err(|_| {
+            Error::file_not_found(&self.source,
+                                  lformat!("markdown file"),
+                                  format!("{}", path.display()))
+        }));
         let mut s = String::new();
 
-        try!(f.read_to_string(&mut s).map_err(|_| Error::parser(&self.source,
-                                                                lformat!("file {file} contains invalid UTF-8, could not parse it",
-                                                                         file = path.display()))));
+        try!(f.read_to_string(&mut s).map_err(|_| {
+            Error::parser(&self.source,
+                          lformat!("file {file} contains invalid UTF-8, could not parse it",
+                                   file = path.display()))
+        }));
         self.parse(&s)
     }
 
@@ -92,9 +96,9 @@ impl Parser {
         opts.insert(OPTION_ENABLE_TABLES);
         opts.insert(OPTION_ENABLE_FOOTNOTES);
         let mut p = CMParser::new_ext(s, opts);
-        
 
-        let mut res = vec!();
+
+        let mut res = vec![];
         try!(self.parse_events(&mut p, &mut res, None));
 
         try!(self.parse_footnotes(&mut res));
@@ -114,9 +118,7 @@ impl Parser {
         // Unfortunately, parser will put all this in a paragraph, so we might need to remove it.
         if tokens.len() == 1 {
             let res = match tokens[0] {
-                Token::Paragraph(ref mut v) => {
-                    Some(mem::replace(v, vec!()))
-                },
+                Token::Paragraph(ref mut v) => Some(mem::replace(v, vec![])),
                 _ => None,
             };
             match res {
@@ -130,7 +132,7 @@ impl Parser {
 
 
     /// Replace footnote reference with their definition
-    fn parse_footnotes(&mut self, v: &mut Vec<Token>) ->Result<()> {
+    fn parse_footnotes(&mut self, v: &mut Vec<Token>) -> Result<()> {
         for token in v {
             match *token {
                 Token::Footnote(ref mut content) => {
@@ -143,50 +145,74 @@ impl Parser {
                         *content = in_vec.clone();
                     } else {
                         return Err(Error::parser(&self.source,
-                                                 lformat!("footnote reference {reference} does not have a matching definition",
+                                                 lformat!("footnote reference {reference} does \
+                                                           not have a matching definition",
                                                           reference = &reference)));
                     }
-                },
-                Token::Paragraph(ref mut vec) | Token::Header(_, ref mut vec) | Token::Emphasis(ref mut vec)
-                    | Token::Strong(ref mut vec) | Token::Code(ref mut vec) | Token::BlockQuote(ref mut vec)
-                    | Token::CodeBlock(_, ref mut vec) | Token::List(ref mut vec) | Token::OrderedList(_, ref mut vec)
-                    | Token::Item(ref mut vec) | Token::Table(_, ref mut vec) | Token::TableHead(ref mut vec)
-                    | Token::TableRow(ref mut vec) | Token::TableCell(ref mut vec) | Token::Link(_, _, ref mut vec)
-                    | Token::Image(_, _, ref mut vec) => try!(self.parse_footnotes(vec)),
+                }
+                Token::Paragraph(ref mut vec) |
+                Token::Header(_, ref mut vec) |
+                Token::Emphasis(ref mut vec) |
+                Token::Strong(ref mut vec) |
+                Token::Code(ref mut vec) |
+                Token::BlockQuote(ref mut vec) |
+                Token::CodeBlock(_, ref mut vec) |
+                Token::List(ref mut vec) |
+                Token::OrderedList(_, ref mut vec) |
+                Token::Item(ref mut vec) |
+                Token::Table(_, ref mut vec) |
+                Token::TableHead(ref mut vec) |
+                Token::TableRow(ref mut vec) |
+                Token::TableCell(ref mut vec) |
+                Token::Link(_, _, ref mut vec) |
+                Token::Image(_, _, ref mut vec) => try!(self.parse_footnotes(vec)),
                 _ => (),
             }
         }
         Ok(())
     }
-    
-    fn parse_events<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, current_tag: Option<&Tag>) -> Result<()> {
+
+    fn parse_events<'a>(&mut self,
+                        p: &mut CMParser<'a>,
+                        v: &mut Vec<Token>,
+                        current_tag: Option<&Tag>)
+                        -> Result<()> {
         while let Some(event) = p.next() {
             match event {
-                Event::Html(text) | Event::InlineHtml(text) | Event::Text(text) => {
+                Event::Html(text) |
+                Event::InlineHtml(text) |
+                Event::Text(text) => {
                     v.push(Token::Str(text.into_owned()));
-                },
+                }
                 Event::Start(tag) => try!(self.parse_tag(p, v, tag)),
                 Event::End(tag) => {
                     debug_assert!(format!("{:?}", Some(&tag)) == format!("{:?}", current_tag),
-                                  format!("Error: opening and closing tags mismatch!\n{:?} ≠ {:?}",
+                                  format!("Error: opening and closing tags mismatch!\n{:?} ≠ \
+                                           {:?}",
                                           tag,
                                           current_tag));
                     break;
-                },
+                }
                 Event::SoftBreak => v.push(Token::SoftBreak),
                 Event::HardBreak => v.push(Token::HardBreak),
-                Event::FootnoteReference(text) => v.push(Token::Footnote(vec!(Token::Str(text.into_owned())))),
+                Event::FootnoteReference(text) => {
+                    v.push(Token::Footnote(vec![Token::Str(text.into_owned())]))
+                }
             }
         }
         Ok(())
     }
 
-    fn parse_tag<'a>(&mut self, p: &mut CMParser<'a>, v: &mut Vec<Token>, tag: Tag<'a>) -> Result<()> {
-        let mut res = vec!();
+    fn parse_tag<'a>(&mut self,
+                     p: &mut CMParser<'a>,
+                     v: &mut Vec<Token>,
+                     tag: Tag<'a>)
+                     -> Result<()> {
+        let mut res = vec![];
 
         try!(self.parse_events(p, &mut res, Some(&tag)));
 
-        
+
         let token = match tag {
             Tag::Paragraph => Token::Paragraph(res),
             Tag::Emphasis => Token::Emphasis(res),
@@ -201,7 +227,8 @@ impl Parser {
                     Token::OrderedList(n, res)
                 } else {
                     Token::List(res)
-                }},
+                }
+            }
             Tag::Item => Token::Item(res),
             Tag::BlockQuote => Token::BlockQuote(res),
             Tag::CodeBlock(language) => Token::CodeBlock(language.into_owned(), res),
@@ -211,13 +238,15 @@ impl Parser {
             Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
-                    Logger::display_warning(lformat!("in {file}, found footnote definition for note '{reference}' but previous definition already exist, overriding it",
+                    Logger::display_warning(lformat!("in {file}, found footnote definition for \
+                                                      note '{reference}' but previous \
+                                                      definition already exist, overriding it",
                                                      file = self.source,
                                                      reference = reference));
                 }
                 self.footnotes.insert(reference.into_owned(), res);
                 Token::SoftBreak
-            },
+            }
         };
         v.push(token);
         Ok(())
@@ -229,23 +258,24 @@ fn collapse(ast: &mut Vec<Token>) {
     if ast.len() < 2 {
         return;
     }
-        
+
     let mut i = 0;
     while i < ast.len() {
         if ast[i].is_str() {
             if i < ast.len() - 1 {
-                if ast[i+1].is_str() {
+                if ast[i + 1].is_str() {
                     // Two consecutives Str, concatenate them
-                    let token = ast.remove(i+1);
-                    if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i], token) {
-//                        dest.push(' ');
+                    let token = ast.remove(i + 1);
+                    if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i],
+                                                                                      token) {
+                        //                        dest.push(' ');
                         dest.push_str(source);
                         continue;
                     } else {
                         unreachable!();
                     }
-                } else if ast[i+1] == Token::SoftBreak {
-                    ast.remove(i+1);
+                } else if ast[i + 1] == Token::SoftBreak {
+                    ast.remove(i + 1);
                     if let &mut Token::Str(ref mut dest) = &mut ast[i] {
                         dest.push(' ');
                         continue;
@@ -270,7 +300,8 @@ fn find_standalone(ast: &mut Vec<Token>) {
         let res = if let &mut Token::Paragraph(ref mut inner) = token {
             if inner.len() == 1 {
                 if inner[0].is_image() {
-                    if let Token::Image(source, title, inner) = mem::replace(&mut inner[0], Token::Rule) {
+                    if let Token::Image(source, title, inner) = mem::replace(&mut inner[0],
+                                                                             Token::Rule) {
                         Token::StandaloneImage(source, title, inner)
                     } else {
                         unreachable!();

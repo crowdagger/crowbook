@@ -85,7 +85,7 @@
 //!    }
 //!    n
 //! }
-//! 
+//!
 //! let md = "# Here's a [link](http://foo.bar) #\n And *another [one](http://foo.bar)* !";
 //!
 //! let mut parser = Parser::new();
@@ -103,7 +103,8 @@ extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
 extern crate crowbook_text_processing;
-#[macro_use] extern crate lazy_static;
+#[macro_use]
+extern crate lazy_static;
 
 #[cfg(feature = "proofread")]
 extern crate hyper;
@@ -132,8 +133,10 @@ pub use html_single::HtmlSingleRenderer;
 pub use renderer::Renderer;
 pub use localize_macros::set_lang;
 
-#[macro_use] pub mod localize_macros;
-#[macro_use] mod html;
+#[macro_use]
+pub mod localize_macros;
+#[macro_use]
+mod html;
 mod html_dir;
 mod error;
 mod book;
@@ -164,4 +167,3 @@ mod text_view;
 
 #[cfg(test)]
 mod tests;
-

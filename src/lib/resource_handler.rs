@@ -3,7 +3,7 @@ use logger::Logger;
 use error::{Error, Result, Source};
 
 use std::collections::HashMap;
-use std::path::{Path,PathBuf};
+use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::fs;
 use std::io::Read;
@@ -60,22 +60,25 @@ impl<'r> ResourceHandler<'r> {
 
     /// Add a local image file and get the resulting transformed
     /// file name
-    pub fn map_image<'a, S: Into<Cow<'a, str>>>(&'a mut self, source: &Source, file: S) -> Result<Cow<'a, str>> {
+    pub fn map_image<'a, S: Into<Cow<'a, str>>>(&'a mut self,
+                                                source: &Source,
+                                                file: S)
+                                                -> Result<Cow<'a, str>> {
         // If image is not local, do nothing much
         let file = file.into();
         if !Self::is_local(file.as_ref()) {
-            self.logger.warning(lformat!("Resources: book includes non-local image {file}, which might cause problem for proper inclusion.",
-                                         file = file));
+            self.logger
+                .warning(lformat!("Resources: book includes non-local image {file}, which might \
+                                   cause problem for proper inclusion.",
+                                  file = file));
             return Ok(file);
         }
-        
+
         // Check exisence of the file
         if fs::metadata(file.as_ref()).is_err() {
-            return Err(Error::file_not_found(source,
-                                             lformat!("image"),
-                                             format!("{}", file)));
+            return Err(Error::file_not_found(source, lformat!("image"), format!("{}", file)));
         }
-        
+
         // if image mapping is not activated do nothing else
         if !self.map_images {
             return Ok(file);
@@ -90,10 +93,14 @@ impl<'r> ResourceHandler<'r> {
         // (or a base64 version of the file)
         let dest_file = if !(self.base64) {
             if let Some(extension) = Path::new(file.as_ref()).extension() {
-                format!("images/image_{}.{}", self.images.len(), extension.to_string_lossy())
+                format!("images/image_{}.{}",
+                        self.images.len(),
+                        extension.to_string_lossy())
             } else {
-                self.logger.warning(lformat!("Resources: book includes image {file} which doesn't have an extension",
-                                             file = file));
+                self.logger
+                    .warning(lformat!("Resources: book includes image {file} which doesn't have \
+                                       an extension",
+                                      file = file));
                 format!("images/image_{}", self.images.len())
             }
         } else {
@@ -105,20 +112,20 @@ impl<'r> ResourceHandler<'r> {
                                                      format!("{}", file)));
                 }
             };
-            let mut content: Vec<u8> = vec!();
+            let mut content: Vec<u8> = vec![];
             if f.read_to_end(&mut content).is_err() {
-                self.logger.error(lformat!("Resources: could not read file {file}",
-                                           file = file));
+                self.logger.error(lformat!("Resources: could not read file {file}", file = file));
                 return Ok(file);
             }
             let base64 = content.to_base64(base64::STANDARD);
             match mime_guess::guess_mime_type_opt(file.as_ref()) {
                 None => {
-                    self.logger.error(lformat!("Resources: could not guess mime type of file {file}",
-                                               file = file));
+                    self.logger
+                        .error(lformat!("Resources: could not guess mime type of file {file}",
+                                        file = file));
                     return Ok(file);
-                },
-                Some(s) => format!("data:{};base64,{}", s.to_string(), base64)
+                }
+                Some(s) => format!("data:{};base64,{}", s.to_string(), base64),
             }
         };
 
@@ -128,7 +135,7 @@ impl<'r> ResourceHandler<'r> {
 
     /// Returns an iterator the the images files mapping
     #[doc(hidden)]
-    pub fn images_mapping(&self) -> &HashMap<String,String> {
+    pub fn images_mapping(&self) -> &HashMap<String, String> {
         &self.images
     }
 
@@ -142,22 +149,23 @@ impl<'r> ResourceHandler<'r> {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            self.logger.error(lformat!("Resources: could not find a in-book match for link {file}",
+            self.logger.error(lformat!("Resources: could not find a in-book match for link \
+                                        {file}",
                                        file = from));
             from
         }
     }
 
-    
+
     /// Tell whether a file name is a local resource or net
-    pub fn is_local(path: &str) -> bool{
+    pub fn is_local(path: &str) -> bool {
         !path.contains("://") // todo: use better algorithm
     }
 
     /// Add a path offset to all linked urls and images src
     pub fn add_offset(link_offset: &Path, image_offset: &Path, ast: &mut [Token]) {
         if link_offset == Path::new("") && image_offset == Path::new("") {
-            //nothing do to
+            // nothing do to
             return;
         }
         for mut token in ast {
@@ -168,17 +176,18 @@ impl<'r> ResourceHandler<'r> {
                         *url = new_url;
                     }
                     Self::add_offset(link_offset, image_offset, v);
-                },
-                Token::Image(ref mut url, _, ref mut v) | Token::StandaloneImage(ref mut url, _, ref mut v) => {
-                        if ResourceHandler::is_local(url) {
-                            let new_url = format!("{}", image_offset.join(&url).display());
-                            *url = new_url;
-                        }
-                        Self::add_offset(link_offset, image_offset, v);
-                    },
+                }
+                Token::Image(ref mut url, _, ref mut v) |
+                Token::StandaloneImage(ref mut url, _, ref mut v) => {
+                    if ResourceHandler::is_local(url) {
+                        let new_url = format!("{}", image_offset.join(&url).display());
+                        *url = new_url;
+                    }
+                    Self::add_offset(link_offset, image_offset, v);
+                }
                 _ => {
                     if let Some(ref mut inner) = token.inner_mut() {
-                            Self::add_offset(link_offset, image_offset, inner);
+                        Self::add_offset(link_offset, image_offset, inner);
                     }
                 }
             }
@@ -195,35 +204,41 @@ impl<'r> ResourceHandler<'r> {
 /// # Returns
 /// A list of files (relative to `base`), or an error.
 pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
-    let mut out:Vec<String> = vec!();
+    let mut out: Vec<String> = vec![];
     let base = Path::new(base);
     for path in list.into_iter() {
         let abs_path = base.join(&path);
-        let res= fs::metadata(&abs_path);
+        let res = fs::metadata(&abs_path);
         match res {
-            Err(err) => return Err(Error::render(Source::empty(),
-                                                 lformat!("error reading file {file}: {error}",
-                                                          file = abs_path.display(),
-                                                          error = err))),
+            Err(err) => {
+                return Err(Error::render(Source::empty(),
+                                         lformat!("error reading file {file}: {error}",
+                                                  file = abs_path.display(),
+                                                  error = err)))
+            }
             Ok(metadata) => {
-                    if metadata.is_file() {
-                        out.push(path);
-                    } else if metadata.is_dir() {
-                        let files = WalkDir::new(&abs_path)
-                            .follow_links(true)
-                            .into_iter()
-                            .filter_map(|e| e.ok())
-                            .filter(|e| e.file_type().is_file())
-                            .map(|e| PathBuf::from(e.path().strip_prefix(base)
-                                                   .unwrap()));
-                        for file in files {
-                            out.push(file.to_string_lossy().into_owned());
-                        }
-                    } else {
-                        return Err(Error::render(Source::empty(),
-                                                 lformat!("error in epub rendering: {path} is neither a file nor a directory",
-                                                          path = &path)));
+                if metadata.is_file() {
+                    out.push(path);
+                } else if metadata.is_dir() {
+                    let files = WalkDir::new(&abs_path)
+                        .follow_links(true)
+                        .into_iter()
+                        .filter_map(|e| e.ok())
+                        .filter(|e| e.file_type().is_file())
+                        .map(|e| {
+                            PathBuf::from(e.path()
+                                .strip_prefix(base)
+                                .unwrap())
+                        });
+                    for file in files {
+                        out.push(file.to_string_lossy().into_owned());
                     }
+                } else {
+                    return Err(Error::render(Source::empty(),
+                                             lformat!("error in epub rendering: {path} is \
+                                                       neither a file nor a directory",
+                                                      path = &path)));
+                }
             }
         }
     }
