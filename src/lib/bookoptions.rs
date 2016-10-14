@@ -375,16 +375,8 @@ impl BookOptions {
             if let Yaml::String(value) = value {
                 if &key == "import_config" {
                     // special case, not a real option
-                    let tmp = try!(
-                        self.root
-                            .join(&value)
-                            .canonicalize()
-                            .map_err(|e| {
-                                Error::default(&self.source,
-                                               lformat!("could not canonicalize path: {error}",
-                                                        error = e))
-                            })
-                    );
+                    let tmp = self.root
+                        .join(&value);
                     let file = try!(tmp
                                     .to_str()
                                     .ok_or(Error::book_option(&self.source,
@@ -604,13 +596,13 @@ impl BookOptions {
                     return base_path;
                 }
                 self.root.join(path)
-                    
             }
 
             "cover" => {
                 // Translate according to resources.base_path.images
                 let base = self.get_path("resources.base_path.images").unwrap();
-                Path::new(&base).join(path)
+                let new_path = Path::new(&base).join(path);
+                new_path
             }
 
             "output.epub" |
@@ -624,25 +616,19 @@ impl BookOptions {
             "output.proofread.pdf" => {
                 // Translate according to output.base_path
                 let base = self.get_path("output.base_path").unwrap();
-                Path::new(&base).join(path)
+                let new_path = Path::new(&base).join(path);
+                new_path
             }
 
             key if self.valid_tpls.contains(&key) => {
                 // Translate according to resources.base_path.template
                 let base = self.get_path("resources.base_path.templates").unwrap();
-                Path::new(&base).join(path)
+                let new_path = Path::new(&base).join(path);
+                new_path
             }
 
             _ => self.root.join(path),
         };
-        let new_path = try!(
-            new_path.canonicalize()
-                .map_err(|e| {
-                    Error::default(&self.source,
-                                   lformat!("could not canonicalize path: {error}",
-                                            error = e))
-                })
-        );
         if let Some(path) = new_path.to_str() {
             Ok(path.to_owned())
         } else {
