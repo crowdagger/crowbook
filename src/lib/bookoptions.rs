@@ -734,7 +734,7 @@ impl BookOptions {
         let mut previous_is_comment = true;
         for (comment, key, o_type, default) in Self::options_to_vec() {
             // Don't display deprecated options if md is not set
-            if !md && comment.trim() == "Deprecated options" {
+            if !md && comment.trim() == &lformat!("Deprecated options") {
                 return out;
             }
             if key.is_none() {
