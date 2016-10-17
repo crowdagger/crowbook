@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-------------
+0.10.0 (2016-10-18)
+-----------------------
 This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and
 the program should now be tranlated if your `LANG` environment
 variable is set to french.
