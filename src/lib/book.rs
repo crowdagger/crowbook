@@ -1,5 +1,5 @@
 use error::{Error, Result, Source};
-use cleaner::{Cleaner, French, Off, Default};
+use cleaner::{Cleaner, CleanerParams, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
@@ -1052,12 +1052,15 @@ impl Book {
 
     // Update the cleaner according to autoclean and lang options
     fn update_cleaner(&mut self) {
+        let params = CleanerParams {
+            smart_quotes: self.options.get_bool("input.smart_quotes").unwrap(),
+        };
         if self.options.get_bool("input.autoclean").unwrap() {
             let lang = self.options.get_str("lang").unwrap().to_lowercase();
             let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
-                Box::new(French::new())
+                Box::new(French::new(params))
             } else {
-                Box::new(Default)
+                Box::new(Default::new(params))
             };
             self.cleaner = cleaner;
         } else {

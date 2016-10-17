@@ -23,6 +23,11 @@ use crowbook_text_processing::clean::typographic_quotes;
 use crowbook_text_processing::french::FrenchFormatter;
 
 
+/// Contains cleaning parameters
+pub struct CleanerParams {
+    pub smart_quotes: bool,
+}
+
 /// Trait for cleaning a string.
 ///
 /// This trait must be called for text that is e.g. in a paragraph, a title,
@@ -68,11 +73,28 @@ impl Cleaner for Off {}
 ///                                     false);
 /// assert_eq!(&s, " A string with more whitespaces than needed ");
 /// ```
-pub struct Default;
+pub struct Default {
+    params: CleanerParams,
+}
+
+impl Default {
+    /// New Default cleaner
+    pub fn new(params: CleanerParams) -> Default {
+        Default {
+            params: params,
+        }
+    }
+}
+    
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        typographic_quotes(remove_whitespaces(input))
+        let s = remove_whitespaces(input);
+        if self.params.smart_quotes {
+            typographic_quotes(s)
+        } else {
+            s
+        }
     }
 }
 
@@ -92,12 +114,18 @@ impl Cleaner for Default {
 /// ```
 pub struct French {
     formatter: FrenchFormatter,
+    params: CleanerParams,
 }
 
 impl French {
     /// Creates a new french cleaner
-    pub fn new() -> French {
-        French { formatter: FrenchFormatter::new() }
+    pub fn new(params: CleanerParams) -> French {
+        let mut this = French {
+            formatter: FrenchFormatter::new(),
+            params: params,
+        };
+        this.formatter.typographic_quotes(this.params.smart_quotes);
+        this
     }
 }
 

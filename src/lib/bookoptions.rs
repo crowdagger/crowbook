@@ -88,6 +88,7 @@ resources.base_path.templates:path:. # {rs_tmpl}
 
 # {input_opt}
 input.autoclean:bool:true           # {autoclean}
+input.smart_quotes:bool:true        # {smart_quotes}
 input.yaml_blocks:bool:false        # {yaml}
 
 
@@ -222,6 +223,7 @@ html.crowbook_link:alias                            # {removed}
                                          rs_tmpl = lformat!("Set base path but only for templates files. Useless if resources.base_path is set."),
                                          
                                          autoclean = lformat!("Toggle cleaning of input markdown according to lang"),
+                                         smart_quotes = lformat!("If enabled, tries to replace vertical quotations marks to curly ones."),
                                          yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
