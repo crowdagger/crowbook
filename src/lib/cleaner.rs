@@ -19,6 +19,7 @@
 
 use std::borrow::Cow;
 use crowbook_text_processing::clean::remove_whitespaces;
+use crowbook_text_processing::clean::typographic_quotes;
 use crowbook_text_processing::french::FrenchFormatter;
 
 
@@ -71,7 +72,7 @@ pub struct Default;
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        remove_whitespaces(input)
+        typographic_quotes(remove_whitespaces(input))
     }
 }
 
