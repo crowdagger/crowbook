@@ -3,9 +3,7 @@ ChangeLog
 
 unreleased
 ------------
-Well, I only managed one release without breaking changes, as this
-release contains some (mostly for the API, which has been split in separate
-libraries). It alse features some internationalization support, and
+This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and
 the program should now be tranlated if your `LANG` environment
 variable is set to french.
 * **Breaking changes**: 
@@ -22,6 +20,7 @@ variable is set to french.
   * `html.css.colours` allows to provide a CSS file that only redefine
     the colour scheme. Such a file can be built from `crowbook
     --print-template html.css.colours`.
+  * `input.smart_quotes`: if set to `true`, tries to replace `'` and `"` by curly quotes.
 * Command line interface:
   * Crowbook is now (imperfectly) localized in french, and can be
     translated to other languages.
