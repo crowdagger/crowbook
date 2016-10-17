@@ -1200,7 +1200,7 @@ msgstr "EPUB ({source}) : conflit entre {title1} et {title2}"
 msgid ""
 "EPUB: could not guess the format of {file} based on extension. Assuming png."
 msgstr ""
-"EPUB: impossible de deviner le format de {} à partir de son extension. On "
+"EPUB: impossible de deviner le format de {file} à partir de son extension. On "
 "part sur du png."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/error.rs:299
