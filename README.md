@@ -55,7 +55,7 @@ the binary somewhere in your `PATH` for later usage.
 [Cargo](https://crates.io/) is the
 [Rust](https://www.rust-lang.org/)'s package manager. You can
 [install it here](https://www.rust-lang.org/downloads.html). Once
-it is down: 
+it is done: 
 
 ```bash
 $ cargo install crowbook
@@ -147,8 +147,8 @@ that can also be generated in PDF (and maybe ODT).
 
 Maybe the most specific "feature" of Crowbook is that (by default, it
 can be deactivated) it tries to "clean" the input files. By default,
-this doesn't do much (except removing superfluous spaces), but if the 
-book's language is set to frenc it tries its best to respect french
+it removes superfluous spaces and tries to use curly quotes. If the 
+book's language is set to french, it also tries its best to respect french
 typography by replacing spaces with non-breaking ones when it is
 appropriate (e.g. before '?', '!', ';' or ':').
 
