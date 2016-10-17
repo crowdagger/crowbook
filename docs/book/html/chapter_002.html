@@ -5,7 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
-    <title>Crowbook User Guide – <b>3.</b> The configuration file</title>
+    <title>Crowbook User Guide – 3. The configuration file</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
@@ -68,7 +68,7 @@ function toggle() {
   <nav id = "nav">
     <h2><a href = "index.html">Crowbook User Guide</a></h2>
     <ul>
- <li><a href = "chapter_000.html#link-1"><b>1.</b> Crowbook</a>
+ <li><a href = "chapter_000.html#link-1">1. Crowbook</a>
  <ul>
   <li><a href = "chapter_000.html#link-2">1.1. Example</a>
   </li>
@@ -92,7 +92,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_001.html#link-22"><b>2.</b> Arguments</a>
+ <li><a href = "chapter_001.html#link-22">2. Arguments</a>
  <ul>
   <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
   </li>
@@ -114,7 +114,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_002.html#link-35"><b>3.</b> The configuration file</a>
+ <li><a href = "chapter_002.html#link-35">3. The configuration file</a>
  <ul>
   <li><a href = "chapter_002.html#link-36">3.1. The list of files</a>
   </li>
@@ -122,7 +122,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_003.html#link-65"><b>4.</b> Templates</a>
+ <li><a href = "chapter_003.html#link-65">4. Templates</a>
  <ul>
   <li><a href = "chapter_003.html#link-66">4.1. List of templates</a>
   </li>
@@ -132,7 +132,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_004.html#link-89"><b>5.</b> Proofreading with Crowbook</a>
+ <li><a href = "chapter_004.html#link-89">5. Proofreading with Crowbook</a>
  <ul>
   <li><a href = "chapter_004.html#link-90">5.1. Enabling proofreading</a>
   </li>
@@ -144,9 +144,9 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_005.html#link-94"><b>6.</b> Tips and tricks</a>
+ <li><a href = "chapter_005.html#link-94">6. Tips and tricks</a>
  <ul>
-  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs' markdown mode</a>
+  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs’ markdown mode</a>
   </li>
   <li><a href = "chapter_005.html#link-98">6.2. Embedding fonts in an EPUB file</a>
   </li>
@@ -192,7 +192,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-290">Crowbook User Guide 0.10.0</p>
+        <div id = "top"><p id = "para-291">Crowbook User Guide 0.10.0</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -201,11 +201,11 @@ function toggle() {
     </header>
       <p class = "prev_chapter">
   <a href = "chapter_001.html">
-    « <b>2.</b> Arguments
+    « 2. Arguments
   </a>
 </p>
-      <h1 id = "link-35"><b>3.</b> The configuration file</h1>
-<p id = "para-91">If you want to use Crowbook for your book, this configuration file is all you'll have to add (assuming you already have the book in Markdown files; if you don't, you'll also have to write a book first, but that's besides the scope of this document).</p>
+      <h1 id = "link-35">3. The configuration file</h1>
+<p id = "para-91">If you want to use Crowbook for your book, this configuration file is all you’ll have to add (assuming you already have the book in Markdown files; if you don’t, you’ll also have to write a book first, but that’s besides the scope of this document).</p>
 <p id = "para-92">The format is not very complicated. This is an example of it:</p>
 <pre><code class = "language-yaml"># metadata
 author: Joan Doe
@@ -233,7 +233,7 @@ output.html: some_book.html
 <ul>
 <li><code>+ file_name.md</code> includes a numbered chapter.</li>
 <li><code>- file_name.md</code> includes an unnumbered chapter.</li>
-<li><code>! file_name.md</code> includes a chapter whose title won't be displayed (except in the table of contents); this is useful for e.g. including a copyright at the beginning or the book, or for short stories where there is only one chapter.</li>
+<li><code>! file_name.md</code> includes a chapter whose title won’t be displayed (except in the table of contents); this is useful for e.g. including a copyright at the beginning or the book, or for short stories where there is only one chapter.</li>
 <li><code>42. file_name.md</code> specifies the number for a chapter.</li>
 </ul>
 <p id = "para-96">So a typical usage might look like this:</p>
@@ -249,9 +249,9 @@ output.html: some_book.html
 <p id = "para-97">There are two important things to note:</p>
 <ol>
 <li>you must <em>not</em> use quotes around the file names.</li>
-<li>the path of these files are relative to the directory where your configuration file is. This means you can run <code>crowbook books/my_trilogy/first_book/config.book</code> without being in the book's directory.</li>
+<li>the path of these files are relative to the directory where your configuration file is. This means you can run <code>crowbook books/my_trilogy/first_book/config.book</code> without being in the book’s directory.</li>
 </ol>
-<p id = "para-98">Also note that you don't have to specify a title. This is because the title of the chapter is inferred from the Markdown document. To go back to our previous example:</p>
+<p id = "para-98">Also note that you don’t have to specify a title. This is because the title of the chapter is inferred from the Markdown document. To go back to our previous example:</p>
 <pre><code>+ chapter_1.md
 </code></pre>
 <p id = "para-99">does not specify a chapter title, because it will read it directly in <code>chapter_1.md</code>, e.g.:</p>
@@ -265,10 +265,10 @@ output.html: some_book.html
 <p id = "para-102">If you do <em>not</em> have a level-1 header in a markdown file:</p>
 <ul>
 <li>if it is a numbered chapter, Crowbook will infer a chapter name from the numbering scheme;</li>
-<li>if it is not numbered, chapter's title will default to the empty string and won't be displayed in the TOC.</li>
+<li>if it is not numbered, chapter’s title will default to the empty string and won’t be displayed in the TOC.</li>
 </ul>
 <h2 id = "link-37">3.2. Crowbook options</h2>
-<p id = "para-103">The first part of the configuration file is dedicated to pass options to Crowbook. This is <a href = "https://en.wikipedia.org/wiki/YAML">YAML syntax</a>, so each line should be of the form <code>key: value</code>. Note that in most cases you don't have to put string in quotes, e.g.:</p>
+<p id = "para-103">The first part of the configuration file is dedicated to pass options to Crowbook. This is <a href = "https://en.wikipedia.org/wiki/YAML">YAML syntax</a>, so each line should be of the form <code>key: value</code>. Note that in most cases you don’t have to put string in quotes, e.g.:</p>
 <pre><code class = "language-yaml">title: My title
 </code></pre>
 <p id = "para-104">It is however possible (and sometimes necessary) to escape some characters to use quotes around strings:</p>
@@ -281,39 +281,39 @@ output.html: some_book.html
  title
 author: Joan Doe
 </code></pre>
-<p id = "para-106">will set <code>title</code> to <code>"A long title"</code>. See <a href = "https://en.wikipedia.org/wiki/YAML#Block_literals">block literals in YAML</a> for more information on the various way to insert multiline strings (which mostly change the way newlines will or won't be inserted).</p>
-<p id = "para-107">A final note on the syntax: all options must be set <em>before</em> the first chapter inclusion (that is, a line beginning with '+', '-', 'x.' (where <code>x</code> is a number) or '!').</p>
+<p id = "para-106">will set <code>title</code> to <code>“A long title”</code>. See <a href = "https://en.wikipedia.org/wiki/YAML#Block_literals">block literals in YAML</a> for more information on the various way to insert multiline strings (which mostly change the way newlines will or won’t be inserted).</p>
+<p id = "para-107">A final note on the syntax: all options must be set <em>before</em> the first chapter inclusion (that is, a line beginning with ‘+’, ‘-’, ‘x.’ (where <code>x</code> is a number) or ‘!’).</p>
 <p id = "para-108">Here is the complete list of options, with a short description. The usage of some of them is detailed later on.</p>
 <h3 id = "link-38">Metadata</h3>
 <ul>
 <li><b><code>author</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>Anonymous</code></li>
 <li>Author of the book</li>
 </ul>
 </li>
 <li><b><code>title</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>Untitled</code></li>
 <li>Title of the book</li>
 </ul>
 </li>
 <li><b><code>lang</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>en</code></li>
 <li>Language of the book</li>
 </ul>
 </li>
 <li><b><code>subject</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>not set</code></li>
-<li>Subject of the book (used for EPUB metadata)</li>
+<li>Subject of the book (used for EPUB metadata</li>
 </ul>
 </li>
 <li><b><code>description</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>not set</code></li>
-<li>Description of the book (used for EPUB metadata)</li>
+<li>Description of the book (used for EPUB metadata</li>
 </ul>
 </li>
 <li><b><code>cover</code></b><ul>
@@ -326,19 +326,19 @@ author: Joan Doe
 <h3 id = "link-39">Additional metadata</h3>
 <ul>
 <li><b><code>license</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>not set</code></li>
 <li>License of the book</li>
 </ul>
 </li>
 <li><b><code>version</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>not set</code></li>
 <li>Version of the book</li>
 </ul>
 </li>
 <li><b><code>date</code></b><ul>
-<li><b>type</b>: string</li>
+<li><b>type</b>: metadata</li>
 <li><b>default value</b>: <code>not set</code></li>
 <li>Date the book was revised</li>
 </ul>
@@ -384,7 +384,7 @@ author: Joan Doe
 </li>
 <li><b><code>output.base_path</code></b><ul>
 <li><b>type</b>: path</li>
-<li><b>default value</b>: <code>""</code></li>
+<li><b>default value</b>: <code>"”</code></li>
 <li>Directory where those output files will we written</li>
 </ul>
 </li>
@@ -394,7 +394,7 @@ author: Joan Doe
 <li><b><code>rendering.initials</code></b><ul>
 <li><b>type</b>: boolean</li>
 <li><b>default value</b>: <code>false</code></li>
-<li>Use initials ('lettrines') for first letter of a chapter (experimental)</li>
+<li>Use initials (’lettrines’) for first letter of a chapter (experimental)</li>
 </ul>
 </li>
 <li><b><code>rendering.inline_toc</code></b><ul>
@@ -405,7 +405,7 @@ author: Joan Doe
 </li>
 <li><b><code>rendering.inline_toc.name</code></b><ul>
 <li><b>type</b>: string</li>
-<li><b>default value</b>: <code>"{{{loc_toc}}}"</code></li>
+<li><b>default value</b>: <code>“{{{loc_toc}}}”</code></li>
 <li>Name of the table of contents if it is displayed in document</li>
 </ul>
 </li>
@@ -417,7 +417,7 @@ author: Joan Doe
 </li>
 <li><b><code>rendering.chapter_template</code></b><ul>
 <li><b>type</b>: string</li>
-<li><b>default value</b>: <code>"{{{number}}}\\. {{{chapter_title}}}"</code></li>
+<li><b>default value</b>: <code>“{{{number}}}\\. {{{chapter_title}}}”</code></li>
 <li>Naming scheme of chapters</li>
 </ul>
 </li>
@@ -449,6 +449,12 @@ author: Joan Doe
 <li><b>type</b>: template path</li>
 <li><b>default value</b>: <code>not set</code></li>
 <li>Path of a stylesheet for HTML rendering</li>
+</ul>
+</li>
+<li><b><code>html.css.colours</code></b><ul>
+<li><b>type</b>: template path</li>
+<li><b>default value</b>: <code>not set</code></li>
+<li>Path of a stylesheet for the colours for HTML</li>
 </ul>
 </li>
 <li><b><code>html.js</code></b><ul>
@@ -586,6 +592,12 @@ author: Joan Doe
 <li>Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts</li>
 </ul>
 </li>
+<li><b><code>resources.out_path</code></b><ul>
+<li><b>type</b>: path</li>
+<li><b>default value</b>: <code>data</code></li>
+<li>Paths where additional resources should be copied in the EPUB file or HTML directory</li>
+</ul>
+</li>
 <li><b><code>resources.base_path</code></b><ul>
 <li><b>type</b>: path</li>
 <li><b>default value</b>: <code>not set</code></li>
@@ -616,12 +628,6 @@ author: Joan Doe
 <li>Set base path but only for templates files. Useless if resources.base_path is set.</li>
 </ul>
 </li>
-<li><b><code>resources.out_path</code></b><ul>
-<li><b>type</b>: path</li>
-<li><b>default value</b>: <code>data</code></li>
-<li>Paths where additional resources should be copied in the EPUB file or HTML directory</li>
-</ul>
-</li>
 </ul>
 <h3 id = "link-49">Input options</h3>
 <ul>
@@ -629,6 +635,12 @@ author: Joan Doe
 <li><b>type</b>: boolean</li>
 <li><b>default value</b>: <code>true</code></li>
 <li>Toggle cleaning of input markdown according to lang</li>
+</ul>
+</li>
+<li><b><code>input.smart_quotes</code></b><ul>
+<li><b>type</b>: boolean</li>
+<li><b>default value</b>: <code>true</code></li>
+<li>If enabled, tries to replace vertical quotations marks to curly ones.</li>
 </ul>
 </li>
 <li><b><code>input.yaml_blocks</code></b><ul>
@@ -643,7 +655,7 @@ author: Joan Doe
 <li><b><code>crowbook.temp_dir</code></b><ul>
 <li><b>type</b>: path</li>
 <li><b>default value</b>: ``</li>
-<li>Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())</li>
+<li>Path where to create a temporary directory (default: uses result from Rust’s std::env::temp_dir())</li>
 </ul>
 </li>
 <li><b><code>crowbook.zip.command</code></b><ul>
@@ -685,7 +697,7 @@ author: Joan Doe
 <li><b><code>proofread</code></b><ul>
 <li><b>type</b>: boolean</li>
 <li><b>default value</b>: <code>false</code></li>
-<li>Activate generation of proofreading copies</li>
+<li>If set to false, will disactivate proofreading even if one of output.proofread.x is present</li>
 </ul>
 </li>
 <li><b><code>proofread.nb_spaces</code></b><ul>
@@ -743,7 +755,7 @@ author: Joan Doe
 </ul>
 </li>
 </ul>
-<p id = "para-109">Note that these options have a type, which in most case should be pretty straightforward (a boolean can be <code>true</code> or <code>false</code>, an integer must be composed by a number, a string is, well, any string). The <code>path</code> type might puzzle you a bit, but it's equivalent to a string, except Crowbook will consider it relatively to the book file. The <code>template path</code> type is just the <code>path</code> of a template.</p>
+<p id = "para-109">Note that these options have a type, which in most case should be pretty straightforward (a boolean can be <code>true</code> or <code>false</code>, an integer must be composed by a number, a string is, well, any string). The <code>path</code> type might puzzle you a bit, but it’s equivalent to a string, except Crowbook will consider it relatively to the book file. The <code>template path</code> type is just the <code>path</code> of a template. Metadata are just strings.</p>
 <h3 id = "link-53">Metadata</h3>
 <p id = "para-110">Metadata are data about the book. Except for <code>cover</code>, which points to an image file, all its fields are strings. The main metadata are:</p>
 <ul>
@@ -786,7 +798,7 @@ license: CC-BY-SA  # Override the license from common.book
 + bar_01.md
 </code></pre>
 <h3 id = "link-55">Output options</h3>
-<p id = "para-117">These options specify which files to generate. You must at least set one of this option, or Crowbook won't do anything.</p>
+<p id = "para-117">These options specify which files to generate. You must at least set one of this option, or Crowbook won’t do anything.</p>
 <p id = "para-118">Recall that all file paths are relative to the directory where the config file is, not to the one where you run <code>crowbook</code>. So if you set</p>
 <pre><code class = "language-yaml">output.epub = foo.epub
 </code></pre>
@@ -794,11 +806,11 @@ license: CC-BY-SA  # Override the license from common.book
 <pre><code class = "language-bash">$ crowbook some/dir/config.book
 </code></pre>
 <p id = "para-120"><code>foo.epub</code> will be generated in <code>some/dir</code>, not in your current directory.</p>
-<p id = "para-121">Crowbook will try to generate each of the <code>output.xxx</code> files that are specified. That means that you'll have to set at least one of those if you want a call to</p>
+<p id = "para-121">Crowbook will try to generate each of the <code>output.xxx</code> files that are specified. That means that you’ll have to set at least one of those if you want a call to</p>
 <pre><code class = "language-bash">$ crowbook my.book
 </code></pre>
-<p id = "para-122">to generate anything. (It's still possible to generate a specific format, and only this one, by using the <code>--to</code> argument on the command line).</p>
-<p id = "para-123">Note that some formats depend on some commands being installed on your system. Most notably, Crowbook depends on LaTeX (<code>xelatex</code> by default, though you can specify the command to use with <code>tex.command</code>) to generate a PDF file, so PDF rendering won't work if it is not installed on your system. Crowbook also uses the <code>zip</code> command to generate the EPUB and ODT, files.</p>
+<p id = "para-122">to generate anything. (It’s still possible to generate a specific format, and only this one, by using the <code>--to</code> argument on the command line).</p>
+<p id = "para-123">Note that some formats depend on some commands being installed on your system. Most notably, Crowbook depends on LaTeX (<code>xelatex</code> by default, though you can specify the command to use with <code>tex.command</code>) to generate a PDF file, so PDF rendering won’t work if it is not installed on your system. Crowbook also uses the <code>zip</code> command to generate the EPUB and ODT, files.</p>
 <p id = "para-124">Current output options are:</p>
 <ul>
 <li><code>output.html</code>: renders a standalone HTML file;</li>
@@ -826,17 +838,17 @@ output.epub: book.epub
 <p id = "para-132">Note that:</p>
 <ul>
 <li>in this case, quoting is necessary because <code>{</code> and <code>}</code> have special meaning in YAML;</li>
-<li>this string won't be used for unnumbered chapters;</li>
-<li>this string isn't currently used by LaTeX, either.</li>
+<li>this string won’t be used for unnumbered chapters;</li>
+<li>this string isn’t currently used by LaTeX, either.</li>
 </ul>
 <h4 id = "link-60">rendering.inline_toc</h4>
 <p id = "para-133">If set to true, Crowbook will include a table of contents at the beginning of the document.</p>
 <h4 id = "link-61">rendering.initials</h4>
-<p id = "para-134">If set to true, Crowbook will use initials, or "lettrines", displaying the first letter of each chapter bigger than the others.</p>
+<p id = "para-134">If set to true, Crowbook will use initials, or “lettrines”, displaying the first letter of each chapter bigger than the others.</p>
 <h3 id = "link-62">Resources options</h3>
 <p id = "para-135">These options allow to embed additional files for some formats (currently, only EPUB). This can be useful for embedding fonts.</p>
 <h4 id = "link-63">resources.files</h4>
-<p id = "para-136">A list of files or directories that should be added. It's a whitespace-separated list, so it can be, e.g.:</p>
+<p id = "para-136">A list of files or directories that should be added. It’s a whitespace-separated list, so it can be, e.g.:</p>
 <pre><code class = "language-yaml">resources.files: font1.otf font2.otf
 </code></pre>
 <p id = "para-137">It is also possible to specify a directory (or multiple directories). So if you have a <code>fonts</code> directories containing <code>font1.otf</code> and <code>font2.otf</code>,</p>
@@ -861,12 +873,12 @@ resources.path: data
 
       <p class = "next_chapter">
   <a href = "chapter_003.html">
-    <b>4.</b> Templates »
+    4. Templates »
   </a>
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-289">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
+  <footer id = "footer"><p id = "para-290">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
 </footer>
   </body>
 </html>

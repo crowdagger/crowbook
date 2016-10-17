@@ -5,7 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
-    <title>Crowbook User Guide – <b>6.</b> Tips and tricks</title>
+    <title>Crowbook User Guide – 6. Tips and tricks</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
@@ -68,7 +68,7 @@ function toggle() {
   <nav id = "nav">
     <h2><a href = "index.html">Crowbook User Guide</a></h2>
     <ul>
- <li><a href = "chapter_000.html#link-1"><b>1.</b> Crowbook</a>
+ <li><a href = "chapter_000.html#link-1">1. Crowbook</a>
  <ul>
   <li><a href = "chapter_000.html#link-2">1.1. Example</a>
   </li>
@@ -92,7 +92,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_001.html#link-22"><b>2.</b> Arguments</a>
+ <li><a href = "chapter_001.html#link-22">2. Arguments</a>
  <ul>
   <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
   </li>
@@ -114,7 +114,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_002.html#link-35"><b>3.</b> The configuration file</a>
+ <li><a href = "chapter_002.html#link-35">3. The configuration file</a>
  <ul>
   <li><a href = "chapter_002.html#link-36">3.1. The list of files</a>
   </li>
@@ -122,7 +122,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_003.html#link-65"><b>4.</b> Templates</a>
+ <li><a href = "chapter_003.html#link-65">4. Templates</a>
  <ul>
   <li><a href = "chapter_003.html#link-66">4.1. List of templates</a>
   </li>
@@ -132,7 +132,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_004.html#link-89"><b>5.</b> Proofreading with Crowbook</a>
+ <li><a href = "chapter_004.html#link-89">5. Proofreading with Crowbook</a>
  <ul>
   <li><a href = "chapter_004.html#link-90">5.1. Enabling proofreading</a>
   </li>
@@ -144,9 +144,9 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_005.html#link-94"><b>6.</b> Tips and tricks</a>
+ <li><a href = "chapter_005.html#link-94">6. Tips and tricks</a>
  <ul>
-  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs' markdown mode</a>
+  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs’ markdown mode</a>
   </li>
   <li><a href = "chapter_005.html#link-98">6.2. Embedding fonts in an EPUB file</a>
   </li>
@@ -192,7 +192,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-296">Crowbook User Guide 0.10.0</p>
+        <div id = "top"><p id = "para-297">Crowbook User Guide 0.10.0</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -201,18 +201,18 @@ function toggle() {
     </header>
       <p class = "prev_chapter">
   <a href = "chapter_004.html">
-    « <b>5.</b> Proofreading with Crowbook
+    « 5. Proofreading with Crowbook
   </a>
 </p>
-      <h1 id = "link-94"><b>6.</b> Tips and tricks</h1>
-<h2 id = "link-95">6.1. Using Crowbook with Emacs' markdown mode</h2>
+      <h1 id = "link-94">6. Tips and tricks</h1>
+<h2 id = "link-95">6.1. Using Crowbook with Emacs’ markdown mode</h2>
 <p id = "para-207">If you use <a href = "https://www.gnu.org/software/emacs/">Emacs</a> as a text editor, there is a nice <a href = "http://jblevins.org/projects/markdown-mode/">Markdown mode</a> to edit Markdown files.</p>
 <p id = "para-208">It is possible to use Crowbook for HTML previewing in his mode, which <a href = "http://xkcd.com/1742/">requires only minimal configuration and tweaking</a>:</p>
 <pre><code class = "language-lisp">(custom-set-variables
  '(markdown-command "crowbook -qs --to html --output /dev/stdout")
  '(markdown-command-needs-filename t))
 </code></pre>
-<p id = "para-210">You can then use <code>markdown-preview</code> (or <code>C-c C-c p</code><a href = "#note-dest-6"><sup id = "note-source-6">[6]</sup></a>) to run crowbook on this file and preview it in your browser, or run <code>markdown-live-preview-mode</code> to see a live preview (updated each time you save you file) in Emacs' integrated browser.</p>
+<p id = "para-210">You can then use <code>markdown-preview</code> (or <code>C-c C-c p</code><a href = "#note-dest-6"><sup id = "note-source-6">[6]</sup></a>) to run crowbook on this file and preview it in your browser, or run <code>markdown-live-preview-mode</code> to see a live preview (updated each time you save you file) in Emacs’ integrated browser.</p>
 <h3 id = "link-96">Some explanations if it looks a bit cryptic to you</h3>
 <p id = "para-211">We set <code>markdown-command</code> to <code>crowbook</code>, the reason for this is a bit obvious. The arguments we give to crowbook might not be a bit less obvious:</p>
 <ul>
@@ -220,7 +220,7 @@ function toggle() {
 <li><code>--to html</code> specifies that HTML must be generated;</li>
 <li><code>--output /dev/stdout</code> forces crowbook to displays the result on the stdout, even if you set <code>output.html</code> to <code>some_file.html</code> (yes, this is a bit ugly).</li>
 </ul>
-<p id = "para-212">Also, <code>(markdown-command-needs-filename t)</code> is because at this point Crowbook can't read from the stdin and must be specified a file.</p>
+<p id = "para-212">Also, <code>(markdown-command-needs-filename t)</code> is because at this point Crowbook can’t read from the stdin and must be specified a file.</p>
 <h3 id = "link-97">Limitations</h3>
 <p id = "para-213">While it renders correctly, this only works really nicely on standalone markdown files where you have specified, e.g.:</p>
 <pre><code class = "language-markdown">---
@@ -230,10 +230,10 @@ title: Some title
 </code></pre>
 <p id = "para-214">Else, it will sets <code>author</code> and <code>title</code> to the default values (<code>anonymous</code> and <code>untitled</code>, respectively).</p>
 <h2 id = "link-98">6.2. Embedding fonts in an EPUB file</h2>
-<p id = "para-215">In order to embed fonts in an EPUB file, you'll first have to edit the stylesheet, which you can first obtain with:</p>
+<p id = "para-215">In order to embed fonts in an EPUB file, you’ll first have to edit the stylesheet, which you can first obtain with:</p>
 <pre><code class = "language-bash">$ crowbook --print-template epub.css &gt; my_epub_stylesheet.css
 </code></pre>
-<p id = "para-216">You'll need to use the <a href = "https://developer.mozilla.org/fr/docs/Web/CSS/@font-face"><code>@font-face</code> attribute</a>:</p>
+<p id = "para-216">You’ll need to use the <a href = "https://developer.mozilla.org/fr/docs/Web/CSS/@font-face"><code>@font-face</code> attribute</a>:</p>
 <pre><code class = "language-css">@font-face {
   font-family: MyFont;
   src: url(data/my_font.ttf);
@@ -248,7 +248,7 @@ output.epub: book.epub
 
 resources.files: my_font.ttf
 </code></pre>
-<p id = "para-218">(Note that you'll have to repeat the process the different <code>font-weight</code> and <code>font-style</code> variants of your font if you want it to display correctly when there is some text in <b>bold</b>, <em>italics</em>, or <b><em>both</em></b>.)</p>
+<p id = "para-218">(Note that you’ll have to repeat the process the different <code>font-weight</code> and <code>font-style</code> variants of your font if you want it to display correctly when there is some text in <b>bold</b>, <em>italics</em>, or <b><em>both</em></b>.)</p>
  <div class = "notes">
  <h2 class = "notes">Notes</h2>
 <table class = "notes">
@@ -274,7 +274,7 @@ resources.files: my_font.ttf
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-295">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
+  <footer id = "footer"><p id = "para-296">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
 </footer>
   </body>
 </html>

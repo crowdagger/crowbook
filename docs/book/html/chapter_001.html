@@ -5,7 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
-    <title>Crowbook User Guide – <b>2.</b> Arguments</title>
+    <title>Crowbook User Guide – 2. Arguments</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
@@ -68,7 +68,7 @@ function toggle() {
   <nav id = "nav">
     <h2><a href = "index.html">Crowbook User Guide</a></h2>
     <ul>
- <li><a href = "chapter_000.html#link-1"><b>1.</b> Crowbook</a>
+ <li><a href = "chapter_000.html#link-1">1. Crowbook</a>
  <ul>
   <li><a href = "chapter_000.html#link-2">1.1. Example</a>
   </li>
@@ -92,7 +92,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_001.html#link-22"><b>2.</b> Arguments</a>
+ <li><a href = "chapter_001.html#link-22">2. Arguments</a>
  <ul>
   <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
   </li>
@@ -114,7 +114,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_002.html#link-35"><b>3.</b> The configuration file</a>
+ <li><a href = "chapter_002.html#link-35">3. The configuration file</a>
  <ul>
   <li><a href = "chapter_002.html#link-36">3.1. The list of files</a>
   </li>
@@ -122,7 +122,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_003.html#link-65"><b>4.</b> Templates</a>
+ <li><a href = "chapter_003.html#link-65">4. Templates</a>
  <ul>
   <li><a href = "chapter_003.html#link-66">4.1. List of templates</a>
   </li>
@@ -132,7 +132,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_004.html#link-89"><b>5.</b> Proofreading with Crowbook</a>
+ <li><a href = "chapter_004.html#link-89">5. Proofreading with Crowbook</a>
  <ul>
   <li><a href = "chapter_004.html#link-90">5.1. Enabling proofreading</a>
   </li>
@@ -144,9 +144,9 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_005.html#link-94"><b>6.</b> Tips and tricks</a>
+ <li><a href = "chapter_005.html#link-94">6. Tips and tricks</a>
  <ul>
-  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs' markdown mode</a>
+  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs’ markdown mode</a>
   </li>
   <li><a href = "chapter_005.html#link-98">6.2. Embedding fonts in an EPUB file</a>
   </li>
@@ -192,7 +192,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-288">Crowbook User Guide 0.10.0</p>
+        <div id = "top"><p id = "para-289">Crowbook User Guide 0.10.0</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -201,40 +201,40 @@ function toggle() {
     </header>
       <p class = "prev_chapter">
   <a href = "chapter_000.html">
-    « <b>1.</b> Crowbook
+    « 1. Crowbook
   </a>
 </p>
-      <h1 id = "link-22"><b>2.</b> Arguments</h1>
+      <h1 id = "link-22">2. Arguments</h1>
 <p id = "para-47">Crowbook can takes a list of arguments:</p>
-<pre><code class = "language-text">Render a markdown book in Epub, PDF or HTML.
+<pre><code class = "language-text">Render a Markdown book in EPUB, PDF or HTML.
 
 USAGE:
-    crowbook [FLAGS] [OPTIONS] [--] [BOOK]
+    crowbook [OPTIONS] [--] [BOOK]
 
 FLAGS:
-    -h, --help            Prints help information
-    -l, --list-options    Lists all possible option
-    -p, --proofread       Enable roofreading
+    -h, --help            Print help information
+    -l, --list-options    List all possible options
+    -p, --proofread       Enable proofreading
+    -q, --quiet           Don't print info/error messages
     -s, --single          Use a single Markdown file instead of a book configuration file
-    -V, --version         Prints version information
     -v, --verbose         Print warnings in parsing/rendering
+    -V, --version         Print version information
 
 OPTIONS:
-    -c, --create &lt;FILES&gt;...            Creates a new book with existing markdown files
-    -o, --output &lt;FILE&gt;                Specifies output file
-        --print-template &lt;TEMPLATE&gt;    Displays the default value of a template
-        --set &lt;KEY_VALUES&gt;             Sets a list of book options
-    -t, --to &lt;FORMAT&gt;
-            Generate specific format [values: epub, pdf, html, tex, odt, proofread.html, proofread.html_dir, proofread.pdf, proofread.tex]
+    -c, --create &lt;FILES&gt;...            Create a new book with existing Markdown files
+    -o, --output &lt;FILE&gt;                Specify output file
+        --print-template &lt;TEMPLATE&gt;    Prints the default content of a template
+        --set &lt;KEY_VALUES&gt;             Set a list of book options
+    -t, --to &lt;FORMAT&gt;                  Generate specific format
 
 ARGS:
-    &lt;BOOK&gt;    File containing the book configuration, or a Markdown file when called with --single
+    &lt;BOOK&gt;    File containing the book configuration file, or a Markdown file when called with --single
 </code></pre>
 <p id = "para-49">Note that Crowbook generates output files relatively to the directory where &lt;BOOK&gt; is<a href = "#note-dest-2"><sup id = "note-source-2">[2]</sup></a>:</p>
  <pre><code class = "language-bash">$ crowbook foo/bar.book --to pdf --output baz.pdf
 </code></pre>
 <p id = "para-50">will thus generate baz.pdf in directory foo and not in current directory.</p>
-<p id = "para-51">The most important option is obviously &lt;BOOK&gt;, i.e. the file configuration book. It is mandatory for most options: if you don't pass it, <code>crowbook</code> will simply display this help message. In a normal use case this is the only argument you'll need to pass, and <code>crowbook</code> will generate the book in all formats specified in the configuration file.</p>
+<p id = "para-51">The most important option is obviously &lt;BOOK&gt;, i.e. the file configuration book. It is mandatory for most options: if you don’t pass it, <code>crowbook</code> will simply display this help message. In a normal use case this is the only argument you’ll need to pass, and <code>crowbook</code> will generate the book in all formats specified in the configuration file.</p>
 <p id = "para-52">It is, however, possible to pass more arguments to <code>crowbook</code>.</p>
 <h2 id = "link-23">2.1. <code>--create</code></h2>
 <p id = "para-53"><b>Usage</b>: <code>crowbook [BOOK] --create file_1.md file_2.md ...</code></p>
@@ -290,7 +290,7 @@ output.html: short.html
 <p id = "para-64">This allows to not have to write a <code>.book</code> configuration file for a short story or an article. <code>crowbook --single foo.md</code> is rougly equivalent to having a book configuration file containing:</p>
 <pre><code class = "language-yaml">! foo.md
 </code></pre>
-<p id = "para-65">That is, the chapter heading (if any) won't be displayed in the output documents (though they still appear in the TOC).</p>
+<p id = "para-65">That is, the chapter heading (if any) won’t be displayed in the output documents (though they still appear in the TOC).</p>
 <blockquote><p id = "para-66">Note that by default, using <code>--single</code> sets the default LaTeX class of the book to <code>article</code> instead of <code>book</code>.</p>
 </blockquote>
 <h2 id = "link-26">2.3. <code>--set</code></h2>
@@ -366,12 +366,12 @@ $ crowbook --print-template epub.template --set epub.version 3
 
       <p class = "next_chapter">
   <a href = "chapter_002.html">
-    <b>3.</b> The configuration file »
+    3. The configuration file »
   </a>
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-287">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
+  <footer id = "footer"><p id = "para-288">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
 </footer>
   </body>
 </html>

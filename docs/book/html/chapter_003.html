@@ -5,7 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
-    <title>Crowbook User Guide – <b>4.</b> Templates</title>
+    <title>Crowbook User Guide – 4. Templates</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
@@ -68,7 +68,7 @@ function toggle() {
   <nav id = "nav">
     <h2><a href = "index.html">Crowbook User Guide</a></h2>
     <ul>
- <li><a href = "chapter_000.html#link-1"><b>1.</b> Crowbook</a>
+ <li><a href = "chapter_000.html#link-1">1. Crowbook</a>
  <ul>
   <li><a href = "chapter_000.html#link-2">1.1. Example</a>
   </li>
@@ -92,7 +92,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_001.html#link-22"><b>2.</b> Arguments</a>
+ <li><a href = "chapter_001.html#link-22">2. Arguments</a>
  <ul>
   <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
   </li>
@@ -114,7 +114,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_002.html#link-35"><b>3.</b> The configuration file</a>
+ <li><a href = "chapter_002.html#link-35">3. The configuration file</a>
  <ul>
   <li><a href = "chapter_002.html#link-36">3.1. The list of files</a>
   </li>
@@ -122,7 +122,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_003.html#link-65"><b>4.</b> Templates</a>
+ <li><a href = "chapter_003.html#link-65">4. Templates</a>
  <ul>
   <li><a href = "chapter_003.html#link-66">4.1. List of templates</a>
   </li>
@@ -132,7 +132,7 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_004.html#link-89"><b>5.</b> Proofreading with Crowbook</a>
+ <li><a href = "chapter_004.html#link-89">5. Proofreading with Crowbook</a>
  <ul>
   <li><a href = "chapter_004.html#link-90">5.1. Enabling proofreading</a>
   </li>
@@ -144,9 +144,9 @@ function toggle() {
   </li>
  </ul>
  </li>
- <li><a href = "chapter_005.html#link-94"><b>6.</b> Tips and tricks</a>
+ <li><a href = "chapter_005.html#link-94">6. Tips and tricks</a>
  <ul>
-  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs' markdown mode</a>
+  <li><a href = "chapter_005.html#link-95">6.1. Using Crowbook with Emacs’ markdown mode</a>
   </li>
   <li><a href = "chapter_005.html#link-98">6.2. Embedding fonts in an EPUB file</a>
   </li>
@@ -192,7 +192,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-292">Crowbook User Guide 0.10.0</p>
+        <div id = "top"><p id = "para-293">Crowbook User Guide 0.10.0</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -201,10 +201,10 @@ function toggle() {
     </header>
       <p class = "prev_chapter">
   <a href = "chapter_002.html">
-    « <b>3.</b> The configuration file
+    « 3. The configuration file
   </a>
 </p>
-      <h1 id = "link-65"><b>4.</b> Templates</h1>
+      <h1 id = "link-65">4. Templates</h1>
 <h2 id = "link-66">4.1. List of templates</h2>
 <p id = "para-147">Crowbook allows the user to specify a number of templates.<a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a></p>
  <h3 id = "link-67">html.js</h3>
@@ -241,7 +241,7 @@ function toggle() {
 <h3 id = "link-80">Inline templates</h3>
 <p id = "para-166">Crowbook also has some inline templates, that are set in the book configuration file:</p>
 <ul>
-<li><code>rendering.inline_toc.name</code> sets the name of the inline table of content, if it is displayed. By default, is is set to <code>{{{loc_toc}}}</code>, that is, a localised version of "Table of Contents".</li>
+<li><code>rendering.inline_toc.name</code> sets the name of the inline table of content, if it is displayed. By default, is is set to <code>{{{loc_toc}}}</code>, that is, a localised version of “Table of Contents”.</li>
 <li><code>rendering.chapter_template</code> sets the naming scheme for chapters.</li>
 </ul>
 <h2 id = "link-81">4.2. Create and edit template</h2>
@@ -255,7 +255,7 @@ function toggle() {
 <p id = "para-169">The easiest way to create a new template is to start with the default one used by Crowbook. In order to do so, you can use the <code>--print-template</code> argument:</p>
 <pre><code class = "language-bash">$ crowbook --print-template tex.template &gt; my_template.tex
 </code></pre>
-<p id = "para-170">In order to get the <code>chapter.xhtml</code> template for EPUB3, you'll also have to use <code>--set epub.version 3</code>:</p>
+<p id = "para-170">In order to get the <code>chapter.xhtml</code> template for EPUB3, you’ll also have to use <code>--set epub.version 3</code>:</p>
 <pre><code class = "language-bash">$ crowbook --print-template epub.chapter.xhtml --set epub.version 3 &gt; my_epub3_template.xhtml
 </code></pre>
 <h3 id = "link-83">Mustache syntax</h3>
@@ -303,12 +303,12 @@ ul li {
 <li><code>date</code>;</li>
 <li>any option <code>metadata.foo</code> defined in the book configuration file will also be exported as <code>metadata_foo</code>.</li>
 </ul>
-<p id = "para-181">These metadata can contain Markdown, which will be rendered. E.g., setting <code>date: "20th of **september**"</code> will render <code>september</code> in bold, using <code>&lt;b&gt;</code> tag for HTML or <code>\textbf</code> for LaTeX. (It might be a bad idea to insert Markdown into <code>author</code> or <code>title</code> fields, and it certainly is for <code>lang</code>, but it can be useful for custom metadata or for fields like <code>description</code>).</p>
-<p id = "para-182">For each metadata <code>foo</code> that is set, Crowbook also inserts a <code>has_foo</code> bool set to true. This allows to use Mustache's section for some logic, e.g.:</p>
+<p id = "para-181">These metadata can contain Markdown, which will be rendered. E.g., setting <code>date: “20th of **september**”</code> will render <code>september</code> in bold, using <code>&lt;b&gt;</code> tag for HTML or <code>\textbf</code> for LaTeX. (It might be a bad idea to insert Markdown into <code>author</code> or <code>title</code> fields, and it certainly is for <code>lang</code>, but it can be useful for custom metadata or for fields like <code>description</code>).</p>
+<p id = "para-182">For each metadata <code>foo</code> that is set, Crowbook also inserts a <code>has_foo</code> bool set to true. This allows to use Mustache’s section for some logic, e.g.:</p>
 <pre><code>{{{title}}}
 {{#has_version}}, version {{{version}}}{{/has_version}}
 </code></pre>
-<p id = "para-183">will avoid rendering ", version" when <code>version</code> is not set.</p>
+<p id = "para-183">will avoid rendering ", version” when <code>version</code> is not set.</p>
 <h3 id = "link-87">Localisation strings</h3>
 <p id = "para-184">For all templates, Crowbook also exports some localisation strings <code>loc_foo</code>. They currently include:</p>
 <div class = "table">
@@ -333,7 +333,7 @@ ul li {
 <tr>
 <th> Mustache tag </th><th> Value </th><th> Available in... </th></tr>
 <tr>
-<td> <code>content</code> </td><td> A rendered version of the book or chapter's content </td><td> <code>html_single.html</code>, <code>html_dir.index.html</code>, <code>html_dir.chapter.html</code>, <code>tex.temlplate</code>, <code>epub.chapter.xhtml</code> </td></tr>
+<td> <code>content</code> </td><td> A rendered version of the book or chapter’s content </td><td> <code>html_single.html</code>, <code>html_dir.index.html</code>, <code>html_dir.chapter.html</code>, <code>tex.temlplate</code>, <code>epub.chapter.xhtml</code> </td></tr>
 <tr>
 <td> <code>toc</code> </td><td> A rendered version of the table of contents </td><td> <code>html_single.html</code>, <code>html_dir.chapter.html</code>, <code>html_dir.index.html</code> </td></tr>
 <tr>
@@ -349,7 +349,7 @@ ul li {
 <tr>
 <td> <code>style</code> </td><td> The CSS file for this HTML<span class = "nbsp">&#160;</span>document, that is, a rendered version of <code>html.css</code> </td><td> <code>html_single.html</code> </td></tr>
 <tr>
-<td> A variable whose name corresponds to <code>lang</code> in book options (e.g. <code>lang_en</code> if lang is set to "en", <code>lang_fr</code> if it is set to "fr", ... </td><td> <code>true</code> </td><td> <code>html.css</code>, <code>epub.css</code> </td></tr>
+<td> A variable whose name corresponds to <code>lang</code> in book options (e.g. <code>lang_en</code> if lang is set to “en”, <code>lang_fr</code> if it is set to “fr”, ... </td><td> <code>true</code> </td><td> <code>html.css</code>, <code>epub.css</code> </td></tr>
 <tr>
 <td> <code>chapter_title</code> </td><td> The title of current chapter </td><td> <code>html_dir.chapter.html</code>, <code>epub.chapter.xhtml</code>, <code>rendering.chapter_template</code> </td></tr>
 <tr>
@@ -394,7 +394,7 @@ ul li {
 
  </td>
  <td class = "note">
-  <aside id = "note-dest-3"><p id = "para-146">Some of them, though, are not "real" templates, they are just files that are inserted, but can't contain mustache tags. This will probably evolve in future versions.</p>
+  <aside id = "note-dest-3"><p id = "para-146">Some of them, though, are not “real” templates, they are just files that are inserted, but can’t contain mustache tags. This will probably evolve in future versions.</p>
 </aside>
   </td>
 </tr>
@@ -421,7 +421,7 @@ ul li {
   <aside id = "note-dest-5"><p id = "para-178"><code>&lt;&lt;foo&gt;&gt;</code> might also work, but the ampersand is required to prevent mustache HTML-escaping the value. This is not good because:</p>
 <ol>
 <li>escaping is already done by Crowbook before setting variable content;</li>
-<li>escaping HTML in a LaTeX document won't probably look good.</li>
+<li>escaping HTML in a LaTeX document won’t probably look good.</li>
 </ol>
 </aside>
   </td>
@@ -431,12 +431,12 @@ ul li {
 
       <p class = "next_chapter">
   <a href = "chapter_004.html">
-    <b>5.</b> Proofreading with Crowbook »
+    5. Proofreading with Crowbook »
   </a>
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-291">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
+  <footer id = "footer"><p id = "para-292">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.0-unreleased</p>
 </footer>
   </body>
 </html>
