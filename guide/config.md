@@ -145,25 +145,25 @@ usage of some of them is detailed later on.
 
 ### Metadata ###
 - **`author`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `Anonymous`
     -  Author of the book
 - **`title`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `Untitled`
     -  Title of the book
 - **`lang`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `en`
     -  Language of the book
 - **`subject`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `not set`
-    -  Subject of the book (used for EPUB metadata)
+    -  Subject of the book (used for EPUB metadata
 - **`description`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `not set`
-    -  Description of the book (used for EPUB metadata)
+    -  Description of the book (used for EPUB metadata
 - **`cover`**
     - **type**: path
     - **default value**: `not set`
@@ -171,15 +171,15 @@ usage of some of them is detailed later on.
 
 ### Additional metadata ###
 - **`license`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `not set`
     -  License of the book
 - **`version`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `not set`
     -  Version of the book
 - **`date`**
-    - **type**: string
+    - **type**: metadata
     - **default value**: `not set`
     -  Date the book was revised
 
@@ -254,6 +254,10 @@ usage of some of them is detailed later on.
     - **type**: template path
     - **default value**: `not set`
     -  Path of a stylesheet for HTML rendering
+- **`html.css.colours`**
+    - **type**: template path
+    - **default value**: `not set`
+    -  Path of a stylesheet for the colours for HTML
 - **`html.js`**
     - **type**: template path
     - **default value**: `not set`
@@ -281,7 +285,7 @@ usage of some of them is detailed later on.
 - **`html.escape_nb_spaces`**
     - **type**: boolean
     - **default value**: `true`
-    -  Replace unicode non breaking spaces with  HTML entities and CSS
+    -  Replace unicode non breaking spaces with HTML entities and CSS
 
 ### Standalone HTML options ###
 - **`html_single.one_chapter`**
@@ -344,6 +348,10 @@ usage of some of them is detailed later on.
     - **type**: string
     - **default value**: `not set`
     -  Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+- **`resources.out_path`**
+    - **type**: path
+    - **default value**: `data`
+    -  Paths where additional resources should be copied in the EPUB file or HTML directory
 - **`resources.base_path`**
     - **type**: path
     - **default value**: `not set`
@@ -364,16 +372,16 @@ usage of some of them is detailed later on.
     - **type**: path
     - **default value**: `.`
     -  Set base path but only for templates files. Useless if resources.base_path is set.
-- **`resources.out_path`**
-    - **type**: path
-    - **default value**: `data`
-    -  Paths where additional resources should be copied in the EPUB file or HTML directory
 
 ### Input options ###
 - **`input.autoclean`**
     - **type**: boolean
     - **default value**: `true`
     -  Toggle cleaning of input markdown according to lang
+- **`input.smart_quotes`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  If enabled, tries to replace vertical quotations marks to curly ones.
 - **`input.yaml_blocks`**
     - **type**: boolean
     - **default value**: `false`
@@ -411,7 +419,7 @@ usage of some of them is detailed later on.
 - **`proofread`**
     - **type**: boolean
     - **default value**: `false`
-    - Activate generation of proofreading copies
+    -  If set to false, will disactivate proofreading even if one of output.proofread.x is present
 - **`proofread.nb_spaces`**
     - **type**: boolean
     - **default value**: `true`
@@ -448,7 +456,6 @@ usage of some of them is detailed later on.
     - **type**: float
     - **default value**: `2.0`
     -  Threshold to detect a repetition
-```
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer

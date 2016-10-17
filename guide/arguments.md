@@ -4,29 +4,29 @@ Arguments
 Crowbook can takes a list of arguments:
 
 ```text
-Render a markdown book in Epub, PDF or HTML.
+Render a Markdown book in EPUB, PDF or HTML.
 
 USAGE:
-    crowbook [FLAGS] [OPTIONS] [--] [BOOK]
+    crowbook [OPTIONS] [--] [BOOK]
 
 FLAGS:
-    -h, --help            Prints help information
-    -l, --list-options    Lists all possible option
-    -p, --proofread       Enable roofreading
+    -h, --help            Print help information
+    -l, --list-options    List all possible options
+    -p, --proofread       Enable proofreading
+    -q, --quiet           Don't print info/error messages
     -s, --single          Use a single Markdown file instead of a book configuration file
-    -V, --version         Prints version information
     -v, --verbose         Print warnings in parsing/rendering
+    -V, --version         Print version information
 
 OPTIONS:
-    -c, --create <FILES>...            Creates a new book with existing markdown files
-    -o, --output <FILE>                Specifies output file
-        --print-template <TEMPLATE>    Displays the default value of a template
-        --set <KEY_VALUES>             Sets a list of book options
-    -t, --to <FORMAT>
-            Generate specific format [values: epub, pdf, html, tex, odt, proofread.html, proofread.html_dir, proofread.pdf, proofread.tex]
+    -c, --create <FILES>...            Create a new book with existing Markdown files
+    -o, --output <FILE>                Specify output file
+        --print-template <TEMPLATE>    Prints the default content of a template
+        --set <KEY_VALUES>             Set a list of book options
+    -t, --to <FORMAT>                  Generate specific format
 
 ARGS:
-    <BOOK>    File containing the book configuration, or a Markdown file when called with --single
+    <BOOK>    File containing the book configuration file, or a Markdown file when called with --single
 ```
 
 Note that Crowbook generates output files relatively to the directory
