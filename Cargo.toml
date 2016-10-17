@@ -8,7 +8,7 @@ documentation = "https://docs.rs/crowbook/"
 readme = "README.md"
 keywords = ["markdown", "book"]
 license = "LGPL-2.1+"
-publish = false
+publish = true
 build = "build.rs"
 
 exclude = [
