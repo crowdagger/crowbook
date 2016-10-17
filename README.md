@@ -230,6 +230,8 @@ library, Crowbook uses the following libraries:
 * [caribon](https://crates.io/crates/caribon)
 * [hyper](https://crates.io/crates/hyper)
 * [url](https://crates.io/crates/url)
+* [lazy_static](https://crates.io/crates/lazy_static)
+* [regex](https://crates.io/crates/regex)
 
 It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
 to enable syntax highlighting for code blocks.
@@ -249,7 +251,7 @@ Also, the [W3C HTML validator](https://validator.w3.org/) and the
 during development.
 
 ChangeLog
----------
+-----------
 
 See [ChangeLog](ChangeLog.md).
 
