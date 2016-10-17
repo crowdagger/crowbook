@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+0.10.1 (2016-10-18)
+-----------------------
+Fixed a bug in `fr.po` translation that prevented building from fresh install.
+
 0.10.0 (2016-10-18)
 -----------------------
 This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and
