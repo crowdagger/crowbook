@@ -493,8 +493,8 @@ impl Book {
         });
 
         if handles.is_empty() {
-            Logger::display_warning("Crowbook generated no file because no output file was \
-                                     specified. Add output.{{format}} to your config file.");
+            Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
+                                     specified. Add output.{{format}} to your config file."));
         }
     }
 
