@@ -4,7 +4,7 @@ BINARY = target/release/$(BINARYNAME)
 
 PKGNAME= $(BINARYNAME)
 MAINTAINER = "Élisabeth Henry \<liz.henry@ouvaton.org\>"
-PKGVERSION = "0.10.0"
+PKGVERSION = "0.10.2"
 PKGLICENSE = "LGPL-2.1+"
 
 default: $(BINARY)
