@@ -75,7 +75,7 @@ pub fn create_book(matches: &ArgMatches) -> ! {
             let s = set_book_options(&mut book, matches);
             f.write_all(&s.as_bytes()).unwrap();
         } else {
-            f.write_all(b"author: Your name
+            f.write_all(lformat!("author: Your name
 title: Your title
 lang: en
 
@@ -85,10 +85,10 @@ lang: en
 # output.pdf: some_file.pdf
 
 # Uncomment and fill to set cover image (for Epub)
-# cover: some_cover.png\n")
+# cover: some_cover.png\n").as_bytes())
                 .unwrap();
         }
-        f.write_all(b"\n# List of chapters\n").unwrap();
+        f.write_all(lformat!("\n# List of chapters\n").as_bytes()).unwrap();
         for file in values {
             f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
         }
