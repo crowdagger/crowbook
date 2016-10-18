@@ -12,8 +12,8 @@ use std::env;
 lazy_static! {
     static ref OPTIONS: String = format!("\
 # {metadata}
-author:meta:Anonymous               # {author}
-title:meta:Untitled                 # {title}
+author:meta:\"\"                    # {author}
+title:meta:\"\"                     # {title}
 lang:meta:en                        # {lang}
 subject:meta                        # {subject}
 description:meta                    # {description}
