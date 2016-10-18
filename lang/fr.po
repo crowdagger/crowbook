@@ -12,7 +12,7 @@ msgid "Error:"
 msgstr "Erreur :"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:25
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2373
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2354
 msgid ""
 "An odd number of arguments was passed to --set, but it takes a list of key "
 "value pairs."
@@ -27,6 +27,40 @@ msgstr "Erreur en initialisant la clé {}: {}"
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:65
 msgid "Could not create file {}: it already exists!"
 msgstr "Impossible de créer le fichier {} : il existe déjà !"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:78
+msgid ""
+"author: Your name\n"
+"title: Your title\n"
+"lang: en\n"
+"\n"
+"# Uncomment and fill to generate files\n"
+"# output.html: some_file.html\n"
+"# output.epub: some_file.epub\n"
+"# output.pdf: some_file.pdf\n"
+"\n"
+"# Uncomment and fill to set cover image (for Epub)\n"
+"# cover: some_cover.png\n"
+msgstr ""
+"author: Votre nom\n"
+"title: Le titre\n"
+"lang: fr\n"
+"\n"
+"# Décommenter et remplir pour générer des fichiers\n"
+"# output.html: un_fichier.html\n"
+"# output.epub: un_fichier.epub\n"
+"# output.pdf: un_fichier.pdf\n"
+"\n"
+"# Décommenter et remplir pour configurer une image de couverture (pour l'Epub)\n"
+"# cover: une_couverture.png\n"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:91
+msgid ""
+"\n"
+"# List of chapters\n"
+msgstr ""
+"\n"
+"# Liste des chapitres\n"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:97
 msgid "Created {}, now you'll have to complete it!"
@@ -103,7 +137,7 @@ msgstr ""
 "l'argument --single"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:123
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2367
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2380
 msgid ""
 "{{bin}} {{version}} by {{author}}\n"
 "{{about}}\n"
@@ -136,13 +170,13 @@ msgstr ""
 "{{positionals}}\n"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:207
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2341
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2350
 msgid "A list of additional files is only valid with the --create option."
 msgstr ""
 "Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
 
 #: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:67
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:931
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:912
 msgid ""
 "No output file specified, and book doesn't specify an output file for {}"
 msgstr ""
@@ -164,7 +198,7 @@ msgid "{} is not a valid template name."
 msgstr "{} n'est pas un nom de template valide."
 
 #: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:172
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:905
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:988
 msgid ""
 "You must pass the file of a book configuration file.\n"
 "\n"
@@ -179,7 +213,7 @@ msgstr ""
 "Pour plus d'informations, essayez --help."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:123
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:990
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1003
 msgid "Error initializing book: could not set {key} to {value}: {error}"
 msgstr ""
 "Erreur à l'initialisation du livre: impossible de positionner {key} à "
@@ -194,7 +228,7 @@ msgid "file contains invalid UTF-8, could not parse it"
 msgstr "le fichier contient de l'UTF-8 invalide, impossible de l'analyser"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:174
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:964
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:932
 msgid ""
 "could not parse {file} as a book file.\n"
 "Maybe you meant to run crowbook with the --single argument?"
@@ -207,12 +241,12 @@ msgid "YAML block was not valid YAML: {error}"
 msgstr "Le bloc YAML n'était pas valide : {error}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:235
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2369
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2348
 msgid "YAML part of the book is not a valid hashmap"
 msgstr "La partie YAML du livre n'est pas une hashmap valide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:258
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2343
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2360
 msgid "chapter filenames must not contain whitespace"
 msgstr "les noms de fichier des chapitres ne doivent pas contenir d'espace"
 
@@ -221,7 +255,7 @@ msgid "no chapter name specified"
 msgstr "pas de nom de chapitre spécifié"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:370
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2345
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2362
 msgid "ill-formatted line specifying chapter number"
 msgstr "line spécifiant un numéro de chapitre mal formattée"
 
@@ -230,7 +264,7 @@ msgid "error parsing chapter number"
 msgstr "erreur dans l'analyse du numéro de chapitre"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:380
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2347
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2382
 msgid "found invalid chapter definition in the chapter list"
 msgstr "définition de chapitre invalide trouvée dans la liste des chapitres"
 
@@ -285,7 +319,7 @@ msgid "Successfully generated HTML directory: {path}"
 msgstr "Répertoire HTML généré avec succès : {path}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:541
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:980
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:896
 msgid ""
 "this version of Crowbook has been compiled without support for proofreading, "
 "not generating {path}"
@@ -298,7 +332,7 @@ msgid "Attempting to generate html directory for proofreading..."
 msgstr "Tentative de générer le répertoire HTML pour la relecture..."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:559
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:924
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:993
 msgid ""
 "this version of Crowbook has been compiled without support for proofreading, "
 "not generating {file}"
@@ -340,7 +374,7 @@ msgid "Successfully generated HTML"
 msgstr "HTML généré avec succès"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:610
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:993
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:921
 msgid ""
 "this version of Crowbook has been compiled without support for proofreading,"
 "not generating HTML file {file}"
@@ -374,7 +408,7 @@ msgid "Successfully generated LaTeX"
 msgstr "LaTeX généré avec succès"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:653
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:971
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:926
 msgid ""
 "this version of Crowbook has been compiled without support for proofreading, "
 "not generating LaTeX file {file}"
@@ -399,7 +433,7 @@ msgid "file {file} contains invalid UTF-8"
 msgstr "le fichier {file} contient de l'UTF-8 invalide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:717
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:968
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1005
 msgid ""
 "Warning: book contains chapter '{file}' in a directory above the book file, "
 "this might cause problems"
@@ -408,7 +442,7 @@ msgstr ""
 "dessus du fichier du livre, cela risque de causer des problèmes"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:749
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:909
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:995
 msgid "Trying to run grammar check on {file}, this might take a while..."
 msgstr ""
 "On essaie de vérifier la grammaire de {file}, cela peut prendre un moment..."
@@ -427,7 +461,7 @@ msgstr "le fichier '{file}' n'a pas pu être lu"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:851
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:878
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2339
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2352
 msgid "could not compile template 'rendering.chapter_template'"
 msgstr "impossible de compiler le template 'rendering.chapter_template'"
 
@@ -436,7 +470,7 @@ msgid "header generated by mustache was not valid utf-8"
 msgstr "l'en-tête générée par mustache contenait de l'UTF-8 invalide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:923
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:919
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:990
 msgid ""
 "could not render `{key}` for metadata:\n"
 "{error}"
@@ -445,23 +479,23 @@ msgstr ""
 "{error}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:982
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:897
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:965
 msgid "Inline YAML block replaced {:?} previously set to {:?} to {:?}"
 msgstr ""
 "Le bloc YAML en ligne a remplacé {:?} qui était précédemment {:?} vers {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:991
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:921
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:952
 msgid "Inline YAML block set {:?} to {:?}"
 msgstr "Le bloc YAML en ligne a positionné {:?} à {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:999
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:915
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:898
 msgid "Inline YAML block could not set {:?} to {:?}: {}"
 msgstr "Le bloc YAML en ligne n'a pas pu positionner {:?} à {:?} : {}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:1008
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:988
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:961
 msgid ""
 "Ignoring YAML block:\n"
 "---\n"
@@ -472,7 +506,7 @@ msgstr ""
 "{block}---"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:1016
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:956
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:969
 msgid ""
 "Found something that looked like a YAML block:\n"
 "{block}"
@@ -481,7 +515,7 @@ msgstr ""
 "{block}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:1020
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:927
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:955
 msgid ""
 "... but it didn't parse correctly as YAML('{error}'), so treating it like "
 "Markdown."
@@ -830,7 +864,9 @@ msgstr "Active le nettoyage du Markdown en entrée en fonction de la langue"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:226
 msgid "If enabled, tries to replace vertical quotations marks to curly ones."
-msgstr "Si activé, essaie de remplacer les apostrophes et guillemets droits par des apostrophes et guillemets typographiques"
+msgstr ""
+"Si activé, essaie de remplacer les apostrophes et guillemets droits par des "
+"apostrophes et guillemets typographiques"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:227
 msgid "Enable inline YAML blocks to override options set in config file"
@@ -927,7 +963,7 @@ msgid "Removed"
 msgstr "Supprimé"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:323
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:933
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:999
 msgid "Ill-formatted OPTIONS string: unrecognized type '{option_type}'"
 msgstr "Chaîne OPTIONS mal formatée : type non reconnu '{option_type}'"
 
@@ -936,59 +972,59 @@ msgid "Expected a String as a key, found {:?}"
 msgstr "Une String était attendue comme clé, pas {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:370
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:917
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:967
 msgid "Expected a string as value for key {}, found {:?}"
 msgstr "Une chaîne de caractères était attendue pour la clé {}, pas {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:385
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:913
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:902
 msgid "'{value}''s path contains invalid UTF-8 code"
 msgstr "le chemin de '{value}' contient de l'UTF-8 invalide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:396
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:482
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:911
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:940
 msgid "expected a string as value for key '{}', found {:?}"
 msgstr ""
 "une chaîne de caractères était attendue comme valeur pour la clé '{}', pas "
 "{:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:407
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:959
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:977
 msgid "could not parse '{value}' as a char: does not contain exactly one char"
 msgstr ""
 "impossible d'analyser '{value}' comme un caractère : ne contient pas "
 "exactement un caractère "
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:415
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:901
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:916
 msgid "expected a string as value containing a char for key '{}', found {:?}"
 msgstr ""
 "une chaîne de caractère contenant un caractère comme valeur pour la clé "
 "'{}', pas {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:426
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:986
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1001
 msgid "expected a boolean as value for key '{}', found {:?}"
 msgstr "un booléen était attendue comme valeur pour la clé '{}', pas {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:437
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:961
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:900
 msgid "expected an integer as value for key '{}', found {:?}"
 msgstr "un entier était attendu comme valeur pour la clé '{}', pas {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:449
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:947
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:959
 msgid "could not parse '{value}' as a float for key '{key}'"
 msgstr "impossible d'analyser '{value}' comme un flottant pour la clé '{key}'"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:457
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1005
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:946
 msgid "expected a float as value for key '{}', found {:?}"
 msgstr "un flottant était attendu comme valeur pour la clé '{}', pas {:?}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:465
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:982
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:950
 msgid "'{old_key}' has been deprecated, you should now use '{new_key}'"
 msgstr ""
 "'{old_key}' a été déprécié, vous devriez maintenant utiliser '{new_key}'"
@@ -1002,7 +1038,7 @@ msgid "unrecognized key '{key}'"
 msgstr "clé '{key}' non reconnue"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:529
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1007
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:984
 msgid ""
 "value '{value}' for key '{key}' does not contain one and only one YAML value"
 msgstr ""
@@ -1018,7 +1054,7 @@ msgid "option '{key}' is not present"
 msgstr "l'option '{key}' n'est pas présente"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:561
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:966
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:997
 msgid ""
 "can't get '{key}' as a list of files, only valid if key is resources.files"
 msgstr ""
@@ -1027,7 +1063,7 @@ msgstr ""
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:638
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:717
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:984
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1007
 msgid "'{key}''s path contains invalid UTF-8 code"
 msgstr "le chemin de '{key}' contient de l'UTF-8 invalide"
 
@@ -1076,7 +1112,7 @@ msgid "not set"
 msgstr "non défini"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:775
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:977
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:944
 msgid ""
 "- **`{key}`**\n"
 "    - **type**: {option_type}\n"
@@ -1150,7 +1186,7 @@ msgid "cover"
 msgstr "couverture"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:346
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2375
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2364
 msgid "could not compile template for cover.xhtml"
 msgstr "impossible de compiler le template pour cover.xhtml"
 
@@ -1175,7 +1211,7 @@ msgid "generated HTML was not utf-8 valid"
 msgstr "le HTML contient de l'UTF-8 invalide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:436
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:936
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:972
 msgid ""
 "EPUB ({source}): detected two chapter titles inside the same markdown file, "
 "in a file where chapter titles are not even rendered."
@@ -1185,7 +1221,7 @@ msgstr ""
 "pas affichés."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:455
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:903
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:986
 msgid "EPUB ({source}): detected two chapters inside the same markdown file."
 msgstr ""
 "EPUB ({source}) : deux chapitres détectés à l'intérieur du même fichier "
@@ -1196,12 +1232,12 @@ msgid "EPUB ({source}): conflict between: {title1} and {title2}"
 msgstr "EPUB ({source}) : conflit entre {title1} et {title2}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:479
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:999
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:982
 msgid ""
 "EPUB: could not guess the format of {file} based on extension. Assuming png."
 msgstr ""
-"EPUB: impossible de deviner le format de {file} à partir de son extension. On "
-"part sur du png."
+"EPUB: impossible de deviner le format de {file} à partir de son extension. "
+"On part sur du png."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/error.rs:299
 msgid "Error connecting to language tool server: {error}"
@@ -1264,12 +1300,12 @@ msgid "could not compile template"
 msgstr "impossible de compiler le template"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/html.rs:596
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2371
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2386
 msgid "could not compile template 'rendering.inline_toc'"
 msgstr "impossible de compiler le template 'rendering.inline_toc'"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/html.rs:615
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:997
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:906
 msgid ""
 "rendering 'html.footer' template:\n"
 "{error}"
@@ -1286,7 +1322,7 @@ msgstr ""
 "{error}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:75
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:942
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:914
 msgid "{path} already exists and is not a directory"
 msgstr "{path} existe déjà et n'est pas un répertoire"
 
@@ -1366,7 +1402,7 @@ msgid "no output pdf file specified '{output}' in book config"
 msgstr "pas de fichier pdf spécifié '{output}' dans la configuration du livre"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:182
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1001
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:904
 msgid ""
 "LaTeX: can't find a tex equivalent for lang '{lang}', fallbacking on english"
 msgstr ""
@@ -1383,27 +1419,27 @@ msgstr "le fichier LaTeX généré contenait de l'UTF-8 invalide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:235
 #: /home/lise/Progs/rust/crowbook/src/lib/html.rs:409
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2377
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2346
 msgid "empty str token, could not find initial"
 msgstr "jeton str vide, impossible de trouver la lettrine"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:374
 #: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:388
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:995
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:910
 msgid "LaTeX ({source}): image '{url}' doesn't seem to be local; ignoring it."
 msgstr ""
 "LaTeX ({source}) : l'image '{url}' n'a pas l'air d'être locale, elle sera "
 "ignorée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:945
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:952
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:948
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:980
 #: /home/lise/Progs/rust/crowbook/src/lib/text_view.rs:130
 #: /home/lise/Progs/rust/crowbook/src/lib/text_view.rs:259
 msgid ""
 "ignored annotation {:?} as it wasn't compatible with the Markdown structure"
 msgstr "annotation {:?} ignorée car non compatible avec la structure Markdown"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2349
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2358
 #: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:61
 #: /home/lise/Progs/rust/crowbook/src/lib/grammar_check.rs:87
 msgid "server didn't respond with a OK status code"
@@ -1438,7 +1474,7 @@ msgid "generated content.xml was not utf-8 valid"
 msgstr "le fichier content.xml généré contenait de l'UTF-8 invalide"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:169
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2351
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2384
 msgid ""
 "ODT: ordered list not currently implemented for this format, fallbacking to "
 "unordered one"
@@ -1447,7 +1483,7 @@ msgstr ""
 "utilisation d'une liste non ordonnée à la place."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:190
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2379
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:2356
 msgid "ODT: blockquotes and codeblocks are not currently implemented for ODT"
 msgstr ""
 "ODT: les blocs de citation et de code ne sont pas encore implémentés pour ODT"
@@ -1461,7 +1497,7 @@ msgid "ODT: tables are not currently implemented for this format"
 msgstr "ODT: les tableaux ne sont pas encore implémentés pour ce format"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:216
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:899
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:938
 msgid "ODT: footnotes are not yet implemented in this format, ignoring {:?}"
 msgstr ""
 "ODT: les notes de bas de page ne sont pas implémentées dans ce format, on "
@@ -1477,14 +1513,14 @@ msgstr ""
 "le fichier {file} contient de l'UTF-8 invalide, impossible de l'analyser"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:148
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:954
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:923
 msgid "footnote reference {reference} does not have a matching definition"
 msgstr ""
 "la référence à la note de pas de page {reference} n'a pas de définition "
 "correspondante"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/parser.rs:241
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:950
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:929
 msgid ""
 "in {file}, found footnote definition for note '{reference}' but previous "
 "definition already exist, overriding it"
@@ -1493,7 +1529,7 @@ msgstr ""
 "une définition précédente existait déjà, elle sera remplacée"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:71
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:907
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:974
 msgid ""
 "Resources: book includes non-local image {file}, which might cause problem "
 "for proper inclusion."
@@ -1502,7 +1538,7 @@ msgstr ""
 "causer des problèmes pour une inclusion correcte"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:101
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:973
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:957
 msgid "Resources: book includes image {file} which doesn't have an extension"
 msgstr "Resources: le livre inclut l'image {file} qui n'a pas d'extension"
 
@@ -1515,7 +1551,7 @@ msgid "Resources: could not guess mime type of file {file}"
 msgstr "Ressources : impossible de deviner le type mime du fichier {file}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:152
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:1003
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:918
 msgid "Resources: could not find a in-book match for link {file}"
 msgstr ""
 "Ressources: impossible de trouver une correspondance à l'intérieur du livre "
@@ -1526,7 +1562,7 @@ msgid "error reading file {file}: {error}"
 msgstr "Erreur en lisant le fichier {file} : {error}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/resource_handler.rs:238
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:929
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:908
 msgid "error in epub rendering: {path} is neither a file nor a directory"
 msgstr ""
 "erreur dans le rendu EPUB : {path} n'est ni un fichier ni un répertoire"
@@ -1537,7 +1573,7 @@ msgid "could not create temporary directory in {path}"
 msgstr "impossible de créer le répertoire temporaire dans {path}'"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:61
-#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:940
+#: /home/lise/Progs/rust/crowbook/src/lib/localize_macros.rs:936
 msgid ""
 "file {file} refers to an absolute or a parent path.\n"
 "This is forbidden because we are supposed to create a temporary file in a "
