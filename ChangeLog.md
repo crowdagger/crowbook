@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+unreleased
+-------------
+* Options:
+ * `author` and `title`'s default values are both set to the empty
+   string, instead of `Anonymous` and `Untitled`.
+
 0.10.1 (2016-10-18)
 -----------------------
 Fixed a bug in `fr.po` translation that prevented building from fresh install.
