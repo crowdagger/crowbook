@@ -25,8 +25,10 @@ Example
 To see what Crowbook's output looks like, you can read the Crowbook
 guide rendered in
 [HTML](http://lise-henry.github.io/crowbook/book/book.html), 
-[PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub).
+[PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub). You can also play with the [online demo version here](http://vps.crowdagger.fr/crowbook/).
 
+
+ 
 
 Installing
 ----------
