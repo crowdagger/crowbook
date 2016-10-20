@@ -6,7 +6,7 @@ use templates::odt;
 use zipper::Zipper;
 use parser::Parser;
 
-use crowbook_text_processing::escape::escape_html;
+use crowbook_text_processing::escape;
 
 /// Rendererer for ODT
 ///
@@ -131,7 +131,7 @@ impl<'a> OdtRenderer<'a> {
 
     fn parse_token(&mut self, token: &Token) -> String {
         match *token {
-            Token::Str(ref text) => escape_html(text.as_ref()).into_owned(),
+            Token::Str(ref text) => escape::html(text.as_ref()).into_owned(),
             Token::Paragraph(ref vec) => {
                 format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n",
                         self.book.clean(self.render_vec(vec), false))
@@ -152,7 +152,7 @@ impl<'a> OdtRenderer<'a> {
                 };
                 format!("<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
                         n,
-                        escape_html(self.book.clean(s, false)))
+                        escape::html(self.book.clean(s, false)))
             }
             Token::Emphasis(ref vec) => {
                 format!("<text:span text:style-name=\"T1\">{}</text:span>",

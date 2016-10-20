@@ -18,9 +18,8 @@
 //! This module contains the `Cleaner` traits and various implementations of it.
 
 use std::borrow::Cow;
-use crowbook_text_processing::clean::remove_whitespaces;
-use crowbook_text_processing::clean::typographic_quotes;
-use crowbook_text_processing::french::FrenchFormatter;
+use crowbook_text_processing::clean;
+use crowbook_text_processing::FrenchFormatter;
 
 
 /// Contains cleaning parameters
@@ -89,9 +88,9 @@ impl Default {
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        let s = remove_whitespaces(input);
+        let s = clean::whitespaces(input);
         if self.params.smart_quotes {
-            typographic_quotes(s)
+            clean::quotes(s)
         } else {
             s
         }

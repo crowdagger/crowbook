@@ -25,7 +25,7 @@ use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
 
-use crowbook_text_processing::escape::escape_tex;
+use crowbook_text_processing::escape;
 
 use std::iter::Iterator;
 use std::fs::File;
@@ -222,7 +222,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.escape {
-                    self.book.clean(escape_tex(text.as_ref()), true)
+                    self.book.clean(escape::tex(text.as_ref()), true)
                 } else {
                     Cow::Borrowed(text.as_ref())
                 };
@@ -345,7 +345,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 if ResourceHandler::is_local(url) {
                     Ok(format!("\\hyperref[{}]{{{}}}", self.handler.get_link(url), content))
                 } else {
-                    let url = escape_tex(url.as_ref());
+                    let url = escape::tex(url.as_ref());
                     if &content == &url {
                         Ok(format!("\\url{{{}}}", content))
                     } else {
@@ -431,7 +431,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         &Data::GrammarError(ref s) => {
                             Ok(format!("\\underline{{{}}}\\protect\\footnote{{{}}}",
                                        content,
-                                       escape_tex(s.as_str())))
+                                       escape::tex(s.as_str())))
                         }
                         _ => unreachable!(),
                     }

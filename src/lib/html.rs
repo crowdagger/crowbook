@@ -29,7 +29,7 @@ use lang;
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
 
-use crowbook_text_processing::escape::{escape_html, escape_nb_spaces, escape_quotes};
+use crowbook_text_processing::escape;
 
 #[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;
@@ -384,7 +384,7 @@ impl<'a> HtmlRenderer<'a> {
                     match annotation {
                         &Data::GrammarError(ref s) => {
                             Ok(format!("<span title = \"{}\" class = \"grammar-error\">{}</span>",
-                                       escape_quotes(s.as_str()),
+                                       escape::quotes(s.as_str()),
                                        content))
                         }
                         _ => unreachable!(),
@@ -395,9 +395,9 @@ impl<'a> HtmlRenderer<'a> {
             }
             Token::Str(ref text) => {
                 let content = if this.as_ref().verbatim {
-                    escape_html(text.as_ref())
+                    escape::html(text.as_ref())
                 } else {
-                    escape_html(this.as_ref().book.clean(text.as_ref(), false))
+                    escape::html(this.as_ref().book.clean(text.as_ref(), false))
                 };
                 let mut content = if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
@@ -425,7 +425,7 @@ impl<'a> HtmlRenderer<'a> {
                 };
 
                 if this.as_ref().book.options.get_bool("html.escape_nb_spaces").unwrap() {
-                    content = escape_nb_spaces(content);
+                    content = escape::nb_spaces(content);
                 }
                 Ok(content.into_owned())
             }
@@ -492,7 +492,7 @@ impl<'a> HtmlRenderer<'a> {
             }
             Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", try!(this.render_vec(vec)))),
             Token::Link(ref url, ref title, ref vec) => {
-                let url = escape_html(url.as_ref());
+                let url = escape::html(url.as_ref());
                 let url = if ResourceHandler::is_local(&url) {
                     Cow::Owned(this.as_ref().handler.get_link(&url).to_owned())
                 } else {
