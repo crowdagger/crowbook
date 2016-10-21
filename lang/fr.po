@@ -235,7 +235,7 @@ msgid ""
 "could not parse {file} as a book file.\n"
 "Maybe you meant to run crowbook with the --single argument?"
 msgstr ""
-"impossible d'analyser {file} comme un ficheir de livre.\n"
+"impossible d'analyser {file} comme un fichier de livre.\n"
 "Peut-être que vous vouliez lancer crowbook avec l'argument --single ?"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:221
@@ -292,7 +292,7 @@ msgid ""
 "Crowbook generated no file because no output file was specified. Add output."
 "{{format}} to your config file."
 msgstr ""
-"Crowbook n'a généré aucun fichier car aucun fichier de sortie n'était spécifié. Ajoutez"
+"Crowbook n'a généré aucun fichier car aucun fichier de sortie n'était spécifié. Ajoutez "
 "output.{{format}} à votre fichier de configuration."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:504
