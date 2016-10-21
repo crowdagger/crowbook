@@ -10,9 +10,6 @@ outputs formats from a book written in Markdown. Its focus is
 novels, and the default settings should (hopefully) generate readable
 books with correct typography without requiring you to worry about it.
     
-![Crowbook logo](img/crowbook.png)
-
-
 Example
 -------
 
