@@ -206,17 +206,16 @@ impl<'a> EpubRenderer<'a> {
         for (n, ref title) in self.toc.iter().enumerate() {
             let filename = filenamer(n);
             let id = format!("navPoint-{}", n + 1);
-            nav_points.push_str(&format!("   <navPoint id=\"{}\">
+            nav_points.push_str(&format!("\
+    <navPoint id=\"{id}\">
       <navLabel>
-        \
-                                          <text>{}</text>
+        <text>{title}</text>
       </navLabel>
-      <content src \
-                                          = \"{}\" />
+      <content src = \"{file}\" />
     </navPoint>\n",
-                                         id,
-                                         title,
-                                         filename));
+                                         id = id,
+                                         title = title,
+                                         file = filename));
         }
         let template = try!(compile_str(TOC,
                                         &self.html.book.source,
