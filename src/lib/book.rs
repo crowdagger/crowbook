@@ -701,7 +701,7 @@ impl Book {
                           lformat!("file {file} contains invalid UTF-8", file = path.display()))
         }));
 
-        // Ignore YAML blocks
+        // Ignore YAML blocks (or not)
         self.parse_yaml(&mut s);
 
         // parse the file
@@ -1053,9 +1053,9 @@ impl Book {
     // Update the cleaner according to autoclean and lang options
     fn update_cleaner(&mut self) {
         let params = CleanerParams {
-            smart_quotes: self.options.get_bool("input.smart_quotes").unwrap(),
+            smart_quotes: self.options.get_bool("input.clean.smart_quotes").unwrap(),
         };
-        if self.options.get_bool("input.autoclean").unwrap() {
+        if self.options.get_bool("input.clean").unwrap() {
             let lang = self.options.get_str("lang").unwrap().to_lowercase();
             let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
                 Box::new(French::new(params))

@@ -87,8 +87,10 @@ resources.base_path.files:path:.     # {rs_base_files}
 resources.base_path.templates:path:. # {rs_tmpl}
 
 # {input_opt}
-input.autoclean:bool:true           # {autoclean}
-input.smart_quotes:bool:true        # {smart_quotes}
+input.clean:bool:true               # {autoclean}
+input.clean.smart_quotes:bool:true  # {smart_quotes}
+input.clean.ligature.dashes:bool:false # {ligature_dashes}
+input.clean.ligature.guillemets:bool:false # {ligature_guillemets}
 input.yaml_blocks:bool:false        # {yaml}
 
 
@@ -116,6 +118,8 @@ proofread.repetitions.ignore_proper:bool:true     # {prf_ignore}
 proofread.repetitions.threshold:float:2.0         # {prf_threshold}
 
 # {deprecated_opt}
+input.smart_quotes:alias:input.clean.smart_quotes   # {renamed}
+input.autoclean:alias:input.clean                   # {renamed}
 base_path:alias:resources.base_path                 # {renamed}
 base_path.links:alias:resources.base_path.links     # {renamed}
 base_path.images:alias:resources.base_path.images   # {renamed}
@@ -215,15 +219,17 @@ html.crowbook_link:alias                            # {removed}
                                          tex_class = lformat!("LaTeX class to use"),
                                          
                                          rs_files = lformat!("Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts"),
-                                         rs_out = lformat!("Paths where additional resources should be copied in the EPUB file or HTML directory "),
+                                         rs_out = lformat!("Paths where additional resources should be copied in the EPUB file or HTML directory"),
                                          rs_base = lformat!("Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path."),
-                                         rs_links = lformat!("Set base path but only for links. Useless if resources.base_path is set."),
-                                         rs_img = lformat!("Set base path but only for images. Useless if resources.base_path is set."),
+                                         rs_links = lformat!("Set base path but only for links. Useless if resources.base_path is set"),
+                                         rs_img = lformat!("Set base path but only for images. Useless if resources.base_path is set"),
                                          rs_base_files = lformat!("Set base path but only for additional files. Useless if resources.base_path is set."),
-                                         rs_tmpl = lformat!("Set base path but only for templates files. Useless if resources.base_path is set."),
+                                         rs_tmpl = lformat!("Set base path but only for templates files. Useless if resources.base_path is set"),
                                          
-                                         autoclean = lformat!("Toggle cleaning of input markdown according to lang"),
-                                         smart_quotes = lformat!("If enabled, tries to replace vertical quotations marks to curly ones."),
+                                         autoclean = lformat!("Toggle typographic cleaning of input markdown according to lang"),
+                                         smart_quotes = lformat!("If enabled, tries to replace vertical quotations marks to curly ones"),
+                                         ligature_dashes = lformat!("If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"),
+                                         ligature_guillemets = lformat!("If enabled, replaces '<<' and '>>' to french \"guillemets\" ('«' and '»')"),
                                          yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
