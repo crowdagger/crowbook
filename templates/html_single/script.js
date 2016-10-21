@@ -19,6 +19,14 @@ function showChapter(chap, noreset){
                 controls[i].style.display = "none";
             }
         }
+	// Hide toc unless we're at first chapter
+	var toc = document.getElementById("toc");
+	if (toc && chap == 0) {
+	    toc.style.display = "block";
+	}
+	if (toc && chap != 0) {
+	    toc.style.display = "none";
+	}
         if (!noreset) {
             window.location.hash = "#chapter-"+chap;
         }

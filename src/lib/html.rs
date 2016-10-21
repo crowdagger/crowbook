@@ -594,7 +594,7 @@ impl<'a> HtmlRenderer<'a> {
         let template = try!(compile_str(template,
                                         &self.book.source,
                                         lformat!("could not compile template \
-                                                  'rendering.inline_toc'")));
+                                                  'rendering.inline_toc.name'")));
         let mut res = vec![];
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())

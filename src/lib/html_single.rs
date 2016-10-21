@@ -158,14 +158,14 @@ impl<'a> HtmlSingleRenderer<'a> {
         // If display_toc, display the toc inline
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
 
-            content = format!("<h1>{}</h1>
-<div id = \"toc\">
-{}
+            content = format!("<div id = \"toc\">
+  <h1>{title}</h1>
+  {toc}
 </div>
-{}",
-                              try!(self.html.get_toc_name()),
-                              &toc,
-                              content);
+{content}",
+                              title = try!(self.html.get_toc_name()),
+                              toc = &toc,
+                              content = content);
         }
 
         // Render the CSS
