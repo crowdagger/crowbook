@@ -583,6 +583,14 @@ function showChapter(chap, noreset){
                 controls[i].style.display = "none";
             }
         }
+	// Hide toc unless we're at first chapter
+	var toc = document.getElementById("toc");
+	if (toc && chap == 0) {
+	    toc.style.display = "block";
+	}
+	if (toc && chap != 0) {
+	    toc.style.display = "none";
+	}
         if (!noreset) {
             window.location.hash = "#chapter-"+chap;
         }
@@ -603,7 +611,7 @@ function getChapter(elem) {
 }
 
 function switchAll() {
-    if (!displayAll){
+    if (!displayAll) {
         displayAll = true;
         var chapters = document.getElementsByClassName("chapter");
         for (i = 0; i < chapters.length; i++) {
@@ -613,11 +621,15 @@ function switchAll() {
         for (i = 0; i < controls.length; i++){
             controls[i].style.display = "none";
         }
+	var toc = document.getElementById("toc");
+	if (toc) {
+	    toc.style.display = "block";
+	}
         displayAllSwitcher = document.getElementById("book-button");
         displayAllSwitcher.src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgoKPHN2ZwogICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiCiAgIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIKICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB3aWR0aD0iMjQiCiAgIGhlaWdodD0iMjQiCiAgIGlkPSJzdmc4MzAyIgogICBzb2RpcG9kaTp2ZXJzaW9uPSIwLjMyIgogICBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ4LjQgcjk5MzkiCiAgIHZlcnNpb249IjEuMCIKICAgc29kaXBvZGk6ZG9jbmFtZT0icGFnZXMuc3ZnIgogICBpbmtzY2FwZTpvdXRwdXRfZXh0ZW5zaW9uPSJvcmcuaW5rc2NhcGUub3V0cHV0LnN2Zy5pbmtzY2FwZSIKICAgaW5rc2NhcGU6ZXhwb3J0LWZpbGVuYW1lPSIvdmFyL3d3dy9wcm9qZWN0cy9jcm93Ym9vay9pbWcvcGFnZXMucG5nIgogICBpbmtzY2FwZTpleHBvcnQteGRwaT0iOTAiCiAgIGlua3NjYXBlOmV4cG9ydC15ZHBpPSI5MCI+CiAgPGRlZnMKICAgICBpZD0iZGVmczgzMDQiPgogICAgPGlua3NjYXBlOnBlcnNwZWN0aXZlCiAgICAgICBzb2RpcG9kaTp0eXBlPSJpbmtzY2FwZTpwZXJzcDNkIgogICAgICAgaW5rc2NhcGU6dnBfeD0iMCA6IDUyNi4xODEwOSA6IDEiCiAgICAgICBpbmtzY2FwZTp2cF95PSIwIDogMTAwMCA6IDAiCiAgICAgICBpbmtzY2FwZTp2cF96PSI3NDQuMDk0NDggOiA1MjYuMTgxMDkgOiAxIgogICAgICAgaW5rc2NhcGU6cGVyc3AzZC1vcmlnaW49IjM3Mi4wNDcyNCA6IDM1MC43ODczOSA6IDEiCiAgICAgICBpZD0icGVyc3BlY3RpdmU4MzEwIiAvPgogIDwvZGVmcz4KICA8c29kaXBvZGk6bmFtZWR2aWV3CiAgICAgaWQ9ImJhc2UiCiAgICAgcGFnZWNvbG9yPSIjZmZmZmZmIgogICAgIGJvcmRlcmNvbG9yPSIjNjY2NjY2IgogICAgIGJvcmRlcm9wYWNpdHk9IjEuMCIKICAgICBncmlkdG9sZXJhbmNlPSIxMDAwMCIKICAgICBndWlkZXRvbGVyYW5jZT0iMTAiCiAgICAgb2JqZWN0dG9sZXJhbmNlPSIxMCIKICAgICBpbmtzY2FwZTpwYWdlb3BhY2l0eT0iMC4wIgogICAgIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiCiAgICAgaW5rc2NhcGU6em9vbT0iMTEuMiIKICAgICBpbmtzY2FwZTpjeD0iOC43OTQyNzA4IgogICAgIGlua3NjYXBlOmN5PSI0LjMxODQzMTUiCiAgICAgaW5rc2NhcGU6ZG9jdW1lbnQtdW5pdHM9InB4IgogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9ImxheWVyMSIKICAgICBzaG93Z3JpZD0iZmFsc2UiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxNjc4IgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjEwMjQiCiAgICAgaW5rc2NhcGU6d2luZG93LXg9IjE1OTYiCiAgICAgaW5rc2NhcGU6d2luZG93LXk9IjAiCiAgICAgaW5rc2NhcGU6d2luZG93LW1heGltaXplZD0iMCIgLz4KICA8bWV0YWRhdGEKICAgICBpZD0ibWV0YWRhdGE4MzA3Ij4KICAgIDxyZGY6UkRGPgogICAgICA8Y2M6V29yawogICAgICAgICByZGY6YWJvdXQ9IiI+CiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+CiAgICAgICAgPGRjOnR5cGUKICAgICAgICAgICByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIiAvPgogICAgICAgIDxkYzp0aXRsZT48L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KICA8ZwogICAgIGlua3NjYXBlOmxhYmVsPSJMYXllciAxIgogICAgIGlua3NjYXBlOmdyb3VwbW9kZT0ibGF5ZXIiCiAgICAgaWQ9ImxheWVyMSIKICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLC0yMzIpIj4KICAgIDxnCiAgICAgICBpZD0iZzQzMjkiCiAgICAgICB0cmFuc2Zvcm09Im1hdHJpeCgwLjMxOTIwMTk5LDAsMCwwLjMxOTIwMTk5LC00LjEwODcyNjEsMjE4LjYzMTkpIj4KICAgICAgPGcKICAgICAgICAgaWQ9Imc0MTYwLTMtMyIKICAgICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTcuMTU1MTc0LC0xNi41OTQwNDUpIj4KICAgICAgICA8ZwogICAgICAgICAgIGlkPSJnMzk5NC0yLTYiCiAgICAgICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4yNjc4NTcxNCwwLjE3ODU3MTQzKSIKICAgICAgICAgICBzdHlsZT0iZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxIj4KICAgICAgICAgIDxyZWN0CiAgICAgICAgICAgICByeT0iMS4wNzE0Mjg1IgogICAgICAgICAgICAgeT0iNjEuNTQ1NjM1IgogICAgICAgICAgICAgeD0iMjIuNDc1ODkzIgogICAgICAgICAgICAgaGVpZ2h0PSI1Mi4yNzUzOTQiCiAgICAgICAgICAgICB3aWR0aD0iMzcuODgwNzIyIgogICAgICAgICAgICAgaWQ9InJlY3QzODYzLTEtMSIKICAgICAgICAgICAgIHN0eWxlPSJjb2xvcjojMDAwMDAwO2ZpbGw6I2ZmZmZmZjtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6NDtzdHJva2Utb3BhY2l0eToxO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTttYXJrZXI6bm9uZTt2aXNpYmlsaXR5OnZpc2libGU7ZGlzcGxheTppbmxpbmU7b3ZlcmZsb3c6dmlzaWJsZTtlbmFibGUtYmFja2dyb3VuZDphY2N1bXVsYXRlIiAvPgogICAgICAgIDwvZz4KICAgICAgICA8dGV4dAogICAgICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiCiAgICAgICAgICAgc3R5bGU9ImZvbnQtc2l6ZTo2cHg7Zm9udC1zdHlsZTpub3JtYWw7Zm9udC12YXJpYW50Om5vcm1hbDtmb250LXdlaWdodDpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtsaW5lLWhlaWdodDoxMjUlO2xldHRlci1zcGFjaW5nOjBweDt3b3JkLXNwYWNpbmc6MHB4O2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6bm9uZTtmb250LWZhbWlseTpEcm9pZCBTYW5zOy1pbmtzY2FwZS1mb250LXNwZWNpZmljYXRpb246RHJvaWQgU2FucyIKICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgeT0iNjcuNjA3MTQiCiAgICAgICAgICAgaWQ9InRleHQ0MTIwLTUtMSIKICAgICAgICAgICBzb2RpcG9kaTpsaW5lc3BhY2luZz0iMTI1JSI+PHRzcGFuCiAgICAgICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIgogICAgICAgICAgICAgeD0iMjQuNzMyMTQzIgogICAgICAgICAgICAgeT0iNjcuNjA3MTQiCiAgICAgICAgICAgICBpZD0idHNwYW40MTM4LTMtNiI+w6l0YWl0PC90c3Bhbj48dHNwYW4KICAgICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiCiAgICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgICB5PSI3NS4xMDcxNCIKICAgICAgICAgICAgIGlkPSJ0c3BhbjQzNjkiPmRpcmVjdGVtZW50PC90c3Bhbj48dHNwYW4KICAgICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiCiAgICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgICB5PSI4Mi42MDcxNCIKICAgICAgICAgICAgIGlkPSJ0c3BhbjQzNzEiPnbDqWN1IHMnZXN0PC90c3Bhbj48dHNwYW4KICAgICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiCiAgICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgICB5PSI5MC4xMDcxNCIKICAgICAgICAgICAgIGlkPSJ0c3BhbjQzNzMiPsOpbG9pZ27DqSBkYW5zPC90c3Bhbj48dHNwYW4KICAgICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiCiAgICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgICB5PSI5Ny42MDcxNCIKICAgICAgICAgICAgIGlkPSJ0c3BhbjQzNzUiPnVuZTwvdHNwYW4+PHRzcGFuCiAgICAgICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIgogICAgICAgICAgICAgeD0iMjQuNzMyMTQzIgogICAgICAgICAgICAgeT0iMTA1LjEwNzE0IgogICAgICAgICAgICAgaWQ9InRzcGFuNDM3NyI+cmVwcsOpc2VudGF0aW88L3RzcGFuPjwvdGV4dD4KICAgICAgPC9nPgogICAgPC9nPgogICAgPGcKICAgICAgIGlkPSJnNDMxNyIKICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDAuMzE5MjAxOTksMCwwLDAuMzE5MjAxOTksLTQuMTA4NzI2MSwyMTguNjMxOSkiPgogICAgICA8ZwogICAgICAgICBzdHlsZT0iZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxIgogICAgICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4Ljg1MTYwMzIsLTguMjAxMTg4MykiCiAgICAgICAgIGlkPSJnMzk5NC0yIj4KICAgICAgICA8cmVjdAogICAgICAgICAgIHN0eWxlPSJjb2xvcjojMDAwMDAwO2ZpbGw6I2ZmZmZmZjtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6NDtzdHJva2Utb3BhY2l0eToxO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTttYXJrZXI6bm9uZTt2aXNpYmlsaXR5OnZpc2libGU7ZGlzcGxheTppbmxpbmU7b3ZlcmZsb3c6dmlzaWJsZTtlbmFibGUtYmFja2dyb3VuZDphY2N1bXVsYXRlIgogICAgICAgICAgIGlkPSJyZWN0Mzg2My0xIgogICAgICAgICAgIHdpZHRoPSIzNy44ODA3MjIiCiAgICAgICAgICAgaGVpZ2h0PSI1Mi4yNzUzOTQiCiAgICAgICAgICAgeD0iMjIuNDc1ODkzIgogICAgICAgICAgIHk9IjYxLjU0NTYzNSIKICAgICAgICAgICByeT0iMS4wNzE0Mjg1IiAvPgogICAgICA8L2c+CiAgICAgIDx0ZXh0CiAgICAgICAgIHNvZGlwb2RpOmxpbmVzcGFjaW5nPSIxMjUlIgogICAgICAgICBpZD0idGV4dDQxMjAtNSIKICAgICAgICAgeT0iNTkuMjI3Mzc5IgogICAgICAgICB4PSIzMy4zMTU4OTEiCiAgICAgICAgIHN0eWxlPSJmb250LXNpemU6NnB4O2ZvbnQtc3R5bGU6bm9ybWFsO2ZvbnQtdmFyaWFudDpub3JtYWw7Zm9udC13ZWlnaHQ6bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6MTI1JTtsZXR0ZXItc3BhY2luZzowcHg7d29yZC1zcGFjaW5nOjBweDtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOm5vbmU7Zm9udC1mYW1pbHk6RHJvaWQgU2FuczstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOkRyb2lkIFNhbnMiCiAgICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQxMzgtMyIKICAgICAgICAgICB5PSI1OS4yMjczNzkiCiAgICAgICAgICAgeD0iMzMuMzE1ODkxIgogICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiPnByb2R1Y3Rpb248L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQzMDUiCiAgICAgICAgICAgeT0iNjYuNzI3Mzc5IgogICAgICAgICAgIHg9IjMzLjMxNTg5MSIKICAgICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIj5zJ2Fubm9uY2U8L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQzMDciCiAgICAgICAgICAgeT0iNzQuMjI3Mzc5IgogICAgICAgICAgIHg9IjMzLjMxNTg5MSIKICAgICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIj5jb21tZSB1bmU8L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQzMDkiCiAgICAgICAgICAgeT0iODEuNzI3Mzc5IgogICAgICAgICAgIHg9IjMzLjMxNTg5MSIKICAgICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIj5pbW1lbnNlPC90c3Bhbj48dHNwYW4KICAgICAgICAgICBpZD0idHNwYW40MzExIgogICAgICAgICAgIHk9Ijg5LjIyNzM3OSIKICAgICAgICAgICB4PSIzMy4zMTU4OTEiCiAgICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSI+YWNjdW11bGF0aW9uPC90c3Bhbj48dHNwYW4KICAgICAgICAgICBpZD0idHNwYW40MzEzIgogICAgICAgICAgIHk9Ijk2LjcyNzM3OSIKICAgICAgICAgICB4PSIzMy4zMTU4OTEiCiAgICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSI+ZGUgc3BlY3RhY2xlcy48L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQzMTUiCiAgICAgICAgICAgeT0iMTA0LjIyNzM4IgogICAgICAgICAgIHg9IjMzLjMxNTg5MSIKICAgICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIj5Ub3V0IGNlIHF1aTwvdHNwYW4+PC90ZXh0PgogICAgPC9nPgogICAgPGcKICAgICAgIGlkPSJnNDE2MCIKICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDAuMzE5MjAxOTksMCwwLDAuMzE5MjAxOTksLTQuMTA4NzI2MSwyMTguNjMxOSkiPgogICAgICA8ZwogICAgICAgICBzdHlsZT0iZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxIgogICAgICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjI2Nzg1NzE0LDAuMTc4NTcxNDMpIgogICAgICAgICBpZD0iZzM5OTQiPgogICAgICAgIDxyZWN0CiAgICAgICAgICAgc3R5bGU9ImNvbG9yOiMwMDAwMDA7ZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1vcGFjaXR5OjE7c3Ryb2tlLWRhc2hhcnJheTpub25lO21hcmtlcjpub25lO3Zpc2liaWxpdHk6dmlzaWJsZTtkaXNwbGF5OmlubGluZTtvdmVyZmxvdzp2aXNpYmxlO2VuYWJsZS1iYWNrZ3JvdW5kOmFjY3VtdWxhdGUiCiAgICAgICAgICAgaWQ9InJlY3QzODYzIgogICAgICAgICAgIHdpZHRoPSIzNy44ODA3MjIiCiAgICAgICAgICAgaGVpZ2h0PSI1Mi4yNzUzOTQiCiAgICAgICAgICAgeD0iMjIuNDc1ODkzIgogICAgICAgICAgIHk9IjYxLjU0NTYzNSIKICAgICAgICAgICByeT0iMS4wNzE0Mjg1IiAvPgogICAgICA8L2c+CiAgICAgIDx0ZXh0CiAgICAgICAgIHNvZGlwb2RpOmxpbmVzcGFjaW5nPSIxMjUlIgogICAgICAgICBpZD0idGV4dDQxMjAiCiAgICAgICAgIHk9IjY3LjYwNzE0IgogICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgIHN0eWxlPSJmb250LXNpemU6NnB4O2ZvbnQtc3R5bGU6bm9ybWFsO2ZvbnQtdmFyaWFudDpub3JtYWw7Zm9udC13ZWlnaHQ6bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6MTI1JTtsZXR0ZXItc3BhY2luZzowcHg7d29yZC1zcGFjaW5nOjBweDtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOm5vbmU7Zm9udC1mYW1pbHk6RHJvaWQgU2FuczstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOkRyb2lkIFNhbnMiCiAgICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiPjx0c3BhbgogICAgICAgICAgIHk9IjY3LjYwNzE0IgogICAgICAgICAgIHg9IjI0LjczMjE0MyIKICAgICAgICAgICBpZD0idHNwYW40MTIyIgogICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiPlRvdXRlIGxhIHZpZTwvdHNwYW4+PHRzcGFuCiAgICAgICAgICAgaWQ9InRzcGFuNDEyNCIKICAgICAgICAgICB5PSI3NS4xMDcxNCIKICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSI+ZGVzIHNvY2nDqXTDqXM8L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQxMjgiCiAgICAgICAgICAgeT0iODIuNjA3MTQiCiAgICAgICAgICAgeD0iMjQuNzMyMTQzIgogICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiPmRhbnM8L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQxMzIiCiAgICAgICAgICAgeT0iOTAuMTA3MTQiCiAgICAgICAgICAgeD0iMjQuNzMyMTQzIgogICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiPmxlc3F1ZWxsZXM8L3RzcGFuPjx0c3BhbgogICAgICAgICAgIGlkPSJ0c3BhbjQxMzQiCiAgICAgICAgICAgeT0iOTcuNjA3MTQiCiAgICAgICAgICAgeD0iMjQuNzMyMTQzIgogICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiPnLDqGduZXMgbGVzPC90c3Bhbj48dHNwYW4KICAgICAgICAgICBpZD0idHNwYW40MTM2IgogICAgICAgICAgIHk9IjEwNS4xMDcxNCIKICAgICAgICAgICB4PSIyNC43MzIxNDMiCiAgICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSI+Y29uZGl0aW9uczwvdHNwYW4+PHRzcGFuCiAgICAgICAgICAgaWQ9InRzcGFuNDEzOCIKICAgICAgICAgICB5PSIxMTIuNjA3MTQiCiAgICAgICAgICAgeD0iMjQuNzMyMTQzIgogICAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiPm1vZGVybmVzIGRlPC90c3Bhbj48L3RleHQ+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K";
         displayAllSwitcher.alt="Display one chapter";
         displayAllSwitcher.title="Display one chapter";
-    }else{
+    } else {
         displayAll = false;
         showChapter(0);
         displayAllSwitcher = document.getElementById("book-button");
@@ -747,61 +759,63 @@ if(!window.HashChangeEvent)(function(){
  </li>
  <li><a href = "#link-90">5. Proofreading with Crowbook</a>
  <ul>
-  <li><a href = "#link-91">5.1. Enabling proofreading</a>
+  <li><a href = "#link-91">5.1. Building Crowbook with proofreading features</a>
   </li>
-  <li><a href = "#link-92">5.2. Repetition detection</a>
+  <li><a href = "#link-92">5.2. Enabling proofreading</a>
   </li>
-  <li><a href = "#link-93">5.3. Grammar checking</a>
+  <li><a href = "#link-93">5.3. Repetition detection</a>
   </li>
-  <li><a href = "#link-94">5.4. Highlighting non-breaking spaces</a>
+  <li><a href = "#link-94">5.4. Grammar checking</a>
+  </li>
+  <li><a href = "#link-95">5.5. Highlighting non-breaking spaces</a>
   </li>
  </ul>
  </li>
- <li><a href = "#link-95">6. Tips and tricks</a>
+ <li><a href = "#link-96">6. Tips and tricks</a>
  <ul>
-  <li><a href = "#link-96">6.1. Using Crowbook with Emacs’ markdown mode</a>
+  <li><a href = "#link-97">6.1. Using Crowbook with Emacs’ markdown mode</a>
   </li>
-  <li><a href = "#link-99">6.2. Embedding fonts in an EPUB file</a>
+  <li><a href = "#link-100">6.2. Embedding fonts in an EPUB file</a>
   </li>
  </ul>
  </li>
- <li><a href = "#link-100">ChangeLog</a>
+ <li><a href = "#link-101">ChangeLog</a>
  <ul>
-  <li><a href = "#link-101">unreleased</a>
+  <li><a href = "#link-102">unreleased</a>
   </li>
-  <li><a href = "#link-102">0.10.1 (2016-10-18)</a>
+  <li><a href = "#link-103">0.10.1 (2016-10-18)</a>
   </li>
-  <li><a href = "#link-103">0.10.0 (2016-10-18)</a>
+  <li><a href = "#link-104">0.10.0 (2016-10-18)</a>
   </li>
-  <li><a href = "#link-104">0.9.1 (2016-09-29)</a>
+  <li><a href = "#link-105">0.9.1 (2016-09-29)</a>
   </li>
-  <li><a href = "#link-105">0.9.0 (2016-09-23)</a>
+  <li><a href = "#link-106">0.9.0 (2016-09-23)</a>
   </li>
-  <li><a href = "#link-106">0.8.0 (2016-09-19)</a>
+  <li><a href = "#link-107">0.8.0 (2016-09-19)</a>
   </li>
-  <li><a href = "#link-107">0.7.0 (2016-09-11)</a>
+  <li><a href = "#link-108">0.7.0 (2016-09-11)</a>
   </li>
-  <li><a href = "#link-108">0.6.0 (2016-09-09)</a>
+  <li><a href = "#link-109">0.6.0 (2016-09-09)</a>
   </li>
-  <li><a href = "#link-109">0.5.1 (2016-04-14)</a>
+  <li><a href = "#link-110">0.5.1 (2016-04-14)</a>
   </li>
-  <li><a href = "#link-110">0.5.0 (2016-04-02)</a>
+  <li><a href = "#link-111">0.5.0 (2016-04-02)</a>
   </li>
-  <li><a href = "#link-111">0.4.0 (2016-03-01)</a>
+  <li><a href = "#link-112">0.4.0 (2016-03-01)</a>
   </li>
-  <li><a href = "#link-112">0.3.0 (2016-02-27)</a>
+  <li><a href = "#link-113">0.3.0 (2016-02-27)</a>
   </li>
-  <li><a href = "#link-113">0.2.2 (2016-02-25)</a>
+  <li><a href = "#link-114">0.2.2 (2016-02-25)</a>
   </li>
-  <li><a href = "#link-114">0.2.1 (2016-02-25)</a>
+  <li><a href = "#link-115">0.2.1 (2016-02-25)</a>
   </li>
-  <li><a href = "#link-115">0.2.0 (2016-02-25)</a>
+  <li><a href = "#link-116">0.2.0 (2016-02-25)</a>
   </li>
-  <li><a href = "#link-116">0.1.0 (2016-02-21)</a>
+  <li><a href = "#link-117">0.1.0 (2016-02-21)</a>
   </li>
  </ul>
  </li>
- <li><a href = "#link-117">GNU LESSER GENERAL PUBLIC LICENSE</a>
+ <li><a href = "#link-118">GNU LESSER GENERAL PUBLIC LICENSE</a>
  </li>
 </ul>
     </nav>
@@ -809,7 +823,7 @@ if(!window.HashChangeEvent)(function(){
     <div id = "content">
       <div id = "page">
         <header>
-          <div id = "top"><p id = "para-291">Crowbook User Guide 0.10.2</p>
+          <div id = "top"><p id = "para-292">Crowbook User Guide 0.10.2</p>
 </div>
           <div id = "menu">
             <img id = "menu-button" onclick="toggle();"
@@ -2076,32 +2090,32 @@ ul li {
 <li>grammar check;</li>
 <li>highlighting non-breaking spaces.</li>
 </ul>
-<blockquote><p id = "para-193">Note that, by default, <code>cargo build</code> <em>won’t</em> compile Crowbook with proofreading features. In order to enable them (at the cost of a bigger binary and a longer compilation time), you’ll have to run:</p>
-</blockquote>
+<h2 id = "link-91">5.1. Building Crowbook with proofreading features</h2>
+<p id = "para-193">Since it is a relative “niche” feature and it requires more dependencies, the default builds of Crowbook don’t include proofreading features. The first step to enable proofreading is thus to build Crowbook with those features:</p>
 <pre><code>$ cargo install --features "proofread" crowbook
 </code></pre>
-<blockquote><p id = "para-194">or:</p>
-</blockquote>
+<p id = "para-194">or:</p>
 <pre><code class = "language-bash">$ cargo build --release --features "proofread"
 </code></pre>
-<blockquote><p id = "para-195">in the source directory.</p>
+<p id = "para-195">in the source directory.</p>
+<blockquote><p id = "para-196">This is assuming you have a working installation of <code>rust</code> and <code>cargo</code>. If you don’t, first <a href = "https://www.rust-lang.org/en-US/downloads.html">get them here</a>.</p>
 </blockquote>
-<h2 id = "link-91">5.1. Enabling proofreading</h2>
-<p id = "para-196">Since proofreading can take quite a lot of time, particularly for a long book, it is disabled by default. You’ll have to run</p>
+<h2 id = "link-92">5.2. Enabling proofreading</h2>
+<p id = "para-197">Since proofreading can take quite a lot of time, particularly for a long book, it is disabled by default. You’ll have to run</p>
 <pre><code class = "language-bash">$ crowbook --proofread my.book
 </code></pre>
-<p id = "para-197">or</p>
+<p id = "para-198">or</p>
 <pre><code class = "language-bash">$ crowbook -p my.book
 </code></pre>
-<p id = "para-198">to generate proofreading copies. Alternatively, if you want it to be activated each time you run <code>crowbook</code> on this book (which is <em>not</em> recommanded for long books, particularly if you want to perform a grammar check), you can set</p>
+<p id = "para-199">to generate proofreading copies. Alternatively, if you want it to be activated each time you run <code>crowbook</code> on this book (which is <em>not</em> recommanded for long books, particularly if you want to perform a grammar check), you can set</p>
 <pre><code class = "language-yaml">proofread: true
 </code></pre>
-<p id = "para-199">in the book configuration file.</p>
-<h2 id = "link-92">5.2. Repetition detection</h2>
-<p id = "para-200">Repetition detection is enabled with:</p>
+<p id = "para-200">in the book configuration file.</p>
+<h2 id = "link-93">5.3. Repetition detection</h2>
+<p id = "para-201">Repetition detection is enabled with:</p>
 <pre><code class = "language-yaml">proofread.repetitions: true
 </code></pre>
-<p id = "para-201">It uses <a href = "https://github.com/lise-henry/caribon">Caribon</a> library to detect the repetition in your text. Since the notion of a repetition is relatively arbitrary, it is possible to adapt the settings. Default are:</p>
+<p id = "para-202">It uses <a href = "https://github.com/lise-henry/caribon">Caribon</a> library to detect the repetition in your text. Since the notion of a repetition is relatively arbitrary, it is possible to adapt the settings. Default are:</p>
 <pre><code class = "language-yaml"># The maximum distance between two identical words to
 # consider them a repetition 
 proofread.repetitions.max_distance: 25
@@ -2119,26 +2133,26 @@ proofread.repetitions.fuzzy: true
 # considered as the same word, but they will be with 0.5)
 proofread.repetitions.fuzzy.threshold: 0.2
 </code></pre>
-<p id = "para-202">For more information, see <a href = "https://github.com/lise-henry/caribon">Caribon</a>’s documentation.</p>
-<blockquote><p id = "para-203">Currently, repetitions are not displayed in PDF proofreading output.</p>
+<p id = "para-203">For more information, see <a href = "https://github.com/lise-henry/caribon">Caribon</a>’s documentation.</p>
+<blockquote><p id = "para-204">Currently, repetitions are not displayed in PDF proofreading output.</p>
 </blockquote>
-<h2 id = "link-93">5.3. Grammar checking</h2>
-<p id = "para-204">Crowbook can also use <a href = "https://languagetool.org/">LanguageTool</a> to detect grammar errors in your text. It is, however, a bit more complex to activate.</p>
-<p id = "para-205">First, you’ll have to activate this feature in your book configuration file:</p>
+<h2 id = "link-94">5.4. Grammar checking</h2>
+<p id = "para-205">Crowbook can also use <a href = "https://languagetool.org/">LanguageTool</a> to detect grammar errors in your text. It is, however, a bit more complex to activate.</p>
+<p id = "para-206">First, you’ll have to activate this feature in your book configuration file:</p>
 <pre><code class = "language-yaml"># Activate language tool support
 proofread.languagetool: true
 # (Optional) Sets the port number to connect to (default below)
 proofread.languagetool.port: 8081
 </code></pre>
-<p id = "para-206">You’ll then have to download the stand-alone version of <a href = "https://languagetool.org/">LanguageTool</a>. It includes a server mode, which you’ll have to launch:</p>
+<p id = "para-207">You’ll then have to download the stand-alone version of <a href = "https://languagetool.org/">LanguageTool</a>. It includes a server mode, which you’ll have to launch:</p>
 <pre><code class = "language-bash">$ java -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8081
 </code></pre>
-<p id = "para-207">You can also use the LanguageTool GUI (<code>languagetool.jar</code>) and start the server from the menu “Text Checking -&gt; Options”. This also allows you to configure LanguageTool more precisely by activating or deactivating rules.</p>
-<p id = "para-208">You can then run Crowbook, and it will highlight grammar errors in HTML or PDF proofreading output files.</p>
-<blockquote><p id = "para-209">Note: running a grammar check on a long book (like a novel) can take up to a few minutes.</p>
+<p id = "para-208">You can also use the LanguageTool GUI (<code>languagetool.jar</code>) and start the server from the menu “Text Checking -&gt; Options”. This also allows you to configure LanguageTool more precisely by activating or deactivating rules.</p>
+<p id = "para-209">You can then run Crowbook, and it will highlight grammar errors in HTML or PDF proofreading output files.</p>
+<blockquote><p id = "para-210">Note: running a grammar check on a long book (like a novel) can take up to a few minutes.</p>
 </blockquote>
-<h2 id = "link-94">5.4. Highlighting non-breaking spaces</h2>
-<p id = "para-210">The last proofreading feature is a bit less important, but it can be useful in some cases. It is is dis/activated by setting <code>proofread.nb_spaces</code> to “true” or “false”, and it will highlight different sort of non-breaking spaces in HTML proofreading output files. This can be useful in some cases, but it is mostly a debugging feature to check that the french cleaner of Crowbook correctly replaces spaces with correct non-breaking spaces in the relevant places.</p>
+<h2 id = "link-95">5.5. Highlighting non-breaking spaces</h2>
+<p id = "para-211">The last proofreading feature is a bit less important, but it can be useful in some cases. It is is dis/activated by setting <code>proofread.nb_spaces</code> to “true” or “false”, and it will highlight different sort of non-breaking spaces in HTML proofreading output files. This can be useful in some cases, but it is mostly a debugging feature to check that the french cleaner of Crowbook correctly replaces spaces with correct non-breaking spaces in the relevant places.</p>
 
 </div><p onclick = "javascript:showChapter(5)" class = "chapterControls next_chapter chapter-4">
   <a href = "#chapter-5">
@@ -2149,42 +2163,42 @@ proofread.languagetool.port: 8081
   « 5. Proofreading with Crowbook
   </a>
 </p><div id = "chapter-5" class = "chapter">
-  <h1 id = "link-95">6. Tips and tricks</h1>
-<h2 id = "link-96">6.1. Using Crowbook with Emacs’ markdown mode</h2>
-<p id = "para-211">If you use <a href = "https://www.gnu.org/software/emacs/">Emacs</a> as a text editor, there is a nice <a href = "http://jblevins.org/projects/markdown-mode/">Markdown mode</a> to edit Markdown files.</p>
-<p id = "para-212">It is possible to use Crowbook for HTML previewing in this mode, which <a href = "http://xkcd.com/1742/">requires only minimal configuration and tweaking</a>:</p>
+  <h1 id = "link-96">6. Tips and tricks</h1>
+<h2 id = "link-97">6.1. Using Crowbook with Emacs’ markdown mode</h2>
+<p id = "para-212">If you use <a href = "https://www.gnu.org/software/emacs/">Emacs</a> as a text editor, there is a nice <a href = "http://jblevins.org/projects/markdown-mode/">Markdown mode</a> to edit Markdown files.</p>
+<p id = "para-213">It is possible to use Crowbook for HTML previewing in this mode, which <a href = "http://xkcd.com/1742/">requires only minimal configuration and tweaking</a>:</p>
 <pre><code class = "language-lisp">(custom-set-variables
  '(markdown-command "crowbook -qs --to html --output /dev/stdout")
  '(markdown-command-needs-filename t))
 </code></pre>
-<p id = "para-213">You can then use <code>markdown-preview</code> (or <code>C-c C-c p</code>) to run Crowbook on this file and preview it in your browser, or run <code>markdown-live-preview-mode</code> to see a live preview (updated each time you save you file) in Emacs’ integrated browser.</p>
-<h3 id = "link-97">Some explanations if it looks a bit cryptic to you</h3>
-<p id = "para-214">We set <code>markdown-command</code> to <code>crowbook</code>, the reason for this is a bit obvious. The arguments we give to crowbook might be a bit less obvious:</p>
+<p id = "para-214">You can then use <code>markdown-preview</code> (or <code>C-c C-c p</code>) to run Crowbook on this file and preview it in your browser, or run <code>markdown-live-preview-mode</code> to see a live preview (updated each time you save you file) in Emacs’ integrated browser.</p>
+<h3 id = "link-98">Some explanations if it looks a bit cryptic to you</h3>
+<p id = "para-215">We set <code>markdown-command</code> to <code>crowbook</code>, the reason for this is a bit obvious. The arguments we give to crowbook might be a bit less obvious:</p>
 <ul>
 <li><code>-qs</code> or <code>--quiet --single</code> tells Crowbook that is a a standalone markdown file, and not a book configuration file, and to be a bit quiet on error/info messages;</li>
 <li><code>--to html</code> specifies that HTML must be generated;</li>
 <li><code>--output /dev/stdout</code> forces Crowbook to display the result on the stdout, even if you set <code>output.html</code> to <code>some_file.html</code>.</li>
 </ul>
-<p id = "para-215">Also, <code>(markdown-command-needs-filename t)</code> is because at this point Crowbook can’t read from the stdin and must be specified a file.</p>
-<h3 id = "link-98">Limitations</h3>
-<p id = "para-216">While it renders correctly, this only works really nicely on standalone Markdown files where you have specified, e.g.:</p>
+<p id = "para-216">Also, <code>(markdown-command-needs-filename t)</code> is because at this point Crowbook can’t read from the stdin and must be specified a file.</p>
+<h3 id = "link-99">Limitations</h3>
+<p id = "para-217">While it renders correctly, this only works really nicely on standalone Markdown files where you have specified, e.g.:</p>
 <pre><code class = "language-markdown">---
 author: Your name
 title: Some title
 ---
 </code></pre>
-<p id = "para-217">Else, it will sets <code>author</code> and <code>title</code> to the default values.</p>
-<h2 id = "link-99">6.2. Embedding fonts in an EPUB file</h2>
-<p id = "para-218">In order to embed fonts in an EPUB file, you’ll first have to edit the stylesheet, which you can first obtain with:</p>
+<p id = "para-218">Else, it will sets <code>author</code> and <code>title</code> to the default values.</p>
+<h2 id = "link-100">6.2. Embedding fonts in an EPUB file</h2>
+<p id = "para-219">In order to embed fonts in an EPUB file, you’ll first have to edit the stylesheet, which you can first obtain with:</p>
 <pre><code class = "language-bash">$ crowbook --print-template epub.css &gt; my_epub_stylesheet.css
 </code></pre>
-<p id = "para-219">You’ll need to use the <a href = "https://developer.mozilla.org/fr/docs/Web/CSS/@font-face"><code>@font-face</code> attribute</a>:</p>
+<p id = "para-220">You’ll need to use the <a href = "https://developer.mozilla.org/fr/docs/Web/CSS/@font-face"><code>@font-face</code> attribute</a>:</p>
 <pre><code class = "language-css">@font-face {
   font-family: MyFont;
   src: url(data/my_font.ttf);
 }
 </code></pre>
-<p id = "para-220">Then you can add <code>my_font.ttf</code> to the files that need to be added to the EPUB zip file:</p>
+<p id = "para-221">Then you can add <code>my_font.ttf</code> to the files that need to be added to the EPUB zip file:</p>
 <pre><code class = "language-yaml">title: My Book
 author: Me
 
@@ -2193,7 +2207,7 @@ output.epub: book.epub
 
 resources.files: my_font.ttf
 </code></pre>
-<p id = "para-221">(Note that you’ll have to repeat the process the different <code>font-weight</code> and <code>font-style</code> variants of your font if you want it to display correctly when there is some text in <b>bold</b>, <em>italics</em>, or <b><em>both</em></b>.)</p>
+<p id = "para-222">(Note that you’ll have to repeat the process the different <code>font-weight</code> and <code>font-style</code> variants of your font if you want it to display correctly when there is some text in <b>bold</b>, <em>italics</em>, or <b><em>both</em></b>.)</p>
 
 </div><p onclick = "javascript:showChapter(6)" class = "chapterControls next_chapter chapter-5">
   <a href = "#chapter-6">
@@ -2204,8 +2218,8 @@ resources.files: my_font.ttf
   « 6. Tips and tricks
   </a>
 </p><div id = "chapter-6" class = "chapter">
-  <h1 id = "link-100">ChangeLog</h1>
-<h2 id = "link-101">unreleased</h2>
+  <h1 id = "link-101">ChangeLog</h1>
+<h2 id = "link-102">unreleased</h2>
 <ul>
 <li>Options:</li>
 <li><code>author</code> and <code>title</code>’s default values are both set to the empty string, instead of <code>Anonymous</code> and <code>Untitled</code>.</li>
@@ -2213,11 +2227,13 @@ resources.files: my_font.ttf
 <li><code>input.smart_quotes</code> has been renamed <code>input.clean.smart_quotes</code>.</li>
 <li>new option: <code>input.clean.ligature.dashes</code> will (if set to true) replace <code>--</code> to en dash (<code>–</code>) and <code>---</code> to em dash (<code>—</code>).</li>
 <li>new option: <code>input.clean.ligature.guillemets</code> will (if set to true) replace <code>&lt;&lt;</code> and <code>&gt;&gt;</code> to french guillemets (<code>«</code> and <code>»</code>).</li>
+<li>Rendering:</li>
+<li>HTML: if <code>html_single.one_chapter</code> and <code>rendering.inline_toc</code> are both set to true, only render the TOC if currently displayed chapter is the first.</li>
 </ul>
-<h2 id = "link-102">0.10.1 (2016-10-18)</h2>
-<p id = "para-222">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
-<h2 id = "link-103">0.10.0 (2016-10-18)</h2>
-<p id = "para-223">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
+<h2 id = "link-103">0.10.1 (2016-10-18)</h2>
+<p id = "para-223">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
+<h2 id = "link-104">0.10.0 (2016-10-18)</h2>
+<p id = "para-224">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
 <ul>
 <li><b>Breaking changes</b>:<ul>
 <li>Templates:<ul>
@@ -2253,8 +2269,8 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-104">0.9.1 (2016-09-29)</h2>
-<p id = "para-224">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
+<h2 id = "link-105">0.9.1 (2016-09-29)</h2>
+<p id = "para-225">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
 <ul>
 <li>New options:<ul>
 <li><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entites and CSS so it can display correctly even if reader’s don’t have a browser/font supporting these unicode symbols.</li>
@@ -2284,8 +2300,8 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-105">0.9.0 (2016-09-23)</h2>
-<p id = "para-225">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
+<h2 id = "link-106">0.9.0 (2016-09-23)</h2>
+<p id = "para-226">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
 <ul>
 <li>reducing the surface of Crowbook’s library API;</li>
 <li>cleaning options names</li>
@@ -2349,8 +2365,8 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-106">0.8.0 (2016-09-19)</h2>
-<p id = "para-226">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
+<h2 id = "link-107">0.8.0 (2016-09-19)</h2>
+<p id = "para-227">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
 <ul>
 <li>New options:<ul>
 <li><code>import_config</code>is not really an option, but allows to import another configuration file, useful if you share a same set of options between multiple books.</li>
@@ -2389,8 +2405,8 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-107">0.7.0 (2016-09-11)</h2>
-<p id = "para-227">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
+<h2 id = "link-108">0.7.0 (2016-09-11)</h2>
+<p id = "para-228">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
 <ul>
 <li>Internal/API:<ul>
 <li><code>Token</code> has a new variant, <code>StandaloneImage</code>. This is used to distinguish an image that is alone in a paragraph of an image that is inlined alongside text.</li>
@@ -2403,7 +2419,7 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-108">0.6.0 (2016-09-09)</h2>
+<h2 id = "link-109">0.6.0 (2016-09-09)</h2>
 <ul>
 <li>Deprecated options:<ul>
 <li><code>nb_char</code>: since it was only used for french cleaner and for typography reasons it’s better to use different non breaking spaces according to context, this option was not really useful anymore.</li>
@@ -2430,8 +2446,8 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-109">0.5.1 (2016-04-14)</h2>
-<p id = "para-228">Mostly rendering fixes:</p>
+<h2 id = "link-110">0.5.1 (2016-04-14)</h2>
+<p id = "para-229">Mostly rendering fixes:</p>
 <ul>
 <li>Epub:<ul>
 <li>Fix a validation problem when book contained hidden chapters.</li>
@@ -2456,7 +2472,7 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-110">0.5.0 (2016-04-02)</h2>
+<h2 id = "link-111">0.5.0 (2016-04-02)</h2>
 <ul>
 <li>Crowbook now requires Rustc 1.7.0.</li>
 <li>It is now possible to render HTML in multiple files:<ul>
@@ -2495,7 +2511,7 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-111">0.4.0 (2016-03-01)</h2>
+<h2 id = "link-112">0.4.0 (2016-03-01)</h2>
 <ul>
 <li>Crowbook now internally uses a true YAML parser, <code>yaml_rust</code>, for its options. Since the “old” Crowbooks’s config format was similar, but had some subtle differences, this is somewhat of a breaking change:<ul>
 <li>strings should now be escaped with “” in some cases (e.g. if it contains special characters). On the other hand, it <em>allows</em> to optionally escape a string with these quotes, which wasn’t possible until then and might be useful in some cases.</li>
@@ -2515,7 +2531,7 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-112">0.3.0 (2016-02-27)</h2>
+<h2 id = "link-113">0.3.0 (2016-02-27)</h2>
 <ul>
 <li>Crowbook now tries to convert local links. That is, if you link to a Markdown file that is used in the book. (e.g. <a href = "#chapter-0">README.md</a>), it <em>should</em> link to an appropriate inner reference inside the book.</li>
 <li>Latex renderer now supports (local) images.</li>
@@ -2533,14 +2549,14 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-113">0.2.2 (2016-02-25)</h2>
+<h2 id = "link-114">0.2.2 (2016-02-25)</h2>
 <ul>
 <li>Bugfixes:<ul>
 <li>French cleaner now correctly replaces space after — (in e.g. dialogs) with “em space”.</li>
 </ul>
 </li>
 </ul>
-<h2 id = "link-114">0.2.1 (2016-02-25)</h2>
+<h2 id = "link-115">0.2.1 (2016-02-25)</h2>
 <ul>
 <li>Bugfixes:<ul>
 <li>HTML/Epub rendering no longer incorrectly increment chapter count for unnumbered chapters.</li>
@@ -2552,7 +2568,7 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-115">0.2.0 (2016-02-25)</h2>
+<h2 id = "link-116">0.2.0 (2016-02-25)</h2>
 <ul>
 <li>Command line arguments:<ul>
 <li>New argument <code>--print-template</code> now allows to print a built-in template to stdout.</li>
@@ -2577,7 +2593,7 @@ resources.files: my_font.ttf
 </ul>
 </li>
 </ul>
-<h2 id = "link-116">0.1.0 (2016-02-21)</h2>
+<h2 id = "link-117">0.1.0 (2016-02-21)</h2>
 <ul>
 <li>initial release</li>
 </ul>
@@ -2591,41 +2607,41 @@ resources.files: my_font.ttf
   « ChangeLog
   </a>
 </p><div id = "chapter-7" class = "chapter">
-  <h1 id = "link-117">GNU LESSER GENERAL PUBLIC LICENSE</h1>
+  <h1 id = "link-118">GNU LESSER GENERAL PUBLIC LICENSE</h1>
 <pre><code>                   Version 2.1, February 1999
 </code></pre>
-<p id = "para-229">Copyright (C) 1991, 1999 Free Software Foundation, Inc. 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.</p>
-<p id = "para-230">[This is the first released version of the Lesser GPL. It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.]</p>
+<p id = "para-230">Copyright (C) 1991, 1999 Free Software Foundation, Inc. 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.</p>
+<p id = "para-231">[This is the first released version of the Lesser GPL. It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.]</p>
 <pre><code>                        Preamble
 </code></pre>
-<p id = "para-231">The licenses for most software are designed to take away your freedom to share and change it. By contrast, the GNU General Public Licenses are intended to guarantee your freedom to share and change free software--to make sure the software is free for all its users.</p>
-<p id = "para-232">This license, the Lesser General Public License, applies to some specially designated software packages--typically libraries--of the Free Software Foundation and other authors who decide to use it. You can use it too, but we suggest you first think carefully about whether this license or the ordinary General Public License is the better strategy to use in any particular case, based on the explanations below.</p>
-<p id = "para-233">When we speak of free software, we are referring to freedom of use, not price. Our General Public Licenses are designed to make sure that you have the freedom to distribute copies of free software (and charge for this service if you wish); that you receive source code or can get it if you want it; that you can change the software and use pieces of it in new free programs; and that you are informed that you can do these things.</p>
-<p id = "para-234">To protect your rights, we need to make restrictions that forbid distributors to deny you these rights or to ask you to surrender these rights. These restrictions translate to certain responsibilities for you if you distribute copies of the library or if you modify it.</p>
-<p id = "para-235">For example, if you distribute copies of the library, whether gratis or for a fee, you must give the recipients all the rights that we gave you. You must make sure that they, too, receive or can get the source code. If you link other code with the library, you must provide complete object files to the recipients, so that they can relink them with the library after making changes to the library and recompiling it. And you must show them these terms so they know their rights.</p>
-<p id = "para-236">We protect your rights with a two-step method: (1) we copyright the library, and (2) we offer you this license, which gives you legal permission to copy, distribute and/or modify the library.</p>
-<p id = "para-237">To protect each distributor, we want to make it very clear that there is no warranty for the free library. Also, if the library is modified by someone else and passed on, the recipients should know that what they have is not the original version, so that the original author’s reputation will not be affected by problems that might be introduced by others.</p>
-<p id = "para-238"> Finally, software patents pose a constant threat to the existence of any free program. We wish to make sure that a company cannot effectively restrict the users of a free program by obtaining a restrictive license from a patent holder. Therefore, we insist that any patent license obtained for a version of the library must be consistent with the full freedom of use specified in this license.</p>
-<p id = "para-239">Most GNU software, including some libraries, is covered by the ordinary GNU General Public License. This license, the GNU Lesser General Public License, applies to certain designated libraries, and is quite different from the ordinary General Public License. We use this license for certain libraries in order to permit linking those libraries into non-free programs.</p>
-<p id = "para-240">When a program is linked with a library, whether statically or using a shared library, the combination of the two is legally speaking a combined work, a derivative of the original library. The ordinary General Public License therefore permits such linking only if the entire combination fits its criteria of freedom. The Lesser General Public License permits more lax criteria for linking other code with the library.</p>
-<p id = "para-241">We call this license the “Lesser” General Public License because it does Less to protect the user’s freedom than the ordinary General Public License. It also provides other free software developers Less of an advantage over competing non-free programs. These disadvantages are the reason we use the ordinary General Public License for many libraries. However, the Lesser license provides advantages in certain special circumstances.</p>
-<p id = "para-242">For example, on rare occasions, there may be a special need to encourage the widest possible use of a certain library, so that it becomes a de-facto standard. To achieve this, non-free programs must be allowed to use the library. A more frequent case is that a free library does the same job as widely used non-free libraries. In this case, there is little to gain by limiting the free library to free software only, so we use the Lesser General Public License.</p>
-<p id = "para-243">In other cases, permission to use a particular library in non-free programs enables a greater number of people to use a large body of free software. For example, permission to use the GNU C Library in non-free programs enables many more people to use the whole GNU operating system, as well as its variant, the GNU/Linux operating system.</p>
-<p id = "para-244">Although the Lesser General Public License is Less protective of the users’ freedom, it does ensure that the user of a program that is linked with the Library has the freedom and the wherewithal to run that program using a modified version of the Library.</p>
-<p id = "para-245">The precise terms and conditions for copying, distribution and modification follow. Pay close attention to the difference between a “work based on the library” and a “work that uses the library”. The former contains code derived from the library, whereas the latter must be combined with the library in order to run.</p>
-<p id = "para-246"> GNU LESSER GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</p>
+<p id = "para-232">The licenses for most software are designed to take away your freedom to share and change it. By contrast, the GNU General Public Licenses are intended to guarantee your freedom to share and change free software--to make sure the software is free for all its users.</p>
+<p id = "para-233">This license, the Lesser General Public License, applies to some specially designated software packages--typically libraries--of the Free Software Foundation and other authors who decide to use it. You can use it too, but we suggest you first think carefully about whether this license or the ordinary General Public License is the better strategy to use in any particular case, based on the explanations below.</p>
+<p id = "para-234">When we speak of free software, we are referring to freedom of use, not price. Our General Public Licenses are designed to make sure that you have the freedom to distribute copies of free software (and charge for this service if you wish); that you receive source code or can get it if you want it; that you can change the software and use pieces of it in new free programs; and that you are informed that you can do these things.</p>
+<p id = "para-235">To protect your rights, we need to make restrictions that forbid distributors to deny you these rights or to ask you to surrender these rights. These restrictions translate to certain responsibilities for you if you distribute copies of the library or if you modify it.</p>
+<p id = "para-236">For example, if you distribute copies of the library, whether gratis or for a fee, you must give the recipients all the rights that we gave you. You must make sure that they, too, receive or can get the source code. If you link other code with the library, you must provide complete object files to the recipients, so that they can relink them with the library after making changes to the library and recompiling it. And you must show them these terms so they know their rights.</p>
+<p id = "para-237">We protect your rights with a two-step method: (1) we copyright the library, and (2) we offer you this license, which gives you legal permission to copy, distribute and/or modify the library.</p>
+<p id = "para-238">To protect each distributor, we want to make it very clear that there is no warranty for the free library. Also, if the library is modified by someone else and passed on, the recipients should know that what they have is not the original version, so that the original author’s reputation will not be affected by problems that might be introduced by others.</p>
+<p id = "para-239"> Finally, software patents pose a constant threat to the existence of any free program. We wish to make sure that a company cannot effectively restrict the users of a free program by obtaining a restrictive license from a patent holder. Therefore, we insist that any patent license obtained for a version of the library must be consistent with the full freedom of use specified in this license.</p>
+<p id = "para-240">Most GNU software, including some libraries, is covered by the ordinary GNU General Public License. This license, the GNU Lesser General Public License, applies to certain designated libraries, and is quite different from the ordinary General Public License. We use this license for certain libraries in order to permit linking those libraries into non-free programs.</p>
+<p id = "para-241">When a program is linked with a library, whether statically or using a shared library, the combination of the two is legally speaking a combined work, a derivative of the original library. The ordinary General Public License therefore permits such linking only if the entire combination fits its criteria of freedom. The Lesser General Public License permits more lax criteria for linking other code with the library.</p>
+<p id = "para-242">We call this license the “Lesser” General Public License because it does Less to protect the user’s freedom than the ordinary General Public License. It also provides other free software developers Less of an advantage over competing non-free programs. These disadvantages are the reason we use the ordinary General Public License for many libraries. However, the Lesser license provides advantages in certain special circumstances.</p>
+<p id = "para-243">For example, on rare occasions, there may be a special need to encourage the widest possible use of a certain library, so that it becomes a de-facto standard. To achieve this, non-free programs must be allowed to use the library. A more frequent case is that a free library does the same job as widely used non-free libraries. In this case, there is little to gain by limiting the free library to free software only, so we use the Lesser General Public License.</p>
+<p id = "para-244">In other cases, permission to use a particular library in non-free programs enables a greater number of people to use a large body of free software. For example, permission to use the GNU C Library in non-free programs enables many more people to use the whole GNU operating system, as well as its variant, the GNU/Linux operating system.</p>
+<p id = "para-245">Although the Lesser General Public License is Less protective of the users’ freedom, it does ensure that the user of a program that is linked with the Library has the freedom and the wherewithal to run that program using a modified version of the Library.</p>
+<p id = "para-246">The precise terms and conditions for copying, distribution and modification follow. Pay close attention to the difference between a “work based on the library” and a “work that uses the library”. The former contains code derived from the library, whereas the latter must be combined with the library in order to run.</p>
+<p id = "para-247"> GNU LESSER GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</p>
 <ol start = "0">
 <li>This License Agreement applies to any software library or other program which contains a notice placed by the copyright holder or other authorized party saying it may be distributed under the terms of this Lesser General Public License (also called “this License”). Each licensee is addressed as “you”.</li>
 </ol>
-<p id = "para-247">A “library” means a collection of software functions and/or data prepared so as to be conveniently linked with application programs (which use some of those functions and data) to form executables.</p>
-<p id = "para-248">The “Library”, below, refers to any such software library or work which has been distributed under these terms. A “work based on the Library” means either the Library or any derivative work under copyright law: that is to say, a work containing the Library or a portion of it, either verbatim or with modifications and/or translated straightforwardly into another language. (Hereinafter, translation is included without limitation in the term “modification”.)</p>
-<p id = "para-249">“Source code” for a work means the preferred form of the work for making modifications to it. For a library, complete source code means all the source code for all modules it contains, plus any associated interface definition files, plus the scripts used to control compilation and installation of the library.</p>
-<p id = "para-250">Activities other than copying, distribution and modification are not covered by this License; they are outside its scope. The act of running a program using the Library is not restricted, and output from such a program is covered only if its contents constitute a work based on the Library (independent of the use of the Library in a tool for writing it). Whether that is true depends on what the Library does and what the program that uses the Library does.</p>
+<p id = "para-248">A “library” means a collection of software functions and/or data prepared so as to be conveniently linked with application programs (which use some of those functions and data) to form executables.</p>
+<p id = "para-249">The “Library”, below, refers to any such software library or work which has been distributed under these terms. A “work based on the Library” means either the Library or any derivative work under copyright law: that is to say, a work containing the Library or a portion of it, either verbatim or with modifications and/or translated straightforwardly into another language. (Hereinafter, translation is included without limitation in the term “modification”.)</p>
+<p id = "para-250">“Source code” for a work means the preferred form of the work for making modifications to it. For a library, complete source code means all the source code for all modules it contains, plus any associated interface definition files, plus the scripts used to control compilation and installation of the library.</p>
+<p id = "para-251">Activities other than copying, distribution and modification are not covered by this License; they are outside its scope. The act of running a program using the Library is not restricted, and output from such a program is covered only if its contents constitute a work based on the Library (independent of the use of the Library in a tool for writing it). Whether that is true depends on what the Library does and what the program that uses the Library does.</p>
 <ol>
 <li>You may copy and distribute verbatim copies of the Library’s complete source code as you receive it, in any medium, provided that you conspicuously and appropriately publish on each copy an appropriate copyright notice and disclaimer of warranty; keep intact all the notices that refer to this License and to the absence of any warranty; and distribute a copy of this License along with the Library.</li>
 </ol>
-<p id = "para-251">You may charge a fee for the physical act of transferring a copy, and you may at your option offer warranty protection in exchange for a fee.</p>
-<p id = "para-252"></p>
+<p id = "para-252">You may charge a fee for the physical act of transferring a copy, and you may at your option offer warranty protection in exchange for a fee.</p>
+<p id = "para-253"></p>
 <ol start = "2">
 <li>You may modify your copy or copies of the Library or any portion of it, thus forming a work based on the Library, and copy and distribute such modifications or work under the terms of Section 1 above, provided that you also meet all of these conditions:</li>
 </ol>
@@ -2652,30 +2668,30 @@ application-supplied function or table used by this function must
 be optional: if the application does not supply it, the square
 root function must still compute square roots.)
 </code></pre>
-<p id = "para-253">These requirements apply to the modified work as a whole. If identifiable sections of that work are not derived from the Library, and can be reasonably considered independent and separate works in themselves, then this License, and its terms, do not apply to those sections when you distribute them as separate works. But when you distribute the same sections as part of a whole which is a work based on the Library, the distribution of the whole must be on the terms of this License, whose permissions for other licensees extend to the entire whole, and thus to each and every part regardless of who wrote it.</p>
-<p id = "para-254">Thus, it is not the intent of this section to claim rights or contest your rights to work written entirely by you; rather, the intent is to exercise the right to control the distribution of derivative or collective works based on the Library.</p>
-<p id = "para-255">In addition, mere aggregation of another work not based on the Library with the Library (or with a work based on the Library) on a volume of a storage or distribution medium does not bring the other work under the scope of this License.</p>
+<p id = "para-254">These requirements apply to the modified work as a whole. If identifiable sections of that work are not derived from the Library, and can be reasonably considered independent and separate works in themselves, then this License, and its terms, do not apply to those sections when you distribute them as separate works. But when you distribute the same sections as part of a whole which is a work based on the Library, the distribution of the whole must be on the terms of this License, whose permissions for other licensees extend to the entire whole, and thus to each and every part regardless of who wrote it.</p>
+<p id = "para-255">Thus, it is not the intent of this section to claim rights or contest your rights to work written entirely by you; rather, the intent is to exercise the right to control the distribution of derivative or collective works based on the Library.</p>
+<p id = "para-256">In addition, mere aggregation of another work not based on the Library with the Library (or with a work based on the Library) on a volume of a storage or distribution medium does not bring the other work under the scope of this License.</p>
 <ol start = "3">
 <li>You may opt to apply the terms of the ordinary GNU General Public License instead of this License to a given copy of the Library. To do this, you must alter all the notices that refer to this License, so that they refer to the ordinary GNU General Public License, version 2, instead of to this License. (If a newer version than version 2 of the ordinary GNU General Public License has appeared, then you can specify that version instead if you wish.) Do not make any other change in these notices.</li>
 </ol>
-<p id = "para-256"> Once this change is made in a given copy, it is irreversible for that copy, so the ordinary GNU General Public License applies to all subsequent copies and derivative works made from that copy.</p>
-<p id = "para-257">This option is useful when you wish to copy part of the code of the Library into a program that is not a library.</p>
+<p id = "para-257"> Once this change is made in a given copy, it is irreversible for that copy, so the ordinary GNU General Public License applies to all subsequent copies and derivative works made from that copy.</p>
+<p id = "para-258">This option is useful when you wish to copy part of the code of the Library into a program that is not a library.</p>
 <ol start = "4">
 <li>You may copy and distribute the Library (or a portion or derivative of it, under Section 2) in object code or executable form under the terms of Sections 1 and 2 above provided that you accompany it with the complete corresponding machine-readable source code, which must be distributed under the terms of Sections 1 and 2 above on a medium customarily used for software interchange.</li>
 </ol>
-<p id = "para-258">If distribution of object code is made by offering access to copy from a designated place, then offering equivalent access to copy the source code from the same place satisfies the requirement to distribute the source code, even though third parties are not compelled to copy the source along with the object code.</p>
+<p id = "para-259">If distribution of object code is made by offering access to copy from a designated place, then offering equivalent access to copy the source code from the same place satisfies the requirement to distribute the source code, even though third parties are not compelled to copy the source along with the object code.</p>
 <ol start = "5">
 <li>A program that contains no derivative of any portion of the Library, but is designed to work with the Library by being compiled or linked with it, is called a “work that uses the Library”. Such a work, in isolation, is not a derivative work of the Library, and therefore falls outside the scope of this License.</li>
 </ol>
-<p id = "para-259">However, linking a “work that uses the Library” with the Library creates an executable that is a derivative of the Library (because it contains portions of the Library), rather than a “work that uses the library”. The executable is therefore covered by this License. Section 6 states terms for distribution of such executables.</p>
-<p id = "para-260">When a “work that uses the Library” uses material from a header file that is part of the Library, the object code for the work may be a derivative work of the Library even though the source code is not. Whether this is true is especially significant if the work can be linked without the Library, or if the work is itself a library. The threshold for this to be true is not precisely defined by law.</p>
-<p id = "para-261">If such an object file uses only numerical parameters, data structure layouts and accessors, and small macros and small inline functions (ten lines or less in length), then the use of the object file is unrestricted, regardless of whether it is legally a derivative work. (Executables containing this object code plus portions of the Library will still fall under Section 6.)</p>
-<p id = "para-262">Otherwise, if the work is a derivative of the Library, you may distribute the object code for the work under the terms of Section 6. Any executables containing that work also fall under Section 6, whether or not they are linked directly with the Library itself.</p>
-<p id = "para-263"></p>
+<p id = "para-260">However, linking a “work that uses the Library” with the Library creates an executable that is a derivative of the Library (because it contains portions of the Library), rather than a “work that uses the library”. The executable is therefore covered by this License. Section 6 states terms for distribution of such executables.</p>
+<p id = "para-261">When a “work that uses the Library” uses material from a header file that is part of the Library, the object code for the work may be a derivative work of the Library even though the source code is not. Whether this is true is especially significant if the work can be linked without the Library, or if the work is itself a library. The threshold for this to be true is not precisely defined by law.</p>
+<p id = "para-262">If such an object file uses only numerical parameters, data structure layouts and accessors, and small macros and small inline functions (ten lines or less in length), then the use of the object file is unrestricted, regardless of whether it is legally a derivative work. (Executables containing this object code plus portions of the Library will still fall under Section 6.)</p>
+<p id = "para-263">Otherwise, if the work is a derivative of the Library, you may distribute the object code for the work under the terms of Section 6. Any executables containing that work also fall under Section 6, whether or not they are linked directly with the Library itself.</p>
+<p id = "para-264"></p>
 <ol start = "6">
 <li>As an exception to the Sections above, you may also combine or link a “work that uses the Library” with the Library to produce a work containing portions of the Library, and distribute that work under terms of your choice, provided that the terms permit modification of the work for the customer’s own use and reverse engineering for debugging such modifications.</li>
 </ol>
-<p id = "para-264">You must give prominent notice with each copy of the work that the Library is used in it and that the Library and its use are covered by this License. You must supply a copy of this License. If the work during execution displays copyright notices, you must include the copyright notice for the Library among them, as well as a reference directing the user to the copy of this License. Also, you must do one of these things:</p>
+<p id = "para-265">You must give prominent notice with each copy of the work that the Library is used in it and that the Library and its use are covered by this License. You must supply a copy of this License. If the work during execution displays copyright notices, you must include the copyright notice for the Library among them, as well as a reference directing the user to the copy of this License. Also, you must do one of these things:</p>
 <pre><code>a) Accompany the work with the complete corresponding
 machine-readable source code for the Library including whatever
 changes were used in the work (which must be distributed under
@@ -2708,9 +2724,9 @@ specified materials from the same place.
 e) Verify that the user has already received a copy of these
 materials or that you have already sent this user a copy.
 </code></pre>
-<p id = "para-265">For an executable, the required form of the “work that uses the Library” must include any data and utility programs needed for reproducing the executable from it. However, as a special exception, the materials to be distributed need not include anything that is normally distributed (in either source or binary form) with the major components (compiler, kernel, and so on) of the operating system on which the executable runs, unless that component itself accompanies the executable.</p>
-<p id = "para-266">It may happen that this requirement contradicts the license restrictions of other proprietary libraries that do not normally accompany the operating system. Such a contradiction means you cannot use both them and the Library together in an executable that you distribute.</p>
-<p id = "para-267"></p>
+<p id = "para-266">For an executable, the required form of the “work that uses the Library” must include any data and utility programs needed for reproducing the executable from it. However, as a special exception, the materials to be distributed need not include anything that is normally distributed (in either source or binary form) with the major components (compiler, kernel, and so on) of the operating system on which the executable runs, unless that component itself accompanies the executable.</p>
+<p id = "para-267">It may happen that this requirement contradicts the license restrictions of other proprietary libraries that do not normally accompany the operating system. Such a contradiction means you cannot use both them and the Library together in an executable that you distribute.</p>
+<p id = "para-268"></p>
 <ol start = "7">
 <li>You may place library facilities that are a work based on the Library side-by-side in a single library together with other library facilities not covered by this License, and distribute such a combined library, provided that the separate distribution of the work based on the Library and of the other library facilities is otherwise permitted, and provided that you do these two things:</li>
 </ol>
@@ -2724,43 +2740,43 @@ that part of it is a work based on the Library, and explaining
 where to find the accompanying uncombined form of the same work.
 </code></pre>
 <ol start = "8">
-<li><p id = "para-268">You may not copy, modify, sublicense, link with, or distribute the Library except as expressly provided under this License. Any attempt otherwise to copy, modify, sublicense, link with, or distribute the Library is void, and will automatically terminate your rights under this License. However, parties who have received copies, or rights, from you under this License will not have their licenses terminated so long as such parties remain in full compliance.</p>
+<li><p id = "para-269">You may not copy, modify, sublicense, link with, or distribute the Library except as expressly provided under this License. Any attempt otherwise to copy, modify, sublicense, link with, or distribute the Library is void, and will automatically terminate your rights under this License. However, parties who have received copies, or rights, from you under this License will not have their licenses terminated so long as such parties remain in full compliance.</p>
 </li>
-<li><p id = "para-269">You are not required to accept this License, since you have not signed it. However, nothing else grants you permission to modify or distribute the Library or its derivative works. These actions are prohibited by law if you do not accept this License. Therefore, by modifying or distributing the Library (or any work based on the Library), you indicate your acceptance of this License to do so, and all its terms and conditions for copying, distributing or modifying the Library or works based on it.</p>
+<li><p id = "para-270">You are not required to accept this License, since you have not signed it. However, nothing else grants you permission to modify or distribute the Library or its derivative works. These actions are prohibited by law if you do not accept this License. Therefore, by modifying or distributing the Library (or any work based on the Library), you indicate your acceptance of this License to do so, and all its terms and conditions for copying, distributing or modifying the Library or works based on it.</p>
 </li>
-<li><p id = "para-270">Each time you redistribute the Library (or any work based on the Library), the recipient automatically receives a license from the original licensor to copy, distribute, link with or modify the Library subject to these terms and conditions. You may not impose any further restrictions on the recipients’ exercise of the rights granted herein. You are not responsible for enforcing compliance by third parties with this License.</p>
+<li><p id = "para-271">Each time you redistribute the Library (or any work based on the Library), the recipient automatically receives a license from the original licensor to copy, distribute, link with or modify the Library subject to these terms and conditions. You may not impose any further restrictions on the recipients’ exercise of the rights granted herein. You are not responsible for enforcing compliance by third parties with this License.</p>
 </li>
 </ol>
-<p id = "para-271"></p>
+<p id = "para-272"></p>
 <ol start = "11">
 <li>If, as a consequence of a court judgment or allegation of patent infringement or for any other reason (not limited to patent issues), conditions are imposed on you (whether by court order, agreement or otherwise) that contradict the conditions of this License, they do not excuse you from the conditions of this License. If you cannot distribute so as to satisfy simultaneously your obligations under this License and any other pertinent obligations, then as a consequence you may not distribute the Library at all. For example, if a patent license would not permit royalty-free redistribution of the Library by all those who receive copies directly or indirectly through you, then the only way you could satisfy both it and this License would be to refrain entirely from distribution of the Library.</li>
 </ol>
-<p id = "para-272">If any portion of this section is held invalid or unenforceable under any particular circumstance, the balance of the section is intended to apply, and the section as a whole is intended to apply in other circumstances.</p>
-<p id = "para-273">It is not the purpose of this section to induce you to infringe any patents or other property right claims or to contest validity of any such claims; this section has the sole purpose of protecting the integrity of the free software distribution system which is implemented by public license practices. Many people have made generous contributions to the wide range of software distributed through that system in reliance on consistent application of that system; it is up to the author/donor to decide if he or she is willing to distribute software through any other system and a licensee cannot impose that choice.</p>
-<p id = "para-274">This section is intended to make thoroughly clear what is believed to be a consequence of the rest of this License.</p>
+<p id = "para-273">If any portion of this section is held invalid or unenforceable under any particular circumstance, the balance of the section is intended to apply, and the section as a whole is intended to apply in other circumstances.</p>
+<p id = "para-274">It is not the purpose of this section to induce you to infringe any patents or other property right claims or to contest validity of any such claims; this section has the sole purpose of protecting the integrity of the free software distribution system which is implemented by public license practices. Many people have made generous contributions to the wide range of software distributed through that system in reliance on consistent application of that system; it is up to the author/donor to decide if he or she is willing to distribute software through any other system and a licensee cannot impose that choice.</p>
+<p id = "para-275">This section is intended to make thoroughly clear what is believed to be a consequence of the rest of this License.</p>
 <ol start = "12">
-<li><p id = "para-275">If the distribution and/or use of the Library is restricted in certain countries either by patents or by copyrighted interfaces, the original copyright holder who places the Library under this License may add an explicit geographical distribution limitation excluding those countries, so that distribution is permitted only in or among countries not thus excluded. In such case, this License incorporates the limitation as if written in the body of this License.</p>
+<li><p id = "para-276">If the distribution and/or use of the Library is restricted in certain countries either by patents or by copyrighted interfaces, the original copyright holder who places the Library under this License may add an explicit geographical distribution limitation excluding those countries, so that distribution is permitted only in or among countries not thus excluded. In such case, this License incorporates the limitation as if written in the body of this License.</p>
 </li>
-<li><p id = "para-276">The Free Software Foundation may publish revised and/or new versions of the Lesser General Public License from time to time. Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.</p>
+<li><p id = "para-277">The Free Software Foundation may publish revised and/or new versions of the Lesser General Public License from time to time. Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.</p>
 </li>
 </ol>
-<p id = "para-277">Each version is given a distinguishing version number. If the Library specifies a version number of this License which applies to it and “any later version”, you have the option of following the terms and conditions either of that version or of any later version published by the Free Software Foundation. If the Library does not specify a license version number, you may choose any version ever published by the Free Software Foundation.</p>
-<p id = "para-278"></p>
+<p id = "para-278">Each version is given a distinguishing version number. If the Library specifies a version number of this License which applies to it and “any later version”, you have the option of following the terms and conditions either of that version or of any later version published by the Free Software Foundation. If the Library does not specify a license version number, you may choose any version ever published by the Free Software Foundation.</p>
+<p id = "para-279"></p>
 <ol start = "14">
-<li><p id = "para-279">If you wish to incorporate parts of the Library into other free programs whose distribution conditions are incompatible with these, write to the author to ask for permission. For software which is copyrighted by the Free Software Foundation, write to the Free Software Foundation; we sometimes make exceptions for this. Our decision will be guided by the two goals of preserving the free status of all derivatives of our free software and of promoting the sharing and reuse of software generally.</p>
+<li><p id = "para-280">If you wish to incorporate parts of the Library into other free programs whose distribution conditions are incompatible with these, write to the author to ask for permission. For software which is copyrighted by the Free Software Foundation, write to the Free Software Foundation; we sometimes make exceptions for this. Our decision will be guided by the two goals of preserving the free status of all derivatives of our free software and of promoting the sharing and reuse of software generally.</p>
 <pre><code>                  NO WARRANTY
 </code></pre>
 </li>
-<li><p id = "para-280">BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE LIBRARY “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE LIBRARY IS WITH YOU. SHOULD THE LIBRARY PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</p>
+<li><p id = "para-281">BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE LIBRARY “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE LIBRARY IS WITH YOU. SHOULD THE LIBRARY PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</p>
 </li>
-<li><p id = "para-281">IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE LIBRARY (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+<li><p id = "para-282">IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE LIBRARY (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
 <pre><code>           END OF TERMS AND CONDITIONS
 </code></pre>
 </li>
 </ol>
-<p id = "para-282"> How to Apply These Terms to Your New Libraries</p>
-<p id = "para-283">If you develop a new library, and you want it to be of the greatest possible use to the public, we recommend making it free software that everyone can redistribute and change. You can do so by permitting redistribution under these terms (or, alternatively, under the terms of the ordinary General Public License).</p>
-<p id = "para-284">To apply these terms, attach the following notices to the library. It is safest to attach them to the start of each source file to most effectively convey the exclusion of warranty; and each file should have at least the “copyright” line and a pointer to where the full notice is found.</p>
+<p id = "para-283"> How to Apply These Terms to Your New Libraries</p>
+<p id = "para-284">If you develop a new library, and you want it to be of the greatest possible use to the public, we recommend making it free software that everyone can redistribute and change. You can do so by permitting redistribution under these terms (or, alternatively, under the terms of the ordinary General Public License).</p>
+<p id = "para-285">To apply these terms, attach the following notices to the library. It is safest to attach them to the start of each source file to most effectively convey the exclusion of warranty; and each file should have at least the “copyright” line and a pointer to where the full notice is found.</p>
 <pre><code>&lt;one line to give the library's name and a brief idea of what it does.&gt;
 Copyright (C) &lt;year&gt;  &lt;name of author&gt;
 
@@ -2778,16 +2794,16 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 </code></pre>
-<p id = "para-285">Also add information on how to contact you by electronic and paper mail.</p>
-<p id = "para-286">You should also get your employer (if you work as a programmer) or your school, if any, to sign a “copyright disclaimer” for the library, if necessary. Here is a sample; alter the names:</p>
-<p id = "para-287">Yoyodyne, Inc., hereby disclaims all copyright interest in the library `Frob’ (a library for tweaking knobs) written by James Random Hacker.</p>
-<p id = "para-288">&lt;signature of Ty Coon&gt;, 1 April 1990 Ty Coon, President of Vice</p>
-<p id = "para-289">That’s all there is to it!</p>
+<p id = "para-286">Also add information on how to contact you by electronic and paper mail.</p>
+<p id = "para-287">You should also get your employer (if you work as a programmer) or your school, if any, to sign a “copyright disclaimer” for the library, if necessary. Here is a sample; alter the names:</p>
+<p id = "para-288">Yoyodyne, Inc., hereby disclaims all copyright interest in the library `Frob’ (a library for tweaking knobs) written by James Random Hacker.</p>
+<p id = "para-289">&lt;signature of Ty Coon&gt;, 1 April 1990 Ty Coon, President of Vice</p>
+<p id = "para-290">That’s all there is to it!</p>
 
 </div>
       </div>
     </div>
-    <footer id = "footer"><p id = "para-290">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.2-pre</p>
+    <footer id = "footer"><p id = "para-291">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.2-pre</p>
 </footer>
   </body>
 </html>
