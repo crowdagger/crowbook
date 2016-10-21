@@ -31,10 +31,50 @@ Basically, it is divided in two parts:
 
 Lines starting with the `#` characters are comments and are discarded.
 
+
+Configuration in an inline YAML block (`crowbook --single`)
+------------------------------------------------------------------------
+
+Sometimes, you only have one Markdown file and might not want to have
+a separate configuration file. In this case, you can specify options
+at the beginning of your Markdown file, using an inline YAML block,
+separated by two lines containing only `---`:
+
+```markdown
+---
+author: Joan Doe
+title: Some (short) book
+lang: en
+
+output.html: some_book.html
+---
+
+# Some (short) book
+
+The book content, formatted in Markdown.
+```
+
+This method only allows to set up options: you can't include a list of
+chapters in this way, since the only "chapter" that will be included
+is this Markdown file itself.
+
+You can then use 
+
+```bash
+crowbook --single some_book.md
+```
+
+to generate output formats from this Markdown file.
+
+> By default (unless `input.yaml_blocks` is set to true), Crowboook
+> will only read those inline blocks when it is runned with `crowbook
+> --single` (or `crowbook -s`). 
+
+
 The list of files
 -----------------
 
-There are various options to include a markdown file.
+There are various options to include a Markdown file.
 
 * `+ file_name.md` includes a numbered chapter.
 * `- file_name.md` includes an unnumbered chapter.
@@ -49,8 +89,7 @@ So a typical usage might look like this:
 ```yaml
 ! copyright.md
 - preface.md
-# We want first chapter to be Chapter 0 because we are programmers!
-0. chapter_0.md
+0. chapter_0.md # We want to start at chapter 0 instead of 1
 # Next chapters can be numbered automatically
 + chapter_1.md
 + chapter_2.md
