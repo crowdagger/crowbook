@@ -1,8 +1,9 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.10.2 (2016-20-21)
+-----------------------
+Only minor changes in this version:
 * Options:
  * `author` and `title`'s default values are both set to the empty
    string, instead of `Anonymous` and `Untitled`.
