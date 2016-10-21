@@ -25,6 +25,8 @@ use crowbook_text_processing::FrenchFormatter;
 /// Contains cleaning parameters
 pub struct CleanerParams {
     pub smart_quotes: bool,
+    pub ligature_guillemets: bool,
+    pub ligature_dashes: bool,
 }
 
 /// Trait for cleaning a string.
@@ -88,12 +90,17 @@ impl Default {
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
-        let s = clean::whitespaces(input);
+        let mut s = clean::whitespaces(input);
         if self.params.smart_quotes {
-            clean::quotes(s)
-        } else {
-            s
+            s = clean::quotes(s);
         }
+        if self.params.ligature_dashes {
+            s = clean::dashes(s);
+        }
+        if self.params.ligature_guillemets {
+            s = clean::guillemets(s);
+        }
+        s
     }
 }
 
@@ -124,6 +131,8 @@ impl French {
             params: params,
         };
         this.formatter.typographic_quotes(this.params.smart_quotes);
+        this.formatter.ligature_dashes(this.params.ligature_dashes);
+        this.formatter.ligature_guillemets(this.params.ligature_guillemets);
         this
     }
 }

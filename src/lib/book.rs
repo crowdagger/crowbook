@@ -1054,6 +1054,8 @@ impl Book {
     fn update_cleaner(&mut self) {
         let params = CleanerParams {
             smart_quotes: self.options.get_bool("input.clean.smart_quotes").unwrap(),
+            ligature_dashes: self.options.get_bool("input.clean.ligature.dashes").unwrap(),
+            ligature_guillemets: self.options.get_bool("input.clean.ligature.guillemets").unwrap(),
         };
         if self.options.get_bool("input.clean").unwrap() {
             let lang = self.options.get_str("lang").unwrap().to_lowercase();
