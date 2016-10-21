@@ -6,6 +6,12 @@ unreleased
 * Options:
  * `author` and `title`'s default values are both set to the empty
    string, instead of `Anonymous` and `Untitled`.
+ * `input.autoclean` has been renamed `input.clean`.
+ * `input.smart_quotes` has been renamed `input.clean.smart_quotes`.
+ * new option: `input.clean.ligature.dashes` will (if set to true)
+   replace `--` to en dash (`–`) and `---` to em dash (`—`).
+ * new option: `input.clean.ligature.guillemets` will (if set to true)
+   replace `<<` and `>>` to french guillemets (`«` and `»`).
 
 0.10.1 (2016-10-18)
 -----------------------
