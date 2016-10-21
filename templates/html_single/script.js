@@ -47,7 +47,7 @@ function getChapter(elem) {
 }
 
 function switchAll() {
-    if (!displayAll){
+    if (!displayAll) {
         displayAll = true;
         var chapters = document.getElementsByClassName("chapter");
         for (i = 0; i < chapters.length; i++) {
@@ -57,11 +57,15 @@ function switchAll() {
         for (i = 0; i < controls.length; i++){
             controls[i].style.display = "none";
         }
+	var toc = document.getElementById("toc");
+	if (toc) {
+	    toc.style.display = "block";
+	}
         displayAllSwitcher = document.getElementById("book-button");
         displayAllSwitcher.src="{{{pages_svg}}}";
         displayAllSwitcher.alt="{{{loc_display_one}}}";
         displayAllSwitcher.title="{{{loc_display_one}}}";
-    }else{
+    } else {
         displayAll = false;
         showChapter(0);
         displayAllSwitcher = document.getElementById("book-button");
