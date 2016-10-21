@@ -48,7 +48,7 @@ uuid = { version = "0.3", features = ["v4"] }
 walkdir = "0.1"
 rustc-serialize = "0.3"
 crossbeam = "0.2"
-crowbook-text-processing = "0.2"
+crowbook-text-processing = "^0.2.2"
 #crowbook-text-processing = { path = "../crowbook-text-processing" }
 lazy_static = "0.2.1"
 caribon = { version = "0.7", optional = true }
