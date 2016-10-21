@@ -38,7 +38,7 @@ $ cargo build --release --features "proofread"
 Enabling proofreading
 ---------------------
 
-Since proofreading can take quite a lot of time, particularly for long
+Since proofreading can take quite a lot of time, particularly for a long
 book, it is disabled by default. You'll have to run
 
 ```bash
@@ -109,7 +109,7 @@ Grammar checking
 
 Crowbook can also use [LanguageTool](https://languagetool.org/) to
 detect grammar errors in your text. It is, however, a bit more
-difficult to activate. 
+complex to activate. 
 
 First, you'll have to activate this feature in your book configuration
 file:
@@ -146,7 +146,7 @@ Highlighting non-breaking spaces
 
 The last proofreading feature is a bit less important, but it can be
 useful in some cases. It is is dis/activated by setting
-`proofread.nb_spaces` to "true" or false, and it will highlight
+`proofread.nb_spaces` to "true" or "false", and it will highlight
 different sort of non-breaking spaces in HTML proofreading output
 files. This can be useful in some cases, but it is mostly a debugging
 feature to check that the french cleaner of Crowbook correctly

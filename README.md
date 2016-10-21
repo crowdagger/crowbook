@@ -3,20 +3,12 @@ Crowbook
 
 [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
 
-Render a book written in markdown to HTML, Epub or PDF.
+Render a book written in markdown to HTML, EPUB and/or PDF.
 
 Crowbook's purpose is to allow you to automatically generate multiple
 outputs formats from a book written in Markdown. Its focus is
 novels, and the default settings should (hopefully) generate readable
-books with correct typography (particularly for the french
-language[^1]).
-
-[^1]: I don't know the rules for other languages well
-enough; If you want more support for the correct typographic rules in
-your language, don't hesitate to open an issue on
-[Github](https://github.com/lise-henry/crowbook/issues), or to submit 
-a pull request.
-
+books with correct typography without requiring you to worry about it.
     
 
 Example
@@ -25,7 +17,9 @@ Example
 To see what Crowbook's output looks like, you can read the Crowbook
 guide rendered in
 [HTML](http://lise-henry.github.io/crowbook/book/book.html), 
-[PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub). You can also play with the [online demo version here](http://vps.crowdagger.fr/crowbook/).
+[PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub). 
+
+You can also play with the [online demo version here](http://vps.crowdagger.fr/crowbook/).
 
 
  
@@ -50,7 +44,7 @@ Linux, Windows and MacOSX). Just extract the archive and run
 the binary somewhere in your `PATH` for later usage.
 
 > Note: only the Linux binaries are really tested, please contact me
-> if there you have any trouble executing the Windows or Mac binaries.
+> if you have any trouble executing the Windows or Mac binaries.
 
 ### Using Cargo ###
 
@@ -67,23 +61,16 @@ will automatically download the latest `crowbook` release on
 [crates.io](https://crates.io/crates/crowbook), compile it, and
 install it on your system.
 
-> By default, compiling Crowbook in this way doesn't activate the
-> proofreading features. If you want to use them, you'll have to run
-> `cargo install --features "proofread" crowbook`.
-
 Dependencies
 ------------
 
-While there are, strictly speaking, no real dependencies to be able to
+While there should be, strictly speaking, no real dependencies to be able to
 run Crowbook (it is published a a statically compiled binary), some
 features require additional commands to work correctly:
 
 * EPUB rendering requires that the `zip` command be present on your system;
 * PDF rendering requires a working installation of LaTeX (preferably
-`xelatex`);
-* Grammar checking (for proofreading copies) requires [LanguageTool](https://languagetool.org/).
-
-
+`xelatex`).
 
 Quick tour
 ----------
@@ -95,7 +82,7 @@ $ crowbook <BOOK>
 ```
 
 where `BOOK` is a configuration file. Crowbook will parse this
-file and generate a book in HTML, Epub, LaTeX, and/or PDF,
+file and generate a book in HTML, EPUB, and/or PDF,
 according to the settings in the configuration file. 
 
 To create a new book, assuming you have a
@@ -129,14 +116,6 @@ rendered in
 [EPUB](http://lise-henry.github.io/crowbook/book/book.epub) and
 [PDF](http://lise-henry.github.io/crowbook/book.pdf).
 
-> Note: in order to be able to render your books as PDF, you'll need
-> to have a working installation of LaTeX (preferably `xelatex`) on
-> your system. 
-
-Crowbook also provides some experimental support for rendering to ODT
-(Libre/Open/Office), but it needs more work.
-
-
 ### Input format ###
 
 Crowbook uses
@@ -145,7 +124,7 @@ should support most of CommonMark Markdown. Inline HTML, however, is
 not implemented, and probably won't be, as the goal is to have books
 that can also be generated in PDF (and maybe ODT).
 
-### Input cleaning ###
+### Typographic "cleaning" ###
 
 Maybe the most specific "feature" of Crowbook is that (by default, it
 can be deactivated) it tries to "clean" the input files. By default,
@@ -260,10 +239,15 @@ See [ChangeLog](ChangeLog.md).
 Library
 -------
 
-While the main purpose of Crowbook is to be runned as a command line,
+While the main purpose of Crowbook is to be runned as a standalone
+program, 
 the code is written as a library, so if you want to build on it you can
 use it as such. You can look at the generated documentation on
 [docs.rs](https://docs.rs/releases/search?query=crowbook).
+
+Additionally, [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/) is
+a separate library containing all the "typographic" functions (smart
+quotes, handling of non-breaking spaces in french, ...).
 
 License 
 -------

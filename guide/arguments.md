@@ -1,7 +1,7 @@
 Arguments 
 =========
 
-Crowbook can takes a list of arguments:
+Crowbook can take a number of arguments:
 
 ```text
 Render a Markdown book in EPUB, PDF or HTML.
@@ -30,25 +30,20 @@ ARGS:
 ```
 
 Note that Crowbook generates output files relatively to the directory
-where <BOOK> is[^1]:
-
-[^1]: Unless the option `output.base_path` is set, see
-[the configuration file](config.md).
-
+where <BOOK> is:
 
 ```bash
 $ crowbook foo/bar.book --to pdf --output baz.pdf
 ```
-will thus generate baz.pdf in directory foo and not in current directory.
+will thus generate "baz.pdf" in directory "foo" and not in the current directory.
 
-The most important option is obviously <BOOK>, i.e. the file
-configuration book. It is mandatory for most options: if you don't
-pass it, `crowbook` 
-will simply display this help message. In a normal use case this is
-the only argument you'll need to pass, and `crowbook` will generate
+The most important option is obviously <BOOK>, i.e. the book
+configuration file. It is mandatory for most options: if you don't 
+pass it, Crowbook will simply display this help message. In a normal use case this is
+the only argument you'll need to pass, and Crowbook will generate
 the book in all formats specified in the configuration file.
 
-It is, however, possible to pass more arguments to `crowbook`.
+It is, however, possible to pass more arguments to `crowbook`:
 
 `--create`
 ---------
@@ -157,7 +152,7 @@ documents (though they still appear in the TOC).
 
 **usage**: `crowbook <BOOK> --set [KEY] [VALUE]...`
 
-This argument takes a list `KEY` `VALUE` pairs and allows setting or
+This argument takes a list of  `KEY` `VALUE` pairs and allows setting or
 overriding a book configuration option. All valid options in the
 configuration files are valid as keys. For more information, see
 [the configuration file](config.md).
@@ -172,7 +167,7 @@ will override the CSS for HTML generation (the `html.css` key) to the
 file `style.css`.
 
 ```bash
-$ crowbook foo.book --set author Foo --title Bar
+$ crowbook foo.book --set author Foo title Bar
 ```
 
 will override the book title to `Bar` and its author to `Foo`.

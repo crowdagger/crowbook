@@ -7,7 +7,7 @@ editor, there is a
 nice [Markdown mode](http://jblevins.org/projects/markdown-mode/) to
 edit Markdown files. 
 
-It is possible to use Crowbook for HTML previewing in his mode, which
+It is possible to use Crowbook for HTML previewing in this mode, which
 [requires only minimal configuration and tweaking](http://xkcd.com/1742/):
 
 ```lisp
@@ -16,24 +16,23 @@ It is possible to use Crowbook for HTML previewing in his mode, which
  '(markdown-command-needs-filename t))
 ```
 
-You can then use `markdown-preview` (or `C-c C-c p`[^1]) to run
-crowbook on this file and preview it in your browser, or run
+You can then use `markdown-preview` (or `C-c C-c p`) to run
+Crowbook on this file and preview it in your browser, or run
 `markdown-live-preview-mode` to see a live preview (updated each time
 you save you file) in Emacs' integrated browser. 
 
 ### Some explanations if it looks a bit cryptic to you 
 
 We set `markdown-command` to `crowbook`, the reason for this is a bit
-obvious. The arguments we give to crowbook might not be a bit less
+obvious. The arguments we give to crowbook might be a bit less
 obvious:
 
-* `-qs` or `--quiet --single` tells crowbook that is a a standalone
+* `-qs` or `--quiet --single` tells Crowbook that is a a standalone
   markdown file, and not a book configuration file, and to be a bit
   quiet on error/info messages;
 * `--to html` specifies that HTML must be generated;
-* `--output /dev/stdout` forces crowbook to displays the result on the
-  stdout, even if you set `output.html` to `some_file.html` (yes, this
-  is a bit ugly).
+* `--output /dev/stdout` forces Crowbook to display the result on the
+  stdout, even if you set `output.html` to `some_file.html`.
 
 Also, `(markdown-command-needs-filename t)` is because at this point
 Crowbook can't read from the stdin and must be specified a file.
@@ -41,7 +40,7 @@ Crowbook can't read from the stdin and must be specified a file.
 ### Limitations
 
 While it renders correctly, this only works really nicely on standalone
-markdown files where you have specified, e.g.:
+Markdown files where you have specified, e.g.:
 
 ```markdown
 ---
@@ -50,8 +49,7 @@ title: Some title
 ---
 ```
 
-Else, it will sets `author` and `title` to the default values
-(`anonymous` and `untitled`, respectively).
+Else, it will sets `author` and `title` to the default values.
 
 ## Embedding fonts in an EPUB file 
 
@@ -90,4 +88,3 @@ resources.files: my_font.ttf
 display correctly when there is some text in **bold**, *italics*, or **_both_**.) 
 
 
-[^1]: Yes, this looks like a crypto-communist statement.
