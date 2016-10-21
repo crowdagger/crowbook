@@ -185,11 +185,11 @@ usage of some of them is detailed later on.
 ### Metadata ###
 - **`author`**
     - **type**: metadata
-    - **default value**: `Anonymous`
+    - **default value**: `""`
     -  Author of the book
 - **`title`**
     - **type**: metadata
-    - **default value**: `Untitled`
+    - **default value**: `""`
     -  Title of the book
 - **`lang`**
     - **type**: metadata
@@ -398,11 +398,11 @@ usage of some of them is detailed later on.
 - **`resources.base_path.links`**
     - **type**: path
     - **default value**: `not set`
-    -  Set base path but only for links. Useless if resources.base_path is set.
+    -  Set base path but only for links. Useless if resources.base_path is set
 - **`resources.base_path.images`**
     - **type**: path
     - **default value**: `.`
-    -  Set base path but only for images. Useless if resources.base_path is set.
+    -  Set base path but only for images. Useless if resources.base_path is set
 - **`resources.base_path.files`**
     - **type**: path
     - **default value**: `.`
@@ -410,17 +410,25 @@ usage of some of them is detailed later on.
 - **`resources.base_path.templates`**
     - **type**: path
     - **default value**: `.`
-    -  Set base path but only for templates files. Useless if resources.base_path is set.
+    -  Set base path but only for templates files. Useless if resources.base_path is set
 
 ### Input options ###
-- **`input.autoclean`**
+- **`input.clean`**
     - **type**: boolean
     - **default value**: `true`
-    -  Toggle cleaning of input markdown according to lang
-- **`input.smart_quotes`**
+    -  Toggle typographic cleaning of input markdown according to lang
+- **`input.clean.smart_quotes`**
     - **type**: boolean
     - **default value**: `true`
-    -  If enabled, tries to replace vertical quotations marks to curly ones.
+    -  If enabled, tries to replace vertical quotations marks to curly ones
+- **`input.clean.ligature.dashes`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')
+- **`input.clean.ligature.guillemets`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If enabled, replaces '<<' and '>>' to french "guillemets" ('«' and '»')
 - **`input.yaml_blocks`**
     - **type**: boolean
     - **default value**: `false`
@@ -513,7 +521,7 @@ an image file, all its fields are strings. The main metadata are:
 * `title`: the title of the book.
 * `lang`: the language of the book. The unicode language code should
 be used, e.g. `en_GB` or `en`, `fr_FR`, ...
-* `cover`: path to an image file for the cover of the book (notdisplayed in all output formats).
+* `cover`: path to an image file for the cover of the book (not displayed in all output formats).
 
 There are also additional metadata:
 
@@ -532,8 +540,8 @@ All metadata are accessible from templates, see
 ### The `import_config` special option ###
 
 The special `import_config` option allows you to include the options
-of another book configuration file in this file. E.g., assuming that
-you some common options that you want to be applied to both `foo.book`
+of another book configuration file. E.g., assuming that
+you want some common options to be applied to both `foo.book`
 and `bar.book`, you can create a `common.book` file:
 
 ```yaml
@@ -555,7 +563,7 @@ title: Foo
 + foo_02.md
 ```
 
-Or include it in `bar.book`, but overriding some of its features:
+Or include it in `bar.book`, but override some of its features:
 
 ```yaml
 import_config: common.book
@@ -567,8 +575,7 @@ license: CC-BY-SA  # Override the license from common.book
 
 ### Output options ###
 
-These options specify which files to generate. You must at least set
-one of this option, or Crowbook won't do anything.
+These options specify which files to generate.
 
 Recall that all file paths are relative to the directory where the
 config file is, not to the one where you run `crowbook`. So if you set
@@ -602,14 +609,14 @@ system. Most notably, Crowbook depends on LaTeX (`xelatex` by
 default, though you can specify the command to use with `tex.command`) to generate a PDF file,
 so PDF rendering won't work if it is not installed on your
 system. Crowbook also uses the `zip` command to generate the EPUB and
-ODT, files.
+ODT files.
 
 Current output options are:
 
-* `output.html`: renders a standalone HTML file;
-* `output.html_dir`: render a HTML directory with one page by chapter;
-* `output.epub`: renders an EPUB file;
-* `output.tex`: renders a LaTeX file;
+* `output.html`: renders a standalone HTML file.
+* `output.html_dir`: render a HTML directory with one page by chapter.
+* `output.epub`: renders an EPUB file.
+* `output.tex`: renders a LaTeX file.
 * `output.pdf`: renders a PDF file (using `tex.command`).
 
 (There are other output options for generating proofreading files, see
@@ -628,9 +635,34 @@ output.epub: book.epub
 
 will render the EPUB file in `docs/book/book.epub`.
 
+### Input options ###
+
+Crowbook does its best to improve the typography of your text. Default
+settings should be good enough for most usages, but you 
+can enable/disable specific options: 
+
+* `input.clean`: if set to `false`, will disable all typographic
+  "cleaning" (default: `true`). The `clean` algorithm is
+  dependent on the language, though currently there is only a variant
+  implemented for `fr` (french), dealing with the specific
+  non-breaking spaces rules for this language.
+* `input.clean.smart_quotes`: if set to `false`, disable the "smart
+  quote" feature, that (tries to) replace straight quotes with curly
+  ones. As it is an heuristics and can't be perfect, you might want to
+  disable it in some circumstances (default: `true`).
+* `input.clean.ligature_dashes`: if set to `true`, will convert `--`
+  to en dash (`–`) and `---` to em dash (`—`). This can be useful if
+  you want to use these characters but can't access them easily on
+  your keymap; however, as it can also cause problems if you *do* want
+  to have two successive dashes, it is disabled by default.
+* `input.clean.ligature_guillemets` is a similar feature for french 'guilemets', replacing
+  `<<` and `>>` to `«` and `»`. For the same reason, it is also
+  disabled by default.
+
 ### Generic options for rendering  ###
 
-These options allow to configure the rendering for all formats.
+These options allow to configure the rendering; they are used (or at
+least should be) for all formats.
 
 #### rendering.num_depth ####
 
@@ -657,15 +689,17 @@ Note that:
 * this string won't be used for unnumbered chapters;
 * this string isn't currently used by LaTeX, either.
 
+It is possible to include Markdown formatting in this template, but it
+isn't advised, because it might cause problems for some formats
+(e.g. your EPUB file might not be correct anymore).
 
-#### rendering.inline_toc ####
+#### Other rendering options ####
 
-If set to true, Crowbook will include a table of contents at the
+* `rendering.inline_toc`: if set to true, Crowbook will include a table of contents at the
 beginning of the document.
-
-#### rendering.initials ####
-
-If set to true, Crowbook will use initials, or "lettrines", displaying
+* `rendering.inline_toc.name`: the name of this table of contents as
+  it should be displayed in the document.
+* `rendering.initials`: if set to true, Crowbook will use initials, or "lettrines", displaying
 the first letter of each chapter bigger than the others.
 
 ### Resources options ###
@@ -702,10 +736,10 @@ resources.files: fonts/font1.otf fonts/font2.otf
 #### resources.out_path ####
 
 This option determine where (in which directory), *in the resulting
-document*, will those files be copied. The default is `data`, so by
+document*, those files will be copied. The default is `data`, so by
 default the `resources.files` in the first example above will search
 `font1.otf` and `font2.otf` *in the same directory than the `.book`
-file, and will copy them to `data/font1.otf` and `data/font2.otf` *in
+file*, and will copy them to `data/font1.otf` and `data/font2.otf` *in
 the EPUB file*. This is therefore this last path that you should use
 if you want to access those files e.g. in a custom CSS stylesheet.
 
