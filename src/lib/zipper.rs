@@ -114,13 +114,16 @@ This is forbidden because we are supposed \
     /// run command and copy file name (supposed to result from the command) to current dir
     pub fn run_command(&mut self,
                        mut command: Command,
+                       command_name: &str,
                        in_file: &str,
                        out_file: &str)
                        -> Result<String> {
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
             .output()
-            .map_err(|e| Error::zipper(lformat!("failed to execute process: {error}", error = e)));
+            .map_err(|e| Error::zipper(lformat!("failed to run command {name}: {error}",
+                                                name = command_name,
+                                                error = e)));
         let output = try!(res_output);
         try!(fs::copy(self.path.join(in_file), out_file).map_err(|_| {
             println!("{}", &String::from_utf8_lossy(&output.stdout));
@@ -137,39 +140,39 @@ This is forbidden because we are supposed \
     }
 
     /// zip all files in zipper's tmp dir to a given file name and return odt file
-    pub fn generate_odt(&mut self, command: &str, odt_file: &str) -> Result<String> {
-        let mut command = Command::new(command);
+    pub fn generate_odt(&mut self, command_name: &str, odt_file: &str) -> Result<String> {
+        let mut command = Command::new(command_name);
         command.arg("-r");
         command.arg("result.odt");
         command.arg(".");
-        self.run_command(command, "result.odt", odt_file)
+        self.run_command(command, command_name, "result.odt", odt_file)
     }
 
 
     /// generate a pdf file into given file name
     pub fn generate_pdf(&mut self,
-                        command: &str,
+                        command_name: &str,
                         tex_file: &str,
                         pdf_file: &str)
                         -> Result<String> {
         // first pass
-        let _ = Command::new(command)
+        let _ = Command::new(command_name)
             .current_dir(&self.path)
             .arg(tex_file)
             .output();
 
         // second pass
-        let mut command = Command::new(command);
+        let mut command = Command::new(command_name);
         command.arg(tex_file);
-        self.run_command(command, "result.pdf", pdf_file)
+        self.run_command(command, command_name, "result.pdf", pdf_file)
     }
 
     /// generate an epub into given file name
-    pub fn generate_epub(&mut self, command: &str, file: &str) -> Result<String> {
-        let mut command = Command::new(command);
+    pub fn generate_epub(&mut self, command_name: &str, file: &str) -> Result<String> {
+        let mut command = Command::new(command_name);
         command.arg("-X");
         command.arg("result.epub");
-        self.run_command(command, "result.epub", file)
+        self.run_command(command, command_name, "result.epub", file)
     }
 }
 
