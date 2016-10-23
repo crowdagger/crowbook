@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+unreleased
+------------
+* CommandLine Interface:
+  * Crowbook displays clearer error messages when unable to launch
+    `latex` or `zip` commands.
+
 0.10.2 (2016-20-21)
 -----------------------
 Only minor changes in this version:
