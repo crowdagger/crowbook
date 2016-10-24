@@ -39,7 +39,7 @@ enum Output {
 impl Output {
     pub fn new() -> Output {
         if let Some(term) = term::stderr() {
-            if term.supports_color() {
+            if (*term).supports_color() {
                 return Output::Terminal(term)
             }
         }
