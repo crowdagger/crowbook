@@ -62,15 +62,12 @@ impl Output {
                     .unwrap();
             },
             Output::Terminal(ref mut term) => {
-                term.fg(colour)
-                    .unwrap();
-                term.attr(term::Attr::Bold)
-                    .unwrap();
+                let _ = term.fg(colour);
+                let _ = term.attr(term::Attr::Bold);
                 write!(term, "{}",
                        head_msg)
                     .unwrap();
-                term.reset()
-                    .unwrap();
+                let _ = term.reset();
                 writeln!(term, "{}",
                        msg)
                     .unwrap();
