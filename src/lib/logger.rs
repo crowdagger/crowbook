@@ -30,13 +30,14 @@ pub enum InfoLevel {
 
 use self::InfoLevel::*;
 
-/// Abstract over eithr term outupt or (if it fails) io::stderr()
+/// Abstract over either term outupt or (if it fails) io::stderr()
 enum Output {
     Terminal(Box<term::StderrTerminal>),
     Stderr(io::Stderr),
 }
 
 impl Output {
+    /// Creates a new Output
     pub fn new() -> Output {
         if let Some(term) = term::stderr() {
             if (*term).supports_color() {
@@ -46,6 +47,7 @@ impl Output {
         return Output::Stderr(io::stderr())
     }
 
+    /// Print a msg with prefixed by a coloured `level` message
     pub fn print_msg<S: Display>(&mut self, level: InfoLevel, msg: S) {
         let (colour, head_msg) = match level {
             Debug => (term::color::BRIGHT_BLUE, lformat!("Debug: ")),
