@@ -1,8 +1,7 @@
 use error::{Error, Result, Source};
 use bookoption::BookOption;
 use book::Book;
-use logger::{Logger, InfoLevel, SHELL_COLOUR_OFF, SHELL_COLOUR_RED, SHELL_COLOUR_BLUE,
-             SHELL_COLOUR_ORANGE, SHELL_COLOUR_GREEN};
+use logger::{Logger, InfoLevel};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
@@ -166,8 +165,8 @@ html.crowbook_link:alias                            # {removed}
                                          author = lformat!("Author of the book"),
                                          title = lformat!("Title of the book"),
                                          lang = lformat!("Language of the book"),
-                                         subject = lformat!("Subject of the book (used for EPUB metadata"),
-                                         description = lformat!("Description of the book (used for EPUB metadata"),
+                                         subject = lformat!("Subject of the book (used for EPUB metadata)"),
+                                         description = lformat!("Description of the book (used for EPUB metadata)"),
                                          cover = lformat!("Path to the cover of the book"),
                                          
                                          license = lformat!("License of the book"),
@@ -751,11 +750,6 @@ impl BookOptions {
                     previous_is_comment = true;
                 }
                 let header = format!("### {} ###\n", comment.trim());
-                let header = if md {
-                    header
-                } else {
-                    format!("{}{}{}", SHELL_COLOUR_RED, header, SHELL_COLOUR_OFF)
-                };
                 out.push_str(&header);
                 continue;
             }
@@ -787,15 +781,13 @@ impl BookOptions {
                                        default = def,
                                        comment = comment));
             } else {
-                out.push_str(&format!("{orange}{key}{off} ({blue}{option_type}{off}) ({msg} \
-                                       {green}{default}{off})\n  {comment}\n",
-                                      orange = SHELL_COLOUR_ORANGE,
+                out.push_str(&format!("{key}
+  {type} {option_type} ({msg} {default})
+  {comment}\n",
+                                      type = lformat!("type:"),
                                       key = key.unwrap(),
-                                      off = SHELL_COLOUR_OFF,
-                                      blue = SHELL_COLOUR_BLUE,
                                       option_type = o_type,
                                       msg = lformat!("default:"),
-                                      green = SHELL_COLOUR_GREEN,
                                       default = def,
                                       comment = comment.trim()));
             }

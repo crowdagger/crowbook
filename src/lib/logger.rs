@@ -30,7 +30,7 @@ pub enum InfoLevel {
 
 use self::InfoLevel::*;
 
-/// Abstract over either term outupt or (if it fails) io::stderr()
+/// Abstract over either term output or (if it fails) io::stderr()
 enum Output {
     Terminal(Box<term::StderrTerminal>),
     Stderr(io::Stderr),
@@ -159,9 +159,3 @@ impl Logger {
     }
 }
 
-// Code to end shell colouring
-pub const SHELL_COLOUR_OFF: &'static str = "\x1B[0m";
-pub const SHELL_COLOUR_RED: &'static str = "\x1B[1m\x1B[31m";
-pub const SHELL_COLOUR_BLUE: &'static str = "\x1B[1m\x1B[36m";
-pub const SHELL_COLOUR_ORANGE: &'static str = "\x1B[1m\x1B[33m";
-pub const SHELL_COLOUR_GREEN: &'static str = "\x1B[1m\x1B[32m";
