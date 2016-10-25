@@ -6,6 +6,10 @@ unreleased
 * CommandLine Interface:
   * Crowbook displays clearer error messages when unable to launch
     `latex` or `zip` commands.
+  * Crowbook uses `term` library in order to display colours correctly
+    on e.g. Windows.
+  * `--list-options` no longer uses colours as it caused problems
+    depending on the terminal of when piping to `less`.
 
 0.10.2 (2016-20-21)
 -----------------------
