@@ -1,5 +1,5 @@
-extern crate crowbook_localize;
-use crowbook_localize::{Localizer, Extractor};
+extern crate crowbook_intl;
+use crowbook_intl::{Localizer, Extractor};
 
 use std::path::Path;
 use std::env;

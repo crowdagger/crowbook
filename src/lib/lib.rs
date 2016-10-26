@@ -103,6 +103,7 @@ extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
 extern crate crowbook_text_processing;
+extern crate crowbook_intl_runtime;
 extern crate term;
 #[macro_use]
 extern crate lazy_static;
@@ -132,7 +133,8 @@ pub use logger::{Logger, InfoLevel};
 pub use html_dir::HtmlDirRenderer;
 pub use html_single::HtmlSingleRenderer;
 pub use renderer::Renderer;
-pub use localize_macros::set_lang;
+pub use crowbook_intl_runtime::set_lang;
+pub use crowbook_intl_runtime::__get_lang;
 
 #[macro_use]
 pub mod localize_macros;

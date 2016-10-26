@@ -36,7 +36,9 @@ default = ["clap"]
 proofread = ["caribon", "hyper", "url"]
 
 [build-dependencies]
-crowbook-localize = "0.0.9"
+# crowbook-intl = "0.1"
+crowbook-intl = { git = "https://github.com/lise-henry/crowbook-intl.git" }
+# crowbook-intl = { path = "../crowbook-intl" }
 
 
 [dependencies]
@@ -57,3 +59,4 @@ clap = { version = "2", optional = true }
 hyper = { version = "0.9", optional = true }
 url =  { version = "1", optional = true }
 term = "0.4"
+crowbook-intl-runtime = { git = "https://github.com/lise-henry/crowbook-intl-runtime.git" }
