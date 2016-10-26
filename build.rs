@@ -1,6 +1,8 @@
 extern crate crowbook_localize;
 use crowbook_localize::{Localizer, Extractor};
 
+use std::path::Path;
+
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=lang/fr.po");
@@ -10,5 +12,6 @@ fn main() {
     
     let mut localizer = Localizer::new(&extractor);
     localizer.add_lang("fr", include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/fr.po"))).unwrap();
-    localizer.write_macro_file(concat!(env!("OUT_DIR"), "/localize_macros.rs")).unwrap();
+    let dest_path = Path::new(env!("OUT_DIR")).join("hello.rs");
+    localizer.write_macro_file(dest_path.to_str().unwrap()).unwrap();
 }
