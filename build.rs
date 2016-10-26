@@ -12,6 +12,6 @@ fn main() {
     
     let mut localizer = Localizer::new(&extractor);
     localizer.add_lang("fr", include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/fr.po"))).unwrap();
-    let dest_path = Path::new(env!("OUT_DIR")).join("hello.rs");
+    let dest_path = Path::new(env!("OUT_DIR")).join("localize_macros.rs");
     localizer.write_macro_file(dest_path.to_str().unwrap()).unwrap();
 }
