@@ -10,5 +10,5 @@ fn main() {
     
     let mut localizer = Localizer::new(&extractor);
     localizer.add_lang("fr", include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/fr.po"))).unwrap();
-    localizer.write_macro_file(concat!(env!("CARGO_MANIFEST_DIR"), "/src/lib/localize_macros.rs")).unwrap();
+    localizer.write_macro_file(concat!(env!("OUT_DIR"), "/localize_macros.rs")).unwrap();
 }
