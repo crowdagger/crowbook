@@ -190,9 +190,9 @@ impl<'a> LatexRenderer<'a> {
                                         &self.book.source,
                                         lformat!("could not compile template 'tex.template'")));
         let mut data = try!(self.book.get_metadata(|s| {
-                let tokens = try!(Parser::new().parse_inline(s));
-                self.render_vec(&tokens)
-            }))
+            let tokens = try!(Parser::new().parse_inline(s));
+            self.render_vec(&tokens)
+        }))
             .insert_str("content", content)
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
             .insert_str("tex_lang", tex_lang);

@@ -910,7 +910,7 @@ impl Book {
 
                 // Only render some metadata as markdown
                 let content = match key.as_ref() {
-                    "author" | "title" | "lang" => Ok(s.to_owned()),
+                    "author" | "title" | "lang" => f(s),
                     _ => f(s),
                 };
                 match content {
