@@ -3,6 +3,8 @@ ChangeLog
 
 unreleased
 ------------
+* Bugfixes:
+  * Fixed escaping of `author` and `title` fields.
 * CommandLine Interface:
   * Crowbook displays clearer error messages when unable to launch
     `latex` or `zip` commands.
