@@ -172,7 +172,7 @@ impl<'a> OdtRenderer<'a> {
             }
             Token::Item(ref vec) => {
                 format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>",
-                        self.book.clean(self.render_vec(vec), false))
+                        self.render_vec(vec))
             }
             Token::Link(ref url, _, ref vec) => {
                 format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>",
@@ -190,7 +190,7 @@ impl<'a> OdtRenderer<'a> {
                     .warning(lformat!("ODT: blockquotes and codeblocks are not currently \
                                        implemented for ODT"));
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
-                        self.book.clean(self.render_vec(vec), false))
+                        self.render_vec(vec))
             }
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),
