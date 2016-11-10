@@ -149,9 +149,10 @@ impl Book {
         book.logger.set_verbosity(verbosity);
 
         let path = Path::new(filename);
-        let mut f = try!(File::open(&path).map_err(|_| {
-            Error::file_not_found(Source::empty(), lformat!("book"), filename.to_owned())
-        }));
+        let mut f = File::open(&path)
+            .map_err(|_| {
+                Error::file_not_found(Source::empty(), lformat!("book"), filename.to_owned())
+            })?;
         // Set book path to book's directory
         if let Some(parent) = path.parent() {
             book.root = parent.to_owned();
@@ -159,10 +160,11 @@ impl Book {
         }
 
         let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| {
-            Error::config_parser(Source::new(filename),
+        f.read_to_string(&mut s)
+            .map_err(|_| {
+                Error::config_parser(Source::new(filename),
                                  lformat!("file contains invalid UTF-8, could not parse it"))
-        }));
+            })?;
 
 
         let result = book.set_from_config(&s);
@@ -207,7 +209,7 @@ impl Book {
         let relative_path = Path::new(Path::new(filename).components().last().unwrap().as_os_str());
 
         // Update grammar checker according to options
-        try!(book.add_chapter(Number::Hidden, &relative_path.to_string_lossy()));
+        book.add_chapter(Number::Hidden, &relative_path.to_string_lossy())?;
 
         Ok(book)
     }
@@ -225,7 +227,7 @@ impl Book {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
                     if let Yaml::Hash(hash) = docs.pop().unwrap() {
                         for (key, value) in hash.into_iter() {
-                            try!(self.options.set_yaml(key, value));
+                            self.options.set_yaml(key, value)?;
                         }
                     } else {
                         unreachable!();
@@ -333,7 +335,7 @@ impl Book {
                 }
             }
         }
-        try!(self.set_options_from_yaml(&yaml));
+        self.set_options_from_yaml(&yaml)?;
 
         // Update cleaner according to options (autoclean/lang)
         self.update_cleaner();
@@ -351,16 +353,16 @@ impl Book {
             }
             if line.starts_with('-') {
                 // unnumbered chapter
-                let file = try!(get_filename(&self.source, line));
-                try!(self.add_chapter(Number::Unnumbered, file));
+                let file = get_filename(&self.source, line)?;
+                self.add_chapter(Number::Unnumbered, file)?;
             } else if line.starts_with('+') {
                 // nunmbered chapter
-                let file = try!(get_filename(&self.source, line));
-                try!(self.add_chapter(Number::Default, file));
+                let file = get_filename(&self.source, line)?;
+                self.add_chapter(Number::Default, file)?;
             } else if line.starts_with('!') {
                 // hidden chapter
-                let file = try!(get_filename(&self.source, line));
-                try!(self.add_chapter(Number::Hidden, file));
+                let file = get_filename(&self.source, line)?;
+                self.add_chapter(Number::Hidden, file)?;
             } else if line.starts_with(|c: char| c.is_digit(10)) {
                 // chapter with specific number
                 let parts: Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
@@ -370,11 +372,12 @@ impl Book {
                                                     lformat!("ill-formatted line specifying \
                                                               chapter number")));
                 }
-                let file = try!(get_filename(&self.source, parts[1]));
-                let number = try!(parts[0].parse::<i32>().map_err(|_| {
-                    Error::config_parser(&self.source, lformat!("error parsing chapter number"))
-                }));
-                try!(self.add_chapter(Number::Specified(number), file));
+                let file = get_filename(&self.source, parts[1])?;
+                let number = parts[0].parse::<i32>()
+                    .map_err(|_| {
+                        Error::config_parser(&self.source, lformat!("error parsing chapter number"))
+                    })?;
+                self.add_chapter(Number::Specified(number), file)?;
             } else {
                 return Err(Error::config_parser(&self.source,
                                                 lformat!("found invalid chapter definition in \
@@ -383,7 +386,7 @@ impl Book {
         }
 
         self.source.unset_line();
-        try!(self.set_chapter_template());
+        self.set_chapter_template()?;
         Ok(())
     }
 
@@ -503,7 +506,7 @@ impl Book {
     pub fn render_pdf(&self) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate pdf..."));
         let mut latex = LatexRenderer::new(&self);
-        let result = try!(latex.render_pdf());
+        let result = latex.render_pdf()?;
         self.logger.debug(lformat!("Output of latex command:"));
         self.logger.debug(result);
         self.logger.info(lformat!("Successfully generated PDF file: {file}",
@@ -515,7 +518,7 @@ impl Book {
     pub fn render_epub(&self) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate epub..."));
         let mut epub = EpubRenderer::new(&self);
-        let result = try!(epub.render_book());
+        let result = epub.render_book()?;
         self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
         self.logger.info(lformat!("Successfully generated EPUB file: {file}",
@@ -527,7 +530,7 @@ impl Book {
     pub fn render_html_dir(&self) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate html directory..."));
         let mut html = HtmlDirRenderer::new(&self);
-        try!(html.render_book());
+        html.render_book()?;
         self.logger.info(lformat!("Successfully generated HTML directory: {path}",
                                   path = self.options.get_path("output.html_dir").unwrap()));
         Ok(())
@@ -546,7 +549,7 @@ impl Book {
         }
         self.logger.debug(lformat!("Attempting to generate html directory for proofreading..."));
         let mut html = HtmlDirRenderer::new(&self).proofread();
-        try!(html.render_book());
+        html.render_book()?;
         self.logger.info(lformat!("Successfully generated HTML directory: {path}",
                                   path = dir_name));
         Ok(())
@@ -564,7 +567,7 @@ impl Book {
         }
         self.logger.debug(lformat!("Attempting to generate PDF for proofreading..."));
         let mut latex = LatexRenderer::new(&self).proofread();
-        try!(latex.render_pdf());
+        latex.render_pdf()?;
         self.logger.info(lformat!("Successfully generated PDF file for proofreading: {file}",
                                   file = file_name));
         Ok(())
@@ -574,7 +577,7 @@ impl Book {
     pub fn render_odt(&self) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate ODT..."));
         let mut odt = OdtRenderer::new(&self);
-        let result = try!(odt.render_book());
+        let result = odt.render_book()?;
         self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
         self.logger.info(lformat!("Successfully generated ODT file: {file}",
@@ -586,11 +589,12 @@ impl Book {
     pub fn render_html<T: Write>(&self, f: &mut T) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate HTML..."));
         let mut html = HtmlSingleRenderer::new(&self);
-        let result = try!(html.render_book());
-        try!(f.write_all(&result.as_bytes()).map_err(|e| {
-            Error::render(&self.source,
-                          lformat!("problem when writing to HTML file: {error}", error = e))
-        }));
+        let result = html.render_book()?;
+        f.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&self.source,
+                              lformat!("problem when writing to HTML file: {error}", error = e))
+            })?;
         if let Ok(file) = self.options.get_path("output.html") {
             self.logger.info(lformat!("Successfully generated HTML file: {file}", file = file));
         } else {
@@ -615,11 +619,12 @@ impl Book {
         }
         self.logger.debug(lformat!("Attempting to generate HTML for proofreading..."));
         let mut html = HtmlSingleRenderer::new(&self).proofread();
-        let result = try!(html.render_book());
-        try!(f.write_all(&result.as_bytes()).map_err(|e| {
-            Error::render(&self.source,
-                          lformat!("problem when writing to HTML file: {error}", error = e))
-        }));
+        let result = html.render_book()?;
+        f.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&self.source,
+                              lformat!("problem when writing to HTML file: {error}", error = e))
+            })?;
         self.logger.info(lformat!("Successfully generated HTML file {file}", file = file_name));
         Ok(())
     }
@@ -629,11 +634,12 @@ impl Book {
         self.logger.debug(lformat!("Attempting to generate LaTeX..."));
 
         let mut latex = LatexRenderer::new(&self);
-        let result = try!(latex.render_book());
-        try!(f.write_all(&result.as_bytes()).map_err(|e| {
-            Error::render(&self.source,
-                          lformat!("problem when writing to LaTeX file: {error}", error = e))
-        }));
+        let result = latex.render_book()?;
+        f.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&self.source,
+                              lformat!("problem when writing to LaTeX file: {error}", error = e))
+            })?;
         if let Ok(file) = self.options.get_path("output.tex") {
             self.logger.info(lformat!("Successfully generated LaTeX file: {file}", file = file));
         } else {
@@ -660,11 +666,12 @@ impl Book {
 
         self.logger.debug("Attempting to generate LaTeX (for proofreading)...");
         let mut latex = LatexRenderer::new(&self).proofread();
-        let result = try!(latex.render_book());
-        try!(f.write_all(&result.as_bytes()).map_err(|e| {
-            Error::render(&self.source,
-                          lformat!("problem when writing to LaTeX file: {error}", error = e))
-        }));
+        let result = latex.render_book()?;
+        f.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&self.source,
+                              lformat!("problem when writing to LaTeX file: {error}", error = e))
+            })?;
         self.logger.info(lformat!("Successfully generated LaTeX file {file}", file = file_name));
         Ok(())
     }
@@ -690,16 +697,18 @@ impl Book {
 
         // try to open file
         let path = self.root.join(file);
-        let mut f = try!(File::open(&path).map_err(|_| {
-            Error::file_not_found(&self.source,
-                                  lformat!("book chapter"),
-                                  format!("{}", path.display()))
-        }));
+        let mut f = File::open(&path)
+            .map_err(|_| {
+                Error::file_not_found(&self.source,
+                                      lformat!("book chapter"),
+                                      format!("{}", path.display()))
+            })?;
         let mut s = String::new();
-        try!(f.read_to_string(&mut s).map_err(|_| {
-            Error::parser(&self.source,
-                          lformat!("file {file} contains invalid UTF-8", file = path.display()))
-        }));
+        f.read_to_string(&mut s)
+            .map_err(|_| {
+                Error::parser(&self.source,
+                              lformat!("file {file} contains invalid UTF-8", file = path.display()))
+            })?;
 
         // Ignore YAML blocks (or not)
         self.parse_yaml(&mut s);
@@ -707,7 +716,7 @@ impl Book {
         // parse the file
         let mut parser = Parser::new();
         parser.set_source_file(file);
-        let mut v = try!(parser.parse(&s));
+        let mut v = parser.parse(&s)?;
 
 
         // transform the AST to make local links and images relative to `book` directory
@@ -774,7 +783,7 @@ impl Book {
     /// **Returns** an error if there was some errror parsing `content`.
     pub fn add_chapter_as_str(&mut self, number: Number, content: &str) -> Result<()> {
         let mut parser = Parser::new();
-        let v = try!(parser.parse(content));
+        let v = parser.parse(content)?;
         self.chapters.push((number, v));
         self.filenames.push(String::new());
         Ok(())
@@ -801,7 +810,7 @@ impl Book {
         let fallback = match template {
             "epub.css" => epub::CSS,
             "epub.chapter.xhtml" => {
-                if try!(self.options.get_i32("epub.version")) == 3 {
+                if self.options.get_i32("epub.version")? == 3 {
                     epub3::TEMPLATE
                 } else {
                     epub::TEMPLATE
@@ -825,17 +834,18 @@ impl Book {
             }
         };
         if let Ok(ref s) = option {
-            let mut f = try!(File::open(s).map_err(|_| {
-                Error::file_not_found(&self.source,
-                                      format!("template '{template}'", template = template),
-                                      s.to_owned())
-            }));
+            let mut f = File::open(s)
+                .map_err(|_| {
+                    Error::file_not_found(&self.source,
+                                          format!("template '{template}'", template = template),
+                                          s.to_owned())
+                })?;
             let mut res = String::new();
-            try!(f.read_to_string(&mut res)
+            f.read_to_string(&mut res)
                 .map_err(|_| {
                     Error::config_parser(&self.source,
                                          lformat!("file '{file}' could not be read", file = s))
-                }));
+                })?;
             Ok(Cow::Owned(res))
         } else {
             Ok(Cow::Borrowed(fallback))
@@ -846,9 +856,9 @@ impl Book {
     /// Sets the chapter_template once and for all
     fn set_chapter_template(&mut self) -> Result<()> {
         let template =
-            try!(compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
-                             &self.source,
-                             lformat!("could not compile template 'rendering.chapter_template'")));
+            compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
+                        &self.source,
+                        lformat!("could not compile template 'rendering.chapter_template'"))?;
         self.chapter_template = Some(template);
         Ok(())
     }
@@ -859,7 +869,7 @@ impl Book {
     pub fn get_chapter_header<F>(&self, n: i32, title: String, mut f: F) -> Result<String>
         where F: FnMut(&str) -> Result<String>
     {
-        let mut data = try!(self.get_metadata(&mut f));
+        let mut data = self.get_metadata(&mut f)?;
         if !title.is_empty() {
             data = data.insert_bool("has_chapter_title", true);
         }
@@ -873,10 +883,10 @@ impl Book {
             template.render_data(&mut res, &data);
         } else {
             let template =
-                try!(compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
-                                 &self.source,
-                                 lformat!("could not compile template \
-                                           'rendering.chapter_template'")));
+                compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
+                            &self.source,
+                            lformat!("could not compile template \
+                                      'rendering.chapter_template'"))?;
             template.render_data(&mut res, &data);
         }
 
