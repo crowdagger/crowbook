@@ -384,16 +384,16 @@ impl BookOptions {
                     // special case, not a real option
                     let tmp = self.root
                         .join(&value);
-                    let file = try!(tmp
-                                    .to_str()
-                                    .ok_or(Error::book_option(&self.source,
-                                                              lformat!("'{value}''s path contains invalid \
-                                                                        UTF-8 code",
-                                                                       value = &value))));
-                    let book = try!(Book::new_from_file(file, InfoLevel::Info, &[]));
-                    try!(self.merge(book.options));
+                    let file = tmp
+                        .to_str()
+                        .ok_or(Error::book_option(&self.source,
+                                                  lformat!("'{value}''s path contains invalid \
+                                                            UTF-8 code",
+                                                           value = &value)))?;
+                    let book = Book::new_from_file(file, InfoLevel::Info, &[])?;
+                    self.merge(book.options)?;
                     Ok(None)
-                } else {
+            } else { 
                     Ok(self.options.insert(key, BookOption::Path(value)))
                 }
             } else {
@@ -568,7 +568,7 @@ impl BookOptions {
                                                    key = key)));
         }
 
-        let list = try!(try!(self.get(key)).as_str()).split_whitespace();
+        let list = self.get(key)?.as_str()?.split_whitespace();
         let mut res = vec![];
         for s in list {
             res.push(s.to_owned());
@@ -578,14 +578,14 @@ impl BookOptions {
 
     /// Gets a string option
     pub fn get_str(&self, key: &str) -> Result<&str> {
-        try!(self.get(key)).as_str()
+        self.get(key)?.as_str()
     }
 
     /// Get a path option
     ///
     /// Adds the correct path correction before it
     pub fn get_path(&self, key: &str) -> Result<String> {
-        let path: &str = try!(try!(self.get(key)).as_path());
+        let path: &str = self.get(key)?.as_path()?;
 
         if Path::new(path).is_absolute() {
             // path is absolute, do nothing
@@ -649,27 +649,27 @@ impl BookOptions {
     ///
     /// Don't add book's root path before it
     pub fn get_relative_path(&self, key: &str) -> Result<&str> {
-        try!(self.get(key)).as_path()
+        self.get(key)?.as_path()
     }
 
     /// gets a bool option
     pub fn get_bool(&self, key: &str) -> Result<bool> {
-        try!(self.get(key)).as_bool()
+        self.get(key)?.as_bool()
     }
 
     /// gets a char option
     pub fn get_char(&self, key: &str) -> Result<char> {
-        try!(self.get(key)).as_char()
+        self.get(key)?.as_char()
     }
 
     /// gets an int  option
     pub fn get_i32(&self, key: &str) -> Result<i32> {
-        try!(self.get(key)).as_i32()
+        self.get(key)?.as_i32()
     }
 
     /// gets a float option
     pub fn get_f32(&self, key: &str) -> Result<f32> {
-        try!(self.get(key)).as_f32()
+        self.get(key)?.as_f32()
     }
 
 
@@ -706,11 +706,12 @@ impl BookOptions {
                     // won't be messed up if resources.base_path.templates is
                     // redefined later on
                     let path = other.get_path(&key).unwrap();
-                    let new_path = try!(::std::env::current_dir().map_err(|_| {
+                    let new_path = ::std::env::current_dir()
+                        .map_err(|_| {
                             Error::default(Source::empty(),
                                            lformat!("could not get current directory!!!"))
-                        }))
-                        .join(&path);
+                        })?
+                    .join(&path);
                     new_path
                 } else {
                     relative_path.join(path)
