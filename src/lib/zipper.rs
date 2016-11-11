@@ -40,13 +40,13 @@ impl Zipper {
         let uuid = uuid::Uuid::new_v4();
         let zipper_path = Path::new(path).join(uuid.simple().to_string());
 
-        try!(DirBuilder::new()
+        DirBuilder::new()
             .recursive(true)
             .create(&zipper_path)
             .map_err(|_| {
                 Error::zipper(lformat!("could not create temporary directory in {path}",
                                        path = path))
-            }));
+            })?;
 
         Ok(Zipper {
             args: vec![],
@@ -68,13 +68,13 @@ This is forbidden because we are supposed \
         let dest_dir = dest_file.parent().unwrap();
         if !fs::metadata(dest_dir).is_ok() {
             // dir does not exist, create it
-            try!(DirBuilder::new()
+            DirBuilder::new()
                 .recursive(true)
                 .create(&dest_dir)
                 .map_err(|_| {
                     Error::zipper(lformat!("could not create temporary directory in {path}",
                                            path = dest_dir.display()))
-                }));
+                })?;
         }
 
 
@@ -105,7 +105,7 @@ This is forbidden because we are supposed \
                                        error = e))
             });
 
-        try!(output);
+        output?;
 
         fs::remove_file(self.path.join(file))
             .map_err(|_| Error::zipper(lformat!("failed to remove file {file}", file = file)))
@@ -124,13 +124,14 @@ This is forbidden because we are supposed \
             .map_err(|e| Error::zipper(lformat!("failed to run command {name}: {error}",
                                                 name = command_name,
                                                 error = e)));
-        let output = try!(res_output);
-        try!(fs::copy(self.path.join(in_file), out_file).map_err(|_| {
-            println!("{}", &String::from_utf8_lossy(&output.stdout));
-            Error::zipper(lformat!("could not copy file {input} to {output}",
-                                   input = in_file,
-                                   output = out_file))
-        }));
+        let output = res_output?;
+        fs::copy(self.path.join(in_file), out_file)
+            .map_err(|_| {
+                println!("{}", &String::from_utf8_lossy(&output.stdout));
+                Error::zipper(lformat!("could not copy file {input} to {output}",
+                                       input = in_file,
+                                       output = out_file))
+            })?;
         if output.status.success() {
             Ok(String::from_utf8_lossy(&output.stdout).into_owned())
         } else {
