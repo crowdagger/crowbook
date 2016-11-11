@@ -56,17 +56,17 @@ impl<'a> OdtRenderer<'a> {
     /// * An error if there was somel problem during either the rendering to
     ///   ODT format, or the generation of the ODT file itself.
     pub fn render_book(&mut self) -> Result<String> {
-        let content = try!(self.render_content());
+        let content = self.render_content()?;
 
         let mut zipper =
-            try!(Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap()));
+            Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
 
         // Write template.odt there
-        try!(zipper.write("template.odt", odt::ODT, false));
+        zipper.write("template.odt", odt::ODT, false)?;
         // unzip it
-        try!(zipper.unzip("template.odt"));
+        zipper.unzip("template.odt")?;
         // Complete it with content.xml
-        try!(zipper.write("content.xml", &content.as_bytes(), false));
+        zipper.write("content.xml", &content.as_bytes(), false)?;
         // Zip and copy
         if let Ok(ref file) = self.book.options.get_path("output.odt") {
             zipper.generate_odt(self.book.options.get_str("crowbook.zip.command").unwrap(),
@@ -103,10 +103,10 @@ impl<'a> OdtRenderer<'a> {
             }
         }
 
-        let template = try!(compile_str(odt::CONTENT,
-                                        &self.book.source,
-                                        "could not compile template for content.xml"));
-        let data = try!(self.book.get_metadata(|s| Ok(s.to_owned())))
+        let template = compile_str(odt::CONTENT,
+                                   &self.book.source,
+                                   "could not compile template for content.xml")?;
+        let data = self.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_str("content", content)
             .insert_str("automatic_styles", &self.automatic_styles)
             .build();
@@ -144,7 +144,7 @@ impl<'a> OdtRenderer<'a> {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
                     let res = self.book.get_chapter_header(chapter, self.render_vec(vec), |s| {
-                        Ok(self.render_vec(&try!(Parser::new().parse_inline(s))))
+                        Ok(self.render_vec(&Parser::new().parse_inline(s)?))
                     });
                     res.unwrap()
                 } else {
