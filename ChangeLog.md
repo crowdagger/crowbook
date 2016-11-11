@@ -3,6 +3,7 @@ ChangeLog
 
 unreleased
 ------------
+* Crowbook now requires rustc >= 1.13.0 to build.
 * Bugfixes:
   * Fixed escaping of `author` and `title` fields.
   * Fixed text cleaning in ODT rendering that causes corrupt files to
