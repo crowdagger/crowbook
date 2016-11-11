@@ -58,7 +58,7 @@ caribon = { version = "0.7", optional = true }
 clap = { version = "2", optional = true }
 url =  { version = "1", optional = true }
 term = "0.4"
-crowbook-intl-runtime = { git = "https://github.com/lise-henry/crowbook-intl-runtime.git" }
+crowbook-intl-runtime = "0.1"
 
 [dependencies.hyper]
 version = "0.9"
