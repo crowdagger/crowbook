@@ -48,14 +48,14 @@ impl GrammarChecker {
             port: port,
         };
 
-        let res = try!(Client::new()
+        let res = Client::new()
             .get(&format!("http://localhost:{}/v2/languages", port))
             .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not connect to language tool server: {error}",
                                               error = e))
-            }));
+            })?;
         if res.status != hyper::Ok {
             return Err(Error::grammar_check(Source::empty(),
                                             lformat!("server didn't respond with a OK status \
@@ -73,14 +73,14 @@ impl GrammarChecker {
 
         let client = Client::new();
 
-        let mut res = try!(client.post(&format!("http://localhost:{}/v2/check", self.port))
+        let mut res = client.post(&format!("http://localhost:{}/v2/check", self.port))
             .body(&query)
             .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not send request to server: {error}",
                                               error = e))
-            }));
+            })?;
 
         if res.status != hyper::Ok {
             return Err(Error::grammar_check(Source::empty(),
@@ -89,15 +89,16 @@ impl GrammarChecker {
         }
 
         let mut s = String::new();
-        try!(res.read_to_string(&mut s)
+        res.read_to_string(&mut s)
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not read response: {error}", error = e))
-            }));
-        let reponse: GrammarCheck = try!(json::decode(&s).map_err(|e| {
-            Error::default(Source::empty(),
-                           lformat!("could not decode JSON: {error}", error = e))
-        }));
+            })?;
+        let reponse: GrammarCheck = json::decode(&s)
+            .map_err(|e| {
+                Error::default(Source::empty(),
+                               lformat!("could not decode JSON: {error}", error = e))
+            })?;
         Ok(reponse)
     }
 }
@@ -124,7 +125,7 @@ impl GrammarChecker {
                         Token::List(ref mut v) |
                         Token::OrderedList(_, ref mut v) => {
                             handles.push(scope.spawn(move || {
-                                let check = try!(self.check(&view_as_text(v)));
+                                let check = self.check(&view_as_text(v))?;
                                 for error in check.matches {
                                     insert_annotation(v,
                                                       &Data::GrammarError(error.message.clone()),
