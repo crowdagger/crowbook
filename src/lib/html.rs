@@ -236,7 +236,7 @@ impl<'a> HtmlRenderer<'a> {
     {
         let mut res = String::new();
         for token in tokens {
-            res.push_str(&try!(this.render_token(token)));
+            res.push_str(&this.render_token(token)?);
             this.as_mut().render_side_notes(&mut res);
         }
         if render_end_notes {
@@ -253,15 +253,15 @@ impl<'a> HtmlRenderer<'a> {
         self.inc_header(n);
         let s = if n == 1 && self.current_numbering >= 1 {
             let chapter = self.current_chapter[0];
-            let c_title = try!(self.render_vec(vec));
+            let c_title = self.render_vec(vec)?;
             let res = self.book.get_chapter_header(chapter, c_title, |s| {
-                self.render_vec(&try!(Parser::new().parse_inline(s)))
+                self.render_vec(&Parser::new().parse_inline(s)?)
             });
-            try!(res)
+            res?
         } else if self.current_numbering >= n {
-            format!("{} {}", self.get_numbers(), try!(self.render_vec(vec)))
+            format!("{} {}", self.get_numbers(), self.render_vec(vec)?)
         } else {
-            try!(self.render_vec(vec))
+            self.render_vec(vec)?
         };
         Ok(s)
     }
@@ -379,7 +379,7 @@ impl<'a> HtmlRenderer<'a> {
     {
         match *token {
             Token::Annotation(ref annotation, ref v) => {
-                let content = try!(this.as_mut().render_vec(v));
+                let content = this.as_mut().render_vec(v)?;
                 if this.as_ref().proofread {
                     match annotation {
                         &Data::GrammarError(ref s) => {
@@ -404,10 +404,10 @@ impl<'a> HtmlRenderer<'a> {
                     if this.as_ref().book.options.get_bool("rendering.initials").unwrap() {
                         // Use initial
                         let mut chars = content.chars();
-                        let initial = try!(chars.next()
+                        let initial = chars.next()
                             .ok_or(Error::parser(&this.as_ref().book.source,
                                                  lformat!("empty str token, could not find \
-                                                           initial"))));
+                                                           initial")))?;
                         let mut new_content = if initial.is_alphanumeric() {
                             format!("<span class = \"initial\">{}</span>", initial)
                         } else {
@@ -443,13 +443,13 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     ""
                 };
-                let content = try!(this.render_vec(vec));
+                let content = this.render_vec(vec)?;
                 this.as_mut().current_par += 1;
                 let par = this.as_ref().current_par;
                 Ok(format!("<p id = \"para-{}\"{}>{}</p>\n", par, class, content))
             }
             Token::Header(n, ref vec) => {
-                let s = try!(this.as_mut().render_title(n, vec));
+                let s = this.as_mut().render_title(n, vec)?;
                 if n <= this.as_ref().book.options.get_i32("rendering.num_depth").unwrap() {
                     let url = format!("{}#link-{}",
                                       this.as_ref().filename,
@@ -458,15 +458,15 @@ impl<'a> HtmlRenderer<'a> {
                 }
                 Ok(this.as_mut().render_title_full(n, s))
             }
-            Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", try!(this.render_vec(vec)))),
-            Token::Strong(ref vec) => Ok(format!("<b>{}</b>", try!(this.render_vec(vec)))),
-            Token::Code(ref vec) => Ok(format!("<code>{}</code>", try!(this.render_vec(vec)))),
+            Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", this.render_vec(vec)?)),
+            Token::Strong(ref vec) => Ok(format!("<b>{}</b>", this.render_vec(vec)?)),
+            Token::Code(ref vec) => Ok(format!("<code>{}</code>", this.render_vec(vec)?)),
             Token::BlockQuote(ref vec) => {
-                Ok(format!("<blockquote>{}</blockquote>\n", try!(this.render_vec(vec))))
+                Ok(format!("<blockquote>{}</blockquote>\n", this.render_vec(vec)?))
             }
             Token::CodeBlock(ref language, ref vec) => {
                 this.as_mut().verbatim = true;
-                let s = try!(this.render_vec(vec));
+                let s = this.render_vec(vec)?;
                 let output = if language.is_empty() {
                     format!("<pre><code>{}</code></pre>\n", s)
                 } else {
@@ -480,7 +480,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::Rule => Ok(String::from("<p class = \"rule\">***</p>\n")),
             Token::SoftBreak => Ok(String::from(" ")),
             Token::HardBreak => Ok(String::from("<br />\n")),
-            Token::List(ref vec) => Ok(format!("<ul>\n{}</ul>\n", try!(this.render_vec(vec)))),
+            Token::List(ref vec) => Ok(format!("<ul>\n{}</ul>\n", this.render_vec(vec)?)),
             Token::OrderedList(n, ref vec) => {
                 Ok(format!("<ol{}>\n{}</ol>\n",
                            if n == 1 {
@@ -488,9 +488,9 @@ impl<'a> HtmlRenderer<'a> {
                            } else {
                                format!(" start = \"{}\"", n)
                            },
-                           try!(this.render_vec(vec))))
+                           this.render_vec(vec)?))
             }
-            Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", try!(this.render_vec(vec)))),
+            Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", this.render_vec(vec)?)),
             Token::Link(ref url, ref title, ref vec) => {
                 let url = escape::html(url.as_ref());
                 let url = if ResourceHandler::is_local(&url) {
@@ -506,13 +506,13 @@ impl<'a> HtmlRenderer<'a> {
                            } else {
                                format!(" title = \"{}\"", title)
                            },
-                           try!(this.render_vec(vec))))
+                           this.render_vec(vec)?))
             }
             Token::Image(ref url, ref title, ref alt) |
             Token::StandaloneImage(ref url, ref title, ref alt) => {
-                let content = try!(this.render_vec(alt));
+                let content = this.render_vec(alt)?;
                 let html: &mut HtmlRenderer = this.as_mut();
-                let url = try!(html.handler.map_image(&html.source, url.as_ref()));
+                let url = html.handler.map_image(&html.source, url.as_ref())?;
 
                 if token.is_image() {
                     Ok(format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
@@ -534,16 +534,16 @@ impl<'a> HtmlRenderer<'a> {
     <table>\n{}
     </table>
 </div>\n",
-                           try!(this.render_vec(vec))))
+                           this.render_vec(vec)?))
             }
-            Token::TableRow(ref vec) => Ok(format!("<tr>\n{}</tr>\n", try!(this.render_vec(vec)))),
+            Token::TableRow(ref vec) => Ok(format!("<tr>\n{}</tr>\n", this.render_vec(vec)?)),
             Token::TableCell(ref vec) => {
                 let tag = if this.as_ref().table_head { "th" } else { "td" };
-                Ok(format!("<{}>{}</{}>", tag, try!(this.render_vec(vec)), tag))
+                Ok(format!("<{}>{}</{}>", tag, this.render_vec(vec)?, tag))
             }
             Token::TableHead(ref vec) => {
                 this.as_mut().table_head = true;
-                let s = try!(this.render_vec(vec));
+                let s = this.render_vec(vec)?;
                 this.as_mut().table_head = false;
                 Ok(format!("<tr>\n{}</tr>\n", s))
             }
@@ -560,7 +560,7 @@ impl<'a> HtmlRenderer<'a> {
 
                 let inner = format!("<aside id = \"note-dest-{}\">{}</aside>",
                                     number,
-                                    try!(this.render_vec(vec)));
+                                    this.render_vec(vec)?);
                 this.as_mut().footnotes.push((note_number, inner));
 
                 Ok(format!("<a href = \"#note-dest-{}\"><sup id = \
@@ -575,10 +575,10 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Consider the html as a template
     fn templatize(&mut self, s: &str) -> Result<String> {
-        let mapbuilder = try!(self.book.get_metadata(|s| Ok(s.to_owned())));
+        let mapbuilder = self.book.get_metadata(|s| Ok(s.to_owned()))?;
         let data = mapbuilder.build();
         let template =
-            try!(compile_str(s, &self.book.source, lformat!("could not compile template")));
+            compile_str(s, &self.book.source, lformat!("could not compile template"))?;
         let mut res = vec![];
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())
@@ -587,14 +587,14 @@ impl<'a> HtmlRenderer<'a> {
     /// Renders the toc name
     #[doc(hidden)]
     pub fn get_toc_name(&mut self) -> Result<String> {
-        let data = try!(self.book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+        let data = self.book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .build();
         let template = self.book.options.get_str("rendering.inline_toc.name").unwrap();
-        let template = try!(compile_str(template,
-                                        &self.book.source,
-                                        lformat!("could not compile template \
-                                                  'rendering.inline_toc.name'")));
+        let template = compile_str(template,
+                                   &self.book.source,
+                                   lformat!("could not compile template \
+                                             'rendering.inline_toc.name'"))?;
         let mut res = vec![];
         template.render_data(&mut res, &data);
         Ok(String::from_utf8_lossy(&res).into_owned())
@@ -623,8 +623,8 @@ impl<'a> HtmlRenderer<'a> {
         if content.is_empty() {
             Ok(content)
         } else {
-            let tokens = try!(Parser::new().parse(&content));
-            let content = try!(this.render_vec(&tokens));
+            let tokens = Parser::new().parse(&content)?;
+            let content = this.render_vec(&tokens)?;
             Ok(format!("<footer id = \"footer\">{}</footer>", content))
         }
     }
@@ -638,7 +638,7 @@ impl<'a> HtmlRenderer<'a> {
             match this.as_mut().templatize(top) {
                 Ok(content) => {
                     Ok(format!("<div id = \"top\">{}</div>",
-                               try!(this.render_vec(&try!(Parser::new().parse(&content))))))
+                               this.render_vec(&Parser::new().parse(&content)?)?))
                 }
                 Err(err) => {
                     Err(Error::render(&this.as_ref().book.source,
