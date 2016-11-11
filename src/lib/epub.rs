@@ -69,111 +69,112 @@ impl<'a> EpubRenderer<'a> {
         }
 
         let mut zipper =
-            try!(Zipper::new(&self.html.book.options.get_path("crowbook.temp_dir").unwrap()));
+            Zipper::new(&self.html.book.options.get_path("crowbook.temp_dir").unwrap())?;
 
         // Write mimetype
-        try!(zipper.write("mimetype", b"application/epub+zip", true));
+        zipper.write("mimetype", b"application/epub+zip", true)?;
 
         // Write cover.xhtml (if needs be)
         if self.html.book.options.get_path("cover").is_ok() {
-            try!(zipper.write("cover.xhtml", &try!(self.render_cover()).as_bytes(), true));
+            zipper.write("cover.xhtml", &self.render_cover()?.as_bytes(), true)?;
         }
 
         // Write chapters
         let template_chapter =
-            try!(compile_str(try!(self.html.book.get_template("epub.chapter.xhtml")).as_ref(),
-                             &self.html.book.source,
-                             lformat!("could not compile template 'epub.chapter.xhtml'")));
+            compile_str(self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
+                        &self.html.book.source,
+                        lformat!("could not compile template 'epub.chapter.xhtml'"))?;
         for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
             self.html.chapter_config(i, n, filenamer(i));
-            let chapter = try!(self.render_chapter(v, &template_chapter));
+            let chapter = self.render_chapter(v, &template_chapter)?;
 
-            try!(zipper.write(&filenamer(i), &chapter.as_bytes(), true));
+            zipper.write(&filenamer(i), &chapter.as_bytes(), true)?;
         }
         self.html.source = Source::empty();
 
         // Render the CSS file and write it
         let template_css =
-            try!(compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
+            compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
                              &self.html.book.source,
-                             lformat!("could not compile template 'epub.css'")));
-        let data = try!(self.html
-                .book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
-            .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
+                             lformat!("could not compile template 'epub.css'"))?;
+        let data = self.html
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
+        .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data);
         let css = String::from_utf8_lossy(&res);
-        try!(zipper.write("stylesheet.css", css.as_bytes(), true));
+        zipper.write("stylesheet.css", css.as_bytes(), true)?;
 
         // Write titlepage
-        try!(zipper.write("title_page.xhtml",
-                          &try!(self.render_titlepage()).as_bytes(),
-                          true));
+        zipper.write("title_page.xhtml",
+                          &self.render_titlepage()?.as_bytes(),
+                          true)?;
 
         // Write file for ibook (why?)
-        try!(zipper.write("META-INF/com.apple.ibooks.display-options.xml",
+        zipper.write("META-INF/com.apple.ibooks.display-options.xml",
                           IBOOK.as_bytes(),
-                          true));
+                          true)?;
 
         // Write container.xml
-        try!(zipper.write("META-INF/container.xml", CONTAINER.as_bytes(), true));
+        zipper.write("META-INF/container.xml", CONTAINER.as_bytes(), true)?;
 
         // Write nav.xhtml
-        try!(zipper.write("nav.xhtml", &try!(self.render_nav()).as_bytes(), true));
+        zipper.write("nav.xhtml", &self.render_nav()?.as_bytes(), true)?;
 
         // Write content.opf
-        try!(zipper.write("content.opf", &try!(self.render_opf()).as_bytes(), true));
+        zipper.write("content.opf", &self.render_opf()?.as_bytes(), true)?;
 
         // Write toc.ncx
-        try!(zipper.write("toc.ncx", &try!(self.render_toc()).as_bytes(), true));
+        zipper.write("toc.ncx", &self.render_toc()?.as_bytes(), true)?;
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = try!(File::open(source).map_err(|_| {
+            let mut f = File::open(source).map_err(|_| {
                 Error::file_not_found(&self.html.source,
                                       lformat!("image or cover"),
                                       source.to_owned())
-            }));
+            })?;
             let mut content = vec![];
-            try!(f.read_to_end(&mut content).map_err(|e| {
+            f.read_to_end(&mut content).map_err(|e| {
                 Error::render(&self.html.source,
                               lformat!("error while reading image file: {error}", error = e))
-            }));
-            try!(zipper.write(dest, &content, true));
+            })?;
+            zipper.write(dest, &content, true)?;
         }
 
         // Write additional resources
         if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
             let base_path_files =
                 self.html.book.options.get_path("resources.base_path.files").unwrap();
-            let list = try!(resource_handler::get_files(list, &base_path_files));
+            let list = resource_handler::get_files(list, &base_path_files)?;
             let data_path =
-                Path::new(try!(self.html.book.options.get_relative_path("resources.out_path")));
+                Path::new(self.html.book.options.get_relative_path("resources.out_path")?);
             for path in list {
                 let abs_path = Path::new(&base_path_files).join(&path);
-                let mut f = try!(File::open(&abs_path).map_err(|_| {
+                let mut f = File::open(&abs_path).map_err(|_| {
                     Error::file_not_found(&self.html.book.source,
                                           lformat!("additional resource from resources.files"),
                                           abs_path.to_string_lossy().into_owned())
-                }));
+                })?;
                 let mut content = vec![];
-                try!(f.read_to_end(&mut content).map_err(|e| {
-                    Error::render(&self.html.book.source,
-                                  lformat!("error while reading resource file: {error}", error = e))
-                }));
-                try!(zipper.write(data_path.join(&path).to_str().unwrap(), &content, true));
+                f.read_to_end(&mut content)
+                    .map_err(|e| {
+                        Error::render(&self.html.book.source,
+                                      lformat!("error while reading resource file: {error}", error = e))
+                    })?;
+                zipper.write(data_path.join(&path).to_str().unwrap(), &content, true)?;
             }
         }
 
         if let Ok(epub_file) = self.html.book.options.get_path("output.epub") {
-            let res = try!(zipper.generate_epub(self.html
-                                                    .book
-                                                    .options
-                                                    .get_str("crowbook.zip.command")
-                                                    .unwrap(),
-                                                &epub_file));
+            let res = zipper.generate_epub(self.html
+                                           .book
+                                           .options
+                                           .get_str("crowbook.zip.command")
+                                           .unwrap(),
+                                           &epub_file)?;
             Ok(res)
         } else {
             Err(Error::render(&self.html.book.source,
@@ -184,13 +185,13 @@ impl<'a> EpubRenderer<'a> {
     /// Render the titlepgae
     fn render_titlepage(&mut self) -> Result<String> {
         let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
-        let template = try!(compile_str(if epub3 { epub3::TITLE } else { TITLE },
-                                        &self.html.book.source,
-                                        lformat!("could not compile template for title page")));
-        let data = try!(self.html
-                .book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
-            .build();
+        let template = compile_str(if epub3 { epub3::TITLE } else { TITLE },
+                                   &self.html.book.source,
+                                   lformat!("could not compile template for title page"))?;
+        let data = self.html
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
+        .build();
         let mut res: Vec<u8> = vec![];
         template.render_data(&mut res, &data);
         match String::from_utf8(res) {
@@ -217,12 +218,12 @@ impl<'a> EpubRenderer<'a> {
                                          title = title,
                                          file = filename));
         }
-        let template = try!(compile_str(TOC,
-                                        &self.html.book.source,
-                                        lformat!("could not render template for toc.ncx")));
-        let data = try!(self.html
-                .book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+        let template = compile_str(TOC,
+                                   &self.html.book.source,
+                                   lformat!("could not render template for toc.ncx"))?;
+        let data = self.html
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("nav_points", nav_points)
             .build();
         let mut res: Vec<u8> = vec![];
@@ -246,9 +247,9 @@ impl<'a> EpubRenderer<'a> {
         }
         if let Ok(ref s) = self.html.book.options.get_path("cover") {
             optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n",
-                                       try!(self.html
-                                           .handler
-                                           .map_image(&self.html.source, s.as_ref()))));
+                                       self.html
+                                       .handler
+                                       .map_image(&self.html.source, s.as_ref())?));
             cover_xhtml.push_str("<reference type=\"cover\" \
                                   title=\"Cover\" href=\"cover.xhtml\" />");
         }
@@ -287,13 +288,13 @@ impl<'a> EpubRenderer<'a> {
 
         // and additional files too
         if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
-            let list = try!(resource_handler::get_files(list,
-                                                        &self.html
-                                                            .book
-                                                            .options
-                                                            .get_path("resources.base_path.\
-                                                                       files")
-                                                            .unwrap()));
+            let list = resource_handler::get_files(list,
+                                                   &self.html
+                                                   .book
+                                                   .options
+                                                   .get_path("resources.base_path.\
+                                                              files")
+                                                   .unwrap())?;
             let data_path =
                 Path::new(self.html.book.options.get_relative_path("resources.out_path").unwrap());
             for path in list {
@@ -309,12 +310,12 @@ impl<'a> EpubRenderer<'a> {
         }
 
         let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
-        let template = try!(compile_str(if epub3 { epub3::OPF } else { OPF },
-                                        &self.html.book.source,
-                                        lformat!("could not compile template for content.opf")));
-        let data = try!(self.html
-                .book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+        let template = compile_str(if epub3 { epub3::OPF } else { OPF },
+                                   &self.html.book.source,
+                                   lformat!("could not compile template for content.opf"))?;
+        let data = self.html
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("optional", optional)
             .insert_str("items", items)
             .insert_str("itemrefs", itemrefs)
@@ -340,18 +341,18 @@ impl<'a> EpubRenderer<'a> {
 
             }
             let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
-            let template = try!(compile_str(if epub3 { epub3::COVER } else { COVER },
-                                            &self.html.book.source,
-                                            lformat!("could not compile template for \
-                                                      cover.xhtml")));
-            let data = try!(self.html
-                    .book
-                    .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+            let template = compile_str(if epub3 { epub3::COVER } else { COVER },
+                                       &self.html.book.source,
+                                       lformat!("could not compile template for \
+                                                 cover.xhtml"))?;
+            let data = self.html
+                .book
+                .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
                 .insert_str("cover",
-                            try!(self.html
-                                    .handler
-                                    .map_image(&self.html.source, Cow::Owned(cover)))
-                                .into_owned())
+                            self.html
+                            .handler
+                            .map_image(&self.html.source, Cow::Owned(cover))?
+                            .into_owned())
                 .build();
             let mut res: Vec<u8> = vec![];
             template.render_data(&mut res, &data);
@@ -373,12 +374,12 @@ impl<'a> EpubRenderer<'a> {
         } else {
             NAV
         };
-        let template = try!(compile_str(template,
-                                        &self.html.book.source,
-                                        lformat!("could not compile template for nav.xhtml")));
-        let data = try!(self.html
+        let template = compile_str(template,
+                                   &self.html.book.source,
+                                   lformat!("could not compile template for nav.xhtml"))?;
+        let data = self.html
                 .book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+                .get_metadata(|s| self.render_vec(&(Parser::new().parse_inline(s)?)))?
             .insert_str("content", content)
             .build();
         let mut res: Vec<u8> = vec![];
@@ -394,7 +395,7 @@ impl<'a> EpubRenderer<'a> {
         let mut content = String::new();
 
         for token in v {
-            let res = try!(self.render_token(&token));
+            let res = self.render_token(&token)?;
             content.push_str(&res);
             self.html.render_side_notes(&mut content);
         }
@@ -402,15 +403,15 @@ impl<'a> EpubRenderer<'a> {
 
         if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
             let number = self.html.current_chapter[0] + 1;
-            self.chapter_title = try!(self.html.book.get_chapter_header(number, "".to_owned(), |s| {
-                    self.render_vec(&try!(Parser::new().parse_inline(s)))
-                }));
+            self.chapter_title = self.html.book.get_chapter_header(number, "".to_owned(), |s| {
+                    self.render_vec(&Parser::new().parse_inline(s)?)
+                })?;
         }
         self.toc.push(self.chapter_title.clone());
 
-        let data = try!(self.html
-                .book
-                .get_metadata(|s| self.render_vec(&try!(Parser::new().parse_inline(s)))))
+        let data = self.html
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
             .insert_str("chapter_title",
                         mem::replace(&mut self.chapter_title, String::new()))
@@ -427,7 +428,7 @@ impl<'a> EpubRenderer<'a> {
     fn find_title(&mut self, vec: &[Token]) -> Result<()> {
         if self.html.current_hide || self.html.current_numbering == 0 {
             if self.chapter_title.is_empty() {
-                self.chapter_title = try!(self.html.render_vec(vec));
+                self.chapter_title = self.html.render_vec(vec)?;
             } else {
                 self.html
                     .book
@@ -439,10 +440,10 @@ impl<'a> EpubRenderer<'a> {
             }
         } else {
             let res = self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
-                                                        try!(self.html.render_vec(vec)),
+                                                        self.html.render_vec(vec)?,
                                                         |s| {
-                                                            self.render_vec(&try!(Parser::new()
-                                                                .parse_inline(s)))
+                                                            self.render_vec(&(Parser::new()
+                                                                .parse_inline(s)?))
                                                         });
             let s = res.unwrap();
             if self.chapter_title.is_empty() {
@@ -498,7 +499,7 @@ impl<'a> EpubRenderer<'a> {
             Token::Header(1, ref vec) => {
                 {
                     let epub: &mut EpubRenderer = this.as_mut();
-                    try!(epub.find_title(vec));
+                    epub.find_title(vec)?;
                 }
                 HtmlRenderer::static_render_token(this, token)
             }
@@ -508,7 +509,7 @@ impl<'a> EpubRenderer<'a> {
                     .options
                     .get_i32("epub.version")
                     .unwrap() == 3;
-                let inner_content = try!(this.render_vec(vec));
+                let inner_content = this.render_vec(vec)?;
                 let html: &mut HtmlRenderer = this.as_mut();
                 html.footnote_number += 1;
                 let number = html.footnote_number;
