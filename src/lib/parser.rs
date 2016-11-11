@@ -75,18 +75,20 @@ impl Parser {
     /// Parse a file and returns an AST or an error
     pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
-        let mut f = try!(File::open(path).map_err(|_| {
-            Error::file_not_found(&self.source,
-                                  lformat!("markdown file"),
-                                  format!("{}", path.display()))
-        }));
+        let mut f = File::open(path)
+            .map_err(|_| {
+                Error::file_not_found(&self.source,
+                                      lformat!("markdown file"),
+                                      format!("{}", path.display()))
+            })?;
         let mut s = String::new();
 
-        try!(f.read_to_string(&mut s).map_err(|_| {
-            Error::parser(&self.source,
-                          lformat!("file {file} contains invalid UTF-8, could not parse it",
-                                   file = path.display()))
-        }));
+        f.read_to_string(&mut s)
+            .map_err(|_| {
+                Error::parser(&self.source,
+                              lformat!("file {file} contains invalid UTF-8, could not parse it",
+                                       file = path.display()))
+            })?;
         self.parse(&s)
     }
 
@@ -99,9 +101,9 @@ impl Parser {
 
 
         let mut res = vec![];
-        try!(self.parse_events(&mut p, &mut res, None));
+        self.parse_events(&mut p, &mut res, None)?;
 
-        try!(self.parse_footnotes(&mut res));
+        self.parse_footnotes(&mut res)?;
 
         collapse(&mut res);
 
@@ -114,7 +116,7 @@ impl Parser {
     /// This function removes the outermost `Paragraph` in most of the
     /// cases, as it is meant to be used for an inline string (e.g. metadata)
     pub fn parse_inline(&mut self, s: &str) -> Result<Vec<Token>> {
-        let mut tokens = try!(self.parse(s));
+        let mut tokens = self.parse(s)?;
         // Unfortunately, parser will put all this in a paragraph, so we might need to remove it.
         if tokens.len() == 1 {
             let res = match tokens[0] {
@@ -165,7 +167,7 @@ impl Parser {
                 Token::TableRow(ref mut vec) |
                 Token::TableCell(ref mut vec) |
                 Token::Link(_, _, ref mut vec) |
-                Token::Image(_, _, ref mut vec) => try!(self.parse_footnotes(vec)),
+                Token::Image(_, _, ref mut vec) => self.parse_footnotes(vec)?,
                 _ => (),
             }
         }
@@ -184,7 +186,7 @@ impl Parser {
                 Event::Text(text) => {
                     v.push(Token::Str(text.into_owned()));
                 }
-                Event::Start(tag) => try!(self.parse_tag(p, v, tag)),
+                Event::Start(tag) => self.parse_tag(p, v, tag)?,
                 Event::End(tag) => {
                     debug_assert!(format!("{:?}", Some(&tag)) == format!("{:?}", current_tag),
                                   format!("Error: opening and closing tags mismatch!\n{:?} ≠ \
@@ -210,7 +212,7 @@ impl Parser {
                      -> Result<()> {
         let mut res = vec![];
 
-        try!(self.parse_events(p, &mut res, Some(&tag)));
+        self.parse_events(p, &mut res, Some(&tag))?;
 
 
         let token = match tag {
