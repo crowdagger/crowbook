@@ -38,7 +38,7 @@ $ crowbook foo/bar.book --to pdf --output baz.pdf
 will thus generate "baz.pdf" in directory "foo" and not in the current directory.
 
 The most important option is obviously <BOOK>, i.e. the book
-configuration file. It is mandatory for most options: if you don't 
+configuration file. It is mandatory in most cases: if you don't 
 pass it, Crowbook will simply display this help message. In a normal use case this is
 the only argument you'll need to pass, and Crowbook will generate
 the book in all formats specified in the configuration file.
@@ -98,7 +98,7 @@ keys/values set by `--set` (see below):
 $ crowbook foo.book --create file1.md file2.md --set author "Pierre Dupont" title "Mon œuvre" lang fr
 ```
 
-will generate a `foo.book` file containing
+will generate a `foo.book` file containing:
 
 ```yaml
 author: Pierre Dupont
@@ -192,7 +192,7 @@ file, with `--set`, or in an inline YAML block.
 
 **usage**: `crowbook --print-template template`
 
-Prints to stdout the built-in template. Useful if you want to
+Prints the built-in template to stdout. Useful if you want to
 customize the appearance of your document. E.g., if you want to modify
 the CSS used for HTML rendering:
 
@@ -236,7 +236,7 @@ Generate only the specified format. `FORMAT` must be either `epub`,
 
 If an output file for the format is not specified in the book
 configuration file, `crowbook` will fail to render PDF, ODT and EPUB,
-whereas it will print HTML and Tex files on stdout. It is, however, 
+whereas it will print HTML and TeX files on stdout. It is, however, 
 possible to specify a file with the `--output` option.
 
 ### Examples ###
@@ -252,7 +252,7 @@ will generate some HTML, and prints it either to the file specified by
 crowbook --to pdf --output foo.pdf foo.book
 ```
 
-will generate a `foo.pdf` file,.
+will generate a `foo.pdf` file.
 
 `--output`
 ---------
