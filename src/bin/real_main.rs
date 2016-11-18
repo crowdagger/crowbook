@@ -117,15 +117,21 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
 }
 
 pub fn real_main() {
-    match env::var("LANG") {
-        Ok(val) => {
-            if val.starts_with("fr") {
-                set_lang("fr");
-            } else {
-                set_lang("en");
+    let lang = get_lang()
+        .or_else(|| {
+            match env::var("LANG") {
+                Ok(val) => {
+                    Some(val)
+                },
+                Err(_) => None,
             }
+        });
+    if let Some(val) = lang {
+        if val.starts_with("fr") {
+            set_lang("fr");
+        } else {
+            set_lang("en");
         }
-        Err(_) => (),
     }
 
     let (matches, help, version) = create_matches();

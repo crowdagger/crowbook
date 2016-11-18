@@ -1,10 +1,26 @@
+use crowbook::Book;
 use clap::{App, Arg, Format, ArgMatches, AppSettings};
+
 use std::io::{self, Write};
 use std::process::exit;
 use std::fs;
-use crowbook::Book;
+use std::env;
 
 
+/// Return the --lang option, if it is set
+pub fn get_lang() -> Option<String> {
+    let mut found = false;
+    for arg in env::args() {
+        if found {
+            return Some(arg.clone());
+        } else {
+            if arg == "--lang" || arg == "-L" {
+                found = true;
+            }
+        }
+    }
+    return None;
+}
 
 /// Prints an error on stderr and exit the program
 pub fn print_error(s: &str) -> ! {
@@ -114,6 +130,7 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref DEBUG: String = lformat!("Print debugging information");
         static ref CREATE: String = lformat!("Create a new book with existing Markdown files");
         static ref OUTPUT: String = lformat!("Specify output file");
+        static ref LANG: String = lformat!("Set the runtime language used by Crowbook");
         static ref TO: String = lformat!("Generate specific format");
         static ref SET: String = lformat!("Set a list of book options");
         static ref LIST_OPTIONS: String = lformat!("List all possible options");
@@ -179,7 +196,9 @@ ARGS:
         .arg(Arg::from_usage("-l --list-options").help(LIST_OPTIONS.as_str()))
         .arg(Arg::from_usage("--list-options-md")
             .help(LIST_OPTIONS_MD.as_str())
-            .hidden(true))
+             .hidden(true))
+        .arg(Arg::from_usage("-L --lang [LANG]")
+             .help(LANG.as_str()))
         .arg(Arg::from_usage("--print-template [TEMPLATE]").help(PRINT_TEMPLATE.as_str()))
         .arg(Arg::with_name("BOOK")
             .index(1)
