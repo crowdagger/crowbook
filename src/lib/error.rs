@@ -15,6 +15,8 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
+use mustache;
+
 use std::error;
 use std::result;
 use std::fmt;
@@ -344,6 +346,14 @@ impl fmt::Display for Error {
 /// Crowbook's Result type, used by many methods that can fail
 pub type Result<T> = result::Result<T, Error>;
 
+
+/// Implement our Error from mustache::Error
+impl From<mustache::Error> for Error {
+    fn from(err: mustache::Error) -> Error {
+        Error::template(Source::empty(),
+                       format!("{}", err))
+    }
+}
 
 #[derive(Debug, PartialEq)]
 enum Inner {
