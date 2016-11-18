@@ -18,7 +18,7 @@ guide rendered in
 [HTML](http://lise-henry.github.io/crowbook/book/book.html), 
 [PDF](http://lise-henry.github.io/crowbook/book/book.pdf) or [EPUB](http://lise-henry.github.io/crowbook/book/book.epub). 
 
-You can also play with the [online demo version here](http://vps.crowdagger.fr/crowbook/).
+You can also play with the [online demo version](http://vps.crowdagger.fr/crowbook/).
 
 
  
@@ -26,13 +26,7 @@ You can also play with the [online demo version here](http://vps.crowdagger.fr/c
 Installing
 ----------
 
-There are three ways to install Crowbook:
-
-### Packages ###
-
-If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can
-download `.deb` packages on
-[the releases page](https://github.com/lise-henry/crowbook/releases). 
+There are two ways to install Crowbook:
 
 ### Binaries ###
 
@@ -41,6 +35,10 @@ to download a precompiled binary for your architecture (currently:
 Linux, Windows and MacOSX). Just extract the archive and run
 `crowbook` (or `crowbook.exe` on Windows). You might also want to copy
 the binary somewhere in your `PATH` for later usage.
+
+If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can
+also download `.deb` packages on
+[the releases page](https://github.com/lise-henry/crowbook/releases). 
 
 > Note: only the Linux binaries are really tested, please contact me
 > if you have any trouble executing the Windows or Mac binaries.
@@ -67,7 +65,7 @@ While there should be, strictly speaking, no real dependencies to be able to
 run Crowbook (it is published a a statically compiled binary), some
 features require additional commands to work correctly:
 
-* EPUB rendering requires that the `zip` command be present on your system;
+* EPUB rendering requires the `zip` command to be present on your system;
 * PDF rendering requires a working installation of LaTeX (preferably
 `xelatex`).
 
@@ -96,12 +94,20 @@ This will generate a default `my.book` file, which you'll need to
 complete. This configuration file contains some metadata, options, and lists the
 Markdown files. 
 
-For more information see
-[the configuration file](guide/config.md).
+For short books containing only a single Markdown file, it is possible
+to embed some metadata at the beginning of the file and use the
+`--single` or `-s` option to run `crowbook` directly on this Markdown
+file and avoid creating a separate book configuration file:
 
-It is also possible to give additional parameters to `crowbook`;
-we have already seen `--create`, but if you want the full list, see
-[the arguments](guide/arguments.md).
+```bash
+$ crowbook -s text.md
+```
+
+
+For more information see the chapters
+on [the arguments supported by `crowbook`](guide/arguments.md) and on [the configuration file](guide/config.md).
+
+
 
 Current features
 ----------------
@@ -119,8 +125,9 @@ rendered in
 
 Crowbook uses
 [pulldown-cmark](https://crates.io/crates/pulldown-cmark) and thus
-should support most of CommonMark Markdown. Inline HTML, however, is
-not implemented, and probably won't be, as the goal is to have books
+should support most
+of [CommonMark Markdown](http://commonmark.org/). Inline HTML,
+however, is not implemented, and probably won't be, as the goal is to have books
 that can also be generated in PDF (and maybe ODT).
 
 ### Typographic "cleaning" ###
@@ -156,21 +163,7 @@ title: My title
 
 This is mostly useful when Crowbook is runned with the `--single`
 argument (receiving a single Markdown file instead of a book
-configuration file). E.g., the following Markdown file:
-
-```yaml
----
-author: John Doe
-title: A book
-
-output.html: book.html
----
-
-This is a very tiny book!
-```
-
-can be processed with `crowbook --single foo.md` or `crowbook -s
-foo.md` to produce the `book.html` file. This is useful for short
+configuration file), for short
 texts that only contain one "chapter".
 
 ### Proofreading ###
@@ -212,6 +205,7 @@ library, Crowbook uses the following libraries:
 * [url](https://crates.io/crates/url)
 * [lazy_static](https://crates.io/crates/lazy_static)
 * [regex](https://crates.io/crates/regex)
+* [term](https://crates.io/crates/term)
 
 It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
 to enable syntax highlighting for code blocks.
