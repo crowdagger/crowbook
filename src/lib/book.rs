@@ -879,14 +879,14 @@ impl Book {
         let mut res: Vec<u8> = vec![];
 
         if let Some(ref template) = self.chapter_template {
-            template.render_data(&mut res, &data);
+            template.render_data(&mut res, &data)?;
         } else {
             let template =
                 compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
                             &self.source,
                             lformat!("could not compile template \
                                       'rendering.chapter_template'"))?;
-            template.render_data(&mut res, &data);
+            template.render_data(&mut res, &data)?;
         }
 
         match String::from_utf8(res) {

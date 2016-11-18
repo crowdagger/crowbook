@@ -112,7 +112,7 @@ impl<'a> OdtRenderer<'a> {
             .build();
 
         let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!(lformat!("generated content.xml was not utf-8 valid")),
             Ok(res) => Ok(res),

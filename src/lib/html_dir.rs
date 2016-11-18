@@ -263,7 +263,7 @@ impl<'a> HtmlDirRenderer<'a> {
             }
             let data = mapbuilder.build();
             let mut res = vec![];
-            template.render_data(&mut res, &data);
+            template.render_data(&mut res, &data)?;
             self.write_file(&filenamer(i), &res)?;
         }
 
@@ -323,7 +323,7 @@ impl<'a> HtmlDirRenderer<'a> {
                         &self.html.book.source,
                         lformat!("could not compile template 'html_dir.index.html"))?;
         let mut res = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         self.write_file("index.html", &res)?;
 
         Ok(())
@@ -346,7 +346,7 @@ impl<'a> HtmlDirRenderer<'a> {
         }
         let data = data.build();
         let mut res: Vec<u8> = vec![];
-        template_css.render_data(&mut res, &data);
+        template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
 
         // Write it

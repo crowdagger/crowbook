@@ -103,7 +103,7 @@ impl<'a> EpubRenderer<'a> {
         .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .build();
         let mut res: Vec<u8> = vec![];
-        template_css.render_data(&mut res, &data);
+        template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
         zipper.write("stylesheet.css", css.as_bytes(), true)?;
 
@@ -193,7 +193,7 @@ impl<'a> EpubRenderer<'a> {
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
         .build();
         let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!("generated HTML in titlepage was not utf-8 valid"),
             Ok(res) => Ok(res),
@@ -227,7 +227,7 @@ impl<'a> EpubRenderer<'a> {
             .insert_str("nav_points", nav_points)
             .build();
         let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!(lformat!("generated HTML in toc.ncx was not valid utf-8")),
             Ok(res) => Ok(res),
@@ -325,7 +325,7 @@ impl<'a> EpubRenderer<'a> {
             .insert_str("coverref", coverref)
             .build();
         let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!(lformat!("generated HTML in content.opf was not valid utf-8")),
             Ok(res) => Ok(res),
@@ -355,7 +355,7 @@ impl<'a> EpubRenderer<'a> {
                             .into_owned())
                 .build();
             let mut res: Vec<u8> = vec![];
-            template.render_data(&mut res, &data);
+            template.render_data(&mut res, &data)?;
             match String::from_utf8(res) {
                 Err(_) => panic!(lformat!("generated HTML for cover.xhtml was not utf-8 valid")),
                 Ok(res) => Ok(res),
@@ -383,7 +383,7 @@ impl<'a> EpubRenderer<'a> {
             .insert_str("content", content)
             .build();
         let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!(lformat!("generated HTML in nav.xhtml was not utf-8 valid")),
             Ok(res) => Ok(res),
@@ -417,7 +417,7 @@ impl<'a> EpubRenderer<'a> {
                         mem::replace(&mut self.chapter_title, String::new()))
             .build();
         let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!(lformat!("generated HTML was not utf-8 valid")),
             Ok(res) => Ok(res),

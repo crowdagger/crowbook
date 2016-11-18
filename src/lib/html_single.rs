@@ -183,7 +183,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         }
         let data = data.build();
         let mut res: Vec<u8> = vec![];
-        template_css.render_data(&mut res, &data);
+        template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
 
         // Render the JS
@@ -200,7 +200,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                         self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
         let mut res: Vec<u8> = vec![];
-        template_js.render_data(&mut res, &data);
+        template_js.render_data(&mut res, &data)?;
         let js = String::from_utf8_lossy(&res);
 
         // Render the HTML document
@@ -240,7 +240,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                                    &self.html.book.source,
                                    lformat!("could not compile template 'html_single.html'"))?;
         let mut res = vec![];
-        template.render_data(&mut res, &data);
+        template.render_data(&mut res, &data)?;
         Ok(String::from_utf8_lossy(&res).into_owned())
     }
 }
