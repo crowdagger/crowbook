@@ -125,7 +125,7 @@ pub fn real_main() {
                 set_lang("en");
             }
         }
-        Err(e) => println!("{}", lformat!("couldn't interpret LANG: {}", e)),
+        Err(_) => (),
     }
 
     let (matches, help, version) = create_matches();
