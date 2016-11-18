@@ -16,6 +16,8 @@ unreleased
     `latex` or `zip` commands.
   * Crowbook uses `term` library in order to display colours correctly
     on e.g. Windows.
+  * The new argument `--lang` (or `-L`) allows to set the runtime
+    language used by Crowbook, overriding `LANG` environment variable.
   * `--list-options` no longer uses colours as it caused problems
     depending on the terminal or when piping to `less`.
 
