@@ -271,3 +271,29 @@ $ crowbook foo/bar.book --to pdf --output baz.pdf
 ```
 will thus generate `baz.pdf` in directory `foo` and not in current
 directory.
+
+`--lang`
+----------
+
+**usage**: `crowbook --lang <LANG>`
+
+(or `crowbook -L <LANG>`)
+
+Set the runtime language used by Crowbook. Currently, only a french
+translation is available. By default, Crowbook uses the `LANG`
+environment variable to determine which language to use, but this
+option allows to override it (e.g. for operating systems that don't
+use such an option, such as Windows).
+
+### Example 
+
+`$ crowbook --lang fr --help`
+
+will display Crowbook's help messages in french.
+
+> Note that this argument has nothing to do with the `lang` option
+> that you can set in the book configuration file, which specifies the
+> language *of the book*. This argument specifies the language of the text messages
+> that Crowbook will display while running.
+
+
