@@ -45,7 +45,7 @@ crowbook-intl = { git = "https://github.com/lise-henry/crowbook-intl.git" }
 mime_guess = "1"
 pulldown-cmark = "0.0.8"
 yaml-rust = "0.3"
-mustache = "0.7"
+mustache = "0.8"
 chrono = "0.2"
 uuid = { version = "0.3", features = ["v4"] }
 walkdir = "1.0"

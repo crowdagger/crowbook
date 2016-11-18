@@ -32,7 +32,6 @@ use std::io::{Write, Read};
 use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::iter::IntoIterator;
-use std::thread;
 
 use crossbeam;
 use mustache;
@@ -1088,7 +1087,7 @@ pub fn compile_str<O, S>(template: &str, source: O, error_msg: S) -> Result<must
           S: Into<Cow<'static, str>>
 {
     let input: String = template.to_owned();
-    let result = thread::spawn(move || mustache::compile_str(&input)).join();
+    let result = mustache::compile_str(&input);
     match result {
         Ok(result) => Ok(result),
         Err(_) => Err(Error::template(source, error_msg)),
