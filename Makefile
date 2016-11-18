@@ -1,6 +1,7 @@
 INSTALL_DIR = /usr/bin/
 BINARYNAME = crowbook
-BINARY = target/release/$(BINARYNAME)
+TARGET = x86_64-unknown-linux-musl
+BINARY = target/$(TARGET)/release/$(BINARYNAME)
 
 PKGNAME= $(BINARYNAME)
 MAINTAINER = "Élisabeth Henry \<liz.henry@ouvaton.org\>"
@@ -13,7 +14,7 @@ clean:
 	cargo clean
 
 $(BINARY): src/lib/lib*.rs src/bin/*.rs Cargo.toml
-	cargo build --release
+	cargo build --release --features "proofread" --target=$(TARGET)
 
 package:
 	checkinstall -D --install=no --pkgname $(PKGNAME) --pkgversion $(PKGVERSION) --pkglicense $(PKGLICENSE) --maintainer $(MAINTAINER)
