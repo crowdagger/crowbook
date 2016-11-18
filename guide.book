@@ -7,8 +7,8 @@ description: >-
  demonstrate and test it.
 lang: en
 cover: cover.png
-version: 0.10.2
-date: "21th of october, 2016"
+version: 0.10.3
+date: "19th of november, 2016"
 
 # Options for generating files
 output.epub: book.epub
