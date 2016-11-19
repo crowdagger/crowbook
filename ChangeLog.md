@@ -5,6 +5,7 @@ unreleased
 ------------
 * Building:
   * Crowbook now requires rustc >= 1.13.0 to build.
+  * Pre-built binaries now all include the proofreading feature. 
   * Linux binaries are now linked against `musl` library so they
     should really work on any Linux platform.
 * Bugfixes:
