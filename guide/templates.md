@@ -35,9 +35,9 @@ most templates must be in a separate file:
 ```yaml
 tex.template: my_template.tex
 ```
-### `--print-template` argument ###
+### `--print-template` ###
 
-The easiest way to create a new template is to start with the default one used by Crowbook. In order to do so, you can use the `--print-template` argument:
+The easiest way to create a new template is to start with the default one. In order to do so, you can use the `--print-template` argument:
 
 ```bash
 $ crowbook --print-template tex.template > my_template.tex
