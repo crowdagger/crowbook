@@ -26,18 +26,18 @@ unreleased
 -----------------------
 Only minor changes in this version:
 * Options:
- * `author` and `title`'s default values are both set to the empty
+  * `author` and `title`'s default values are both set to the empty
    string, instead of `Anonymous` and `Untitled`.
- * `input.autoclean` has been renamed `input.clean`.
- * `input.smart_quotes` has been renamed `input.clean.smart_quotes`.
- * new option: `input.clean.ligature.dashes` will (if set to true)
+  * `input.autoclean` has been renamed `input.clean`.
+  * `input.smart_quotes` has been renamed `input.clean.smart_quotes`.
+  * new option: `input.clean.ligature.dashes` will (if set to true)
    replace `--` to en dash (`–`) and `---` to em dash (`—`).
- * new option: `input.clean.ligature.guillemets` will (if set to true)
+  * new option: `input.clean.ligature.guillemets` will (if set to true)
    replace `<<` and `>>` to french guillemets (`«` and `»`).
 * Rendering:
- * HTML: if `html_single.one_chapter` and `rendering.inline_toc` are
-   both set to true, only render the TOC if currently displayed
-   chapter is the first.
+  * HTML: if `html_single.one_chapter` and `rendering.inline_toc` are
+    both set to true, only render the TOC if currently displayed
+    chapter is the first.
 
 0.10.1 (2016-10-18)
 -----------------------
