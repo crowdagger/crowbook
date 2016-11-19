@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-------------
+0.10.3 (2016-11-19)
+-----------------------
 * Building:
   * Crowbook now requires rustc >= 1.13.0 to build.
   * Pre-built binaries now all include the proofreading feature. 
@@ -22,7 +22,7 @@ unreleased
   * `--list-options` no longer uses colours as it caused problems
     depending on the terminal or when piping to `less`.
 
-0.10.2 (2016-20-21)
+0.10.2 (2016-10-21)
 -----------------------
 Only minor changes in this version:
 * Options:
