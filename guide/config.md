@@ -581,7 +581,7 @@ Recall that all file paths are relative to the directory where the
 config file is, not to the one where you run `crowbook`. So if you set
 
 ```yaml
-output.epub = foo.epub
+output.epub: foo.epub
 ```
 
 and runs
