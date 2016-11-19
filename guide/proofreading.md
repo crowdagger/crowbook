@@ -18,30 +18,6 @@ Current proofreading features are:
 * grammar check;
 * highlighting non-breaking spaces.
 
-Building Crowbook with proofreading features
-------------------------------------------------------
-
-Since it is a relative "niche" feature and it requires more
-dependencies, the default builds of Crowbook 
-don't include proofreading features. The first step to enable
-proofreading is thus to build Crowbook with those features:
-
-```
-$ cargo install --features "proofread" crowbook
-```
-
-or:
-
-```bash
-$ cargo build --release --features "proofread"
-```
-
-in the source directory.
-
-> This is assuming you have a working installation of `rust` and
-> `cargo`. If you don't, first [get them here](https://www.rust-lang.org/en-US/downloads.html).
-
-
 Enabling proofreading
 ---------------------
 
