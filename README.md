@@ -62,7 +62,7 @@ Dependencies
 ------------
 
 While there should be, strictly speaking, no real dependencies to be able to
-run Crowbook (it is published a a statically compiled binary), some
+run Crowbook (it is published as a statically compiled binary), some
 features require additional commands to work correctly:
 
 * EPUB rendering requires the `zip` command to be present on your system;
@@ -161,7 +161,7 @@ title: My title
 ---
 ```
 
-This is mostly useful when Crowbook is runned with the `--single`
+This is mostly useful when Crowbook is run with the `--single`
 argument (receiving a single Markdown file instead of a book
 configuration file), for short
 texts that only contain one "chapter".
@@ -232,7 +232,7 @@ See [ChangeLog](ChangeLog.md).
 Library
 -------
 
-While the main purpose of Crowbook is to be runned as a standalone
+While the main purpose of Crowbook is to be run as a standalone
 program, 
 the code is written as a library, so if you want to build on it you can
 use it as such. You can look at the generated documentation on
