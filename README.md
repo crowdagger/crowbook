@@ -87,7 +87,7 @@ list of Markdown files, you can generate a template configuration file
 with the `--create` argument:
 
 ```bash
-$ crowbook --create my.book chapter_*.md
+$ crowbook my.book --create chapter_*.md
 ```
 
 This will generate a default `my.book` file, which you'll need to
