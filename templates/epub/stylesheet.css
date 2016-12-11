@@ -116,7 +116,7 @@ div.notes {
 }
 
 table.notes {
-    bordel-collapse: collapse;
+    border-collapse: collapse;
     border-style: hidden;
 }
 
