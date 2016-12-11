@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+unreleased
+------------
+* Rendering:
+  * HTML:
+    * The default CSS style has been slightly modified.
+
 0.10.3 (2016-11-19)
 -----------------------
 * Building:
