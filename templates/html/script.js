@@ -17,7 +17,7 @@ var display_menu = false;
 function toggle() {
     if (display_menu == true) {
         display_menu = false;
-        document.getElementById("nav").style.left = "-20%";
+        document.getElementById("nav").style.left = "-21%";
         document.getElementById("content").style.marginLeft = "10%";
         document.getElementById("menu").style.left = "1em";
         if(document.getElementById("top")) {

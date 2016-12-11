@@ -1,7 +1,8 @@
 /* Colours for the navigation menu (toc) */
 nav {
-    background: #CFB0D4;
+    background: #CBBFCC;
     color: black;
+    border-right-color: black;
 }
 
 #nav a:link {
@@ -31,7 +32,7 @@ footer a:hover, #top a:hover {
     color: #b743fe;
 }
 
-/* Additional elements */
+/* Additional elements, only use for proofreading */
 /* Grammar error */
 .grammar-error {
     background: #d966ff;

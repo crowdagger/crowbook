@@ -16,6 +16,7 @@ p.first-para:first-letter {
 
 /* The nav element corresponding to the navigation menu */
 nav {
+    z-index: 2;
     position: fixed;
     left: 0;
     top: 0;
@@ -24,6 +25,8 @@ nav {
     overflow-y: auto;
     font-size: 80%;
     margin-left: 0;
+    border-right-width: 2px;
+    border-right-style: dashed;
 }
 
 #nav code {
@@ -91,7 +94,7 @@ nav {
 
 /* Hide navigation bar */
 #nav {
-    left: -20%;
+    left: -21%;
     transition: left 1s;
 }
 
