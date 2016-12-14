@@ -194,7 +194,14 @@ impl<'a> LatexRenderer<'a> {
         let mut data = self.book.get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
+            .insert_bool("tex_title", self.book.options.get_bool("tex.title").unwrap())
             .insert_str("tex_lang", tex_lang);
+        if let Ok(tex_font_size) = self.book.options.get_i32("tex.font_size") {
+            data = data
+                .insert_bool("has_tex_size", true)
+                .insert_str("tex_size", format!("{}", tex_font_size));
+        }
+
         // If class isn't book, set open_any to true, so margins are symetric.
         if self.book.options.get_str("tex.class").unwrap() == "book" {
             data = data.insert_bool("book", true);

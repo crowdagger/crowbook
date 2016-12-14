@@ -1,5 +1,5 @@
 {{=<< >>=}}
-\documentclass{<<&class>>}
+\documentclass<<#has_tex_size>>[<<&tex_size>>pt]<</has_tex_size>>{<<&class>>}
 <<#xelatex>>
 \usepackage{fontspec}
 \usepackage{xunicode}
@@ -123,7 +123,9 @@
 
 \begin{document}
 
+<<#tex_title>>
 \maketitle
+<</tex_title>>
 
 <<&content>>
 
