@@ -291,4 +291,7 @@ below.
 | `class` | The content of `tex.class` | `tex.template` |
 | `book`  | True if `tex.class` is `book`, not set else | `tex.template` |
 | `tex_lang` | The babel equivalent of `lang` | `tex.template` |
+| `tex_title` | Set to true to run `\maketitle` | `tex.template` |
+| `tex_size` | The font size to pass to the LaTeX class | `tex.template` |
+| `has_tex_size` | Set to true if `tex_size` is set | `tex.template` |
 | `initials` | True if `rendering.initials` is true, not set else | `tex.template` | 
