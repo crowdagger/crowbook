@@ -75,8 +75,10 @@ tex.links_as_footnotes:bool:true    # {tex_links}
 tex.command:str:xelatex             # {tex_command}
 tex.template:tpl                    # {tex_tmpl}
 tex.class:str:book                  # {tex_class}
+tex.paper_size:str:a5paper          # {tex_paper_size}
 tex.title:bool:true                 # {tex_title}
 tex.font_size:int                   # {tex_font_size}
+
 
 # {rs_opt}
 resources.files:str                  # {rs_files}
@@ -219,6 +221,7 @@ html.crowbook_link:alias                            # {removed}
                                          tex_tmpl = lformat!("Path of a LaTeX template file"),
                                          tex_class = lformat!("LaTeX class to use"),
                                          tex_title = lformat!(r"If true, generate a title with \maketitle"),
+                                         tex_paper_size = lformat!("Specifies the size of the page."),
                                          tex_font_size = lformat!("Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"),
                                          
                                          rs_files = lformat!("Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts"),

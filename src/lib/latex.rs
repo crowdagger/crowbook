@@ -195,6 +195,7 @@ impl<'a> LatexRenderer<'a> {
             .insert_str("content", content)
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
             .insert_bool("tex_title", self.book.options.get_bool("tex.title").unwrap())
+            .insert_str("papersize", self.book.options.get_str("tex.paper_size").unwrap())
             .insert_str("tex_lang", tex_lang);
         if let Ok(tex_font_size) = self.book.options.get_i32("tex.font_size") {
             data = data
