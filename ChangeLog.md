@@ -8,6 +8,7 @@ unreleased
     the LaTeX class (must be 10, 11 or 12).
   * `tex.title` can be set to `false` to avoid rendering the title
     with `\maketitle`.
+  * `tex.paper_size` specifies the paper size for PDF output. 
 * Rendering:
   * HTML:
     * The default CSS style has been slightly modified.
