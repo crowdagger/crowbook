@@ -3,6 +3,11 @@ ChangeLog
 
 unreleased
 ------------
+* New options:
+  * `tex.font_size` specifies an optional font size (in pt) passed to
+    the LaTeX class (must be 10, 11 or 12).
+  * `tex.title` can be set to `false` to avoid rendering the title
+    with `\maketitle`.
 * Rendering:
   * HTML:
     * The default CSS style has been slightly modified.
