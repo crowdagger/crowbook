@@ -162,6 +162,7 @@ mod toc;
 mod zipper;
 mod templates;
 mod bookoption;
+mod misc;
 
 #[cfg(feature = "proofread")]
 mod grammar_check;
