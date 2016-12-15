@@ -9,6 +9,10 @@ unreleased
   * `tex.title` can be set to `false` to avoid rendering the title
     with `\maketitle`.
   * `tex.paper_size` specifies the paper size for PDF output. 
+  * `tex.template.add`, `html.css.add` and `epub.css.add`allow to
+    specify inline LaTex or CSS code in the book configuration file
+    that will be added respectively to `tex.template.add`,
+    `html.css.add` and `epub.css.add`.
 * Rendering:
   * HTML:
     * The default CSS style has been slightly modified.
