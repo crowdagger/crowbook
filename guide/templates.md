@@ -207,8 +207,17 @@ sheet.
 
 Crowbook also has some inline templates, that are set in the book configuration file:
 
+* `tex.template.add`, `html.css.add` and `epub.css.add` allow to
+  specify some LaTeX or CSS code directly in the book configuration
+  file. This code will be added respectively to `tex.template`,
+  `html.css` or `epub.css` template. For CSS template, this code is
+  inserted at the end of the template (allowing to redefine rules that
+  are set by the template); for the LaTeX template, the code is
+  inserted at the end of the preambule, just before the
+  `\begin{document}` tag.
 * `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
 * `rendering.chapter_template` sets the naming scheme for chapters.
+
 
 
 
@@ -268,7 +277,7 @@ below.
 
 |    Mustache tag     |    Value    |   Available in...   |
 |---------------------|-------------|---------------------|
-| `content` | A rendered version of the book or chapter's content | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html`, `tex.temlplate`, `epub.chapter.xhtml` |
+| `content` | A rendered version of the book or chapter's content | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html`, `tex.template`, `epub.chapter.xhtml` |
 | `toc` | A rendered version of the table of contents | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
 | `has_toc`| Set to `true` if the table of contents is not empty | `html_single.html` |
 | `colours`| The content of `html.css.colours` | `html.css` |
@@ -295,3 +304,4 @@ below.
 | `tex_size` | The font size to pass to the LaTeX class | `tex.template` |
 | `has_tex_size` | Set to true if `tex_size` is set | `tex.template` |
 | `initials` | True if `rendering.initials` is true, not set else | `tex.template` | 
+| `additional_code` | Set to the content of `tex.template.add`, `html.css.add` or `epub.css.add` | `tex.template`, `html.css`, `epub.css` |
