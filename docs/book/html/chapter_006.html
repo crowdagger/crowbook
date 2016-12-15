@@ -36,7 +36,7 @@ var display_menu = false;
 function toggle() {
     if (display_menu == true) {
         display_menu = false;
-        document.getElementById("nav").style.left = "-20%";
+        document.getElementById("nav").style.left = "-21%";
         document.getElementById("content").style.marginLeft = "10%";
         document.getElementById("menu").style.left = "1em";
         if(document.getElementById("top")) {
@@ -158,43 +158,45 @@ function toggle() {
  </li>
  <li><a href = "chapter_006.html#link-101">ChangeLog</a>
  <ul>
-  <li><a href = "chapter_006.html#link-102">0.10.3 (2016-11-19)</a>
+  <li><a href = "chapter_006.html#link-102">unreleased</a>
   </li>
-  <li><a href = "chapter_006.html#link-103">0.10.2 (2016-10-21)</a>
+  <li><a href = "chapter_006.html#link-103">0.10.3 (2016-11-19)</a>
   </li>
-  <li><a href = "chapter_006.html#link-104">0.10.1 (2016-10-18)</a>
+  <li><a href = "chapter_006.html#link-104">0.10.2 (2016-10-21)</a>
   </li>
-  <li><a href = "chapter_006.html#link-105">0.10.0 (2016-10-18)</a>
+  <li><a href = "chapter_006.html#link-105">0.10.1 (2016-10-18)</a>
   </li>
-  <li><a href = "chapter_006.html#link-106">0.9.1 (2016-09-29)</a>
+  <li><a href = "chapter_006.html#link-106">0.10.0 (2016-10-18)</a>
   </li>
-  <li><a href = "chapter_006.html#link-107">0.9.0 (2016-09-23)</a>
+  <li><a href = "chapter_006.html#link-107">0.9.1 (2016-09-29)</a>
   </li>
-  <li><a href = "chapter_006.html#link-108">0.8.0 (2016-09-19)</a>
+  <li><a href = "chapter_006.html#link-108">0.9.0 (2016-09-23)</a>
   </li>
-  <li><a href = "chapter_006.html#link-109">0.7.0 (2016-09-11)</a>
+  <li><a href = "chapter_006.html#link-109">0.8.0 (2016-09-19)</a>
   </li>
-  <li><a href = "chapter_006.html#link-110">0.6.0 (2016-09-09)</a>
+  <li><a href = "chapter_006.html#link-110">0.7.0 (2016-09-11)</a>
   </li>
-  <li><a href = "chapter_006.html#link-111">0.5.1 (2016-04-14)</a>
+  <li><a href = "chapter_006.html#link-111">0.6.0 (2016-09-09)</a>
   </li>
-  <li><a href = "chapter_006.html#link-112">0.5.0 (2016-04-02)</a>
+  <li><a href = "chapter_006.html#link-112">0.5.1 (2016-04-14)</a>
   </li>
-  <li><a href = "chapter_006.html#link-113">0.4.0 (2016-03-01)</a>
+  <li><a href = "chapter_006.html#link-113">0.5.0 (2016-04-02)</a>
   </li>
-  <li><a href = "chapter_006.html#link-114">0.3.0 (2016-02-27)</a>
+  <li><a href = "chapter_006.html#link-114">0.4.0 (2016-03-01)</a>
   </li>
-  <li><a href = "chapter_006.html#link-115">0.2.2 (2016-02-25)</a>
+  <li><a href = "chapter_006.html#link-115">0.3.0 (2016-02-27)</a>
   </li>
-  <li><a href = "chapter_006.html#link-116">0.2.1 (2016-02-25)</a>
+  <li><a href = "chapter_006.html#link-116">0.2.2 (2016-02-25)</a>
   </li>
-  <li><a href = "chapter_006.html#link-117">0.2.0 (2016-02-25)</a>
+  <li><a href = "chapter_006.html#link-117">0.2.1 (2016-02-25)</a>
   </li>
-  <li><a href = "chapter_006.html#link-118">0.1.0 (2016-02-21)</a>
+  <li><a href = "chapter_006.html#link-118">0.2.0 (2016-02-25)</a>
+  </li>
+  <li><a href = "chapter_006.html#link-119">0.1.0 (2016-02-21)</a>
   </li>
  </ul>
  </li>
- <li><a href = "chapter_007.html#link-119">GNU LESSER GENERAL PUBLIC LICENSE</a>
+ <li><a href = "chapter_007.html#link-120">GNU LESSER GENERAL PUBLIC LICENSE</a>
  </li>
 </ul>
   </nav>
@@ -215,7 +217,23 @@ function toggle() {
   </a>
 </p>
       <h1 id = "link-101">ChangeLog</h1>
-<h2 id = "link-102">0.10.3 (2016-11-19)</h2>
+<h2 id = "link-102">unreleased</h2>
+<ul>
+<li>New options:<ul>
+<li><code>tex.font_size</code> specifies an optional font size (in pt) passed to the LaTeX class (must be 10, 11 or 12).</li>
+<li><code>tex.title</code> can be set to <code>false</code> to avoid rendering the title with <code>\maketitle</code>.</li>
+<li><code>tex.paper_size</code> specifies the paper size for PDF output.</li>
+</ul>
+</li>
+<li>Rendering:<ul>
+<li>HTML:<ul>
+<li>The default CSS style has been slightly modified.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id = "link-103">0.10.3 (2016-11-19)</h2>
 <ul>
 <li>Building:<ul>
 <li>Crowbook now requires rustc &gt;= 1.13.0 to build.</li>
@@ -236,7 +254,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-103">0.10.2 (2016-10-21)</h2>
+<h2 id = "link-104">0.10.2 (2016-10-21)</h2>
 <p id = "para-224">Only minor changes in this version:</p>
 <ul>
 <li>Options:<ul>
@@ -252,9 +270,9 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-104">0.10.1 (2016-10-18)</h2>
+<h2 id = "link-105">0.10.1 (2016-10-18)</h2>
 <p id = "para-225">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
-<h2 id = "link-105">0.10.0 (2016-10-18)</h2>
+<h2 id = "link-106">0.10.0 (2016-10-18)</h2>
 <p id = "para-226">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
 <ul>
 <li><b>Breaking changes</b>:<ul>
@@ -291,7 +309,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-106">0.9.1 (2016-09-29)</h2>
+<h2 id = "link-107">0.9.1 (2016-09-29)</h2>
 <p id = "para-227">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
 <ul>
 <li>New options:<ul>
@@ -322,7 +340,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-107">0.9.0 (2016-09-23)</h2>
+<h2 id = "link-108">0.9.0 (2016-09-23)</h2>
 <p id = "para-228">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
 <ul>
 <li>reducing the surface of Crowbook’s library API;</li>
@@ -387,7 +405,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-108">0.8.0 (2016-09-19)</h2>
+<h2 id = "link-109">0.8.0 (2016-09-19)</h2>
 <p id = "para-229">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
 <ul>
 <li>New options:<ul>
@@ -427,7 +445,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-109">0.7.0 (2016-09-11)</h2>
+<h2 id = "link-110">0.7.0 (2016-09-11)</h2>
 <p id = "para-230">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
 <ul>
 <li>Internal/API:<ul>
@@ -441,7 +459,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-110">0.6.0 (2016-09-09)</h2>
+<h2 id = "link-111">0.6.0 (2016-09-09)</h2>
 <ul>
 <li>Deprecated options:<ul>
 <li><code>nb_char</code>: since it was only used for french cleaner and for typography reasons it’s better to use different non breaking spaces according to context, this option was not really useful anymore.</li>
@@ -468,7 +486,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-111">0.5.1 (2016-04-14)</h2>
+<h2 id = "link-112">0.5.1 (2016-04-14)</h2>
 <p id = "para-231">Mostly rendering fixes:</p>
 <ul>
 <li>Epub:<ul>
@@ -494,7 +512,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-112">0.5.0 (2016-04-02)</h2>
+<h2 id = "link-113">0.5.0 (2016-04-02)</h2>
 <ul>
 <li>Crowbook now requires Rustc 1.7.0.</li>
 <li>It is now possible to render HTML in multiple files:<ul>
@@ -533,7 +551,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-113">0.4.0 (2016-03-01)</h2>
+<h2 id = "link-114">0.4.0 (2016-03-01)</h2>
 <ul>
 <li>Crowbook now internally uses a true YAML parser, <code>yaml_rust</code>, for its options. Since the “old” Crowbooks’s config format was similar, but had some subtle differences, this is somewhat of a breaking change:<ul>
 <li>strings should now be escaped with “” in some cases (e.g. if it contains special characters). On the other hand, it <em>allows</em> to optionally escape a string with these quotes, which wasn’t possible until then and might be useful in some cases.</li>
@@ -553,7 +571,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-114">0.3.0 (2016-02-27)</h2>
+<h2 id = "link-115">0.3.0 (2016-02-27)</h2>
 <ul>
 <li>Crowbook now tries to convert local links. That is, if you link to a Markdown file that is used in the book. (e.g. <a href = "chapter_000.html">README.md</a>), it <em>should</em> link to an appropriate inner reference inside the book.</li>
 <li>Latex renderer now supports (local) images.</li>
@@ -571,14 +589,14 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-115">0.2.2 (2016-02-25)</h2>
+<h2 id = "link-116">0.2.2 (2016-02-25)</h2>
 <ul>
 <li>Bugfixes:<ul>
 <li>French cleaner now correctly replaces space after — (in e.g. dialogs) with “em space”.</li>
 </ul>
 </li>
 </ul>
-<h2 id = "link-116">0.2.1 (2016-02-25)</h2>
+<h2 id = "link-117">0.2.1 (2016-02-25)</h2>
 <ul>
 <li>Bugfixes:<ul>
 <li>HTML/Epub rendering no longer incorrectly increment chapter count for unnumbered chapters.</li>
@@ -590,7 +608,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-117">0.2.0 (2016-02-25)</h2>
+<h2 id = "link-118">0.2.0 (2016-02-25)</h2>
 <ul>
 <li>Command line arguments:<ul>
 <li>New argument <code>--print-template</code> now allows to print a built-in template to stdout.</li>
@@ -615,7 +633,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-118">0.1.0 (2016-02-21)</h2>
+<h2 id = "link-119">0.1.0 (2016-02-21)</h2>
 <ul>
 <li>initial release</li>
 </ul>
@@ -627,7 +645,7 @@ function toggle() {
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-305">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.3</p>
+  <footer id = "footer"><p id = "para-305">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
 </footer>
   </body>
 </html>
