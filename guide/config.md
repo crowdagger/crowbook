@@ -183,6 +183,7 @@ Here is the complete list of options, with a short description. The
 usage of some of them is detailed later on.
 
 ### Metadata ###
+### Metadata ###
 - **`author`**
     - **type**: metadata
     - **default value**: `""`
@@ -198,11 +199,11 @@ usage of some of them is detailed later on.
 - **`subject`**
     - **type**: metadata
     - **default value**: `not set`
-    -  Subject of the book (used for EPUB metadata
+    -  Subject of the book (used for EPUB metadata)
 - **`description`**
     - **type**: metadata
     - **default value**: `not set`
-    -  Description of the book (used for EPUB metadata
+    -  Description of the book (used for EPUB metadata)
 - **`cover`**
     - **type**: path
     - **default value**: `not set`
@@ -293,6 +294,10 @@ usage of some of them is detailed later on.
     - **type**: template path
     - **default value**: `not set`
     -  Path of a stylesheet for HTML rendering
+- **`html.css.add`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Some inline CSS added to the stylesheet template
 - **`html.css.colours`**
     - **type**: template path
     - **default value**: `not set`
@@ -359,6 +364,10 @@ usage of some of them is detailed later on.
     - **type**: template path
     - **default value**: `not set`
     -  Path of a stylesheet for EPUB
+- **`epub.css.add`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Inline CSS added to the EPUB stylesheet template
 - **`epub.chapter.xhtml`**
     - **type**: template path
     - **default value**: `not set`
@@ -377,10 +386,26 @@ usage of some of them is detailed later on.
     - **type**: template path
     - **default value**: `not set`
     -  Path of a LaTeX template file
+- **`tex.template.add`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Inline code added in the LaTeX template
 - **`tex.class`**
     - **type**: string
     - **default value**: `book`
     -  LaTeX class to use
+- **`tex.paper_size`**
+    - **type**: string
+    - **default value**: `a5paper`
+    -  Specifies the size of the page.
+- **`tex.title`**
+    - **type**: boolean
+    - **default value**: `true`
+    -  If true, generate a title with maketitle
+- **`tex.font_size`**
+    - **type**: integer
+    - **default value**: `not set`
+    -  Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)
 
 ### Resources option ###
 - **`resources.files`**
@@ -503,6 +528,7 @@ usage of some of them is detailed later on.
     - **type**: float
     - **default value**: `2.0`
     -  Threshold to detect a repetition
+
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
