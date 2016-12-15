@@ -178,6 +178,9 @@ impl<'a> HtmlSingleRenderer<'a> {
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("colours",
                         self.html.book.get_template("html.css.colours")?);
+        if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
+            data = data.insert_str("additional_code", html_css_add);
+        }
         if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }

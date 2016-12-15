@@ -46,6 +46,7 @@ import_config:path                  # {import_config}
 html.header:str                     # {html_header}
 html.footer:str                     # {html_footer}
 html.css:tpl                        # {html_css}
+html.css.add:str                    # {html_css_add}
 html.css.colours:tpl                # {css_colours}
 html.js:tpl                         # {html_js}
 html.css.print:tpl                  # {css_print}
@@ -68,12 +69,14 @@ html_dir.chapter.html:tpl           # {chapter_html}
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}
 epub.css:tpl                        # {epub_css}
+epub.css.add:str                    # {epub_css_add}
 epub.chapter.xhtml:tpl              # {chapter_xhtml}
 
 # {tex_opt}
 tex.links_as_footnotes:bool:true    # {tex_links}
 tex.command:str:xelatex             # {tex_command}
 tex.template:tpl                    # {tex_tmpl}
+tex.template.add:str                # {tex_tmpl_add}
 tex.class:str:book                  # {tex_class}
 tex.paper_size:str:a5paper          # {tex_paper_size}
 tex.title:bool:true                 # {tex_title}
@@ -196,6 +199,7 @@ html.crowbook_link:alias                            # {removed}
                                          html_header = lformat!("Custom header to display at the beginning of html file(s)"),
                                          html_footer = lformat!("Custom footer to display at the end of HTML file(s)"),
                                          html_css = lformat!("Path of a stylesheet for HTML rendering"),
+                                         html_css_add = lformat!("Some inline CSS added to the stylesheet template"),
                                          css_colours = lformat!("Path of a stylesheet for the colours for HTML"),
                                          html_js = lformat!("Path of a javascript file"),
                                          css_print = lformat!("Path of a media print stylesheet for HTML rendering"),
@@ -214,11 +218,13 @@ html.crowbook_link:alias                            # {removed}
                                          
                                          epub_ver = lformat!("EPUB version to generate (2 or 3)"),
                                          epub_css = lformat!("Path of a stylesheet for EPUB"),
+                                         epub_css_add = lformat!("Inline CSS added to the EPUB stylesheet template"),
                                          chapter_xhtml = lformat!("Path of an xhtml template for each chapter"),
                                          
                                          tex_links = lformat!("Add foontotes to URL of links so they are readable when printed"),
                                          tex_command = lformat!("LaTeX command to use for generating PDF"),
                                          tex_tmpl = lformat!("Path of a LaTeX template file"),
+                                         tex_tmpl_add = lformat!("Inline code added in the LaTeX template"),
                                          tex_class = lformat!("LaTeX class to use"),
                                          tex_title = lformat!("If true, generate a title with maketitle"),
                                          tex_paper_size = lformat!("Specifies the size of the page."),

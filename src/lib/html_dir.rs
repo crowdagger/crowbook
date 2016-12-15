@@ -341,6 +341,9 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?;
         data = data.insert_str("colours",
                                self.html.book.get_template("html.css.colours")?);
+        if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
+            data = data.insert_str("additional_code", html_css_add);
+        }
         if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
             data = data.insert_bool("display_spaces", true);
         }

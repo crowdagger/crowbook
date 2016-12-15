@@ -97,11 +97,14 @@ impl<'a> EpubRenderer<'a> {
             compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
                              &self.html.book.source,
                              lformat!("could not compile template 'epub.css'"))?;
-        let data = self.html
+        let mut data = self.html
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-        .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
-            .build();
+            .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
+        if let Ok(epub_css_add) = self.html.book.options.get_str("epub.css.add") {
+            data = data.insert_str("additional_code", epub_css_add);
+        }
+        let data = data.build();
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
