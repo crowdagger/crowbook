@@ -13,6 +13,7 @@ unreleased
     specify inline LaTex or CSS code in the book configuration file
     that will be added respectively to `tex.template.add`,
     `html.css.add` and `epub.css.add`.
+  * `html.icon` allows to specify the path of an icon for HTML documents.
 * Command-line interface:
   * Paths that are displayed should now be normalized,
     e.g. "foo/bar.pdf" instead of "baz/../foo/bar.pdf".
