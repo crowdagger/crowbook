@@ -19,13 +19,22 @@
 
 use std;
 use std::path::Path;
+use std::io::Result;
 
 /// Try to canonicalize a path using std::fs::canonicalize, and returns the
 /// unmodified path if it fails (e.g. if the path doesn't exist (yet))
 pub fn canonicalize<P: AsRef<Path>>(path: P) -> String {
-    if let Ok(path) = std::fs::canonicalize(path.as_ref()) {
+    try_canonicalize(path.as_ref())
+        .unwrap_or(format!("{}", path.as_ref().display()))
+}
+
+
+fn try_canonicalize<P: AsRef<Path>>(path: P) -> Result<String> {
+    let path = std::fs::canonicalize(path.as_ref())?;
+    let cwd = std::env::current_dir()?;
+    Ok(if let Ok(path) = path.strip_prefix(&cwd) {
         format!("{}", path.display())
     } else {
-        format!("{}", path.as_ref().display())
-    }
+        format!("{}", path.display())
+    })
 }
