@@ -18,7 +18,7 @@
 //! Misc utility functions used across crowbook
 
 use std;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::io::Result;
 
 /// Try to canonicalize a path using std::fs::canonicalize, and returns the
@@ -30,11 +30,24 @@ pub fn canonicalize<P: AsRef<Path>>(path: P) -> String {
 
 
 fn try_canonicalize<P: AsRef<Path>>(path: P) -> Result<String> {
-    let path = std::fs::canonicalize(path.as_ref())?;
-    let cwd = std::env::current_dir()?;
-    Ok(if let Ok(path) = path.strip_prefix(&cwd) {
-        format!("{}", path.display())
-    } else {
-        format!("{}", path.display())
-    })
+    let full_path = std::fs::canonicalize(path.as_ref())?;
+    let mut cwd = std::env::current_dir()?;
+    let mut ups = 0;
+
+    loop {
+        if let Ok(path) = full_path.strip_prefix(&cwd.clone()) {
+            let mut new_path = PathBuf::new();
+            for _ in 0..ups {
+                new_path.push("../");
+            }
+            new_path.push(path);
+            return Ok(format!("{}", new_path.display()));
+        } else {
+            if !cwd.pop() {
+                return Ok(format!("{}", full_path.display()));
+            } else {
+                ups += 1;
+            }
+        }
+    }
 }
