@@ -46,34 +46,12 @@ pub trait Cleaner: Sync {
 }
 
 /// Cleaner implementation that does nothing
-///
-/// # Examples
-///
-/// ```
-/// use crowbook::cleaner::Cleaner;
-/// use crowbook::cleaner::Off;
-/// use std::borrow::Cow;
-/// let off = Off;
-/// let s = off.clean(Cow::Borrowed("  A string   that won't be cleaned "), false);
-/// assert_eq!(&s, "  A string   that won't be cleaned ");
-/// ```
 pub struct Off;
 impl Cleaner for Off {}
 
 /// Default implementation of cleaner trait.
 ///
 /// Only removes unnecessary whitespaces.
-///
-/// # Examples
-///
-/// ```
-/// use crowbook::cleaner::Cleaner;
-/// use crowbook::cleaner::Default;
-/// use std::borrow::Cow;
-/// let s = Default.clean(Cow::Borrowed("  A  string   with   more   whitespaces  than  needed   "),
-///                                     false);
-/// assert_eq!(&s, " A string with more whitespaces than needed ");
-/// ```
 pub struct Default {
     params: CleanerParams,
 }
@@ -108,16 +86,6 @@ impl Cleaner for Default {
 ///
 /// This implementation replaces spaces before some characters (e.g. `?` or `;`)
 /// with non-breaking spaces
-///
-/// # Examples
-///
-/// ```
-/// use crowbook::cleaner::Cleaner;
-/// use crowbook::cleaner::French;
-/// use std::borrow::Cow;
-/// let s =  French.clean(Cow::Borrowed("  Bonjour ! Comment allez-vous   ?   "), true);
-/// assert_eq!(&s, " Bonjour~! Comment allez-vous~? ");
-/// ```
 pub struct French {
     formatter: FrenchFormatter,
     params: CleanerParams,
