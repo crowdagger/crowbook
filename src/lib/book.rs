@@ -176,7 +176,7 @@ impl Book {
                                              lformat!("could not parse {file} as a book \
                                                        file.\nMaybe you meant to run crowbook \
                                                        with the --single argument?",
-                                                      file = misc::canonicalize(&filename)));
+                                                      file = misc::normalize(&filename)));
                     Err(err)
                 } else {
                     Err(err)
@@ -510,7 +510,7 @@ impl Book {
         self.logger.debug(lformat!("Output of latex command:"));
         self.logger.debug(result);
         self.logger.info(lformat!("Successfully generated PDF file: {file}",
-                                  file = misc::canonicalize(
+                                  file = misc::normalize(
                                       self.options.get_path("output.pdf")?)));
         Ok(())
     }
@@ -523,7 +523,7 @@ impl Book {
         self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
         self.logger.info(lformat!("Successfully generated EPUB file: {file}",
-                                  file = misc::canonicalize(
+                                  file = misc::normalize(
                                       self.options.get_path("output.epub")?)));
         Ok(())
     }
@@ -534,7 +534,7 @@ impl Book {
         let mut html = HtmlDirRenderer::new(&self);
         html.render_book()?;
         self.logger.info(lformat!("Successfully generated HTML directory: {path}",
-                                  path = misc::canonicalize(
+                                  path = misc::normalize(
                                       self.options.get_path("output.html_dir")?)));
         Ok(())
     }
@@ -547,14 +547,14 @@ impl Book {
             Logger::display_warning(lformat!("this version of Crowbook has been compiled \
                                               without support for proofreading, not generating \
                                               {path}",
-                                             path = misc::canonicalize(dir_name)));
+                                             path = misc::normalize(dir_name)));
             return Ok(());
         }
         self.logger.debug(lformat!("Attempting to generate html directory for proofreading..."));
         let mut html = HtmlDirRenderer::new(&self).proofread();
         html.render_book()?;
         self.logger.info(lformat!("Successfully generated HTML directory: {path}",
-                                  path = misc::canonicalize(dir_name)));
+                                  path = misc::normalize(dir_name)));
         Ok(())
     }
 
@@ -565,14 +565,14 @@ impl Book {
             Logger::display_warning(lformat!("this version of Crowbook has been compiled \
                                               without support for proofreading, not generating \
                                               {file}",
-                                             file = misc::canonicalize(file_name)));
+                                             file = misc::normalize(file_name)));
             return Ok(());
         }
         self.logger.debug(lformat!("Attempting to generate PDF for proofreading..."));
         let mut latex = LatexRenderer::new(&self).proofread();
         latex.render_pdf()?;
         self.logger.info(lformat!("Successfully generated PDF file for proofreading: {file}",
-                                  file = misc::canonicalize(file_name)));
+                                  file = misc::normalize(file_name)));
         Ok(())
     }
 
@@ -584,7 +584,7 @@ impl Book {
         self.logger.debug(lformat!("Output of zip command:"));
         self.logger.debug(&result);
         self.logger.info(lformat!("Successfully generated ODT file: {file}",
-                                  file = misc::canonicalize(
+                                  file = misc::normalize(
                                       self.options.get_path("output.odt")?)));
         Ok(())
     }
@@ -601,7 +601,7 @@ impl Book {
             })?;
         if let Ok(file) = self.options.get_path("output.html") {
             self.logger.info(lformat!("Successfully generated HTML file: {file}",
-                                      file = misc::canonicalize(file)));
+                                      file = misc::normalize(file)));
         } else {
             self.logger.info(lformat!("Successfully generated HTML"));
         }
@@ -619,7 +619,7 @@ impl Book {
             Logger::display_warning(lformat!("this version of Crowbook has been compiled \
                                               without support for proofreading,not generating \
                                               HTML file {file}",
-                                             file = misc::canonicalize(file_name)));
+                                             file = misc::normalize(file_name)));
             return Ok(());
         }
         self.logger.debug(lformat!("Attempting to generate HTML for proofreading..."));
@@ -631,7 +631,7 @@ impl Book {
                               lformat!("problem when writing to HTML file: {error}", error = e))
             })?;
         self.logger.info(lformat!("Successfully generated HTML file {file}",
-                                  file = misc::canonicalize(file_name)));
+                                  file = misc::normalize(file_name)));
         Ok(())
     }
 
@@ -648,7 +648,7 @@ impl Book {
             })?;
         if let Ok(file) = self.options.get_path("output.tex") {
             self.logger.info(lformat!("Successfully generated LaTeX file: {file}",
-                                      file = misc::canonicalize(file)));
+                                      file = misc::normalize(file)));
         } else {
             self.logger.info(lformat!("Successfully generated LaTeX"));
         }
@@ -666,7 +666,7 @@ impl Book {
             Logger::display_warning(lformat!("this version of Crowbook has been compiled \
                                               without support for proofreading, not generating \
                                               LaTeX file {file}",
-                                             file = misc::canonicalize(file_name)));
+                                             file = misc::normalize(file_name)));
             return Ok(());
         }
 
@@ -680,7 +680,7 @@ impl Book {
                               lformat!("problem when writing to LaTeX file: {error}", error = e))
             })?;
         self.logger.info(lformat!("Successfully generated LaTeX file {file}",
-                                  file = misc::canonicalize(file_name)));
+                                  file = misc::normalize(file_name)));
         Ok(())
     }
 
@@ -698,7 +698,7 @@ impl Book {
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
         self.logger.debug(lformat!("Parsing chapter: {file}...",
-                                   file = misc::canonicalize(file)));
+                                   file = misc::normalize(file)));
 
         // add file to the list of file names
         self.filenames.push(file.to_owned());
@@ -717,7 +717,7 @@ impl Book {
             .map_err(|_| {
                 Error::parser(&self.source,
                               lformat!("file {file} contains invalid UTF-8",
-                                       file = misc::canonicalize(&path)))
+                                       file = misc::normalize(&path)))
             })?;
 
         // Ignore YAML blocks (or not)
@@ -735,7 +735,7 @@ impl Book {
             self.logger
                 .warning(lformat!("Warning: book contains chapter '{file}' in a directory above \
                                    the book file, this might cause problems",
-                                  file = misc::canonicalize(file)));
+                                  file = misc::normalize(file)));
         }
 
 
@@ -767,10 +767,10 @@ impl Book {
                 self.logger
                     .info(lformat!("Trying to run grammar check on {file}, this might take a \
                                     while...",
-                                   file = misc::canonicalize(file)));
+                                   file = misc::normalize(file)));
                 if let Err(err) = checker.check_chapter(&mut v) {
                     self.logger.error(lformat!("Error running grammar check on {file}: {error}",
-                                               file = misc::canonicalize(file),
+                                               file = misc::normalize(file),
                                                error = err));
                 }
             }

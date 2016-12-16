@@ -23,13 +23,13 @@ use std::io::Result;
 
 /// Try to canonicalize a path using std::fs::canonicalize, and returns the
 /// unmodified path if it fails (e.g. if the path doesn't exist (yet))
-pub fn canonicalize<P: AsRef<Path>>(path: P) -> String {
-    try_canonicalize(path.as_ref())
+pub fn normalize<P: AsRef<Path>>(path: P) -> String {
+    try_normalize(path.as_ref())
         .unwrap_or(format!("{}", path.as_ref().display()))
 }
 
 
-fn try_canonicalize<P: AsRef<Path>>(path: P) -> Result<String> {
+fn try_normalize<P: AsRef<Path>>(path: P) -> Result<String> {
     let full_path = std::fs::canonicalize(path.as_ref())?;
     let mut cwd = std::env::current_dir()?;
     let mut ups = 0;
