@@ -19,17 +19,27 @@
 //!  For documentation regarding the *program* `crowbook`, see
 //!  [the Github page](https://github.com/lise-henry/crowbook).
 //!
+//! # Usage
+//!
+//! Just like any other library, just add a dependency on `crowbook`
+//! in your `Cargo.toml` file. You will probably want to deactivate
+//! default features that are mostly useful for the binary:
+//!
+//! ```ignore
+//! crowbook = {version = "0.10", default-features = false}
+//! ```
+//!
 //! # Book
 //!
-//! The central structure of Crowbook is `Book`, who coordinates everything.
+//! The central structure of Crowbook is `Book`, which coordinates everything.
 //!
 //! Its roles are:
 //!
-//! * reading a book configuration file and setting the book options accordingly
-//! * reading the chapters (written in Markdown) listed in this configuration file
-//!   to `Parser`, get back an AST and store it in memory
-//! * call `HtmlRenderer`, `EpubRenderer`, `LatexRenderer` and/or `OdtRenderer`
-//!   according to the book's parameters and generate the appopriate files.
+//! * read a book configuration file and setting the book options accordingly;
+//! * read the chapters (written in Markdown) listed in this
+//!   configuration file and pass them to to `Parser`, get back an AST and store it in memory
+//! * call the various renderers according to the book's parameters
+//! and generate the appopriate files. 
 //!
 //! ## Example
 //!
@@ -137,6 +147,7 @@ pub use crowbook_intl_runtime::set_lang;
 pub use crowbook_intl_runtime::__get_lang;
 
 #[macro_use]
+#[doc(hidden)]
 pub mod localize_macros;
 #[macro_use]
 mod html;
