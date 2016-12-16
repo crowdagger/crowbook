@@ -6,7 +6,7 @@ Crowbook
 Render a book written in markdown to HTML, EPUB and/or PDF.
 
 Crowbook's purpose is to allow you to automatically generate multiple
-outputs formats from a book written in Markdown. Its focus is
+output formats from a book written in Markdown. Its focus is
 novels, and the default settings should (hopefully) generate readable
 books with correct typography without requiring you to worry about it.
     
@@ -39,9 +39,6 @@ the binary somewhere in your `PATH` for later usage.
 If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can
 also download `.deb` packages on
 [the releases page](https://github.com/lise-henry/crowbook/releases). 
-
-> Note: only the Linux binaries are really tested, please contact me
-> if you have any trouble executing the Windows or Mac binaries.
 
 ### Using Cargo ###
 
@@ -139,14 +136,14 @@ book's language is set to french, it also tries its best to respect french
 typography by replacing spaces with non-breaking ones when it is
 appropriate (e.g. before '?', '!', ';' or ':').
 
-> This feature is currently limited to french language, but please
+> Please
 > [open an issue](https://github.com/lise-henry/crowbook/issues/new) describing typographic rules if you want it to be
-> implemented for another language.
+> implemented for other languages.
 
 ### Links handling ###
 
 Crowbook tries to correctly translate local links in the input
-Markdown files: e.g. if you have a link to a markdown file that is
+Markdown files: e.g. if you have a link to a Markdown file that is
 part of your book, it will be transformed into a link inside the
 document. 
 
