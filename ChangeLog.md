@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-------------
+0.10.4 (2016-12-16)
+-----------------------
 * New options:
   * `tex.font_size` specifies an optional font size (in pt) passed to
     the LaTeX class (must be 10, 11 or 12).
