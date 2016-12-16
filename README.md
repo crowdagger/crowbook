@@ -235,14 +235,15 @@ the code is written as a library, so if you want to build on it you can
 use it as such. You can look at the generated documentation on
 [docs.rs](https://docs.rs/releases/search?query=crowbook).
 
-Additionally, [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/) is
-a separate library containing all the "typographic" functions (smart
-quotes, handling of non-breaking spaces in french, ...).
+Note that, in order to facilitate code reuse, some features have been
+split to separate libraries:
+  * [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/) contains all the "typographic" functions (smart
+quotes, handling of non-breaking spaces in french, ...). 
+  * [crowbook-intl](https://github.com/lise-henry/crowbook-intl/) is
+    used for the internationalization (translation) process.
 
 License 
 -------
-
-
 
 Crowbook is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License (LGPL),
