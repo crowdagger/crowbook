@@ -183,7 +183,6 @@ Here is the complete list of options, with a short description. The
 usage of some of them is detailed later on.
 
 ### Metadata ###
-### Metadata ###
 - **`author`**
     - **type**: metadata
     - **default value**: `""`
@@ -282,6 +281,10 @@ usage of some of them is detailed later on.
     -  Import another book configuration file
 
 ### HTML options ###
+- **`html.icon`**
+    - **type**: path
+    - **default value**: `not set`
+    -  Path to an icon to be used for the HTML files(s)
 - **`html.header`**
     - **type**: string
     - **default value**: `not set`
@@ -528,7 +531,6 @@ usage of some of them is detailed later on.
     - **type**: float
     - **default value**: `2.0`
     -  Threshold to detect a repetition
-
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
