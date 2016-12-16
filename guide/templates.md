@@ -294,7 +294,8 @@ below.
 | `one_chapter`   | True if `html_single.one_chapter` is true, else not present | `html_single.html`, `html_single.js` |
 | `book.svg` | The base64-encoded image of the button to display all chapters | `html_single.js`, `html_single.html` |
 | `pages.svg` | The base64-encoded image of the button to display one chapter at a time | `html_single.js`, `html_single.html` |
-| `menu_svg` | The base64-encoded image of the hamburger menu image | `hml_single.html` |
+| `favicon` | The `<link rel = "icon" ...>` tag if `html.icon` is set | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
+| `menu_svg` | The base64-encoded image of the hamburger menu image | `html_single.html` |
 | `prev_chapter` | Title and a link of previous chapter | `html_dir.chapter.html` |
 | `next_chapter` | Title and a link of nexts chapter | `html_dir.chapter.html` |
 | `class` | The content of `tex.class` | `tex.template` |
