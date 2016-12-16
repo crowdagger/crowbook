@@ -228,7 +228,7 @@ html.crowbook_link:alias                            # {removed}
                                          tex_tmpl = lformat!("Path of a LaTeX template file"),
                                          tex_tmpl_add = lformat!("Inline code added in the LaTeX template"),
                                          tex_class = lformat!("LaTeX class to use"),
-                                         tex_title = lformat!("If true, generate a title with maketitle"),
+                                         tex_title = lformat!("If true, generate a title with \\maketitle"),
                                          tex_paper_size = lformat!("Specifies the size of the page."),
                                          tex_font_size = lformat!("Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"),
                                          
