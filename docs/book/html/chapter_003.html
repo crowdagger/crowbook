@@ -5,6 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
+    <link rel = "icon" href = "images/image_0.svg">
     <title>Crowbook User Guide – 4. Templates</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
@@ -204,7 +205,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-300">Crowbook User Guide 0.10.3</p>
+        <div id = "top"><p id = "para-299">Crowbook User Guide 0.10.4</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -217,37 +218,37 @@ function toggle() {
   </a>
 </p>
       <h1 id = "link-67">4. Templates</h1>
-<p id = "para-154">Crowbook allows the user to specify a number of templates.<a href = "#note-dest-1"><sup id = "note-source-1">[1]</sup></a></p>
-<p id = "para-155">Each of this template can be overriden by a custom one, by setting e.g.:</p>
+<p id = "para-153">Crowbook allows the user to specify a number of templates.<a href = "#note-dest-1"><sup id = "note-source-1">[1]</sup></a></p>
+<p id = "para-154">Each of this template can be overriden by a custom one, by setting e.g.:</p>
 <pre><code class = "language-yaml">html.css: my_template.css
 </code></pre>
-<p id = "para-156">in the book configuration file. The templates that you are most susceptible to modify are the following:</p>
+<p id = "para-155">in the book configuration file. The templates that you are most susceptible to modify are the following:</p>
 <ul>
 <li><code>html.css</code>: stylesheet for HTML output;</li>
 <li><code>epub.css</code>: stylesheet for EPUB output;</li>
 <li><code>tex.template</code>: template of a LaTeX file.</li>
 </ul>
  <h2 id = "link-68">4.1. Create and edit template</h2>
-<p id = "para-157">Except for inline templates, which are set directly in the book configuration file:</p>
+<p id = "para-156">Except for inline templates, which are set directly in the book configuration file:</p>
 <pre><code class = "language-yaml">rendering.chapter_template: "{{{loc_chapter}}} {{{number}}}: {{{chapter_title}}}"
 </code></pre>
-<p id = "para-158">most templates must be in a separate file:</p>
+<p id = "para-157">most templates must be in a separate file:</p>
 <pre><code class = "language-yaml">tex.template: my_template.tex
 </code></pre>
 <h3 id = "link-69"><code>--print-template</code></h3>
-<p id = "para-159">The easiest way to create a new template is to start with the default one. In order to do so, you can use the <code>--print-template</code> argument:</p>
+<p id = "para-158">The easiest way to create a new template is to start with the default one. In order to do so, you can use the <code>--print-template</code> argument:</p>
 <pre><code class = "language-bash">$ crowbook --print-template tex.template &gt; my_template.tex
 </code></pre>
-<p id = "para-160">In order to get the <code>chapter.xhtml</code> template for EPUB3, you’ll also have to use <code>--set epub.version 3</code>:</p>
+<p id = "para-159">In order to get the <code>chapter.xhtml</code> template for EPUB3, you’ll also have to use <code>--set epub.version 3</code>:</p>
 <pre><code class = "language-bash">$ crowbook --print-template epub.chapter.xhtml --set epub.version 3 &gt; my_epub3_template.xhtml
 </code></pre>
 <h3 id = "link-70">Mustache syntax</h3>
-<p id = "para-161">Crowbook uses <a href = "https://crates.io/crates/mustache">rust-mustache</a> as its templating engine, which allows to use <a href = "http://mustache.github.io/">Mustache</a> syntax in the templates.</p>
-<p id = "para-163">It mainly boils down to using <code>{{{foo}}}</code><a href = "#note-dest-2"><sup id = "note-source-2">[2]</sup></a> to insert the value of variable <code>foo</code> in the document:</p>
+<p id = "para-160">Crowbook uses <a href = "https://crates.io/crates/mustache">rust-mustache</a> as its templating engine, which allows to use <a href = "http://mustache.github.io/">Mustache</a> syntax in the templates.</p>
+<p id = "para-162">It mainly boils down to using <code>{{{foo}}}</code><a href = "#note-dest-2"><sup id = "note-source-2">[2]</sup></a> to insert the value of variable <code>foo</code> in the document:</p>
 <pre><code class = "language-html">&lt;h1 class = "title" &gt;{{{title}}}&lt;h1&gt;
 &lt;h2 class = "author"&gt;{{{author}}}&lt;/h2&gt;
 </code></pre>
-<p id = "para-164">Mustache also provides the possibility of checking whether a variable is set:</p>
+<p id = "para-163">Mustache also provides the possibility of checking whether a variable is set:</p>
 <pre><code>{{#foo}}
 Foo exists
 {{/foo}}
@@ -255,7 +256,7 @@ Foo exists
 Foo does not exist
 {{^foo}}
 </code></pre>
-<p id = "para-165">Crowbook uses this and sets some variables to <code>true</code> to allow templates to conditionally include some portions. E.g., in <code>html.css</code>:</p>
+<p id = "para-164">Crowbook uses this and sets some variables to <code>true</code> to allow templates to conditionally include some portions. E.g., in <code>html.css</code>:</p>
 <pre><code class = "language-css">{{#lang_fr}}
 /* Make list displays '–' instead of bullets */
 ul li {
@@ -264,55 +265,56 @@ ul li {
 }
 {{/lang_fr}}
 </code></pre>
-<p id = "para-166">In this case, Crowbook sets a variable whose name is equal to <code>lang_foo</code> to <code>true</code>, allowing to have different styles for some elements according to the language.</p>
-<p id = "para-167">For more information about Mustache syntax, see <a href = "http://mustache.github.io/mustache.5.html">Mustache manual</a>.</p>
+<p id = "para-165">In this case, Crowbook sets a variable whose name is equal to <code>lang_foo</code> to <code>true</code>, allowing to have different styles for some elements according to the language.</p>
+<p id = "para-166">For more information about Mustache syntax, see <a href = "http://mustache.github.io/mustache.5.html">Mustache manual</a>.</p>
 <h4 id = "link-71">Syntax in LaTeX</h4>
-<p id = "para-169">Since LaTeX already uses a lot of curly brackets, the default template sets an altenative syntax to access variables, with <code>&lt;&lt;&amp;foo&gt;&gt;</code><a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a>:</p>
+<p id = "para-168">Since LaTeX already uses a lot of curly brackets, the default template sets an altenative syntax to access variables, with <code>&lt;&lt;&amp;foo&gt;&gt;</code><a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a>:</p>
 <pre><code class = "language-latex">\title{&lt;&lt;&amp;title&gt;&gt;}
 \author{&lt;&lt;&amp;author&gt;&gt;}
 &lt;&lt;#has_date&gt;&gt;\date{&lt;&lt;&amp;date&gt;&gt;}&lt;&lt;/has_date&gt;
 </code></pre>
   <h2 id = "link-72">4.2. List of templates</h2>
 <h3 id = "link-73">html.js</h3>
-<p id = "para-170">The javascript file used by both the standalone HTML renderer and the multiple files HTML renderer.</p>
-<p id = "para-171">This is not currently an actual template, just a plain javascript file which cannot contain <code>mustache</code> tags.</p>
+<p id = "para-169">The javascript file used by both the standalone HTML renderer and the multiple files HTML renderer.</p>
+<p id = "para-170">This is not currently an actual template, just a plain javascript file which cannot contain <code>mustache</code> tags.</p>
 <h3 id = "link-74">html.css</h3>
-<p id = "para-172">The main CSS file used by both the standalone HTML renderer and the multiple files HTML renderer.</p>
+<p id = "para-171">The main CSS file used by both the standalone HTML renderer and the multiple files HTML renderer.</p>
 <h3 id = "link-75">html.css.colours</h3>
-<p id = "para-173">A CSS file containing only colour settings. Used by <code>html.css</code>.</p>
-<p id = "para-174">This is not currently an actual template, just a plain CSS file which cannot contain <code>mustache</code> tags.</p>
+<p id = "para-172">A CSS file containing only colour settings. Used by <code>html.css</code>.</p>
+<p id = "para-173">This is not currently an actual template, just a plain CSS file which cannot contain <code>mustache</code> tags.</p>
 <h3 id = "link-76">html.css.print</h3>
-<p id = "para-175">An additional CSS file used by both the standalone HTML renderer and the multiple files HTML renderer. Its purpose is to provide CSS instructions for printing (i.e., when the user clicks the <code>print</code> button in her browser).</p>
-<p id = "para-176">This is not currently an actual template, just a plain CSS file which cannot contain <code>mustache</code> tags.</p>
+<p id = "para-174">An additional CSS file used by both the standalone HTML renderer and the multiple files HTML renderer. Its purpose is to provide CSS instructions for printing (i.e., when the user clicks the <code>print</code> button in her browser).</p>
+<p id = "para-175">This is not currently an actual template, just a plain CSS file which cannot contain <code>mustache</code> tags.</p>
 <h3 id = "link-77">html.highlight.js</h3>
-<p id = "para-177">A javascript file used by both HTML renderers to highlight codes in code blocks. It should be a variant of <a href = "https://highlightjs.org/">highlight.js</a>.</p>
-<p id = "para-178">This is not an actual template, just a plain javascript file.</p>
+<p id = "para-176">A javascript file used by both HTML renderers to highlight codes in code blocks. It should be a variant of <a href = "https://highlightjs.org/">highlight.js</a>.</p>
+<p id = "para-177">This is not an actual template, just a plain javascript file.</p>
 <h3 id = "link-78">html.highlight.css</h3>
-<p id = "para-179">A CSS file used by both HTML renderers to set the theme of <a href = "https://highlightjs.org/">highlight.js</a>. It should, though, be an highlight.js theme.</p>
-<p id = "para-180">This is not an actual template, just a plain CSS file.</p>
+<p id = "para-178">A CSS file used by both HTML renderers to set the theme of <a href = "https://highlightjs.org/">highlight.js</a>. It should, though, be an highlight.js theme.</p>
+<p id = "para-179">This is not an actual template, just a plain CSS file.</p>
 <h3 id = "link-79">html_single.js</h3>
-<p id = "para-181">A javascript file used only by the standalone HTML renderer. Its main purpose is to handle the displaying of a single chapter at a time when <code>one_chapter</code> is set to true.</p>
+<p id = "para-180">A javascript file used only by the standalone HTML renderer. Its main purpose is to handle the displaying of a single chapter at a time when <code>one_chapter</code> is set to true.</p>
 <h3 id = "link-80">html_single.html</h3>
-<p id = "para-182">The main template for standalone HTML renderer.</p>
+<p id = "para-181">The main template for standalone HTML renderer.</p>
 <h3 id = "link-81">html_dir.chapter.html</h3>
-<p id = "para-183">The main template for multiple files HTML renderer. It is the template for rendering each chapter.</p>
+<p id = "para-182">The main template for multiple files HTML renderer. It is the template for rendering each chapter.</p>
 <h3 id = "link-82">html_dir.index.html</h3>
-<p id = "para-184">The template used by multiple files HTML renderer to render the <code>index.html</code> file.</p>
+<p id = "para-183">The template used by multiple files HTML renderer to render the <code>index.html</code> file.</p>
 <h3 id = "link-83">tex.template</h3>
-<p id = "para-185">The main (and currently only) template used by the LaTeX renderer.</p>
+<p id = "para-184">The main (and currently only) template used by the LaTeX renderer.</p>
 <h3 id = "link-84">epub.chapter.xhtml</h3>
-<p id = "para-186">This template is the main template used by the Epub renderer. It contains the XHTML template that will be used for each chapter.</p>
+<p id = "para-185">This template is the main template used by the Epub renderer. It contains the XHTML template that will be used for each chapter.</p>
 <h3 id = "link-85">epub.css</h3>
-<p id = "para-187">This template is used by the Epub renderer and contains the style sheet.</p>
+<p id = "para-186">This template is used by the Epub renderer and contains the style sheet.</p>
 <h3 id = "link-86">Inline templates</h3>
-<p id = "para-188">Crowbook also has some inline templates, that are set in the book configuration file:</p>
+<p id = "para-187">Crowbook also has some inline templates, that are set in the book configuration file:</p>
 <ul>
+<li><code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code> allow to specify some LaTeX or CSS code directly in the book configuration file. This code will be added respectively to <code>tex.template</code>, <code>html.css</code> or <code>epub.css</code> template. For CSS template, this code is inserted at the end of the template (allowing to redefine rules that are set by the template); for the LaTeX template, the code is inserted at the end of the preambule, just before the <code>\begin{document}</code> tag.</li>
 <li><code>rendering.inline_toc.name</code> sets the name of the inline table of content, if it is displayed. By default, is is set to <code>{{{loc_toc}}}</code>, that is, a localised version of “Table of Contents”.</li>
 <li><code>rendering.chapter_template</code> sets the naming scheme for chapters.</li>
 </ul>
 <h2 id = "link-87">4.3. List of accessible variables</h2>
 <h3 id = "link-88">Metadata</h3>
-<p id = "para-189">For every template, Crowbook exports all of the metadata:</p>
+<p id = "para-188">For every template, Crowbook exports all of the metadata:</p>
 <ul>
 <li><code>author</code>;</li>
 <li><code>title</code>;</li>
@@ -324,14 +326,14 @@ ul li {
 <li><code>date</code>;</li>
 <li>any option <code>metadata.foo</code> defined in the book configuration file will also be exported as <code>metadata_foo</code>.</li>
 </ul>
-<p id = "para-190">These metadata can contain Markdown, which will be rendered. E.g., setting <code>date: “20th of **september**”</code> will render <code>september</code> in bold, using <code>&lt;b&gt;</code> tag for HTML or <code>\textbf</code> for LaTeX. (It might be a bad idea to insert Markdown into <code>author</code> or <code>title</code> fields, and it certainly is for <code>lang</code>, but it can be useful for custom metadata or for fields like <code>description</code>).</p>
-<p id = "para-191">For each metadata <code>foo</code> that is set, Crowbook also inserts a <code>has_foo</code> bool set to true. This allows to use Mustache’s section for some logic, e.g.:</p>
+<p id = "para-189">These metadata can contain Markdown, which will be rendered. E.g., setting <code>date: “20th of **september**”</code> will render <code>september</code> in bold, using <code>&lt;b&gt;</code> tag for HTML or <code>\textbf</code> for LaTeX. (It might be a bad idea to insert Markdown into <code>author</code> or <code>title</code> fields, and it certainly is for <code>lang</code>, but it can be useful for custom metadata or for fields like <code>description</code>).</p>
+<p id = "para-190">For each metadata <code>foo</code> that is set, Crowbook also inserts a <code>has_foo</code> bool set to true. This allows to use Mustache’s section for some logic, e.g.:</p>
 <pre><code>{{{title}}}
 {{#has_version}}, version {{{version}}}{{/has_version}}
 </code></pre>
-<p id = "para-192">will avoid rendering “, version” when <code>version</code> is not set.</p>
+<p id = "para-191">will avoid rendering “, version” when <code>version</code> is not set.</p>
 <h3 id = "link-89">Localisation strings</h3>
-<p id = "para-193">For all templates, Crowbook also exports some localisation strings <code>loc_foo</code>. They currently include:</p>
+<p id = "para-192">For all templates, Crowbook also exports some localisation strings <code>loc_foo</code>. They currently include:</p>
 <div class = "table">
     <table>
 <tr>
@@ -348,13 +350,13 @@ ul li {
     </table>
 </div>
 <h3 id = "link-90">Template-dependent values</h3>
-<p id = "para-194">Crowbook also exports some additional fields for some templates, see below.</p>
+<p id = "para-193">Crowbook also exports some additional fields for some templates, see below.</p>
 <div class = "table">
     <table>
 <tr>
 <th> Mustache tag </th><th> Value </th><th> Available in... </th></tr>
 <tr>
-<td> <code>content</code> </td><td> A rendered version of the book or chapter’s content </td><td> <code>html_single.html</code>, <code>html_dir.index.html</code>, <code>html_dir.chapter.html</code>, <code>tex.temlplate</code>, <code>epub.chapter.xhtml</code> </td></tr>
+<td> <code>content</code> </td><td> A rendered version of the book or chapter’s content </td><td> <code>html_single.html</code>, <code>html_dir.index.html</code>, <code>html_dir.chapter.html</code>, <code>tex.template</code>, <code>epub.chapter.xhtml</code> </td></tr>
 <tr>
 <td> <code>toc</code> </td><td> A rendered version of the table of contents </td><td> <code>html_single.html</code>, <code>html_dir.chapter.html</code>, <code>html_dir.index.html</code> </td></tr>
 <tr>
@@ -388,7 +390,9 @@ ul li {
 <tr>
 <td> <code>pages.svg</code> </td><td> The base64-encoded image of the button to display one chapter at a time </td><td> <code>html_single.js</code>, <code>html_single.html</code> </td></tr>
 <tr>
-<td> <code>menu_svg</code> </td><td> The base64-encoded image of the hamburger menu image </td><td> <code>hml_single.html</code> </td></tr>
+<td> <code>favicon</code> </td><td> The <code>&lt;link rel = “icon” ...&gt;</code> tag if <code>html.icon</code> is set </td><td> <code>html_single.html</code>, <code>html_dir.chapter.html</code>, <code>html_dir.index.html</code> </td></tr>
+<tr>
+<td> <code>menu_svg</code> </td><td> The base64-encoded image of the hamburger menu image </td><td> <code>html_single.html</code> </td></tr>
 <tr>
 <td> <code>prev_chapter</code> </td><td> Title and a link of previous chapter </td><td> <code>html_dir.chapter.html</code> </td></tr>
 <tr>
@@ -407,6 +411,8 @@ ul li {
 <td> <code>has_tex_size</code> </td><td> Set to true if <code>tex_size</code> is set </td><td> <code>tex.template</code> </td></tr>
 <tr>
 <td> <code>initials</code> </td><td> True if <code>rendering.initials</code> is true, not set else </td><td> <code>tex.template</code> </td></tr>
+<tr>
+<td> <code>additional_code</code> </td><td> Set to the content of <code>tex.template.add</code>, <code>html.css.add</code> or <code>epub.css.add</code> </td><td> <code>tex.template</code>, <code>html.css</code>, <code>epub.css</code> </td></tr>
 
     </table>
 </div>
@@ -421,7 +427,7 @@ ul li {
 
  </td>
  <td class = "note">
-  <aside id = "note-dest-1"><p id = "para-153">Some of them, though, are not “real” templates, they are just files that are inserted, but can’t contain mustache tags. This will probably evolve in future versions.</p>
+  <aside id = "note-dest-1"><p id = "para-152">Some of them, though, are not “real” templates, they are just files that are inserted, but can’t contain mustache tags. This will probably evolve in future versions.</p>
 </aside>
   </td>
 </tr>
@@ -433,7 +439,7 @@ ul li {
 
  </td>
  <td class = "note">
-  <aside id = "note-dest-2"><p id = "para-162">Mustache also provides the <code>{{foo}}</code> variant, which HTML-escapes the content of the variable. You should not use this, as Crowbook already renders and correctly escapes the variables it sets for use in templates.</p>
+  <aside id = "note-dest-2"><p id = "para-161">Mustache also provides the <code>{{foo}}</code> variant, which HTML-escapes the content of the variable. You should not use this, as Crowbook already renders and correctly escapes the variables it sets for use in templates.</p>
 </aside>
   </td>
 </tr>
@@ -445,7 +451,7 @@ ul li {
 
  </td>
  <td class = "note">
-  <aside id = "note-dest-3"><p id = "para-168"><code>&lt;&lt;foo&gt;&gt;</code> might also work, but the ampersand is required to prevent mustache HTML-escaping the value. This is not good because:</p>
+  <aside id = "note-dest-3"><p id = "para-167"><code>&lt;&lt;foo&gt;&gt;</code> might also work, but the ampersand is required to prevent mustache HTML-escaping the value. This is not good because:</p>
 <ol>
 <li>escaping is already done by Crowbook before setting variable content;</li>
 <li>escaping HTML in a LaTeX document won’t probably look good.</li>
@@ -463,7 +469,7 @@ ul li {
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-299">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
+  <footer id = "footer"><p id = "para-298">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
 </footer>
   </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
+    <link rel = "icon" href = "images/image_0.svg">
     <title>Crowbook User Guide – 2. Arguments</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
@@ -204,7 +205,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-296">Crowbook User Guide 0.10.3</p>
+        <div id = "top"><p id = "para-295">Crowbook User Guide 0.10.4</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -217,7 +218,7 @@ function toggle() {
   </a>
 </p>
       <h1 id = "link-21">2. Arguments</h1>
-<p id = "para-44">Crowbook can take a number of arguments:</p>
+<p id = "para-43">Crowbook can take a number of arguments:</p>
 <pre><code class = "language-text">Render a Markdown book in EPUB, PDF or HTML.
 
 USAGE:
@@ -242,19 +243,19 @@ OPTIONS:
 ARGS:
     &lt;BOOK&gt;    File containing the book configuration file, or a Markdown file when called with --single
 </code></pre>
-<p id = "para-45">Note that Crowbook generates output files relatively to the directory where &lt;BOOK&gt; is:</p>
+<p id = "para-44">Note that Crowbook generates output files relatively to the directory where &lt;BOOK&gt; is:</p>
 <pre><code class = "language-bash">$ crowbook foo/bar.book --to pdf --output baz.pdf
 </code></pre>
-<p id = "para-46">will thus generate “baz.pdf” in directory “foo” and not in the current directory.</p>
-<p id = "para-47">The most important option is obviously &lt;BOOK&gt;, i.e. the book configuration file. It is mandatory in most cases: if you don’t pass it, Crowbook will simply display this help message. In a normal use case this is the only argument you’ll need to pass, and Crowbook will generate the book in all formats specified in the configuration file.</p>
-<p id = "para-48">It is, however, possible to pass more arguments to <code>crowbook</code>:</p>
+<p id = "para-45">will thus generate “baz.pdf” in directory “foo” and not in the current directory.</p>
+<p id = "para-46">The most important option is obviously &lt;BOOK&gt;, i.e. the book configuration file. It is mandatory in most cases: if you don’t pass it, Crowbook will simply display this help message. In a normal use case this is the only argument you’ll need to pass, and Crowbook will generate the book in all formats specified in the configuration file.</p>
+<p id = "para-47">It is, however, possible to pass more arguments to <code>crowbook</code>:</p>
 <h2 id = "link-22">2.1. <code>--create</code></h2>
-<p id = "para-49"><b>Usage</b>: <code>crowbook [BOOK] --create file_1.md file_2.md ...</code></p>
-<p id = "para-50">Creates a new book from a list of Markdown files. It will generate a book configuration file with all file names specified as chapters. It either prints the result to stdout (if <code>BOOK</code> is not specified) or generate the file <code>BOOK</code> (or abort if it already exists).</p>
+<p id = "para-48"><b>Usage</b>: <code>crowbook [BOOK] --create file_1.md file_2.md ...</code></p>
+<p id = "para-49">Creates a new book from a list of Markdown files. It will generate a book configuration file with all file names specified as chapters. It either prints the result to stdout (if <code>BOOK</code> is not specified) or generate the file <code>BOOK</code> (or abort if it already exists).</p>
 <h3 id = "link-23">Examples</h3>
 <pre><code class = "language-bash">crowbook foo.book --create  README.md ChangeLog.md LICENSE.md
 </code></pre>
-<p id = "para-51">will generate a file <code>foo.book</code> containing:</p>
+<p id = "para-50">will generate a file <code>foo.book</code> containing:</p>
 <pre><code class = "language-yaml">author: Your name
 title: Your title
 lang: en
@@ -272,14 +273,14 @@ lang: en
 + ChangeLog.md
 + LICENSE.md
 </code></pre>
-<p id = "para-52">while</p>
+<p id = "para-51">while</p>
 <pre><code class = "language-bash">crowbook --create README.md ChangeLog.md LICENSE.md
 </code></pre>
-<p id = "para-53">will print the same result, but to stdout (without creating a file).</p>
-<p id = "para-54">When <code>crowbook</code> is runned with <code>--create</code>, it can also use the keys/values set by <code>--set</code> (see below):</p>
+<p id = "para-52">will print the same result, but to stdout (without creating a file).</p>
+<p id = "para-53">When <code>crowbook</code> is runned with <code>--create</code>, it can also use the keys/values set by <code>--set</code> (see below):</p>
 <pre><code class = "language-bash">$ crowbook foo.book --create file1.md file2.md --set author "Pierre Dupont" title "Mon œuvre" lang fr
 </code></pre>
-<p id = "para-55">will generate a <code>foo.book</code> file containing:</p>
+<p id = "para-54">will generate a <code>foo.book</code> file containing:</p>
 <pre><code class = "language-yaml">author: Pierre Dupont
 title: Mon œuvre
 lang: fr
@@ -289,83 +290,83 @@ lang: fr
 + file2.md
 </code></pre>
 <h2 id = "link-24">2.2. <code>--single</code></h2>
-<p id = "para-56"><b>usage</b>: <code>crowbook --single &lt;FILE&gt;</code></p>
-<p id = "para-57">(or <code>crowbook -s &lt;FILE&gt;</code>)</p>
-<p id = "para-58">This argument allows to give <code>crowbook</code> a single Markdown file. This file can contain an inline YAML block to set some book options. Inline YAML blocks must start and end with a line with <code>---</code> (three dashes). E.g:</p>
+<p id = "para-55"><b>usage</b>: <code>crowbook --single &lt;FILE&gt;</code></p>
+<p id = "para-56">(or <code>crowbook -s &lt;FILE&gt;</code>)</p>
+<p id = "para-57">This argument allows to give <code>crowbook</code> a single Markdown file. This file can contain an inline YAML block to set some book options. Inline YAML blocks must start and end with a line with <code>---</code> (three dashes). E.g:</p>
 <pre><code class = "language-yaml">---
 author: Joan Doe
 title: A short story
 output.html: short.html
 ---
 </code></pre>
-<p id = "para-59">If this YAML block is not at the beginning of a file, it must also be preceded by a blank line.</p>
-<p id = "para-60">This allows to not have to write a <code>.book</code> configuration file for a short story or an article. <code>crowbook --single foo.md</code> is rougly equivalent to having a book configuration file containing:</p>
+<p id = "para-58">If this YAML block is not at the beginning of a file, it must also be preceded by a blank line.</p>
+<p id = "para-59">This allows to not have to write a <code>.book</code> configuration file for a short story or an article. <code>crowbook --single foo.md</code> is rougly equivalent to having a book configuration file containing:</p>
 <pre><code class = "language-yaml">! foo.md
 </code></pre>
-<p id = "para-61">That is, the chapter heading (if any) won’t be displayed in the output documents (though they still appear in the TOC).</p>
-<blockquote><p id = "para-62">Note that by default, using <code>--single</code> sets the default LaTeX class of the book to <code>article</code> instead of <code>book</code>.</p>
+<p id = "para-60">That is, the chapter heading (if any) won’t be displayed in the output documents (though they still appear in the TOC).</p>
+<blockquote><p id = "para-61">Note that by default, using <code>--single</code> sets the default LaTeX class of the book to <code>article</code> instead of <code>book</code>.</p>
 </blockquote>
 <h2 id = "link-25">2.3. <code>--set</code></h2>
-<p id = "para-63"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --set [KEY] [VALUE]...</code></p>
-<p id = "para-64">This argument takes a list of <code>KEY</code> <code>VALUE</code> pairs and allows setting or overriding a book configuration option. All valid options in the configuration files are valid as keys. For more information, see <a href = "chapter_002.html">the configuration file</a>.</p>
+<p id = "para-62"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --set [KEY] [VALUE]...</code></p>
+<p id = "para-63">This argument takes a list of <code>KEY</code> <code>VALUE</code> pairs and allows setting or overriding a book configuration option. All valid options in the configuration files are valid as keys. For more information, see <a href = "chapter_002.html">the configuration file</a>.</p>
 <h3 id = "link-26">Examples</h3>
 <pre><code class = "language-bash">$ crowbook foo.book --set html.css style.css
 </code></pre>
-<p id = "para-65">will override the CSS for HTML generation (the <code>html.css</code> key) to the file <code>style.css</code>.</p>
+<p id = "para-64">will override the CSS for HTML generation (the <code>html.css</code> key) to the file <code>style.css</code>.</p>
 <pre><code class = "language-bash">$ crowbook foo.book --set author Foo title Bar
 </code></pre>
-<p id = "para-66">will override the book title to <code>Bar</code> and its author to <code>Foo</code>.</p>
+<p id = "para-65">will override the book title to <code>Bar</code> and its author to <code>Foo</code>.</p>
 <h2 id = "link-27">2.4. <code>--proofread</code></h2>
-<p id = "para-67">Equivalent to <code>--set proofread true</code>. Enable proofreading. See <a href = "chapter_004.html">Proofreading</a>.</p>
+<p id = "para-66">Equivalent to <code>--set proofread true</code>. Enable proofreading. See <a href = "chapter_004.html">Proofreading</a>.</p>
 <h2 id = "link-28">2.5. <code>--list-options</code></h2>
-<p id = "para-68"><b>usage</b>: <code>crowbook --list-options</code></p>
-<p id = "para-69">(or <code>crowbook -l</code>)</p>
-<p id = "para-70">Displays all the valid options to use, whether in a book configuration file, with <code>--set</code>, or in an inline YAML block.</p>
+<p id = "para-67"><b>usage</b>: <code>crowbook --list-options</code></p>
+<p id = "para-68">(or <code>crowbook -l</code>)</p>
+<p id = "para-69">Displays all the valid options to use, whether in a book configuration file, with <code>--set</code>, or in an inline YAML block.</p>
 <h2 id = "link-29">2.6. <code>--print-template</code></h2>
-<p id = "para-71"><b>usage</b>: <code>crowbook --print-template template</code></p>
-<p id = "para-72">Prints the built-in template to stdout. Useful if you want to customize the appearance of your document. E.g., if you want to modify the CSS used for HTML rendering:</p>
+<p id = "para-70"><b>usage</b>: <code>crowbook --print-template template</code></p>
+<p id = "para-71">Prints the built-in template to stdout. Useful if you want to customize the appearance of your document. E.g., if you want to modify the CSS used for HTML rendering:</p>
 <pre><code class = "language-bash">$ crowbook --print-template html.css &gt; my_style.css
 # edit my_style.css in your favourite editor
 $ crowbook my.book --set html.css my_style.css
 # or add "html.css: my_style.css" in my.book
 </code></pre>
-<p id = "para-73">Note that it is possible to use this option in conjonction with <code>--set</code>, though it is currently only useful for EPUB template:</p>
+<p id = "para-72">Note that it is possible to use this option in conjonction with <code>--set</code>, though it is currently only useful for EPUB template:</p>
 <pre><code class = "language-bash">$ crowbook --print-template epub.template --set epub.version 2
 # Returns the template for Epub 2 (currently it is the default one)
 $ crowbook --print-template epub.template --set epub.version 3
 # Returns the template for Epub 3
 </code></pre>
 <h2 id = "link-30">2.7. <code>--verbose</code></h2>
-<p id = "para-74"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --verbose</code></p>
-<p id = "para-75">If this flag is set, Crowbook will print the warnings it detects while parsing and rendering. These warnings are typically related to the inclusion of non-local images, linking to Markdown files that are not part of the book, and so on.</p>
+<p id = "para-73"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --verbose</code></p>
+<p id = "para-74">If this flag is set, Crowbook will print the warnings it detects while parsing and rendering. These warnings are typically related to the inclusion of non-local images, linking to Markdown files that are not part of the book, and so on.</p>
 <h2 id = "link-31">2.8. <code>--to</code></h2>
-<p id = "para-76"><b>usage</b>: <code>crowbook &lt;BOOK&gt;--to [FORMAT]</code></p>
-<p id = "para-77">(or <code>crowbook &lt;BOOK&gt; -t [FORMAT]</code>)</p>
-<p id = "para-78">Generate only the specified format. <code>FORMAT</code> must be either <code>epub</code>, <code>pdf</code>, <code>html</code>, <code>odt</code> or <code>tex</code>.</p>
-<p id = "para-79">If an output file for the format is not specified in the book configuration file, <code>crowbook</code> will fail to render PDF, ODT and EPUB, whereas it will print HTML and TeX files on stdout. It is, however, possible to specify a file with the <code>--output</code> option.</p>
+<p id = "para-75"><b>usage</b>: <code>crowbook &lt;BOOK&gt;--to [FORMAT]</code></p>
+<p id = "para-76">(or <code>crowbook &lt;BOOK&gt; -t [FORMAT]</code>)</p>
+<p id = "para-77">Generate only the specified format. <code>FORMAT</code> must be either <code>epub</code>, <code>pdf</code>, <code>html</code>, <code>odt</code> or <code>tex</code>.</p>
+<p id = "para-78">If an output file for the format is not specified in the book configuration file, <code>crowbook</code> will fail to render PDF, ODT and EPUB, whereas it will print HTML and TeX files on stdout. It is, however, possible to specify a file with the <code>--output</code> option.</p>
 <h3 id = "link-32">Examples</h3>
 <pre><code class = "language-bash">crowbook --to html foo.book
 </code></pre>
-<p id = "para-80">will generate some HTML, and prints it either to the file specified by <code>output.html</code> in <code>foo.book</code>, or to stdout if it is not specified.</p>
+<p id = "para-79">will generate some HTML, and prints it either to the file specified by <code>output.html</code> in <code>foo.book</code>, or to stdout if it is not specified.</p>
 <pre><code class = "language-bash">crowbook --to pdf --output foo.pdf foo.book
 </code></pre>
-<p id = "para-81">will generate a <code>foo.pdf</code> file.</p>
+<p id = "para-80">will generate a <code>foo.pdf</code> file.</p>
 <h2 id = "link-33">2.9. <code>--output</code></h2>
-<p id = "para-82"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --to &lt;FORMAT&gt; --output &lt;FILE&gt;</code></p>
-<p id = "para-83">(or <code>crowbook -t &lt;FORMAT&gt; -o &lt;FILE&gt; &lt;BOOK&gt;</code>)</p>
-<p id = "para-84">Specifies an output file. Only valid when <code>--to</code> is used.</p>
-<p id = "para-85">Note that Crowbook generates output files relatively to the directory where <code>BOOK</code> is (unless the option <code>output.base_path</code> is set):</p>
+<p id = "para-81"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --to &lt;FORMAT&gt; --output &lt;FILE&gt;</code></p>
+<p id = "para-82">(or <code>crowbook -t &lt;FORMAT&gt; -o &lt;FILE&gt; &lt;BOOK&gt;</code>)</p>
+<p id = "para-83">Specifies an output file. Only valid when <code>--to</code> is used.</p>
+<p id = "para-84">Note that Crowbook generates output files relatively to the directory where <code>BOOK</code> is (unless the option <code>output.base_path</code> is set):</p>
 <pre><code class = "language-bash">$ crowbook foo/bar.book --to pdf --output baz.pdf
 </code></pre>
-<p id = "para-86">will thus generate <code>baz.pdf</code> in directory <code>foo</code> and not in current directory.</p>
+<p id = "para-85">will thus generate <code>baz.pdf</code> in directory <code>foo</code> and not in current directory.</p>
 <h2 id = "link-34">2.10. <code>--lang</code></h2>
-<p id = "para-87"><b>usage</b>: <code>crowbook --lang &lt;LANG&gt;</code></p>
-<p id = "para-88">(or <code>crowbook -L &lt;LANG&gt;</code>)</p>
-<p id = "para-89">Set the runtime language used by Crowbook. Currently, only a french translation is available. By default, Crowbook uses the <code>LANG</code> environment variable to determine which language to use, but this option allows to override it (e.g. for operating systems that don’t use such an option, such as Windows).</p>
+<p id = "para-86"><b>usage</b>: <code>crowbook --lang &lt;LANG&gt;</code></p>
+<p id = "para-87">(or <code>crowbook -L &lt;LANG&gt;</code>)</p>
+<p id = "para-88">Set the runtime language used by Crowbook. Currently, only a french translation is available. By default, Crowbook uses the <code>LANG</code> environment variable to determine which language to use, but this option allows to override it (e.g. for operating systems that don’t use such an option, such as Windows).</p>
 <h3 id = "link-35">Example</h3>
-<p id = "para-90"><code>$ crowbook --lang fr --help</code></p>
-<p id = "para-91">will display Crowbook’s help messages in french.</p>
-<blockquote><p id = "para-92">Note that this argument has nothing to do with the <code>lang</code> option that you can set in the book configuration file, which specifies the language <em>of the book</em>. This argument specifies the language of the text messages that Crowbook will display while running.</p>
+<p id = "para-89"><code>$ crowbook --lang fr --help</code></p>
+<p id = "para-90">will display Crowbook’s help messages in french.</p>
+<blockquote><p id = "para-91">Note that this argument has nothing to do with the <code>lang</code> option that you can set in the book configuration file, which specifies the language <em>of the book</em>. This argument specifies the language of the text messages that Crowbook will display while running.</p>
 </blockquote>
 
       <p class = "next_chapter">
@@ -375,7 +376,7 @@ $ crowbook --print-template epub.template --set epub.version 3
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-295">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
+  <footer id = "footer"><p id = "para-294">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
 </footer>
   </body>
 </html>

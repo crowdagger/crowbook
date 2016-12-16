@@ -5,6 +5,7 @@
     <meta name="generator" content="crowbook">
     <meta name="author" content="Élisabeth Henry">
     <meta name="viewport" content="width=device-width">
+    <link rel = "icon" href = "images/image_0.svg">
     <title>Crowbook User Guide – ChangeLog</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
@@ -204,7 +205,7 @@ function toggle() {
   <div id = "content">
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-306">Crowbook User Guide 0.10.3</p>
+        <div id = "top"><p id = "para-305">Crowbook User Guide 0.10.4</p>
 </div>
           <div id = "menu">
       <img id = "menu-button" onclick="toggle();"
@@ -223,6 +224,12 @@ function toggle() {
 <li><code>tex.font_size</code> specifies an optional font size (in pt) passed to the LaTeX class (must be 10, 11 or 12).</li>
 <li><code>tex.title</code> can be set to <code>false</code> to avoid rendering the title with <code>\maketitle</code>.</li>
 <li><code>tex.paper_size</code> specifies the paper size for PDF output.</li>
+<li><code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code>allow to specify inline LaTex or CSS code in the book configuration file that will be added respectively to <code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code>.</li>
+<li><code>html.icon</code> allows to specify the path of an icon for HTML documents.</li>
+</ul>
+</li>
+<li>Command-line interface:<ul>
+<li>Paths that are displayed should now be normalized, e.g. “foo/bar.pdf” instead of “baz/../foo/bar.pdf”.</li>
 </ul>
 </li>
 <li>Rendering:<ul>
@@ -255,7 +262,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-104">0.10.2 (2016-10-21)</h2>
-<p id = "para-224">Only minor changes in this version:</p>
+<p id = "para-223">Only minor changes in this version:</p>
 <ul>
 <li>Options:<ul>
 <li><code>author</code> and <code>title</code>’s default values are both set to the empty string, instead of <code>Anonymous</code> and <code>Untitled</code>.</li>
@@ -271,9 +278,9 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-105">0.10.1 (2016-10-18)</h2>
-<p id = "para-225">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
+<p id = "para-224">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
 <h2 id = "link-106">0.10.0 (2016-10-18)</h2>
-<p id = "para-226">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
+<p id = "para-225">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
 <ul>
 <li><b>Breaking changes</b>:<ul>
 <li>Templates:<ul>
@@ -310,7 +317,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-107">0.9.1 (2016-09-29)</h2>
-<p id = "para-227">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
+<p id = "para-226">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
 <ul>
 <li>New options:<ul>
 <li><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entites and CSS so it can display correctly even if reader’s don’t have a browser/font supporting these unicode symbols.</li>
@@ -341,7 +348,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-108">0.9.0 (2016-09-23)</h2>
-<p id = "para-228">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
+<p id = "para-227">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
 <ul>
 <li>reducing the surface of Crowbook’s library API;</li>
 <li>cleaning options names</li>
@@ -406,7 +413,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-109">0.8.0 (2016-09-19)</h2>
-<p id = "para-229">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
+<p id = "para-228">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
 <ul>
 <li>New options:<ul>
 <li><code>import_config</code>is not really an option, but allows to import another configuration file, useful if you share a same set of options between multiple books.</li>
@@ -446,7 +453,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-110">0.7.0 (2016-09-11)</h2>
-<p id = "para-230">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
+<p id = "para-229">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
 <ul>
 <li>Internal/API:<ul>
 <li><code>Token</code> has a new variant, <code>StandaloneImage</code>. This is used to distinguish an image that is alone in a paragraph of an image that is inlined alongside text.</li>
@@ -487,7 +494,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-112">0.5.1 (2016-04-14)</h2>
-<p id = "para-231">Mostly rendering fixes:</p>
+<p id = "para-230">Mostly rendering fixes:</p>
 <ul>
 <li>Epub:<ul>
 <li>Fix a validation problem when book contained hidden chapters.</li>
@@ -645,7 +652,7 @@ function toggle() {
 </p>
     </div>
   </div>
-  <footer id = "footer"><p id = "para-305">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
+  <footer id = "footer"><p id = "para-304">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.4-pre</p>
 </footer>
   </body>
 </html>
