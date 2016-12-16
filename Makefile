@@ -14,7 +14,7 @@ clean:
 	cargo clean
 
 $(BINARY): src/lib/lib*.rs src/bin/*.rs Cargo.toml
-	cargo build --release --features "proofread" --target=$(TARGET)
+	cargo build --release --target=$(TARGET)
 
 package:
 	checkinstall -D --install=no --pkgname $(PKGNAME) --pkgversion $(PKGVERSION) --pkglicense $(PKGLICENSE) --maintainer $(MAINTAINER)
