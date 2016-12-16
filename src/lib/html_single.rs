@@ -223,6 +223,10 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("pages_svg", pages_svg)
             .insert_str("footer", HtmlRenderer::get_footer(self)?)
             .insert_str("header", HtmlRenderer::get_header(self)?);
+        if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
+                let favicon = self.html.handler.map_image(&self.html.book.source, favicon)?;
+                mapbuilder = mapbuilder.insert_str("favicon", format!("<link rel = \"icon\" href = \"{}\">", favicon));
+            }
         if !self.html.toc.is_empty() {
             mapbuilder = mapbuilder.insert_bool("has_toc", true);
             mapbuilder = mapbuilder.insert_str("toc", toc)
