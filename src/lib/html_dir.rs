@@ -258,6 +258,10 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("script", self.html.book.get_template("html.js").unwrap())
                 .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
 
+            if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
+                let favicon = self.html.handler.map_image(&self.html.book.source, favicon)?;
+                mapbuilder = mapbuilder.insert_str("favicon", format!("<link rel = \"icon\" href = \"{}\">", favicon));
+            }
             if self.html.book.options.get_bool("html.highlight_code").unwrap() == true {
                 mapbuilder = mapbuilder.insert_bool("highlight_code", true);
             }
@@ -314,6 +318,10 @@ impl<'a> HtmlDirRenderer<'a> {
             .insert_str("toc", toc.clone())
             .insert_str("script", self.html.book.get_template("html.js").unwrap())
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
+        if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
+            let favicon = self.html.handler.map_image(&self.html.book.source, favicon)?;
+            mapbuilder = mapbuilder.insert_str("favicon", format!("<link rel = \"icon\" href = \"{}\">", favicon));
+        }
         if self.html.book.options.get_bool("html.highlight_code").unwrap() == true {
             mapbuilder = mapbuilder.insert_bool("highlight_code", true);
         }

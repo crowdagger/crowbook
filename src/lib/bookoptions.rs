@@ -43,6 +43,7 @@ rendering.chapter_template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}
 import_config:path                  # {import_config}
 
 # {html_opt}
+html.icon:path                      # {html_icon}
 html.header:str                     # {html_header}
 html.footer:str                     # {html_footer}
 html.css:tpl                        # {html_css}
@@ -195,7 +196,8 @@ html.crowbook_link:alias                            # {removed}
                                          chapter_template = lformat!("Naming scheme of chapters"),
                                          
                                          import_config = lformat!("Import another book configuration file"),
-                                         
+
+                                         html_icon = lformat!("Path to an icon to be used for the HTML files(s)"),
                                          html_header = lformat!("Custom header to display at the beginning of html file(s)"),
                                          html_footer = lformat!("Custom footer to display at the end of HTML file(s)"),
                                          html_css = lformat!("Path of a stylesheet for HTML rendering"),
@@ -618,7 +620,7 @@ impl BookOptions {
                 self.root.join(path)
             }
 
-            "cover" => {
+            "cover" | "html.icon" => {
                 // Translate according to resources.base_path.images
                 let base = self.get_path("resources.base_path.images").unwrap();
                 let new_path = Path::new(&base).join(path);
