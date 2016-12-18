@@ -7,10 +7,13 @@ static FR: &'static str = include_str!("../../lang/fr.yaml");
 
 /// Get the hashmap for a given language
 pub fn get_hash(lang: &str) -> Hash {
-    let docs = match lang {
-        "fr" => YamlLoader::load_from_str(FR).unwrap(),
-        "es" => YamlLoader::load_from_str(ES).unwrap(),
-        _ => YamlLoader::load_from_str(EN).unwrap(),
+    let lang = lang.to_lowercase();
+    let docs = if lang.starts_with("fr") {
+        YamlLoader::load_from_str(FR).unwrap()
+    } else if lang.starts_with("es") {
+        YamlLoader::load_from_str(ES).unwrap()
+    } else {
+        YamlLoader::load_from_str(EN).unwrap()
     };
     let elem = docs.into_iter().next().unwrap();
     if let Yaml::Hash(hash) = elem {
