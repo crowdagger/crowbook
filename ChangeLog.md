@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+unreleased
+------------
+* Bugfixes:
+  * EPUB:
+    * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
+      of "&").
+
 0.10.4 (2016-12-16)
 -----------------------
 * New options:
