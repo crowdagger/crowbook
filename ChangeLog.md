@@ -4,7 +4,9 @@ ChangeLog
 unreleased
 ------------
 * Rendering:
-  * EPUB: the toc.ncx now displays links to "title" and (if set) "cover"
+  * EPUB: the `toc.ncx` file now displays links to "title" and (if set)
+    "cover".
+  * EPUB: the `toc.ncx` file now displays toc levels below chapter.
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
