@@ -224,21 +224,48 @@ impl<'a> EpubRenderer<'a> {
 ",
                                          loc_cover = loc_cover));
         }
-        
-        for (n, ref title) in self.toc.iter().enumerate() {
-            let filename = filenamer(n);
-            let id = format!("navPoint-{}", n + offset);
-            nav_points.push_str(&format!("\
-    <navPoint id=\"{id}\">
-      <navLabel>
-        <text>{title}</text>
-      </navLabel>
-      <content src = \"{file}\" />
-    </navPoint>\n",
-                                         id = id,
-                                         title = title,
-                                         file = filename));
+
+        let mut levels = vec![];
+
+        for element in self.html.toc.elements.iter() {
+            let mut last_level;
+
+            loop {
+                last_level = if levels.is_empty() {
+                    0
+                } else {
+                    levels[levels.len() - 1]
+                };
+
+                if last_level == element.level {
+                    nav_points.push_str("    </navPoint>\n");
+                    break;
+                } else if element.level >= last_level  {
+                    levels.push(element.level);
+                    break;
+                } else /* if element.level < last_level */ {
+                    levels.pop().unwrap();
+                    nav_points.push_str("    </navPoint>\n");
+                    continue;
+                }
+            }
+            
+            nav_points.push_str(&format!("
+   <navPoint id = \"navPoint-{id}\">
+     <navLabel>
+       <text>{title}</text>
+     </navLabel>
+     <content src = \"{url}\" />
+",
+                                   id = offset,
+                                   title = element.title,
+                                   url = element.url));
+            offset += 1;
         }
+        for _ in levels {
+            nav_points.push_str("    </navPoint>\n");
+        }
+
         let template = compile_str(TOC,
                                    &self.html.book.source,
                                    lformat!("could not render template for toc.ncx"))?;

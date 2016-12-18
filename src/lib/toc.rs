@@ -4,7 +4,7 @@ use std::iter;
 /// A structure for manipulating Table Of Content
 #[derive(Debug)]
 pub struct Toc {
-    elements: Vec<TocElement>,
+    pub elements: Vec<TocElement>,
     numbered: bool,
 }
 
@@ -106,10 +106,10 @@ impl Toc {
 
 
 #[derive(Debug)]
-struct TocElement {
-    level: i32,
-    url: String,
-    title: String,
+pub struct TocElement {
+    pub level: i32,
+    pub url: String,
+    pub title: String,
 }
 
 impl TocElement {
