@@ -32,3 +32,100 @@ fn toc_simple() {
 </ul>";
     test_eq(&actual, expected);
 }
+
+#[test]
+fn toc_epub_simple() {
+    let mut toc = Toc::new();
+    toc.add(1, String::from("#1"), "1".to_owned());
+    toc.add(1, String::from("#2"), "2".to_owned());
+    let actual = toc.render_epub(1);
+    let expected = "
+   <navPoint id = \"navPoint-1\">
+     <navLabel>
+       <text>1</text>
+     </navLabel>
+     <content src = \"#1\" />
+    </navPoint>
+
+   <navPoint id = \"navPoint-2\">
+     <navLabel>
+       <text>2</text>
+     </navLabel>
+     <content src = \"#2\" />
+    </navPoint>
+";
+    test_eq(&actual, expected);
+}
+
+#[test]
+fn toc_epub_simple_sublevels() {
+    let mut toc = Toc::new();
+    toc.add(1, String::from("#1"), "1".to_owned());
+    toc.add(2, String::from("#1.1"), "1.1".to_owned());
+    toc.add(1, String::from("#2"), "2".to_owned());
+    toc.add(2, String::from("#2.1"), "2.1".to_owned());
+    let actual = toc.render_epub(1);
+    let expected = "
+   <navPoint id = \"navPoint-1\">
+     <navLabel>
+       <text>1</text>
+     </navLabel>
+     <content src = \"#1\" />
+
+   <navPoint id = \"navPoint-2\">
+     <navLabel>
+       <text>1.1</text>
+     </navLabel>
+     <content src = \"#1.1\" />
+    </navPoint>
+    </navPoint>
+
+   <navPoint id = \"navPoint-3\">
+     <navLabel>
+       <text>2</text>
+     </navLabel>
+     <content src = \"#2\" />
+
+   <navPoint id = \"navPoint-4\">
+     <navLabel>
+       <text>2.1</text>
+     </navLabel>
+     <content src = \"#2.1\" />
+    </navPoint>
+    </navPoint>
+";
+    test_eq(&actual, expected);
+}
+
+
+#[test]
+fn toc_epub_broken_sublevels() {
+    let mut toc = Toc::new();
+    toc.add(2, String::from("#1.1"), "1.1".to_owned());
+    toc.add(1, String::from("#2"), "2".to_owned());
+    toc.add(2, String::from("#2.1"), "2.1".to_owned());
+    let actual = toc.render_epub(1);
+    let expected = "
+   <navPoint id = \"navPoint-1\">
+     <navLabel>
+       <text>1.1</text>
+     </navLabel>
+     <content src = \"#1.1\" />
+    </navPoint>
+
+   <navPoint id = \"navPoint-2\">
+     <navLabel>
+       <text>2</text>
+     </navLabel>
+     <content src = \"#2\" />
+
+   <navPoint id = \"navPoint-3\">
+     <navLabel>
+       <text>2.1</text>
+     </navLabel>
+     <content src = \"#2.1\" />
+    </navPoint>
+    </navPoint>
+";
+    test_eq(&actual, expected);
+}
