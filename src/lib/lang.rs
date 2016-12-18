@@ -2,12 +2,14 @@ use yaml_rust::{YamlLoader, Yaml};
 use yaml_rust::yaml::Hash;
 
 static EN: &'static str = include_str!("../../lang/en.yaml");
+static ES: &'static str = include_str!("../../lang/es.yaml");
 static FR: &'static str = include_str!("../../lang/fr.yaml");
 
 /// Get the hashmap for a given language
 pub fn get_hash(lang: &str) -> Hash {
     let docs = match lang {
         "fr" => YamlLoader::load_from_str(FR).unwrap(),
+        "es" => YamlLoader::load_from_str(ES).unwrap(),
         _ => YamlLoader::load_from_str(EN).unwrap(),
     };
     let elem = docs.into_iter().next().unwrap();
