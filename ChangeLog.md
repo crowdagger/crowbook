@@ -9,6 +9,9 @@ unreleased
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
       of "&").
+* Internationalization:
+  * Strings in generated Crowbook documents (such as "Table of
+    contents", "Title", "Cover" and such) are now translated in spanish.
 
 0.10.4 (2016-12-16)
 -----------------------
