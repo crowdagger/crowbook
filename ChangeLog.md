@@ -3,6 +3,8 @@ ChangeLog
 
 unreleased
 ------------
+* Rendering:
+  * EPUB: the toc.ncx now displays links to "title" and (if set) "cover"
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
