@@ -211,60 +211,22 @@ impl<'a> EpubRenderer<'a> {
         let mut offset = 1;
 
         if self.html.book.options.get("cover").is_ok() {
-            offset += 1;
             let loc_cover = lang::get_str(self.html.book.options.get_str("lang").unwrap(),
                                           "cover");
             nav_points.push_str(&format!("\
-    <navPoint id=\"navPoint-1\">
+    <navPoint id=\"navPoint-{offset}\">
       <navLabel> 
         <text>{loc_cover}</text>
       </navLabel>
       <content src=\"cover.xhtml\" />
     </navPoint>
 ",
+                                         offset = offset,
                                          loc_cover = loc_cover));
-        }
-
-        let mut levels = vec![];
-
-        for element in self.html.toc.elements.iter() {
-            let mut last_level;
-
-            loop {
-                last_level = if levels.is_empty() {
-                    0
-                } else {
-                    levels[levels.len() - 1]
-                };
-
-                if last_level == element.level {
-                    nav_points.push_str("    </navPoint>\n");
-                    break;
-                } else if element.level >= last_level  {
-                    levels.push(element.level);
-                    break;
-                } else /* if element.level < last_level */ {
-                    levels.pop().unwrap();
-                    nav_points.push_str("    </navPoint>\n");
-                    continue;
-                }
-            }
-            
-            nav_points.push_str(&format!("
-   <navPoint id = \"navPoint-{id}\">
-     <navLabel>
-       <text>{title}</text>
-     </navLabel>
-     <content src = \"{url}\" />
-",
-                                   id = offset,
-                                   title = element.title,
-                                   url = element.url));
             offset += 1;
         }
-        for _ in levels {
-            nav_points.push_str("    </navPoint>\n");
-        }
+
+        nav_points.push_str(&self.html.toc.render_epub(offset));
 
         let template = compile_str(TOC,
                                    &self.html.book.source,

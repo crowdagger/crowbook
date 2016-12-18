@@ -4,7 +4,7 @@ use std::iter;
 /// A structure for manipulating Table Of Content
 #[derive(Debug)]
 pub struct Toc {
-    pub elements: Vec<TocElement>,
+    elements: Vec<TocElement>,
     numbered: bool,
 }
 
@@ -36,6 +36,52 @@ impl Toc {
     pub fn add(&mut self, level: i32, url: String, title: String) {
         let element = TocElement::new(level, url, title);
         self.elements.push(element);
+    }
+
+    /// Render the Toc in a toc.ncx compatible way, for EPUB.
+    pub fn render_epub(&self, mut offset: u32) -> String {
+        let mut output = String::new();
+        let mut levels = vec![];
+        
+        for element in self.elements.iter() {
+            let mut last_level;
+            
+            loop {
+                last_level = if levels.is_empty() {
+                    0
+                } else {
+                    levels[levels.len() - 1]
+                };
+
+                if last_level == element.level {
+                    output.push_str("    </navPoint>\n");
+                    break;
+                } else if element.level >= last_level  {
+                    levels.push(element.level);
+                    break;
+                } else /* if element.level < last_level */ {
+                    levels.pop().unwrap();
+                    output.push_str("    </navPoint>\n");
+                    continue;
+                }
+            }
+            
+            output.push_str(&format!("
+   <navPoint id = \"navPoint-{id}\">
+     <navLabel>
+       <text>{title}</text>
+     </navLabel>
+     <content src = \"{url}\" />
+",
+                                   id = offset,
+                                   title = element.title,
+                                   url = element.url));
+            offset += 1;
+        }
+        for _ in levels {
+            output.push_str("    </navPoint>\n");
+        }
+        output
     }
 
     /// Render the Toc in either <ul> or <ol> form (according to Self::numbered
@@ -106,10 +152,10 @@ impl Toc {
 
 
 #[derive(Debug)]
-pub struct TocElement {
-    pub level: i32,
-    pub url: String,
-    pub title: String,
+struct TocElement {
+    level: i32,
+    url: String,
+    title: String,
 }
 
 impl TocElement {
