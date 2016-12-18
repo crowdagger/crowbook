@@ -6,12 +6,12 @@
     <meta name="dtb:maxPageNumber" content="0" />
   </head>
   <docTitle>
-    <text>{{title}}</text>
+    <text>{{{title}}}</text>
   </docTitle>
   <navMap>
     <navPoint id="navPoint-0">
       <navLabel>
-        <text>{{title}}</text>
+        <text>{{{title}}}</text>
       </navLabel>
       <content src="title_page.xhtml" />
     </navPoint>

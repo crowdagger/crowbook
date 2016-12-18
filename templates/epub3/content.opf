@@ -2,11 +2,11 @@
 <package version="3.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="epub-id-1">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
             xmlns:opf="http://www.idpf.org/2007/opf">
-    <dc:identifier id="epub-id-1">{{uuid}}</dc:identifier>
-    <dc:title>{{title}}</dc:title>
+    <dc:identifier id="epub-id-1">{{{uuid}}}</dc:identifier>
+    <dc:title>{{{title}}}</dc:title>
     <dc:date>{{{date}}}</dc:date>
-    <dc:language>{{lang}}</dc:language>
-    <dc:creator id="epub-creator-1">{{author}}</dc:creator>
+    <dc:language>{{{lang}}}</dc:language>
+    <dc:creator id="epub-creator-1">{{{author}}}</dc:creator>
     <meta refines="#epub-creator-1" property="role"
           scheme="marc:relators">aut</meta>
     <meta property="dcterms:modified">{{{date}}}</meta>
@@ -29,7 +29,7 @@
     {{{itemrefs}}}
   </spine>
   <guide>
-    <reference type="toc" title="{{title}}" href="nav.xhtml" />
+    <reference type="toc" title="{{{title}}}" href="nav.xhtml" />
     {{{cover_xhtml}}}
   </guide>
 </package>

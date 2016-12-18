@@ -3,10 +3,10 @@
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
             xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:identifier id="epub-id-1">{{uuid}}</dc:identifier>
-    <dc:title>{{title}}</dc:title>
-    <dc:date>{{date}}</dc:date>
-    <dc:language>{{lang}}</dc:language>
-    <dc:creator opf:role="aut">{{author}}</dc:creator>
+    <dc:title>{{{title}}}</dc:title>
+    <dc:date>{{{date}}}</dc:date>
+    <dc:language>{{{lang}}}</dc:language>
+    <dc:creator opf:role="aut">{{{author}}}</dc:creator>
     {{{optional}}}
   </metadata>
   <manifest>
@@ -24,7 +24,7 @@
     {{{itemrefs}}}
   </spine>
   <guide>
-    <reference type="toc" title="{{title}}" href="nav.xhtml" />
+    <reference type="toc" title="{{{title}}}" href="nav.xhtml" />
     {{{cover_xhtml}}}
   </guide>
 </package>
