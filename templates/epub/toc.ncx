@@ -11,7 +11,7 @@
   <navMap>
     <navPoint id="navPoint-0">
       <navLabel>
-        <text>{{{title}}}</text>
+        <text>{{{loc_title}}}</text>
       </navLabel>
       <content src="title_page.xhtml" />
     </navPoint>
