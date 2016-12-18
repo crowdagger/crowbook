@@ -25,6 +25,7 @@ use templates::epub3;
 use resource_handler;
 use renderer::Renderer;
 use parser::Parser;
+use lang;
 
 use chrono;
 use uuid;
@@ -207,9 +208,26 @@ impl<'a> EpubRenderer<'a> {
     fn render_toc(&mut self) -> Result<String> {
         let mut nav_points = String::new();
 
+        let mut offset = 1;
+
+        if self.html.book.options.get("cover").is_ok() {
+            offset += 1;
+            let loc_cover = lang::get_str(self.html.book.options.get_str("lang").unwrap(),
+                                          "cover");
+            nav_points.push_str(&format!("\
+    <navPoint id=\"navPoint-1\">
+      <navLabel> 
+        <text>{loc_cover}</text>
+      </navLabel>
+      <content src=\"cover.xhtml\" />
+    </navPoint>
+",
+                                         loc_cover = loc_cover));
+        }
+        
         for (n, ref title) in self.toc.iter().enumerate() {
             let filename = filenamer(n);
-            let id = format!("navPoint-{}", n + 1);
+            let id = format!("navPoint-{}", n + offset);
             nav_points.push_str(&format!("\
     <navPoint id=\"{id}\">
       <navLabel>
