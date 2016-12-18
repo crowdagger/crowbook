@@ -226,6 +226,11 @@ ChangeLog
 
 See [ChangeLog](ChangeLog.md).
 
+Contributing
+---------------
+
+See [how you can contribute to Crowbook](guide/contribute.md).
+
 Library
 -------
 
