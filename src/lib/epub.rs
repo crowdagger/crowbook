@@ -65,6 +65,16 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
+        let lang = self.html.book.options.get_str("lang").unwrap();
+        self.html.toc.add(1,
+                          String::from("title_page.xhtml"),
+                          lang::get_str(lang, "title"));
+        if self.html.book.options.get("cover").is_ok() {
+            self.html.toc.add(1,
+                              String::from("cover.xhtml"),
+                              lang::get_str(lang, "cover"));
+        }
+        
         /* If toc will be rendered inline, add it... to the toc (yeah it's meta) */
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
             self.html.toc.add(1,
@@ -221,25 +231,7 @@ impl<'a> EpubRenderer<'a> {
     fn render_toc(&mut self) -> Result<String> {
         let mut nav_points = String::new();
 
-        let mut offset = 1;
-
-        if self.html.book.options.get("cover").is_ok() {
-            let loc_cover = lang::get_str(self.html.book.options.get_str("lang").unwrap(),
-                                          "cover");
-            nav_points.push_str(&format!("\
-    <navPoint id=\"navPoint-{offset}\">
-      <navLabel> 
-        <text>{loc_cover}</text>
-      </navLabel>
-      <content src=\"cover.xhtml\" />
-    </navPoint>
-",
-                                         offset = offset,
-                                         loc_cover = loc_cover));
-            offset += 1;
-        }
-
-        nav_points.push_str(&self.html.toc.render_epub(offset));
+        nav_points.push_str(&self.html.toc.render_epub(0));
 
         let template = compile_str(TOC,
                                    &self.html.book.source,

@@ -9,12 +9,6 @@
     <text>{{{title}}}</text>
   </docTitle>
   <navMap>
-    <navPoint id="navPoint-0">
-      <navLabel>
-        <text>{{{loc_title}}}</text>
-      </navLabel>
-      <content src="title_page.xhtml" />
-    </navPoint>
     {{{nav_points}}}
   </navMap>
 </ncx>
