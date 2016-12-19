@@ -65,6 +65,14 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
+        /* If toc will be rendered inline, add it... to the toc (yeah it's meta) */
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
+            self.html.toc.add(1,
+                              String::from("toc.xhtml"),
+                              lang::get_str(self.html.book.options.get_str("lang").unwrap(),
+                                            "toc"));
+        }
+        
         for (i, filename) in self.html.book.filenames.iter().enumerate() {
             self.html.handler.add_link(filename.clone(), filenamer(i));
         }
@@ -129,6 +137,11 @@ impl<'a> EpubRenderer<'a> {
 
         // Write content.opf
         zipper.write("content.opf", &self.render_opf()?.as_bytes(), true)?;
+
+        // Render inline toc if it is needed
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
+            zipper.write("toc.xhtml", &self.render_inline_toc()?.as_bytes(), true)?;
+        }
 
         // Write toc.ncx
         zipper.write("toc.ncx", &self.render_toc()?.as_bytes(), true)?;
@@ -278,6 +291,11 @@ impl<'a> EpubRenderer<'a> {
                             \"application/xhtml+xml\" />\n");
             coverref.push_str("<itemref idref = \"cover_xhtml\" />");
         }
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
+            items.push_str("<item id = \"toc_xhtml\" href = \"toc.xhtml\" media-type = \
+                            \"application/xhtml+xml\" />\n");
+            itemrefs.push_str("<itemref idref=\"toc_xhtml\" />");
+        }
         for n in 0..self.toc.len() {
             let filename = filenamer(n);
             items.push_str(&format!("<item id = \"{}\" href = \"{}\" \
@@ -375,6 +393,41 @@ impl<'a> EpubRenderer<'a> {
         }
     }
 
+    /// Render the inline TOC
+    fn render_inline_toc(&mut self) -> Result<String> {
+        self.html.toc.numbered(false);
+        let lang = self.html.book.options.get_str("lang").unwrap();
+        let loc_toc = lang::get_str(lang, "toc");
+        let content = format!("<h1>{title}</h1>
+{toc}",
+                              toc = self.html.toc.render(),
+                              title = loc_toc); 
+        self.html.toc.numbered(true);
+
+
+        let template = if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
+            epub3::TEMPLATE
+        } else {
+            TEMPLATE
+        };
+        let template = compile_str(template,
+                                   &self.html.book.source,
+                                   lformat!("could not compile template for toc.xhtml"))?;
+        let data = self
+            .html
+            .book
+            .get_metadata(|s| self.render_vec(&(Parser::new().parse_inline(s)?)))?
+            .insert_str("content", content)
+            .insert_str("chapter_title", loc_toc)
+            .build();
+        let mut res: Vec<u8> = vec![];
+        template.render_data(&mut res, &data)?;
+        match String::from_utf8(res) {
+            Err(_) => panic!(lformat!("generated HTML in toc.xhtml was not utf-8 valid")),
+            Ok(res) => Ok(res),
+        }
+    }
+    
     /// Render nav.xhtml
     fn render_nav(&mut self) -> Result<String> {
         let content = self.html.toc.render();
