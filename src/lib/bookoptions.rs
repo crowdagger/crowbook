@@ -72,6 +72,7 @@ epub.version:int:2                  # {epub_ver}
 epub.css:tpl                        # {epub_css}
 epub.css.add:str                    # {epub_css_add}
 epub.chapter.xhtml:tpl              # {chapter_xhtml}
+epub.toc.extras:bool:true           # {epub_toc}
 
 # {tex_opt}
 tex.links_as_footnotes:bool:true    # {tex_links}
@@ -222,6 +223,7 @@ html.crowbook_link:alias                            # {removed}
                                          epub_css = lformat!("Path of a stylesheet for EPUB"),
                                          epub_css_add = lformat!("Inline CSS added to the EPUB stylesheet template"),
                                          chapter_xhtml = lformat!("Path of an xhtml template for each chapter"),
+                                         epub_toc = lformat!("Add 'Title' and (if set) 'Cover' in the EPUB table of contents"),
                                          
                                          tex_links = lformat!("Add foontotes to URL of links so they are readable when printed"),
                                          tex_command = lformat!("LaTeX command to use for generating PDF"),

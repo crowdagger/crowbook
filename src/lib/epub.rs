@@ -66,14 +66,17 @@ impl<'a> EpubRenderer<'a> {
     /// Render a book
     pub fn render_book(&mut self) -> Result<String> {
         let lang = self.html.book.options.get_str("lang").unwrap();
-        self.html.toc.add(1,
-                          String::from("title_page.xhtml"),
-                          lang::get_str(lang, "title"));
-        if self.html.book.options.get("cover").is_ok() {
+        if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
             self.html.toc.add(1,
-                              String::from("cover.xhtml"),
-                              lang::get_str(lang, "cover"));
+                              String::from("title_page.xhtml"),
+                              lang::get_str(lang, "title"));
+            if self.html.book.options.get("cover").is_ok() {
+                self.html.toc.add(1,
+                                  String::from("cover.xhtml"),
+                                  lang::get_str(lang, "cover"));
+            }
         }
+        
         
         /* If toc will be rendered inline, add it... to the toc (yeah it's meta) */
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
