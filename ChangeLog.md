@@ -6,10 +6,13 @@ unreleased
 * Rendering:
   * EPUB:
     * The `toc.ncx` file now displays links to "title" and (if set)
-    "cover".
+    "cover" (can be deactivated, see below).
     * The `toc.ncx` file now displays toc levels below chapter.
 	* The table of contents is now displayed inline if
       `rendering.inline_toc` is set to `true`.
+* New options:
+  * `epub.toc.extras`, set to `true` by default, will add links to the
+    title and the cover (if it is set) in the table of contents.
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
