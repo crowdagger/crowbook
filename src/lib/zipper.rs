@@ -18,7 +18,8 @@
 use error::{Error, Result};
 
 use std::path::{Path, PathBuf};
-use std::io::{Read, Write};
+use std::io;
+use std::io::Write;
 use std::process::Command;
 use std::fs::{self, File, DirBuilder};
 use uuid;
@@ -128,11 +129,7 @@ This is forbidden because we are supposed \
         let mut file = File::open(self.path.join(in_file))
             .map_err(|_| Error::zipper(lformat!("could not open file in tmp directory: '{file}'",
                                                 file = in_file)))?;
-        let mut buf = vec!();
-        file.read_to_end(&mut buf)
-            .map_err(|_| Error::zipper(lformat!("error reading content of file '{file}'",
-                                                file = in_file)))?;
-        out.write_all(&buf)
+        io::copy(&mut file, out)
             .map_err(|_| Error::zipper(lformat!("error copying file '{file}'",
                                                 file = in_file)))?;
         if output.status.success() {
