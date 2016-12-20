@@ -461,22 +461,16 @@ impl Book {
     #[cfg(not(feature = "proofread"))]
     fn init_checker(&mut self) {}
 
-    /// Renders the book to the given format
+    /// Renders the book to the given format if output.{format} is set,
+    /// do nothing otherwise.
     pub fn render_format(&self, format: &str) -> () {
-        if self.options.get(format).is_ok() {
-            let path = self.options.get_path(format).unwrap();
-            let (result, name) = match format {
-                "output.pdf" => (self.render_format_to_file("pdf", path), "PDF"),
-                "output.epub" => (self.render_format_to_file("epub", path), "EPUB"),
-                "output.html_dir" => (self.render_format_to_file("html_dir", path), "HTML directory"),
-                "output.proofread.html_dir" => (self.render_format_to_file("proofread.html_dir", path), "HTML directory (for proofreading)"),
-                "output.proofread.pdf" => (self.render_format_to_file("proofread.pdf", path), "PDF (for proofreading)"),
-                "output.odt" => (self.render_format_to_file("odt", path), "ODT"),
-                _ => unreachable!(),
-            };
+        let mut key = String::from("output.");
+        key.push_str(format);
+        if let Ok(path) = self.options.get_path(&key) {
+            let result = self.render_format_to_file(format, path);
             if let Err(err) = result {
                 self.logger
-                    .error(lformat!("Error rendering {name}: {error}", name = name, error = err));
+                    .error(lformat!("Error rendering {name}: {error}", name = format, error = err));
             }
         }
     }
@@ -508,32 +502,32 @@ impl Book {
         let mut handles = vec![];
         crossbeam::scope(|scope| {
             if self.options.get("output.pdf").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("output.pdf")));
+                handles.push(scope.spawn(|| self.render_format("pdf")));
             }
             if self.options.get("output.epub").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("output.epub")));
+                handles.push(scope.spawn(|| self.render_format("epub")));
             }
             if self.options.get("output.html_dir").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("output.html_dir")));
+                handles.push(scope.spawn(|| self.render_format("html_dir")));
             }
             if self.options.get("output.odt").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("output.odt")));
+                handles.push(scope.spawn(|| self.render_format("odt")));
             }
             if self.options.get_path("output.html").is_ok() {
-                handles.push(scope.spawn(|| self.render_one_file("output.html")));
+                handles.push(scope.spawn(|| self.render_format("html")));
             }
             if self.options.get_path("output.tex").is_ok() {
-                handles.push(scope.spawn(|| self.render_one_file("output.tex")));
+                handles.push(scope.spawn(|| self.render_format("tex")));
             }
             if self.is_proofread() {
                 if self.options.get("output.proofread.pdf").is_ok() {
-                    handles.push(scope.spawn(|| self.render_format("output.proofread.pdf")));
+                    handles.push(scope.spawn(|| self.render_format("proofread.pdf")));
                 }
                 if self.options.get("output.proofread.html_dir").is_ok() {
-                    handles.push(scope.spawn(|| self.render_format("output.proofread.html_dir")));
+                    handles.push(scope.spawn(|| self.render_format("proofread.html_dir")));
                 }
                 if self.options.get_path("output.proofread.html").is_ok() {
-                    handles.push(scope.spawn(|| self.render_one_file("output.proofread.html")));
+                    handles.push(scope.spawn(|| self.render_format("proofread.html")));
                 }
             }
         });
