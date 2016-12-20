@@ -19,7 +19,8 @@ extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Result, Book, BookOptions, InfoLevel, set_lang, Error, Source};
+use crowbook::{Result, Book, BookOptions, InfoLevel, Error, Source};
+use crowbook_intl_runtime::set_lang;
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;

@@ -137,7 +137,6 @@ pub use number::Number;
 pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
 pub use renderer::Renderer;
-pub use crowbook_intl_runtime::set_lang;
 pub use crowbook_intl_runtime::__get_lang;
 
 #[macro_use]
