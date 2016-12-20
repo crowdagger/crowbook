@@ -22,7 +22,7 @@ use parser::Parser;
 use token::Token;
 use epub::{EpubRenderer, Epub};
 use html_single::{HtmlSingleRenderer, HtmlSingle, ProofHtmlSingle};
-use html_dir::HtmlDirRenderer;
+use html_dir::{HtmlDirRenderer, HtmlDir, ProofHtmlDir};
 use latex::{LatexRenderer, Latex, ProofLatex, Pdf, ProofPdf};
 use odt::{OdtRenderer, Odt};
 use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
@@ -130,6 +130,8 @@ impl Book {
         };
         book.formats.insert("html", Box::new(HtmlSingle{}));
         book.formats.insert("proofread.html", Box::new(ProofHtmlSingle{}));
+        book.formats.insert("html_dir", Box::new(HtmlDir{}));
+        book.formats.insert("proofread.html_dir", Box::new(ProofHtmlDir{}));
         book.formats.insert("tex", Box::new(Latex{}));
         book.formats.insert("proofread.tex", Box::new(ProofLatex{}));
         book.formats.insert("pdf", Box::new(Pdf{}));
@@ -466,10 +468,8 @@ impl Book {
             let (result, name) = match format {
                 "output.pdf" => (self.render_format_to_file("pdf", path), "PDF"),
                 "output.epub" => (self.render_format_to_file("epub", path), "EPUB"),
-                "output.html_dir" => (self.render_html_dir(), "HTML directory"),
-                "output.proofread.html_dir" => {
-                    (self.render_proof_html_dir(), "HTML directory (for proofreading)")
-                }
+                "output.html_dir" => (self.render_format_to_file("html_dir", path), "HTML directory"),
+                "output.proofread.html_dir" => (self.render_format_to_file("proofread.html_dir", path), "HTML directory (for proofreading)"),
                 "output.proofread.pdf" => (self.render_format_to_file("proofread.pdf", path), "PDF (for proofreading)"),
                 "output.odt" => (self.render_format_to_file("odt", path), "ODT"),
                 _ => unreachable!(),
@@ -557,36 +557,6 @@ impl Book {
     //                                   self.options.get_path("output.epub")?)));
     //     Ok(())
     // }
-
-    /// Render book to HTML directory according to book options
-    pub fn render_html_dir(&self) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate html directory..."));
-        let mut html = HtmlDirRenderer::new(&self);
-        html.render_book()?;
-        self.logger.info(lformat!("Successfully generated HTML directory: {path}",
-                                  path = misc::normalize(
-                                      self.options.get_path("output.html_dir")?)));
-        Ok(())
-    }
-
-
-    /// Render book to HTML directory according to book options (proofread version)
-    pub fn render_proof_html_dir(&self) -> Result<()> {
-        let dir_name = self.options.get_path("output.proofread.html_dir").unwrap();
-        if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled \
-                                              without support for proofreading, not generating \
-                                              {path}",
-                                             path = misc::normalize(dir_name)));
-            return Ok(());
-        }
-        self.logger.debug(lformat!("Attempting to generate html directory for proofreading..."));
-        let mut html = HtmlDirRenderer::new(&self).proofread();
-        html.render_book()?;
-        self.logger.info(lformat!("Successfully generated HTML directory: {path}",
-                                  path = misc::normalize(dir_name)));
-        Ok(())
-    }
 
     /// Render book to specified format according to book options
     pub fn render_format_to<T: Write>(&self, format: &str, f: &mut T) -> Result<()> {

@@ -23,6 +23,7 @@ use templates::img;
 use resource_handler;
 use renderer::Renderer;
 use parser::Parser;
+use book_renderer::BookRenderer;
 
 use std::io::{Read, Write};
 use std::fs;
@@ -56,35 +57,30 @@ impl<'a> HtmlDirRenderer<'a> {
     }
 
     /// Render a book
-    pub fn render_book(&mut self) -> Result<()> {
+    pub fn render_book(&mut self, dest_path: &Path) -> Result<()> {
         // Add internal files to resource handler
         for (i, filename) in self.html.book.filenames.iter().enumerate() {
             self.html.handler.add_link(filename.clone(), filenamer(i));
         }
 
-        // Create the directory
-        let dest_path = if self.html.proofread {
-            self.html.book.options.get_path("output.proofread.html_dir")?
-        } else {
-            self.html.book.options.get_path("output.html_dir")?
-        };
         match fs::metadata(&dest_path) {
             Ok(metadata) => {
                 if metadata.is_file() {
                     return Err(Error::render(&self.html.book.source,
                                              lformat!("{path} already exists and is not a \
                                                        directory",
-                                                      path = &dest_path)));
+                                                      path = dest_path.display())));
                 } else if metadata.is_dir() {
                     self.html
                         .book
                         .logger
-                        .warning(lformat!("{path} already exists, deleting it", path = &dest_path));
+                        .warning(lformat!("{path} already exists, deleting it",
+                                          path = dest_path.display()));
                     fs::remove_dir_all(&dest_path)
                         .map_err(|e| {
                             Error::render(&self.html.book.source,
                                           lformat!("error deleting directory {path}: {error}",
-                                                   path = &dest_path,
+                                                   path = dest_path.display(),
                                                    error = e))
                     })?;
                 }
@@ -97,7 +93,7 @@ impl<'a> HtmlDirRenderer<'a> {
             .map_err(|e| {
                 Error::render(&self.html.book.source,
                               lformat!("could not create HTML directory {path}: {error}",
-                                       path = &dest_path,
+                                       path = dest_path.display(),
                                        error = e))
             })?;
 
@@ -412,4 +408,32 @@ fn filenamer(i: usize) -> String {
 
 derive_html!{HtmlDirRenderer<'a>, HtmlRenderer::static_render_token}
 
+pub struct HtmlDir {}
+pub struct ProofHtmlDir {}
 
+impl BookRenderer for HtmlDir {
+    fn render(&self, _: &Book, _: &mut Write) -> Result<()> {
+        Err(Error::render(Source::empty(),
+                          lformat!("error: can only render HTML directory to a path, not to a stream")))
+    }
+    
+    fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
+        HtmlDirRenderer::new(book)
+            .render_book(path)?;
+        Ok(())
+    }
+}
+
+impl BookRenderer for ProofHtmlDir {
+    fn render(&self, _: &Book, _: &mut Write) -> Result<()> {
+        Err(Error::render(Source::empty(),
+                          lformat!("error: can only render HTML directory to a path, not to a stream")))
+    }
+    
+    fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
+        HtmlDirRenderer::new(book)
+            .proofread()
+            .render_book(path)?;
+        Ok(())
+    }
+}
