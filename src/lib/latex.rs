@@ -24,12 +24,13 @@ use zipper::Zipper;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
+use book_renderer::BookRenderer;
 
 use crowbook_text_processing::escape;
 
 use std::iter::Iterator;
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::borrow::Cow;
 
 /// LaTeX renderer
@@ -452,5 +453,20 @@ impl<'a> Renderer for LatexRenderer<'a> {
 
             Token::__NonExhaustive => unreachable!(),
         }
+    }
+}
+
+pub struct Latex;
+
+impl BookRenderer for Latex {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+        let mut latex = LatexRenderer::new(book);
+        let result = latex.render_book()?;
+        to.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&book.source,
+                              lformat!("problem when writing LaTeX: {error}", error = e))
+            })?;
+        Ok(())
     }
 }

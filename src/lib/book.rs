@@ -23,7 +23,7 @@ use token::Token;
 use epub::EpubRenderer;
 use html_single::{HtmlSingleRenderer, HtmlSingle, ProofHtmlSingle};
 use html_dir::HtmlDirRenderer;
-use latex::LatexRenderer;
+use latex::{LatexRenderer, Latex};
 use odt::OdtRenderer;
 use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
 use number::Number;
@@ -130,6 +130,7 @@ impl Book {
         };
         book.formats.insert("html", Box::new(HtmlSingle{}));
         book.formats.insert("proofread.html", Box::new(ProofHtmlSingle{}));
+        book.formats.insert("tex", Box::new(Latex{}));
         book
     }
     
@@ -479,9 +480,9 @@ impl Book {
             if let Ok(mut f) = File::create(&file) {
                 let (result, name) = match s {
                     "output.html" => (self.render_format_to("html", &mut f), "HTML"),
-                    "output.tex" => (self.render_tex(&mut f), "LaTeX"),
+                    "output.tex" => (self.render_format_to("tex", &mut f), "LaTeX"),
                     "output.proofread.html" => {
-                        (self.render_proof_html(&mut f), "HTML (for proofreading)")
+                        (self.render_format_to("proofread.html", &mut f), "HTML (for proofreading)")
                     }
                     _ => unreachable!(),
                 };
@@ -642,53 +643,6 @@ impl Book {
                                             format = format)))
             }
         }
-    }
-
-    /// Render book to html according to book options (proofread version)
-    pub fn render_proof_html<T: Write>(&self, f: &mut T) -> Result<()> {
-        let file_name = if let Ok(file) = self.options.get_path("output.proofread.html") {
-            file.to_owned()
-        } else {
-            String::new()
-        };
-        if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled \
-                                              without support for proofreading,not generating \
-                                              HTML file {file}",
-                                             file = misc::normalize(file_name)));
-            return Ok(());
-        }
-        self.logger.debug(lformat!("Attempting to generate HTML for proofreading..."));
-        let mut html = HtmlSingleRenderer::new(&self).proofread();
-        let result = html.render_book()?;
-        f.write_all(&result.as_bytes())
-            .map_err(|e| {
-                Error::render(&self.source,
-                              lformat!("problem when writing to HTML file: {error}", error = e))
-            })?;
-        self.logger.info(lformat!("Successfully generated HTML file {file}",
-                                  file = misc::normalize(file_name)));
-        Ok(())
-    }
-
-    /// Render book to pdf according to book options
-    pub fn render_tex<T: Write>(&self, f: &mut T) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate LaTeX..."));
-
-        let mut latex = LatexRenderer::new(&self);
-        let result = latex.render_book()?;
-        f.write_all(&result.as_bytes())
-            .map_err(|e| {
-                Error::render(&self.source,
-                              lformat!("problem when writing to LaTeX file: {error}", error = e))
-            })?;
-        if let Ok(file) = self.options.get_path("output.tex") {
-            self.logger.info(lformat!("Successfully generated LaTeX file: {file}",
-                                      file = misc::normalize(file)));
-        } else {
-            self.logger.info(lformat!("Successfully generated LaTeX"));
-        }
-        Ok(())
     }
 
     /// Render book to pdf according to book options (proofread version)

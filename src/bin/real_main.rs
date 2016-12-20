@@ -60,9 +60,8 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
         Err(_) => {
             match format {
                 "html" => book.render_format_to("html", &mut io::stdout()),
-                "proofread.html" => book.render_proof_html(&mut io::stdout()),
-                "tex" => book.render_tex(&mut io::stdout()),
-                "proofread.tex" => book.render_tex(&mut io::stdout()),
+                "proofread.html" => book.render_format_to("proofread.html", &mut io::stdout()),
+                "tex" => book.render_format_to("tex", &mut io::stdout()),
                 _ => {
                     print_error(&lformat!("No output file specified, and book doesn't specify an \
                                            output file for {}",
@@ -75,7 +74,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                 "epub" => book.render_epub(),
                 "tex" => {
                     if let Ok(mut f) = File::create(&file) {
-                        book.render_tex(&mut f)
+                        book.render_format_to("tex", &mut f)
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }
@@ -96,7 +95,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                 }
                 "proofread.html" => {
                     if let Ok(mut f) = File::create(&file) {
-                        book.render_proof_html(&mut f)
+                        book.render_format_to("proofread.html", &mut f)
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }

@@ -262,7 +262,6 @@ pub struct ProofHtmlSingle {}
 impl BookRenderer for HtmlSingle {
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book);
-        book.logger.debug(lformat!("Attempting to generate HTML..."));
         let result = html.render_book()?;
         to.write_all(&result.as_bytes())
             .map_err(|e| {
@@ -277,7 +276,6 @@ impl BookRenderer for ProofHtmlSingle {
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)
             .proofread();
-        book.logger.debug(lformat!("Attempting to generate HTML..."));
         let result = html.render_book()?;
         to.write_all(&result.as_bytes())
             .map_err(|e| {
