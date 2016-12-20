@@ -126,7 +126,6 @@ extern crate url;
 extern crate caribon;
 
 
-pub use parser::Parser;
 pub use book::Book;
 pub use bookoption::BookOption;
 pub use bookoptions::BookOptions;
