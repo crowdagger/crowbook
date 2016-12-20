@@ -68,15 +68,12 @@ use yaml_rust::{YamlLoader, Yaml};
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if
     /// you are writing a new renderer.
-    #[doc(hidden)]
     pub chapters: Vec<(Number, Vec<Token>)>,
 
     /// A list of the filenames of the chapters
-    #[doc(hidden)]
     pub filenames: Vec<String>,
 
     /// Options of the book
-    #[doc(hidden)]
     pub options: BookOptions,
 
     /// Root path of the book
