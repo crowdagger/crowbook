@@ -656,20 +656,17 @@ impl Book {
     }
 
 
-    // /// Render book to epub according to book options
-    // pub fn render_epub(&self) -> Result<()> {
-    //     self.logger.debug(lformat!("Attempting to generate epub..."));
-    //     let mut epub = EpubRenderer::new(&self);
-    //     let result = epub.render_book()?;
-    //     self.logger.debug(lformat!("Output of zip command:"));
-    //     self.logger.debug(&result);
-    //     self.logger.info(lformat!("Successfully generated EPUB file: {file}",
-    //                               file = misc::normalize(
-    //                                   self.options.get_path("output.epub")?)));
-    //     Ok(())
-    // }
-
-    /// Render book to specified format according to book options
+    /// Render book to specified format according to book options, and write the results
+    /// in the `Write` object.
+    ///
+    /// This method will fail if the format is not handled by the book, or if there is a
+    /// problem during rendering, or if the renderer can't render to a byte stream (e.g.
+    /// multiple files HTML renderer can't, as it must create a directory.)
+    ///
+    /// # See also
+    /// * `render_format_to_file`, which creates a new file (that *can* be a directory).
+    /// * `render_format`, which won't do anything if `output.{format}` isn't specified
+    ///   in the book configuration file.
     pub fn render_format_to<T: Write>(&self, format: &str, f: &mut T) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate {format}...",
                                    format = format));
@@ -688,7 +685,16 @@ impl Book {
         }
     }
 
-    /// Render book to specified format according to book options
+    /// Render book to specified format according to book options. Creates a new file
+    /// and write the result in it.
+    ///
+    /// This method will fail if the format is not handled by the book, or if there is a
+    /// problem during rendering.
+    ///
+    /// # See also
+    /// * `render_format_to`, which writes in any `Write`able object.
+    /// * `render_format`, which won't do anything if `output.{format}` isn't specified
+    ///   in the book configuration file.
     pub fn render_format_to_file<P:AsRef<Path>>(&self, format: &str, path: P) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate {format}...",
                                    format = format));
