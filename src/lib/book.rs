@@ -110,7 +110,7 @@ pub struct Book {
     cleaner: Box<Cleaner>,
     chapter_template: Option<Template>,
     checker: Option<GrammarChecker>,
-    formats: HashMap<&'static str, Box<BookRenderer>>,
+    formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
 }
 
 impl Book {
@@ -128,22 +128,25 @@ impl Book {
             checker: None,
             formats: HashMap::new(),
         };
-        book.add_format("html", Box::new(HtmlSingle{}))
-            .add_format("proofread.html", Box::new(ProofHtmlSingle{}))
-            .add_format("html_dir", Box::new(HtmlDir{}))
-            .add_format("proofread.html_dir", Box::new(ProofHtmlDir{}))
-            .add_format("tex", Box::new(Latex{}))
-            .add_format("proofread.tex", Box::new(ProofLatex{}))
-            .add_format("pdf", Box::new(Pdf{}))
-            .add_format("proofread.pdf", Box::new(ProofPdf{}))
-            .add_format("epub", Box::new(Epub{}))
-            .add_format("odt", Box::new(Odt{}));
+        book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
+            .add_format("proofread.html", lformat!("HTML (standalone page/proofreading)"), Box::new(ProofHtmlSingle{}))
+            .add_format("html_dir", lformat!("HTML (multiple pages)"), Box::new(HtmlDir{}))
+            .add_format("proofread.html_dir", lformat!("HTML (multiple pages/proofreading)"), Box::new(ProofHtmlDir{}))
+            .add_format("tex", lformat!("LaTeX"), Box::new(Latex{}))
+            .add_format("proofread.tex", lformat!("LaTeX (proofreading)"), Box::new(ProofLatex{}))
+            .add_format("pdf", lformat!("PDF"), Box::new(Pdf{}))
+            .add_format("proofread.pdf", lformat!("PDF (proofreading)"), Box::new(ProofPdf{}))
+            .add_format("epub", lformat!("EPUB"), Box::new(Epub{}))
+            .add_format("odt", lformat!("ODT"), Box::new(Odt{}));
         book
     }
 
     /// Register a format that can be rendered.
-    pub fn add_format(&mut self, format: &'static str, renderer: Box<BookRenderer>) -> &mut Self {
-        self.formats.insert(format, renderer);
+    pub fn add_format<S: Into<String>>(&mut self,
+                                       format: &'static str,
+                                       description: S,
+                                       renderer: Box<BookRenderer>) -> &mut Self {
+        self.formats.insert(format, (description.into(), renderer));
         self
     }
     
@@ -551,10 +554,10 @@ impl Book {
         self.logger.debug(lformat!("Attempting to generate {format}...",
                                    format = format));
         match self.formats.get(format) {
-            Some(renderer) => {
+            Some(&(ref description, ref renderer)) => {
                 renderer.render(&self, f)?;
                 self.logger.info(lformat!("Succesfully generated {format}",
-                                          format = format));
+                                          format = description));
                 Ok(())
             },
             None => {
@@ -570,10 +573,10 @@ impl Book {
         self.logger.debug(lformat!("Attempting to generate {format}...",
                                    format = format));
         match self.formats.get(format) {
-            Some(renderer) => {
+            Some(&(ref description, ref renderer)) => {
                 renderer.render_to_file(&self, path.as_ref())?;
-                self.logger.info(lformat!("Succesfully generated {format} to {path}",
-                                          format = format,
+                self.logger.info(lformat!("Succesfully generated {format}: {path}",
+                                          format = description,
                                           path = path.as_ref().display()));
                 Ok(())
             },
