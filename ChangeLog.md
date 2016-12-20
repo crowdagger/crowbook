@@ -10,6 +10,7 @@ ChangeLog
   * Behaviour of `--to` should now be consistent for all output
     formats.
   * If `--output` is set to `-`, prints to stdout. 
+  * Conversely, if `<BOOK>` is set to `-`, reads from stdin.
 * Rendering:
   * EPUB:
     * The `toc.ncx` file now displays links to "title" and (if set)
