@@ -80,7 +80,7 @@ use yaml_rust::{YamlLoader, Yaml};
 ///                    ("lang", "en")]);
 ///
 /// // Add a chapter to the book
-/// book.add_chapter_from_str(Number::Default, "# The beginning#\nBla, bla, bla").unwrap();
+/// book.add_chapter_from_source(Number::Default, "# The beginning#\nBla, bla, bla".as_bytes()).unwrap();
 ///
 /// // Render the book as html to stdout
 /// book.render_format_to("html", &mut std::io::stdout()).unwrap();
@@ -310,9 +310,9 @@ impl Book {
         Ok(self)
     }
 
-    /// Loads a single markdown config from a &str
+    /// Reads a single markdown config from a `Read`able object.
     ///
-    /// Similar to `load_markdown_file`, except it reads a string instead of a file.
+    /// Similar to `load_markdown_file`, except it reads a source instead of a file.
     ///
     /// # Example
     ///
@@ -329,7 +329,7 @@ impl Book {
     /// Some content in *markdown*.";
     ///
     /// let mut book = Book::new();
-    /// book.load_markdown_config(content).unwrap();
+    /// book.read_markdown_config(content.as_bytes()).unwrap();
     /// assert_eq!(book.options.get_str("title").unwrap(), "Bar");
     /// ```
     pub fn read_markdown_config<R: Read>(&mut self, source: R) -> Result<&mut Self> {
@@ -370,7 +370,9 @@ impl Book {
         Ok(self)
     }
         
-    /// Loads a book configution as a &str.
+    /// Reads a book configuration from a `Read`able source.
+    ///
+    /// # Book configuration
     ///
     /// A line with "option: value" sets the option to value
     ///
@@ -395,7 +397,7 @@ impl Book {
     /// + chapter_01.md";
     /// 
     /// let mut book = Book::new();
-    /// book.load_config(content); // no unwraping as `intro.md` and `chapter_01.md` don't exist
+    /// book.read_config(content.as_bytes()); // no unwraping as `intro.md` and `chapter_01.md` don't exist
     /// ```
     pub fn read_config<R: Read>(&mut self, mut source: R) -> Result<&mut Book> {
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
@@ -608,7 +610,7 @@ impl Book {
     /// Bar and baz, too.";
     ///
     /// Book::new()
-    ///       .load_markdown_config(content)
+    ///       .read_markdown_config(content.as_bytes())
     ///       .unwrap()
     ///       .render_all(); // renders foo.tex in /tmp
     /// ```
