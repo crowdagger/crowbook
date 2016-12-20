@@ -340,12 +340,12 @@ impl Book {
     /// book.load_markdown_config(content).unwrap();
     /// assert_eq!(book.options.get_str("title").unwrap(), "Bar");
     /// ```
-    pub fn load_markdown_config(&mut self, s: &str) -> Result<&mut Self> {
+    pub fn load_markdown_config<R: Read>(&mut self, source: R) -> Result<&mut Self> {
         self.options.set("tex.class", "article").unwrap();
         self.options.set("input.yaml_blocks", "true").unwrap();
 
         // Update grammar checker according to options
-        self.add_chapter_from_str(Number::Hidden, s)?;
+        self.add_chapter_from_source(Number::Hidden, source)?;
 
         Ok(self)
     }
@@ -810,7 +810,7 @@ impl Book {
         Ok(self)
     }
 
-    /// Adds a chapter, as a string, to the book
+    /// Adds a chapter to the book from a source (any object implementing `Read`)
     ///
     /// `Book` will then parse the string and store the AST (i.e., a vector
     /// of `Token`s).
@@ -821,9 +821,12 @@ impl Book {
     /// * `content`: the content of the chapter.
     ///
     /// **Returns** an error if there was some errror parsing `content`.
-    pub fn add_chapter_from_str(&mut self, number: Number, content: &str) -> Result<&mut Self> {
+    pub fn add_chapter_from_source<R: Read>(&mut self, number: Number, mut source: R) -> Result<&mut Self> {
         // Ignore YAML blocks (or not)
-        let mut content = String::from(content);
+        let mut content = String::new();
+        source.read_to_string(&mut content)
+            .map_err(|_| Error::config_parser(Source::empty(),
+                                              lformat!("could not read source")))?;
         self.parse_yaml(&mut content);
         
         let mut parser = Parser::new();

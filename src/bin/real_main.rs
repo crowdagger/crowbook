@@ -154,11 +154,7 @@ pub fn try_main() -> Result<()> {
         if s != "-" {
             book.load_markdown_file(s)?;
         } else {
-            let mut buffer = String::new();
-            io::stdin().read_to_string(&mut buffer)
-                .map_err(|_| Error::default(Source::empty(),
-                                            lformat!("Error reading from stdin")))?;
-            book.load_markdown_config(&buffer)?;
+            book.load_markdown_config(io::stdin())?;
         }
     } else {
         if s != "-" {
