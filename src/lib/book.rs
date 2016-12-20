@@ -153,7 +153,7 @@ impl Book {
     /// Sets the options of a `Book`
     ///
     /// # Arguments
-    /// *`options`: a (possibly empty) list (or other iterator) of (key, value) tuples.
+    /// * `options`: a (possibly empty) list (or other iterator) of (key, value) tuples.
     ///
     /// # Example
     ///
