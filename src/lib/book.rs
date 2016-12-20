@@ -215,6 +215,17 @@ impl Book {
         Ok(self)
     }
 
+    /// Loads a single markdown config from a &str
+    pub fn load_markdown_config(&mut self, s: &str) -> Result<&mut Self> {
+        self.options.set("tex.class", "article").unwrap();
+        self.options.set("input.yaml_blocks", "true").unwrap();
+
+        // Update grammar checker according to options
+        self.add_chapter_from_str(Number::Hidden, s)?;
+
+        Ok(self)
+    }
+
     /// Sets options from a YAML block
     fn set_options_from_yaml(&mut self, yaml: &str) -> Result<&mut Book> {
         self.options.source = self.source.clone();
@@ -696,7 +707,7 @@ impl Book {
     ///
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
-    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<()> {
+    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
         self.logger.debug(lformat!("Parsing chapter: {file}...",
                                    file = misc::normalize(file)));
 
@@ -777,7 +788,7 @@ impl Book {
         }
 
         self.chapters.push((number, v));
-        Ok(())
+        Ok(self)
     }
 
     /// Adds a chapter, as a string, to the book
@@ -791,12 +802,12 @@ impl Book {
     /// * `content`: the content of the chapter.
     ///
     /// **Returns** an error if there was some errror parsing `content`.
-    pub fn add_chapter_as_str(&mut self, number: Number, content: &str) -> Result<()> {
+    pub fn add_chapter_from_str(&mut self, number: Number, content: &str) -> Result<&mut Self> {
         let mut parser = Parser::new();
         let v = parser.parse(content)?;
         self.chapters.push((number, v));
         self.filenames.push(String::new());
-        Ok(())
+        Ok(self)
     }
 
 
