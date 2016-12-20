@@ -208,6 +208,14 @@ impl Book {
     /// Sets the verbosity of a book
     ///
     /// See `InfoLevel` for more information on verbosity
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::{Book, InfoLevel};
+    /// let mut book = Book::new();
+    /// book.set_verbosity(InfoLevel::Warning);
+    /// ```
     pub fn set_verbosity(&mut self, verbosity: InfoLevel) -> &mut Book {
         self.logger.set_verbosity(verbosity);
         self
@@ -215,10 +223,18 @@ impl Book {
 
     /// Loads a book configuration file
     ///
-    /// # Arguments
-    /// * `filename`: the path of file to load. The directory of this file is used as
+    /// # Argument
+    /// * `path`: the path of the file to load. The directory of this file is used as
     ///   a "root" directory for all paths referenced in books, whether chapter files,
     ///   templates, cover images, and so on.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use crowbook::Book;
+    /// let mut book = Book::new();
+    /// let result = book.load_file("some.book");
+    /// ```
     pub fn load_file<P: AsRef<Path>>(&mut self, path: P) -> Result<&mut Book> {
         let filename = format!("{}", path.as_ref().display());
         self.source = Source::new(filename.as_str());
@@ -261,6 +277,20 @@ impl Book {
     }
     
     /// Loads a single markdown file
+    ///
+    /// This is *not* used to add a chapter to an existing book, but to to load the
+    /// book configuration file from a single Markdown file.
+    ///
+    /// Since it is designed for single-chapter short stories, this method also sets
+    /// the `tex.class` option to `article`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::Book;
+    /// let mut book = Book::new();
+    /// book.load_markdown_file("foo.md"); // not unwraping since foo.md doesn't exist
+    /// ```
     pub fn load_markdown_file<P:AsRef<Path>>(&mut self, path: P) -> Result<&mut Self> {
         let filename = format!("{}", path.as_ref().display());
         self.source = Source::new(filename.as_str());
@@ -289,6 +319,27 @@ impl Book {
     }
 
     /// Loads a single markdown config from a &str
+    ///
+    /// Similar to `load_markdown_file`, except it reads a string instead of a file.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::Book;
+    /// let content = "\
+    /// ---
+    /// author: Foo
+    /// title: Bar
+    /// ---
+    ///
+    /// # Book #
+    ///
+    /// Some content in *markdown*.";
+    ///
+    /// let mut book = Book::new();
+    /// book.load_markdown_config(content).unwrap();
+    /// assert_eq!(book.options.get_str("title").unwrap(), "Bar");
+    /// ```
     pub fn load_markdown_config(&mut self, s: &str) -> Result<&mut Self> {
         self.options.set("tex.class", "article").unwrap();
         self.options.set("input.yaml_blocks", "true").unwrap();
@@ -336,6 +387,24 @@ impl Book {
     /// - chapter_name.md adds the (unnumbered) chapter
     ///
     /// 3. chapter_name.md adds the (custom numbered) chapter
+    ///
+    /// # See also
+    /// * `load_file`
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::Book;
+    /// let content = "\
+    /// author: Foo
+    /// title: Bar
+    ///
+    /// ! intro.md
+    /// + chapter_01.md";
+    /// 
+    /// let mut book = Book::new();
+    /// book.load_config(content); // no unwraping as `intro.md` and `chapter_01.md` don't exist
+    /// ```
     pub fn load_config(&mut self, s: &str) -> Result<&mut Book> {
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
             let words: Vec<&str> = (&s[1..]).split_whitespace().collect();
