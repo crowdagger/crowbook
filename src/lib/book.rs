@@ -128,17 +128,23 @@ impl Book {
             checker: None,
             formats: HashMap::new(),
         };
-        book.formats.insert("html", Box::new(HtmlSingle{}));
-        book.formats.insert("proofread.html", Box::new(ProofHtmlSingle{}));
-        book.formats.insert("html_dir", Box::new(HtmlDir{}));
-        book.formats.insert("proofread.html_dir", Box::new(ProofHtmlDir{}));
-        book.formats.insert("tex", Box::new(Latex{}));
-        book.formats.insert("proofread.tex", Box::new(ProofLatex{}));
-        book.formats.insert("pdf", Box::new(Pdf{}));
-        book.formats.insert("proofread.pdf", Box::new(ProofPdf{}));
-        book.formats.insert("epub", Box::new(Epub{}));
-        book.formats.insert("odt", Box::new(Odt{}));
+        book.add_format("html", Box::new(HtmlSingle{}))
+            .add_format("proofread.html", Box::new(ProofHtmlSingle{}))
+            .add_format("html_dir", Box::new(HtmlDir{}))
+            .add_format("proofread.html_dir", Box::new(ProofHtmlDir{}))
+            .add_format("tex", Box::new(Latex{}))
+            .add_format("proofread.tex", Box::new(ProofLatex{}))
+            .add_format("pdf", Box::new(Pdf{}))
+            .add_format("proofread.pdf", Box::new(ProofPdf{}))
+            .add_format("epub", Box::new(Epub{}))
+            .add_format("odt", Box::new(Odt{}));
         book
+    }
+
+    /// Register a format that can be rendered.
+    pub fn add_format(&mut self, format: &'static str, renderer: Box<BookRenderer>) -> &mut Self {
+        self.formats.insert(format, renderer);
+        self
     }
     
     /// Sets the options of a `Book`
