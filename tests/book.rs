@@ -8,8 +8,8 @@ fn test_book() {
     book.set_verbosity(InfoLevel::Error)
         .load_file(&format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "tests/test.book"))
         .unwrap();
-    book.render_html(&mut io::sink()).unwrap();
-    book.render_tex(&mut io::sink()).unwrap();
+    book.render_format_to("html", &mut io::sink()).unwrap();
+    book.render_format_to("tex", &mut io::sink()).unwrap();
 }
 
 #[test]
@@ -18,6 +18,6 @@ fn book_example() {
     book.set_verbosity(InfoLevel::Error)
         .load_file(&format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "guide.book"))
         .unwrap();
-    book.render_html(&mut io::sink()).unwrap();
-    book.render_tex(&mut io::sink()).unwrap();
+    book.render_format_to("html", &mut io::sink()).unwrap();
+    book.render_format_to("tex", &mut io::sink()).unwrap();
 }
