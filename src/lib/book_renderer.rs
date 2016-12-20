@@ -23,15 +23,15 @@ use std::path::Path;
 
 /// Thait that must be implemented by the various renderers to render a whole book.
 
-pub trait BookRenderer {
+pub trait BookRenderer: Sync {
     /// Render the book and write the result to the specified writer
-    fn render(&mut self, book: &Book, to: &mut Write) -> Result<()>;
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()>;
 
     /// Render the book to a given file.
     ///
     /// The default implementation creates a file and calls `render` to write to it,
     /// but in some cases it might be useful to override it.
-    fn render_to_file(&mut self, book: &Book, path: &AsRef<Path>) -> Result<()> {
+    fn render_to_file(&self, book: &Book, path: &AsRef<Path>) -> Result<()> {
         let mut file = File::create(path)
             .map_err(|err| Error::default(Source::empty(),
                                     lformat!("could not create file '{file}': {err}",

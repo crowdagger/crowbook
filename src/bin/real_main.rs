@@ -59,7 +59,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     let result = match option {
         Err(_) => {
             match format {
-                "html" => book.render_html(&mut io::stdout()),
+                "html" => book.render_format_to("html", &mut io::stdout()),
                 "proofread.html" => book.render_proof_html(&mut io::stdout()),
                 "tex" => book.render_tex(&mut io::stdout()),
                 "proofread.tex" => book.render_tex(&mut io::stdout()),
@@ -89,7 +89,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
                 }
                 "html" => {
                     if let Ok(mut f) = File::create(&file) {
-                        book.render_html(&mut f)
+                        book.render_format_to("html", &mut f)
                     } else {
                         print_error(&lformat!("Could not create file '{}'", file));
                     }

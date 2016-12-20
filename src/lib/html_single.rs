@@ -256,11 +256,11 @@ impl<'a> HtmlSingleRenderer<'a> {
 derive_html!{HtmlSingleRenderer<'a>, HtmlSingleRenderer::static_render_token}
 
 
-struct HtmlSingle {}
-struct ProofHtmlSingle {}
+pub struct HtmlSingle {}
+pub struct ProofHtmlSingle {}
 
 impl BookRenderer for HtmlSingle {
-    fn render(&mut self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book);
         book.logger.debug(lformat!("Attempting to generate HTML..."));
         let result = html.render_book()?;
@@ -274,7 +274,7 @@ impl BookRenderer for HtmlSingle {
 }
 
 impl BookRenderer for ProofHtmlSingle {
-    fn render(&mut self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)
             .proofread();
         book.logger.debug(lformat!("Attempting to generate HTML..."));

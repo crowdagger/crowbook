@@ -21,7 +21,7 @@ use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
 use epub::EpubRenderer;
-use html_single::HtmlSingleRenderer;
+use html_single::{HtmlSingleRenderer, HtmlSingle, ProofHtmlSingle};
 use html_dir::HtmlDirRenderer;
 use latex::LatexRenderer;
 use odt::OdtRenderer;
@@ -31,6 +31,7 @@ use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
 use lang;
 use misc;
+use book_renderer::BookRenderer;
 
 #[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
@@ -50,6 +51,7 @@ use std::io::{Write, Read};
 use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::iter::IntoIterator;
+use std::collections::HashMap;
 
 use crossbeam;
 use mustache;
@@ -108,12 +110,13 @@ pub struct Book {
     cleaner: Box<Cleaner>,
     chapter_template: Option<Template>,
     checker: Option<GrammarChecker>,
+    formats: HashMap<&'static str, Box<BookRenderer>>,
 }
 
 impl Book {
     /// Creates a new, empty `Book`
     pub fn new() -> Book {
-        Book {
+        let mut book = Book {
             source: Source::empty(),
             chapters: vec![],
             filenames: vec![],
@@ -123,7 +126,11 @@ impl Book {
             logger: Logger::new(InfoLevel::Info),
             chapter_template: None,
             checker: None,
-        }
+            formats: HashMap::new(),
+        };
+        book.formats.insert("html", Box::new(HtmlSingle{}));
+        book.formats.insert("proofread.html", Box::new(ProofHtmlSingle{}));
+        book
     }
     
     /// Sets the options of a `Book`
@@ -471,7 +478,7 @@ impl Book {
         if let Ok(file) = self.options.get_path(s) {
             if let Ok(mut f) = File::create(&file) {
                 let (result, name) = match s {
-                    "output.html" => (self.render_html(&mut f), "HTML"),
+                    "output.html" => (self.render_format_to("html", &mut f), "HTML"),
                     "output.tex" => (self.render_tex(&mut f), "LaTeX"),
                     "output.proofread.html" => {
                         (self.render_proof_html(&mut f), "HTML (for proofreading)")
@@ -619,22 +626,22 @@ impl Book {
     }
 
     /// Render book to html according to book options
-    pub fn render_html<T: Write>(&self, f: &mut T) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate HTML..."));
-        let mut html = HtmlSingleRenderer::new(&self);
-        let result = html.render_book()?;
-        f.write_all(&result.as_bytes())
-            .map_err(|e| {
-                Error::render(&self.source,
-                              lformat!("problem when writing to HTML file: {error}", error = e))
-            })?;
-        if let Ok(file) = self.options.get_path("output.html") {
-            self.logger.info(lformat!("Successfully generated HTML file: {file}",
-                                      file = misc::normalize(file)));
-        } else {
-            self.logger.info(lformat!("Successfully generated HTML"));
+    pub fn render_format_to<T: Write>(&self, format: &str, f: &mut T) -> Result<()> {
+        self.logger.debug(lformat!("Attempting to generate {format}...",
+                                   format = format));
+        match self.formats.get(format) {
+            Some(renderer) => {
+                renderer.render(&self, f)?;
+                self.logger.info(lformat!("Succesfully generated {format}",
+                                          format = format));
+                Ok(())
+            },
+            None => {
+                Err(Error::default(Source::empty(),
+                                   lformat!("unknown format {format}",
+                                            format = format)))
+            }
         }
-        Ok(())
     }
 
     /// Render book to html according to book options (proofread version)
