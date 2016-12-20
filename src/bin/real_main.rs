@@ -154,7 +154,7 @@ pub fn try_main() -> Result<()> {
         if s != "-" {
             book.load_markdown_file(s)?;
         } else {
-            book.load_markdown_config(io::stdin())?;
+            book.read_markdown_config(io::stdin())?;
         }
     } else {
         if s != "-" {

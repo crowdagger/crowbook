@@ -332,7 +332,7 @@ impl Book {
     /// book.load_markdown_config(content).unwrap();
     /// assert_eq!(book.options.get_str("title").unwrap(), "Bar");
     /// ```
-    pub fn load_markdown_config<R: Read>(&mut self, source: R) -> Result<&mut Self> {
+    pub fn read_markdown_config<R: Read>(&mut self, source: R) -> Result<&mut Self> {
         self.options.set("tex.class", "article").unwrap();
         self.options.set("input.yaml_blocks", "true").unwrap();
 
