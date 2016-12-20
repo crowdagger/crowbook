@@ -571,8 +571,17 @@ impl Book {
     #[cfg(not(feature = "proofread"))]
     fn init_checker(&mut self) {}
 
-    /// Renders the book to the given format if output.{format} is set,
+    /// Renders the book to the given format if output.{format} is set;
     /// do nothing otherwise.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::Book;
+    /// let mut book = Book::new();
+    /// /* Will do nothing as book is empty and has no output format specified */
+    /// book.render_format("pdf");
+    /// ```
     pub fn render_format(&self, format: &str) -> () {
         let mut key = String::from("output.");
         key.push_str(format);
@@ -585,7 +594,27 @@ impl Book {
         }
     }
 
-    /// Generates output files acccording to book options
+    /// Generates output files acccording to book options.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::Book;
+    /// let content = "\
+    /// ---
+    /// title: Foo
+    /// output.tex: /tmp/foo.tex
+    /// ---
+    ///
+    /// # Foo
+    ///
+    /// Bar and baz, too.";
+    ///
+    /// Book::new()
+    ///       .load_markdown_config(content)
+    ///       .unwrap()
+    ///       .render_all(); // renders foo.tex in /tmp
+    /// ```
     pub fn render_all(&self) -> () {
         let mut handles = vec![];
         crossbeam::scope(|scope| {
