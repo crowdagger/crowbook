@@ -20,11 +20,11 @@ use cleaner::{Cleaner, CleanerParams, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
-use epub::{EpubRenderer, Epub};
-use html_single::{HtmlSingleRenderer, HtmlSingle, ProofHtmlSingle};
-use html_dir::{HtmlDirRenderer, HtmlDir, ProofHtmlDir};
-use latex::{LatexRenderer, Latex, ProofLatex, Pdf, ProofPdf};
-use odt::{OdtRenderer, Odt};
+use epub::{Epub};
+use html_single::{HtmlSingle, ProofHtmlSingle};
+use html_dir::{HtmlDir, ProofHtmlDir};
+use latex::{Latex, ProofLatex, Pdf, ProofPdf};
+use odt::{Odt};
 use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
 use number::Number;
 use resource_handler::ResourceHandler;
@@ -474,28 +474,6 @@ impl Book {
             }
         }
     }
-
-    fn render_one_file(&self, s: &str) -> () {
-        if let Ok(file) = self.options.get_path(s) {
-            if let Ok(mut f) = File::create(&file) {
-                let (result, name) = match s {
-                    "output.html" => (self.render_format_to("html", &mut f), "HTML"),
-                    "output.tex" => (self.render_format_to("tex", &mut f), "LaTeX"),
-                    "output.proofread.html" => {
-                        (self.render_format_to("proofread.html", &mut f), "HTML (for proofreading)")
-                    }
-                    _ => unreachable!(),
-                };
-                if let Err(err) = result {
-                    self.logger
-                        .error(lformat!("rendering {name}: {error}", name = name, error = err));
-                }
-            } else {
-                self.logger.error(lformat!("could not create file '{file}'", file = &file));
-            }
-        }
-    }
-
 
     /// Generates output files acccording to book options
     pub fn render_all(&self) -> () {
