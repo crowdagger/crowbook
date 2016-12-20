@@ -529,7 +529,7 @@ impl BookOptions {
     /// # Examples
     /// ```
     /// use crowbook::Book;
-    /// let mut book = Book::new(&[]);
+    /// let mut book = Book::new();
     /// // Set author
     /// book.options.set("author", "Joan Doe").unwrap();
     /// // Set numbering to chapters and subsections

@@ -73,16 +73,17 @@ use yaml_rust::{YamlLoader, Yaml};
 ///
 /// ```
 /// use crowbook::{Book, Number};
-/// // Create a book with some options
-/// let mut book = Book::new(&[("author", "Joan Doe"),
-///                            ("title", "An untitled book"),
-///                            ("lang", "en")]);
-//
-/// // Add content to the book
-/// book.add_chapter_as_str(Number::Default, "# The beginning#\nBla, bla, bla").unwrap();
+/// // Create a book with some options 
+/// let mut book = Book::new();
+/// book.set_options(&[("author", "Joan Doe"),
+///                    ("title", "An untitled book"),
+///                    ("lang", "en")]);
+///
+/// // Add a chapter to the book
+/// book.add_chapter_from_str(Number::Default, "# The beginning#\nBla, bla, bla").unwrap();
 ///
 /// // Render the book as html to stdout
-/// book.render_html(&mut std::io::stdout()).unwrap();
+/// book.render_format_to("html", &mut std::io::stdout()).unwrap();
 /// ```
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if

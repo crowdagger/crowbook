@@ -26,7 +26,7 @@
 //! default features that are mostly useful for the binary:
 //!
 //! ```ignore
-//! crowbook = {version = "0.10", default-features = false}
+//! crowbook = {version = "0.11", default-features = false}
 //! ```
 //!
 //! # Book
@@ -44,11 +44,12 @@
 //! ## Example
 //!
 //! ```ignore
-//! use crowbook::{Book, InfoLevel};
-//! // Reads configuration file "foo.book" (and set verbosity do default level)
-//! let mut book = Book::new_from_file("foo.book", InfoLevel::Info, &[]).unwrap();
-//! // Render all formats according to this configuration file
-//! book.render_all().unwrap();
+//! use crowbook::Book;
+//! // Reads configuration file "foo.book" and render all formats according to this
+//! // configuration file
+//! Book::new()
+//!      .load_file("foo.book").unwrap()
+//!      .render_all().unwrap();
 //! ```
 //!
 //! This is basically the code for the `crowbook` binary (though it contains a
