@@ -7,7 +7,9 @@ ChangeLog
   hoping they will be the last ones for a while. API should now be
   more simple and consistent.
 * Command-line interface: 
-  * Behaviour of `--to` should now be consistent for all output formats.
+  * Behaviour of `--to` should now be consistent for all output
+    formats.
+  * If `--output` is set to `-`, prints to stdout. 
 
 unreleased
 ------------
