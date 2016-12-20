@@ -46,8 +46,9 @@ impl<'r> ResourceHandler<'r> {
     /// Turns on mapping for image files
     ///
     /// # Argument: an offset (should be book.root)
-    pub fn set_images_mapping(&mut self, b: bool) {
+    pub fn set_images_mapping(&mut self, b: bool) -> &mut Self {
         self.map_images = b;
+        self
     }
 
     /// Sets base64 mode for image mapping
