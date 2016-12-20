@@ -12,7 +12,7 @@ description: >-
  description
 epub.version: 3";
     let mut book = Book::new();
-    book.load_config(config).unwrap();
+    book.read_config(config.as_bytes()).unwrap();
     test_eq(book.options.get_str("author").unwrap(), "Author");
     test_eq(book.options.get_str("title").unwrap(), "Some title");
     test_eq(book.options.get_str("description").unwrap(),
