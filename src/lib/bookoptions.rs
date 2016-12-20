@@ -272,6 +272,28 @@ html.crowbook_link:alias                            # {removed}
 
 
 /// Contains the options of a book.
+///
+/// This structure offers some facilities to check the content of an option.
+/// It also verifies, when setting an option, that it corresponds to certain
+/// values (e.g. if you expect an int, you can't set this option to "foo").
+///
+/// # Example
+///
+/// ```
+/// use crowbook::BookOptions;
+/// let mut options = BookOptions::new();
+///
+/// // By default, `lang` is set to "en"
+/// assert_eq!(options.get_str("lang").unwrap(), "en");
+///
+/// // We can change it to "fr"
+/// options.set("lang", "fr").unwrap();
+/// assert_eq!(options.get_str("lang").unwrap(), "fr");
+///
+/// // `epub.version` must be an int, we can't set it to a string
+/// let res = options.set("epub.version", "foo");
+/// assert!(res.is_err());
+/// ```
 #[derive(Debug)]
 pub struct BookOptions {
     options: HashMap<String, BookOption>,
@@ -296,7 +318,7 @@ pub struct BookOptions {
 }
 
 impl BookOptions {
-    /// Creates a new BookOptions struct from the default compliled string
+    /// Creates a new BookOptions struct from the default compiled string
     pub fn new() -> BookOptions {
         let mut options = BookOptions {
             options: HashMap::new(),
@@ -594,14 +616,28 @@ impl BookOptions {
         Ok(res)
     }
 
-    /// Gets a string option
+    /// Gets a string option.
+    ///
+    /// # Returns
+    ///
+    /// * A string if `key` is valid and corresponds to a string
+    /// * An error either if `key` is not valid or is not a string.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::BookOptions;
+    /// let options = BookOptions::new();
+    /// assert!(options.get_str("author").is_ok());
+    /// assert!(options.get_str("rendering.inline_toc").is_err());
+    /// ```
     pub fn get_str(&self, key: &str) -> Result<&str> {
         self.get(key)?.as_str()
     }
 
-    /// Get a path option
+    /// Get a path option.
     ///
-    /// Adds the correct path correction before it
+    /// Adds the correct path correction before it.
     pub fn get_path(&self, key: &str) -> Result<String> {
         let path: &str = self.get(key)?.as_path()?;
 
@@ -665,27 +701,43 @@ impl BookOptions {
 
     /// Get a path option
     ///
-    /// Don't add book's root path before it
+    /// Don't add book's root path before it.
     pub fn get_relative_path(&self, key: &str) -> Result<&str> {
         self.get(key)?.as_path()
     }
 
-    /// gets a bool option
+    /// Gets a bool option
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use crowbook::BookOptions;
+    /// let options = BookOptions::new();
+    /// assert!(options.get_bool("epub.toc.extras").is_ok());
+    /// ```
     pub fn get_bool(&self, key: &str) -> Result<bool> {
         self.get(key)?.as_bool()
     }
 
-    /// gets a char option
+    /// Gets a char option
     pub fn get_char(&self, key: &str) -> Result<char> {
         self.get(key)?.as_char()
     }
 
-    /// gets an int  option
+    /// Gets an int  option
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use crowbook::BookOptions;
+    /// let options = BookOptions::new();
+    /// assert!(options.get_i32("rendering.num_depth").is_ok());
+    /// ```
     pub fn get_i32(&self, key: &str) -> Result<i32> {
         self.get(key)?.as_i32()
     }
 
-    /// gets a float option
+    /// Gets a float option
     pub fn get_f32(&self, key: &str) -> Result<f32> {
         self.get(key)?.as_f32()
     }
@@ -753,8 +805,14 @@ impl BookOptions {
 
     /// Returns a description of all options valid to pass to a book.
     ///
-    /// # arguments
+    /// # Arguments
     /// * `md`: whether the output should be formatted in Markdown
+    ///
+    /// # Example
+    /// ```
+    /// use crowbook::BookOptions;
+    /// println!("{}", BookOptions::description(false));
+    /// ```
     pub fn description(md: bool) -> String {
         let mut out = String::new();
         let mut previous_is_comment = true;
