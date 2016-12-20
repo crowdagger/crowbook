@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.11.0 (???)
+--------------
+* **Breaking changes**: the API has undergone some breaking changes,
+  hoping they will be the last ones for a while. API should now be
+  more simple and consistent.
+* Command-line interface: 
+  * Behaviour of `--to` should now be consistent for all output formats.
+
 unreleased
 ------------
 * Rendering:
