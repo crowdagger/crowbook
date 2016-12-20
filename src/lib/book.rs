@@ -94,14 +94,9 @@ pub struct Book {
 }
 
 impl Book {
-    /// Creates a new `Book` with given options
-    ///
-    /// # Arguments
-    /// *`options` a list (or other iterator) of (key, value) tuples. Can be &[].
-    pub fn new<'a, I>(options: I) -> Book
-        where I: IntoIterator<Item = &'a (&'a str, &'a str)>
-    {
-        let mut book = Book {
+    /// Creates a new, empty `Book`
+    pub fn new() -> Book {
+        Book {
             source: Source::empty(),
             chapters: vec![],
             filenames: vec![],
@@ -111,12 +106,20 @@ impl Book {
             logger: Logger::new(InfoLevel::Info),
             chapter_template: None,
             checker: None,
-        };
-
+        }
+    }
+    
+    /// Sets the options of a `Book`
+    ///
+    /// # Arguments
+    /// *`options` a list (or other iterator) of (key, value) tuples. Can be &[].
+    pub fn set_options<'a, I>(&mut self, options: I) -> &mut Book
+        where I: IntoIterator<Item = &'a (&'a str, &'a str)>
+    {
         // set options
         for &(key, value) in options {
-            if let Err(err) = book.options.set(key, value) {
-                book.logger
+            if let Err(err) = self.options.set(key, value) {
+                self.logger
                     .error(lformat!("Error initializing book: could not set {key} to {value}: \
                                      {error}",
                                     key = key,
@@ -125,55 +128,57 @@ impl Book {
             }
         }
         // set cleaner according to lang and autoclean settings
-        book.update_cleaner();
-        book
+        self.update_cleaner();
+        self
     }
 
-    /// Creates a new book from a file, with options
+    /// Sets the verbosity of a book
+    ///
+    /// See `InfoLevel` for more information on verbosity
+    pub fn set_verbosity(&mut self, verbosity: InfoLevel) -> &mut Book {
+        self.logger.set_verbosity(verbosity);
+        self
+    }
+
+    /// Loads a book configuration file
     ///
     /// # Arguments
     /// * `filename`: the path of file to load. The directory of this file is used as
     ///   a "root" directory for all paths referenced in books, whether chapter files,
     ///   templates, cover images, and so on.
-    /// * `verbosity: sets the book verbosity
-    /// * `options`: a list of (key, value) options to pass to the book
-    pub fn new_from_file<'a, I>(filename: &str, verbosity: InfoLevel, options: I) -> Result<Book>
-        where I: IntoIterator<Item = &'a (&'a str, &'a str)>
-    {
-        let mut book = Book::new(options);
-        book.source = Source::new(filename);
-        book.options.source = Source::new(filename);
-        book.logger.set_verbosity(verbosity);
+    pub fn load_file<P: AsRef<Path>>(&mut self, path: P) -> Result<&mut Book> {
+        let filename = format!("{}", path.as_ref().display());
+        self.source = Source::new(filename.as_str());
+        self.options.source = Source::new(filename.as_str());
 
-        let path = Path::new(filename);
-        let mut f = File::open(&path)
+        let mut f = File::open(path.as_ref())
             .map_err(|_| {
-                Error::file_not_found(Source::empty(), lformat!("book"), filename.to_owned())
+                Error::file_not_found(Source::empty(), lformat!("book"), filename.clone())
             })?;
         // Set book path to book's directory
-        if let Some(parent) = path.parent() {
-            book.root = parent.to_owned();
-            book.options.root = book.root.clone();
+        if let Some(parent) = path.as_ref().parent() {
+            self.root = parent.to_owned();
+            self.options.root = self.root.clone();
         }
 
         let mut s = String::new();
         f.read_to_string(&mut s)
             .map_err(|_| {
-                Error::config_parser(Source::new(filename),
+                Error::config_parser(Source::new(filename.as_str()),
                                  lformat!("file contains invalid UTF-8, could not parse it"))
             })?;
 
 
-        let result = book.set_from_config(&s);
+        let result = self.load_config(&s);
         match result {
-            Ok(..) => Ok(book),
+            Ok(book) => Ok(book),
             Err(err) => {
-                if err.is_config_parser() && filename.ends_with(".md") {
+                if err.is_config_parser() && path.as_ref().ends_with(".md") {
                     let err = Error::default(Source::empty(),
                                              lformat!("could not parse {file} as a book \
                                                        file.\nMaybe you meant to run crowbook \
                                                        with the --single argument?",
-                                                      file = misc::normalize(&filename)));
+                                                      file = misc::normalize(path)));
                     Err(err)
                 } else {
                     Err(err)
@@ -181,38 +186,37 @@ impl Book {
             }
         }
     }
-
-    /// Creates a book from a single markdown file
-    pub fn new_from_markdown_file<'a, I>(filename: &str,
-                                         verbosity: InfoLevel,
-                                         options: I)
-                                         -> Result<Book>
-        where I: IntoIterator<Item = &'a (&'a str, &'a str)>
-    {
-        let mut book = Book::new(options);
-        book.source = Source::new(filename);
-        book.logger.set_verbosity(verbosity);
+    
+    /// Loads a single markdown file
+    pub fn load_markdown_file<P:AsRef<Path>>(&mut self, path: P) -> Result<&mut Self> {
+        let filename = format!("{}", path.as_ref().display());
+        self.source = Source::new(filename.as_str());
 
         // Set book path to book's directory
-        if let Some(parent) = Path::new(filename).parent() {
-            book.root = parent.to_owned();
-            book.options.root = book.root.clone();
+        if let Some(parent) = path.as_ref().parent() {
+            self.root = parent.to_owned();
+            self.options.root = self.root.clone();
         }
-        book.options.set("tex.class", "article").unwrap();
-        book.options.set("input.yaml_blocks", "true").unwrap();
+        self.options.set("tex.class", "article").unwrap();
+        self.options.set("input.yaml_blocks", "true").unwrap();
 
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md
-        let relative_path = Path::new(Path::new(filename).components().last().unwrap().as_os_str());
+        let relative_path = Path::new(path
+                                      .as_ref()
+                                      .components()
+                                      .last()
+                                      .unwrap()
+                                      .as_os_str());
 
         // Update grammar checker according to options
-        book.add_chapter(Number::Hidden, &relative_path.to_string_lossy())?;
+        self.add_chapter(Number::Hidden, &relative_path.to_string_lossy())?;
 
-        Ok(book)
+        Ok(self)
     }
 
     /// Sets options from a YAML block
-    fn set_options_from_yaml(&mut self, yaml: &str) -> Result<()> {
+    fn set_options_from_yaml(&mut self, yaml: &str) -> Result<&mut Book> {
         self.options.source = self.source.clone();
         match YamlLoader::load_from_str(&yaml) {
             Err(err) => {
@@ -236,10 +240,10 @@ impl Book {
                 }
             }
         }
-        Ok(())
+        Ok(self)
     }
-
-    /// Sets options and load chapters according to configuration file
+        
+    /// Loads a book configution as a &str.
     ///
     /// A line with "option: value" sets the option to value
     ///
@@ -248,8 +252,7 @@ impl Book {
     /// - chapter_name.md adds the (unnumbered) chapter
     ///
     /// 3. chapter_name.md adds the (custom numbered) chapter
-    pub fn set_from_config(&mut self, s: &str) -> Result<()> {
-
+    pub fn load_config(&mut self, s: &str) -> Result<&mut Book> {
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
             let words: Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
@@ -384,7 +387,7 @@ impl Book {
 
         self.source.unset_line();
         self.set_chapter_template()?;
-        Ok(())
+        Ok(self)
     }
 
     /// Determine whether proofreading is activated or not

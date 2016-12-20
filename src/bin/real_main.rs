@@ -19,7 +19,7 @@ extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Book, BookOptions, InfoLevel, set_lang};
+use crowbook::{Result, Book, BookOptions, InfoLevel, set_lang};
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
@@ -116,7 +116,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     }
 }
 
-pub fn real_main() {
+pub fn try_main() -> Result<()> {
     let lang = get_lang()
         .or_else(|| {
             match env::var("LANG") {
@@ -148,7 +148,7 @@ pub fn real_main() {
 
     if matches.is_present("print-template") {
         let template = matches.value_of("print-template").unwrap();
-        let mut book = Book::new(&[]);
+        let mut book = Book::new();
         set_book_options(&mut book, &matches);
         let result = book.get_template(template.as_ref());
         match result {
@@ -194,22 +194,29 @@ pub fn real_main() {
         InfoLevel::Info
     };
 
-    let book_res = if matches.is_present("single") {
-        Book::new_from_markdown_file(s, verbosity, &get_book_options(&matches))
+    let mut book = Book::new();
+    book.set_verbosity(verbosity)
+        .set_options(&get_book_options(&matches));
+
+    if matches.is_present("single") {
+        book.load_markdown_file(s)?;
     } else {
-        Book::new_from_file(s, verbosity, &get_book_options(&matches))
-    };
+        book.load_file(s)?;
+    }
 
-    match book_res {
+    set_book_options(&mut book, &matches);
+    if let Some(format) = matches.value_of("to") {
+        render_format(&mut book, &matches, format);
+    } else {
+        book.render_all();
+    }
+
+    Ok(())
+}
+
+pub fn real_main() {
+    match try_main() {
         Err(err) => print_error(&format!("{}", err)),
-        Ok(mut book) => {
-            set_book_options(&mut book, &matches);
-
-            if let Some(format) = matches.value_of("to") {
-                render_format(&mut book, &matches, format);
-            } else {
-                book.render_all();
-            }
-        }
+        Ok(_) => (),
     }
 }

@@ -1,7 +1,7 @@
 use error::{Error, Result, Source};
 use bookoption::BookOption;
 use book::Book;
-use logger::{Logger, InfoLevel};
+use logger::{Logger};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
@@ -407,7 +407,8 @@ impl BookOptions {
                                                   lformat!("'{value}''s path contains invalid \
                                                             UTF-8 code",
                                                            value = &value)))?;
-                    let book = Book::new_from_file(file, InfoLevel::Info, &[])?;
+                    let mut book = Book::new();
+                    book.load_file(file)?;
                     self.merge(book.options)?;
                     Ok(None)
             } else { 
