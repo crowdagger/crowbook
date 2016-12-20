@@ -144,7 +144,7 @@ impl Book {
     /// Sets the options of a `Book`
     ///
     /// # Arguments
-    /// *`options` a list (or other iterator) of (key, value) tuples. Can be &[].
+    /// *`options`: a (possibly empty) list (or other iterator) of (key, value) tuples.
     ///
     /// # Example
     ///
@@ -152,8 +152,8 @@ impl Book {
     /// use crowbook::Book;
     /// let mut book = Book::new();
     /// book.set_options(&[("author", "Foo"), ("title", "Bar")]);
-    /// assert_eq!(book.options.get_str("title").unwrap(), "Bar");
     /// assert_eq!(book.options.get_str("author").unwrap(), "Foo");
+    /// assert_eq!(book.options.get_str("title").unwrap(), "Bar");
     /// ```
     pub fn set_options<'a, I>(&mut self, options: I) -> &mut Book
         where I: IntoIterator<Item = &'a (&'a str, &'a str)>
