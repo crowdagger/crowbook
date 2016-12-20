@@ -160,11 +160,7 @@ pub fn try_main() -> Result<()> {
         if s != "-" {
             book.load_file(s)?;
         } else {
-            let mut buffer = String::new();
-            io::stdin().read_to_string(&mut buffer)
-                .map_err(|_| Error::default(Source::empty(),
-                                            lformat!("Error reading from stdin")))?;
-            book.load_config(&buffer)?;
+            book.read_config(io::stdin())?;
         }
     }
 

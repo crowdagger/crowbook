@@ -240,7 +240,7 @@ impl Book {
         self.source = Source::new(filename.as_str());
         self.options.source = Source::new(filename.as_str());
 
-        let mut f = File::open(path.as_ref())
+        let f = File::open(path.as_ref())
             .map_err(|_| {
                 Error::file_not_found(Source::empty(), lformat!("book"), filename.clone())
             })?;
@@ -250,15 +250,7 @@ impl Book {
             self.options.root = self.root.clone();
         }
 
-        let mut s = String::new();
-        f.read_to_string(&mut s)
-            .map_err(|_| {
-                Error::config_parser(Source::new(filename.as_str()),
-                                 lformat!("file contains invalid UTF-8, could not parse it"))
-            })?;
-
-
-        let result = self.load_config(&s);
+        let result = self.read_config(&f);
         match result {
             Ok(book) => Ok(book),
             Err(err) => {
@@ -405,7 +397,7 @@ impl Book {
     /// let mut book = Book::new();
     /// book.load_config(content); // no unwraping as `intro.md` and `chapter_01.md` don't exist
     /// ```
-    pub fn load_config(&mut self, s: &str) -> Result<&mut Book> {
+    pub fn read_config<R: Read>(&mut self, mut source: R) -> Result<&mut Book> {
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
             let words: Vec<&str> = (&s[1..]).split_whitespace().collect();
             if words.len() > 1 {
@@ -418,8 +410,13 @@ impl Book {
             Ok(words[0])
         }
 
+        let mut s = String::new();
+        source.read_to_string(&mut s)
+            .map_err(|err| Error::config_parser(Source::empty(),
+                                                lformat!("could not read source: {error}",
+                                                         error = err)))?;
+        
         // Parse the YAML block, that is, until first chapter
-
         let mut yaml = String::new();
         let mut lines = s.lines().peekable();
         let mut line;
