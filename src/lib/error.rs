@@ -23,7 +23,10 @@ use std::fmt;
 use std::borrow::Cow;
 
 #[derive(Debug, PartialEq, Clone)]
-/// Source of an error file
+/// Source of an error.
+///
+/// Contains (if it's possible) the file and ideally the line that the user should
+/// look at to correct their error.
 pub struct Source {
     /// File name of the source
     #[doc(hidden)]
@@ -51,7 +54,7 @@ impl Source {
         }
     }
 
-    /// Sets line number of a source (with &mut self)
+    /// Sets line number of a source.
     pub fn set_line(&mut self, line: u32) -> &mut Self {
         self.line = Some(line);
         self
@@ -85,7 +88,11 @@ impl<'a> From<&'a Source> for Source {
     }
 }
 #[derive(Debug, PartialEq)]
-/// Crowbook Error type
+/// Crowbook Error type.
+///
+/// This type tries (when it can) to track where the error came from, to
+/// pinpoint the file (at least) and, if possible, the line the user needs
+/// to look at.
 pub struct Error {
     /// Origin (file, line) of the error, if there is one
     source: Source,
@@ -93,7 +100,7 @@ pub struct Error {
 }
 
 impl Error {
-    /// Creates a new default error
+    /// Creates a new default error.
     pub fn default<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -101,7 +108,7 @@ impl Error {
         }
     }
 
-    /// Creates a new grammar check error
+    /// Creates a new grammar check error.
     ///
     /// Used when there is a problem connecting to languagetool
     pub fn grammar_check<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
@@ -110,9 +117,9 @@ impl Error {
             inner: Inner::GrammarCheck(msg.into()),
         }
     }
-    /// Creates a new parser error
+    /// Creates a new parser error.
     ///
-    /// Error when parsing markdown file
+    /// Error when parsing markdown file.
     pub fn parser<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -120,9 +127,9 @@ impl Error {
         }
     }
 
-    /// Creates a new config parser error
+    /// Creates a new config parser error.
     ///
-    /// Error when parsing book file
+    /// Error when parsing the book configuration file.
     pub fn config_parser<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -130,10 +137,12 @@ impl Error {
         }
     }
 
-    /// Creates a new file not found error
+    /// Creates a new "file not found" error
     ///
-    /// * msg: description of why the file was needed
-    /// * file: file name
+    /// # Arguments
+    /// * source: the source of the error.
+    /// * msg: description of why the file was needed.
+    /// * file: file name that wasn't found.
     pub fn file_not_found<S1: Into<Cow<'static, str>>, S2: Into<Cow<'static, str>>, O: Into<Source>>
         (source: O,
          msg: S1,
@@ -145,9 +154,9 @@ impl Error {
         }
     }
 
-    /// Creates a new render error
+    /// Creates a new render error.
     ///
-    /// Error when rendering
+    /// Error when rendering the book to a given format.
     pub fn render<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -155,9 +164,9 @@ impl Error {
         }
     }
 
-    /// Creates a new template error
+    /// Creates a new template error.
     ///
-    /// Error when compiling a mustache template
+    /// Error when compiling a mustache template.
     pub fn template<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -165,9 +174,9 @@ impl Error {
         }
     }
 
-    /// Creates a new invalid option error
+    /// Creates a new invalid option error.
     ///
-    /// Error when trying to set an option
+    /// Error when trying to set an option.
     pub fn invalid_option<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -175,9 +184,9 @@ impl Error {
         }
     }
 
-    /// Creates a new zipper error
+    /// Creates a new zipper error.
     ///
-    /// Error when moving/copying files to temporary dir, e.g. using `zip` commmand
+    /// Error when moving/copying files to temporary dir, e.g. using `zip` commmand.
     pub fn zipper<S: Into<Cow<'static, str>>>(msg: S) -> Error {
         Error {
             source: Source::empty(),
@@ -187,7 +196,7 @@ impl Error {
 
     /// Creates a new book option error
     ///
-    /// Used when converting an error to invalid type
+    /// Used when converting an error to invalid type.
     pub fn book_option<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -195,13 +204,13 @@ impl Error {
         }
     }
 
-    /// Change the source of an error
+    /// Change the source of an error.
     pub fn with_source<O: Into<Source>>(mut self, source: O) -> Error {
         self.source = source.into();
         self
     }
 
-    /// Returns true if self is a default option error, false else
+    /// Returns true if self is a default option error, false else.
     pub fn is_default(&self) -> bool {
         match self.inner {
             Inner::Default(..) => true,
@@ -209,7 +218,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is a parser error, false else
+    /// Returns true if self is a parser error, false else.
     pub fn is_parser(&self) -> bool {
         match self.inner {
             Inner::Parser(..) => true,
@@ -217,7 +226,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is a config parser error, false else
+    /// Returns true if self is a config parser error, false else.
     pub fn is_config_parser(&self) -> bool {
         match self.inner {
             Inner::ConfigParser(..) => true,
@@ -225,7 +234,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is a file not found error, false else
+    /// Returns true if self is a file not found error, false else.
     pub fn is_file_not_found(&self) -> bool {
         match self.inner {
             Inner::FileNotFound(..) => true,
@@ -233,7 +242,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is a render error, false else
+    /// Returns true if self is a render error, false else.
     pub fn is_render(&self) -> bool {
         match self.inner {
             Inner::Render(..) => true,
@@ -241,7 +250,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is a zipper error, false else
+    /// Returns true if self is a zipper error, false else.
     pub fn is_zipper(&self) -> bool {
         match self.inner {
             Inner::Zipper(..) => true,
@@ -249,7 +258,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is a book option error, false else
+    /// Returns true if self is a book option error, false else.
     pub fn is_book_option(&self) -> bool {
         match self.inner {
             Inner::BookOption(..) => true,
@@ -257,7 +266,7 @@ impl Error {
         }
     }
 
-    /// Returns true if self is an invalid option error, false else
+    /// Returns true if self is an invalid option error, false else.
     pub fn is_invalid_option(&self) -> bool {
         match self.inner {
             Inner::InvalidOption(..) => true,
