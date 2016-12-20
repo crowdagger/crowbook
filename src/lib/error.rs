@@ -52,14 +52,16 @@ impl Source {
     }
 
     /// Sets line number of a source (with &mut self)
-    pub fn set_line(&mut self, line: u32) {
+    pub fn set_line(&mut self, line: u32) -> &mut Self {
         self.line = Some(line);
+        self
     }
 
     /// Unsets a line number of a source
     #[doc(hidden)]
-    pub fn unset_line(&mut self) {
+    pub fn unset_line(&mut self) -> &mut Self {
         self.line = None;
+        self
     }
 }
 
