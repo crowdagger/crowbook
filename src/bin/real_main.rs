@@ -19,13 +19,12 @@ extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Result, Book, BookOptions, InfoLevel, Error, Source};
+use crowbook::{Result, Book, BookOptions, InfoLevel};
 use crowbook_intl_runtime::set_lang;
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
 use std::io;
-use std::io::Read;
 use std::env;
 
 
