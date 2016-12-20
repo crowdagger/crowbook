@@ -79,7 +79,28 @@ impl Output {
 }
 
 /// Logs info and warning message and choose whether to display them
-/// according to verbosity
+/// according to verbosity.
+///
+/// This struct has two families of methods:
+///
+/// * `logger.{level}`: will only print the message if `level` is below or equal
+///   `logger`'s current verbosity level;
+/// * `Logger::display_{level}`: will print the message in any case, since they are static
+///   methods and don't depend on the current verbosity.
+///
+/// # Example
+///
+/// ```
+/// use crowbook::{Logger, InfoLevel};
+/// let mut logger = Logger::new();
+/// logger.warning("Won't be printed since default level is above that");
+/// logger.set_verbosity(InfoLevel::Warning);
+/// logger.warning("Now, this will be printed");
+/// Logger::display_debug("Display in any cases");
+/// ```
+///
+/// # See also
+/// * `InfoLevel`
 #[derive(Debug)]
 pub struct Logger {
     verbosity: InfoLevel,
@@ -87,7 +108,7 @@ pub struct Logger {
 
 
 impl Logger {
-    /// Creates a new logger with default verbosity
+    /// Creates a new logger with default verbosity (`Info`).
     pub fn new() -> Logger {
         Logger { verbosity: InfoLevel::Info }
     }
