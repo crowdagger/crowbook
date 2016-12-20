@@ -177,15 +177,15 @@ msgid "A list of additional files is only valid with the --create option."
 msgstr ""
 "Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:67
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:58
 msgid "Could not create file '{}'"
 msgstr "Impossible de créer le fichier '{}'"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:119
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:111
 msgid "{} is not a valid template name."
 msgstr "{} n'est pas un nom de template valide."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:138
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:130
 msgid ""
 "You must pass the file of a book configuration file.\n"
 "\n"
@@ -199,21 +199,66 @@ msgstr ""
 "\n"
 "Pour plus d'informations, essayez --help."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:171
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:160
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:170
+msgid "Error reading from stdin"
+msgstr "Erreur en lisant l'entrée standard"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:131
+msgid "HTML (standalone page)"
+msgstr "HTML (page indépendante)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:132
+msgid "HTML (standalone page/proofreading)"
+msgstr "HTML (page indépendante/relecture)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:133
+msgid "HTML (multiple pages)"
+msgstr "HTML (plusieurs pages)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:134
+msgid "HTML (multiple pages/proofreading)"
+msgstr "HTML (plusieurs pages/relecture)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:135
+msgid "LaTeX"
+msgstr "LaTeX"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:136
+msgid "LaTeX (proofreading)"
+msgstr "LaTeX (relecture)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:137
+msgid "PDF"
+msgstr "PDF"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:138
+msgid "PDF (proofreading)"
+msgstr "PDF (relecture)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:139
+msgid "EPUB"
+msgstr "EPUB"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:140
+msgid "ODT"
+msgstr "ODT"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:174
 msgid "Error initializing book: could not set {key} to {value}: {error}"
 msgstr ""
 "Erreur à l'initialisation du livre: impossible de positionner {key} à "
 "{value} : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:204
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:207
 msgid "book"
 msgstr "livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:216
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:219
 msgid "file contains invalid UTF-8, could not parse it"
 msgstr "le fichier contient de l'UTF-8 invalide, impossible de l'analyser"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:226
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:229
 msgid ""
 "could not parse {file} as a book file.\n"
 "Maybe you meant to run crowbook with the --single argument?"
@@ -221,43 +266,43 @@ msgstr ""
 "impossible d'analyser {file} comme un fichier de livre.\n"
 "Peut-être que vous vouliez lancer crowbook avec l'argument --single ?"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:283
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:286
 msgid "YAML block was not valid YAML: {error}"
 msgstr "Le bloc YAML n'était pas valide : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:297
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:300
 msgid "YAML part of the book is not a valid hashmap"
 msgstr "La partie YAML du livre n'est pas une hashmap valide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:319
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:322
 msgid "chapter filenames must not contain whitespace"
 msgstr "les noms de fichier des chapitres ne doivent pas contenir d'espace"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:322
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:325
 msgid "no chapter name specified"
 msgstr "pas de nom de chapitre spécifié"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:431
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:434
 msgid "ill-formatted line specifying chapter number"
 msgstr "line spécifiant un numéro de chapitre mal formattée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:437
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:440
 msgid "error parsing chapter number"
 msgstr "erreur dans l'analyse du numéro de chapitre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:442
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:445
 msgid "found invalid chapter definition in the chapter list"
 msgstr "définition de chapitre invalide trouvée dans la liste des chapitres"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:471
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:474
 msgid "{error}. Proceeding without checking grammar."
 msgstr "{error}. On poursuit sans vérifier la grammaire."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:489
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:492
 msgid "Error rendering {name}: {error}"
 msgstr "Erreur dans le rendu de {name} : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:530
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:533
 msgid ""
 "Crowbook generated no file because no output file was specified. Add output."
 "{{format}} to your config file."
@@ -265,37 +310,37 @@ msgstr ""
 "Crowbook n'a généré aucun fichier car aucun fichier de sortie n'était "
 "spécifié. Ajoutez output.{{format}} à votre fichier de configuration."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:551
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:570
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:554
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:573
 msgid "Attempting to generate {format}..."
 msgstr "Tentative de générer le format {format}..."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:556
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:559
 msgid "Succesfully generated {format}"
 msgstr "Format '{format}' généré avec succès"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:562
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:582
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:565
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:585
 msgid "unknown format {format}"
 msgstr "format inconnu : {format}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:575
-msgid "Succesfully generated {format} to {path}"
-msgstr "Format {format} généré avec succès vers {path}"
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:578
+msgid "Succesfully generated {format}: {path}"
+msgstr "Format {format} généré avec succès : {path}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:601
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:604
 msgid "Parsing chapter: {file}..."
 msgstr "Analyse du chapitre: {file}..."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:613
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:616
 msgid "book chapter"
 msgstr "chapitre de livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:620
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:623
 msgid "file {file} contains invalid UTF-8"
 msgstr "le fichier {file} contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:637
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:640
 msgid ""
 "Warning: book contains chapter '{file}' in a directory above the book file, "
 "this might cause problems"
@@ -303,33 +348,33 @@ msgstr ""
 "Avertissement: le livre contient un chapitre '{file}' dans un répertoire au-"
 "dessus du fichier du livre, cela risque de causer des problèmes"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:669
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:672
 msgid "Trying to run grammar check on {file}, this might take a while..."
 msgstr ""
 "On essaie de vérifier la grammaire de {file}, cela peut prendre un moment..."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:673
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:676
 msgid "Error running grammar check on {file}: {error}"
 msgstr "Erreur dans la véfirication grammaticale de {file} : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:743
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:746
 msgid "invalid template '{template}'"
 msgstr "template invalide '{template}'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:758
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:761
 msgid "file '{file}' could not be read"
 msgstr "le fichier '{file}' n'a pas pu être lu"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:772
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:799
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:775
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:802
 msgid "could not compile template 'rendering.chapter_template'"
 msgstr "impossible de compiler le template 'rendering.chapter_template'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:805
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:808
 msgid "header generated by mustache was not valid utf-8"
 msgstr "l'en-tête générée par mustache contenait de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:844
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:847
 msgid ""
 "could not render `{key}` for metadata:\n"
 "{error}"
@@ -337,20 +382,20 @@ msgstr ""
 "impossible de faire le rendu de `{key}` comme metadonnée :\n"
 "{error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:903
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:906
 msgid "Inline YAML block replaced {:?} previously set to {:?} to {:?}"
 msgstr ""
 "Le bloc YAML en ligne a remplacé {:?} qui était précédemment {:?} vers {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:912
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:915
 msgid "Inline YAML block set {:?} to {:?}"
 msgstr "Le bloc YAML en ligne a positionné {:?} à {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:920
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:923
 msgid "Inline YAML block could not set {:?} to {:?}: {}"
 msgstr "Le bloc YAML en ligne n'a pas pu positionner {:?} à {:?} : {}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:929
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:932
 msgid ""
 "Ignoring YAML block:\n"
 "---\n"
@@ -360,7 +405,7 @@ msgstr ""
 "---\n"
 "{block}---"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:937
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:940
 msgid ""
 "Found something that looked like a YAML block:\n"
 "{block}"
@@ -368,7 +413,7 @@ msgstr ""
 "Trouvé quelque chose qui ressemblait à un bloc YAML :\n"
 "{block}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:941
+#: /home/lise/Progs/rust/crowbook/src/lib/book.rs:944
 msgid ""
 "... but it didn't parse correctly as YAML('{error}'), so treating it like "
 "Markdown."
@@ -1264,7 +1309,9 @@ msgstr "impossible d'écrire dans le fichier {file} : {error}"
 #: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:417
 #: /home/lise/Progs/rust/crowbook/src/lib/html_dir.rs:430
 msgid "error: can only render HTML directory to a path, not to a stream"
-msgstr "erreur : le répertoire HTML ne peut être rendu que vers un chemin, pas un stream"
+msgstr ""
+"erreur : le répertoire HTML ne peut être rendu que vers un chemin, pas un "
+"stream"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/html_single.rs:176
 msgid "could not compile template 'html.css'"
