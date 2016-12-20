@@ -12,8 +12,7 @@ It is possible to use Crowbook for HTML previewing in this mode, which
 
 ```lisp
 (custom-set-variables
- '(markdown-command "crowbook -qs --to html --output /dev/stdout")
- '(markdown-command-needs-filename t))
+ '(markdown-command "crowbook - -qs  --to html --output -"))
 ```
 
 You can then use `markdown-preview` (or `C-c C-c p`) to run
@@ -27,15 +26,14 @@ We set `markdown-command` to `crowbook`, the reason for this is a bit
 obvious. The arguments we give to crowbook might be a bit less
 obvious:
 
+* the fist argument, `-`, is actually the book file: it tells
+  `crowbook` to read it from standard input.
 * `-qs` or `--quiet --single` tells Crowbook that is a a standalone
   markdown file, and not a book configuration file, and to be a bit
   quiet on error/info messages;
 * `--to html` specifies that HTML must be generated;
-* `--output /dev/stdout` forces Crowbook to display the result on the
+* `--output -` tells Crowbook to display the result on the
   stdout, even if you set `output.html` to `some_file.html`.
-
-Also, `(markdown-command-needs-filename t)` is because at this point
-Crowbook can't read from the stdin and must be specified a file.
 
 ### Limitations
 
