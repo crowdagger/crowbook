@@ -47,7 +47,7 @@ impl Output {
         return Output::Stderr(io::stderr())
     }
 
-    /// Print a msg with prefixed by a coloured `level` message
+    /// Print a msg prefixed by a coloured `level` message
     pub fn print_msg<S: Display>(&mut self, level: InfoLevel, msg: S) {
         let (colour, head_msg) = match level {
             Debug => (term::color::BRIGHT_BLUE, lformat!("Debug: ")),
@@ -87,14 +87,15 @@ pub struct Logger {
 
 
 impl Logger {
-    /// Creates a new logger with defined verbosity
-    pub fn new(verbosity: InfoLevel) -> Logger {
-        Logger { verbosity: verbosity }
+    /// Creates a new logger with default verbosity
+    pub fn new() -> Logger {
+        Logger { verbosity: InfoLevel::Info }
     }
 
     /// Sets verbosity
-    pub fn set_verbosity(&mut self, verbosity: InfoLevel) {
+    pub fn set_verbosity(&mut self, verbosity: InfoLevel) -> &mut Logger {
         self.verbosity = verbosity;
+        self
     }
 
     /// Prints a message

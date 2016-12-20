@@ -123,7 +123,7 @@ impl Book {
             cleaner: Box::new(Off),
             root: PathBuf::new(),
             options: BookOptions::new(),
-            logger: Logger::new(InfoLevel::Info),
+            logger: Logger::new(),
             chapter_template: None,
             checker: None,
             formats: HashMap::new(),
