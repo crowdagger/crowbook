@@ -29,38 +29,27 @@ use std::env;
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
+    let mut key = String::from("output.");
+    key.push_str(format);
+    let mut stdout = false;
+    
     if let Some(file) = matches.value_of("output") {
-        match format {
-            "epub" => book.options.set("output.epub", file).unwrap(),
-            "tex" => book.options.set("output.tex", file).unwrap(),
-            "html" => book.options.set("output.html", file).unwrap(),
-            "pdf" => book.options.set("output.pdf", file).unwrap(),
-            "odt" => book.options.set("output.odt", file).unwrap(),
-            "proofread.html" => book.options.set("output.proofread.html", file).unwrap(),
-            "proofread.pdf" => book.options.set("output.proofread.pdf", file).unwrap(),
-            "proofread.tex" => book.options.set("output.proofead.tex", file).unwrap(),
-            "proofread.hml_dir" => book.options.set("output.proofread.html_dir", file).unwrap(),
-            _ => unreachable!(),
-        };
+        if file == "-" {
+            stdout = true;
+        } else {
+            book.options.set(&key, file).unwrap();
+        }
     }
 
-    let option = match format {
-        "epub" => book.options.get_path("output.epub"),
-        "tex" => book.options.get_path("output.tex"),
-        "html" => book.options.get_path("output.html"),
-        "pdf" => book.options.get_path("output.pdf"),
-        "odt" => book.options.get_path("output.odt"),
-        "proofread.html" => book.options.get_path("output.proofread.html"),
-        "proofread.html_dir" => book.options.get_path("output.proofread.html_dir"),
-        "proofread.pdf" => book.options.get_path("output.proofread.pdf"),
-        "proofread.tex" => book.options.get_path("output.proofread.tex"),
-        _ => unreachable!(),
-    };
-    let result = match option {
-        Err(_) => {
+    let res = book.options.get_path(&key);
+
+    let result = match (res, stdout) {
+        (Err(_), _) |
+        (_, true)
+        => {
             book.render_format_to(format, &mut io::stdout())
         }
-        Ok(file) => {
+        (Ok(file), false) => {
             if let Ok(mut f) = File::create(&file) {
                 book.render_format_to(format, &mut f)
             } else {
@@ -68,6 +57,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
             }
         }
     };
+    
     match result {
         Err(err) => print_error(&format!("{}", err)),
         Ok(_) => {
