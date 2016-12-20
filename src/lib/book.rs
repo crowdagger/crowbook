@@ -787,8 +787,12 @@ impl Book {
     ///
     /// **Returns** an error if there was some errror parsing `content`.
     pub fn add_chapter_from_str(&mut self, number: Number, content: &str) -> Result<&mut Self> {
+        // Ignore YAML blocks (or not)
+        let mut content = String::from(content);
+        self.parse_yaml(&mut content);
+        
         let mut parser = Parser::new();
-        let v = parser.parse(content)?;
+        let v = parser.parse(&content)?;
         self.chapters.push((number, v));
         self.filenames.push(String::new());
         Ok(self)
