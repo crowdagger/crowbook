@@ -143,6 +143,27 @@ impl Book {
     }
 
     /// Register a format that can be rendered.
+    ///
+    /// The renderer for this format must implement the `BookRenderer` trait.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use crowbook::{Result, Book, BookRenderer};
+    /// use std::io::Write;
+    /// struct Dummy {}
+    /// impl BookRenderer for Dummy {
+    ///     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    ///         write!(to, "This does nothing useful").unwrap();
+    ///         Ok(())
+    ///      }
+    /// }
+    ///
+    /// let mut book = Book::new();
+    /// book.add_format("foo",
+    ///                 "Some dummy implementation",
+    ///                 Box::new(Dummy{}));
+    /// ```
     pub fn add_format<S: Into<String>>(&mut self,
                                        format: &'static str,
                                        description: S,
