@@ -10,9 +10,6 @@ ChangeLog
   * Behaviour of `--to` should now be consistent for all output
     formats.
   * If `--output` is set to `-`, prints to stdout. 
-
-unreleased
-------------
 * Rendering:
   * EPUB:
     * The `toc.ncx` file now displays links to "title" and (if set)
