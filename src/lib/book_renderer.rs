@@ -31,11 +31,11 @@ pub trait BookRenderer: Sync {
     ///
     /// The default implementation creates a file and calls `render` to write to it,
     /// but in some cases it might be useful to override it.
-    fn render_to_file(&self, book: &Book, path: &AsRef<Path>) -> Result<()> {
+    fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
         let mut file = File::create(path)
             .map_err(|err| Error::default(Source::empty(),
                                     lformat!("could not create file '{file}': {err}",
-                                             file = path.as_ref().display(),
+                                             file = path.display(),
                                              err = err)))?;
         self.render(book, &mut file)?;
         Ok(())

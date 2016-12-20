@@ -20,11 +20,11 @@ use cleaner::{Cleaner, CleanerParams, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
 use token::Token;
-use epub::EpubRenderer;
+use epub::{EpubRenderer, Epub};
 use html_single::{HtmlSingleRenderer, HtmlSingle, ProofHtmlSingle};
 use html_dir::HtmlDirRenderer;
-use latex::{LatexRenderer, Latex};
-use odt::OdtRenderer;
+use latex::{LatexRenderer, Latex, ProofLatex, Pdf, ProofPdf};
+use odt::{OdtRenderer, Odt};
 use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
 use number::Number;
 use resource_handler::ResourceHandler;
@@ -131,6 +131,11 @@ impl Book {
         book.formats.insert("html", Box::new(HtmlSingle{}));
         book.formats.insert("proofread.html", Box::new(ProofHtmlSingle{}));
         book.formats.insert("tex", Box::new(Latex{}));
+        book.formats.insert("proofread.tex", Box::new(ProofLatex{}));
+        book.formats.insert("pdf", Box::new(Pdf{}));
+        book.formats.insert("proofread.pdf", Box::new(ProofPdf{}));
+        book.formats.insert("epub", Box::new(Epub{}));
+        book.formats.insert("odt", Box::new(Odt{}));
         book
     }
     
@@ -457,15 +462,16 @@ impl Book {
     /// Renders the book to the given format
     pub fn render_format(&self, format: &str) -> () {
         if self.options.get(format).is_ok() {
+            let path = self.options.get_path(format).unwrap();
             let (result, name) = match format {
-                "output.pdf" => (self.render_pdf(), "PDF"),
-                "output.epub" => (self.render_epub(), "EPUB"),
+                "output.pdf" => (self.render_format_to_file("pdf", path), "PDF"),
+                "output.epub" => (self.render_format_to_file("epub", path), "EPUB"),
                 "output.html_dir" => (self.render_html_dir(), "HTML directory"),
                 "output.proofread.html_dir" => {
                     (self.render_proof_html_dir(), "HTML directory (for proofreading)")
                 }
-                "output.proofread.pdf" => (self.render_proof_pdf(), "PDF (for proofreading)"),
-                "output.odt" => (self.render_odt(), "ODT"),
+                "output.proofread.pdf" => (self.render_format_to_file("proofread.pdf", path), "PDF (for proofreading)"),
+                "output.odt" => (self.render_format_to_file("odt", path), "ODT"),
                 _ => unreachable!(),
             };
             if let Err(err) = result {
@@ -539,31 +545,18 @@ impl Book {
     }
 
 
-    /// Render book to pdf according to book options
-    pub fn render_pdf(&self) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate pdf..."));
-        let mut latex = LatexRenderer::new(&self);
-        let result = latex.render_pdf()?;
-        self.logger.debug(lformat!("Output of latex command:"));
-        self.logger.debug(result);
-        self.logger.info(lformat!("Successfully generated PDF file: {file}",
-                                  file = misc::normalize(
-                                      self.options.get_path("output.pdf")?)));
-        Ok(())
-    }
-
-    /// Render book to epub according to book options
-    pub fn render_epub(&self) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate epub..."));
-        let mut epub = EpubRenderer::new(&self);
-        let result = epub.render_book()?;
-        self.logger.debug(lformat!("Output of zip command:"));
-        self.logger.debug(&result);
-        self.logger.info(lformat!("Successfully generated EPUB file: {file}",
-                                  file = misc::normalize(
-                                      self.options.get_path("output.epub")?)));
-        Ok(())
-    }
+    // /// Render book to epub according to book options
+    // pub fn render_epub(&self) -> Result<()> {
+    //     self.logger.debug(lformat!("Attempting to generate epub..."));
+    //     let mut epub = EpubRenderer::new(&self);
+    //     let result = epub.render_book()?;
+    //     self.logger.debug(lformat!("Output of zip command:"));
+    //     self.logger.debug(&result);
+    //     self.logger.info(lformat!("Successfully generated EPUB file: {file}",
+    //                               file = misc::normalize(
+    //                                   self.options.get_path("output.epub")?)));
+    //     Ok(())
+    // }
 
     /// Render book to HTML directory according to book options
     pub fn render_html_dir(&self) -> Result<()> {
@@ -595,38 +588,7 @@ impl Book {
         Ok(())
     }
 
-    /// Render book to PDF according to book options (proofread version)
-    pub fn render_proof_pdf(&self) -> Result<()> {
-        let file_name = self.options.get_path("output.proofread.pdf").unwrap();
-        if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled \
-                                              without support for proofreading, not generating \
-                                              {file}",
-                                             file = misc::normalize(file_name)));
-            return Ok(());
-        }
-        self.logger.debug(lformat!("Attempting to generate PDF for proofreading..."));
-        let mut latex = LatexRenderer::new(&self).proofread();
-        latex.render_pdf()?;
-        self.logger.info(lformat!("Successfully generated PDF file for proofreading: {file}",
-                                  file = misc::normalize(file_name)));
-        Ok(())
-    }
-
-    /// Render book to odt according to book options
-    pub fn render_odt(&self) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate ODT..."));
-        let mut odt = OdtRenderer::new(&self);
-        let result = odt.render_book()?;
-        self.logger.debug(lformat!("Output of zip command:"));
-        self.logger.debug(&result);
-        self.logger.info(lformat!("Successfully generated ODT file: {file}",
-                                  file = misc::normalize(
-                                      self.options.get_path("output.odt")?)));
-        Ok(())
-    }
-
-    /// Render book to html according to book options
+    /// Render book to specified format according to book options
     pub fn render_format_to<T: Write>(&self, format: &str, f: &mut T) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate {format}...",
                                    format = format));
@@ -645,33 +607,24 @@ impl Book {
         }
     }
 
-    /// Render book to pdf according to book options (proofread version)
-    pub fn render_proof_tex<T: Write>(&self, f: &mut T) -> Result<()> {
-        let file_name = if let Ok(file) = self.options.get_path("output.proofread.tex") {
-            file.to_owned()
-        } else {
-            String::new()
-        };
-        if !cfg!(feature = "proofread") {
-            Logger::display_warning(lformat!("this version of Crowbook has been compiled \
-                                              without support for proofreading, not generating \
-                                              LaTeX file {file}",
-                                             file = misc::normalize(file_name)));
-            return Ok(());
+    /// Render book to specified format according to book options
+    pub fn render_format_to_file<P:AsRef<Path>>(&self, format: &str, path: P) -> Result<()> {
+        self.logger.debug(lformat!("Attempting to generate {format}...",
+                                   format = format));
+        match self.formats.get(format) {
+            Some(renderer) => {
+                renderer.render_to_file(&self, path.as_ref())?;
+                self.logger.info(lformat!("Succesfully generated {format} to {path}",
+                                          format = format,
+                                          path = path.as_ref().display()));
+                Ok(())
+            },
+            None => {
+                Err(Error::default(Source::empty(),
+                                   lformat!("unknown format {format}",
+                                            format = format)))
+            }
         }
-
-
-        self.logger.debug("Attempting to generate LaTeX (for proofreading)...");
-        let mut latex = LatexRenderer::new(&self).proofread();
-        let result = latex.render_book()?;
-        f.write_all(&result.as_bytes())
-            .map_err(|e| {
-                Error::render(&self.source,
-                              lformat!("problem when writing to LaTeX file: {error}", error = e))
-            })?;
-        self.logger.info(lformat!("Successfully generated LaTeX file {file}",
-                                  file = misc::normalize(file_name)));
-        Ok(())
     }
 
     /// Adds a chapter, as a file name, to the book

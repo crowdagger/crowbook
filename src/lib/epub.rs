@@ -26,12 +26,13 @@ use resource_handler;
 use renderer::Renderer;
 use parser::Parser;
 use lang;
+use book_renderer::BookRenderer;
 
 use chrono;
 use uuid;
 use mustache::Template;
 
-use std::io::Read;
+use std::io::{Read, Write};
 use std::convert::{AsRef, AsMut};
 use std::fs;
 use std::fs::File;
@@ -64,7 +65,7 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render a book
-    pub fn render_book(&mut self) -> Result<String> {
+    pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
         let lang = self.html.book.options.get_str("lang").unwrap();
         if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
             self.html.toc.add(1,
@@ -198,18 +199,13 @@ impl<'a> EpubRenderer<'a> {
             }
         }
 
-        if let Ok(epub_file) = self.html.book.options.get_path("output.epub") {
-            let res = zipper.generate_epub(self.html
+        let res = zipper.generate_epub(self.html
                                            .book
                                            .options
                                            .get_str("crowbook.zip.command")
                                            .unwrap(),
-                                           &epub_file)?;
-            Ok(res)
-        } else {
-            Err(Error::render(&self.html.book.source,
-                              lformat!("no output epub file specified in book config")))
-        }
+                                       to)?;
+        Ok(res)
     }
 
     /// Render the titlepgae
@@ -610,3 +606,13 @@ fn filenamer(i: usize) -> String {
 
 
 derive_html!{EpubRenderer<'a>, EpubRenderer::static_render_token}
+
+pub struct Epub {}
+
+impl BookRenderer for Epub {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+        EpubRenderer::new(book)
+            .render_book(to)?;
+        Ok(())
+    }
+}

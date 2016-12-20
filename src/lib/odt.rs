@@ -5,8 +5,11 @@ use error::Result;
 use templates::odt;
 use zipper::Zipper;
 use parser::Parser;
+use book_renderer::BookRenderer;
 
 use crowbook_text_processing::escape;
+
+use std::io::Write;
 
 /// Rendererer for ODT
 ///
@@ -55,7 +58,7 @@ impl<'a> OdtRenderer<'a> {
     ///   used to create the ODT file.
     /// * An error if there was somel problem during either the rendering to
     ///   ODT format, or the generation of the ODT file itself.
-    pub fn render_book(&mut self) -> Result<String> {
+    pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
         let content = self.render_content()?;
 
         let mut zipper =
@@ -68,12 +71,8 @@ impl<'a> OdtRenderer<'a> {
         // Complete it with content.xml
         zipper.write("content.xml", &content.as_bytes(), false)?;
         // Zip and copy
-        if let Ok(ref file) = self.book.options.get_path("output.odt") {
-            zipper.generate_odt(self.book.options.get_str("crowbook.zip.command").unwrap(),
-                                file)
-        } else {
-            panic!(lformat!("odt.render_book called while book.output_odt is not set"));
-        }
+        zipper.generate_odt(self.book.options.get_str("crowbook.zip.command").unwrap(),
+                            to)
     }
 
     /// Render content.xml
@@ -221,5 +220,16 @@ impl<'a> OdtRenderer<'a> {
             Token::Annotation(_, ref vec) => self.render_vec(vec),
             Token::__NonExhaustive => unreachable!(),
         }
+    }
+}
+
+
+pub struct Odt {}
+
+impl BookRenderer for Odt {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+        OdtRenderer::new(book)
+            .render_book(to)?;
+        Ok(())
     }
 }

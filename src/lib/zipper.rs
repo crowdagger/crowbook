@@ -18,7 +18,7 @@
 use error::{Error, Result};
 
 use std::path::{Path, PathBuf};
-use std::io::Write;
+use std::io::{Read, Write};
 use std::process::Command;
 use std::fs::{self, File, DirBuilder};
 use uuid;
@@ -111,12 +111,12 @@ This is forbidden because we are supposed \
             .map_err(|_| Error::zipper(lformat!("failed to remove file {file}", file = file)))
     }
 
-    /// run command and copy file name (supposed to result from the command) to current dir
+    /// run command and copy content of file output (supposed to result from the command) to current dir
     pub fn run_command(&mut self,
                        mut command: Command,
                        command_name: &str,
                        in_file: &str,
-                       out_file: &str)
+                       out: &mut Write)
                        -> Result<String> {
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
@@ -125,13 +125,16 @@ This is forbidden because we are supposed \
                                                 name = command_name,
                                                 error = e)));
         let output = res_output?;
-        fs::copy(self.path.join(in_file), out_file)
-            .map_err(|_| {
-                println!("{}", &String::from_utf8_lossy(&output.stdout));
-                Error::zipper(lformat!("could not copy file {input} to {output}",
-                                       input = in_file,
-                                       output = out_file))
-            })?;
+        let mut file = File::open(self.path.join(in_file))
+            .map_err(|_| Error::zipper(lformat!("could not open file in tmp directory: '{file}'",
+                                                file = in_file)))?;
+        let mut buf = vec!();
+        file.read_to_end(&mut buf)
+            .map_err(|_| Error::zipper(lformat!("error reading content of file '{file}'",
+                                                file = in_file)))?;
+        out.write_all(&buf)
+            .map_err(|_| Error::zipper(lformat!("error copying file '{file}'",
+                                                file = in_file)))?;
         if output.status.success() {
             Ok(String::from_utf8_lossy(&output.stdout).into_owned())
         } else {
@@ -140,8 +143,8 @@ This is forbidden because we are supposed \
         }
     }
 
-    /// zip all files in zipper's tmp dir to a given file name and return odt file
-    pub fn generate_odt(&mut self, command_name: &str, odt_file: &str) -> Result<String> {
+    /// zip all files in zipper's tmp dir to a given file name and write to odt file
+    pub fn generate_odt(&mut self, command_name: &str, odt_file: &mut Write) -> Result<String> {
         let mut command = Command::new(command_name);
         command.arg("-r");
         command.arg("result.odt");
@@ -154,7 +157,7 @@ This is forbidden because we are supposed \
     pub fn generate_pdf(&mut self,
                         command_name: &str,
                         tex_file: &str,
-                        pdf_file: &str)
+                        pdf_file: &mut Write)
                         -> Result<String> {
         // first pass
         let _ = Command::new(command_name)
@@ -169,7 +172,7 @@ This is forbidden because we are supposed \
     }
 
     /// generate an epub into given file name
-    pub fn generate_epub(&mut self, command_name: &str, file: &str) -> Result<String> {
+    pub fn generate_epub(&mut self, command_name: &str, file: &mut Write) -> Result<String> {
         let mut command = Command::new(command_name);
         command.arg("-X");
         command.arg("result.epub");

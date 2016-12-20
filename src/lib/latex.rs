@@ -71,43 +71,32 @@ impl<'a> LatexRenderer<'a> {
         self
     }
 
-    /// Render pdf in a file
-    pub fn render_pdf(&mut self) -> Result<String> {
-        let output = if self.proofread {
-            "output.proofread.pdf"
-        } else {
-            "output.pdf"
-        };
-        if let Ok(pdf_file) = self.book.options.get_path(output) {
-            let content = self.render_book()?;
-            let mut zipper =
-                Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
-            zipper.write("result.tex", &content.as_bytes(), false)?;
+    /// Render pdf to a file
+    pub fn render_pdf(&mut self, to: &mut Write) -> Result<String> {
+        let content = self.render_book()?;
+        let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
+                                     .unwrap())?;
+        zipper.write("result.tex", &content.as_bytes(), false)?;
 
-            // write image files
-            for (source, dest) in self.handler.images_mapping() {
-                let mut f = File::open(source)
-                    .map_err(|_| {
-                        Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
+        // write image files
+        for (source, dest) in self.handler.images_mapping() {
+            let mut f = File::open(source)
+                .map_err(|_| {
+                    Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
                     })?;
-                let mut content = vec![];
-                f.read_to_end(&mut content)
-                    .map_err(|e| {
-                        Error::render(&self.source,
-                                      lformat!("error while reading image file: {error}", error = e))
-                    })?;
-                zipper.write(dest, &content, true)?;
-            }
-
-
-            zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(),
-                                "result.tex",
-                                &pdf_file)
-        } else {
-            Err(Error::render(&self.source,
-                              lformat!("no output pdf file specified '{output}' in book config",
-                                       output = output)))
+            let mut content = vec![];
+            f.read_to_end(&mut content)
+                .map_err(|e| {
+                    Error::render(&self.source,
+                                  lformat!("error while reading image file: {error}", error = e))
+                })?;
+            zipper.write(dest, &content, true)?;
         }
+
+
+        zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(),
+                            "result.tex",
+                            to)
     }
 
     /// Render latex in a string
@@ -457,6 +446,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
 }
 
 pub struct Latex;
+pub struct ProofLatex;
+pub struct Pdf;
+pub struct ProofPdf;
+
 
 impl BookRenderer for Latex {
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
@@ -467,6 +460,36 @@ impl BookRenderer for Latex {
                 Error::render(&book.source,
                               lformat!("problem when writing LaTeX: {error}", error = e))
             })?;
+        Ok(())
+    }
+}
+
+impl BookRenderer for ProofLatex {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+        let mut latex = LatexRenderer::new(book).proofread();
+        let result = latex.render_book()?;
+        to.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&book.source,
+                              lformat!("problem when writing LaTeX: {error}", error = e))
+            })?;
+        Ok(())
+    }
+}
+
+impl BookRenderer for Pdf {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+        LatexRenderer::new(book)
+            .render_pdf(to)?;
+        Ok(())
+    }
+}
+
+impl BookRenderer for ProofPdf {
+    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+        LatexRenderer::new(book)
+            .proofread()
+            .render_pdf(to)?;
         Ok(())
     }
 }
