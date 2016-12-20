@@ -19,11 +19,12 @@ extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Result, Book, BookOptions, InfoLevel, set_lang};
+use crowbook::{Result, Book, BookOptions, InfoLevel, set_lang, Error, Source};
 use clap::ArgMatches;
 use std::process::exit;
 use std::fs::File;
 use std::io;
+use std::io::Read;
 use std::env;
 
 
@@ -149,9 +150,25 @@ pub fn try_main() -> Result<()> {
         .set_options(&get_book_options(&matches));
 
     if matches.is_present("single") {
-        book.load_markdown_file(s)?;
+        if s != "-" {
+            book.load_markdown_file(s)?;
+        } else {
+            let mut buffer = String::new();
+            io::stdin().read_to_string(&mut buffer)
+                .map_err(|_| Error::default(Source::empty(),
+                                            lformat!("Error reading from stdin")))?;
+            book.load_markdown_config(&buffer)?;
+        }
     } else {
-        book.load_file(s)?;
+        if s != "-" {
+            book.load_file(s)?;
+        } else {
+            let mut buffer = String::new();
+            io::stdin().read_to_string(&mut buffer)
+                .map_err(|_| Error::default(Source::empty(),
+                                            lformat!("Error reading from stdin")))?;
+            book.load_config(&buffer)?;
+        }
     }
 
     set_book_options(&mut book, &matches);
