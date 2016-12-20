@@ -18,7 +18,7 @@
 use token::Token;
 use error::Result;
 
-/// Renderer trait.
+/// Renderer trait, implemented by various renderer to render a list of `Token`s.
 pub trait Renderer {
     /// Render an individual token
     fn render_token(&mut self, token: &Token) -> Result<String>;

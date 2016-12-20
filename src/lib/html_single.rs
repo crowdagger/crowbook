@@ -15,18 +15,19 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Result, Source};
+use error::{Error, Result, Source};
 use html::HtmlRenderer;
 use book::{Book, compile_str};
 use token::Token;
 use templates::img;
 use renderer::Renderer;
+use book_renderer::BookRenderer;
 use parser::Parser;
 
 use rustc_serialize::base64::{self, ToBase64};
 
 use std::convert::{AsMut, AsRef};
-
+use std::io::Write;
 
 /// Single file HTML renderer
 ///
@@ -253,3 +254,37 @@ impl<'a> HtmlSingleRenderer<'a> {
 }
 
 derive_html!{HtmlSingleRenderer<'a>, HtmlSingleRenderer::static_render_token}
+
+
+struct HtmlSingle {}
+struct ProofHtmlSingle {}
+
+impl BookRenderer for HtmlSingle {
+    fn render(&mut self, book: &Book, to: &mut Write) -> Result<()> {
+        let mut html = HtmlSingleRenderer::new(book);
+        book.logger.debug(lformat!("Attempting to generate HTML..."));
+        let result = html.render_book()?;
+        to.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&book.source,
+                              lformat!("problem when writing HTML: {error}", error = e))
+            })?;
+        Ok(())
+    }
+}
+
+impl BookRenderer for ProofHtmlSingle {
+    fn render(&mut self, book: &Book, to: &mut Write) -> Result<()> {
+        let mut html = HtmlSingleRenderer::new(book)
+            .proofread();
+        book.logger.debug(lformat!("Attempting to generate HTML..."));
+        let result = html.render_book()?;
+        to.write_all(&result.as_bytes())
+            .map_err(|e| {
+                Error::render(&book.source,
+                              lformat!("problem when writing HTML: {error}", error = e))
+            })?;
+        Ok(())
+    }
+}
+

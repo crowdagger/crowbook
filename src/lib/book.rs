@@ -1,3 +1,20 @@
+// Copyright (C) 2016 Élisabeth HENRY.
+//
+// This file is part of Crowbook.
+//
+// Crowbook is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation, either version 2.1 of the License, or
+// (at your option) any later version.
+//
+// Crowbook is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
+
 use error::{Error, Result, Source};
 use cleaner::{Cleaner, CleanerParams, French, Off, Default};
 use bookoptions::BookOptions;
@@ -429,9 +446,10 @@ impl Book {
     #[cfg(not(feature = "proofread"))]
     fn init_checker(&mut self) {}
 
-    fn render_one(&self, s: &str) -> () {
-        if self.options.get(s).is_ok() {
-            let (result, name) = match s {
+    /// Renders the book to the given format
+    pub fn render_format(&self, format: &str) -> () {
+        if self.options.get(format).is_ok() {
+            let (result, name) = match format {
                 "output.pdf" => (self.render_pdf(), "PDF"),
                 "output.epub" => (self.render_epub(), "EPUB"),
                 "output.html_dir" => (self.render_html_dir(), "HTML directory"),
@@ -476,16 +494,16 @@ impl Book {
         let mut handles = vec![];
         crossbeam::scope(|scope| {
             if self.options.get("output.pdf").is_ok() {
-                handles.push(scope.spawn(|| self.render_one("output.pdf")));
+                handles.push(scope.spawn(|| self.render_format("output.pdf")));
             }
             if self.options.get("output.epub").is_ok() {
-                handles.push(scope.spawn(|| self.render_one("output.epub")));
+                handles.push(scope.spawn(|| self.render_format("output.epub")));
             }
             if self.options.get("output.html_dir").is_ok() {
-                handles.push(scope.spawn(|| self.render_one("output.html_dir")));
+                handles.push(scope.spawn(|| self.render_format("output.html_dir")));
             }
             if self.options.get("output.odt").is_ok() {
-                handles.push(scope.spawn(|| self.render_one("output.odt")));
+                handles.push(scope.spawn(|| self.render_format("output.odt")));
             }
             if self.options.get_path("output.html").is_ok() {
                 handles.push(scope.spawn(|| self.render_one_file("output.html")));
@@ -495,10 +513,10 @@ impl Book {
             }
             if self.is_proofread() {
                 if self.options.get("output.proofread.pdf").is_ok() {
-                    handles.push(scope.spawn(|| self.render_one("output.proofread.pdf")));
+                    handles.push(scope.spawn(|| self.render_format("output.proofread.pdf")));
                 }
                 if self.options.get("output.proofread.html_dir").is_ok() {
-                    handles.push(scope.spawn(|| self.render_one("output.proofread.html_dir")));
+                    handles.push(scope.spawn(|| self.render_format("output.proofread.html_dir")));
                 }
                 if self.options.get_path("output.proofread.html").is_ok() {
                     handles.push(scope.spawn(|| self.render_one_file("output.proofread.html")));

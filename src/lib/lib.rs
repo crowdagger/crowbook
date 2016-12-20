@@ -126,6 +126,7 @@ extern crate url;
 extern crate caribon;
 
 
+pub use parser::Parser;
 pub use book::Book;
 pub use bookoption::BookOption;
 pub use bookoptions::BookOptions;
@@ -160,6 +161,7 @@ mod logger;
 mod bookoptions;
 mod lang;
 mod renderer;
+mod book_renderer;
 mod html_single;
 
 mod toc;
