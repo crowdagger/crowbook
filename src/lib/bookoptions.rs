@@ -38,7 +38,7 @@ rendering.inline_toc:bool:false                                      # {inline_t
 rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
 rendering.chapter_template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
-rendering.part_template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\\\\. {{{{{{part_title}}}}}}\" # {part_template}
+rendering.part_template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
 rendering.roman_numerals:bool:false                                  # {roman_numerals}
 
 # {special_ops}
