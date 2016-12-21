@@ -19,7 +19,6 @@ use error::{Error, Result, Source};
 use cleaner::{Cleaner, CleanerParams, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
-use token::Token;
 use epub::{Epub};
 use html_single::{HtmlSingle, ProofHtmlSingle};
 use html_dir::{HtmlDir, ProofHtmlDir};
@@ -58,7 +57,7 @@ use crossbeam;
 use mustache;
 use mustache::{MapBuilder, Template};
 use yaml_rust::{YamlLoader, Yaml};
-
+use numerals::roman::Roman;
 
 /// A Book.
 ///
@@ -911,8 +910,18 @@ impl Book {
         if !title.is_empty() {
             data = data.insert_bool("has_chapter_title", true);
         }
+        let number = if self.options.get_bool("rendering.roman_numerals").unwrap() == true {
+            if n <= 0 {
+                return Err(Error::render(Source::empty(),
+                                            lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
+                                                     n = n)));
+            }
+            format!("{:X}", Roman::from(n as i16))
+        } else {
+            format!("{}", n)
+        };
         data = data.insert_str("chapter_title", title)
-            .insert_str("number", format!("{}", n));
+            .insert_str("number", number);
 
         let data = data.build();
         let mut res: Vec<u8> = vec![];

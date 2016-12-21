@@ -116,6 +116,7 @@ extern crate crossbeam;
 extern crate crowbook_text_processing;
 extern crate crowbook_intl_runtime;
 extern crate term;
+extern crate numerals;
 #[macro_use]
 extern crate lazy_static;
 

@@ -38,6 +38,7 @@ rendering.inline_toc:bool:false                                      # {inline_t
 rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
 rendering.chapter_template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+rendering.roman_numerals:bool:false                                  # {roman_numerals}
 
 # {special_ops}
 import_config:path                  # {import_config}
@@ -195,6 +196,7 @@ html.crowbook_link:alias                            # {removed}
                                          toc_name = lformat!("Name of the table of contents if it is displayed in document"),
                                          num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
                                          chapter_template = lformat!("Naming scheme of chapters"),
+                                         roman_numerals = lformat!("If set to true, display chapter number with roman numeral"),
                                          
                                          import_config = lformat!("Import another book configuration file"),
 

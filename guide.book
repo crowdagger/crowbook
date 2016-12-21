@@ -33,6 +33,7 @@ rendering.num_depth: 2
 rendering.initials: false
 rendering.inline_toc: false
 rendering.chapter_template: "{{{number}}}\\. {{{chapter_title}}}"
+rendering.roman_numerals: true
 
 # Html options
 html.icon: crowbook.svg
