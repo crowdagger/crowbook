@@ -186,6 +186,7 @@ ARGS:
                                "html",
                                "tex",
                                "odt",
+                               "html_dir",
                                "proofread.html",
                                "proofread.html_dir",
                                "proofread.pdf",

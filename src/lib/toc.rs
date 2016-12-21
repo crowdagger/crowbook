@@ -39,7 +39,8 @@ impl Toc {
     }
 
     /// Render the Toc in a toc.ncx compatible way, for EPUB.
-    pub fn render_epub(&self, mut offset: u32) -> String {
+    pub fn render_epub(&mut self, mut offset: u32) -> String {
+        self.parts_hack();
         let mut output = String::new();
         let mut levels = vec![];
         
@@ -84,8 +85,26 @@ impl Toc {
         output
     }
 
+    /// Handle parts (sort of) by adding 1 to all levels if lowest level is zero
+    fn parts_hack(&mut self) {
+        let mut contains_zero = false;
+        for elem in &self.elements {
+            if elem.level == 0 {
+                contains_zero = true;
+                break;
+            }
+        }
+        if contains_zero {
+            for mut elem in &mut self.elements {
+                elem.level += 1;
+            }
+        }
+    }
+
     /// Render the Toc in either <ul> or <ol> form (according to Self::numbered
-    pub fn render(&self) -> String {
+    pub fn render(&mut self) -> String {
+        self.parts_hack();
+        
         let mut output = String::new();
 
         let mut x = 0;
@@ -167,3 +186,5 @@ impl TocElement {
         }
     }
 }
+
+

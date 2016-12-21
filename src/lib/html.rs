@@ -65,6 +65,10 @@ pub struct HtmlRenderer<'a> {
     #[doc(hidden)]
     pub current_hide: bool,
 
+    /// Whether current chapter is actually a part
+    #[doc(hidden)]
+    pub current_part: bool,
+
     /// Resource handler
     #[doc(hidden)]
     pub handler: ResourceHandler<'a>,
@@ -135,6 +139,7 @@ impl<'a> HtmlRenderer<'a> {
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
+            current_part: false,
             current_par: 0,
             current_hide: false,
             table_head: false,
@@ -163,6 +168,7 @@ impl<'a> HtmlRenderer<'a> {
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
+            current_part: false,
             current_par: 0,
             current_hide: false,
             table_head: false,
@@ -216,18 +222,24 @@ impl<'a> HtmlRenderer<'a> {
         self.current_hide = false;
         let book_numbering = self.book.options.get_i32("rendering.num_depth").unwrap();
         match n {
-            Number::Unnumbered => self.current_numbering = 0,
-            Number::Default => self.current_numbering = book_numbering,
+            Number::Unnumbered | Number::UnnumberedPart => self.current_numbering = 0,
+            Number::Default | Number::DefaultPart => self.current_numbering = book_numbering,
             Number::Specified(n) => {
                 self.current_numbering = book_numbering;
                 self.current_chapter[1] = n - 1;
+            },
+            Number::SpecifiedPart(n) => {
+                self.current_numbering = book_numbering;
+                self.current_chapter[0] = n - 1;
+//                self.current_chapter[1] = 0;
             }
             Number::Hidden => {
                 self.current_numbering = 0;
                 self.current_hide = true;
-            }
-            _ => panic!("Parts are not supported yet"),
-        }
+            },
+        } //          _ => panic!("Parts are not supported yet"),
+        self.current_part = n.is_part();
+        
         self.filename = filename;
     }
 
@@ -251,15 +263,22 @@ impl<'a> HtmlRenderer<'a> {
     /// Renders a title (without `<h1>` tags), increasing header number beforehand
     #[doc(hidden)]
     pub fn render_title(&mut self, n: i32, vec: &[Token]) -> Result<String> {
+        let n = if self.current_part {
+            n -1
+        } else {
+            n
+        };
         self.inc_header(n);
         let s = if n == 1 && self.current_numbering >= 1 {
-            let part = self.current_chapter[0];
             let chapter = self.current_chapter[1];
             let c_title = self.render_vec(vec)?;
             let res = self.book.get_chapter_header(chapter, c_title, |s| {
                 self.render_vec(&Parser::new().parse_inline(s)?)
             });
             res?
+        } else if n == 1 && self.current_numbering >= 0 {
+            let p_title = self.render_vec(vec)?;
+            p_title
         } else if self.current_numbering >= n {
             format!("{} {}", self.get_numbers(), self.render_vec(vec)?)
         } else {
@@ -270,15 +289,25 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Renders a title, including `<h1>` tags and appropriate links
     #[doc(hidden)]
-    pub fn render_title_full(&mut self, n: i32, inner: String) -> String {
+    pub fn render_title_full(&mut self, n: i32, inner: String) -> Result<String> {
         if n == 1 && self.current_hide {
-            format!("<h1 id = \"link-{}\"></h1>", self.link_number)
+            Ok(format!("<h1 id = \"link-{}\"></h1>", self.link_number))
+        } else if n == 1 && self.current_part {
+            let part = self.current_chapter[0];
+            let res = self.book.get_part_header(part, |s| {
+                self.render_vec(&Parser::new().parse_inline(s)?)
+            })?;
+            Ok(format!("<h2 class = \"part\">{}</h2>
+<h1 id = \"link-{}\" class = \"part\">{}</h1>\n",
+                    res,
+                    self.link_number,
+                    inner))
         } else {
-            format!("<h{} id = \"link-{}\">{}</h{}>\n",
+            Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",
                     n,
                     self.link_number,
                     inner,
-                    n)
+                    n))
         }
     }
 
@@ -465,9 +494,13 @@ impl<'a> HtmlRenderer<'a> {
                     let url = format!("{}#link-{}",
                                       this.as_ref().filename,
                                       this.as_ref().link_number);
-                    this.as_mut().toc.add(n, url, s.clone());
+                    if !this.as_ref().current_part {
+                        this.as_mut().toc.add(n, url, s.clone());
+                    } else {
+                        this.as_mut().toc.add(n - 1, url, s.clone());
+                    }
                 }
-                Ok(this.as_mut().render_title_full(n, s))
+                Ok(this.as_mut().render_title_full(n, s)?)
             }
             Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", this.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("<b>{}</b>", this.render_vec(vec)?)),

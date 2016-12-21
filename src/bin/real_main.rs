@@ -51,11 +51,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
             book.render_format_to(format, &mut io::stdout())
         }
         (Ok(file), false) => {
-            if let Ok(mut f) = File::create(&file) {
-                book.render_format_to(format, &mut f)
-            } else {
-                print_error(&lformat!("Could not create file '{}'", file));
-            }
+            book.render_format_to_file(format, file)
         }
     };
     
