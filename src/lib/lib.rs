@@ -140,6 +140,7 @@ pub use logger::{Logger, InfoLevel};
 pub use renderer::Renderer;
 pub use book_renderer::BookRenderer;
 pub use crowbook_intl_runtime::__get_lang;
+pub use chapter::Chapter;
 
 #[macro_use]
 #[doc(hidden)]
@@ -155,7 +156,7 @@ mod odt;
 mod parser;
 mod token;
 mod cleaner;
-
+mod chapter;
 mod number;
 mod resource_handler;
 mod logger;
