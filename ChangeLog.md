@@ -21,6 +21,8 @@ ChangeLog
 * New options:
   * `epub.toc.extras`, set to `true` by default, will add links to the
     title and the cover (if it is set) in the table of contents.
+  * `rendering.roman_numerals`, if set to `true`, will display chapter
+    numbers using roman numerals (still experimental).
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead

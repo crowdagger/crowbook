@@ -203,6 +203,7 @@ library, Crowbook uses the following libraries:
 * [lazy_static](https://crates.io/crates/lazy_static)
 * [regex](https://crates.io/crates/regex)
 * [term](https://crates.io/crates/term)
+* [numerals](https://crates.io/crates/numerals)
 
 It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
 to enable syntax highlighting for code blocks.
