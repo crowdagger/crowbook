@@ -991,15 +991,16 @@ impl Book {
         where F: FnMut(&str) -> Result<String>
     {
         let mut data = self.get_metadata(&mut f)?;
-        let number = if self.options.get_bool("rendering.roman_numerals").unwrap() == true {
+        let number = //if self.options.get_bool("rendering.roman_numerals").unwrap() == true {
             if n <= 0 {
                 return Err(Error::render(Source::empty(),
                                             lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
                                                      n = n)));
-            }
-            format!("{:X}", Roman::from(n as i16))
-        } else {
-            format!("{}", n)
+            } else {
+                format!("{:X}", Roman::from(n as i16))
+            
+//        } else {
+//            format!("{}", n)
         };
         data = data.insert_str("number", number);
 
