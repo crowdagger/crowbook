@@ -102,9 +102,6 @@ impl<'a> LatexRenderer<'a> {
     /// Render latex in a string
     pub fn render_book(&mut self) -> Result<String> {
         let mut content = String::from("");
-        for (i, filename) in self.book.filenames.iter().enumerate() {
-            self.handler.add_link(filename.clone(), format!("chapter-{}", i));
-        }
 
         // set tex numbering and toc display to book's parameters
         let numbering = self.book.options.get_i32("rendering.num_depth").unwrap() - 1;
@@ -117,13 +114,17 @@ impl<'a> LatexRenderer<'a> {
             content.push_str("\\tableofcontents\n");
         }
 
-        let mut i = 0;
-        for &(n, ref v) in &self.book.chapters {
-            self.source = Source::new(&self.book.filenames[i] as &str);
+        for (i, chapter) in self.book.chapters.iter().enumerate() {
+            self.handler.add_link(chapter.filename.as_ref(), format!("chapter-{}", i));
+        }
+        
+        for (i, chapter) in self.book.chapters.iter().enumerate() {
+            let n = chapter.number;
+            let v = &chapter.content;
+            self.source = Source::new(chapter.filename.as_str());
             content.push_str(&format!("\\label{{chapter-{}}}", i));
             self.current_chapter = n;
             content.push_str(&self.render_vec(v)?);
-            i += 1;
         }
         self.source = Source::empty();
 

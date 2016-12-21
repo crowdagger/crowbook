@@ -76,9 +76,6 @@ impl<'a> HtmlSingleRenderer<'a> {
         let pages_svg = img::PAGES_SVG.to_base64(base64::STANDARD);
         let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
 
-        for (i, filename) in self.html.book.filenames.iter().enumerate() {
-            self.html.handler.add_link(filename.clone(), format!("#chapter-{}", i));
-        }
         let mut content = String::new();
 
         let mut titles = vec![];
@@ -86,7 +83,14 @@ impl<'a> HtmlSingleRenderer<'a> {
         let render_notes_chapter =
             self.html.book.options.get_bool("html_single.one_chapter").unwrap();
 
-        for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
+        for (i, chapter) in self.html.book.chapters.iter().enumerate() {
+            self.html.handler.add_link(chapter.filename.as_ref(),
+                                       format!("#chapter-{}", i));
+        }
+        
+        for (i, chapter) in self.html.book.chapters.iter().enumerate() {
+            let n = chapter.number;
+            let v = &chapter.content;
             self.html.chapter_config(i, n, String::new());
 
             let mut title = String::new();

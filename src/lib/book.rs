@@ -32,6 +32,7 @@ use logger::{Logger, InfoLevel};
 use lang;
 use misc;
 use book_renderer::BookRenderer;
+use chapter::Chapter;
 
 #[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
@@ -88,10 +89,7 @@ use yaml_rust::{YamlLoader, Yaml};
 pub struct Book {
     /// Internal structure. You should not accesss this directly except if
     /// you are writing a new renderer.
-    pub chapters: Vec<(Number, Vec<Token>)>,
-
-    /// A list of the filenames of the chapters
-    pub filenames: Vec<String>,
+    pub chapters: Vec<Chapter>,
 
     /// Options of the book
     pub options: BookOptions,
@@ -120,7 +118,6 @@ impl Book {
         let mut book = Book {
             source: Source::empty(),
             chapters: vec![],
-            filenames: vec![],
             cleaner: Box::new(Off),
             root: PathBuf::new(),
             options: BookOptions::new(),
@@ -729,10 +726,6 @@ impl Book {
         self.logger.debug(lformat!("Parsing chapter: {file}...",
                                    file = misc::normalize(file)));
 
-        // add file to the list of file names
-        self.filenames.push(file.to_owned());
-
-
         // try to open file
         let path = self.root.join(file);
         let mut f = File::open(&path)
@@ -805,7 +798,7 @@ impl Book {
             }
         }
 
-        self.chapters.push((number, v));
+        self.chapters.push(Chapter::new(number, file, v));
         Ok(self)
     }
 
@@ -830,8 +823,7 @@ impl Book {
         
         let mut parser = Parser::new();
         let v = parser.parse(&content)?;
-        self.chapters.push((number, v));
-        self.filenames.push(String::new());
+        self.chapters.push(Chapter::new(number, String::new(), v));
         Ok(self)
     }
 

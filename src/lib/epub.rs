@@ -87,8 +87,8 @@ impl<'a> EpubRenderer<'a> {
                                             "toc"));
         }
         
-        for (i, filename) in self.html.book.filenames.iter().enumerate() {
-            self.html.handler.add_link(filename.clone(), filenamer(i));
+        for (i, chapter) in self.html.book.chapters.iter().enumerate() {
+            self.html.handler.add_link(chapter.filename.as_str(), filenamer(i));
         }
 
         let mut zipper =
@@ -107,7 +107,9 @@ impl<'a> EpubRenderer<'a> {
             compile_str(self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
                         &self.html.book.source,
                         lformat!("could not compile template 'epub.chapter.xhtml'"))?;
-        for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
+        for (i, chapter) in self.html.book.chapters.iter().enumerate() {
+            let n = chapter.number;
+            let v = &chapter.content;
             self.html.chapter_config(i, n, filenamer(i));
             let chapter = self.render_chapter(v, &template_chapter)?;
 

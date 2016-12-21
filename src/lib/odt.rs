@@ -79,7 +79,9 @@ impl<'a> OdtRenderer<'a> {
     fn render_content(&mut self) -> Result<String> {
         let mut content = String::new();
 
-        for &(n, ref v) in &self.book.chapters {
+        for chapter in &self.book.chapters {
+            let n = chapter.number;
+            let v = &chapter.content;
             self.current_hide = false;
             match n {
                 Number::Unnumbered => self.current_numbering = 0,

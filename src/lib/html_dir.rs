@@ -59,8 +59,8 @@ impl<'a> HtmlDirRenderer<'a> {
     /// Render a book
     pub fn render_book(&mut self, dest_path: &Path) -> Result<()> {
         // Add internal files to resource handler
-        for (i, filename) in self.html.book.filenames.iter().enumerate() {
-            self.html.handler.add_link(filename.clone(), filenamer(i));
+        for (i, chapter) in self.html.book.chapters.iter().enumerate() {
+            self.html.handler.add_link(chapter.filename.as_ref(), filenamer(i));
         }
 
         match fs::metadata(&dest_path) {
@@ -173,7 +173,9 @@ impl<'a> HtmlDirRenderer<'a> {
     fn write_html(&mut self) -> Result<()> {
         let mut chapters = vec![];
         let mut titles = vec![];
-        for (i, &(n, ref v)) in self.html.book.chapters.iter().enumerate() {
+        for (i, chapter) in self.html.book.chapters.iter().enumerate() {
+            let n = chapter.number;
+            let v = &chapter.content;
             self.html.chapter_config(i, n, filenamer(i));
             let mut title = String::new();
             for token in v {
