@@ -30,6 +30,7 @@ use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
 
 use crowbook_text_processing::escape;
+use numerals::roman::Roman;
 
 #[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;
@@ -312,7 +313,16 @@ impl<'a> HtmlRenderer<'a> {
                     break;
                 }
             }
-            output.push_str(&format!("{}.", self.current_chapter[i])); //todo
+            if i != 0 || !self.book.options.get_bool("rendering.roman_numerals").unwrap() {
+                output.push_str(&format!("{}.", self.current_chapter[i])); //todo
+            } else {
+                if self.current_chapter[i] >= 1 {
+                    output.push_str(&format!("{:X}.", Roman::from(self.current_chapter[i] as i16)));
+                } else {
+                    self.book.logger.error(lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
+                                                    n = self.current_chapter[i]));
+                }
+            }
         }
         output
     }
