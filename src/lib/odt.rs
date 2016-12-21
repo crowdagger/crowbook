@@ -84,12 +84,12 @@ impl<'a> OdtRenderer<'a> {
             let v = &chapter.content;
             self.current_hide = false;
             match n {
-                Number::Unnumbered => self.current_numbering = 0,
-                Number::Default => {
+                Number::Unnumbered | Number::UnnumberedPart => self.current_numbering = 0,
+                Number::Default | Number::DefaultPart => {
                     self.current_numbering =
                         self.book.options.get_i32("rendering.num_depth").unwrap()
                 }
-                Number::Specified(n) => {
+                Number::Specified(n) | Number::SpecifiedPart(n) => {
                     self.current_numbering = self.book.options.get_i32("numbering").unwrap();
                     self.current_chapter = n;
                 }
@@ -97,8 +97,11 @@ impl<'a> OdtRenderer<'a> {
                     self.current_numbering = 0;
                     self.current_hide = true;
                 }
-                _ => panic!(lformat!("Parts are not supported yet")),
             }
+            if n.is_part() {
+                self.book.logger.error(lformat!("Parts are not supported yet in ODT"));
+            }
+
             for token in v {
                 content.push_str(&self.parse_token(token));
             }
