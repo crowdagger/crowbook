@@ -43,6 +43,18 @@ h1, h2, h3, h4, h5, h6 {
     font-variant: small-caps;
 }
 
+/* Title of a part */
+h1.part {
+    font-size: 250%;
+    text-align: center;
+}
+
+/* The `Part X` section of a part */
+h2.part {
+    font-size: 175%;
+    text-align: center;
+}
+
 /* Title of the book */
 h1.title {
     text-align: center;
