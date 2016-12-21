@@ -6,8 +6,8 @@ ChangeLog
 * **Breaking changes**: the API has undergone some breaking changes,
   hoping they will be the last ones for a while. API should now be
   more simple and consistent.
-* Crowbook now supports parts, using the '@' character in the book
-  configuration file.
+* Crowbook now supports parts (above the "chapter" level), using the
+  '@' character in the book configuration file.
 * Command-line interface: 
   * Behaviour of `--to` should now be consistent for all output
     formats.
