@@ -30,7 +30,7 @@ fn toc_epub_simple() {
     let mut toc = Toc::new();
     toc.add(1, String::from("#1"), "1".to_owned());
     toc.add(1, String::from("#2"), "2".to_owned());
-    let actual = toc.render_epub(1);
+    let actual = toc.render_epub();
     let expected = "
 <navPoint id = \"navPoint-1\">
   <navLabel>
@@ -56,7 +56,7 @@ fn toc_epub_simple_sublevels() {
     toc.add(2, String::from("#1.1"), "1.1".to_owned());
     toc.add(1, String::from("#2"), "2".to_owned());
     toc.add(2, String::from("#2.1"), "2.1".to_owned());
-    let actual = toc.render_epub(1);
+    let actual = toc.render_epub();
     let expected = "
 <navPoint id = \"navPoint-1\">
   <navLabel>
@@ -96,7 +96,7 @@ fn toc_epub_broken_sublevels() {
     toc.add(2, String::from("#1.1"), "1.1".to_owned());
     toc.add(1, String::from("#2"), "2".to_owned());
     toc.add(2, String::from("#2.1"), "2.1".to_owned());
-    let actual = toc.render_epub(1);
+    let actual = toc.render_epub();
     let expected = "
 <navPoint id = \"navPoint-1\">
   <navLabel>
