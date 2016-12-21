@@ -343,7 +343,7 @@ impl<'a> HtmlRenderer<'a> {
                     break;
                 }
             }
-            if i != 1 || !self.book.options.get_bool("rendering.roman_numerals").unwrap() {
+            if i != 1 || !self.book.options.get_bool("rendering.roman_numerals.chapters").unwrap() {
                 output.push_str(&format!("{}.", self.current_chapter[i])); //todo
             } else {
                 if self.current_chapter[i] >= 1 {

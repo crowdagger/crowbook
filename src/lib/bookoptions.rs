@@ -39,7 +39,8 @@ rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {
 rendering.num_depth:int:1                                            # {num_depth}
 rendering.chapter_template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
 rendering.part_template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
-rendering.roman_numerals:bool:false                                  # {roman_numerals}
+rendering.roman_numerals.parts:bool:true                                      # {roman_numerals_parts}
+rendering.roman_numerals.chapters:bool:false                                  # {roman_numerals_chapters}
 
 # {special_ops}
 import_config:path                  # {import_config}
@@ -198,7 +199,8 @@ html.crowbook_link:alias                            # {removed}
                                          num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
                                          chapter_template = lformat!("Naming scheme of chapters"),
                                          part_template = lformat!("Naming scheme of parts"),
-                                         roman_numerals = lformat!("If set to true, display chapter number with roman numeral"),
+                                         roman_numerals_parts = lformat!("If set to true, display part number with roman numerals"),
+                                         roman_numerals_chapters = lformat!("If set to true, display chapter number with roman numerals"),
                                          
                                          import_config = lformat!("Import another book configuration file"),
 

@@ -951,7 +951,7 @@ impl Book {
         if !title.is_empty() {
             data = data.insert_bool("has_chapter_title", true);
         }
-        let number = if self.options.get_bool("rendering.roman_numerals").unwrap() == true {
+        let number = if self.options.get_bool("rendering.roman_numerals.chapters").unwrap() == true {
             if n <= 0 {
                 return Err(Error::render(Source::empty(),
                                             lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
@@ -991,16 +991,16 @@ impl Book {
         where F: FnMut(&str) -> Result<String>
     {
         let mut data = self.get_metadata(&mut f)?;
-        let number = //if self.options.get_bool("rendering.roman_numerals").unwrap() == true {
+        let number = if self.options.get_bool("rendering.roman_numerals.parts").unwrap()  {
             if n <= 0 {
                 return Err(Error::render(Source::empty(),
-                                            lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
+                                            lformat!("can not use roman numerals with zero or negative numbers ({n})",
                                                      n = n)));
             } else {
                 format!("{:X}", Roman::from(n as i16))
-            
-//        } else {
-//            format!("{}", n)
+            }
+        } else {
+                format!("{}", n)
         };
         data = data.insert_str("number", number);
 
