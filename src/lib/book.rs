@@ -32,6 +32,7 @@ use lang;
 use misc;
 use book_renderer::BookRenderer;
 use chapter::Chapter;
+use token::Token;
 
 #[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
@@ -530,7 +531,13 @@ impl Book {
             } else if line.starts_with('@') {
                 /* Part */
                 let subline = &line[1..];
-                if subline.starts_with('+') {
+                if subline.starts_with(|c: char| c.is_whitespace()) {
+                    let subline = subline.trim();
+                    let ast = Parser::new()
+                        .parse_inline(subline)?;
+                    let ast = vec!(Token::Header(1, ast));
+                    self.chapters.push(Chapter::new(Number::DefaultPart, String::new(), ast));
+                } else if subline.starts_with('+') {
                     /* Numbered part */
                     let file = get_filename(&self.source, subline)?;
                     self.add_chapter(Number::DefaultPart, file)?;
