@@ -504,7 +504,7 @@ impl Book {
                 let file = get_filename(&self.source, line)?;
                 self.add_chapter(Number::Unnumbered, file)?;
             } else if line.starts_with('+') {
-                // nunmbered chapter
+                // numbered chapter
                 let file = get_filename(&self.source, line)?;
                 self.add_chapter(Number::Default, file)?;
             } else if line.starts_with('!') {
@@ -522,10 +522,42 @@ impl Book {
                 }
                 let file = get_filename(&self.source, parts[1])?;
                 let number = parts[0].parse::<i32>()
-                    .map_err(|_| {
-                        Error::config_parser(&self.source, lformat!("error parsing chapter number"))
-                    })?;
+                    .map_err(|err| {
+                        Error::config_parser(&self.source,
+                                             lformat!("error parsing chapter number: {error}",
+                                             error = err))})?;
                 self.add_chapter(Number::Specified(number), file)?;
+            } else if line.starts_with('@') {
+                /* Part */
+                let subline = &line[1..];
+                if subline.starts_with('+') {
+                    /* Numbered part */
+                    let file = get_filename(&self.source, subline)?;
+                    self.add_chapter(Number::DefaultPart, file)?;
+                } else if subline.starts_with('-') {
+                    /* Unnumbered part */
+                    let file = get_filename(&self.source, line)?;
+                    self.add_chapter(Number::UnnumberedPart, file)?;
+                } else if subline.starts_with(|c: char| c.is_digit(10)) {
+                    /* Specified  part*/
+                    let parts: Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
+                        .collect();
+                    if parts.len() != 2 {
+                        return Err(Error::config_parser(&self.source,
+                                                        lformat!("ill-formatted line specifying \
+                                                                  part number")));
+                    }
+                    let file = get_filename(&self.source, parts[1])?;
+                    let number = parts[0].parse::<i32>()
+                        .map_err(|err| {
+                            Error::config_parser(&self.source,
+                                                 lformat!("error parsing part number: {error}",
+                                                          error = err))})?;
+                    self.add_chapter(Number::SpecifiedPart(number), file)?;
+                } else {
+                    return Err(Error::config_parser(&self.source,
+                                                    lformat!("found invalid part definition in the chapter list")));
+                }
             } else {
                 return Err(Error::config_parser(&self.source,
                                                 lformat!("found invalid chapter definition in \
