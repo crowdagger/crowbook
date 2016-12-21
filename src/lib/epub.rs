@@ -458,7 +458,7 @@ impl<'a> EpubRenderer<'a> {
         self.html.render_end_notes(&mut content);
 
         if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
-            let number = self.html.current_chapter[0] + 1;
+            let number = self.html.current_chapter[1] + 1;
             self.chapter_title = self.html.book.get_chapter_header(number, "".to_owned(), |s| {
                     self.render_vec(&Parser::new().parse_inline(s)?)
                 })?;
@@ -495,7 +495,7 @@ impl<'a> EpubRenderer<'a> {
                                       source = self.html.source));
             }
         } else {
-            let res = self.html.book.get_chapter_header(self.html.current_chapter[0] + 1,
+            let res = self.html.book.get_chapter_header(self.html.current_chapter[1] + 1,
                                                         self.html.render_vec(vec)?,
                                                         |s| {
                                                             self.render_vec(&(Parser::new()

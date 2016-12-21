@@ -53,9 +53,9 @@ pub struct HtmlRenderer<'a> {
     /// Proofread or not
     pub proofread: bool,
 
-    /// Current chapter (and subsection, subsubsection and so on)
+    /// Current part, chapter (and subsection, subsubsection and so on)
     #[doc(hidden)]
-    pub current_chapter: [i32; 6],
+    pub current_chapter: [i32; 7],
 
     /// Current numbering level
     #[doc(hidden)]
@@ -133,7 +133,7 @@ impl<'a> HtmlRenderer<'a> {
             book: book,
             toc: Toc::new(),
             link_number: 0,
-            current_chapter: [0, 0, 0, 0, 0, 0],
+            current_chapter: [0, 0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_par: 0,
             current_hide: false,
@@ -161,7 +161,7 @@ impl<'a> HtmlRenderer<'a> {
             book: book,
             toc: Toc::new(),
             link_number: 0,
-            current_chapter: [0, 0, 0, 0, 0, 0],
+            current_chapter: [0, 0, 0, 0, 0, 0, 0],
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_par: 0,
             current_hide: false,
@@ -220,7 +220,7 @@ impl<'a> HtmlRenderer<'a> {
             Number::Default => self.current_numbering = book_numbering,
             Number::Specified(n) => {
                 self.current_numbering = book_numbering;
-                self.current_chapter[0] = n - 1;
+                self.current_chapter[1] = n - 1;
             }
             Number::Hidden => {
                 self.current_numbering = 0;
@@ -253,7 +253,8 @@ impl<'a> HtmlRenderer<'a> {
     pub fn render_title(&mut self, n: i32, vec: &[Token]) -> Result<String> {
         self.inc_header(n);
         let s = if n == 1 && self.current_numbering >= 1 {
-            let chapter = self.current_chapter[0];
+            let part = self.current_chapter[0];
+            let chapter = self.current_chapter[1];
             let c_title = self.render_vec(vec)?;
             let res = self.book.get_chapter_header(chapter, c_title, |s| {
                 self.render_vec(&Parser::new().parse_inline(s)?)
@@ -285,12 +286,12 @@ impl<'a> HtmlRenderer<'a> {
     ///
     /// Also sets up first_paragraph, link stuff and so on
     fn inc_header(&mut self, n: i32) {
-        if n == 1 {
+        if n <= 1 {
             self.first_paragraph = true;
         }
         if self.current_numbering >= n {
-            assert!(n >= 1);
-            let n = (n - 1) as usize;
+            assert!(n >= 0);
+            let n = n as usize;
             assert!(n < self.current_chapter.len());
             self.current_chapter[n] += 1;
             for i in n + 1..self.current_chapter.len() {
@@ -303,7 +304,7 @@ impl<'a> HtmlRenderer<'a> {
     /// Returns a "x.y.z" corresponding to current chapter/section/...
     fn get_numbers(&self) -> String {
         let mut output = String::new();
-        for i in 0..self.current_chapter.len() {
+        for i in 1..self.current_chapter.len() {
             if self.current_chapter[i] == 0 {
                 if i == self.current_chapter.len() - 1 {
                     break;
@@ -313,7 +314,7 @@ impl<'a> HtmlRenderer<'a> {
                     break;
                 }
             }
-            if i != 0 || !self.book.options.get_bool("rendering.roman_numerals").unwrap() {
+            if i != 1 || !self.book.options.get_bool("rendering.roman_numerals").unwrap() {
                 output.push_str(&format!("{}.", self.current_chapter[i])); //todo
             } else {
                 if self.current_chapter[i] >= 1 {

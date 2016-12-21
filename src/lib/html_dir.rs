@@ -186,7 +186,7 @@ impl<'a> HtmlDirRenderer<'a> {
                         } else {
                             title = self.html
                                 .book
-                                .get_chapter_header(self.html.current_chapter[0] + 1,
+                                .get_chapter_header(self.html.current_chapter[1] + 1,
                                                     self.html.render_vec(vec)?,
                                                     |s| {
                                                         self.render_vec(&Parser::new()
