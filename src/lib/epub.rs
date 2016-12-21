@@ -232,7 +232,7 @@ impl<'a> EpubRenderer<'a> {
     fn render_toc(&mut self) -> Result<String> {
         let mut nav_points = String::new();
 
-        nav_points.push_str(&self.html.toc.render_epub(0));
+        nav_points.push_str(&self.html.toc.render_epub());
 
         let template = compile_str(TOC,
                                    &self.html.book.source,

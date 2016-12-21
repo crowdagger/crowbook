@@ -1,5 +1,19 @@
-use std::iter;
-
+// Copyright (C) 2016 Élisabeth HENRY.
+//
+// This file is part of Crowbook.
+//
+// Crowbook is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation, either version 2.1 of the License, or
+// (at your option) any later version.
+//
+// Caribon is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received ba copy of the GNU Lesser General Public License
+// along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 /// A structure for manipulating Table Of Content
 #[derive(Debug)]
@@ -48,11 +62,10 @@ impl Toc {
     }
 
     /// Render the Toc in a toc.ncx compatible way, for EPUB.
-    pub fn render_epub(&mut self, mut offset: u32) -> String {
+    pub fn render_epub(&mut self) -> String {
         let mut output = String::new();
         let mut offset = 0;
         for elem in &self.elements {
-            let mut i = 0;
             let (n, s) = elem.render_epub(offset);
             offset = n;
             output.push_str(&s);
