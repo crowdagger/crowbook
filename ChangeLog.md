@@ -6,6 +6,8 @@ ChangeLog
 * **Breaking changes**: the API has undergone some breaking changes,
   hoping they will be the last ones for a while. API should now be
   more simple and consistent.
+* Crowbook now supports parts, using the '@' character in the book
+  configuration file.
 * Command-line interface: 
   * Behaviour of `--to` should now be consistent for all output
     formats.
@@ -21,8 +23,10 @@ ChangeLog
 * New options:
   * `epub.toc.extras`, set to `true` by default, will add links to the
     title and the cover (if it is set) in the table of contents.
-  * `rendering.roman_numerals`, if set to `true`, will display chapter
-    numbers using roman numerals (still experimental).
+  * `rendering.roman_numerals.chapters`, if set to `true`, will display chapter
+    numbers using roman numerals.
+  * `rendering.roman_numerals.parts`, if set to `true` (it is by
+    default) will display part numbers using roman numerals.
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
