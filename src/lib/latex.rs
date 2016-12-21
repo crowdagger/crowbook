@@ -295,9 +295,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 match n {
                     1 => {
                         if !self.is_short {
-                            content.push_str(r"\chapter");
+                            if self.current_chapter.is_part() {
+                                content.push_str(r"\part");
+                            } else {
+                                content.push_str(r"\chapter");
+                            }
                         } else {
-                            // Chapters aren't handlled for class article
+                            // Chapters or parts aren't handlled for class article
                             content.push_str(r"\section");
                         }
                     }
@@ -306,7 +310,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     4 => content.push_str(r"\subsubsection"),
                     _ => content.push_str(r"\paragraph"),
                 }
-                if self.current_chapter == Number::Unnumbered {
+                if self.current_chapter.is_numbered() == false {
                     content.push_str("*");
                 }
                 content.push_str(r"{");
