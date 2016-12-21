@@ -428,7 +428,7 @@ impl Book {
         loop {
             if let Some(next_line) = lines.peek() {
                 if next_line.starts_with(|c| match c {
-                    '-' | '+' | '!' => true,
+                    '-' | '+' | '!' | '@'  => true,
                     _ => c.is_digit(10),
                 }) {
                     break;
