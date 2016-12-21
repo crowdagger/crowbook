@@ -496,8 +496,19 @@ impl<'a> HtmlRenderer<'a> {
                                       this.as_ref().link_number);
                     if !this.as_ref().current_part {
                         this.as_mut().toc.add(n, url, s.clone());
+
                     } else {
-                        this.as_mut().toc.add(n - 1, url, s.clone());
+                        let is_roman = this.as_ref().book.options.get_bool("rendering.roman_numerals.parts").unwrap();
+                        let number = this.as_ref().current_chapter[0];
+                        let number = if is_roman && number >= 1 {
+                            format!("{:X}", Roman::from(number as i16))
+                        } else {
+                            format!("{}", number)
+                        };
+                        let toc_content = format!("{number} {content}",
+                                                  content = s,
+                                                  number = number);
+                        this.as_mut().toc.add(n - 1, url, toc_content);
                     }
                 }
                 Ok(this.as_mut().render_title_full(n, s)?)
