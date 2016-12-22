@@ -370,9 +370,9 @@ impl<'a> HtmlDirRenderer<'a> {
             self.html.book.options.get_path("output.html_dir").unwrap()
         };
         let dest_path = PathBuf::from(&dir_name);
-        if dest_path.starts_with("..") {
-            panic!("html dir is asked to create a file outside of its directory, no way!");
-        }
+        assert!(dest_path.starts_with(dir_name),
+                "html_dir renderer is asked to create a file ({dest_path}) outside of its directory, no way!",
+                dest_path = dest_path.display());
         let dest_file = dest_path.join(file);
         let dest_dir = dest_file.parent().unwrap();
         if !fs::metadata(dest_dir).is_ok() {
