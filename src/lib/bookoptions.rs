@@ -757,10 +757,6 @@ impl BookOptions {
     /// Option is not inserted either if new value is equal to default.
     #[doc(hidden)]
     pub fn merge(&mut self, other: BookOptions) -> Result<()> {
-        let relative_path = match other.root.strip_prefix(&self.root) {
-            Ok(path) => path,
-            Err(_) => &other.root,
-        };
         for (key, value) in &other.options {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(key) {
@@ -778,22 +774,17 @@ impl BookOptions {
                 }
             }
             // If it's a path, get the corrected path
-            if let &BookOption::Path(ref path) = value {
-                let new_path: PathBuf = if true { //other.valid_tpls.contains(&key.as_ref()) {
-                    // Sets key with an absolute path so it
-                    // won't be messed up if resources.base_path is
-                    // redefined later on
-                    let path = other.get_path(&key).unwrap();
-                    let new_path = ::std::env::current_dir()
-                        .map_err(|_| {
-                            Error::default(Source::empty(),
-                                           lformat!("could not get current directory!!!"))
-                        })?
+            if let &BookOption::Path(_) = value {
+                // Sets key with an absolute path so it
+                // won't be messed up if resources.base_path is
+                // redefined later on
+                let path = other.get_path(&key).unwrap();
+                let new_path = ::std::env::current_dir()
+                    .map_err(|_| {
+                        Error::default(Source::empty(),
+                                       lformat!("could not get current directory!"))
+                    })?
                     .join(&path);
-                    new_path
-                } else {
-                    relative_path.join(path)
-                };
                 let new_path = if let Some(path) = new_path.to_str() {
                     path.to_owned()
                 } else {
