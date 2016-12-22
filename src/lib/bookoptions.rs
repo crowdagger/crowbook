@@ -779,9 +779,9 @@ impl BookOptions {
             }
             // If it's a path, get the corrected path
             if let &BookOption::Path(ref path) = value {
-                let new_path: PathBuf = if other.valid_tpls.contains(&key.as_ref()) {
-                    // If key is a template, sets it with an absolute path so it
-                    // won't be messed up if resources.base_path.templates is
+                let new_path: PathBuf = if true { //other.valid_tpls.contains(&key.as_ref()) {
+                    // Sets key with an absolute path so it
+                    // won't be messed up if resources.base_path is
                     // redefined later on
                     let path = other.get_path(&key).unwrap();
                     let new_path = ::std::env::current_dir()
