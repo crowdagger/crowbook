@@ -33,7 +33,7 @@ rendering.num_depth: 2
 rendering.initials: false
 rendering.inline_toc: false
 rendering.chapter_template: "{{{number}}}\\. {{{chapter_title}}}"
-rendering.roman_numerals: true
+rendering.roman_numerals.chapters: false
 
 # Html options
 html.icon: crowbook.svg
@@ -55,12 +55,15 @@ epub.version: 3
 
 # Finally, our files.
 # Paths are relative to the directory where this file is
+#@ User guide
 + README.md
 + guide/arguments.md
 + guide/config.md
 + guide/templates.md
 + guide/proofreading.md
+#@ More info
 + guide/misc.md
 + guide/contribute.md
+#@ Appendix
 - ChangeLog.md
 - LICENSE.md
