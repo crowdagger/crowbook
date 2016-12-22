@@ -216,7 +216,8 @@ Crowbook also has some inline templates, that are set in the book configuration 
   inserted at the end of the preambule, just before the
   `\begin{document}` tag.
 * `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
-* `rendering.chapter_template` sets the naming scheme for chapters.
+* `rendering.chapter_template` sets the naming scheme for chapters,
+  while `rendering.part_template` does the same for part.
 
 
 
