@@ -27,7 +27,7 @@ Create and edit template
 Except for inline templates, which are set directly in the book configuration file:
 
 ```yaml
-rendering.chapter_template: "{{{loc_chapter}}} {{{number}}}: {{{chapter_title}}}"
+rendering.chapter.template: "{{{loc_chapter}}} {{{number}}}: {{{chapter_title}}}"
 ```
 
 most templates must be in a separate file:
@@ -216,8 +216,8 @@ Crowbook also has some inline templates, that are set in the book configuration 
   inserted at the end of the preambule, just before the
   `\begin{document}` tag.
 * `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
-* `rendering.chapter_template` sets the naming scheme for chapters,
-  while `rendering.part_template` does the same for part.
+* `rendering.chapter.template` sets the naming scheme for chapters,
+  while `rendering.part.template` does the same for part.
 
 
 
@@ -287,7 +287,7 @@ below.
 | `script` | The javascript file for this HTML document | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
 | `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html_single.html` |
 | A variable whose name corresponds to `lang` in book options (e.g. `lang_en` if lang is set to "en", `lang_fr` if it is set to "fr", ...) | `true`  | `html.css`, `epub.css` |
-| `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml`, `rendering.chapter_template` |
+| `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml`, `rendering.chapter.template` |
 | `highlight_code` | True if `html.highlight_code` is true | `html_single.html`, `html_dir.chapter.html` |
 | `highlight_css` | The content of `html.highlight.css` | `html_single.html` |
 | `highlight_js` | The base64-encoded content of `html.highlight.js` | `html_single.html` |
