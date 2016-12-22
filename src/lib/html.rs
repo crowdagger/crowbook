@@ -343,7 +343,7 @@ impl<'a> HtmlRenderer<'a> {
                     break;
                 }
             }
-            if i != 1 || !self.book.options.get_bool("rendering.roman_numerals.chapters").unwrap() {
+            if i != 1 || !self.book.options.get_bool("rendering.chapter.roman_numerals").unwrap() {
                 output.push_str(&format!("{}.", self.current_chapter[i])); //todo
             } else {
                 if self.current_chapter[i] >= 1 {
@@ -498,7 +498,7 @@ impl<'a> HtmlRenderer<'a> {
                         this.as_mut().toc.add(n, url, s.clone());
 
                     } else {
-                        let is_roman = this.as_ref().book.options.get_bool("rendering.roman_numerals.parts").unwrap();
+                        let is_roman = this.as_ref().book.options.get_bool("rendering.part.roman_numerals").unwrap();
                         let number = this.as_ref().current_chapter[0];
                         let number = if is_roman && number >= 1 {
                             format!("{:X}", Roman::from(number as i16))

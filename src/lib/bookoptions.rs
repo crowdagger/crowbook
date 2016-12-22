@@ -37,10 +37,11 @@ rendering.initials:bool:false                                        # {renderin
 rendering.inline_toc:bool:false                                      # {inline_toc}
 rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
-rendering.chapter_template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
-rendering.part_template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
-rendering.roman_numerals.parts:bool:true                                      # {roman_numerals_parts}
-rendering.roman_numerals.chapters:bool:false                                  # {roman_numerals_chapters}
+rendering.chapter.template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
+rendering.part.template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
+rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
+
 
 # {special_ops}
 import_config:path                  # {import_config}
@@ -142,7 +143,7 @@ use_initials:alias:rendering.initials               # {renamed}
 toc_name:alias:rendering.inline_toc.name            # {renamed}
 display_toc:alias:rendering.inline_toc              # {renamed}
 numbering:alias:rendering.num_depth                 # {renamed}
-numbering_template:alias:rendering.chapter_template # {renamed}
+numbering_template:alias:rendering.chapter_tempalte # {renamed}
 html.display_chapter:alias:html_single.one_chapter  # {renamed}
 temp_dir:alias:crowbook.temp_dir                    # {renamed}
 zip.command:alias:crowbook.zip.command              # {renamed}
@@ -153,6 +154,7 @@ html.template:alias:html_single.html                # {renamed}
 html_dir.script:alias:html_dir.js                   # {renamed}
 epub.template:alias:epub.chapter.xhtml              # {renamed}
 html_dir.css:alias:html.css                         # {renamed}
+rendering.chapter_template:alias:rendering.chapter.template # {renamed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}

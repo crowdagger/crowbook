@@ -934,9 +934,9 @@ impl Book {
     /// Sets the chapter_template once and for all
     fn set_chapter_template(&mut self) -> Result<()> {
         let template =
-            compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
+            compile_str(self.options.get_str("rendering.chapter.template").unwrap(),
                         &self.source,
-                        lformat!("could not compile template 'rendering.chapter_template'"))?;
+                        lformat!("could not compile template 'rendering.chapter.template'"))?;
         self.chapter_template = Some(template);
         Ok(())
     }
@@ -951,7 +951,7 @@ impl Book {
         if !title.is_empty() {
             data = data.insert_bool("has_chapter_title", true);
         }
-        let number = if self.options.get_bool("rendering.roman_numerals.chapters").unwrap() == true {
+        let number = if self.options.get_bool("rendering.chapter.roman_numerals").unwrap() == true {
             if n <= 0 {
                 return Err(Error::render(Source::empty(),
                                             lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
@@ -971,10 +971,10 @@ impl Book {
             template.render_data(&mut res, &data)?;
         } else {
             let template =
-                compile_str(self.options.get_str("rendering.chapter_template").unwrap(),
+                compile_str(self.options.get_str("rendering.chapter.template").unwrap(),
                             &self.source,
                             lformat!("could not compile template \
-                                      'rendering.chapter_template'"))?;
+                                      'rendering.chapter.template'"))?;
             template.render_data(&mut res, &data)?;
         }
 
@@ -984,14 +984,13 @@ impl Book {
         }
     }
 
-
     /// Returns the string corresponding to a number, title, and the numbering template for part
     #[doc(hidden)]
     pub fn get_part_header<F>(&self, n: i32, mut f: F) -> Result<String>
         where F: FnMut(&str) -> Result<String>
     {
         let mut data = self.get_metadata(&mut f)?;
-        let number = if self.options.get_bool("rendering.roman_numerals.parts").unwrap()  {
+        let number = if self.options.get_bool("rendering.part.roman_numerals").unwrap()  {
             if n <= 0 {
                 return Err(Error::render(Source::empty(),
                                             lformat!("can not use roman numerals with zero or negative numbers ({n})",
@@ -1011,10 +1010,10 @@ impl Book {
             template.render_data(&mut res, &data)?;
         } else {
             let template =
-                compile_str(self.options.get_str("rendering.part_template").unwrap(),
+                compile_str(self.options.get_str("rendering.part.template").unwrap(),
                             &self.source,
                             lformat!("could not compile template \
-                                      'rendering.part_template'"))?;
+                                      'rendering.part.template'"))?;
             template.render_data(&mut res, &data)?;
         }
 
