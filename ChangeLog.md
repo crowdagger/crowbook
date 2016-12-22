@@ -5,7 +5,7 @@ ChangeLog
 --------------
 * **Breaking changes**: the API has undergone some breaking changes,
   hoping they will be the last ones for a while. API should now be
-  more simple and consistent.
+  more simple and consistent (?).
 * Crowbook now supports parts (above the "chapter" level), using the
   '@' character in the book configuration file.
 * Command-line interface: 
@@ -34,6 +34,8 @@ ChangeLog
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
       of "&").
+  * HTML directory:
+    * Fix panic when trying to generate html directory in "../xxx" ([#23](https://github.com/lise-henry/crowbook/issues/23)).
 * Internationalization:
   * Strings in generated Crowbook documents (such as "Table of
     contents", "Title", "Cover" and such) are now translated in spanish.
