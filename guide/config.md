@@ -83,6 +83,7 @@ There are various options to include a Markdown file.
   copyright at the beginning or the book, or for short stories where
   there is only one chapter.
 * `42. file_name.md` specifies the number for a chapter.
+* `@` includes a part instead of a chapter.
 
 So a typical usage might look like this:
 
@@ -136,6 +137,58 @@ markdown file:
 the numbering scheme;
 * if it is not numbered, chapter's title will default to the empty
 string and won't be displayed in the TOC.
+
+
+### Parts ###
+
+Parts are included using the `@` character, followed by the same characters than for chapters:
+
+```
+@+ numbered_part.md
++ chapter_01.md
++ chapter_02.md
+@- unnumbered_part.md
++ chapter_03.md
++ chapter_04.md
+@42. part_with_number_42.md
++ chapter_05.md
+```
+
+However, you usually don't really want to have a content directly
+below the part, only chapters (though it can be useful to add an
+introduction before the first chapter of this part), so there is also
+a more straighforward way to use parts, using only the `@` character
+followed by the (markdown-formatted) title of this part:
+
+```
+@ Beginning
++ chapter_01.md
++ chapter_02.md
+@ Middle
++ chapter_03.md
++ chapter_04.md
+@ Appendix
+- notes.md
+```
+
+With this shortcut, parts are always numbered. So 
+
+```
+@ Beginning
+```
+
+is equivalent to 
+
+```
+@+ some_file.md
+```
+
+with `some_file.md` containing only a title:
+
+```markdown
+# Beginning
+```
+
 
 
 Crowbook options 
