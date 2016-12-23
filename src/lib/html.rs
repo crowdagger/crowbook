@@ -231,7 +231,6 @@ impl<'a> HtmlRenderer<'a> {
             Number::SpecifiedPart(n) => {
                 self.current_numbering = book_numbering;
                 self.current_chapter[0] = n - 1;
-//                self.current_chapter[1] = 0;
             }
             Number::Hidden => {
                 self.current_numbering = 0;
@@ -323,7 +322,12 @@ impl<'a> HtmlRenderer<'a> {
             let n = n as usize;
             assert!(n < self.current_chapter.len());
             self.current_chapter[n] += 1;
-            for i in n + 1..self.current_chapter.len() {
+            let begin = if n == 0 && !self.book.options.get_bool("rendering.part.reset_counter").unwrap() {
+                n + 2
+            } else {
+                n + 1
+            };
+            for i in begin..self.current_chapter.len() {
                 self.current_chapter[i] = 0;
             }
         }

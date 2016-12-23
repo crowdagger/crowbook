@@ -41,6 +41,7 @@ rendering.chapter.template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}
 rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
 rendering.part.template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
 rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
+rendering.part.reset_counter:bool:true                                      # {reset_counter}
 
 
 # {special_ops}
@@ -203,6 +204,7 @@ html.crowbook_link:alias                            # {removed}
                                          part_template = lformat!("Naming scheme of parts"),
                                          roman_numerals_parts = lformat!("If set to true, display part number with roman numerals"),
                                          roman_numerals_chapters = lformat!("If set to true, display chapter number with roman numerals"),
+                                         reset_counter = lformat!("If set to true, reset chapter number at each part"),
                                          
                                          import_config = lformat!("Import another book configuration file"),
 

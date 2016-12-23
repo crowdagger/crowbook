@@ -296,6 +296,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     1 => {
                         if !self.is_short {
                             if self.current_chapter.is_part() {
+                                if self.book.options.get_bool("rendering.part.reset_counter").unwrap() {
+                                    content.push_str(r"\setcounter{chapter}{0}");
+                                }
                                 content.push_str(r"\part");
                             } else {
                                 content.push_str(r"\chapter");
