@@ -28,6 +28,8 @@ ChangeLog
   * `rendering.part.roman_numerals`, if set to `true` (it is by
     default) will display part numbers using roman numerals.
   * `rendering.part.template` specifies the numbering scheme of parts.
+  * `rendering.part.reset_counter`, if set to `true` (it is by
+    default), resets chapter number to zero after a part.
 * Renamed options:
   * `rendering.chapter_template` renamed to `rendering.chapter.template`.
 * Bugfixes:
