@@ -739,7 +739,7 @@ impl Book {
                 renderer.render_to_file(&self, path.as_ref())?;
                 self.logger.info(lformat!("Succesfully generated {format}: {path}",
                                           format = description,
-                                          path = path.as_ref().display()));
+                                          path = misc::normalize(path)));
                 Ok(())
             },
             None => {
