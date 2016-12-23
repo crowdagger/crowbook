@@ -1,13 +1,18 @@
-#[macro_use]
 extern crate crowbook;
 extern crate crowbook_intl_runtime;
 
 #[cfg(feature = "clap")]
 extern crate clap;
+
+#[macro_use]
+mod localize_macros;
 #[cfg(feature = "clap")]
 mod real_main;
 #[cfg(feature = "clap")]
 mod helpers;
+#[cfg(feature = "clap")]
+
+
 
 #[cfg(feature = "clap")]
 #[macro_use]

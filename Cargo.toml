@@ -24,7 +24,7 @@ exclude = [
 [lib]
 name = "crowbook"
 path = "src/lib/lib.rs"
-doctest = false
+doctest = true
 
 [[bin]]
 name = "crowbook"
@@ -36,7 +36,8 @@ default = ["clap", "proofread"]
 proofread = ["caribon", "hyper", "url"]
 
 [build-dependencies]
-crowbook-intl = "0.1"
+# crowbook-intl = "0.1"
+crowbook-intl = { path = "../crowbook-intl" }
 
 [dependencies]
 mime_guess = "1"

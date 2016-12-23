@@ -140,12 +140,11 @@ pub use resource_handler::ResourceHandler;
 pub use logger::{Logger, InfoLevel};
 pub use renderer::Renderer;
 pub use book_renderer::BookRenderer;
-pub use crowbook_intl_runtime::__get_lang;
 pub use chapter::Chapter;
 
 #[macro_use]
 #[doc(hidden)]
-pub mod localize_macros;
+mod localize_macros;
 #[macro_use]
 mod html;
 mod html_dir;
