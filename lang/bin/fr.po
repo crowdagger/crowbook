@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# LICENSE
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:41
+msgid ""
+"An odd number of arguments was passed to --set, but it takes a list of key "
+"value pairs."
+msgstr ""
+"Un nombre impair d'arguments a été donné à --set, alors qu'il prend une "
+"liste de paires clé-valeur."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:69
+msgid "Error in setting key {}: {}"
+msgstr "Erreur en initialisant la clé {}: {}"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:81
+msgid "Could not create file {}: it already exists!"
+msgstr "Impossible de créer le fichier {} : il existe déjà !"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:94
+msgid ""
+"author: Your name\n"
+"title: Your title\n"
+"lang: en\n"
+"\n"
+"# Uncomment and fill to generate files\n"
+"# output.html: some_file.html\n"
+"# output.epub: some_file.epub\n"
+"# output.pdf: some_file.pdf\n"
+"\n"
+"# Uncomment and fill to set cover image (for Epub)\n"
+"# cover: some_cover.png\n"
+msgstr ""
+"author: Votre nom\n"
+"title: Le titre\n"
+"lang: fr\n"
+"\n"
+"# Décommenter et remplir pour générer des fichiers\n"
+"# output.html: un_fichier.html\n"
+"# output.epub: un_fichier.epub\n"
+"# output.pdf: un_fichier.pdf\n"
+"\n"
+"# Décommenter et remplir pour configurer une image de couverture (pour "
+"l'Epub)\n"
+"# cover: une_couverture.png\n"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:107
+msgid ""
+"\n"
+"# List of chapters\n"
+msgstr ""
+"\n"
+"# Liste des chapitres\n"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:113
+msgid "Created {}, now you'll have to complete it!"
+msgstr "{} a été crée, maintenant vous n'avez plus qu'à le compléter !"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:123
+msgid "Print help information"
+msgstr "Affiche l'aide"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:124
+msgid "Print version information"
+msgstr "Affiche le numéro de version"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:125
+msgid "Render a Markdown book in EPUB, PDF or HTML."
+msgstr "Fait le rendu en EPUB, PDF ou HTML d'un livre écrit en Markdown."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:126
+msgid "Use a single Markdown file instead of a book configuration file"
+msgstr ""
+"Utilise un simple fichier Markdown au lieu d'un fichier de configuration de "
+"livre"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:127
+msgid "Print warnings in parsing/rendering"
+msgstr "Affiche les avertissements dans l'analyse et le rendu"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:128
+msgid "Don't print info/error messages"
+msgstr "N'affiche pas les messages d'erreurs ou d'information"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:129
+msgid "Enable proofreading"
+msgstr "Activer la génération de versions pour la relecture"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:130
+msgid "Print debugging information"
+msgstr "Affiche des informations de débuggage"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:131
+msgid "Create a new book with existing Markdown files"
+msgstr "Crée un nouveau livre à partir de fichiers Markdown existants"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:132
+msgid "Specify output file"
+msgstr "Spécifie un fichier de sortie"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:133
+msgid "Set the runtime language used by Crowbook"
+msgstr "Spécifie la langue à utiliser par Crowbook à l'exécution"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:134
+msgid "Generate specific format"
+msgstr "Génère un format spécifique"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:135
+msgid "Set a list of book options"
+msgstr "Règle une liste d'options pour le livre"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:136
+msgid "List all possible options"
+msgstr "Liste toutes les options possibles"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:137
+msgid "List all possible options, formatted in Markdown"
+msgstr "Liste toutes les options possibles, formatées en Markdown"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:138
+msgid "Prints the default content of a template"
+msgstr "Affiche le contenu par défaut d'un template"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:139
+msgid ""
+"File containing the book configuration file, or a Markdown file when called "
+"with --single"
+msgstr ""
+"Fichier contenant la configuration du livre, ou un fichier Markdown avec "
+"l'argument --single"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:140
+msgid ""
+"{{bin}} {{version}} by {{author}}\n"
+"{{about}}\n"
+"\n"
+"USAGE:\n"
+"    {{usage}}\n"
+"\n"
+"FLAGS:\n"
+"{{flags}}\n"
+"\n"
+"OPTIONS:\n"
+"{{options}}\n"
+"\n"
+"ARGS:\n"
+"{{positionals}}\n"
+msgstr ""
+"{{bin}} {{version}} par {{author}}\n"
+"{{about}}\n"
+"\n"
+"UTILISATION:\n"
+"    {{usage}}\n"
+"\n"
+"PARAMÈTRES:\n"
+"{{flags}}\n"
+"\n"
+"OPTIONS:\n"
+"{{options}}\n"
+"\n"
+"ARGUMENTS:\n"
+"{{positionals}}\n"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:227
+msgid "A list of additional files is only valid with the --create option."
+msgstr ""
+"Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:105
+msgid "{} is not a valid template name."
+msgstr "{} n'est pas un nom de template valide."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:124
+msgid ""
+"You must pass the file of a book configuration file.\n"
+"\n"
+"{}\n"
+"\n"
+"For more information try --help."
+msgstr ""
+"Vous devez passer le nom de fichier d'un livre.\n"
+"\n"
+"{}\n"
+"\n"
+"Pour plus d'informations, essayez --help."
+
+
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:29
+msgid "Error:"
+msgstr "Erreur :"
+
