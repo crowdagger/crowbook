@@ -31,6 +31,7 @@ ChangeLog
   * `rendering.part.reset_counter`, if set to `true` (it is by
     default), resets chapter number to zero after a part.
 * Renamed options:
+  * `import_config` renamed to `import`.
   * `rendering.chapter_template` renamed to `rendering.chapter.template`.
 * Bugfixes:
   * EPUB:
