@@ -5,7 +5,8 @@ ChangeLog
 --------------
 * **Breaking changes**: the API has undergone some breaking changes,
   hoping they will be the last ones for a while. API should now be
-  more simple and consistent (?).
+  more simple and consistent (?). This version contains also
+  substantial options renaming (see below).
 * Crowbook now supports parts (above the "chapter" level), using the
   '@' character in the book configuration file.
 * Command-line interface: 
@@ -36,6 +37,10 @@ ChangeLog
   * `html_single.html` renamed to `html.standalone.html`.
   * `html_single.js` renamed to `html.standalone.js`.
   * `html_single.one_chapter` renamed to `html.standalone.one_chapter`.
+  * `output.html_dir` renamed to `output.html.dir`.
+  * `output.proofread.html_dir` renamed to `output.proofread.html.dir`.
+  * `html_dir.index.html` renamed to `html.dir.index.html`.
+  * `html_dir.chapter.html` renamed to `html.dir.chapter.html`.
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
