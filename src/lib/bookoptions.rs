@@ -87,7 +87,7 @@ tex.template.add:str                # {tex_tmpl_add}
 tex.class:str:book                  # {tex_class}
 tex.paper_size:str:a5paper          # {tex_paper_size}
 tex.title:bool:true                 # {tex_title}
-tex.font_size:int                   # {tex_font_size}
+tex.font.size:int                   # {tex_font_size}
 
 
 # {rs_opt}
@@ -164,6 +164,7 @@ output.html_dir:alias:output.html.dir               # {renamed}
 html_dir.index.html:alias:html.dir.index.html       # {renamed}
 html_dir.chapter.html:alias:html.dir.chapter.html   # {renamed}
 output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
+tex.font_size:alias:tex.font.size                   # {renamed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}

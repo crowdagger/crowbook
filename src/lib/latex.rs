@@ -191,7 +191,7 @@ impl<'a> LatexRenderer<'a> {
         if let Ok(tex_tmpl_add) = self.book.options.get_str("tex.template.add") {
             data = data.insert_str("additional_code", tex_tmpl_add);
         }
-        if let Ok(tex_font_size) = self.book.options.get_i32("tex.font_size") {
+        if let Ok(tex_font_size) = self.book.options.get_i32("tex.font.size") {
             data = data
                 .insert_bool("has_tex_size", true)
                 .insert_str("tex_size", format!("{}", tex_font_size));
