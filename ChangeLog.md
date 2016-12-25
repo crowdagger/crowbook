@@ -33,6 +33,9 @@ ChangeLog
 * Renamed options:
   * `import_config` renamed to `import`.
   * `rendering.chapter_template` renamed to `rendering.chapter.template`.
+  * `html_single.html` renamed to `html.standalone.html`.
+  * `html_single.js` renamed to `html.standalone.js`.
+  * `html_single.one_chapter` renamed to `html.standalone.one_chapter`.
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
