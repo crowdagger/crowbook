@@ -45,7 +45,7 @@ rendering.part.reset_counter:bool:true                                      # {r
 
 
 # {special_ops}
-import_config:path                  # {import_config}
+import:path                  # {import_config}
 
 # {html_opt}
 html.icon:path                      # {html_icon}
@@ -156,6 +156,7 @@ html_dir.script:alias:html_dir.js                   # {renamed}
 epub.template:alias:epub.chapter.xhtml              # {renamed}
 html_dir.css:alias:html.css                         # {renamed}
 rendering.chapter_template:alias:rendering.chapter.template # {renamed}
+import_config:alias:import                          # {renamed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
@@ -429,7 +430,7 @@ impl BookOptions {
         } else if self.valid_paths.contains(&key.as_ref()) {
             // value is a path
             if let Yaml::String(value) = value {
-                if &key == "import_config" {
+                if &key == "import" {
                     // special case, not a real option
                     let tmp = self.root
                         .join(&value);
