@@ -41,6 +41,7 @@ ChangeLog
   * `output.proofread.html_dir` renamed to `output.proofread.html.dir`.
   * `html_dir.index.html` renamed to `html.dir.index.html`.
   * `html_dir.chapter.html` renamed to `html.dir.chapter.html`.
+  * `tex.font_size` renamed to `tex.font.size`.
 * Bugfixes:
   * EPUB:
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
