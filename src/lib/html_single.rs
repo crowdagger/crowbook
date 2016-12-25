@@ -81,7 +81,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let mut titles = vec![];
         let mut chapters = vec![];
         let render_notes_chapter =
-            self.html.book.options.get_bool("html_single.one_chapter").unwrap();
+            self.html.book.options.get_bool("html.standalone.one_chapter").unwrap();
 
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html.handler.add_link(chapter.filename.as_ref(),
@@ -127,7 +127,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         self.html.source = Source::empty();
 
         for (i, chapter) in chapters.iter().enumerate() {
-            if self.html.book.options.get_bool("html_single.one_chapter").unwrap() && i != 0 {
+            if self.html.book.options.get_bool("html.standalone.one_chapter").unwrap() && i != 0 {
                 content.push_str(&format!("<p onclick = \"javascript:showChapter({})\" class = \
                                            \"chapterControls prev_chapter chapter-{}\">
   <a \
@@ -141,7 +141,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                                           titles[i - 1]));
             }
             content.push_str(chapter);
-            if self.html.book.options.get_bool("html_single.one_chapter").unwrap() &&
+            if self.html.book.options.get_bool("html.standalone.one_chapter").unwrap() &&
                i < titles.len() - 1 {
                 content.push_str(&format!("<p onclick = \"javascript:showChapter({})\" class = \
                                            \"chapterControls next_chapter chapter-{}\">
@@ -196,14 +196,14 @@ impl<'a> HtmlSingleRenderer<'a> {
 
         // Render the JS
         let template_js =
-            compile_str(self.html.book.get_template("html_single.js")?.as_ref(),
+            compile_str(self.html.book.get_template("html.standalone.js")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'html_single.js'"))?;
+                        lformat!("could not compile template 'html.standalone.js'"))?;
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
             .insert_bool("one_chapter",
-                         self.html.book.options.get_bool("html_single.one_chapter").unwrap())
+                         self.html.book.options.get_bool("html.standalone.one_chapter").unwrap())
             .insert_str("common_script",
                         self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
@@ -219,7 +219,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("script", js)
             .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
             .insert_bool("one_chapter",
-                         self.html.book.options.get_bool("html_single.one_chapter").unwrap())
+                         self.html.book.options.get_bool("html.standalone.one_chapter").unwrap())
             .insert_str("style", css.as_ref())
             .insert_str("print_style",
                         self.html.book.get_template("html.css.print").unwrap())
@@ -247,10 +247,10 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .insert_str("highlight_js", highlight_js);
         }
         let data = mapbuilder.build();
-        let template = compile_str(self.html.book.get_template("html_single.html")?
+        let template = compile_str(self.html.book.get_template("html.standalone.html")?
                                    .as_ref(),
                                    &self.html.book.source,
-                                   lformat!("could not compile template 'html_single.html'"))?;
+                                   lformat!("could not compile template 'html.standalone.html'"))?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         Ok(String::from_utf8_lossy(&res).into_owned())

@@ -63,9 +63,9 @@ html.side_notes:bool:false          # {side_notes}
 html.escape_nb_spaces:bool:true     # {nb_spaces}
 
 # {html_single_opt}
-html_single.one_chapter:bool:false  # {one_chapter}
-html_single.html:tpl                # {single_html}
-html_single.js:tpl                  # {single_js}
+html.standalone.one_chapter:bool:false  # {one_chapter}
+html.standalone.html:tpl                # {single_html}
+html.standalone.js:tpl                  # {single_js}
 
 
 # {html_dir_opt}
@@ -157,6 +157,9 @@ epub.template:alias:epub.chapter.xhtml              # {renamed}
 html_dir.css:alias:html.css                         # {renamed}
 rendering.chapter_template:alias:rendering.chapter.template # {renamed}
 import_config:alias:import                          # {renamed}
+html_single.one_chapter:alias:html.standalone.one_chapter #{renamed}
+html_single.html:alias:html.standalone.html         # {renamed}
+html_single.js:alias:html.standalone.js             # {renamed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
