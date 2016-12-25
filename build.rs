@@ -11,10 +11,10 @@ fn main() {
     // Extract and localize src/lib
     let mut extractor = Extractor::new();
     extractor.add_messages_from_dir(concat!(env!("CARGO_MANIFEST_DIR"), "/src/lib")).unwrap();
-    extractor.write_pot_file(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/crowbook.pot")).unwrap();
+    extractor.write_pot_file(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/lib/crowbook.pot")).unwrap();
     
     let mut localizer = Localizer::new(&extractor);
-    localizer.add_lang("fr", include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/fr.po"))).unwrap();
+    localizer.add_lang("fr", include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/lang/lib/fr.po"))).unwrap();
     let dest_path = Path::new(&env::var("OUT_DIR").unwrap())
         .join("localize_macros.rs");
     localizer.write_macro_file(dest_path).unwrap();
