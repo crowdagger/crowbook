@@ -26,7 +26,7 @@ date:meta                           # {date}
 # {output_opt}
 output.epub:path                    # {output_epub}
 output.html:path                    # {output_html}
-output.html_dir:path                # {output_html_dir}
+output.html.dir:path                # {output_html_dir}
 output.tex:path                     # {output_tex}
 output.pdf:path                     # {output_pdf}
 output.odt:path                     # {output_odt}
@@ -69,8 +69,8 @@ html.standalone.js:tpl                  # {single_js}
 
 
 # {html_dir_opt}
-html_dir.index.html:tpl             # {index_html}
-html_dir.chapter.html:tpl           # {chapter_html}
+html.dir.index.html:tpl             # {index_html}
+html.dir.chapter.html:tpl           # {chapter_html}
 
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}
@@ -115,7 +115,7 @@ crowbook.verbose:bool:false         # {verbose}
 
 # {prf_opt}
 output.proofread.html:path          # {prf_html}
-output.proofread.html_dir:path      # {prf_html_dir}
+output.proofread.html.dir:path      # {prf_html_dir}
 output.proofread.pdf:path           # {prf_pdf}
 
 # {prf_opt2}
@@ -160,6 +160,10 @@ import_config:alias:import                          # {renamed}
 html_single.one_chapter:alias:html.standalone.one_chapter #{renamed}
 html_single.html:alias:html.standalone.html         # {renamed}
 html_single.js:alias:html.standalone.js             # {renamed}
+output.html_dir:alias:output.html.dir               # {renamed}
+html_dir.index.html:alias:html.dir.index.html       # {renamed}
+html_dir.chapter.html:alias:html.dir.chapter.html   # {renamed}
+output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
@@ -682,12 +686,12 @@ impl BookOptions {
 
             "output.epub" |
             "output.html" |
-            "output.html_dir" |
+            "output.html.dir" |
             "output.pdf" |
             "output.tex" |
             "output.odt" |
             "output.proofread.html" |
-            "output.proofread.html_dir" |
+            "output.proofread.html.dir" |
             "output.proofread.pdf" => {
                 // Translate according to output.base_path
                 let base = self.get_path("output.base_path").unwrap();

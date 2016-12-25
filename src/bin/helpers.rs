@@ -186,9 +186,9 @@ ARGS:
                                "html",
                                "tex",
                                "odt",
-                               "html_dir",
+                               "html.dir",
                                "proofread.html",
-                               "proofread.html_dir",
+                               "proofread.html.dir",
                                "proofread.pdf",
                                "proofread.tex"]))
         .arg(Arg::from_usage("--set [KEY_VALUES]")

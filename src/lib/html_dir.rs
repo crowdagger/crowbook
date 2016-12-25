@@ -210,9 +210,9 @@ impl<'a> HtmlDirRenderer<'a> {
 
         // render all chapters
         let template =
-            compile_str(self.html.book.get_template("html_dir.chapter.html")?.as_ref(),
+            compile_str(self.html.book.get_template("html.dir.chapter.html")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'html_dir.chapter.html"))?;
+                        lformat!("could not compile template 'html.dir.chapter.html"))?;
         for (i, content) in chapters.into_iter().enumerate() {
             let prev_chapter = if i > 0 {
                 format!("<p class = \"prev_chapter\">
@@ -325,9 +325,9 @@ impl<'a> HtmlDirRenderer<'a> {
         }
         let data = mapbuilder.build();
         let template =
-            compile_str(self.html.book.get_template("html_dir.index.html")?.as_ref(),
+            compile_str(self.html.book.get_template("html.dir.index.html")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'html_dir.index.html"))?;
+                        lformat!("could not compile template 'html.dir.index.html"))?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         self.write_file("index.html", &res)?;
@@ -365,13 +365,13 @@ impl<'a> HtmlDirRenderer<'a> {
     // Write content to a file
     fn write_file(&self, file: &str, content: &[u8]) -> Result<()> {
         let dir_name = if self.html.proofread {
-            self.html.book.options.get_path("output.proofread.html_dir").unwrap()
+            self.html.book.options.get_path("output.proofread.html.dir").unwrap()
         } else {
-            self.html.book.options.get_path("output.html_dir").unwrap()
+            self.html.book.options.get_path("output.html.dir").unwrap()
         };
         let dest_path = PathBuf::from(&dir_name);
         assert!(dest_path.starts_with(dir_name),
-                "html_dir renderer is asked to create a file ({dest_path}) outside of its directory, no way!",
+                "multifile HTML renderer is asked to create a file ({dest_path}) outside of its directory, no way!",
                 dest_path = dest_path.display());
         let dest_file = dest_path.join(file);
         let dest_dir = dest_file.parent().unwrap();
