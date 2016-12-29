@@ -247,10 +247,10 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .insert_str("highlight_js", highlight_js);
         }
         let data = mapbuilder.build();
-        let template = compile_str(self.html.book.get_template("html.standalone.html")?
+        let template = compile_str(self.html.book.get_template("html.standalone.template")?
                                    .as_ref(),
                                    &self.html.book.source,
-                                   lformat!("could not compile template 'html.standalone.html'"))?;
+                                   lformat!("could not compile template 'html.standalone.template'"))?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         Ok(String::from_utf8_lossy(&res).into_owned())

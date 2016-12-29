@@ -63,8 +63,8 @@ html.side_notes:bool:false          # {side_notes}
 html.escape_nb_spaces:bool:true     # {nb_spaces}
 
 # {html_single_opt}
+html.standalone.template:tpl                # {single_html}
 html.standalone.one_chapter:bool:false  # {one_chapter}
-html.standalone.html:tpl                # {single_html}
 html.standalone.js:tpl                  # {single_js}
 
 
@@ -158,7 +158,7 @@ html_dir.css:alias:html.css                         # {renamed}
 rendering.chapter_template:alias:rendering.chapter.template # {renamed}
 import_config:alias:import                          # {renamed}
 html_single.one_chapter:alias:html.standalone.one_chapter #{renamed}
-html_single.html:alias:html.standalone.html         # {renamed}
+html_single.html:alias:html.standalone.template         # {renamed}
 html_single.js:alias:html.standalone.js             # {renamed}
 output.html_dir:alias:output.html.dir               # {renamed}
 html_dir.index.html:alias:html.dir.index.html       # {renamed}

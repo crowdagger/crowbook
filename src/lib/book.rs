@@ -897,7 +897,7 @@ impl Book {
             "html.css" => html::CSS,
             "html.css.colours" => html::CSS_COLOURS,
             "html.css.print" => html::PRINT_CSS,
-            "html.standalone.html" => html_single::HTML,
+            "html.standalone.template" => html_single::HTML,
             "html.standalone.js" => html_single::JS,
             "html.js" => html::JS,
             "html.dir.index.html" => html_dir::INDEX_HTML,
