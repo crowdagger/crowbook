@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-0.11.0 (???)
---------------
+0.11.0 (2016-12-31)
+-----------------------
 Substantial changes in this release, the more important one being
 support for parts!
 * **Breaking changes**: the API has undergone some breaking changes,
