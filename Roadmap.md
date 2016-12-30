@@ -12,4 +12,3 @@ Not really blocking (can happen after 1.0 without being breaking):
 
 * Real support for ODT
 * Download external images and embed them
-
