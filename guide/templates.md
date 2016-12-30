@@ -167,26 +167,21 @@ highlight.js theme.
 
 This is not an actual template, just a plain CSS file.
 
-### html_single.js ###
+### html.standalone.js ###
 
 A javascript file used only by the standalone HTML renderer. Its main
 purpose is to handle the displaying of a single chapter at a time when
 `one_chapter` is set to true.
 
 
-### html_single.html ###
+### html.standalone.template ###
 
-The main template for standalone HTML renderer.
+The main HTML template for standalone HTML renderer.
 
-### html_dir.chapter.html ###
+### html.dir.template ###
 
-The main template for multiple files HTML renderer. It is the template
-for rendering each chapter. 
+The main HTML template for multiple files HTML renderer. 
 
-### html_dir.index.html ###
-
-The template used by multiple files HTML renderer to render the
-`index.html` file.
 
 ### tex.template ###
 
@@ -210,7 +205,7 @@ Crowbook also has some inline templates, that are set in the book configuration 
 * `tex.template.add`, `html.css.add` and `epub.css.add` allow to
   specify some LaTeX or CSS code directly in the book configuration
   file. This code will be added respectively to `tex.template`,
-  `html.css` or `epub.css` template. For CSS template, this code is
+  `html.css` or `epub.css` template. For CSS templates, this code is
   inserted at the end of the template (allowing to redefine rules that
   are set by the template); for the LaTeX template, the code is
   inserted at the end of the preambule, just before the
@@ -278,27 +273,27 @@ below.
 
 |    Mustache tag     |    Value    |   Available in...   |
 |---------------------|-------------|---------------------|
-| `content` | A rendered version of the book or chapter's content | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html`, `tex.template`, `epub.chapter.xhtml` |
-| `toc` | A rendered version of the table of contents | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
-| `has_toc`| Set to `true` if the table of contents is not empty | `html_single.html` |
+| `content` | A rendered version of the book or chapter's content | `html.standalone.template`, `html.dir.template`, `tex.template`, `epub.chapter.xhtml` |
+| `toc` | A rendered version of the table of contents | `html.standalone.template`, `html.dir.template` |
+| `has_toc`| Set to `true` if the table of contents is not empty | `html.standalone.template` |
 | `colours`| The content of `html.css.colours` | `html.css` |
-| `footer` | The content of `html.footer` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
-| `header` | The content of `html.header` | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
-| `script` | The javascript file for this HTML document | `html_single.html`, `html_dir.index.html`, `html_dir.chapter.html` |
-| `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html_single.html` |
+| `footer` | The content of `html.footer` | `html.standalone.template`, `html.dir.template` |
+| `header` | The content of `html.header` | `html.standalone.template`, `html.dirtemplate` |
+| `script` | The javascript file for this HTML document | `html.standalone.template`, `html.dir.template` |
+| `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html.standalone.template` |
 | A variable whose name corresponds to `lang` in book options (e.g. `lang_en` if lang is set to "en", `lang_fr` if it is set to "fr", ...) | `true`  | `html.css`, `epub.css` |
-| `chapter_title` | The title of current chapter | `html_dir.chapter.html`, `epub.chapter.xhtml`, `rendering.chapter.template` |
-| `highlight_code` | True if `html.highlight_code` is true | `html_single.html`, `html_dir.chapter.html` |
-| `highlight_css` | The content of `html.highlight.css` | `html_single.html` |
-| `highlight_js` | The base64-encoded content of `html.highlight.js` | `html_single.html` |
-| `common_script` | The content of `html.js` | `html_single.js` |
-| `one_chapter`   | True if `html_single.one_chapter` is true, else not present | `html_single.html`, `html_single.js` |
-| `book.svg` | The base64-encoded image of the button to display all chapters | `html_single.js`, `html_single.html` |
-| `pages.svg` | The base64-encoded image of the button to display one chapter at a time | `html_single.js`, `html_single.html` |
-| `favicon` | The `<link rel = "icon" ...>` tag if `html.icon` is set | `html_single.html`, `html_dir.chapter.html`, `html_dir.index.html` |
-| `menu_svg` | The base64-encoded image of the hamburger menu image | `html_single.html` |
-| `prev_chapter` | Title and a link of previous chapter | `html_dir.chapter.html` |
-| `next_chapter` | Title and a link of nexts chapter | `html_dir.chapter.html` |
+| `chapter_title` | The title of current chapter | `html.dir.template`, `epub.chapter.xhtml`, `rendering.chapter.template` |
+| `highlight_code` | True if `html.highlight_code` is true | `html.standalone.template`, `html.dir.template` |
+| `highlight_css` | The content of `html.highlight.css` | `html.standalone.template` |
+| `highlight_js` | The base64-encoded content of `html.highlight.js` | `html.standalone.tempate` |
+| `common_script` | The content of `html.js` | `html.single.js` |
+| `one_chapter`   | True if `html.standalone.one_chapter` is true, else not present | `html.standalone.template`, `html.standalone.js` |
+| `book.svg` | The base64-encoded image of the button to display all chapters | `html.standalone.js`, `html.standalone.template` |
+| `pages.svg` | The base64-encoded image of the button to display one chapter at a time | `html.standalone.js`, `html.standalone.template` |
+| `favicon` | The `<link rel = "icon" ...>` tag if `html.icon` is set | `html.standalone.template`, `html.dir.template` |
+| `menu_svg` | The base64-encoded image of the hamburger menu image | `html.standalone.template` |
+| `prev_chapter` | Title and a link of previous chapter | `html.dir.template` |
+| `next_chapter` | Title and a link of nexts chapter | `html.dir.template` |
 | `class` | The content of `tex.class` | `tex.template` |
 | `book`  | True if `tex.class` is `book`, not set else | `tex.template` |
 | `tex_lang` | The babel equivalent of `lang` | `tex.template` |
