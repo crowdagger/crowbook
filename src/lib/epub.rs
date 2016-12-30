@@ -622,7 +622,7 @@ impl<'a> EpubRenderer<'a> {
                 html.add_footnote(note_number, inner);
 
                 Ok(format!("<a {} href = \"#note-dest-{}\"><sup id = \
-                            \"note-source-{}\">{}</sup></a>",
+                            \"note-source-{}\">[{}]</sup></a>",
                            if epub3 { "epub:type = \"noteref\"" } else { "" },
                            number,
                            number,
