@@ -14,6 +14,9 @@ ChangeLog
     formats.
   * If `--output` is set to `-`, prints to stdout. 
   * Conversely, if `<BOOK>` is set to `-`, reads from stdin.
+  * Path specified by `--output` is now interpreted relatively to
+    current directory (and not depending on where `<BOOK>` is or its
+    options).
 * Rendering:
   * Chapters with no titles now have an empty title added (so it can
     at least display e.g. "Chapter X").
