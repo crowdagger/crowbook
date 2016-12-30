@@ -40,9 +40,11 @@ use caribon::Parser as Caribon;
 /// Used by EpubRenderer, HtmlSingleRenderer, HtmlDirRenderer
 pub struct HtmlRenderer<'a> {
     table_head: bool,
-    verbatim: bool,
+    #[doc(hidden)]
+    pub verbatim: bool,
     current_par: u32,
-    first_letter: bool,
+    #[doc(hidden)]
+    pub first_letter: bool,
     first_paragraph: bool,
     footnotes: Vec<(String, String)>,
     filename: String,

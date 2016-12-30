@@ -31,6 +31,7 @@ use book_renderer::BookRenderer;
 use chrono;
 use uuid;
 use mustache::Template;
+use crowbook_text_processing::escape;
 
 use std::io::{Read, Write};
 use std::convert::{AsRef, AsMut};
@@ -552,6 +553,43 @@ impl<'a> EpubRenderer<'a> {
         AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer
     {
         match *token {
+            Token::Str(ref text) => {
+                let html: &mut HtmlRenderer = this.as_mut();
+                let content = if html.verbatim {
+                    escape::html(text.as_ref())
+                } else {
+                    escape::html(html.book.clean(text.as_ref(), false))
+                };
+                let mut content = if html.first_letter {
+                    html.first_letter = false;
+                    if html.book.options.get_bool("rendering.initials").unwrap() {
+                        // Use initial
+                        let mut chars = content.chars();
+                        let initial = chars.next()
+                            .ok_or(Error::parser(&html.book.source,
+                                                 lformat!("empty str token, could not find \
+                                                           initial")))?;
+                        let mut new_content = if initial.is_alphanumeric() {
+                            format!("<span class = \"initial\">{}</span>", initial)
+                        } else {
+                            format!("{}", initial)
+                        };
+                        for c in chars {
+                            new_content.push(c);
+                        }
+                        Cow::Owned(new_content)
+                    } else {
+                        content
+                    }
+                } else {
+                    content
+                };
+
+                if html.book.options.get_bool("epub.escape_nb_spaces").unwrap() {
+                    content = escape::nb_spaces(content);
+                }
+                Ok(content.into_owned())
+            },
             Token::Header(1, ref vec) => {
                 {
                     let epub: &mut EpubRenderer = this.as_mut();
