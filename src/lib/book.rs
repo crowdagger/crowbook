@@ -870,7 +870,7 @@ impl Book {
     /// * `content`: the content of the chapter.
     ///
     /// **Returns** an error if there was some errror parsing `content`.
-    pub fn add_chapter_from_source<R: Read>(&mut self, number: Number, mut source: R) -> Result<&mut Self> {
+    pub fn add_chapter_from_source<R: Read>(&mut self, number: Number, source: R) -> Result<&mut Self> {
         self.add_chapter_from_named_source(number, "", source)
     }
 
