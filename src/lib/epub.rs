@@ -100,7 +100,7 @@ impl<'a> EpubRenderer<'a> {
 
         // Write cover.xhtml (if needs be)
         if self.html.book.options.get_path("cover").is_ok() {
-            zipper.write("cover.xhtml", &self.render_cover()?.as_bytes(), true)?;
+            zipper.write("OEBPS/cover.xhtml", &self.render_cover()?.as_bytes(), true)?;
         }
 
         // Write chapters
@@ -114,7 +114,7 @@ impl<'a> EpubRenderer<'a> {
             self.html.chapter_config(i, n, filenamer(i));
             let chapter = self.render_chapter(v, &template_chapter)?;
 
-            zipper.write(&filenamer(i), &chapter.as_bytes(), true)?;
+            zipper.write(Path::new("OEBPS").join(&filenamer(i)), &chapter.as_bytes(), true)?;
         }
         self.html.source = Source::empty();
 
@@ -134,10 +134,10 @@ impl<'a> EpubRenderer<'a> {
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
-        zipper.write("stylesheet.css", css.as_bytes(), true)?;
+        zipper.write("OEBPS/stylesheet.css", css.as_bytes(), true)?;
 
         // Write titlepage
-        zipper.write("title_page.xhtml",
+        zipper.write("OEBPS/title_page.xhtml",
                           &self.render_titlepage()?.as_bytes(),
                           true)?;
 
@@ -150,18 +150,18 @@ impl<'a> EpubRenderer<'a> {
         zipper.write("META-INF/container.xml", CONTAINER.as_bytes(), true)?;
 
         // Write nav.xhtml
-        zipper.write("nav.xhtml", &self.render_nav()?.as_bytes(), true)?;
+        zipper.write("OEBPS/nav.xhtml", &self.render_nav()?.as_bytes(), true)?;
 
         // Write content.opf
-        zipper.write("content.opf", &self.render_opf()?.as_bytes(), true)?;
+        zipper.write("OEBPS/content.opf", &self.render_opf()?.as_bytes(), true)?;
 
         // Render inline toc if it is needed
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
-            zipper.write("toc.xhtml", &self.render_inline_toc()?.as_bytes(), true)?;
+            zipper.write("OEBPS/toc.xhtml", &self.render_inline_toc()?.as_bytes(), true)?;
         }
 
         // Write toc.ncx
-        zipper.write("toc.ncx", &self.render_toc()?.as_bytes(), true)?;
+        zipper.write("OEBPS/toc.ncx", &self.render_toc()?.as_bytes(), true)?;
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
@@ -175,7 +175,7 @@ impl<'a> EpubRenderer<'a> {
                 Error::render(&self.html.source,
                               lformat!("error while reading image file: {error}", error = e))
             })?;
-            zipper.write(dest, &content, true)?;
+            zipper.write(Path::new("OEBPS").join(dest), &content, true)?;
         }
 
         // Write additional resources
@@ -183,8 +183,8 @@ impl<'a> EpubRenderer<'a> {
             let base_path_files =
                 self.html.book.options.get_path("resources.base_path.files").unwrap();
             let list = resource_handler::get_files(list, &base_path_files)?;
-            let data_path =
-                Path::new(self.html.book.options.get_relative_path("resources.out_path")?);
+            let data_path = Path::new("OEBPS")
+                .join(self.html.book.options.get_relative_path("resources.out_path")?);
             for path in list {
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = File::open(&abs_path).map_err(|_| {
@@ -198,7 +198,7 @@ impl<'a> EpubRenderer<'a> {
                         Error::render(&self.html.book.source,
                                       lformat!("error while reading resource file: {error}", error = e))
                     })?;
-                zipper.write(data_path.join(&path).to_str().unwrap(), &content, true)?;
+                zipper.write(data_path.join(&path), &content, true)?;
             }
         }
 

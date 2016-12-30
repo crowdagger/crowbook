@@ -56,8 +56,9 @@ impl Zipper {
     }
 
     /// writes a content to a temporary file
-    pub fn write(&mut self, file: &str, content: &[u8], add_args: bool) -> Result<()> {
-        let path = Path::new(file);
+    pub fn write<P:AsRef<Path>>(&mut self, path: P, content: &[u8], add_args: bool) -> Result<()> {
+        let path = path.as_ref();
+        let file = format!("{}", path.display());
         if path.starts_with("..") || path.is_absolute() {
             return Err(Error::zipper(lformat!("file {file} refers to an absolute or a parent \
                                                path.
