@@ -676,6 +676,7 @@ impl<'a> HtmlRenderer<'a> {
                                                       error = err)))
                 }
             }
+
         } else {
             String::new()
         };

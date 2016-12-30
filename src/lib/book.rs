@@ -823,6 +823,9 @@ impl Book {
         // add offset
         ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut v);
 
+        // Add a title if there is none in the chapter
+        misc::insert_title(&mut v);
+
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
             if let Some(ref checker) = self.checker {

@@ -17,6 +17,8 @@
 
 //! Misc utility functions used across crowbook
 
+use token::Token;
+
 use std;
 use std::path::{Path, PathBuf};
 use std::io::Result;
@@ -50,4 +52,15 @@ fn try_normalize<P: AsRef<Path>>(path: P) -> Result<String> {
             }
         }
     }
+}
+
+/// Insert a title (if there is none) to a vec of tokens
+pub fn insert_title(tokens: &mut Vec<Token>) {
+    for token in tokens.iter() {
+        match token {
+            &Token::Header(1, _) => return,
+            _ => {}
+        }
+    }
+    tokens.insert(0, Token::Header(1, vec!()));
 }
