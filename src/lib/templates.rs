@@ -41,8 +41,7 @@ pub mod html_single {
 }
 
 pub mod html_dir {
-    pub static INDEX_HTML: &'static str = include_str!("../../templates/html_dir/index.html");
-    pub static CHAPTER_HTML: &'static str = include_str!("../../templates/html_dir/chapter.html");
+    pub static TEMPLATE: &'static str = include_str!("../../templates/html_dir/chapter.html");
 }
 
 pub mod latex {

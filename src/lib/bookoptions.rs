@@ -69,8 +69,7 @@ html.standalone.js:tpl                  # {single_js}
 
 
 # {html_dir_opt}
-html.dir.index.html:tpl             # {index_html}
-html.dir.chapter.html:tpl           # {chapter_html}
+html.dir.template:tpl               # {html_dir_template}
 
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}
@@ -161,8 +160,8 @@ html_single.one_chapter:alias:html.standalone.one_chapter #{renamed}
 html_single.html:alias:html.standalone.template         # {renamed}
 html_single.js:alias:html.standalone.js             # {renamed}
 output.html_dir:alias:output.html.dir               # {renamed}
-html_dir.index.html:alias:html.dir.index.html       # {renamed}
-html_dir.chapter.html:alias:html.dir.chapter.html   # {renamed}
+html_dir.index.html:alias:html.dir.template         # {renamed}
+html_dir.chapter.html:alias:html.dir.template       # {renamed}
 output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
 tex.font_size:alias:tex.font.size                   # {renamed}
 nb_char:alias                                       # {removed}
@@ -232,11 +231,10 @@ html.crowbook_link:alias                            # {removed}
                                          nb_spaces = lformat!("Replace unicode non breaking spaces with HTML entities and CSS"),
                                          
                                          one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
-                                         single_html = lformat!("Path of an HTML template"),
+                                         single_html = lformat!("Path of an HTML template for standalone HTML"),
                                          single_js = lformat!("Path of a javascript file"),
                                          
-                                         index_html = lformat!("Path of index.html template"),
-                                         chapter_html = lformat!("Path of a chapter.html template"),
+                                         html_dir_template = lformat!("Path of a HTML template for multifile HTML"),
                                          
                                          epub_ver = lformat!("EPUB version to generate (2 or 3)"),
                                          epub_css = lformat!("Path of a stylesheet for EPUB"),

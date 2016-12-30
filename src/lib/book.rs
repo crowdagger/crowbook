@@ -130,8 +130,8 @@ impl Book {
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
             .add_format("proofread.html", lformat!("HTML (standalone page/proofreading)"), Box::new(ProofHtmlSingle{}))
-            .add_format("html_dir", lformat!("HTML (multiple pages)"), Box::new(HtmlDir{}))
-            .add_format("proofread.html_dir", lformat!("HTML (multiple pages/proofreading)"), Box::new(ProofHtmlDir{}))
+            .add_format("html.dir", lformat!("HTML (multiple pages)"), Box::new(HtmlDir{}))
+            .add_format("proofread.html.dir", lformat!("HTML (multiple pages/proofreading)"), Box::new(ProofHtmlDir{}))
             .add_format("tex", lformat!("LaTeX"), Box::new(Latex{}))
             .add_format("proofread.tex", lformat!("LaTeX (proofreading)"), Box::new(ProofLatex{}))
             .add_format("pdf", lformat!("PDF"), Box::new(Pdf{}))
@@ -583,7 +583,7 @@ impl Book {
     fn is_proofread(&self) -> bool {
         self.options.get_bool("proofread").unwrap() &&
         (self.options.get("output.proofread.html").is_ok() ||
-         self.options.get("output.proofread.html_dir").is_ok() ||
+         self.options.get("output.proofread.html.dir").is_ok() ||
          self.options.get("output.proofread.pdf").is_ok())
     }
 
@@ -660,8 +660,8 @@ impl Book {
             if self.options.get("output.epub").is_ok() {
                 handles.push(scope.spawn(|| self.render_format("epub")));
             }
-            if self.options.get("output.html_dir").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("html_dir")));
+            if self.options.get("output.html.dir").is_ok() {
+                handles.push(scope.spawn(|| self.render_format("html.dir")));
             }
             if self.options.get("output.odt").is_ok() {
                 handles.push(scope.spawn(|| self.render_format("odt")));
@@ -676,8 +676,8 @@ impl Book {
                 if self.options.get("output.proofread.pdf").is_ok() {
                     handles.push(scope.spawn(|| self.render_format("proofread.pdf")));
                 }
-                if self.options.get("output.proofread.html_dir").is_ok() {
-                    handles.push(scope.spawn(|| self.render_format("proofread.html_dir")));
+                if self.options.get("output.proofread.html.dir").is_ok() {
+                    handles.push(scope.spawn(|| self.render_format("proofread.html.dir")));
                 }
                 if self.options.get_path("output.proofread.html").is_ok() {
                     handles.push(scope.spawn(|| self.render_format("proofread.html")));
@@ -900,8 +900,7 @@ impl Book {
             "html.standalone.template" => html_single::HTML,
             "html.standalone.js" => html_single::JS,
             "html.js" => html::JS,
-            "html.dir.index.html" => html_dir::INDEX_HTML,
-            "html.dir.chapter.html" => html_dir::CHAPTER_HTML,
+            "html.dir.template" => html_dir::TEMPLATE,
             "html.highlight.js" => highlight::JS,
             "html.highlight.css" => highlight::CSS,
             "tex.template" => latex::TEMPLATE,
