@@ -440,35 +440,14 @@ impl<'a> HtmlRenderer<'a> {
                 }
             }
             Token::Str(ref text) => {
-                let content = if this.as_ref().verbatim {
+                let mut content = if this.as_ref().verbatim {
                     escape::html(text.as_ref())
                 } else {
                     escape::html(this.as_ref().book.clean(text.as_ref(), false))
                 };
-                let mut content = if this.as_ref().first_letter {
+                if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
-                    if this.as_ref().book.options.get_bool("rendering.initials").unwrap() {
-                        // Use initial
-                        let mut chars = content.chars();
-                        let initial = chars.next()
-                            .ok_or(Error::parser(&this.as_ref().book.source,
-                                                 lformat!("empty str token, could not find \
-                                                           initial")))?;
-                        let mut new_content = if initial.is_alphanumeric() {
-                            format!("<span class = \"initial\">{}</span>", initial)
-                        } else {
-                            format!("{}", initial)
-                        };
-                        for c in chars {
-                            new_content.push(c);
-                        }
-                        Cow::Owned(new_content)
-                    } else {
-                        content
-                    }
-                } else {
-                    content
-                };
+                }
 
                 if this.as_ref().book.options.get_bool("html.escape_nb_spaces").unwrap() {
                     content = escape::nb_spaces(content);
