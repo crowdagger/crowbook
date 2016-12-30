@@ -39,8 +39,8 @@ ChangeLog
   * `html_single.one_chapter` renamed to `html.standalone.one_chapter`.
   * `output.html_dir` renamed to `output.html.dir`.
   * `output.proofread.html_dir` renamed to `output.proofread.html.dir`.
-  * `html_dir.index.html` renamed to `html.dir.index.html`.
-  * `html_dir.chapter.html` renamed to `html.dir.chapter.html`.
+  * `html_dir.index.html` and `html.dir.chapter.html` have been merged
+    and both renamed to `html.dir.template`.
   * `tex.font_size` renamed to `tex.font.size`.
 * Bugfixes:
   * EPUB:
