@@ -26,6 +26,9 @@ ChangeLog
 * New options:
   * `epub.toc.extras`, set to `true` by default, will add links to the
     title and the cover (if it is set) in the table of contents.
+  * `epub.escape_nb_spaces`, similar to `html.escape_nb_spaces` and
+    set to false by default since at least Kobo reader don't seem to
+    be able to understand the CSS to escape those nb spaces...
   * `rendering.chapter.roman_numerals`, if set to `true`, will display chapter
     numbers using roman numerals.
   * `rendering.part.roman_numerals`, if set to `true` (it is by
