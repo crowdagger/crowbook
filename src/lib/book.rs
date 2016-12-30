@@ -750,49 +750,34 @@ impl Book {
         }
     }
 
-    /// Adds a chapter, as a file name, to the book
+    /// Adds a chapter to the book.
     ///
-    /// `Book` will then parse the file and store the AST (i.e., a vector
-    /// of `Token`s).
-    ///
-    /// # Arguments
-    /// * `number`: specifies if the chapter must be numbered, not numbered, or if its title
-    ///   must be hidden. See `Number`.
-    /// * `file`: path of the file for this chapter
-    ///
-    /// **Returns** an error if `file` does not exist, could not be read, of if there was
-    /// some error parsing it.
-    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
-        self.logger.debug(lformat!("Parsing chapter: {file}...",
-                                   file = misc::normalize(file)));
-
-        // try to open file
-        let path = self.root.join(file);
-        let mut f = File::open(&path)
-            .map_err(|_| {
-                Error::file_not_found(&self.source,
-                                      lformat!("book chapter"),
-                                      format!("{}", path.display()))
-            })?;
-        let mut s = String::new();
-        f.read_to_string(&mut s)
+    /// This method is the backend used both by `add_chapter` and `add_chapter_from_source`.
+    pub fn add_chapter_from_named_source<R: Read>(&mut self,
+                                                  number: Number,
+                                                  file: &str,
+                                                  mut source: R)
+                                                  -> Result<&mut Self> {
+        let mut content = String::new();
+        source.read_to_string(&mut content)
             .map_err(|_| {
                 Error::parser(&self.source,
                               lformat!("file {file} contains invalid UTF-8",
-                                       file = misc::normalize(&path)))
+                                       file = misc::normalize(file)))
             })?;
 
         // Ignore YAML blocks (or not)
-        self.parse_yaml(&mut s);
+        self.parse_yaml(&mut content);
 
         // parse the file
         let mut parser = Parser::new();
         parser.set_source_file(file);
-        let mut v = parser.parse(&s)?;
-
+        let mut tokens = parser.parse(&content)?;
 
         // transform the AST to make local links and images relative to `book` directory
-        let offset = Path::new(file).parent().unwrap();
+        let offset = Path::new(file)
+            .parent()
+            .unwrap();
         if offset.starts_with("..") {
             self.logger
                 .warning(lformat!("Warning: book contains chapter '{file}' in a directory above \
@@ -800,7 +785,7 @@ impl Book {
                                   file = misc::normalize(file)));
         }
 
-
+        
         // For offset: if nothing is specified, it is the filename's directory
         // If base_path.{images/links} is specified, override it for one of them.
         // If base_path is specified, override it for both.
@@ -821,10 +806,10 @@ impl Book {
             }
         }
         // add offset
-        ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut v);
+        ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut tokens);
 
         // Add a title if there is none in the chapter
-        misc::insert_title(&mut v);
+        misc::insert_title(&mut tokens);
 
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
@@ -833,7 +818,7 @@ impl Book {
                     .info(lformat!("Trying to run grammar check on {file}, this might take a \
                                     while...",
                                    file = misc::normalize(file)));
-                if let Err(err) = checker.check_chapter(&mut v) {
+                if let Err(err) = checker.check_chapter(&mut tokens) {
                     self.logger.error(lformat!("Error running grammar check on {file}: {error}",
                                                file = misc::normalize(file),
                                                error = err));
@@ -841,8 +826,37 @@ impl Book {
             }
         }
 
-        self.chapters.push(Chapter::new(number, file, v));
+        self.chapters.push(Chapter::new(number, file, tokens));
+
         Ok(self)
+    }
+
+    /// Adds a chapter, as a file name, to the book
+    ///
+    /// `Book` will then parse the file and store the AST (i.e., a vector
+    /// of `Token`s).
+    ///
+    /// # Arguments
+    /// * `number`: specifies if the chapter must be numbered, not numbered, or if its title
+    ///   must be hidden. See `Number`.
+    /// * `file`: path of the file for this chapter
+    ///
+    /// **Returns** an error if `file` does not exist, could not be read, of if there was
+    /// some error parsing it.
+    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
+        self.logger.debug(lformat!("Parsing chapter: {file}...",
+                                   file = misc::normalize(file)));
+
+        // try to open file
+        let path = self.root.join(file);
+        let f = File::open(&path)
+            .map_err(|_| {
+                Error::file_not_found(&self.source,
+                                      lformat!("book chapter"),
+                                      format!("{}", path.display()))
+            })?;
+     
+        self.add_chapter_from_named_source(number, file, f)
     }
 
     /// Adds a chapter to the book from a source (any object implementing `Read`)
@@ -857,17 +871,7 @@ impl Book {
     ///
     /// **Returns** an error if there was some errror parsing `content`.
     pub fn add_chapter_from_source<R: Read>(&mut self, number: Number, mut source: R) -> Result<&mut Self> {
-        // Ignore YAML blocks (or not)
-        let mut content = String::new();
-        source.read_to_string(&mut content)
-            .map_err(|_| Error::config_parser(Source::empty(),
-                                              lformat!("could not read source")))?;
-        self.parse_yaml(&mut content);
-        
-        let mut parser = Parser::new();
-        let v = parser.parse(&content)?;
-        self.chapters.push(Chapter::new(number, String::new(), v));
-        Ok(self)
+        self.add_chapter_from_named_source(number, "", source)
     }
 
 
