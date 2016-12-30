@@ -29,14 +29,6 @@ ARGS:
     <BOOK>    File containing the book configuration file, or a Markdown file when called with --single
 ```
 
-Note that Crowbook generates output files relatively to the directory
-where <BOOK> is:
-
-```bash
-$ crowbook foo/bar.book --to pdf --output baz.pdf
-```
-will thus generate "baz.pdf" in directory "foo" and not in the current directory.
-
 The most important option is obviously <BOOK>, i.e. the book
 configuration file. It is mandatory in most cases: if you don't 
 pass it, Crowbook will simply display this help message. In a normal use case this is
@@ -91,7 +83,7 @@ crowbook --create README.md ChangeLog.md LICENSE.md
 
 will print the same result, but to stdout (without creating a file).
 
-When `crowbook` is runned with `--create`, it can also use the
+When `crowbook` is run with `--create`, it can also use the
 keys/values set by `--set` (see below):
 
 ```bash
@@ -119,7 +111,7 @@ lang: fr
 
 This argument allows to give `crowbook` a single Markdown file. This
 file can contain an inline YAML block to set some book options. Inline
-YAML blocks must start and end with a line with `---` (three dashes). E.g:
+YAML blocks must start and end with a line containing only `---` (three dashes). E.g:
 
 ```yaml
 ---
@@ -133,7 +125,7 @@ If this YAML block is not at the beginning of a file, it must also be
 preceded by a blank line.
 
 This allows to not have to write a `.book` configuration file for a
-short story or an article. `crowbook --single foo.md` is rougly equivalent to having a book
+short story or an article. `crowbook -s foo.md` is rougly equivalent to having a book
 configuration file containing:
 
 ```yaml
@@ -143,7 +135,7 @@ configuration file containing:
 That is, the chapter heading (if any) won't be displayed in the output
 documents (though they still appear in the TOC).
 
-> Note that by default, using `--single` sets the default LaTeX class
+> Note that by default, using `--single` or `-s` sets the default LaTeX class
 > of the book to `article` instead of `book`.
 
 
@@ -175,6 +167,10 @@ will override the book title to `Bar` and its author to `Foo`.
 `--proofread`
 -------------
 
+**usage**: `crowbook --proofread <BOOK>`
+
+(or `crowbook -p <BOOK>`)
+
 Equivalent to `--set proofread true`. Enable proofreading. See [Proofreading](proofreading.md).
 
 `--list-options`
@@ -203,17 +199,6 @@ $ crowbook my.book --set html.css my_style.css
 # or add "html.css: my_style.css" in my.book
 ```
 
-Note that it is possible to use this option in conjonction with
-`--set`, though it is currently only useful for EPUB template:
-
-```bash
-$ crowbook --print-template epub.template --set epub.version 2
-# Returns the template for Epub 2 (currently it is the default one)
-$ crowbook --print-template epub.template --set epub.version 3
-# Returns the template for Epub 3
-```
-
-
 `--verbose`
 -----------
 
@@ -232,7 +217,7 @@ part of the book, and so on.
 (or `crowbook <BOOK> -t [FORMAT]`)
 
 Generate only the specified format. `FORMAT` must be either `epub`,
-`pdf`, `html`, `odt` or `tex`.
+`pdf`, `html`, `html.dir`, `odt` or `tex`.
 
 If an output file for the format is not specified in the book
 configuration file, `crowbook` will fail to render PDF, ODT and EPUB,
@@ -263,14 +248,6 @@ will generate a `foo.pdf` file.
 
 Specifies an output file. Only valid when `--to` is used.
 
-Note that Crowbook generates output files relatively to the directory
-where `BOOK` is (unless the option `output.base_path` is set):
-
-```bash
-$ crowbook foo/bar.book --to pdf --output baz.pdf
-```
-will thus generate `baz.pdf` in directory `foo` and not in current
-directory.
 
 `--lang`
 ----------
