@@ -38,25 +38,25 @@ function toggle() {
     if (display_menu == true) {
         display_menu = false;
         document.getElementById("nav").style.left = "-21%";
-        document.getElementById("content").style.marginLeft = "10%";
+        document.getElementById("content").style.marginLeft = "0%";
         document.getElementById("menu").style.left = "1em";
-        if(document.getElementById("top")) {
+/*        if(document.getElementById("top")) {
             document.getElementById("top").style.left = "0";
         }
         if(document.getElementById("footer")) {
             document.getElementById("footer").style.marginLeft = "0%";
-        }
+        }*/
     } else {
         display_menu = true;
         document.getElementById("nav").style.left = "0";
-        document.getElementById("content").style.marginLeft = "30%";
+        document.getElementById("content").style.marginLeft = "20%";
         document.getElementById("menu").style.left = "20%";
-        if(document.getElementById("top")) {
+/*        if(document.getElementById("top")) {
             document.getElementById("top").style.left = "20%";
         }
         if(document.getElementById("footer")) {
             document.getElementById("footer").style.marginLeft = "20%";
-        }
+        }*/
     }
 }
 
@@ -69,174 +69,169 @@ function toggle() {
   <nav id = "nav">
     <h2><a href = "index.html">Crowbook User Guide</a></h2>
     <ul>
- <li><a href = "chapter_000.html#link-1">1. Crowbook</a>
- <ul>
-  <li><a href = "chapter_000.html#link-2">1.1. Example</a>
-  </li>
-  <li><a href = "chapter_000.html#link-3">1.2. Installing</a>
-  </li>
-  <li><a href = "chapter_000.html#link-6">1.3. Dependencies</a>
-  </li>
-  <li><a href = "chapter_000.html#link-7">1.4. Quick tour</a>
-  </li>
-  <li><a href = "chapter_000.html#link-8">1.5. Current features</a>
-  </li>
-  <li><a href = "chapter_000.html#link-16">1.6. Contributors</a>
-  </li>
-  <li><a href = "chapter_000.html#link-17">1.7. Acknowledgements</a>
-  </li>
-  <li><a href = "chapter_000.html#link-18">1.8. ChangeLog</a>
-  </li>
-  <li><a href = "chapter_000.html#link-19">1.9. Contributing</a>
-  </li>
-  <li><a href = "chapter_000.html#link-20">1.10. Library</a>
-  </li>
-  <li><a href = "chapter_000.html#link-21">1.11. License</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_001.html#link-22">2. Arguments</a>
- <ul>
-  <li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-25">2.2. <code>--single</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-26">2.3. <code>--set</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-28">2.4. <code>--proofread</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-29">2.5. <code>--list-options</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-30">2.6. <code>--print-template</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-31">2.7. <code>--verbose</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-32">2.8. <code>--to</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-34">2.9. <code>--output</code></a>
-  </li>
-  <li><a href = "chapter_001.html#link-35">2.10. <code>--lang</code></a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_002.html#link-37">3. The configuration file</a>
- <ul>
-  <li><a href = "chapter_002.html#link-38">3.1. Configuration in an inline YAML block (<code>crowbook --single</code>)</a>
-  </li>
-  <li><a href = "chapter_002.html#link-39">3.2. The list of files</a>
-  </li>
-  <li><a href = "chapter_002.html#link-40">3.3. Crowbook options</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_003.html#link-68">4. Templates</a>
- <ul>
-  <li><a href = "chapter_003.html#link-69">4.1. Create and edit template</a>
-  </li>
-  <li><a href = "chapter_003.html#link-73">4.2. List of templates</a>
-  </li>
-  <li><a href = "chapter_003.html#link-88">4.3. List of accessible variables</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_004.html#link-92">5. Proofreading with Crowbook</a>
- <ul>
-  <li><a href = "chapter_004.html#link-93">5.1. Enabling proofreading</a>
-  </li>
-  <li><a href = "chapter_004.html#link-94">5.2. Repetition detection</a>
-  </li>
-  <li><a href = "chapter_004.html#link-95">5.3. Grammar checking</a>
-  </li>
-  <li><a href = "chapter_004.html#link-96">5.4. Highlighting non-breaking spaces</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_005.html#link-97">6. Tips and tricks</a>
- <ul>
-  <li><a href = "chapter_005.html#link-98">6.1. Using Crowbook with Emacs’ markdown mode</a>
-  </li>
-  <li><a href = "chapter_005.html#link-101">6.2. Embedding fonts in an EPUB file</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_006.html#link-102">7. Contributing</a>
- <ul>
-  <li><a href = "chapter_006.html#link-103">7.1. Internationalization</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_007.html#link-104">ChangeLog</a>
- <ul>
-  <li><a href = "chapter_007.html#link-105">unreleased</a>
-  </li>
-  <li><a href = "chapter_007.html#link-106">0.10.4 (2016-12-16)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-107">0.10.3 (2016-11-19)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-108">0.10.2 (2016-10-21)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-109">0.10.1 (2016-10-18)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-110">0.10.0 (2016-10-18)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-111">0.9.1 (2016-09-29)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-112">0.9.0 (2016-09-23)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-113">0.8.0 (2016-09-19)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-114">0.7.0 (2016-09-11)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-115">0.6.0 (2016-09-09)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-116">0.5.1 (2016-04-14)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-117">0.5.0 (2016-04-02)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-118">0.4.0 (2016-03-01)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-119">0.3.0 (2016-02-27)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-120">0.2.2 (2016-02-25)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-121">0.2.1 (2016-02-25)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-122">0.2.0 (2016-02-25)</a>
-  </li>
-  <li><a href = "chapter_007.html#link-123">0.1.0 (2016-02-21)</a>
-  </li>
- </ul>
- </li>
- <li><a href = "chapter_008.html#link-124">GNU LESSER GENERAL PUBLIC LICENSE</a>
- </li>
+<li><a href = "chapter_000.html#link-1">1. Crowbook</a>
+<ul><li><a href = "chapter_000.html#link-2">1.1. Example</a></li>
+<li><a href = "chapter_000.html#link-3">1.2. Installing</a></li>
+<li><a href = "chapter_000.html#link-6">1.3. Dependencies</a></li>
+<li><a href = "chapter_000.html#link-7">1.4. Quick tour</a></li>
+<li><a href = "chapter_000.html#link-8">1.5. Current features</a></li>
+<li><a href = "chapter_000.html#link-16">1.6. Contributors</a></li>
+<li><a href = "chapter_000.html#link-17">1.7. Acknowledgements</a></li>
+<li><a href = "chapter_000.html#link-18">1.8. ChangeLog</a></li>
+<li><a href = "chapter_000.html#link-19">1.9. Contributing</a></li>
+<li><a href = "chapter_000.html#link-20">1.10. Library</a></li>
+<li><a href = "chapter_000.html#link-21">1.11. License</a></li>
+
 </ul>
+</li>
+<li><a href = "chapter_001.html#link-22">2. Arguments</a>
+<ul><li><a href = "chapter_001.html#link-23">2.1. <code>--create</code></a></li>
+<li><a href = "chapter_001.html#link-25">2.2. <code>--single</code></a></li>
+<li><a href = "chapter_001.html#link-26">2.3. <code>--set</code></a></li>
+<li><a href = "chapter_001.html#link-28">2.4. <code>--proofread</code></a></li>
+<li><a href = "chapter_001.html#link-29">2.5. <code>--list-options</code></a></li>
+<li><a href = "chapter_001.html#link-30">2.6. <code>--print-template</code></a></li>
+<li><a href = "chapter_001.html#link-31">2.7. <code>--verbose</code></a></li>
+<li><a href = "chapter_001.html#link-32">2.8. <code>--to</code></a></li>
+<li><a href = "chapter_001.html#link-34">2.9. <code>--output</code></a></li>
+<li><a href = "chapter_001.html#link-35">2.10. <code>--lang</code></a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_002.html#link-37">3. The configuration file</a>
+<ul><li><a href = "chapter_002.html#link-38">3.1. Configuration in an inline YAML block</a></li>
+<li><a href = "chapter_002.html#link-39">3.2. The list of files</a></li>
+<li><a href = "chapter_002.html#link-41">3.3. Crowbook options</a></li>
+<li><a href = "chapter_002.html#link-55">3.4. Full list of options</a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_003.html#link-71">4. Templates</a>
+<ul><li><a href = "chapter_003.html#link-72">4.1. Create and edit template</a></li>
+<li><a href = "chapter_003.html#link-76">4.2. List of templates</a></li>
+<li><a href = "chapter_003.html#link-90">4.3. List of accessible variables</a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_004.html#link-94">5. Proofreading with Crowbook</a>
+<ul><li><a href = "chapter_004.html#link-95">5.1. Enabling proofreading</a></li>
+<li><a href = "chapter_004.html#link-96">5.2. Repetition detection</a></li>
+<li><a href = "chapter_004.html#link-97">5.3. Grammar checking</a></li>
+<li><a href = "chapter_004.html#link-98">5.4. Highlighting non-breaking spaces</a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_005.html#link-99">6. Tips and tricks</a>
+<ul><li><a href = "chapter_005.html#link-100">6.1. Using Crowbook with Emacs’ markdown mode</a></li>
+<li><a href = "chapter_005.html#link-103">6.2. Embedding fonts in an EPUB file</a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_006.html#link-104">7. Contributing</a>
+<ul><li><a href = "chapter_006.html#link-105">7.1. Internationalization</a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_007.html#link-106">ChangeLog</a>
+<ul><li><a href = "chapter_007.html#link-107">0.11.0 (???)</a></li>
+<li><a href = "chapter_007.html#link-108">0.10.4 (2016-12-16)</a></li>
+<li><a href = "chapter_007.html#link-109">0.10.3 (2016-11-19)</a></li>
+<li><a href = "chapter_007.html#link-110">0.10.2 (2016-10-21)</a></li>
+<li><a href = "chapter_007.html#link-111">0.10.1 (2016-10-18)</a></li>
+<li><a href = "chapter_007.html#link-112">0.10.0 (2016-10-18)</a></li>
+<li><a href = "chapter_007.html#link-113">0.9.1 (2016-09-29)</a></li>
+<li><a href = "chapter_007.html#link-114">0.9.0 (2016-09-23)</a></li>
+<li><a href = "chapter_007.html#link-115">0.8.0 (2016-09-19)</a></li>
+<li><a href = "chapter_007.html#link-116">0.7.0 (2016-09-11)</a></li>
+<li><a href = "chapter_007.html#link-117">0.6.0 (2016-09-09)</a></li>
+<li><a href = "chapter_007.html#link-118">0.5.1 (2016-04-14)</a></li>
+<li><a href = "chapter_007.html#link-119">0.5.0 (2016-04-02)</a></li>
+<li><a href = "chapter_007.html#link-120">0.4.0 (2016-03-01)</a></li>
+<li><a href = "chapter_007.html#link-121">0.3.0 (2016-02-27)</a></li>
+<li><a href = "chapter_007.html#link-122">0.2.2 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-123">0.2.1 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-124">0.2.0 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-125">0.1.0 (2016-02-21)</a></li>
+
+</ul>
+</li>
+<li><a href = "chapter_008.html#link-126">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
+
+</ul>
+
   </nav>
 
   <div id = "content">
+    <div id = "top"><p id = "para-310">Crowbook User Guide 0.11.0</p>
+</div>
     <div id = "page">
       <header>
-        <div id = "top"><p id = "para-310">Crowbook User Guide 0.10.5</p>
-</div>
-          <div id = "menu">
-      <img id = "menu-button" onclick="toggle();"
-           src="menu.svg" alt = "Table of contents" title = "Table of contents" />
-          </div>
-    </header>
+        <div id = "menu">
+	  <img id = "menu-button" onclick="toggle();"
+               src="menu.svg" alt = "Table of contents" title = "Table of contents" />
+        </div>
+      </header>
       <p class = "prev_chapter">
   <a href = "chapter_006.html">
     « 7. Contributing
   </a>
 </p>
-      <h1 id = "link-104">ChangeLog</h1>
-<h2 id = "link-105">unreleased</h2>
+      <h1 id = "link-106">ChangeLog</h1>
+<h2 id = "link-107">0.11.0 (???)</h2>
+<p id = "para-225">Substantial changes in this release, the more important one being support for parts!</p>
 <ul>
+<li><b>Breaking changes</b>: the API has undergone some breaking changes, hoping they will be the last ones for a while. API should now be more simple and consistent (?). This version contains also substantial options renaming (see below).</li>
+<li>Crowbook now supports parts (above the “chapter” level), using the ‘@’ character in the book configuration file.</li>
+<li>Command-line interface:<ul>
+<li>Behaviour of <code>--to</code> should now be consistent for all output formats.</li>
+<li>If <code>--output</code> is set to <code>-</code>, prints to stdout.</li>
+<li>Conversely, if <code>&lt;BOOK&gt;</code> is set to <code>-</code>, reads from stdin.</li>
+<li>Path specified by <code>--output</code> is now interpreted relatively to current directory (and not depending on where <code>&lt;BOOK&gt;</code> is or its options).</li>
+</ul>
+</li>
 <li>Rendering:<ul>
-<li>EPUB: the toc.ncx now displays links to “title” and (if set) “cover”</li>
+<li>Chapters with no titles now have an empty title added (so it can at least display e.g. “Chapter X”).</li>
+<li>EPUB:<ul>
+<li>The <code>toc.ncx</code> file now displays links to “title” and (if set) “cover” (can be deactivated, see below).</li>
+<li>The <code>toc.ncx</code> file now displays toc levels below chapter.</li>
+<li>The table of contents is now displayed inline if <code>rendering.inline_toc</code> is set to <code>true</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>New options:<ul>
+<li><code>epub.toc.extras</code>, set to <code>true</code> by default, will add links to the title and the cover (if it is set) in the table of contents.</li>
+<li><code>epub.escape_nb_spaces</code>, similar to <code>html.escape_nb_spaces</code> and set to false by default since at least Kobo reader don’t seem to be able to understand the CSS to escape those nb spaces...</li>
+<li><code>rendering.chapter.roman_numerals</code>, if set to <code>true</code>, will display chapter numbers using roman numerals.</li>
+<li><code>rendering.part.roman_numerals</code>, if set to <code>true</code> (it is by default) will display part numbers using roman numerals.</li>
+<li><code>rendering.part.template</code> specifies the numbering scheme of parts.</li>
+<li><code>rendering.part.reset_counter</code>, if set to <code>true</code> (it is by default), resets chapter number to zero after a part.</li>
+</ul>
+</li>
+<li>Renamed options:<ul>
+<li><code>import_config</code> renamed to <code>import</code>.</li>
+<li><code>rendering.chapter_template</code> renamed to <code>rendering.chapter.template</code>.</li>
+<li><code>html_single.html</code> renamed to <code>html.standalone.template</code>.</li>
+<li><code>html_single.js</code> renamed to <code>html.standalone.js</code>.</li>
+<li><code>html_single.one_chapter</code> renamed to <code>html.standalone.one_chapter</code>.</li>
+<li><code>output.html_dir</code> renamed to <code>output.html.dir</code>.</li>
+<li><code>output.proofread.html_dir</code> renamed to <code>output.proofread.html.dir</code>.</li>
+<li><code>html_dir.index.html</code> and <code>html.dir.chapter.html</code> have been merged and both renamed to <code>html.dir.template</code>.</li>
+<li><code>tex.font_size</code> renamed to <code>tex.font.size</code>.</li>
 </ul>
 </li>
 <li>Bugfixes:<ul>
 <li>EPUB:<ul>
 <li>Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead of "&amp;").</li>
+</ul>
+</li>
+<li>HTML directory:<ul>
+<li>Fix panic when trying to generate html directory in “../xxx” (<a href = "https://github.com/lise-henry/crowbook/issues/23">#23</a>).</li>
+<li>Fix “previous chapter” links that were not displayed when “html.header” was set.</li>
+</ul>
+</li>
+<li>HTML:<ul>
+<li>Fix the way initial letter is displayed if <code>rendering.initials</code> is true.</li>
 </ul>
 </li>
 </ul>
@@ -246,7 +241,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-106">0.10.4 (2016-12-16)</h2>
+<h2 id = "link-108">0.10.4 (2016-12-16)</h2>
 <ul>
 <li>New options:<ul>
 <li><code>tex.font_size</code> specifies an optional font size (in pt) passed to the LaTeX class (must be 10, 11 or 12).</li>
@@ -268,7 +263,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-107">0.10.3 (2016-11-19)</h2>
+<h2 id = "link-109">0.10.3 (2016-11-19)</h2>
 <ul>
 <li>Building:<ul>
 <li>Crowbook now requires rustc &gt;= 1.13.0 to build.</li>
@@ -289,7 +284,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-108">0.10.2 (2016-10-21)</h2>
+<h2 id = "link-110">0.10.2 (2016-10-21)</h2>
 <p id = "para-226">Only minor changes in this version:</p>
 <ul>
 <li>Options:<ul>
@@ -305,9 +300,9 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-109">0.10.1 (2016-10-18)</h2>
+<h2 id = "link-111">0.10.1 (2016-10-18)</h2>
 <p id = "para-227">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
-<h2 id = "link-110">0.10.0 (2016-10-18)</h2>
+<h2 id = "link-112">0.10.0 (2016-10-18)</h2>
 <p id = "para-228">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
 <ul>
 <li><b>Breaking changes</b>:<ul>
@@ -344,7 +339,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-111">0.9.1 (2016-09-29)</h2>
+<h2 id = "link-113">0.9.1 (2016-09-29)</h2>
 <p id = "para-229">This release mainly introduces generation of proofreading copies, allowing, if they are set (and <code>crowbook</code> was compiled with the <code>proofread</code> feature) to generate proofreading copies, using tools to check grammar and detect repetitions. These features are currently experimental.</p>
 <ul>
 <li>New options:<ul>
@@ -375,7 +370,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-112">0.9.0 (2016-09-23)</h2>
+<h2 id = "link-114">0.9.0 (2016-09-23)</h2>
 <p id = "para-230">The main objective of this release is to clean public interfaces, in order to limit breaking changes in the future. <em>Ideally</em>, all pre-1.0 releases should thus be 0.9.x. Concretely, this meant three things:</p>
 <ul>
 <li>reducing the surface of Crowbook’s library API;</li>
@@ -440,7 +435,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-113">0.8.0 (2016-09-19)</h2>
+<h2 id = "link-115">0.8.0 (2016-09-19)</h2>
 <p id = "para-231">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
 <ul>
 <li>New options:<ul>
@@ -480,7 +475,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-114">0.7.0 (2016-09-11)</h2>
+<h2 id = "link-116">0.7.0 (2016-09-11)</h2>
 <p id = "para-232">This releases renders images differently when they are on a standalone paragraph or inside a paragraph.</p>
 <ul>
 <li>Internal/API:<ul>
@@ -494,7 +489,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-115">0.6.0 (2016-09-09)</h2>
+<h2 id = "link-117">0.6.0 (2016-09-09)</h2>
 <ul>
 <li>Deprecated options:<ul>
 <li><code>nb_char</code>: since it was only used for french cleaner and for typography reasons it’s better to use different non breaking spaces according to context, this option was not really useful anymore.</li>
@@ -521,7 +516,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-116">0.5.1 (2016-04-14)</h2>
+<h2 id = "link-118">0.5.1 (2016-04-14)</h2>
 <p id = "para-233">Mostly rendering fixes:</p>
 <ul>
 <li>Epub:<ul>
@@ -547,7 +542,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-117">0.5.0 (2016-04-02)</h2>
+<h2 id = "link-119">0.5.0 (2016-04-02)</h2>
 <ul>
 <li>Crowbook now requires Rustc 1.7.0.</li>
 <li>It is now possible to render HTML in multiple files:<ul>
@@ -586,7 +581,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-118">0.4.0 (2016-03-01)</h2>
+<h2 id = "link-120">0.4.0 (2016-03-01)</h2>
 <ul>
 <li>Crowbook now internally uses a true YAML parser, <code>yaml_rust</code>, for its options. Since the “old” Crowbooks’s config format was similar, but had some subtle differences, this is somewhat of a breaking change:<ul>
 <li>strings should now be escaped with “” in some cases (e.g. if it contains special characters). On the other hand, it <em>allows</em> to optionally escape a string with these quotes, which wasn’t possible until then and might be useful in some cases.</li>
@@ -606,7 +601,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-119">0.3.0 (2016-02-27)</h2>
+<h2 id = "link-121">0.3.0 (2016-02-27)</h2>
 <ul>
 <li>Crowbook now tries to convert local links. That is, if you link to a Markdown file that is used in the book. (e.g. <a href = "chapter_000.html">README.md</a>), it <em>should</em> link to an appropriate inner reference inside the book.</li>
 <li>Latex renderer now supports (local) images.</li>
@@ -624,14 +619,14 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-120">0.2.2 (2016-02-25)</h2>
+<h2 id = "link-122">0.2.2 (2016-02-25)</h2>
 <ul>
 <li>Bugfixes:<ul>
 <li>French cleaner now correctly replaces space after — (in e.g. dialogs) with “em space”.</li>
 </ul>
 </li>
 </ul>
-<h2 id = "link-121">0.2.1 (2016-02-25)</h2>
+<h2 id = "link-123">0.2.1 (2016-02-25)</h2>
 <ul>
 <li>Bugfixes:<ul>
 <li>HTML/Epub rendering no longer incorrectly increment chapter count for unnumbered chapters.</li>
@@ -643,7 +638,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-122">0.2.0 (2016-02-25)</h2>
+<h2 id = "link-124">0.2.0 (2016-02-25)</h2>
 <ul>
 <li>Command line arguments:<ul>
 <li>New argument <code>--print-template</code> now allows to print a built-in template to stdout.</li>
@@ -668,7 +663,7 @@ function toggle() {
 </ul>
 </li>
 </ul>
-<h2 id = "link-123">0.1.0 (2016-02-21)</h2>
+<h2 id = "link-125">0.1.0 (2016-02-21)</h2>
 <ul>
 <li>initial release</li>
 </ul>
@@ -679,8 +674,8 @@ function toggle() {
   </a>
 </p>
     </div>
-  </div>
-  <footer id = "footer"><p id = "para-309">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.10.5-pre</p>
+    <footer id = "footer"><p id = "para-309">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.11.0-pre</p>
 </footer>
+  </div>
   </body>
 </html>
