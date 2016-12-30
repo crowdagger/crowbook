@@ -31,27 +31,28 @@ use std::env;
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     let mut key = String::from("output.");
     key.push_str(format);
+
     let mut stdout = false;
+    let mut file = None;
     
-    if let Some(file) = matches.value_of("output") {
-        if file == "-" {
+    if let Some(f) = matches.value_of("output") {
+        if f == "-" {
             stdout = true;
         } else {
-            book.options.set(&key, file).unwrap();
+            file = Some(String::from(f));
         }
     }
 
     let res = book.options.get_path(&key);
 
-    let result = match (res, stdout) {
-        (Err(_), _) |
-        (_, true)
-        => {
-            book.render_format_to(format, &mut io::stdout())
-        }
-        (Ok(file), false) => {
-            book.render_format_to_file(format, file)
-        }
+    let result = match(file, res, stdout) {
+        (Some(file), _, _) => book.render_format_to_file(format, file),
+
+        (None, Err(_), _) |
+        (None, _, true)
+        => book.render_format_to(format, &mut io::stdout()),
+
+        (None, Ok(file), false) => book.render_format_to_file(format, file)
     };
     
     match result {
