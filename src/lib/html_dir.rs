@@ -238,7 +238,6 @@ impl<'a> HtmlDirRenderer<'a> {
                 String::new()
             };
 
-
             // Render each HTML document
             let mut mapbuilder = self.html
                 .book

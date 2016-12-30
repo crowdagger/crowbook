@@ -33,19 +33,19 @@
   </nav>
 
   <div id = "content">
+    {{{header}}}
     <div id = "page">
       <header>
-        {{{header}}}
-          <div id = "menu">
-      <img id = "menu-button" onclick="toggle();"
-           src="menu.svg" alt = "{{{loc_toc}}}" title = "{{{loc_toc}}}" />
-          </div>
-    </header>
+        <div id = "menu">
+	  <img id = "menu-button" onclick="toggle();"
+               src="menu.svg" alt = "{{{loc_toc}}}" title = "{{{loc_toc}}}" />
+        </div>
+      </header>
       {{{prev_chapter}}}
       {{{content}}}
       {{{next_chapter}}}
     </div>
+    {{{footer}}}
   </div>
-  {{{footer}}}
   </body>
 </html>
