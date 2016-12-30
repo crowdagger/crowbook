@@ -53,6 +53,9 @@ ChangeLog
       ([#23](https://github.com/lise-henry/crowbook/issues/23)).
 	* Fix "previous chapter" links that were not displayed when
       "html.header" was set.
+  * HTML: 
+    * Fix the way initial letter is displayed if `rendering.initials`
+      is true.
 * Internationalization:
   * Strings in generated Crowbook documents (such as "Table of
     contents", "Title", "Cover" and such) are now translated in spanish.
