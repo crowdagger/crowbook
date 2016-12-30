@@ -47,7 +47,10 @@ ChangeLog
     * Fix duplicate HTML escaping (resulting in e.g. "&amp;" instead
       of "&").
   * HTML directory:
-    * Fix panic when trying to generate html directory in "../xxx" ([#23](https://github.com/lise-henry/crowbook/issues/23)).
+    * Fix panic when trying to generate html directory in "../xxx"
+      ([#23](https://github.com/lise-henry/crowbook/issues/23)).
+	* Fix "previous chapter" links that were not displayed when
+      "html.header" was set.
 * Internationalization:
   * Strings in generated Crowbook documents (such as "Table of
     contents", "Title", "Cover" and such) are now translated in spanish.
