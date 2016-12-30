@@ -775,9 +775,11 @@ impl Book {
         let mut tokens = parser.parse(&content)?;
 
         // transform the AST to make local links and images relative to `book` directory
-        let offset = Path::new(file)
-            .parent()
-            .unwrap();
+        let offset = if let Some(f) = Path::new(file).parent() {
+            f
+        } else {
+            Path::new("")
+        };
         if offset.starts_with("..") {
             self.logger
                 .warning(lformat!("Warning: book contains chapter '{file}' in a directory above \
