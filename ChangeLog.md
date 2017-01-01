@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+unreleased
+------------
+* Rendering:
+	* Avoid page break before or after a separating rule.
+
 0.11.0 (2016-12-31)
 -----------------------
 Substantial changes in this release, the more important one being
