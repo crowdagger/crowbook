@@ -93,6 +93,10 @@ h2.author {
     margin-top: 1em;
     margin-bottom: 1em;
     font-weight: bold;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+    break-after: avoid;
 }
 
 /* The number of the note in an expanded footnote (e.g. [3]) */
