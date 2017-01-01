@@ -69,14 +69,15 @@ impl<'a> EpubRenderer<'a> {
     pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
         let lang = self.html.book.options.get_str("lang").unwrap();
         if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
-            self.html.toc.add(1,
-                              String::from("title_page.xhtml"),
-                              lang::get_str(lang, "title"));
             if self.html.book.options.get("cover").is_ok() {
                 self.html.toc.add(1,
                                   String::from("cover.xhtml"),
                                   lang::get_str(lang, "cover"));
             }
+            self.html.toc.add(1,
+                              String::from("title_page.xhtml"),
+                              lang::get_str(lang, "title"));
+
         }
         
         
