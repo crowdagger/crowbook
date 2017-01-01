@@ -77,7 +77,7 @@ epub.css:tpl                        # {epub_css}
 epub.css.add:str                    # {epub_css_add}
 epub.chapter.xhtml:tpl              # {chapter_xhtml}
 epub.toc.extras:bool:true           # {epub_toc}
-epub.escape_nb_spaces:bool:false    # {nb_spaces}
+epub.escape_nb_spaces:bool:true     # {nb_spaces}
 
 # {tex_opt}
 tex.links_as_footnotes:bool:true    # {tex_links}
