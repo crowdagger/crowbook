@@ -8,7 +8,7 @@ documentation = "https://docs.rs/crowbook/"
 readme = "README.md"
 keywords = ["markdown", "book"]
 license = "LGPL-2.1+"
-publish = true
+publish = false
 build = "build.rs"
 
 exclude = [
@@ -56,6 +56,7 @@ caribon = { version = "0.7", optional = true }
 clap = { version = "2", optional = true }
 url =  { version = "1", optional = true }
 numerals = "0.1"
+epub = { git = "https://github.com/lise-henry/epub.git" }
 
 [dependencies.hyper]
 version = "0.9"

@@ -32,6 +32,7 @@ use chrono;
 use uuid;
 use mustache::Template;
 use crowbook_text_processing::escape;
+use epub_maker;
 
 use std::io::{Read, Write};
 use std::convert::{AsRef, AsMut};
@@ -55,7 +56,6 @@ impl<'a> EpubRenderer<'a> {
     /// Creates a new Epub renderer
     pub fn new(book: &'a Book) -> EpubRenderer<'a> {
         let mut html = HtmlRenderer::new(book);
-        html.toc.numbered(true);
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
         EpubRenderer {
@@ -67,41 +67,80 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render a book
     pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
-        let lang = self.html.book.options.get_str("lang").unwrap();
-        if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
-            if self.html.book.options.get("cover").is_ok() {
-                self.html.toc.add(1,
-                                  String::from("cover.xhtml"),
-                                  lang::get_str(lang, "cover"));
-            }
-            self.html.toc.add(1,
-                              String::from("title_page.xhtml"),
-                              lang::get_str(lang, "title"));
-
+        // Initialize the EPUB builder
+        let mut zip = epub_maker::ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)?;
+        zip.command(self.html.book.options.get_str("crowbook.zip.command")
+                    .unwrap());
+        let mut maker = epub_maker::Epub::new(zip)?;
+        if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
+            maker.epub_version(epub_maker::EpubVersion::V3_0);
         }
         
+        let lang = self.html.book.options.get_str("lang").unwrap();
+        let toc_extras = self.html.book.options.get_bool("epub.toc.extras").unwrap();
+        maker.metadata("lang", lang)?;
+        maker.metadata("author", self.html.book.options.get_str("author").unwrap())?;
+        maker.metadata("title", self.html.book.options.get_str("title").unwrap())?;
+        maker.metadata("generator", "crowbook")?;
+        maker.metadata("toc_name", lang::get_str(lang,
+                                                 "toc"))?;
+        if let Ok(subject) = self.html.book.options.get_str("subject") {
+            maker.metadata("subject", subject)?;
+        }
+        if let Ok(description) = self.html.book.options.get_str("description") {
+            maker.metadata("description", description)?;
+        }
+        if let Ok(license) = self.html.book.options.get_str("license") {
+            maker.metadata("license", license)?;
+        }
         
-        /* If toc will be rendered inline, add it... to the toc (yeah it's meta) */
+        // if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
+        //     if self.html.book.options.get("cover").is_ok() {
+        //         self.html.toc.add(1,
+        //                           String::from("cover.xhtml"),
+        //                           lang::get_str(lang, "cover"));
+        //     }
+        //     self.html.toc.add(1,
+        //                       String::from("title_page.xhtml"),
+        //                       lang::get_str(lang, "title"));
+
+        // }
+        
+        
+        // /* If toc will be rendered inline, add it... to the toc (yeah it's meta) */
+        // if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
+        //     self.html.toc.add(1,
+        //                       String::from("toc.xhtml"),
+        //                       lang::get_str(self.html.book.options.get_str("lang").unwrap(),
+        //                                     "toc"));
+        // }
+
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
-            self.html.toc.add(1,
-                              String::from("toc.xhtml"),
-                              lang::get_str(self.html.book.options.get_str("lang").unwrap(),
-                                            "toc"));
+            maker.inline_toc();
         }
         
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html.handler.add_link(chapter.filename.as_str(), filenamer(i));
         }
 
-        let mut zipper =
-            Zipper::new(&self.html.book.options.get_path("crowbook.temp_dir").unwrap())?;
-
-        // Write mimetype
-        zipper.write("mimetype", b"application/epub+zip", true)?;
-
         // Write cover.xhtml (if needs be)
         if self.html.book.options.get_path("cover").is_ok() {
-            zipper.write("OEBPS/cover.xhtml", &self.render_cover()?.as_bytes(), true)?;
+            let cover = self.render_cover()?;
+            let mut content = epub_maker::EpubContent::new("cover.xhtml", cover.as_bytes());
+            if toc_extras {
+                content = content.title(lang::get_str(lang, "cover"));
+            }
+            maker.add_content(content)?;
+        }
+
+        // Write titlepage
+        {
+            let title_page = self.render_titlepage()?;
+            let mut content = epub_maker::EpubContent::new("title_page.xhtml", title_page.as_bytes());
+            if toc_extras {
+                content = content.title(lang::get_str(lang, "title"));
+            }
+            maker.add_content(content)?;
         }
 
         // Write chapters
@@ -115,7 +154,18 @@ impl<'a> EpubRenderer<'a> {
             self.html.chapter_config(i, n, filenamer(i));
             let chapter = self.render_chapter(v, &template_chapter)?;
 
-            zipper.write(Path::new("OEBPS").join(&filenamer(i)), &chapter.as_bytes(), true)?;
+            // TODO: deal with toc discrepancies
+            let mut content = epub_maker::EpubContent::new(filenamer(i), chapter.as_bytes());
+            // horrible hack
+            // todo: find cleaner way
+            for element in self.html.toc.elements.iter() {
+                if element.url.contains(&filenamer(i)) {
+                    content = content.title(element.title.as_ref());
+                    content.toc.children = element.children.clone();
+                    break;
+                }
+            }
+            maker.add_content(content)?;
         }
         self.html.source = Source::empty();
 
@@ -135,34 +185,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
-        zipper.write("OEBPS/stylesheet.css", css.as_bytes(), true)?;
-
-        // Write titlepage
-        zipper.write("OEBPS/title_page.xhtml",
-                          &self.render_titlepage()?.as_bytes(),
-                          true)?;
-
-        // Write file for ibook (why?)
-        zipper.write("META-INF/com.apple.ibooks.display-options.xml",
-                          IBOOK.as_bytes(),
-                          true)?;
-
-        // Write container.xml
-        zipper.write("META-INF/container.xml", CONTAINER.as_bytes(), true)?;
-
-        // Write nav.xhtml
-        zipper.write("OEBPS/nav.xhtml", &self.render_nav()?.as_bytes(), true)?;
-
-        // Write content.opf
-        zipper.write("OEBPS/content.opf", &self.render_opf()?.as_bytes(), true)?;
-
-        // Render inline toc if it is needed
-        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
-            zipper.write("OEBPS/toc.xhtml", &self.render_inline_toc()?.as_bytes(), true)?;
-        }
-
-        // Write toc.ncx
-        zipper.write("OEBPS/toc.ncx", &self.render_toc()?.as_bytes(), true)?;
+        maker.stylesheet(css.as_bytes());
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
@@ -171,12 +194,7 @@ impl<'a> EpubRenderer<'a> {
                                       lformat!("image or cover"),
                                       source.to_owned())
             })?;
-            let mut content = vec![];
-            f.read_to_end(&mut content).map_err(|e| {
-                Error::render(&self.html.source,
-                              lformat!("error while reading image file: {error}", error = e))
-            })?;
-            zipper.write(Path::new("OEBPS").join(dest), &content, true)?;
+            maker.add_resource(dest, &f, self.get_format(dest))?;
         }
 
         // Write additional resources
@@ -184,8 +202,7 @@ impl<'a> EpubRenderer<'a> {
             let base_path_files =
                 self.html.book.options.get_path("resources.base_path.files").unwrap();
             let list = resource_handler::get_files(list, &base_path_files)?;
-            let data_path = Path::new("OEBPS")
-                .join(self.html.book.options.get_relative_path("resources.out_path")?);
+            let data_path = Path::new(self.html.book.options.get_relative_path("resources.out_path")?);
             for path in list {
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let mut f = File::open(&abs_path).map_err(|_| {
@@ -193,23 +210,13 @@ impl<'a> EpubRenderer<'a> {
                                           lformat!("additional resource from resources.files"),
                                           abs_path.to_string_lossy().into_owned())
                 })?;
-                let mut content = vec![];
-                f.read_to_end(&mut content)
-                    .map_err(|e| {
-                        Error::render(&self.html.book.source,
-                                      lformat!("error while reading resource file: {error}", error = e))
-                    })?;
-                zipper.write(data_path.join(&path), &content, true)?;
+                maker.add_resource(data_path.join(&path), &f, self.get_format(path.as_ref()))?;
             }
         }
 
-        let res = zipper.generate_epub(self.html
-                                           .book
-                                           .options
-                                           .get_str("crowbook.zip.command")
-                                           .unwrap(),
-                                       to)?;
-        Ok(res)
+        maker.generate(to);
+    
+        Ok(String::new())
     }
 
     /// Render the titlepgae
@@ -388,65 +395,6 @@ impl<'a> EpubRenderer<'a> {
         }
     }
 
-    /// Render the inline TOC
-    fn render_inline_toc(&mut self) -> Result<String> {
-        self.html.toc.numbered(false);
-        let lang = self.html.book.options.get_str("lang").unwrap();
-        let loc_toc = lang::get_str(lang, "toc");
-        let content = format!("<h1>{title}</h1>
-{toc}",
-                              toc = self.html.toc.render(),
-                              title = loc_toc); 
-        self.html.toc.numbered(true);
-
-
-        let template = if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
-            epub3::TEMPLATE
-        } else {
-            TEMPLATE
-        };
-        let template = compile_str(template,
-                                   &self.html.book.source,
-                                   lformat!("could not compile template for toc.xhtml"))?;
-        let data = self
-            .html
-            .book
-            .get_metadata(|s| self.render_vec(&(Parser::new().parse_inline(s)?)))?
-            .insert_str("content", content)
-            .insert_str("chapter_title", loc_toc)
-            .build();
-        let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data)?;
-        match String::from_utf8(res) {
-            Err(_) => panic!(lformat!("generated HTML in toc.xhtml was not utf-8 valid")),
-            Ok(res) => Ok(res),
-        }
-    }
-    
-    /// Render nav.xhtml
-    fn render_nav(&mut self) -> Result<String> {
-        let content = self.html.toc.render();
-
-        let template = if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
-            epub3::NAV
-        } else {
-            NAV
-        };
-        let template = compile_str(template,
-                                   &self.html.book.source,
-                                   lformat!("could not compile template for nav.xhtml"))?;
-        let data = self.html
-                .book
-                .get_metadata(|s| self.render_vec(&(Parser::new().parse_inline(s)?)))?
-            .insert_str("content", content)
-            .build();
-        let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data)?;
-        match String::from_utf8(res) {
-            Err(_) => panic!(lformat!("generated HTML in nav.xhtml was not utf-8 valid")),
-            Ok(res) => Ok(res),
-        }
-    }
 
     /// Render a chapter
     pub fn render_chapter(&mut self, v: &[Token], template: &Template) -> Result<String> {
@@ -525,7 +473,7 @@ impl<'a> EpubRenderer<'a> {
         Ok(())
     }
 
-    // Get the format of an image file, based on its extension
+    // Get the format of a file, based on its extension
     fn get_format(&self, s: &str) -> String {
         let opt = guess_mime_type_opt(s);
         match opt {

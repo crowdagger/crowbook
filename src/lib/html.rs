@@ -20,7 +20,6 @@ use token::Token;
 use token::Data;
 use book::{Book, compile_str};
 use number::Number;
-use toc::Toc;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
@@ -31,6 +30,8 @@ use std::convert::{AsMut, AsRef};
 
 use crowbook_text_processing::escape;
 use numerals::roman::Roman;
+use epub_maker::Toc;
+use epub_maker::TocElement;
 
 #[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;
@@ -480,7 +481,8 @@ impl<'a> HtmlRenderer<'a> {
                                       this.as_ref().filename,
                                       this.as_ref().link_number);
                     if !this.as_ref().current_part {
-                        this.as_mut().toc.add(n, url, s.clone());
+                        this.as_mut().toc.add(TocElement::new(url, s.clone())
+                                              .level(n));
 
                     } else {
                         let is_roman = this.as_ref().book.options.get_bool("rendering.part.roman_numerals").unwrap();
@@ -493,7 +495,8 @@ impl<'a> HtmlRenderer<'a> {
                         let toc_content = format!("{number} {content}",
                                                   content = s,
                                                   number = number);
-                        this.as_mut().toc.add(n - 1, url, toc_content);
+                        this.as_mut().toc.add(TocElement::new(url, toc_content)
+                                              .level(n - 1));
                     }
                 }
                 Ok(this.as_mut().render_title_full(n, s)?)

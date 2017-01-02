@@ -206,7 +206,7 @@ impl<'a> HtmlDirRenderer<'a> {
             chapters.push(chapter);
         }
         self.html.source = Source::empty();
-        let toc = self.html.toc.render();
+        let toc = self.html.toc.render(false);
 
         // render all chapters
         let template =

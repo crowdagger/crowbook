@@ -159,7 +159,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         self.html.render_end_notes(&mut content);
 
 
-        let toc = self.html.toc.render();
+        let toc = self.html.toc.render(false);
         // If display_toc, display the toc inline
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
 

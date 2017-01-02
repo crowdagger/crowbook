@@ -117,6 +117,7 @@ extern crate crowbook_text_processing;
 extern crate crowbook_intl_runtime;
 extern crate term;
 extern crate numerals;
+extern crate epub as epub_maker;
 #[macro_use]
 extern crate lazy_static;
 
