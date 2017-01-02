@@ -30,8 +30,8 @@ use std::convert::{AsMut, AsRef};
 
 use crowbook_text_processing::escape;
 use numerals::roman::Roman;
-use epub_maker::Toc;
-use epub_maker::TocElement;
+use epub_builder::Toc;
+use epub_builder::TocElement;
 
 #[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;

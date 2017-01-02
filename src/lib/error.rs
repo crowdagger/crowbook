@@ -16,7 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use mustache;
-use epub_maker;
+use epub_builder;
 
 use std::error;
 use std::result;
@@ -368,8 +368,8 @@ impl From<mustache::Error> for Error {
 }
 
 /// Implement our error from epub_maker::Error
-impl From<epub_maker::Error> for Error {
-    fn from(err: epub_maker::Error) -> Error {
+impl From<epub_builder::Error> for Error {
+    fn from(err: epub_builder::Error) -> Error {
         Error::render(Source::empty(),
                       lformat!("error during EPUB generation: {}", err))
     }

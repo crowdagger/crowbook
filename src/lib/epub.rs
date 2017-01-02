@@ -29,7 +29,10 @@ use book_renderer::BookRenderer;
 
 use mustache::Template;
 use crowbook_text_processing::escape;
-use epub_maker;
+use epub_builder::EpubBuilder;
+use epub_builder::EpubVersion;
+use epub_builder::EpubContent;
+use epub_builder::ZipCommand;
 
 use std::io::Write;
 use std::convert::{AsRef, AsMut};
@@ -65,12 +68,12 @@ impl<'a> EpubRenderer<'a> {
     /// Render a book
     pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
         // Initialize the EPUB builder
-        let mut zip = epub_maker::ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)?;
+        let mut zip = ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)?;
         zip.command(self.html.book.options.get_str("crowbook.zip.command")
                     .unwrap());
-        let mut maker = epub_maker::Epub::new(zip)?;
+        let mut maker = EpubBuilder::new(zip)?;
         if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
-            maker.epub_version(epub_maker::EpubVersion::V3_0);
+            maker.epub_version(EpubVersion::V30);
         }
         
         let lang = self.html.book.options.get_str("lang").unwrap();
@@ -123,7 +126,7 @@ impl<'a> EpubRenderer<'a> {
         // Write cover.xhtml (if needs be)
         if self.html.book.options.get_path("cover").is_ok() {
             let cover = self.render_cover()?;
-            let mut content = epub_maker::EpubContent::new("cover.xhtml", cover.as_bytes());
+            let mut content = EpubContent::new("cover.xhtml", cover.as_bytes());
             if toc_extras {
                 content = content.title(lang::get_str(lang, "cover"));
             }
@@ -133,7 +136,7 @@ impl<'a> EpubRenderer<'a> {
         // Write titlepage
         {
             let title_page = self.render_titlepage()?;
-            let mut content = epub_maker::EpubContent::new("title_page.xhtml", title_page.as_bytes());
+            let mut content = EpubContent::new("title_page.xhtml", title_page.as_bytes());
             if toc_extras {
                 content = content.title(lang::get_str(lang, "title"));
             }
@@ -152,7 +155,7 @@ impl<'a> EpubRenderer<'a> {
             let chapter = self.render_chapter(v, &template_chapter)?;
 
             // TODO: deal with toc discrepancies
-            let mut content = epub_maker::EpubContent::new(filenamer(i), chapter.as_bytes());
+            let mut content = EpubContent::new(filenamer(i), chapter.as_bytes());
             // horrible hack
             // todo: find cleaner way
             for element in self.html.toc.elements.iter() {

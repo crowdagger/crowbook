@@ -3,13 +3,12 @@ name = "crowbook"
 version = "0.11.1-pre"
 dependencies = [
  "caribon 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "chrono 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.19.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "crossbeam 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-text-processing 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "epub 0.0.1-pre (git+https://github.com/lise-henry/epub.git)",
+ "epub-builder 0.0.1-pre (git+https://github.com/lise-henry/epub-builder.git)",
  "hyper 0.9.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "mime_guess 1.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -177,9 +176,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "epub"
+name = "epub-builder"
 version = "0.0.1-pre"
-source = "git+https://github.com/lise-henry/epub.git#8aa7bbcfb77243154c92200ee68f5ca6d0f28b11"
+source = "git+https://github.com/lise-henry/epub-builder.git#177b5dcd5f66f143a8ac1f43461b17770f9bc82a"
 dependencies = [
  "chrono 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -690,7 +689,7 @@ dependencies = [
 "checksum crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "62cf6ec512b4d7fb7d8683efa703b17e5b8f5e24a9eb7ec9fb92237f039d941c"
 "checksum crowbook-text-processing 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "19b36c133a7bfba2e67109078222033b0bfb083bcc0a67b67a2bb7000254798e"
 "checksum dbghelp-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "97590ba53bcb8ac28279161ca943a924d1fd4a8fb3fa63302591647c4fc5b850"
-"checksum epub 0.0.1-pre (git+https://github.com/lise-henry/epub.git)" = "<none>"
+"checksum epub-builder 0.0.1-pre (git+https://github.com/lise-henry/epub-builder.git)" = "<none>"
 "checksum error-chain 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)" = "318cb3c71ee4cdea69fdc9e15c173b245ed6063e1709029e8fd32525a881120f"
 "checksum flate2 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)" = "3eeb481e957304178d2e782f2da1257f1434dfecbae883bafb61ada2a9fea3bb"
 "checksum gcc 0.3.41 (registry+https://github.com/rust-lang/crates.io-index)" = "3689e1982a563af74960ae3a4758aa632bb8fd984cfc3cc3b60ee6109477ab6e"

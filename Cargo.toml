@@ -43,7 +43,6 @@ mime_guess = "1"
 pulldown-cmark = "0.0.8"
 yaml-rust = "0.3"
 mustache = "0.8"
-chrono = "0.2"
 uuid = { version = "0.3", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
@@ -56,7 +55,7 @@ caribon = { version = "0.7", optional = true }
 clap = { version = "2", optional = true }
 url =  { version = "1", optional = true }
 numerals = "0.1"
-epub = { git = "https://github.com/lise-henry/epub.git" }
+epub-builder = { git = "https://github.com/lise-henry/epub-builder.git" }
 
 [dependencies.hyper]
 version = "0.9"
