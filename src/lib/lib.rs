@@ -106,8 +106,6 @@
 
 extern crate pulldown_cmark as cmark;
 extern crate mustache;
-extern crate chrono;
-extern crate uuid;
 extern crate yaml_rust;
 extern crate mime_guess;
 extern crate walkdir;
@@ -118,6 +116,7 @@ extern crate crowbook_intl_runtime;
 extern crate term;
 extern crate numerals;
 extern crate epub as epub_maker;
+extern crate uuid;
 #[macro_use]
 extern crate lazy_static;
 
@@ -167,7 +166,6 @@ mod renderer;
 mod book_renderer;
 mod html_single;
 
-mod toc;
 mod zipper;
 mod templates;
 mod bookoption;

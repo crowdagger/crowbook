@@ -168,14 +168,6 @@ This is forbidden because we are supposed \
         command.arg(tex_file);
         self.run_command(command, command_name, "result.pdf", pdf_file)
     }
-
-    /// generate an epub into given file name
-    pub fn generate_epub(&mut self, command_name: &str, file: &mut Write) -> Result<String> {
-        let mut command = Command::new(command_name);
-        command.arg("-X");
-        command.arg("result.epub");
-        self.run_command(command, command_name, "result.epub", file)
-    }
 }
 
 impl Drop for Zipper {

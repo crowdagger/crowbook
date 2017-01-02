@@ -19,7 +19,6 @@ use error::{Error, Result, Source};
 use token::Token;
 use html::HtmlRenderer;
 use book::{Book, compile_str};
-use zipper::Zipper;
 use templates::epub::*;
 use templates::epub3;
 use resource_handler;
@@ -28,13 +27,11 @@ use parser::Parser;
 use lang;
 use book_renderer::BookRenderer;
 
-use chrono;
-use uuid;
 use mustache::Template;
 use crowbook_text_processing::escape;
 use epub_maker;
 
-use std::io::{Read, Write};
+use std::io::Write;
 use std::convert::{AsRef, AsMut};
 use std::fs;
 use std::fs::File;
@@ -185,11 +182,11 @@ impl<'a> EpubRenderer<'a> {
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
-        maker.stylesheet(css.as_bytes());
+        maker.stylesheet(css.as_bytes())?;
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = File::open(source).map_err(|_| {
+            let f = File::open(source).map_err(|_| {
                 Error::file_not_found(&self.html.source,
                                       lformat!("image or cover"),
                                       source.to_owned())
@@ -205,7 +202,7 @@ impl<'a> EpubRenderer<'a> {
             let data_path = Path::new(self.html.book.options.get_relative_path("resources.out_path")?);
             for path in list {
                 let abs_path = Path::new(&base_path_files).join(&path);
-                let mut f = File::open(&abs_path).map_err(|_| {
+                let f = File::open(&abs_path).map_err(|_| {
                     Error::file_not_found(&self.html.book.source,
                                           lformat!("additional resource from resources.files"),
                                           abs_path.to_string_lossy().into_owned())
@@ -214,7 +211,7 @@ impl<'a> EpubRenderer<'a> {
             }
         }
 
-        maker.generate(to);
+        maker.generate(to)?;
     
         Ok(String::new())
     }
@@ -233,131 +230,6 @@ impl<'a> EpubRenderer<'a> {
         template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!("generated HTML in titlepage was not utf-8 valid"),
-            Ok(res) => Ok(res),
-        }
-    }
-
-    /// Render toc.ncx
-    fn render_toc(&mut self) -> Result<String> {
-        let mut nav_points = String::new();
-
-        nav_points.push_str(&self.html.toc.render_epub());
-
-        let template = compile_str(TOC,
-                                   &self.html.book.source,
-                                   lformat!("could not render template for toc.ncx"))?;
-        let data = self.html
-            .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("nav_points", nav_points)
-            .build();
-        let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data)?;
-        match String::from_utf8(res) {
-            Err(_) => panic!(lformat!("generated HTML in toc.ncx was not valid utf-8")),
-            Ok(res) => Ok(res),
-        }
-    }
-
-    /// Render content.opf
-    fn render_opf(&mut self) -> Result<String> {
-        // Optional metadata
-        let mut cover_xhtml = String::new();
-        let mut optional = String::new();
-        if let Ok(s) = self.html.book.options.get_str("description") {
-            optional.push_str(&format!("<dc:description>{}</dc:description>\n", s));
-        }
-        if let Ok(s) = self.html.book.options.get_str("subject") {
-            optional.push_str(&format!("<dc:subject>{}</dc:subject>\n", s));
-        }
-        if let Ok(ref s) = self.html.book.options.get_path("cover") {
-            optional.push_str(&format!("<meta name = \"cover\" content = \"{}\" />\n",
-                                       self.html
-                                       .handler
-                                       .map_image(&self.html.source, s.as_ref())?));
-            cover_xhtml.push_str("<reference type=\"cover\" \
-                                  title=\"Cover\" href=\"cover.xhtml\" />");
-        }
-
-        // date
-        let date = chrono::UTC::now().format("%Y-%m-%dT%H:%M:%SZ");
-
-        // uuid
-        let uuid = uuid::Uuid::new_v4().urn().to_string();
-
-        let mut items = String::new();
-        let mut itemrefs = String::new();
-        let mut coverref = String::new();
-        if self.html.book.options.get("cover").is_ok() {
-            items.push_str("<item id = \"cover_xhtml\" href = \"cover.xhtml\" media-type = \
-                            \"application/xhtml+xml\" />\n");
-            coverref.push_str("<itemref idref = \"cover_xhtml\" />");
-        }
-        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
-            items.push_str("<item id = \"toc_xhtml\" href = \"toc.xhtml\" media-type = \
-                            \"application/xhtml+xml\" />\n");
-            itemrefs.push_str("<itemref idref=\"toc_xhtml\" />");
-        }
-        for n in 0..self.toc.len() {
-            let filename = filenamer(n);
-            items.push_str(&format!("<item id = \"{}\" href = \"{}\" \
-                                     media-type=\"application/xhtml+xml\" />\n",
-                                    to_id(&filename),
-                                    filename));
-            itemrefs.push_str(&format!("<itemref idref=\"{}\" />\n", to_id(&filename)));
-        }
-
-        // put the images in the manifest too
-        for image in self.html.handler.images_mapping().values() {
-            let format = self.get_format(image);
-            items.push_str(&format!("<item media-type = \"{}\" id = \"{}\" href = \"{}\" />\n",
-                                    format,
-                                    to_id(image),
-                                    image));
-        }
-
-        // and additional files too
-        if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
-            let list = resource_handler::get_files(list,
-                                                   &self.html
-                                                   .book
-                                                   .options
-                                                   .get_path("resources.base_path.\
-                                                              files")
-                                                   .unwrap())?;
-            let data_path =
-                Path::new(self.html.book.options.get_relative_path("resources.out_path").unwrap());
-            for path in list {
-                let format = self.get_format(&path);
-                let path = data_path.join(&path);
-                let path_str = path.to_str().unwrap();
-                items.push_str(&format!("<item media-type = \"{}\" id = \"{}\" href = \"{}\" \
-                                         />\n",
-                                        format,
-                                        to_id(path_str),
-                                        path_str));
-            }
-        }
-
-        let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
-        let template = compile_str(if epub3 { epub3::OPF } else { OPF },
-                                   &self.html.book.source,
-                                   lformat!("could not compile template for content.opf"))?;
-        let data = self.html
-            .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("optional", optional)
-            .insert_str("items", items)
-            .insert_str("itemrefs", itemrefs)
-            .insert_str("date", date)
-            .insert_str("uuid", uuid)
-            .insert_str("cover_xhtml", cover_xhtml)
-            .insert_str("coverref", coverref)
-            .build();
-        let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data)?;
-        match String::from_utf8(res) {
-            Err(_) => panic!(lformat!("generated HTML in content.opf was not valid utf-8")),
             Ok(res) => Ok(res),
         }
     }
@@ -582,11 +454,6 @@ impl<'a> EpubRenderer<'a> {
     }
 }
 
-
-// generate an id compatible string, replacing / and . by _
-fn to_id(s: &str) -> String {
-    s.replace(".", "_").replace("/", "_")
-}
 
 /// Generate a file name given an int
 fn filenamer(i: usize) -> String {
