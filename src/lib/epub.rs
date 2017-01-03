@@ -33,6 +33,7 @@ use epub_builder::EpubBuilder;
 use epub_builder::EpubVersion;
 use epub_builder::EpubContent;
 use epub_builder::ZipCommand;
+use epub_builder::ReferenceType;
 
 use std::io::Write;
 use std::convert::{AsRef, AsMut};
@@ -123,7 +124,8 @@ impl<'a> EpubRenderer<'a> {
         // Write cover.xhtml (if needs be)
         if self.html.book.options.get_path("cover").is_ok() {
             let cover = self.render_cover()?;
-            let mut content = EpubContent::new("cover.xhtml", cover.as_bytes());
+            let mut content = EpubContent::new("cover.xhtml", cover.as_bytes())
+                .reftype(ReferenceType::Cover);
             if toc_extras {
                 content = content.title(lang::get_str(lang, "cover"));
             }
@@ -133,7 +135,8 @@ impl<'a> EpubRenderer<'a> {
         // Write titlepage
         {
             let title_page = self.render_titlepage()?;
-            let mut content = EpubContent::new("title_page.xhtml", title_page.as_bytes());
+            let mut content = EpubContent::new("title_page.xhtml", title_page.as_bytes())
+                .reftype(ReferenceType::TitlePage);
             if toc_extras {
                 content = content.title(lang::get_str(lang, "title"));
             }
@@ -156,8 +159,10 @@ impl<'a> EpubRenderer<'a> {
             self.html.chapter_config(i, n, filenamer(i));
             let chapter = self.render_chapter(v, &template_chapter)?;
 
-            // TODO: deal with toc discrepancies
             let mut content = EpubContent::new(filenamer(i), chapter.as_bytes());
+            if i == 0 {
+                content = content.reftype(ReferenceType::Text);
+            }
             // horrible hack
             // todo: find cleaner way
             for element in self.html.toc.elements.iter() {
