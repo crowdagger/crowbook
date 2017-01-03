@@ -115,9 +115,6 @@ impl<'a> EpubRenderer<'a> {
         //                                     "toc"));
         // }
 
-        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
-            maker.inline_toc();
-        }
         
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html.handler.add_link(chapter.filename.as_str(), filenamer(i));
@@ -143,6 +140,11 @@ impl<'a> EpubRenderer<'a> {
             maker.add_content(content)?;
         }
 
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
+            maker.inline_toc();
+        }
+
+        
         // Write chapters
         let template_chapter =
             compile_str(self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
