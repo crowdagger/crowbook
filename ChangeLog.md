@@ -5,6 +5,12 @@ unreleased
 ------------
 * Rendering:
 	* Avoid page break before or after a separating rule.
+	* EPUB:
+	    * Set back HTML escape of narrow non-breaking spaces to `true`
+          by default (it caused problems on some readers, but cause
+          much more serious one if `false`).
+		* Add more information to guide/nav landmarks.
+		  
 
 0.11.0 (2016-12-31)
 -----------------------
