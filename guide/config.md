@@ -385,6 +385,16 @@ can enable/disable specific options:
 These options allow to configure the rendering; they are used (or at
 least should be) for all formats.
 
+* `rendering.highlight`: specify if and how to perform syntax
+  highlighting for code blocks. Default value is `highlight.js`; this
+  will use [`highlight.js`](https://highlightjs.org/) for HTML
+  rendering, and will not perform any syntax highlighting for other
+  output formats. Other valid values are:
+  * `syntect`: uses the [syntect](https://crates.io/crates/syntect)
+    library to perform syntax highlighting. This has the advantage of
+    also enabling syntax highlighting for LaTeX/PDF and EPUB formats;
+    however syntect support is still experimental in Crowbook.
+  * `none`: disable syntax highlighting.
 * `rendering.num_depth`: an integer that represents the maximum level of numbering for your
 book. E.g., `1` will only number chapters, while `2` will number
 chapters, sections, but not anything below that. `6` is the maximum  level
@@ -593,6 +603,10 @@ Here is the complete list of options. You can always look at it by running `crow
     -  Directory where those output files will we written
 
 ### Rendering options ###
+- **`rendering.highlight`**
+    - **type**: string
+    - **default value**: `highlight.js`
+    -  If/how highligh code blocks. Possible values: "highlight.js" (HTML-only, default), "syntect", "none"
 - **`rendering.initials`**
     - **type**: boolean
     - **default value**: `false`
@@ -669,10 +683,6 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: template path
     - **default value**: `not set`
     -  Path of a media print stylesheet for HTML rendering
-- **`html.highlight_code`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Provides syntax highlighting for code blocks (using highlight.js)
 - **`html.highlight.js`**
     - **type**: template path
     - **default value**: `not set`
@@ -733,7 +743,7 @@ Here is the complete list of options. You can always look at it by running `crow
     -  Add 'Title' and (if set) 'Cover' in the EPUB table of contents
 - **`epub.escape_nb_spaces`**
     - **type**: boolean
-    - **default value**: `false`
+    - **default value**: `true`
     -  Replace unicode non breaking spaces with HTML entities and CSS
 
 ### LaTeX options ###
@@ -891,6 +901,7 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: float
     - **default value**: `2.0`
     -  Threshold to detect a repetition
+
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
