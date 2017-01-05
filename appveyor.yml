@@ -30,10 +30,10 @@ build: false
 # Equivalent to Travis' `script` phase
 # TODO modify this phase as you see fit
 test_script:
-  - cargo build --verbose
-  - cargo run
-  - cargo test
-  - cargo build --release
+  - cargo build --no-default-features --features=clap,proofread --verbose
+  - cargo run --no-default-features --features=clap,proofread 
+  - cargo test --no-default-features --features=clap,proofread 
+  - cargo build --release --no-default-features --features=clap,proofread 
 
 # Equivalent to `before_deploy` phase
 after_test:
