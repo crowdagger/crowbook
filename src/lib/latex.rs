@@ -329,7 +329,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Code(ref vec) => Ok(format!("\\texttt{{{}}}",
                                                insert_breaks(&self.render_vec(vec)?))),
             Token::BlockQuote(ref vec) => {
-                Ok(format!("\\begin{{quotation}}\n{}\\end{{quotation}}\n",
+                Ok(format!("\\begin{{quotation}}{{\\itshape\n{}}}\\end{{quotation}}\n",
                            self.render_vec(vec)?))
             }
             Token::CodeBlock(ref language, ref vec) => {
