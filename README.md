@@ -204,6 +204,7 @@ library, Crowbook uses the following libraries:
 * [regex](https://crates.io/crates/regex)
 * [term](https://crates.io/crates/term)
 * [numerals](https://crates.io/crates/numerals)
+* [syntect](https://crates.io/crates/syntect)
 
 It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
 to enable syntax highlighting for code blocks.
@@ -243,6 +244,7 @@ use it as such. You can look at the generated documentation on
 
 Note that, in order to facilitate code reuse, some features have been
 split to separate libraries:
+  * [epub-builder](https://github.com/lise-henry/epub-builder) makes it easier to generate EPUB files.
   * [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/) contains all the "typographic" functions (smart
 quotes, handling of non-breaking spaces in french, ...). 
   * [crowbook-intl](https://github.com/lise-henry/crowbook-intl/) is
