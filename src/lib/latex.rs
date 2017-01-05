@@ -424,15 +424,15 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Table(n, ref vec) => {
                 let mut cols = String::new();
                 for _ in 0..n {
-                    cols.push_str("|c");
+                    cols.push_str("|X");
                 }
                 cols.push_str("|");
                 Ok(format!("\\begin{{center}}
-\\begin{{tabular}}{{{}}}
+\\begin{{tabularx}}{{\\textwidth}}{{{}}}
 \\hline
 {}
 \\hline
-\\end{{tabular}}
+\\end{{tabularx}}
 \\end{{center}}\n\n",
                            cols,
                            self.render_vec(vec)?))
