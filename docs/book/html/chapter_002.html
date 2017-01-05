@@ -133,36 +133,37 @@ function toggle() {
 </ul>
 </li>
 <li><a href = "chapter_007.html#link-106">ChangeLog</a>
-<ul><li><a href = "chapter_007.html#link-107">0.11.0 (???)</a></li>
-<li><a href = "chapter_007.html#link-108">0.10.4 (2016-12-16)</a></li>
-<li><a href = "chapter_007.html#link-109">0.10.3 (2016-11-19)</a></li>
-<li><a href = "chapter_007.html#link-110">0.10.2 (2016-10-21)</a></li>
-<li><a href = "chapter_007.html#link-111">0.10.1 (2016-10-18)</a></li>
-<li><a href = "chapter_007.html#link-112">0.10.0 (2016-10-18)</a></li>
-<li><a href = "chapter_007.html#link-113">0.9.1 (2016-09-29)</a></li>
-<li><a href = "chapter_007.html#link-114">0.9.0 (2016-09-23)</a></li>
-<li><a href = "chapter_007.html#link-115">0.8.0 (2016-09-19)</a></li>
-<li><a href = "chapter_007.html#link-116">0.7.0 (2016-09-11)</a></li>
-<li><a href = "chapter_007.html#link-117">0.6.0 (2016-09-09)</a></li>
-<li><a href = "chapter_007.html#link-118">0.5.1 (2016-04-14)</a></li>
-<li><a href = "chapter_007.html#link-119">0.5.0 (2016-04-02)</a></li>
-<li><a href = "chapter_007.html#link-120">0.4.0 (2016-03-01)</a></li>
-<li><a href = "chapter_007.html#link-121">0.3.0 (2016-02-27)</a></li>
-<li><a href = "chapter_007.html#link-122">0.2.2 (2016-02-25)</a></li>
-<li><a href = "chapter_007.html#link-123">0.2.1 (2016-02-25)</a></li>
-<li><a href = "chapter_007.html#link-124">0.2.0 (2016-02-25)</a></li>
-<li><a href = "chapter_007.html#link-125">0.1.0 (2016-02-21)</a></li>
+<ul><li><a href = "chapter_007.html#link-107">0.11.1 (2017-01-05)</a></li>
+<li><a href = "chapter_007.html#link-108">0.11.0 (2016-12-31)</a></li>
+<li><a href = "chapter_007.html#link-109">0.10.4 (2016-12-16)</a></li>
+<li><a href = "chapter_007.html#link-110">0.10.3 (2016-11-19)</a></li>
+<li><a href = "chapter_007.html#link-111">0.10.2 (2016-10-21)</a></li>
+<li><a href = "chapter_007.html#link-112">0.10.1 (2016-10-18)</a></li>
+<li><a href = "chapter_007.html#link-113">0.10.0 (2016-10-18)</a></li>
+<li><a href = "chapter_007.html#link-114">0.9.1 (2016-09-29)</a></li>
+<li><a href = "chapter_007.html#link-115">0.9.0 (2016-09-23)</a></li>
+<li><a href = "chapter_007.html#link-116">0.8.0 (2016-09-19)</a></li>
+<li><a href = "chapter_007.html#link-117">0.7.0 (2016-09-11)</a></li>
+<li><a href = "chapter_007.html#link-118">0.6.0 (2016-09-09)</a></li>
+<li><a href = "chapter_007.html#link-119">0.5.1 (2016-04-14)</a></li>
+<li><a href = "chapter_007.html#link-120">0.5.0 (2016-04-02)</a></li>
+<li><a href = "chapter_007.html#link-121">0.4.0 (2016-03-01)</a></li>
+<li><a href = "chapter_007.html#link-122">0.3.0 (2016-02-27)</a></li>
+<li><a href = "chapter_007.html#link-123">0.2.2 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-124">0.2.1 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-125">0.2.0 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-126">0.1.0 (2016-02-21)</a></li>
 
 </ul>
 </li>
-<li><a href = "chapter_008.html#link-126">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
+<li><a href = "chapter_008.html#link-127">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
 
 </ul>
 
   </nav>
 
   <div id = "content">
-    <div id = "top"><p id = "para-300">Crowbook User Guide 0.11.0</p>
+    <div id = "top"><p id = "para-300">Crowbook User Guide 0.11.1</p>
 </div>
     <div id = "page">
       <header>
@@ -385,6 +386,11 @@ output.epub: book.epub
 <h3 id = "link-47">Generic options for rendering</h3>
 <p id = "para-136">These options allow to configure the rendering; they are used (or at least should be) for all formats.</p>
 <ul>
+<li><code>rendering.highlight</code>: specify if and how to perform syntax highlighting for code blocks. Default value is <code>highlight.js</code>; this will use <a href = "https://highlightjs.org/"><code>highlight.js</code></a> for HTML rendering, and will not perform any syntax highlighting for other output formats. Other valid values are:<ul>
+<li><code>syntect</code>: uses the <a href = "https://crates.io/crates/syntect">syntect</a> library to perform syntax highlighting. This has the advantage of also enabling syntax highlighting for LaTeX/PDF and EPUB formats; however syntect support is still experimental in Crowbook.</li>
+<li><code>none</code>: disable syntax highlighting.</li>
+</ul>
+</li>
 <li><code>rendering.num_depth</code>: an integer that represents the maximum level of numbering for your book. E.g., <code>1</code> will only number chapters, while <code>2</code> will number chapters, sections, but not anything below that. <code>6</code> is the maximum level and turns numbering on for all headers. (Default is <code>1</code>.)</li>
 <li><code>rendering.chapter.template</code> and <code>rendering.part.template</code>: the strings that will be used for chapter and part titles. It is possible to include Markdown formatting in this template, but it isn’t advised, because it might cause problems for some formats (e.g. your EPUB file might not be correct anymore).</li>
 <li><code>rendering.part.roman_numerals</code> and <code>rendering.chapter.roman_numerals</code>: these two booleans allow you to specify if you want roman numerals for part or chapter numbers (default is <code>true</code> for part numbers, and <code>false</code> for chapter numbers).</li>
@@ -554,6 +560,12 @@ resources.path: data
 </ul>
 <h3 id = "link-59">Rendering options</h3>
 <ul>
+<li><b><code>rendering.highlight</code></b><ul>
+<li><b>type</b>: string</li>
+<li><b>default value</b>: <code>highlight.js</code></li>
+<li>If/how highligh code blocks. Possible values: “highlight.js” (HTML-only, default), “syntect”, “none”</li>
+</ul>
+</li>
 <li><b><code>rendering.initials</code></b><ul>
 <li><b>type</b>: boolean</li>
 <li><b>default value</b>: <code>false</code></li>
@@ -668,12 +680,6 @@ resources.path: data
 <li>Path of a media print stylesheet for HTML rendering</li>
 </ul>
 </li>
-<li><b><code>html.highlight_code</code></b><ul>
-<li><b>type</b>: boolean</li>
-<li><b>default value</b>: <code>true</code></li>
-<li>Provides syntax highlighting for code blocks (using highlight.js)</li>
-</ul>
-</li>
 <li><b><code>html.highlight.js</code></b><ul>
 <li><b>type</b>: template path</li>
 <li><b>default value</b>: <code>not set</code></li>
@@ -763,7 +769,7 @@ resources.path: data
 </li>
 <li><b><code>epub.escape_nb_spaces</code></b><ul>
 <li><b>type</b>: boolean</li>
-<li><b>default value</b>: <code>false</code></li>
+<li><b>default value</b>: <code>true</code></li>
 <li>Replace unicode non breaking spaces with HTML entities and CSS</li>
 </ul>
 </li>
@@ -1010,7 +1016,7 @@ resources.path: data
   </a>
 </p>
     </div>
-    <footer id = "footer"><p id = "para-299">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.11.0-pre</p>
+    <footer id = "footer"><p id = "para-299">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.11.1</p>
 </footer>
   </div>
   </body>
