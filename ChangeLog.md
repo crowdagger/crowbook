@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-------------
+0.11.1 (2017-01-05)
+-----------------------
 * Rendering:
 	* Avoid page break before or after a separating rule.
 	* Add support for [syntect](https://crates.io/crates/syntect) for
@@ -27,6 +27,8 @@ unreleased
     can work in EPUB or LaTeX, but more experimental at this point).
 * Deprecated options:
   * `html.highlight_code` (use `rendering.highlight` instead).
+* Bugfixes:
+  * HTML (standalone): fix the template that contained invalid HTML code.
 
 0.11.0 (2016-12-31)
 -----------------------
