@@ -5,12 +5,27 @@ unreleased
 ------------
 * Rendering:
 	* Avoid page break before or after a separating rule.
+	* Add support for [syntect](https://crates.io/crates/syntect) for
+      syntax highlighting. This is activated by setting
+      `rendering.highlight` to `syntect` (see below).
 	* EPUB:
 	    * Set back HTML escape of narrow non-breaking spaces to `true`
           by default (it caused problems on some readers, but cause
           much more serious one if `false`).
 		* Add more information to guide/nav landmarks.
-		  
+	* LaTeX/PDF:
+	    * Improve the way code blocks are displayed, using the
+          `mdframed` package.
+		* Try to reduce the issues of too long lines when using code
+          and code blocks, by inserting `\allowbreak{}` directive
+          after some characters (`.`, `/`, `_`, ...).
+* New options:
+  * `rendering.highlight` can be set to `none`, `highlight.js` (by
+    default, enables syntax highlighting via Javascript, but only on
+    HTML document) or `syntect` (doesn't necessitate javascript, and
+    can work in EPUB or LaTeX, but more experimental at this point).
+* Deprecated options:
+  * `html.highlight_code` (use `rendering.highlight` instead).
 
 0.11.0 (2016-12-31)
 -----------------------
