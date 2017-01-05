@@ -57,7 +57,6 @@ html.css.add:str                    # {html_css_add}
 html.css.colours:tpl                # {css_colours}
 html.js:tpl                         # {html_js}
 html.css.print:tpl                  # {css_print}
-html.highlight_code:bool:true       # {highlight}
 html.highlight.js:tpl               # {highlight_js}
 html.highlight.css:tpl              # {highlight_css}
 html.side_notes:bool:false          # {side_notes}
@@ -166,6 +165,7 @@ html_dir.index.html:alias:html.dir.template         # {renamed}
 html_dir.chapter.html:alias:html.dir.template       # {renamed}
 output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
 tex.font_size:alias:tex.font.size                   # {renamed}
+html.highlight_code:alias:rendering.highlight       # {renamed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
@@ -227,7 +227,6 @@ html.crowbook_link:alias                            # {removed}
                                          css_colours = lformat!("Path of a stylesheet for the colours for HTML"),
                                          html_js = lformat!("Path of a javascript file"),
                                          css_print = lformat!("Path of a media print stylesheet for HTML rendering"),
-                                         highlight = lformat!("Provides syntax highlighting for code blocks (using highlight.js)"),
                                          highlight_js = lformat!("Set another highlight.js version than the bundled one"),
                                          highlight_css = lformat!("Set another highlight.js CSS theme than the default one"),
                                          side_notes = lformat!("Display footnotes as side notes in HTML/Epub (experimental)"),
