@@ -333,9 +333,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::CodeBlock(ref language, ref vec) => {
                 self.escape = false;
-                let res = self.render_vec(vec)?;
+                let mut res = self.render_vec(vec)?;
+                // Remove trailing newline
+                if res.ends_with('\n') {
+                    res.pop();
+                }
                 self.escape = true;
-                let mut res = if self.book.options.get_str("rendering.highlight").unwrap() == "syntect" {
+                res = if self.book.options.get_str("rendering.highlight").unwrap() == "syntect" {
                     self.syntax.to_tex(&res, language)
                 } else {
                     format!("\\begin{{spverbatim}}
@@ -343,8 +347,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
 \\end{{spverbatim}}",
                             code = res)
                 };
-                res.push_str("\n\n");
-//                res.push_str("{\\vspace{1em}}\n");
+                res = format!("\\begin{{mdframed}}
+{}
+\\end{{mdframed}}", res);
                 Ok(res)
             }
             Token::Rule => Ok(String::from("\\HRule\n")),

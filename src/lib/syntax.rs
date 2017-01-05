@@ -65,7 +65,7 @@ impl Syntax {
         for (style, text) in regions.into_iter() {
             let mut content = escape::tex(text).into_owned();
             content = content.replace('\n', "\\\\\n")
-                .replace(' ', "\\hphantom{ }");
+                .replace(' ', "\\hphantom{ }\\allowbreak{}");
             content = format!("\\texttt{{{}}}", content);
             if style.foreground != BLACK {
                 let r = style.foreground.r as f32 / 255.0;
@@ -88,11 +88,7 @@ impl Syntax {
             }
             result.push_str(&content);
         }
-        format!("{{\\vspace{{1em}}}}
-\\begin{{sloppypar}}
-{{\\setlength{{\\parindent}}{{0cm}}{}}}
-\\end{{sloppypar}}",
-                result)
+        format!("{{\\sloppy {}}}", result)
     }
 }
 

@@ -11,10 +11,11 @@
 \usepackage[<<&tex_lang>>]{babel}
 
 \usepackage{fancyhdr}
-\usepackage{spverbatim}
 \usepackage{booktabs}
+\usepackage{spverbatim}
 \usepackage{graphicx}
 \usepackage{color}
+\usepackage{mdframed}
 <<#initials>> % only if use_initials is set to true
 \usepackage{lettrine}
 <</initials>>
@@ -25,7 +26,6 @@
 \usepackage[anythingbreaks]{breakurl}
 <</xelatex>>
 
-% TODO: provide a way to configure
 \usepackage[<<&papersize>>, top=2cm, bottom=1.5cm,
   <<#book>> left=2.5cm,right=1.5cm<</book>><<^book>> left=2cm,right=2cm<</book>>]{geometry}%A5 by default
 
