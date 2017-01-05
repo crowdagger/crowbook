@@ -20,6 +20,8 @@ ChangeLog
           and code blocks, by inserting `\allowbreak{}` directive
           after some characters (`.`, `/`, `_`, ...).
 		* Block quotes are now displayed in italics.
+		* Tables now use `tabularx`, which allows to break too long
+          lines (it still doesn't break pages, though).
 * New options:
   * `rendering.highlight` can be set to `none`, `highlight.js` (by
     default, enables syntax highlighting via Javascript, but only on
