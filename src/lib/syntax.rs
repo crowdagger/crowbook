@@ -54,7 +54,7 @@ impl Syntax {
     }
 
     pub fn to_tex(&self, code: &str, language: &str) -> String {
-        use syntect::highlighting::{FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
+        use syntect::highlighting::{BLACK, FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let theme = &self.theme_set.themes["InspiredGitHub"];
@@ -67,6 +67,16 @@ impl Syntax {
             content = content.replace('\n', "\\\\\n")
                 .replace(' ', "\\hphantom{ }");
             content = format!("\\texttt{{{}}}", content);
+            if style.foreground != BLACK {
+                let r = style.foreground.r as f32 / 255.0;
+                let g = style.foreground.g as f32 / 255.0;
+                let b = style.foreground.b as f32 / 255.0;
+                content = format!("\\textcolor[rgb]{{{r}, {g}, {b}}}{{{text}}}",
+                                  r = r,
+                                  g = g,
+                                  b = b,
+                                  text = content);
+            }
             if style.font_style.contains(FONT_STYLE_BOLD) {
                 content = format!("\\textbf{{{}}}", content);
             }
@@ -79,7 +89,9 @@ impl Syntax {
             result.push_str(&content);
         }
         format!("{{\\vspace{{1em}}}}
-{{\\setlength{{\\parindent}}{{0cm}}{}}}",
+\\begin{{sloppypar}}
+{{\\setlength{{\\parindent}}{{0cm}}{}}}
+\\end{{sloppypar}}",
                 result)
     }
 }
