@@ -54,6 +54,7 @@ impl Syntax {
     }
 
     pub fn to_tex(&self, code: &str, language: &str) -> String {
+        use latex::insert_breaks;
         use syntect::highlighting::{BLACK, FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
@@ -64,6 +65,7 @@ impl Syntax {
         let mut result = String::with_capacity(code.len());
         for (style, text) in regions.into_iter() {
             let mut content = escape::tex(text).into_owned();
+            content = insert_breaks(&content);
             content = content.replace('\n', "\\\\\n")
                 .replace(' ', "\\hphantom{ }\\allowbreak{}");
             content = format!("\\texttt{{{}}}", content);

@@ -326,7 +326,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::Emphasis(ref vec) => Ok(format!("\\emph{{{}}}", self.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("\\textbf{{{}}}", self.render_vec(vec)?)),
-            Token::Code(ref vec) => Ok(format!("\\texttt{{{}}}", self.render_vec(vec)?)),
+            Token::Code(ref vec) => Ok(format!("\\texttt{{{}}}",
+                                               insert_breaks(&self.render_vec(vec)?))),
             Token::BlockQuote(ref vec) => {
                 Ok(format!("\\begin{{quotation}}\n{}\\end{{quotation}}\n",
                            self.render_vec(vec)?))
@@ -517,4 +518,20 @@ impl BookRenderer for ProofPdf {
             .render_pdf(to)?;
         Ok(())
     }
+}
+
+/// Insert possible breaks after characters '-', '/', '_', '.', ... to avoid code exploding
+/// the page
+pub fn insert_breaks(text: &str) -> String {
+    let mut result = String::with_capacity(text.len());
+    for c in text.chars() {
+        match c {
+            '.' | '_' | ')' | '(' | '-' | '/' => {
+                result.push(c);
+                result.push_str("\\allowbreak{}");
+            },
+            _ => result.push(c),
+        }
+    }
+    result
 }
