@@ -126,6 +126,8 @@ extern crate hyper;
 extern crate url;
 #[cfg(feature = "proofread")]
 extern crate caribon;
+#[cfg(feature = "syntect")]
+extern crate syntect;
 
 
 pub use parser::Parser;
@@ -165,6 +167,7 @@ mod lang;
 mod renderer;
 mod book_renderer;
 mod html_single;
+mod syntax;
 
 mod zipper;
 mod templates;

@@ -387,7 +387,7 @@ impl<'a> EpubRenderer<'a> {
             Token::Str(ref text) => {
                 let html: &mut HtmlRenderer = this.as_mut();
                 let content = if html.verbatim {
-                    escape::html(text.as_ref())
+                    Cow::Borrowed(text.as_ref())
                 } else {
                     escape::html(html.book.clean(text.as_ref(), false))
                 };

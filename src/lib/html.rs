@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -23,6 +23,8 @@ use number::Number;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
+use syntax::Syntax;
+use logger::Logger;
 use lang;
 
 use std::borrow::Cow;
@@ -35,6 +37,15 @@ use epub_builder::TocElement;
 
 #[cfg(feature = "proofread")]
 use caribon::Parser as Caribon;
+
+#[derive(Debug, PartialEq, Copy, Clone)]
+/// If/how to highlight code
+enum Highlight {
+    None,
+    Js,
+    Syntect,
+}
+    
 
 /// Base structure for rendering HTML files
 ///
@@ -96,6 +107,9 @@ pub struct HtmlRenderer<'a> {
     parser: Option<Caribon>,
     #[cfg(feature  = "proofread")]
     repetition_threshold: f32,
+
+    syntax: Syntax,
+    highlight: Highlight,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -131,10 +145,24 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
+    fn get_highlight(book: &Book) -> Highlight {
+        match book.options.get_str("rendering.highlight").unwrap() {
+            "syntect" => Highlight::Syntect,
+            "none" => Highlight::None,
+            "highlight.js" => Highlight::Js,
+            value => {
+                Logger::display_error(lformat!("rendering.highlight set to '{}', not a valid value",
+                                                   value));
+                Highlight::None
+            }
+        }
+    }
+
     /// Creates a new HTML renderer
     #[cfg(feature = "proofread")]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         let parser = Self::init_caribon(&book);
+        let highlight = Self::get_highlight(&book);
 
         let mut html = HtmlRenderer {
             book: book,
@@ -157,6 +185,8 @@ impl<'a> HtmlRenderer<'a> {
             proofread: false,
             parser: parser,
             repetition_threshold: book.options.get_f32("proofread.repetitions.threshold").unwrap(),
+            syntax: Syntax::new(),
+            highlight: highlight,
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
@@ -165,6 +195,8 @@ impl<'a> HtmlRenderer<'a> {
 
     #[cfg(not(feature = "proofread"))]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
+        let highlight = Self::get_highlight(book);
+        
         let mut html = HtmlRenderer {
             book: book,
             toc: Toc::new(),
@@ -184,6 +216,8 @@ impl<'a> HtmlRenderer<'a> {
             first_letter: false,
             first_paragraph: true,
             proofread: false,
+            syntax: Syntax::new(),
+            highlight: highlight,
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
@@ -442,7 +476,7 @@ impl<'a> HtmlRenderer<'a> {
             }
             Token::Str(ref text) => {
                 let mut content = if this.as_ref().verbatim {
-                    escape::html(text.as_ref())
+                    Cow::Borrowed(text.as_ref())
                 } else {
                     escape::html(this.as_ref().book.clean(text.as_ref(), false))
                 };
@@ -508,14 +542,17 @@ impl<'a> HtmlRenderer<'a> {
                 Ok(format!("<blockquote>{}</blockquote>\n", this.render_vec(vec)?))
             }
             Token::CodeBlock(ref language, ref vec) => {
+                let highlight = this.as_ref().highlight;
                 this.as_mut().verbatim = true;
                 let s = this.render_vec(vec)?;
-                let output = if language.is_empty() {
+                let output = if highlight == Highlight::Syntect {
+                    this.as_ref().syntax.to_html(&s, language)
+                } else if language.is_empty() {
                     format!("<pre><code>{}</code></pre>\n", s)
                 } else {
                     format!("<pre><code class = \"language-{}\">{}</code></pre>\n",
                             language,
-                            s)
+                            escape::html(s))
                 };
                 this.as_mut().verbatim = false;
                 Ok(output)

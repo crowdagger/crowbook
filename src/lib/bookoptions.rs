@@ -33,6 +33,7 @@ output.odt:path                     # {output_odt}
 output.base_path:path:\"\"            # {output_base_path}
 
 # {render_opt}
+rendering.highlight:str:highlight.js                                 # {rendering_highlight}
 rendering.initials:bool:false                                        # {rendering_initials}
 rendering.inline_toc:bool:false                                      # {inline_toc}
 rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
@@ -204,7 +205,8 @@ html.crowbook_link:alias                            # {removed}
                                          output_odt = lformat!("Output file name for ODT rendering"),
                                          output_html_dir = lformat!("Output directory name for HTML rendering"),
                                          output_base_path = lformat!("Directory where those output files will we written"),
-                                         
+
+                                         rendering_highlight = lformat!("If/how highligh code blocks. Possible values: \"highlight.js\" (HTML-only, default), \"syntect\", \"none\""),
                                          rendering_initials = lformat!("Use initials ('lettrines') for first letter of a chapter (experimental)"),
                                          inline_toc = lformat!("Display a table of content in the document"),
                                          toc_name = lformat!("Name of the table of contents if it is displayed in document"),
