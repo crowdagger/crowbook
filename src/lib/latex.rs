@@ -25,6 +25,7 @@ use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
 use book_renderer::BookRenderer;
+use syntax::Syntax;
 
 use crowbook_text_processing::escape;
 
@@ -44,6 +45,7 @@ pub struct LatexRenderer<'a> {
     first_paragraph: bool,
     is_short: bool,
     proofread: bool,
+    syntax: Syntax,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -61,6 +63,7 @@ impl<'a> LatexRenderer<'a> {
             first_paragraph: true,
             is_short: book.options.get_str("tex.class").unwrap() == "article",
             proofread: false,
+            syntax: Syntax::new(),
         }
     }
 
@@ -328,12 +331,21 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 Ok(format!("\\begin{{quotation}}\n{}\\end{{quotation}}\n",
                            self.render_vec(vec)?))
             }
-            Token::CodeBlock(_, ref vec) => {
+            Token::CodeBlock(ref language, ref vec) => {
                 self.escape = false;
                 let res = self.render_vec(vec)?;
                 self.escape = true;
-                Ok(format!("\\begin{{spverbatim}}{}\\end{{spverbatim}}\n\\vspace{{1em}}\n",
-                           res))
+                let mut res = if self.book.options.get_str("rendering.highlight").unwrap() == "syntect" {
+                    self.syntax.to_tex(&res, language)
+                } else {
+                    format!("\\begin{{spverbatim}}
+{code}
+\\end{{spverbatim}}",
+                            code = res)
+                };
+                res.push_str("\n\n");
+//                res.push_str("{\\vspace{1em}}\n");
+                Ok(res)
             }
             Token::Rule => Ok(String::from("\\HRule\n")),
             Token::SoftBreak => Ok(String::from(" ")),

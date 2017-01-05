@@ -15,6 +15,8 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
+use crowbook_text_processing::escape;
+
 
 #[cfg(feature="syntect")]
 use syntect;
@@ -50,6 +52,36 @@ impl Syntax {
                 syntect::html::styles_to_coloured_html(&regions[..],
                                                        syntect::html::IncludeBackground::No))
     }
+
+    pub fn to_tex(&self, code: &str, language: &str) -> String {
+        use syntect::highlighting::{FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
+        let syntax = self.syntax_set.find_syntax_by_token(language)
+            .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
+        let theme = &self.theme_set.themes["InspiredGitHub"];
+        let mut h = syntect::easy::HighlightLines::new(syntax, theme);
+        let regions = h.highlight(&code);
+        
+        let mut result = String::with_capacity(code.len());
+        for (style, text) in regions.into_iter() {
+            let mut content = escape::tex(text).into_owned();
+            content = content.replace('\n', "\\\\\n")
+                .replace(' ', "\\hphantom{ }");
+            content = format!("\\texttt{{{}}}", content);
+            if style.font_style.contains(FONT_STYLE_BOLD) {
+                content = format!("\\textbf{{{}}}", content);
+            }
+            if style.font_style.contains(FONT_STYLE_ITALIC) {
+                content = format!("\\emph{{{}}}", content);
+            }
+            if style.font_style.contains(FONT_STYLE_UNDERLINE) {
+                content = format!("\\underline{{{}}}", content);
+            }
+            result.push_str(&content);
+        }
+        format!("{{\\vspace{{1em}}}}
+{{\\setlength{{\\parindent}}{{0cm}}{}}}",
+                result)
+    }
 }
 
 #[cfg(not(feature="syntect"))]
@@ -61,7 +93,12 @@ impl Syntax {
 
     pub fn to_html(&self, code: &str, language: &str) -> String {
         format!("<pre><code class = \"language-{lang}\">{code}</code></pre>",
-                code = ::crowbook_text_processing::escape::html(code),
+                code = escape::html(code),
                 lang = language)
+    }
+
+    pub fn to_tex(&self, code: &str, language: &str) -> String {
+        format!("\\begin{{spverbatim}}{}\\end{{spverbatim}}\n",
+                code)
     }
 }
