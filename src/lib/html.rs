@@ -40,7 +40,7 @@ use caribon::Parser as Caribon;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 /// If/how to highlight code
-enum Highlight {
+pub enum Highlight {
     None,
     Js,
     Syntect,
@@ -99,6 +99,9 @@ pub struct HtmlRenderer<'a> {
     #[doc(hidden)]
     pub toc: Toc,
 
+    #[doc(hidden)]
+    pub highlight: Highlight,
+
     /// Current link number
     #[doc(hidden)]
     pub link_number: u32,
@@ -109,7 +112,6 @@ pub struct HtmlRenderer<'a> {
     repetition_threshold: f32,
 
     syntax: Syntax,
-    highlight: Highlight,
 }
 
 impl<'a> HtmlRenderer<'a> {

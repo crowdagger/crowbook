@@ -17,6 +17,7 @@
 
 use error::{Error, Result, Source};
 use html::HtmlRenderer;
+use html::Highlight;
 use book::{Book, compile_str};
 use token::Token;
 use templates::img;
@@ -108,7 +109,7 @@ impl<'a> HtmlDirRenderer<'a> {
         self.write_file("menu.svg", img::MENU_SVG)?;
 
         // Write highlight files if they are needed
-        if self.html.book.options.get_bool("html.highlight_code") == Ok(true) {
+        if self.html.highlight == Highlight::Js {
             self.write_file("highlight.js",
                             self.html
                             .book
@@ -259,7 +260,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 let favicon = self.html.handler.map_image(&self.html.book.source, favicon)?;
                 mapbuilder = mapbuilder.insert_str("favicon", format!("<link rel = \"icon\" href = \"{}\">", favicon));
             }
-            if self.html.book.options.get_bool("html.highlight_code").unwrap() == true {
+            if self.html.highlight == Highlight::Js {
                 mapbuilder = mapbuilder.insert_bool("highlight_code", true);
             }
             let data = mapbuilder.build();
@@ -319,7 +320,7 @@ impl<'a> HtmlDirRenderer<'a> {
             let favicon = self.html.handler.map_image(&self.html.book.source, favicon)?;
             mapbuilder = mapbuilder.insert_str("favicon", format!("<link rel = \"icon\" href = \"{}\">", favicon));
         }
-        if self.html.book.options.get_bool("html.highlight_code").unwrap() == true {
+        if self.html.highlight == Highlight::Js {
             mapbuilder = mapbuilder.insert_bool("highlight_code", true);
         }
         let data = mapbuilder.build();

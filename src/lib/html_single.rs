@@ -17,6 +17,7 @@
 
 use error::{Error, Result, Source};
 use html::HtmlRenderer;
+use html::Highlight;
 use book::{Book, compile_str};
 use token::Token;
 use templates::img;
@@ -236,7 +237,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             mapbuilder = mapbuilder.insert_bool("has_toc", true);
             mapbuilder = mapbuilder.insert_str("toc", toc)
         }
-        if self.html.book.options.get_bool("html.highlight_code") == Ok(true) {
+        if self.html.highlight == Highlight::Js {
             let highlight_js = self.html.book.get_template("html.highlight.js")?
                 .as_bytes()
                 .to_base64(base64::STANDARD);
