@@ -19,6 +19,7 @@ unreleased
 		* Try to reduce the issues of too long lines when using code
           and code blocks, by inserting `\allowbreak{}` directive
           after some characters (`.`, `/`, `_`, ...).
+		* Block quotes are now displayed in italics.
 * New options:
   * `rendering.highlight` can be set to `none`, `highlight.js` (by
     default, enables syntax highlighting via Javascript, but only on
