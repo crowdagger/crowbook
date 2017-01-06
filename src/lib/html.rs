@@ -373,13 +373,17 @@ impl<'a> HtmlRenderer<'a> {
                                        content))
                         }
                         &Data::Repetition(ref colour) => {
-                            Ok(format!("<span class = \"repetition\" \
-                                        style = \"text-decoration-line: underline; \
-                                        text-decoration-style: wavy; \
-                                        text-decoration-color: {colour}\">{content}</span>",
-                                       colour = colour,
-                                       content = content))
-                        }
+                            if !this.as_ref().verbatim {
+                                Ok(format!("<span class = \"repetition\" \
+                                            style = \"text-decoration-line: underline; \
+                                            text-decoration-style: wavy; \
+                                            text-decoration-color: {colour}\">{content}</span>",
+                                           colour = colour,
+                                           content = content))
+                            } else {
+                                Ok(content)
+                            }
+                        },
                         _ => unreachable!(),
                     }
                 } else {

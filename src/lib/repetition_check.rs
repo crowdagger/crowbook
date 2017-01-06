@@ -63,21 +63,31 @@ impl RepetitionDetector {
             .with_html(false)
             .with_ignore_proper(self.ignore_proper)
             .with_max_distance(self.max_distance as u32);
+        for mut token in tokens.iter_mut() {
+            match *token {
+                Token::Paragraph(ref mut v) |
+                Token::Header(_, ref mut v) |
+                Token::BlockQuote(ref mut v) |
+                Token::List(ref mut v) |
+                Token::OrderedList(_, ref mut v) => {
+                    let mut ast = parser.tokenize(&view_as_text(v))
+                        .map_err(|err| Error::default(Source::empty(),
+                                                      lformat!("error detecting repetitions: {err}",
+                                                       err = err)))?;
+                    
+                    parser.detect_local(&mut ast, self.threshold);
+                    let repetitions = parser.ast_to_repetitions(&ast);
+                    for repetition in repetitions.iter() {
+                        insert_annotation(v,
+                                          &Data::Repetition(repetition.colour.to_string()),
+                                          repetition.offset,
+                                          repetition.length);
+                    }
+                },
 
-        let mut ast = parser.tokenize(&view_as_text(tokens))
-            .map_err(|err| Error::default(Source::empty(),
-                                          lformat!("error detecting repetitions: {err}",
-                                                   err = err)))?;
-        
-        parser.detect_local(&mut ast, self.threshold);
-        let repetitions = parser.ast_to_repetitions(&ast);
-        for repetition in repetitions.iter() {
-            insert_annotation(tokens,
-                              &Data::Repetition(repetition.colour.to_string()),
-                              repetition.offset,
-                              repetition.length);
+                _ => (),
+            }
         }
-
         Ok(())
     }
 }
