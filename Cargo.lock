@@ -2,7 +2,7 @@
 name = "crowbook"
 version = "0.11.2-pre"
 dependencies = [
- "caribon 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "caribon 0.8.0-unreleased (git+https://github.com/lise-henry/caribon.git)",
  "clap 2.19.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "crossbeam 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -119,8 +119,8 @@ dependencies = [
 
 [[package]]
 name = "caribon"
-version = "0.7.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+version = "0.8.0-unreleased"
+source = "git+https://github.com/lise-henry/caribon.git#3dbcc2356ba02bd58e379abeea2e5dfdba4e10f2"
 dependencies = [
  "stemmer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "strsim 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -870,7 +870,7 @@ dependencies = [
 "checksum byteorder 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c40977b0ee6b9885c9013cd41d9feffdd22deb3bb4dc3a71d901cc7a77de18c8"
 "checksum bzip2 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7c30a578393daf45ee6101aa043afa8d47a7e70f05032b15b88b28a7111c6a53"
 "checksum bzip2-sys 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "81c91586be5d862524de53126d49c11fef83dc1a8e8034235f37372e3b2da311"
-"checksum caribon 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)" = "b462d4221abf52c2bac09de46f64d8e1f9ed7089e1cd591f59ca35326275dc81"
+"checksum caribon 0.8.0-unreleased (git+https://github.com/lise-henry/caribon.git)" = "<none>"
 "checksum cfg-if 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "de1e760d7b6535af4241fca8bd8adf68e2e7edacc6b29f5d399050c5e48cf88c"
 "checksum chrono 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)" = "9213f7cd7c27e95c2b57c49f0e69b1ea65b27138da84a170133fd21b07659c00"
 "checksum clap 2.19.3 (registry+https://github.com/rust-lang/crates.io-index)" = "95b78f3fe0fc94c13c731714363260e04b557a637166f33a4570d3189d642374"
