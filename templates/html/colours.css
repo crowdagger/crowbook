@@ -35,5 +35,8 @@ footer a:hover, #top a:hover {
 /* Additional elements, only use for proofreading */
 /* Grammar error */
 .grammar-error {
-    background: #d966ff;
+    color: red;
+    text-decoration-line: underline;
+    text-decoration-style: double;
+/*    background: #d966ff;*/
 }

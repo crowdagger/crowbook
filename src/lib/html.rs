@@ -374,7 +374,9 @@ impl<'a> HtmlRenderer<'a> {
                         }
                         &Data::Repetition(ref colour) => {
                             Ok(format!("<span class = \"repetition\" \
-                                        style = \"text-decoration: underline; color: {colour}\">{content}</span>",
+                                        style = \"text-decoration-line: underline; \
+                                        text-decoration-style: wavy; \
+                                        text-decoration-color: {colour}\">{content}</span>",
                                        colour = colour,
                                        content = content))
                         }
