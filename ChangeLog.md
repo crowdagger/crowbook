@@ -3,9 +3,15 @@ ChangeLog
 
 unreleased
 ------------
+* Proofreading:
+  * Repetition detection is now a bit less of an hack, and should
+    cause less problems when used in conjunction with grammar
+    checking. It now also works on PDF output (so the way it is
+    highlighted could be improved).
 * Bugfixes:
   * Avoid initializing `syntect` (at the cost of performances) if it
     is not used.
+	
 
 0.11.1 (2017-01-05)
 -----------------------
