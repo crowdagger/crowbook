@@ -463,6 +463,14 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             Ok(format!("\\underline{{{}}}\\protect\\footnote{{{}}}",
                                        content,
                                        escape::tex(s.as_str())))
+                        },
+                        &Data::Repetition(ref colour) => {
+                            if colour == "red" {
+                                Ok(format!("\\underline{{{}}}",
+                                           content))
+                            } else {
+                                Ok(content)
+                            }
                         }
                         _ => unreachable!(),
                     }

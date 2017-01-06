@@ -22,6 +22,7 @@
 /// **not** rely on exhaustive matching.
 pub enum Data {
     GrammarError(String),
+    Repetition(String),
     __NonExhaustive,
 }
 

@@ -35,9 +35,6 @@ use numerals::roman::Roman;
 use epub_builder::Toc;
 use epub_builder::TocElement;
 
-#[cfg(feature = "proofread")]
-use caribon::Parser as Caribon;
-
 #[derive(Debug, PartialEq, Copy, Clone)]
 /// If/how to highlight code
 pub enum Highlight {
@@ -106,47 +103,10 @@ pub struct HtmlRenderer<'a> {
     #[doc(hidden)]
     pub link_number: u32,
 
-    #[cfg(feature = "proofread")]
-    parser: Option<Caribon>,
-    #[cfg(feature  = "proofread")]
-    repetition_threshold: f32,
-
     syntax: Option<Syntax>,
 }
 
 impl<'a> HtmlRenderer<'a> {
-    #[cfg(feature = "proofread")]
-    fn init_caribon(book: &Book) -> Option<Caribon> {
-        if book.options.get_bool("proofread.repetitions").unwrap() {
-            let lang = book.options.get_str("lang").unwrap();
-
-            match Caribon::new(&lang) {
-                Ok(parser) => {
-                    let fuzzy = if book.options.get_bool("proofread.repetitions.fuzzy").unwrap() {
-                        Some(book.options.get_f32("proofread.repetitions.fuzzy.threshold").unwrap())
-                    } else {
-                        None
-                    };
-                    let ignore_proper =
-                        book.options.get_bool("proofread.repetitions.ignore_proper").unwrap();
-                    let dist = book.options.get_i32("proofread.repetitions.max_distance").unwrap();
-
-                    Some(parser.with_fuzzy(fuzzy)
-                        .with_html(true)
-                        .with_ignore_proper(ignore_proper)
-                        .with_max_distance(dist as u32))
-                }
-                Err(err) => {
-                    book.logger
-                        .error(lformat!("could not create caribon parser: {error}", error = err));
-                    None
-                }
-            }
-        } else {
-            None
-        }
-    }
-
     fn get_highlight(book: &Book) -> (Highlight, Option<Syntax>) {
         match book.options.get_str("rendering.highlight").unwrap() {
             "syntect" => (Highlight::Syntect, Some(Syntax::new())),
@@ -161,9 +121,7 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Creates a new HTML renderer
-    #[cfg(feature = "proofread")]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        let parser = Self::init_caribon(&book);
         let (highlight, syntax) = Self::get_highlight(&book);
 
         let mut html = HtmlRenderer {
@@ -185,8 +143,6 @@ impl<'a> HtmlRenderer<'a> {
             first_letter: false,
             first_paragraph: true,
             proofread: false,
-            parser: parser,
-            repetition_threshold: book.options.get_f32("proofread.repetitions.threshold").unwrap(),
             syntax: syntax,
             highlight: highlight,
         };
@@ -194,58 +150,6 @@ impl<'a> HtmlRenderer<'a> {
         html.handler.set_base64(true);
         html
     }
-
-    #[cfg(not(feature = "proofread"))]
-    pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        let (highlight, syntax) = Self::get_highlight(book);
-        
-        let mut html = HtmlRenderer {
-            book: book,
-            toc: Toc::new(),
-            link_number: 0,
-            current_chapter: [0, 0, 0, 0, 0, 0, 0],
-            current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
-            current_part: false,
-            current_par: 0,
-            current_hide: false,
-            table_head: false,
-            footnote_number: 0,
-            footnotes: vec![],
-            verbatim: false,
-            filename: String::new(),
-            handler: ResourceHandler::new(&book.logger),
-            source: Source::empty(),
-            first_letter: false,
-            first_paragraph: true,
-            proofread: false,
-            syntax: syntax,
-            highlight: highlight,
-        };
-        html.handler.set_images_mapping(true);
-        html.handler.set_base64(true);
-        html
-    }
-
-    // Detect the repetitions
-    #[cfg(feature = "proofread")]
-    fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
-        if !self.proofread {
-            return s.into().into_owned();
-        }
-        if let Some(ref mut parser) = self.parser {
-            let mut ast = parser.tokenize(s.into().as_ref()).unwrap();
-            parser.detect_local(&mut ast, self.repetition_threshold);
-            parser.ast_to_html(&mut ast, false)
-        } else {
-            s.into().into_owned()
-        }
-    }
-
-    #[cfg(not(feature = "proofread"))]
-    fn detect_repetitions<'s, S: Into<Cow<'s, str>>>(&mut self, s: S) -> String {
-        s.into().into_owned()
-    }
-
 
     /// Add a footnote which will be renderer later on
     #[doc(hidden)]
@@ -293,8 +197,6 @@ impl<'a> HtmlRenderer<'a> {
         if render_end_notes {
             this.as_mut().render_end_notes(&mut res);
         }
-        let res = this.as_mut().detect_repetitions(res);
-
         Ok(res)
     }
 
@@ -469,6 +371,12 @@ impl<'a> HtmlRenderer<'a> {
                             Ok(format!("<span title = \"{}\" class = \"grammar-error\">{}</span>",
                                        escape::quotes(s.as_str()),
                                        content))
+                        }
+                        &Data::Repetition(ref colour) => {
+                            Ok(format!("<span class = \"repetition\" \
+                                        style = \"text-decoration: underline; color: {colour}\">{content}</span>",
+                                       colour = colour,
+                                       content = content))
                         }
                         _ => unreachable!(),
                     }

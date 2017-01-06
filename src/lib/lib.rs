@@ -177,6 +177,8 @@ mod misc;
 #[cfg(feature = "proofread")]
 mod grammar_check;
 #[cfg(feature = "proofread")]
+mod repetition_check;
+#[cfg(feature = "proofread")]
 mod text_view;
 
 #[cfg(test)]

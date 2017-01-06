@@ -35,6 +35,9 @@ use chapter::Chapter;
 use token::Token;
 
 #[cfg(feature = "proofread")]
+use repetition_check::RepetitionDetector;
+
+#[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
 
 // Dummy grammarchecker thas does nothing to let the compiler compile
@@ -46,6 +49,16 @@ impl GrammarChecker {
         Ok(())
     }
 }
+// Dummy RepetitionDetector thas does nothing to let the compiler compile
+#[cfg(not(feature = "proofread"))]
+struct RepetitionDetector {}
+#[cfg(not(feature = "proofread"))]
+impl RepetitionDetector {
+    fn check_chapter(&self, _: &[Token]) -> Result<()> {
+        Ok(())
+    }
+}
+
 
 use std::fs::File;
 use std::io::{Write, Read};
@@ -110,6 +123,7 @@ pub struct Book {
     chapter_template: Option<Template>,
     part_template: Option<Template>,
     checker: Option<GrammarChecker>,
+    detector: Option<RepetitionDetector>,
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
 }
 
@@ -126,6 +140,7 @@ impl Book {
             chapter_template: None,
             part_template: None,
             checker: None,
+            detector: None,
             formats: HashMap::new(),
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
@@ -587,19 +602,24 @@ impl Book {
          self.options.get("output.proofread.pdf").is_ok())
     }
 
-    /// Initialize the grammar checker if it needs to be
+    /// Initialize the grammar checker and repetetion detector if they needs to be
     #[cfg(feature = "proofread")]
     fn init_checker(&mut self) {
-        if self.options.get_bool("proofread.languagetool").unwrap() && self.is_proofread() {
-            let port = self.options.get_i32("proofread.languagetool.port").unwrap() as usize;
-            let lang = self.options.get_str("lang").unwrap();
-            let checker = GrammarChecker::new(port, lang);
-            match checker {
-                Ok(checker) => self.checker = Some(checker),
-                Err(e) => {
-                    self.logger
-                        .error(lformat!("{error}. Proceeding without checking grammar.", error = e))
+        if self.is_proofread() {
+            if self.options.get_bool("proofread.languagetool").unwrap() {
+                let port = self.options.get_i32("proofread.languagetool.port").unwrap() as usize;
+                let lang = self.options.get_str("lang").unwrap();
+                let checker = GrammarChecker::new(port, lang);
+                match checker {
+                    Ok(checker) => self.checker = Some(checker),
+                    Err(e) => {
+                        self.logger
+                            .error(lformat!("{error}. Proceeding without checking grammar.", error = e))
+                    }
                 }
+            }
+            if self.options.get_bool("proofread.repetitions").unwrap() {
+                self.detector = Some(RepetitionDetector::new(&self));
             }
         }
     }
@@ -822,6 +842,17 @@ impl Book {
                                    file = misc::normalize(file)));
                 if let Err(err) = checker.check_chapter(&mut tokens) {
                     self.logger.error(lformat!("Error running grammar check on {file}: {error}",
+                                               file = misc::normalize(file),
+                                               error = err));
+                }
+            }
+            if let Some(ref detector) = self.detector {
+                self.logger
+                    .info(lformat!("Trying to run repetition detector on {file}, this might take a \
+                                    while...",
+                                   file = misc::normalize(file)));
+                if let Err(err) = detector.check_chapter(&mut tokens) {
+                    self.logger.error(lformat!("Error running repetition detector on {file}: {error}",
                                                file = misc::normalize(file),
                                                error = err));
                 }
