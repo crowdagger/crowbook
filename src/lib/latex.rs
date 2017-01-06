@@ -465,7 +465,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                                        escape::tex(s.as_str())))
                         },
                         &Data::Repetition(ref colour) => {
-                            if colour == "red" {
+                            if !self.escape && colour == "red" {
                                 Ok(format!("\\underline{{{}}}",
                                            content))
                             } else {
