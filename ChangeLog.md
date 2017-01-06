@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+unreleased
+------------
+* Bugfixes:
+  * Avoid initializing `syntect` (at the cost of performances) if it
+    is not used.
+
 0.11.1 (2017-01-05)
 -----------------------
 * Rendering:

@@ -45,7 +45,7 @@ pub struct LatexRenderer<'a> {
     first_paragraph: bool,
     is_short: bool,
     proofread: bool,
-    syntax: Syntax,
+    syntax: Option<Syntax>,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -53,6 +53,11 @@ impl<'a> LatexRenderer<'a> {
     pub fn new(book: &'a Book) -> LatexRenderer<'a> {
         let mut handler = ResourceHandler::new(&book.logger);
         handler.set_images_mapping(true);
+        let syntax = if book.options.get_str("rendering.highlight").unwrap() == "syntect" {
+            Some(Syntax::new())
+        } else {
+            None
+        };
         LatexRenderer {
             book: book,
             current_chapter: Number::Default,
@@ -63,7 +68,7 @@ impl<'a> LatexRenderer<'a> {
             first_paragraph: true,
             is_short: book.options.get_str("tex.class").unwrap() == "article",
             proofread: false,
-            syntax: Syntax::new(),
+            syntax: syntax,
         }
     }
 
@@ -340,8 +345,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     res.pop();
                 }
                 self.escape = true;
-                res = if self.book.options.get_str("rendering.highlight").unwrap() == "syntect" {
-                    self.syntax.to_tex(&res, language)
+                res = if let Some(ref syntax) = self.syntax {
+                    syntax.to_tex(&res, language)
                 } else {
                     format!("\\begin{{spverbatim}}
 {code}

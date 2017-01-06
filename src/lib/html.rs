@@ -111,7 +111,7 @@ pub struct HtmlRenderer<'a> {
     #[cfg(feature  = "proofread")]
     repetition_threshold: f32,
 
-    syntax: Syntax,
+    syntax: Option<Syntax>,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -147,15 +147,15 @@ impl<'a> HtmlRenderer<'a> {
         }
     }
 
-    fn get_highlight(book: &Book) -> Highlight {
+    fn get_highlight(book: &Book) -> (Highlight, Option<Syntax>) {
         match book.options.get_str("rendering.highlight").unwrap() {
-            "syntect" => Highlight::Syntect,
-            "none" => Highlight::None,
-            "highlight.js" => Highlight::Js,
+            "syntect" => (Highlight::Syntect, Some(Syntax::new())),
+            "none" => (Highlight::None, None),
+            "highlight.js" => (Highlight::Js, None),
             value => {
                 Logger::display_error(lformat!("rendering.highlight set to '{}', not a valid value",
                                                    value));
-                Highlight::None
+                (Highlight::None, None)
             }
         }
     }
@@ -164,7 +164,7 @@ impl<'a> HtmlRenderer<'a> {
     #[cfg(feature = "proofread")]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
         let parser = Self::init_caribon(&book);
-        let highlight = Self::get_highlight(&book);
+        let (highlight, syntax) = Self::get_highlight(&book);
 
         let mut html = HtmlRenderer {
             book: book,
@@ -187,7 +187,7 @@ impl<'a> HtmlRenderer<'a> {
             proofread: false,
             parser: parser,
             repetition_threshold: book.options.get_f32("proofread.repetitions.threshold").unwrap(),
-            syntax: Syntax::new(),
+            syntax: syntax,
             highlight: highlight,
         };
         html.handler.set_images_mapping(true);
@@ -197,7 +197,7 @@ impl<'a> HtmlRenderer<'a> {
 
     #[cfg(not(feature = "proofread"))]
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        let highlight = Self::get_highlight(book);
+        let (highlight, syntax) = Self::get_highlight(book);
         
         let mut html = HtmlRenderer {
             book: book,
@@ -218,7 +218,7 @@ impl<'a> HtmlRenderer<'a> {
             first_letter: false,
             first_paragraph: true,
             proofread: false,
-            syntax: Syntax::new(),
+            syntax: syntax,
             highlight: highlight,
         };
         html.handler.set_images_mapping(true);
@@ -544,11 +544,10 @@ impl<'a> HtmlRenderer<'a> {
                 Ok(format!("<blockquote>{}</blockquote>\n", this.render_vec(vec)?))
             }
             Token::CodeBlock(ref language, ref vec) => {
-                let highlight = this.as_ref().highlight;
                 this.as_mut().verbatim = true;
                 let s = this.render_vec(vec)?;
-                let output = if highlight == Highlight::Syntect {
-                    this.as_ref().syntax.to_html(&s, language)
+                let output = if let Some(ref syntax) = this.as_ref().syntax {
+                    syntax.to_html(&s, language)
                 } else if language.is_empty() {
                     format!("<pre><code>{}</code></pre>\n", s)
                 } else {
