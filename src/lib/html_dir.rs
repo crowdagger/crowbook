@@ -64,30 +64,28 @@ impl<'a> HtmlDirRenderer<'a> {
             self.html.handler.add_link(chapter.filename.as_ref(), filenamer(i));
         }
 
-        match fs::metadata(&dest_path) {
-            Ok(metadata) => {
-                if metadata.is_file() {
-                    return Err(Error::render(&self.html.book.source,
-                                             lformat!("{path} already exists and is not a \
-                                                       directory",
-                                                      path = dest_path.display())));
-                } else if metadata.is_dir() {
-                    self.html
-                        .book
-                        .logger
-                        .warning(lformat!("{path} already exists, deleting it",
-                                          path = dest_path.display()));
-                    fs::remove_dir_all(&dest_path)
-                        .map_err(|e| {
-                            Error::render(&self.html.book.source,
-                                          lformat!("error deleting directory {path}: {error}",
-                                                   path = dest_path.display(),
-                                                   error = e))
+        if let Ok(metadata) = fs::metadata(&dest_path) {
+            if metadata.is_file() {
+                return Err(Error::render(&self.html.book.source,
+                                         lformat!("{path} already exists and is not a \
+                                                   directory",
+                                                  path = dest_path.display())));
+            } else if metadata.is_dir() {
+                self.html
+                    .book
+                    .logger
+                    .warning(lformat!("{path} already exists, deleting it",
+                                      path = dest_path.display()));
+                fs::remove_dir_all(&dest_path)
+                    .map_err(|e| {
+                        Error::render(&self.html.book.source,
+                                      lformat!("error deleting directory {path}: {error}",
+                                               path = dest_path.display(),
+                                               error = e))
                     })?;
-                }
             }
-            Err(_) => (),
         }
+
         fs::DirBuilder::new()
             .recursive(true)
             .create(&dest_path)
@@ -102,7 +100,9 @@ impl<'a> HtmlDirRenderer<'a> {
         self.write_css()?;
         // Write print.css
         self.write_file("print.css",
-                             &self.html.book.get_template("html.css.print").unwrap().as_bytes())?;
+                        self.html.book.get_template("html.css.print")
+                        .unwrap()
+                        .as_bytes())?;
         // Write index.html and chapter_xxx.html
         self.write_html()?;
         // Write menu.svg
@@ -113,7 +113,7 @@ impl<'a> HtmlDirRenderer<'a> {
             self.write_file("highlight.js",
                             self.html
                             .book
-                                     .get_template("html.highlight.js")
+                            .get_template("html.highlight.js")
                             .unwrap()
                             .as_bytes())?;
             self.write_file("highlight.css",

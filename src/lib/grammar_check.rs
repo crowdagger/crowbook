@@ -156,7 +156,7 @@ impl GrammarChecker {
                     }
                 }
             }
-            for handle in handles.into_iter() {
+            for handle in handles {
                 if let Err(err) = handle.join() {
                     result = Err(err);
                     break;

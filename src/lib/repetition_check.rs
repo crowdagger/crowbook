@@ -77,7 +77,7 @@ impl RepetitionDetector {
                     
                     parser.detect_local(&mut ast, self.threshold);
                     let repetitions = parser.ast_to_repetitions(&ast);
-                    for repetition in repetitions.iter() {
+                    for repetition in &repetitions {
                         insert_annotation(v,
                                           &Data::Repetition(repetition.colour.to_string()),
                                           repetition.offset,

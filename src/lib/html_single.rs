@@ -268,7 +268,7 @@ impl BookRenderer for HtmlSingle {
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book);
         let result = html.render_book()?;
-        to.write_all(&result.as_bytes())
+        to.write_all(result.as_bytes())
             .map_err(|e| {
                 Error::render(&book.source,
                               lformat!("problem when writing HTML: {error}", error = e))
@@ -282,7 +282,7 @@ impl BookRenderer for ProofHtmlSingle {
         let mut html = HtmlSingleRenderer::new(book)
             .proofread();
         let result = html.render_book()?;
-        to.write_all(&result.as_bytes())
+        to.write_all(result.as_bytes())
             .map_err(|e| {
                 Error::render(&book.source,
                               lformat!("problem when writing HTML: {error}", error = e))

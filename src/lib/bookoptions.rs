@@ -444,10 +444,10 @@ impl BookOptions {
                         .join(&value);
                     let file = tmp
                         .to_str()
-                        .ok_or(Error::book_option(&self.source,
-                                                  lformat!("'{value}''s path contains invalid \
-                                                            UTF-8 code",
-                                                           value = &value)))?;
+                        .ok_or_else(|| Error::book_option(&self.source,
+                                                          lformat!("'{value}''s path contains invalid \
+                                                                    UTF-8 code",
+                                                                   value = &value)))?;
                     let mut book = Book::new();
                     book.load_file(file)?;
                     self.merge(book.options)?;
@@ -524,7 +524,7 @@ impl BookOptions {
                                                 &value)))
             }
         } else if self.deprecated.contains_key(&key) {
-            let opt = self.deprecated.get(&key).unwrap().clone();
+            let opt = self.deprecated[&key].clone();
             if let Some(new_key) = opt {
                 Logger::display_warning(lformat!("'{old_key}' has been deprecated, you should \
                                                   now use '{new_key}'",
@@ -769,7 +769,7 @@ impl BookOptions {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(key) {
                 let previous_opt = self.options.get(key);
-                let default = self.defaults.get(key).unwrap();
+                let default = &self.defaults[key];
                 // If new value is equal to default, don't insert it
                 if value == default {
                     continue;
@@ -786,7 +786,7 @@ impl BookOptions {
                 // Sets key with an absolute path so it
                 // won't be messed up if resources.base_path is
                 // redefined later on
-                let path = other.get_path(&key).unwrap();
+                let path = other.get_path(key).unwrap();
                 let new_path = ::std::env::current_dir()
                     .map_err(|_| {
                         Error::default(Source::empty(),

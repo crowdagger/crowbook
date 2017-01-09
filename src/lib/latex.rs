@@ -84,7 +84,7 @@ impl<'a> LatexRenderer<'a> {
         let content = self.render_book()?;
         let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
                                      .unwrap())?;
-        zipper.write("result.tex", &content.as_bytes(), false)?;
+        zipper.write("result.tex", content.as_bytes(), false)?;
 
         // write image files
         for (source, dest) in self.handler.images_mapping() {
@@ -102,7 +102,7 @@ impl<'a> LatexRenderer<'a> {
         }
 
 
-        zipper.generate_pdf(&self.book.options.get_str("tex.command").unwrap(),
+        zipper.generate_pdf(self.book.options.get_str("tex.command").unwrap(),
                             "result.tex",
                             to)
     }
@@ -240,9 +240,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     if self.book.options.get_bool("rendering.initials").unwrap() {
                         let mut chars = content.chars().peekable();
                         let initial = chars.next()
-                            .ok_or(Error::parser(&self.book.source,
-                                                 lformat!("empty str token, could not find \
-                                                           initial")))?;
+                            .ok_or_else(|| Error::parser(&self.book.source,
+                                                    lformat!("empty str token, could not find \
+                                                              initial")))?;
                         let mut first_word = String::new();
                         loop {
                             let c = if let Some(next_char) = chars.peek() {
@@ -319,7 +319,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     4 => content.push_str(r"\subsubsection"),
                     _ => content.push_str(r"\paragraph"),
                 }
-                if self.current_chapter.is_numbered() == false {
+                if !self.current_chapter.is_numbered() {
                     content.push_str("*");
                 }
                 content.push_str(r"{");
@@ -454,13 +454,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Annotation(ref annotation, ref vec) => {
                 let content = self.render_vec(vec)?;
                 if self.proofread {
-                    match annotation {
-                        &Data::GrammarError(ref s) => {
+                    match *annotation {
+                        Data::GrammarError(ref s) => {
                             Ok(format!("\\underline{{{}}}\\protect\\footnote{{{}}}",
                                        content,
                                        escape::tex(s.as_str())))
                         },
-                        &Data::Repetition(ref colour) => {
+                        Data::Repetition(ref colour) => {
                             if !self.escape && colour == "red" {
                                 Ok(format!("\\underline{{{}}}",
                                            content))
@@ -490,7 +490,7 @@ impl BookRenderer for Latex {
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
-        to.write_all(&result.as_bytes())
+        to.write_all(result.as_bytes())
             .map_err(|e| {
                 Error::render(&book.source,
                               lformat!("problem when writing LaTeX: {error}", error = e))
@@ -503,7 +503,7 @@ impl BookRenderer for ProofLatex {
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book).proofread();
         let result = latex.render_book()?;
-        to.write_all(&result.as_bytes())
+        to.write_all(result.as_bytes())
             .map_err(|e| {
                 Error::render(&book.source,
                               lformat!("problem when writing LaTeX: {error}", error = e))

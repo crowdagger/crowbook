@@ -47,7 +47,7 @@ impl Syntax {
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let theme = &self.theme_set.themes["InspiredGitHub"];
         let mut h = syntect::easy::HighlightLines::new(syntax, theme);
-        let regions = h.highlight(&code);
+        let regions = h.highlight(code);
         format!("<pre>{}</pre>",
                 syntect::html::styles_to_coloured_html(&regions[..],
                                                        syntect::html::IncludeBackground::No))
@@ -60,10 +60,10 @@ impl Syntax {
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let theme = &self.theme_set.themes["InspiredGitHub"];
         let mut h = syntect::easy::HighlightLines::new(syntax, theme);
-        let regions = h.highlight(&code);
+        let regions = h.highlight(code);
         
         let mut result = String::with_capacity(code.len());
-        for (style, text) in regions.into_iter() {
+        for (style, text) in regions {
             let mut content = escape::tex(text).into_owned();
             content = insert_breaks(&content);
             content = content.replace('\n', "\\\\\n")

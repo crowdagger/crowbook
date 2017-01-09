@@ -46,13 +46,12 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     let res = book.options.get_path(&key);
 
     let result = match(file, res, stdout) {
-        (Some(file), _, _) => book.render_format_to_file(format, file),
+        (Some(file), _, _) |
+        (None, Ok(file), false) => book.render_format_to_file(format, file),
 
         (None, Err(_), _) |
         (None, _, true)
         => book.render_format_to(format, &mut io::stdout()),
-
-        (None, Ok(file), false) => book.render_format_to_file(format, file)
     };
     
     match result {
@@ -151,12 +150,10 @@ pub fn try_main() -> Result<()> {
         } else {
             book.read_markdown_config(io::stdin())?;
         }
+    } else if s != "-" {
+        book.load_file(s)?;
     } else {
-        if s != "-" {
-            book.load_file(s)?;
-        } else {
-            book.read_config(io::stdin())?;
-        }
+        book.read_config(io::stdin())?;
     }
 
     set_book_options(&mut book, &matches);
@@ -170,8 +167,7 @@ pub fn try_main() -> Result<()> {
 }
 
 pub fn real_main() {
-    match try_main() {
-        Err(err) => print_error(&format!("{}", err)),
-        Ok(_) => (),
+    if let Err(err) = try_main() {
+        print_error(&format!("{}", err));
     }
 }

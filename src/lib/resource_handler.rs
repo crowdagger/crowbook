@@ -87,7 +87,7 @@ impl<'r> ResourceHandler<'r> {
 
         // If this image has already been registered, returns it
         if self.images.contains_key(file.as_ref()) {
-            return Ok(Cow::Borrowed(self.images.get(file.as_ref()).unwrap()));
+            return Ok(Cow::Borrowed(&self.images[file.as_ref()]));
         }
 
         // Else, create a new file name that has same extension
@@ -207,7 +207,7 @@ impl<'r> ResourceHandler<'r> {
 pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
     let mut out: Vec<String> = vec![];
     let base = Path::new(base);
-    for path in list.into_iter() {
+    for path in list {
         let abs_path = base.join(&path);
         let res = fs::metadata(&abs_path);
         match res {

@@ -69,7 +69,7 @@ impl<'a> OdtRenderer<'a> {
         // unzip it
         zipper.unzip("template.odt")?;
         // Complete it with content.xml
-        zipper.write("content.xml", &content.as_bytes(), false)?;
+        zipper.write("content.xml", content.as_bytes(), false)?;
         // Zip and copy
         zipper.generate_odt(self.book.options.get_str("crowbook.zip.command").unwrap(),
                             to)
@@ -128,7 +128,7 @@ impl<'a> OdtRenderer<'a> {
         let mut res = String::new();
 
         for token in tokens {
-            res.push_str(&self.parse_token(&token));
+            res.push_str(&self.parse_token(token));
         }
         res
     }

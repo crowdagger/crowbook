@@ -13,13 +13,11 @@ pub fn get_lang() -> Option<String> {
     for arg in env::args() {
         if found {
             return Some(arg.clone());
-        } else {
-            if arg == "--lang" || arg == "-L" {
-                found = true;
-            }
+        } else if arg == "--lang" || arg == "-L" {
+            found = true;
         }
     }
-    return None;
+    None
 }
 
 /// Prints an error on stderr and exit the program
@@ -89,7 +87,7 @@ pub fn create_book(matches: &ArgMatches) -> ! {
         if matches.is_present("set") {
             let mut book = Book::new();
             let s = set_book_options(&mut book, matches);
-            f.write_all(&s.as_bytes()).unwrap();
+            f.write_all(s.as_bytes()).unwrap();
         } else {
             f.write_all(lformat!("author: Your name
 title: Your title
@@ -106,7 +104,7 @@ lang: en
         }
         f.write_all(lformat!("\n# List of chapters\n").as_bytes()).unwrap();
         for file in values {
-            f.write_all(&format!("+ {}\n", file).as_bytes()).unwrap();
+            f.write_all(format!("+ {}\n", file).as_bytes()).unwrap();
         }
         if let Some(s) = matches.value_of("BOOK") {
             println!("{}",

@@ -27,7 +27,7 @@ use std::io::Result;
 /// unmodified path if it fails (e.g. if the path doesn't exist (yet))
 pub fn normalize<P: AsRef<Path>>(path: P) -> String {
     try_normalize(path.as_ref())
-        .unwrap_or(format!("{}", path.as_ref().display()))
+        .unwrap_or_else(|_| format!("{}", path.as_ref().display()))
 }
 
 
@@ -57,9 +57,8 @@ fn try_normalize<P: AsRef<Path>>(path: P) -> Result<String> {
 /// Insert a title (if there is none) to a vec of tokens
 pub fn insert_title(tokens: &mut Vec<Token>) {
     for token in tokens.iter() {
-        match token {
-            &Token::Header(1, _) => return,
-            _ => {}
+        if let &Token::Header(1, _) = token {
+            return;
         }
     }
     tokens.insert(0, Token::Header(1, vec!()));

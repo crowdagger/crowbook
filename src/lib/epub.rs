@@ -143,7 +143,7 @@ impl<'a> EpubRenderer<'a> {
             maker.add_content(content)?;
         }
 
-        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
+        if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
             maker.inline_toc();
         }
 
@@ -165,7 +165,7 @@ impl<'a> EpubRenderer<'a> {
             }
             // horrible hack
             // todo: find cleaner way
-            for element in self.html.toc.elements.iter() {
+            for element in &self.html.toc.elements {
                 if element.url.contains(&filenamer(i)) {
                     content = content.title(element.title.as_ref());
                     content.toc.children = element.children.clone();
@@ -283,7 +283,7 @@ impl<'a> EpubRenderer<'a> {
         let mut content = String::new();
 
         for token in v {
-            let res = self.render_token(&token)?;
+            let res = self.render_token(token)?;
             content.push_str(&res);
             self.html.render_side_notes(&mut content);
         }
@@ -397,9 +397,9 @@ impl<'a> EpubRenderer<'a> {
                         // Use initial
                         let mut chars = content.chars();
                         let initial = chars.next()
-                            .ok_or(Error::parser(&html.book.source,
-                                                 lformat!("empty str token, could not find \
-                                                           initial")))?;
+                            .ok_or_else(|| Error::parser(&html.book.source,
+                                                         lformat!("empty str token, could not find \
+                                                                   initial")))?;
                         let mut new_content = if initial.is_alphanumeric() {
                             format!("<span class = \"initial\">{}</span>", initial)
                         } else {

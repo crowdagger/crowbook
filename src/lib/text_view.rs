@@ -27,20 +27,20 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
           R: Default,
           F2: Fn(R, R) -> R
 {
-    match token {
-        &Token::Str(ref s) => f(s),
+    match *token {
+        Token::Str(ref s) => f(s),
 
-        &Token::Rule |
-        &Token::SoftBreak |
-        &Token::HardBreak => f("\n"),
+        Token::Rule |
+        Token::SoftBreak |
+        Token::HardBreak => f("\n"),
 
-        &Token::Image(..) |
-        &Token::StandaloneImage(..) |
-        &Token::Footnote(..) |
-        &Token::Table(..) |
-        &Token::TableHead(..) |
-        &Token::TableRow(..) |
-        &Token::TableCell(..) => f(""),
+        Token::Image(..) |
+        Token::StandaloneImage(..) |
+        Token::Footnote(..) |
+        Token::Table(..) |
+        Token::TableHead(..) |
+        Token::TableRow(..) |
+        Token::TableCell(..) => f(""),
 
         _ => traverse_vec(token.inner().unwrap(), f, add),
     }
@@ -55,7 +55,7 @@ pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f: &F1, add: &F2) -> R
 {
     tokens.iter()
         .map(|t| traverse_token(t, f, add))
-        .fold(R::default(), |r1, r2| add(r1, r2))
+        .fold(R::default(), add)
 }
 
 
@@ -98,7 +98,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
                         break;
                     }
                 }
-                pos = pos - len;
+                pos -= len;
                 false
             }
 
@@ -120,7 +120,7 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
             }
 
             _ => {
-                if let Some(ref inner) = tokens[i].inner() {
+                if let Some(inner) = tokens[i].inner() {
                     let len = count_length(inner);
                     // Only recurse if the two is in this subtree
                     if pos < len {

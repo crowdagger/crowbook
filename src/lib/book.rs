@@ -359,7 +359,7 @@ impl Book {
     /// Sets options from a YAML block
     fn set_options_from_yaml(&mut self, yaml: &str) -> Result<&mut Book> {
         self.options.source = self.source.clone();
-        match YamlLoader::load_from_str(&yaml) {
+        match YamlLoader::load_from_str(yaml) {
             Err(err) => {
                 return Err(Error::config_parser(&self.source,
                                                 lformat!("YAML block was not valid YAML: {error}",
@@ -368,7 +368,7 @@ impl Book {
             Ok(mut docs) => {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
                     if let Yaml::Hash(hash) = docs.pop().unwrap() {
-                        for (key, value) in hash.into_iter() {
+                        for (key, value) in hash {
                             self.options.set_yaml(key, value)?;
                         }
                     } else {
@@ -471,7 +471,7 @@ impl Book {
                     is_next_line_ok = false;
                 } else {
                     let doc = doc.unwrap();
-                    if doc.len() > 0 && doc[0].as_hash().is_some() {
+                    if !doc.is_empty() && doc[0].as_hash().is_some() {
                         is_next_line_ok = true;
                     } else {
                         is_next_line_ok = false;
@@ -619,7 +619,7 @@ impl Book {
                 }
             }
             if self.options.get_bool("proofread.repetitions").unwrap() {
-                self.detector = Some(RepetitionDetector::new(&self));
+                self.detector = Some(RepetitionDetector::new(self));
             }
         }
     }
@@ -728,7 +728,7 @@ impl Book {
                                    format = format));
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
-                renderer.render(&self, f)?;
+                renderer.render(self, f)?;
                 self.logger.info(lformat!("Succesfully generated {format}",
                                           format = description));
                 Ok(())
@@ -756,7 +756,7 @@ impl Book {
                                    format = format));
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
-                renderer.render_to_file(&self, path.as_ref())?;
+                renderer.render_to_file(self, path.as_ref())?;
                 self.logger.info(lformat!("Succesfully generated {format}: {path}",
                                           format = description,
                                           path = misc::normalize(path)));
@@ -990,7 +990,7 @@ impl Book {
         if !title.is_empty() {
             data = data.insert_bool("has_chapter_title", true);
         }
-        let number = if self.options.get_bool("rendering.chapter.roman_numerals").unwrap() == true {
+        let number = if self.options.get_bool("rendering.chapter.roman_numerals").unwrap() {
             if n <= 0 {
                 return Err(Error::render(Source::empty(),
                                             lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
@@ -1085,6 +1085,7 @@ impl Book {
                 let key = key.replace(".", "_");
 
                 // Only render some metadata as markdown
+                // (actually, currently treat them all as markdown)
                 let content = match key.as_ref() {
                     "author" | "title" | "lang" => f(s),
                     _ => f(s),
@@ -1107,7 +1108,7 @@ impl Book {
 
         // Add localization strings
         let hash = lang::get_hash(self.options.get_str("lang").unwrap());
-        for (key, value) in hash.into_iter() {
+        for (key, value) in hash {
             let key = format!("loc_{}", key.as_str().unwrap());
             let value = value.as_str().unwrap();
             mapbuilder = mapbuilder.insert_str(&key, value);
