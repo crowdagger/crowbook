@@ -122,7 +122,7 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Creates a new HTML renderer
     pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        let (highlight, syntax) = Self::get_highlight(&book);
+        let (highlight, syntax) = Self::get_highlight(book);
 
         let mut html = HtmlRenderer {
             book: book,
@@ -216,9 +216,6 @@ impl<'a> HtmlRenderer<'a> {
                 self.render_vec(&Parser::new().parse_inline(s)?)
             });
             res?
-        } else if n == 1 && self.current_numbering >= 0 {
-            let p_title = self.render_vec(vec)?;
-            p_title
         } else if self.current_numbering >= n {
             format!("{} {}", self.get_numbers(), self.render_vec(vec)?)
         } else {
@@ -290,13 +287,11 @@ impl<'a> HtmlRenderer<'a> {
             }
             if i != 1 || !self.book.options.get_bool("rendering.chapter.roman_numerals").unwrap() {
                 output.push_str(&format!("{}.", self.current_chapter[i])); //todo
+            } else if self.current_chapter[i] >= 1 {
+                output.push_str(&format!("{:X}.", Roman::from(self.current_chapter[i] as i16)));
             } else {
-                if self.current_chapter[i] >= 1 {
-                    output.push_str(&format!("{:X}.", Roman::from(self.current_chapter[i] as i16)));
-                } else {
-                    self.book.logger.error(lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
+                self.book.logger.error(lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
                                                     n = self.current_chapter[i]));
-                }
             }
         }
         output
@@ -366,13 +361,13 @@ impl<'a> HtmlRenderer<'a> {
             Token::Annotation(ref annotation, ref v) => {
                 let content = this.as_mut().render_vec(v)?;
                 if this.as_ref().proofread {
-                    match annotation {
-                        &Data::GrammarError(ref s) => {
+                    match *annotation {
+                        Data::GrammarError(ref s) => {
                             Ok(format!("<span title = \"{}\" class = \"grammar-error\">{}</span>",
                                        escape::quotes(s.as_str()),
                                        content))
                         }
-                        &Data::Repetition(ref colour) => {
+                        Data::Repetition(ref colour) => {
                             if !this.as_ref().verbatim {
                                 Ok(format!("<span class = \"repetition\" \
                                             style = \"text-decoration-line: underline; \

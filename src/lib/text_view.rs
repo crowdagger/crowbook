@@ -252,15 +252,13 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
             tokens.insert(i + 1, new_token);
         }
         return None;
+    } else if found_left.is_none() && found_right.is_none() {
+        return Some(pos);
     } else {
-        if found_left.is_none() && found_right.is_none() {
-            return Some(pos);
-        } else {
-            Logger::display_warning(lformat!("ignored annotation {:?} as it wasn't compatible \
-                                              with the Markdown structure",
-                                             annotation));
-            return None;
-        }
+        Logger::display_warning(lformat!("ignored annotation {:?} as it wasn't compatible \
+                                          with the Markdown structure",
+                                         annotation));
+        return None;
     }
 }
 

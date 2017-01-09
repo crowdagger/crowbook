@@ -292,12 +292,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         } else {
                             return Ok(r#"\section*{}"#.to_owned());
                         }
-                    } else {
-                        if let Number::Specified(n) = self.current_chapter {
-                            content.push_str(r"\setcounter{chapter}{");
-                            content.push_str(&format!("{}", n - 1));
-                            content.push_str("}\n");
-                        }
+                    } else if let Number::Specified(n) = self.current_chapter {
+                        content.push_str(r"\setcounter{chapter}{");
+                        content.push_str(&format!("{}", n - 1));
+                        content.push_str("}\n");
                     }
                 }
                 match n {
@@ -379,15 +377,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     let url = escape::tex(url.as_ref());
                     if &content == &url {
                         Ok(format!("\\url{{{}}}", content))
+                    } else if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
+                        Ok(format!("\\href{{{}}}{{{}}}\\protect\\footnote{{\\url{{{}}}}}",
+                                   url,
+                                   content,
+                                   url))
                     } else {
-                        if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
-                            Ok(format!("\\href{{{}}}{{{}}}\\protect\\footnote{{\\url{{{}}}}}",
-                                       url,
-                                       content,
-                                       url))
-                        } else {
-                            Ok(format!("\\href{{{}}}{{{}}}", url, content))
-                        }
+                        Ok(format!("\\href{{{}}}{{{}}}", url, content))
                     }
                 }
             }

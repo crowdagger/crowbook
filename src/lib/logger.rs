@@ -44,7 +44,7 @@ impl Output {
                 return Output::Terminal(term)
             }
         }
-        return Output::Stderr(io::stderr())
+        Output::Stderr(io::stderr())
     }
 
     /// Print a msg prefixed by a coloured `level` message

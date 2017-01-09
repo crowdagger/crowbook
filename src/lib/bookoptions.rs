@@ -681,8 +681,7 @@ impl BookOptions {
             "cover" | "html.icon" => {
                 // Translate according to resources.base_path.images
                 let base = self.get_path("resources.base_path.images").unwrap();
-                let new_path = Path::new(&base).join(path);
-                new_path
+                Path::new(&base).join(path)
             }
 
             "output.epub" |
@@ -696,15 +695,13 @@ impl BookOptions {
             "output.proofread.pdf" => {
                 // Translate according to output.base_path
                 let base = self.get_path("output.base_path").unwrap();
-                let new_path = Path::new(&base).join(path);
-                new_path
+                Path::new(&base).join(path)
             }
 
             key if self.valid_tpls.contains(&key) => {
                 // Translate according to resources.base_path.template
                 let base = self.get_path("resources.base_path.templates").unwrap();
-                let new_path = Path::new(&base).join(path);
-                new_path
+                Path::new(&base).join(path)
             }
 
             _ => self.root.join(path),

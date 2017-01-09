@@ -109,11 +109,10 @@ impl French {
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
     fn clean<'a>(&self, s: Cow<'a, str>, latex: bool) -> Cow<'a, str> {
-        let s = if latex {
+        if latex {
             self.formatter.format_tex(s)
         } else {
             self.formatter.format(s)
-        };
-        s
+        }
     }
 }

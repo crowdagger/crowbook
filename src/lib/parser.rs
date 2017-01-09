@@ -263,27 +263,25 @@ fn collapse(ast: &mut Vec<Token>) {
 
     let mut i = 0;
     while i < ast.len() {
-        if ast[i].is_str() {
-            if i < ast.len() - 1 {
-                if ast[i + 1].is_str() {
-                    // Two consecutives Str, concatenate them
-                    let token = ast.remove(i + 1);
-                    if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i],
-                                                                                      token) {
-                        //                        dest.push(' ');
-                        dest.push_str(source);
-                        continue;
-                    } else {
-                        unreachable!();
-                    }
-                } else if ast[i + 1] == Token::SoftBreak {
-                    ast.remove(i + 1);
-                    if let &mut Token::Str(ref mut dest) = &mut ast[i] {
-                        dest.push(' ');
-                        continue;
-                    } else {
-                        unreachable!();
-                    }
+        if ast[i].is_str() && i < ast.len() - 1 {
+            if ast[i + 1].is_str() {
+                // Two consecutives Str, concatenate them
+                let token = ast.remove(i + 1);
+                if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i],
+                                                                                  token) {
+                    //                        dest.push(' ');
+                    dest.push_str(source);
+                    continue;
+                } else {
+                    unreachable!();
+                }
+            } else if ast[i + 1] == Token::SoftBreak {
+                ast.remove(i + 1);
+                if let &mut Token::Str(ref mut dest) = &mut ast[i] {
+                    dest.push(' ');
+                    continue;
+                } else {
+                    unreachable!();
                 }
             }
         }
