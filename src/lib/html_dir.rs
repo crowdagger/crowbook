@@ -213,7 +213,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let template =
             compile_str(self.html.book.get_template("html.dir.template")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'html.dir.template"))?;
+                        "html.dir.template")?;
         for (i, content) in chapters.into_iter().enumerate() {
             let prev_chapter = if i > 0 {
                 format!("<p class = \"prev_chapter\">
@@ -327,7 +327,7 @@ impl<'a> HtmlDirRenderer<'a> {
         let template =
             compile_str(self.html.book.get_template("html.dir.template")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'html.dir.template"))?;
+                        "html.dir.template")?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         self.write_file("index.html", &res)?;
@@ -343,7 +343,7 @@ impl<'a> HtmlDirRenderer<'a> {
                                        .get_template("html.css")?
                                        .as_ref(),
                                        &self.html.book.source,
-                                       lformat!("could not compile template 'html.css"))?;
+                                       "html.css")?;
         let mut data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?;
         data = data.insert_str("colours",
                                self.html.book.get_template("html.css.colours")?);

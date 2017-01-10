@@ -152,7 +152,7 @@ impl<'a> EpubRenderer<'a> {
         let template_chapter =
             compile_str(self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'epub.chapter.xhtml'"))?;
+                        "epub.chapter.xhtml")?;
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             let n = chapter.number;
             let v = &chapter.content;
@@ -179,8 +179,8 @@ impl<'a> EpubRenderer<'a> {
         // Render the CSS file and write it
         let template_css =
             compile_str(self.html.book.get_template("epub.css").unwrap().as_ref(),
-                             &self.html.book.source,
-                             lformat!("could not compile template 'epub.css'"))?;
+                        &self.html.book.source,
+                        "epub.css")?;
         let mut data = self.html
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
@@ -231,7 +231,7 @@ impl<'a> EpubRenderer<'a> {
         let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
         let template = compile_str(if epub3 { epub3::TITLE } else { TITLE },
                                    &self.html.book.source,
-                                   lformat!("could not compile template for title page"))?;
+                                   "title page")?;
         let data = self.html
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
@@ -255,8 +255,7 @@ impl<'a> EpubRenderer<'a> {
             let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
             let template = compile_str(if epub3 { epub3::COVER } else { COVER },
                                        &self.html.book.source,
-                                       lformat!("could not compile template for \
-                                                 cover.xhtml"))?;
+                                       "cover.xhtml")?;
             let data = self.html
                 .book
                 .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?

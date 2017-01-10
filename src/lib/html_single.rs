@@ -178,7 +178,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let template_css = compile_str(self.html.book.get_template("html.css")?
                                        .as_ref(),
                                        &self.html.book.source,
-                                       lformat!("could not compile template 'html.css'"))?;
+                                       "html.css")?;
         let mut data = self.html
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
@@ -199,7 +199,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let template_js =
             compile_str(self.html.book.get_template("html.standalone.js")?.as_ref(),
                         &self.html.book.source,
-                        lformat!("could not compile template 'html.standalone.js'"))?;
+                        "html.standalone.js")?;
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_str("book_svg", &book_svg)
             .insert_str("pages_svg", &pages_svg)
@@ -251,7 +251,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         let template = compile_str(self.html.book.get_template("html.standalone.template")?
                                    .as_ref(),
                                    &self.html.book.source,
-                                   lformat!("could not compile template 'html.standalone.template'"))?;
+                                   "html.standalone.template")?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         Ok(String::from_utf8_lossy(&res).into_owned())

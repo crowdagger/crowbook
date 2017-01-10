@@ -568,7 +568,7 @@ impl<'a> HtmlRenderer<'a> {
         let mapbuilder = self.book.get_metadata(|s| Ok(s.to_owned()))?;
         let data = mapbuilder.build();
         let template =
-            compile_str(s, &self.book.source, lformat!("could not compile template"))?;
+            compile_str(s, &self.book.source, "")?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         Ok(String::from_utf8_lossy(&res).into_owned())
@@ -583,8 +583,7 @@ impl<'a> HtmlRenderer<'a> {
         let template = self.book.options.get_str("rendering.inline_toc.name").unwrap();
         let template = compile_str(template,
                                    &self.book.source,
-                                   lformat!("could not compile template \
-                                             'rendering.inline_toc.name'"))?;
+                                   "rendering.inline_toc.name")?;
         let mut res = vec![];
         template.render_data(&mut res, &data)?;
         Ok(String::from_utf8_lossy(&res).into_owned())

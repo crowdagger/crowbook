@@ -975,7 +975,7 @@ impl Book {
         let template =
             compile_str(self.options.get_str("rendering.chapter.template").unwrap(),
                         &self.source,
-                        lformat!("could not compile template 'rendering.chapter.template'"))?;
+                        "rendering.chapter.template")?;
         self.chapter_template = Some(template);
         Ok(())
     }
@@ -1012,8 +1012,7 @@ impl Book {
             let template =
                 compile_str(self.options.get_str("rendering.chapter.template").unwrap(),
                             &self.source,
-                            lformat!("could not compile template \
-                                      'rendering.chapter.template'"))?;
+                            "rendering.chapter.template")?;
             template.render_data(&mut res, &data)?;
         }
 
@@ -1051,8 +1050,7 @@ impl Book {
             let template =
                 compile_str(self.options.get_str("rendering.part.template").unwrap(),
                             &self.source,
-                            lformat!("could not compile template \
-                                      'rendering.part.template'"))?;
+                            "rendering.part.template")?;
             template.render_data(&mut res, &data)?;
         }
 
@@ -1250,14 +1248,15 @@ impl Book {
 
 
 /// Calls mustache::compile_str but catches panics and returns a result
-pub fn compile_str<O, S>(template: &str, source: O, error_msg: S) -> Result<mustache::Template>
-    where O: Into<Source>,
-          S: Into<Cow<'static, str>>
+pub fn compile_str<O>(template: &str, source: O, template_name: &str) -> Result<mustache::Template>
+    where O: Into<Source>
 {
     let input: String = template.to_owned();
     let result = mustache::compile_str(&input);
     match result {
         Ok(result) => Ok(result),
-        Err(_) => Err(Error::template(source, error_msg)),
+        Err(err) => Err(Error::template(source, lformat!("could not compile '{template}': {error}",
+                                                         template = template_name,
+                                                         error = err))),
     }
 }

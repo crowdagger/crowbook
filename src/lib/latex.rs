@@ -189,7 +189,7 @@ impl<'a> LatexRenderer<'a> {
 
         let template = compile_str(self.book.get_template("tex.template")?.as_ref(),
                                    &self.book.source,
-                                   lformat!("could not compile template 'tex.template'"))?;
+                                   "tex.template")?;
         let mut data = self.book.get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
