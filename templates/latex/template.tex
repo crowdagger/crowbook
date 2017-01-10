@@ -29,8 +29,13 @@
 \usepackage[anythingbreaks]{breakurl}
 <</xelatex>>
 
+<<#stdpage>>
+\usepackage[<<&papersize>>]{geometry}
+<</stdpage>>
+<<^stdpage>>
 \usepackage[<<&papersize>>, top=2cm, bottom=1.5cm,
   <<#book>> left=2.5cm,right=1.5cm<</book>><<^book>> left=2cm,right=2cm<</book>>]{geometry}%A5 by default
+<</stdpage>>
 
 <<^xelatex>>
 % Even with inputenc, not all unicode chars are recognized. This a
@@ -43,6 +48,10 @@
 % beautiful, though, but at least it's readable.
 \setlength\emergencystretch{.5\textwidth}
 <</xelatex>>
+
+<<#stdpage>>
+\usepackage[hyphen=false, parskip]{stdpage}
+<</stdpage>>
 
 \makeatletter
 
@@ -60,6 +69,7 @@
 
 \date{<<&date>>}
 
+<<^stdpage>>
 % Title
 <<#book>>
 \renewcommand{\maketitle}{
@@ -124,6 +134,8 @@
 \chead[\fancyplain{}{\rm\thepage}]{\fancyplain{}{\rm\thepage}}
 % Footer
 \cfoot{\fancyplain{}{}}
+
+<</stdpage>>
 
 <<&additional_code>>
 

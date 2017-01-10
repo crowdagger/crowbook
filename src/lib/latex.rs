@@ -195,6 +195,7 @@ impl<'a> LatexRenderer<'a> {
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
             .insert_bool("tex_title", self.book.options.get_bool("tex.title").unwrap())
             .insert_str("papersize", self.book.options.get_str("tex.paper_size").unwrap())
+            .insert_bool("stdpage", self.book.options.get_bool("tex.stdpage").unwrap())
             .insert_str("tex_lang", tex_lang);
         if let Ok(tex_tmpl_add) = self.book.options.get_str("tex.template.add") {
             data = data.insert_str("additional_code", tex_tmpl_add);

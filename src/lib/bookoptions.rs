@@ -88,6 +88,7 @@ tex.class:str:book                  # {tex_class}
 tex.paper_size:str:a5paper          # {tex_paper_size}
 tex.title:bool:true                 # {tex_title}
 tex.font.size:int                   # {tex_font_size}
+tex.stdpage:bool:false              # {tex_stdpage}
 
 
 # {rs_opt}
@@ -252,6 +253,7 @@ html.crowbook_link:alias                            # {removed}
                                          tex_title = lformat!("If true, generate a title with \\maketitle"),
                                          tex_paper_size = lformat!("Specifies the size of the page."),
                                          tex_font_size = lformat!("Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"),
+                                         tex_stdpage = lformat!("If set to true, use 'stdpage' package to format a manuscript according to standards"),
                                          
                                          rs_files = lformat!("Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts"),
                                          rs_out = lformat!("Paths where additional resources should be copied in the EPUB file or HTML directory"),

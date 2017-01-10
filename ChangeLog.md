@@ -8,6 +8,9 @@ unreleased
     cause less problems when used in conjunction with grammar
     checking. It now also works on PDF output (so the way it is
     highlighted could be improved).
+* New options:
+  * `tex.stdpage`: if set to `true`, will use the `stdpage` package to
+    render the book according to standards for submitting manuscripts.
 * Bugfixes:
   * Avoid initializing `syntect` (at the cost of performances) if it
     is not used.
