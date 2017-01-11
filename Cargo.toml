@@ -46,7 +46,6 @@ mustache = "0.8"
 uuid = { version = "0.3", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
-crossbeam = "0.2"
 rayon = "0.6"
 crowbook-text-processing = "^0.2.2"
 lazy_static = "0.2.1"
