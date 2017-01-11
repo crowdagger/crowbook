@@ -66,8 +66,9 @@ use std::path::{Path, PathBuf};
 use std::borrow::Cow;
 use std::iter::IntoIterator;
 use std::collections::HashMap;
+use std::cmp::Ordering;
 
-use crossbeam;
+use rayon::prelude::*;
 use mustache;
 use mustache::{MapBuilder, Template};
 use yaml_rust::{YamlLoader, Yaml};
@@ -672,43 +673,34 @@ impl Book {
     ///       .render_all(); // renders foo.tex in /tmp
     /// ```
     pub fn render_all(&self) -> () {
-        let mut handles = vec![];
-        crossbeam::scope(|scope| {
-            if self.options.get("output.pdf").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("pdf")));
-            }
-            if self.options.get("output.epub").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("epub")));
-            }
-            if self.options.get("output.html.dir").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("html.dir")));
-            }
-            if self.options.get("output.odt").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("odt")));
-            }
-            if self.options.get_path("output.html").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("html")));
-            }
-            if self.options.get_path("output.tex").is_ok() {
-                handles.push(scope.spawn(|| self.render_format("tex")));
-            }
-            if self.is_proofread() {
-                if self.options.get("output.proofread.pdf").is_ok() {
-                    handles.push(scope.spawn(|| self.render_format("proofread.pdf")));
+        let mut keys: Vec<_> = self.formats
+            .keys()
+            .filter(|fmt| {
+                if !self.is_proofread() {
+                    !fmt.contains("proofread")
+                } else {
+                    true
                 }
-                if self.options.get("output.proofread.html.dir").is_ok() {
-                    handles.push(scope.spawn(|| self.render_format("proofread.html.dir")));
-                }
-                if self.options.get_path("output.proofread.html").is_ok() {
-                    handles.push(scope.spawn(|| self.render_format("proofread.html")));
-                }
+            })
+            .collect();
+        // Make sure that PDF comes first since running latex takes lots of time
+        keys.sort_by(|fmt1, fmt2| {
+            if fmt1.contains("pdf") {
+                Ordering::Less
+            } else if fmt2.contains("pdf") {
+                Ordering::Greater
+            } else {
+                Ordering::Equal
             }
         });
 
-        if handles.is_empty() {
-            Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
-                                     specified. Add output.{{format}} to your config file."));
-        }
+        keys.par_iter()
+            .for_each(|fmt| self.render_format(fmt));
+
+        // if handles.is_empty() {
+        //     Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
+        //                              specified. Add output.{{format}} to your config file."));
+        // }
     }
 
 
