@@ -47,6 +47,7 @@ uuid = { version = "0.3", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
 crossbeam = "0.2"
+rayon = "0.6"
 crowbook-text-processing = "^0.2.2"
 lazy_static = "0.2.1"
 term = "0.4"
@@ -56,7 +57,8 @@ epub-builder = "0.1"
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
 url =  { version = "1", optional = true }
-syntect = { version = "1", optional = true }
+# syntect = { version = "1", optional = true }
+syntect =  {git = "https://github.com/trishume/syntect.git", optional = true }
 
 [dependencies.hyper]
 version = "0.9"

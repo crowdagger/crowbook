@@ -111,6 +111,7 @@ extern crate mime_guess;
 extern crate walkdir;
 extern crate rustc_serialize;
 extern crate crossbeam;
+extern crate rayon;
 extern crate crowbook_text_processing;
 extern crate crowbook_intl_runtime;
 extern crate term;

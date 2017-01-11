@@ -15,8 +15,9 @@ dependencies = [
  "mustache 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "numerals 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "pulldown-cmark 0.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rayon 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
- "syntect 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "syntect 1.0.2 (git+https://github.com/trishume/syntect.git)",
  "term 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -211,6 +212,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "deque"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -539,6 +548,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rayon"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "deque 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.19 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num_cpus 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "regex"
 version = "0.1.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -631,7 +651,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "syntect"
 version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+source = "git+https://github.com/trishume/syntect.git#17b4e5064b9b6fe44bf2a0a0622f9bf9fadb3bb1"
 dependencies = [
  "bincode 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -881,6 +901,7 @@ dependencies = [
 "checksum crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "62cf6ec512b4d7fb7d8683efa703b17e5b8f5e24a9eb7ec9fb92237f039d941c"
 "checksum crowbook-text-processing 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)" = "38687c25c27e3bfb0b16d6c12c6c048493f119ba2f45e9dff54149454dca1d8b"
 "checksum dbghelp-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "97590ba53bcb8ac28279161ca943a924d1fd4a8fb3fa63302591647c4fc5b850"
+"checksum deque 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "1614659040e711785ed8ea24219140654da1729f3ec8a47a9719d041112fe7bf"
 "checksum epub-builder 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "6adeb45c24cc45ca37e0cb9cd897ed8ddf8c99c2957c2b01732d8f640fe0e7fd"
 "checksum error-chain 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)" = "318cb3c71ee4cdea69fdc9e15c173b245ed6063e1709029e8fd32525a881120f"
 "checksum flate2 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)" = "3eeb481e957304178d2e782f2da1257f1434dfecbae883bafb61ada2a9fea3bb"
@@ -921,6 +942,7 @@ dependencies = [
 "checksum podio 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "e5422a1ee1bc57cc47ae717b0137314258138f38fd5f3cea083f43a9725383a0"
 "checksum pulldown-cmark 0.0.8 (registry+https://github.com/rust-lang/crates.io-index)" = "1058d7bb927ca067656537eec4e02c2b4b70eaaa129664c5b90c111e20326f41"
 "checksum rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "022e0636ec2519ddae48154b028864bdce4eaf7d35226ab8e65c611be97b189d"
+"checksum rayon 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "50c575b58c2b109e2fbc181820cbe177474f35610ff9e357dc75f6bac854ffbf"
 "checksum regex 0.1.80 (registry+https://github.com/rust-lang/crates.io-index)" = "4fd4ace6a8cf7860714a2c2280d6c1f7e6a413486c13298bbc86fd3da019402f"
 "checksum regex 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "4278c17d0f6d62dfef0ab00028feb45bd7d2102843f80763474eeb1be8a10c01"
 "checksum regex-syntax 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)" = "f9ec002c35e86791825ed294b50008eea9ddfc8def4420124fbc6b08db834957"
@@ -934,7 +956,7 @@ dependencies = [
 "checksum solicit 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "172382bac9424588d7840732b250faeeef88942e37b6e35317dce98cafdd75b2"
 "checksum stemmer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "8bc851510b472ff407137208a23f4f58e0cb41fdb5c3e38c9fd4482ea03c46f1"
 "checksum strsim 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "67f84c44fbb2f91db7fef94554e6b2ac05909c9c0b0bc23bb98d3a1aebfe7f7c"
-"checksum syntect 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d89b830beceb259c98167444f74482d9016c82d479fb602b8319d34128fcf542"
+"checksum syntect 1.0.2 (git+https://github.com/trishume/syntect.git)" = "<none>"
 "checksum tempdir 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "87974a6f5c1dfb344d733055601650059a3363de2a6104819293baff662132d6"
 "checksum term 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "3deff8a2b3b6607d6d7cc32ac25c0b33709453ca9cceac006caac51e963cf94a"
 "checksum term_size 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "3f7f5f3f71b0040cecc71af239414c23fd3c73570f5ff54cf50e03cef637f2a0"
