@@ -26,7 +26,9 @@ use renderer::Renderer;
 use parser::Parser;
 use book_renderer::BookRenderer;
 
-use std::io::{Read, Write};
+use std::io;
+use std::io::Read;
+use std::fmt::Write;
 use std::fs;
 use std::fs::File;
 use std::path::Path;
@@ -288,23 +290,25 @@ impl<'a> HtmlDirRenderer<'a> {
         // Insert toc inline if option is set
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
 
-            content.push_str(&format!("<h1>{}</h1>
+            write!(content,
+                   "<h1>{}</h1>
 <div id = \"toc\">
 {}
 </div>
 ",
-                                      self.html.get_toc_name()?,
-                                      &toc));
+                   self.html.get_toc_name()?,
+                   &toc)?;
         }
 
         if titles.len() > 1 {
-            content.push_str(&format!("<p class = \"next_chapter\">
+            write!(content,
+                   "<p class = \"next_chapter\">
   <a href = \"{}\">
     {} »
   </a>
 </p>",
-                                      filenamer(0),
-                                      titles[0]));
+                   filenamer(0),
+                   titles[0])?;
         }
         // Render index.html and write it too
         let mut mapbuilder = self.html
@@ -393,7 +397,7 @@ impl<'a> HtmlDirRenderer<'a> {
                                    file = dest_file.display(),
                                    error = e))
         })?;
-        f.write_all(content)
+        io::Write::write_all(&mut f, content)
             .map_err(|e| {
                 Error::render(&self.html.book.source,
                               lformat!("could not write to file {file}: {error}",
@@ -414,7 +418,7 @@ pub struct HtmlDir {}
 pub struct ProofHtmlDir {}
 
 impl BookRenderer for HtmlDir {
-    fn render(&self, _: &Book, _: &mut Write) -> Result<()> {
+    fn render(&self, _: &Book, _: &mut io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("error: can only render HTML directory to a path, not to a stream")))
     }
@@ -427,7 +431,7 @@ impl BookRenderer for HtmlDir {
 }
 
 impl BookRenderer for ProofHtmlDir {
-    fn render(&self, _: &Book, _: &mut Write) -> Result<()> {
+    fn render(&self, _: &Book, _: &mut io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("error: can only render HTML directory to a path, not to a stream")))
     }

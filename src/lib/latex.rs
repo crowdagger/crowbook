@@ -31,8 +31,11 @@ use crowbook_text_processing::escape;
 
 use std::iter::Iterator;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io;
+use std::io::Read;
+use std::fmt::Write;
 use std::borrow::Cow;
+
 
 /// LaTeX renderer
 pub struct LatexRenderer<'a> {
@@ -80,7 +83,7 @@ impl<'a> LatexRenderer<'a> {
     }
 
     /// Render pdf to a file
-    pub fn render_pdf(&mut self, to: &mut Write) -> Result<String> {
+    pub fn render_pdf(&mut self, to: &mut io::Write) -> Result<String> {
         let content = self.render_book()?;
         let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
                                      .unwrap())?;
@@ -109,14 +112,15 @@ impl<'a> LatexRenderer<'a> {
 
     /// Render latex in a string
     pub fn render_book(&mut self) -> Result<String> {
-        let mut content = String::from("");
+        let mut content = String::new();
 
         // set tex numbering and toc display to book's parameters
         let numbering = self.book.options.get_i32("rendering.num_depth").unwrap() - 1;
-        content.push_str(&format!("\\setcounter{{tocdepth}}{{{}}}
+        write!(content,
+               "\\setcounter{{tocdepth}}{{{}}}
 \\setcounter{{secnumdepth}}{{{}}}\n",
-                                  numbering,
-                                  numbering));
+               numbering,
+               numbering)?;
 
         if self.book.options.get_bool("rendering.inline_toc").unwrap() {
             content.push_str("\\tableofcontents\n");
@@ -130,7 +134,9 @@ impl<'a> LatexRenderer<'a> {
             let n = chapter.number;
             let v = &chapter.content;
             self.source = Source::new(chapter.filename.as_str());
-            content.push_str(&format!("\\label{{chapter-{}}}", i));
+            write!(content,
+                   "\\label{{chapter-{}}}",
+                   i)?;
             self.current_chapter = n;
             content.push_str(&self.render_vec(v)?);
         }
@@ -295,7 +301,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         }
                     } else if let Number::Specified(n) = self.current_chapter {
                         content.push_str(r"\setcounter{chapter}{");
-                        content.push_str(&format!("{}", n - 1));
+                        write!(content, "{}", n - 1)?;
                         content.push_str("}\n");
                     }
                 }
@@ -488,7 +494,7 @@ pub struct ProofPdf;
 
 
 impl BookRenderer for Latex {
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
         to.write_all(result.as_bytes())
@@ -501,7 +507,7 @@ impl BookRenderer for Latex {
 }
 
 impl BookRenderer for ProofLatex {
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book).proofread();
         let result = latex.render_book()?;
         to.write_all(result.as_bytes())
@@ -514,7 +520,7 @@ impl BookRenderer for ProofLatex {
 }
 
 impl BookRenderer for Pdf {
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .render_pdf(to)?;
         Ok(())
@@ -522,7 +528,7 @@ impl BookRenderer for Pdf {
 }
 
 impl BookRenderer for ProofPdf {
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .proofread()
             .render_pdf(to)?;

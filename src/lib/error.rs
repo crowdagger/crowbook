@@ -371,7 +371,16 @@ impl From<mustache::Error> for Error {
 impl From<epub_builder::Error> for Error {
     fn from(err: epub_builder::Error) -> Error {
         Error::render(Source::empty(),
-                      lformat!("error during EPUB generation: {}", err))
+                      lformat!("error during EPUB generation: {error}",
+                               error = err))
+    }
+}
+
+impl From<fmt::Error> for Error {
+    fn from(err: fmt::Error) -> Error {
+        Error::default(Source::empty(),
+                       lformat!("format error: {error}",
+                                error = err))
     }
 }
 

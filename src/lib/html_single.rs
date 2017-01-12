@@ -28,7 +28,8 @@ use parser::Parser;
 use rustc_serialize::base64::{self, ToBase64};
 
 use std::convert::{AsMut, AsRef};
-use std::io::Write;
+use std::io;
+use std::fmt::Write;
 
 /// Single file HTML renderer
 ///
@@ -129,32 +130,32 @@ impl<'a> HtmlSingleRenderer<'a> {
 
         for (i, chapter) in chapters.iter().enumerate() {
             if self.html.book.options.get_bool("html.standalone.one_chapter").unwrap() && i != 0 {
-                content.push_str(&format!("<p onclick = \"javascript:showChapter({})\" class = \
-                                           \"chapterControls prev_chapter chapter-{}\">
-  <a \
-                                           href = \"#chapter-{}\">
+                write!(content,
+                       "<p onclick = \"javascript:showChapter({})\" class = \
+                        \"chapterControls prev_chapter chapter-{}\">
+  <a href = \"#chapter-{}\">
   « {}
   </a>
 </p>",
-                                          i - 1,
-                                          i,
-                                          i - 1,
-                                          titles[i - 1]));
+                       i - 1,
+                       i,
+                       i - 1,
+                       titles[i - 1])?;
             }
             content.push_str(chapter);
             if self.html.book.options.get_bool("html.standalone.one_chapter").unwrap() &&
                i < titles.len() - 1 {
-                content.push_str(&format!("<p onclick = \"javascript:showChapter({})\" class = \
-                                           \"chapterControls next_chapter chapter-{}\">
-  <a \
-                                           href = \"#chapter-{}\">
+                   write!(content,
+                          "<p onclick = \"javascript:showChapter({})\" class = \
+                           \"chapterControls next_chapter chapter-{}\">
+  <a href = \"#chapter-{}\">
   {} »
   </a>
 </p>",
-                                          i + 1,
-                                          i,
-                                          i + 1,
-                                          titles[i + 1]));
+                          i + 1,
+                          i,
+                          i + 1,
+                          titles[i + 1])?;
             }
         }
         self.html.render_end_notes(&mut content);
@@ -265,7 +266,7 @@ pub struct HtmlSingle {}
 pub struct ProofHtmlSingle {}
 
 impl BookRenderer for HtmlSingle {
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book);
         let result = html.render_book()?;
         to.write_all(result.as_bytes())
@@ -278,7 +279,7 @@ impl BookRenderer for HtmlSingle {
 }
 
 impl BookRenderer for ProofHtmlSingle {
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)
             .proofread();
         let result = html.render_book()?;

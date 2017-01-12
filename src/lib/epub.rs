@@ -282,8 +282,7 @@ impl<'a> EpubRenderer<'a> {
         let mut content = String::new();
 
         for token in v {
-            let res = self.render_token(token)?;
-            content.push_str(&res);
+            content.push_str(&self.render_token(token)?);
             self.html.render_side_notes(&mut content);
         }
         self.html.render_end_notes(&mut content);

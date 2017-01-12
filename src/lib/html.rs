@@ -29,6 +29,7 @@ use lang;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
+use std::fmt::Write;
 
 use crowbook_text_processing::escape;
 use numerals::roman::Roman;
@@ -286,9 +287,11 @@ impl<'a> HtmlRenderer<'a> {
                 }
             }
             if i != 1 || !self.book.options.get_bool("rendering.chapter.roman_numerals").unwrap() {
-                output.push_str(&format!("{}.", self.current_chapter[i])); //todo
+                write!(output, "{}.", self.current_chapter[i]).unwrap(); //todo
             } else if self.current_chapter[i] >= 1 {
-                output.push_str(&format!("{:X}.", Roman::from(self.current_chapter[i] as i16)));
+                write!(output,
+                       "{:X}.",
+                       Roman::from(self.current_chapter[i] as i16)).unwrap();
             } else {
                 self.book.logger.error(lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
                                                     n = self.current_chapter[i]));
@@ -303,9 +306,10 @@ impl<'a> HtmlRenderer<'a> {
     pub fn render_side_notes(&mut self, res: &mut String) {
         if self.book.options.get_bool("html.side_notes").unwrap() {
             for (note_number, footnote) in self.footnotes.drain(..) {
-                res.push_str(&format!("<div class = \"sidenote\">\n{} {}\n</div>\n",
-                                      note_number,
-                                      footnote));
+                write!(res,
+                       "<div class = \"sidenote\">\n{} {}\n</div>\n",
+                       note_number,
+                       footnote).unwrap();
             }
         }
     }
@@ -325,13 +329,15 @@ impl<'a> HtmlRenderer<'a> {
             //             }
 
 
-            res.push_str(&format!("<div class = \"notes\">
+            write!(res,
+                   "<div class = \"notes\">
  <h2 class = \"notes\">{}</h2>\n",
-                                  lang::get_str(self.book.options.get_str("lang").unwrap(),
-                                                "notes")));
+                   lang::get_str(self.book.options.get_str("lang").unwrap(),
+                                 "notes")).unwrap();
             res.push_str("<table class = \"notes\">\n");
             for (note_number, footnote) in self.footnotes.drain(..) {
-                res.push_str(&format!("<tr class = \"notes\">
+                write!(res,
+                       "<tr class = \"notes\">
  <td class = \"note-number\">
   {}
  </td>
@@ -340,7 +346,7 @@ impl<'a> HtmlRenderer<'a> {
   </td>
 </tr>\n",
                                       note_number,
-                                      footnote));
+                                      footnote).unwrap();
             }
             res.push_str("</table>\n");
             res.push_str("</div>\n");
