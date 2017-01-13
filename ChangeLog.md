@@ -11,6 +11,8 @@ unreleased
 * New options:
   * `tex.stdpage`: if set to `true`, will use the `stdpage` package to
     render the book according to standards for submitting manuscripts.
+  * `rendering.highlight.theme` allows to specifies a theme for syntax
+    highlighting (only used if `rendering.highlight` is set to "syntect").
 * Rendering:
   * EPUB:
     * Now sets the "cover-image" property and meta so readers should
