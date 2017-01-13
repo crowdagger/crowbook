@@ -180,10 +180,10 @@ ul li {
 
 span.initial { 
     float: left;
-    font-size: 2em;
+    font-size: 285%;
     font-weight: bold;
     margin-right: 0.05em;
-    line-height: 1em;
+    line-height: 0.8em;
 }
 
 p.first-para {
