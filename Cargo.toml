@@ -56,8 +56,7 @@ epub-builder = "^0.1.2"
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
 url =  { version = "1", optional = true }
-# syntect = { version = "1", optional = true }
-syntect =  {git = "https://github.com/trishume/syntect.git", optional = true }
+syntect = { version = "1", optional = true }
 
 [dependencies.hyper]
 version = "0.9"

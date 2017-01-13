@@ -16,7 +16,7 @@ dependencies = [
  "pulldown-cmark 0.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "rayon 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)",
- "syntect 1.0.3 (git+https://github.com/trishume/syntect.git)",
+ "syntect 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "term 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -655,7 +655,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "syntect"
 version = "1.0.3"
-source = "git+https://github.com/trishume/syntect.git#7a0b359609873612665c9b51b78c98e3555b154e"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bincode 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -961,7 +961,7 @@ dependencies = [
 "checksum solicit 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "172382bac9424588d7840732b250faeeef88942e37b6e35317dce98cafdd75b2"
 "checksum stemmer 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "8bc851510b472ff407137208a23f4f58e0cb41fdb5c3e38c9fd4482ea03c46f1"
 "checksum strsim 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "67f84c44fbb2f91db7fef94554e6b2ac05909c9c0b0bc23bb98d3a1aebfe7f7c"
-"checksum syntect 1.0.3 (git+https://github.com/trishume/syntect.git)" = "<none>"
+"checksum syntect 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "ec9348a972d85073ab0bccaadfc517ef7961c8260a14585fc74aacbdd2fe807d"
 "checksum tempdir 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "87974a6f5c1dfb344d733055601650059a3363de2a6104819293baff662132d6"
 "checksum term 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "3deff8a2b3b6607d6d7cc32ac25c0b33709453ca9cceac006caac51e963cf94a"
 "checksum term_size 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "3f7f5f3f71b0040cecc71af239414c23fd3c73570f5ff54cf50e03cef637f2a0"
