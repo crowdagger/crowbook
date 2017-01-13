@@ -110,7 +110,7 @@ pub struct HtmlRenderer<'a> {
 impl<'a> HtmlRenderer<'a> {
     fn get_highlight(book: &Book) -> (Highlight, Option<Syntax>) {
         match book.options.get_str("rendering.highlight").unwrap() {
-            "syntect" => (Highlight::Syntect, Some(Syntax::new())),
+            "syntect" => (Highlight::Syntect, Some(Syntax::new(book))),
             "none" => (Highlight::None, None),
             "highlight.js" => (Highlight::Js, None),
             value => {
@@ -462,7 +462,7 @@ impl<'a> HtmlRenderer<'a> {
                 this.as_mut().verbatim = true;
                 let s = this.render_vec(vec)?;
                 let output = if let Some(ref syntax) = this.as_ref().syntax {
-                    syntax.to_html(&s, language)
+                    syntax.to_html(&s, language)?
                 } else if language.is_empty() {
                     format!("<pre><code>{}</code></pre>\n", s)
                 } else {

@@ -57,7 +57,7 @@ impl<'a> LatexRenderer<'a> {
         let mut handler = ResourceHandler::new(&book.logger);
         handler.set_images_mapping(true);
         let syntax = if book.options.get_str("rendering.highlight").unwrap() == "syntect" {
-            Some(Syntax::new())
+            Some(Syntax::new(book))
         } else {
             None
         };
@@ -351,7 +351,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 }
                 self.escape = true;
                 res = if let Some(ref syntax) = self.syntax {
-                    syntax.to_tex(&res, language)
+                    syntax.to_tex(&res, language)?
                 } else {
                     format!("\\begin{{spverbatim}}
 {code}

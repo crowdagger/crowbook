@@ -15,6 +15,9 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
+use error::Result;
+use book::Book;
+
 use crowbook_text_processing::escape;
 
 
@@ -25,7 +28,7 @@ use syntect;
 #[cfg(feature="syntect")]
 pub struct Syntax {
     syntax_set: syntect::parsing::SyntaxSet,
-    theme_set: syntect::highlighting::ThemeSet, 
+    theme: syntect::highlighting::Theme,
 }
 
 #[cfg(not(feature="syntect"))]
@@ -34,32 +37,46 @@ pub struct Syntax {}
 #[cfg(feature="syntect")]
 impl Syntax {
     /// Creates a new Syntax wrapper
-    pub fn new() -> Syntax {
+    pub fn new(book: &Book) -> Syntax {
+        let mut theme_set = syntect::highlighting::ThemeSet::load_defaults();
+        let theme_name = book.options.get_str("rendering.highlight.theme").unwrap();
+        let theme = match theme_set.themes.remove(theme_name) {
+            Some(theme) => theme,
+            None => {
+                book.logger.error(lformat!("could not set syntect theme to {theme}, defaulting to \"InspiredGithub\"",
+                                           theme = theme_name));
+                book.logger.info(lformat!("valid theme names are: {themes}",
+                                          themes = theme_set.themes
+                                          .keys()
+                                          .map(|s| s.to_owned())
+                                          .collect::<Vec<_>>()
+                                          .join(", ")));
+                theme_set.themes.remove("InspiredGitHub").unwrap()
+            }
+        };
         Syntax {
             syntax_set: syntect::parsing::SyntaxSet::load_defaults_nonewlines(),
-            theme_set: syntect::highlighting::ThemeSet::load_defaults(),
+            theme: theme,
         }
     }
 
     /// Convert a string containing code to HTML
-    pub fn to_html(&self, code: &str, language: &str) -> String {
+    pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
-        let theme = &self.theme_set.themes["InspiredGitHub"];
-        let mut h = syntect::easy::HighlightLines::new(syntax, theme);
+        let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
         let regions = h.highlight(code);
-        format!("<pre>{}</pre>",
-                syntect::html::styles_to_coloured_html(&regions[..],
-                                                       syntect::html::IncludeBackground::No))
+        Ok(format!("<pre>{}</pre>",
+                   syntect::html::styles_to_coloured_html(&regions[..],
+                                                          syntect::html::IncludeBackground::No)))
     }
 
-    pub fn to_tex(&self, code: &str, language: &str) -> String {
+    pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
         use latex::insert_breaks;
         use syntect::highlighting::{BLACK, FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
-        let theme = &self.theme_set.themes["InspiredGitHub"];
-        let mut h = syntect::easy::HighlightLines::new(syntax, theme);
+        let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
         let regions = h.highlight(code);
         
         let mut result = String::with_capacity(code.len());
@@ -90,25 +107,25 @@ impl Syntax {
             }
             result.push_str(&content);
         }
-        format!("{{\\sloppy {}}}", result)
+        Ok(format!("{{\\sloppy {}}}", result))
     }
 }
 
 #[cfg(not(feature="syntect"))]
 impl Syntax {
-    pub fn new() -> Syntax {
-        ::logger::Logger::display_error(lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
+    pub fn new(book: &Book) -> Syntax {
+        book.error(lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
         Syntax {}
     }
 
-    pub fn to_html(&self, code: &str, language: &str) -> String {
-        format!("<pre><code class = \"language-{lang}\">{code}</code></pre>",
+    pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
+        Ok(format!("<pre><code class = \"language-{lang}\">{code}</code></pre>",
                 code = escape::html(code),
-                lang = language)
+                lang = language))
     }
 
-    pub fn to_tex(&self, code: &str, language: &str) -> String {
-        format!("\\begin{{spverbatim}}{}\\end{{spverbatim}}\n",
-                code)
+    pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
+        Ok(format!("\\begin{{spverbatim}}{}\\end{{spverbatim}}\n",
+                code))
     }
 }
