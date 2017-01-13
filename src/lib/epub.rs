@@ -195,13 +195,19 @@ impl<'a> EpubRenderer<'a> {
         maker.stylesheet(css.as_bytes())?;
 
         // Write all images (including cover)
+        let cover = self.html.book.options.get_path("cover");
         for (source, dest) in self.html.handler.images_mapping() {
             let f = File::open(source).map_err(|_| {
                 Error::file_not_found(&self.html.source,
                                       lformat!("image or cover"),
                                       source.to_owned())
             })?;
-            maker.add_resource(dest, &f, self.get_format(dest))?;
+            if cover.as_ref() == Ok(source) {
+                // Treat cover specially so it is properly tagged
+                maker.add_cover_image(dest, &f, self.get_format(dest))?;
+            } else {
+                maker.add_resource(dest, &f, self.get_format(dest))?;
+            }
         }
 
         // Write additional resources
