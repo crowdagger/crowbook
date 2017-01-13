@@ -33,7 +33,7 @@ output.odt:path                     # {output_odt}
 output.base_path:path:\"\"            # {output_base_path}
 
 # {render_opt}
-rendering.highlight:str:highlight.js                                 # {rendering_highlight}
+rendering.highlight:str:syntect                                      # {rendering_highlight}
 rendering.highlight.theme:str:InspiredGitHub                         # {rendering_highlight_theme}
 rendering.initials:bool:false                                        # {rendering_initials}
 rendering.inline_toc:bool:false                                      # {inline_toc}
@@ -208,7 +208,7 @@ html.crowbook_link:alias                            # {removed}
                                          output_html_dir = lformat!("Output directory name for HTML rendering"),
                                          output_base_path = lformat!("Directory where those output files will we written"),
 
-                                         rendering_highlight = lformat!("If/how highligh code blocks. Possible values: \"highlight.js\" (HTML-only, default), \"syntect\", \"none\""),
+                                         rendering_highlight = lformat!("If/how highligh code blocks. Possible values: \"syntect\" (default, performed at runtime), \"highlight.js\" (HTML-only, uses Javascript), \"none\""),
                                          rendering_highlight_theme = lformat!("Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"),
                                          rendering_initials = lformat!("Use initials ('lettrines') for first letter of a chapter (experimental)"),
                                          inline_toc = lformat!("Display a table of content in the document"),
