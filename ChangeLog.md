@@ -11,6 +11,10 @@ unreleased
 * New options:
   * `tex.stdpage`: if set to `true`, will use the `stdpage` package to
     render the book according to standards for submitting manuscripts.
+* Rendering:
+  * EPUB:
+    * Now sets the "cover-image" property and meta so readers should
+      display cover correctly.
 * Bugfixes:
   * Avoid initializing `syntect` (at the cost of performances) if it
     is not used.
