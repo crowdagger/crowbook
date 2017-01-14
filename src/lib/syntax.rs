@@ -114,7 +114,7 @@ impl Syntax {
 #[cfg(not(feature="syntect"))]
 impl Syntax {
     pub fn new(book: &Book) -> Syntax {
-        book.error(lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
+        book.logger.error(lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
         Syntax {}
     }
 
@@ -124,7 +124,7 @@ impl Syntax {
                 lang = language))
     }
 
-    pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
+    pub fn to_tex(&self, code: &str, _: &str) -> Result<String> {
         Ok(format!("\\begin{{spverbatim}}{}\\end{{spverbatim}}\n",
                 code))
     }
