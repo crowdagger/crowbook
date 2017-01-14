@@ -7,7 +7,8 @@ use renderer::Renderer;
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new();
-    book.options.set("numbering", "0").unwrap();
+    book.set_options(&[("rendering.num_depth", "0"),
+                       ("rendering.highlight", "none")]);
     let mut html = HtmlRenderer::new(&book);
     html.render_vec(v).unwrap()
 }
