@@ -370,7 +370,9 @@ impl Book {
                 if docs.len() == 1 && docs[0].as_hash().is_some() {
                     if let Yaml::Hash(hash) = docs.pop().unwrap() {
                         for (key, value) in hash {
-                            self.options.set_yaml(key, value)?;
+                            if let Err(err) = self.options.set_yaml(key, value) {
+                                self.logger.error(format!("{}", err));
+                            };
                         }
                     } else {
                         unreachable!();
