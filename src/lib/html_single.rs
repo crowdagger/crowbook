@@ -41,7 +41,10 @@ pub struct HtmlSingleRenderer<'a> {
 impl<'a> HtmlSingleRenderer<'a> {
     /// Creates a new HtmlSingleRenderer
     pub fn new(book: &'a Book) -> HtmlSingleRenderer<'a> {
-        let mut html = HtmlRenderer::new(book);
+        let mut html = HtmlRenderer::new(book,
+                                         book.options
+                                         .get_str("html.highlight.theme")
+                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()));
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
         HtmlSingleRenderer { html: html }

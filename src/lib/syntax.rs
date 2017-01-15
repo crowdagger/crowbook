@@ -37,9 +37,8 @@ pub struct Syntax {}
 #[cfg(feature="syntect")]
 impl Syntax {
     /// Creates a new Syntax wrapper
-    pub fn new(book: &Book) -> Syntax {
+    pub fn new(book: &Book, theme_name: &str) -> Syntax {
         let mut theme_set = syntect::highlighting::ThemeSet::load_defaults();
-        let theme_name = book.options.get_str("rendering.highlight.theme").unwrap();
         let theme = match theme_set.themes.remove(theme_name) {
             Some(theme) => theme,
             None => {
@@ -113,7 +112,7 @@ impl Syntax {
 
 #[cfg(not(feature="syntect"))]
 impl Syntax {
-    pub fn new(book: &Book) -> Syntax {
+    pub fn new(book: &Book, _: &str) -> Syntax {
         book.logger.error(lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
         Syntax {}
     }

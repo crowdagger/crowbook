@@ -108,9 +108,9 @@ pub struct HtmlRenderer<'a> {
 }
 
 impl<'a> HtmlRenderer<'a> {
-    fn get_highlight(book: &Book) -> (Highlight, Option<Syntax>) {
+    fn get_highlight(book: &Book, theme: &str) -> (Highlight, Option<Syntax>) {
         match book.options.get_str("rendering.highlight").unwrap() {
-            "syntect" => (Highlight::Syntect, Some(Syntax::new(book))),
+            "syntect" => (Highlight::Syntect, Some(Syntax::new(book, theme))),
             "none" => (Highlight::None, None),
             "highlight.js" => (Highlight::Js, None),
             value => {
@@ -122,8 +122,8 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Creates a new HTML renderer
-    pub fn new(book: &'a Book) -> HtmlRenderer<'a> {
-        let (highlight, syntax) = Self::get_highlight(book);
+    pub fn new(book: &'a Book, theme: &str) -> HtmlRenderer<'a> {
+        let (highlight, syntax) = Self::get_highlight(book, theme);
 
         let mut html = HtmlRenderer {
             book: book,

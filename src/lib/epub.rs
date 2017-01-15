@@ -56,7 +56,10 @@ pub struct EpubRenderer<'a> {
 impl<'a> EpubRenderer<'a> {
     /// Creates a new Epub renderer
     pub fn new(book: &'a Book) -> EpubRenderer<'a> {
-        let mut html = HtmlRenderer::new(book);
+        let mut html = HtmlRenderer::new(book,
+                                         book.options
+                                         .get_str("epub.highlight.theme")
+                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()));
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
         EpubRenderer {

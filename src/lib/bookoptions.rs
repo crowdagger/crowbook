@@ -51,6 +51,7 @@ import:path                  # {import_config}
 
 # {html_opt}
 html.icon:path                      # {html_icon}
+html.highlight.theme:str            # {html_theme}
 html.header:str                     # {html_header}
 html.footer:str                     # {html_footer}
 html.css:tpl                        # {html_css}
@@ -74,6 +75,7 @@ html.dir.template:tpl               # {html_dir_template}
 
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}
+epub.highlight.theme:str            # {epub_theme}
 epub.css:tpl                        # {epub_css}
 epub.css.add:str                    # {epub_css_add}
 epub.chapter.xhtml:tpl              # {chapter_xhtml}
@@ -81,6 +83,7 @@ epub.toc.extras:bool:true           # {epub_toc}
 epub.escape_nb_spaces:bool:true     # {nb_spaces}
 
 # {tex_opt}
+tex.highlight.theme:str             # {tex_theme}
 tex.links_as_footnotes:bool:true    # {tex_links}
 tex.command:str:xelatex             # {tex_command}
 tex.template:tpl                    # {tex_tmpl}
@@ -286,6 +289,10 @@ html.crowbook_link:alias                            # {removed}
                                          prf_fuzzy_t = lformat!("Max threshold of differences to consider two strings a repetition"),
                                          prf_ignore = lformat!("Ignore proper nouns for repetitions"),
                                          prf_threshold = lformat!("Threshold to detect a repetition"),
+
+                                         tex_theme = lformat!("If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"),
+                                         html_theme = lformat!("If set, set theme for syntax highlighting for HTML output (syntect only)"),
+                                         epub_theme = lformat!("If set, set theme for syntax highlighting for EPUB output (syntect only)"),
                                          
                                          renamed = lformat!("Renamed"),
                                          removed = lformat!("Removed"),

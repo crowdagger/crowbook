@@ -47,7 +47,10 @@ pub struct HtmlDirRenderer<'a> {
 impl<'a> HtmlDirRenderer<'a> {
     /// Creates a new HtmlDirRenderer
     pub fn new(book: &'a Book) -> HtmlDirRenderer<'a> {
-        let mut html = HtmlRenderer::new(book);
+        let mut html = HtmlRenderer::new(book,
+                                         book.options
+                                         .get_str("epub.highlight.theme")
+                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()));
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
         HtmlDirRenderer { html: html }
