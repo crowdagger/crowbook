@@ -3,6 +3,9 @@ ChangeLog
 
 unreleased
 ------------
+* When there is an error setting an option from the book configuration
+  file (e.g. because it is an invalid key), print an error but do not
+  abort, only ignore this specific option.
 * Proofreading:
   * Repetition detection is now a bit less of an hack, and should
     cause less problems when used in conjunction with grammar
@@ -12,11 +15,23 @@ unreleased
   * `tex.stdpage`: if set to `true`, will use the `stdpage` package to
     render the book according to standards for submitting manuscripts.
   * `rendering.highlight.theme` allows to specifies a theme for syntax
-    highlighting (only used if `rendering.highlight` is set to "syntect").
+    highlighting (only used if `rendering.highlight` is set to
+    "syntect").
+* Deprecated option:
+  * `proofread.nb_spaces`.
 * Rendering:
+  * `[syntect](https://crates.io/crates/syntect)` is now the default
+    for `rendering.highlight`. Concretely, this means that by default
+    syntax highlighting is now done when `crowbook` is run instead of
+    using `[highlight.js](https://highlightjs.org/)`. (EDIT: bad idea
+    since syntect seems to have trouble building on windows, at least
+    on appveyor? Revert it before release?)
   * EPUB:
     * Now sets the "cover-image" property and meta so readers should
       display cover correctly.
+	* Narrow non-breaking spaces should display more correctly on KOBO
+      ereaders (hoping this won't break the way they are displayed
+      everywhere else).
 * Bugfixes:
   * Avoid initializing `syntect` (at the cost of performances) if it
     is not used.
