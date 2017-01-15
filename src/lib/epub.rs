@@ -421,7 +421,7 @@ impl<'a> EpubRenderer<'a> {
                 };
 
                 if html.book.options.get_bool("epub.escape_nb_spaces").unwrap() {
-                    content = escape::nb_spaces(content);
+                    content = escape::nnbsp(content);
                 }
                 Ok(content.into_owned())
             },

@@ -47,7 +47,8 @@ uuid = { version = "0.3", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
 rayon = "0.6"
-crowbook-text-processing = "^0.2.2"
+# crowbook-text-processing = "^0.2.6"
+crowbook-text-processing = { git = "https://github.com/lise-henry/crowbook-text-processing.git" }
 lazy_static = "0.2.1"
 term = "0.4"
 crowbook-intl-runtime = "0.1"

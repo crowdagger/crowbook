@@ -402,7 +402,7 @@ impl<'a> HtmlRenderer<'a> {
                 }
 
                 if this.as_ref().book.options.get_bool("html.escape_nb_spaces").unwrap() {
-                    content = escape::nb_spaces(content);
+                    content = escape::nnbsp(content);
                 }
                 Ok(content.into_owned())
             }
