@@ -199,18 +199,4 @@ p.first-para {
     padding: 0;
 }
 
-{{#display_spaces}}
-.nnbsp {
-    background-color: #9999ff;
-}
-
-.ensp {
-    background-color: #ff9999;
-}
-
-.nbsp {
-    background-color: #ffff66;
-}
-{{/display_spaces}}
-
 {{{additional_code}}}
