@@ -122,7 +122,6 @@ output.proofread.pdf:path           # {prf_pdf}
 
 # {prf_opt2}
 proofread:bool:false                              # {prf}
-proofread.nb_spaces:bool:true                     # {prf_spaces}
 proofread.languagetool:bool:false                 # {prf_lng}
 proofread.languagetool.port:int:8081              # {prf_lng_port}
 proofread.repetitions:bool:false                  # {prf_repet}
@@ -168,6 +167,7 @@ html_dir.chapter.html:alias:html.dir.template       # {renamed}
 output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
 tex.font_size:alias:tex.font.size                   # {renamed}
 html.highlight_code:alias:rendering.highlight       # {renamed}
+proofread.nb_spaces:alias                           # {removed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
@@ -278,7 +278,6 @@ html.crowbook_link:alias                            # {removed}
                                          prf_html_dir = lformat!("Output directory name for HTML rendering with proofread features"),
                                          prf_pdf = lformat!("Output file name for PDF rendering with proofread features"),
                                          prf = lformat!("If set to false, will disactivate proofreading even if one of output.proofread.x is present"),
-                                         prf_spaces = lformat!("Highlight non breaking spaces so it is easier to see if typography is correct"),
                                          prf_lng = lformat!("If true, try to use language tool server to grammar check the book"),
                                          prf_lng_port = lformat!("Port to connect to languagetool-server"),
                                          prf_repet = lformat!("If set to true, use Caribon to detect repetitions"),

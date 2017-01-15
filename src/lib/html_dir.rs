@@ -354,9 +354,6 @@ impl<'a> HtmlDirRenderer<'a> {
         if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
             data = data.insert_str("additional_code", html_css_add);
         }
-        if self.html.proofread && self.html.book.options.get_bool("proofread.nb_spaces").unwrap() {
-            data = data.insert_bool("display_spaces", true);
-        }
         let data = data.build();
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data)?;
