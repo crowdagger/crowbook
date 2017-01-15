@@ -17,6 +17,9 @@ unreleased
   * `rendering.highlight.theme` allows to specifies a theme for syntax
     highlighting (only used if `rendering.highlight` is set to
     "syntect").
+  * `html.highlight.theme`, `epub.highlight.theme` and
+    `tex.highlight.theme` allow to specify a theme for
+    HTML/EPUB/LaTeX renderers (only used with syntect).
 * Deprecated option:
   * `proofread.nb_spaces`.
 * Rendering:
