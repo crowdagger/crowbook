@@ -36,6 +36,8 @@ unreleased
       ereaders (hoping this won't break the way they are displayed
       everywhere else).
 * Bugfixes:
+  * Fix `mimetype` of EPUB files (make sure it is always "stored" and
+    not "deflated" by the `zip` command).
   * Avoid initializing `syntect` (at the cost of performances) if it
     is not used.
 	
