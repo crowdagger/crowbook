@@ -16,6 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use error::{Error, Result};
+use logger::{Logger, InfoLevel};
 
 use std::path::{Path, PathBuf};
 use std::io;
@@ -26,18 +27,19 @@ use uuid;
 use std::ops::Drop;
 
 /// Struct used to create zip (using filesystem and zip command)
-pub struct Zipper {
+pub struct Zipper<'a> {
     args: Vec<String>,
     path: PathBuf,
+    logger: &'a Logger,
 }
 
-impl Zipper {
+impl<'a> Zipper<'a> {
     /// Creates new zipper
     ///
     /// # Arguments
     /// * `path`: the path to a temporary directory
     /// (zipper will create a random dir in it and clean it later)
-    pub fn new(path: &str) -> Result<Zipper> {
+    pub fn new(path: &str, logger: &'a Logger) -> Result<Zipper<'a>> {
         let uuid = uuid::Uuid::new_v4();
         let zipper_path = Path::new(path).join(uuid.simple().to_string());
 
@@ -52,6 +54,7 @@ impl Zipper {
         Ok(Zipper {
             args: vec![],
             path: zipper_path,
+            logger: logger,
         })
     }
 
@@ -123,17 +126,37 @@ This is forbidden because we are supposed \
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
             .output()
-            .map_err(|e| Error::zipper(lformat!("failed to run command {name}: {error}",
-                                                name = command_name,
-                                                error = e)));
+            .map_err(|e| {
+                if self.logger.verbosity() <= InfoLevel::Warning {
+                    Error::zipper(lformat!("failed to run command '{name}'.\n\
+                                            Command output: \n\
+                                            {error}",
+                                           name = command_name,
+                                           error = e))
+                } else {
+                    Error::zipper(lformat!("failed to run command '{name}'. For more information, run crowbook with `--verbose`.",
+                                           name = command_name))
+                }
+            });
         let output = res_output?;
-        let mut file = File::open(self.path.join(in_file))
-            .map_err(|_| Error::zipper(lformat!("could not open file in tmp directory: '{file}'",
-                                                file = in_file)))?;
-        io::copy(&mut file, out)
-            .map_err(|_| Error::zipper(lformat!("error copying file '{file}'",
-                                                file = in_file)))?;
         if output.status.success() {
+            let mut file = File::open(self.path.join(in_file))
+                .map_err(|_| {
+                    if self.logger.verbosity() <= InfoLevel::Warning {
+                        Error::zipper(lformat!("could not open result of command '{command}'\n\
+                                                Command output:\n\
+                                                {output}'",
+                                               command = command_name,
+                                               output = String::from_utf8_lossy(&output.stdout)))
+                    } else {
+                        Error::zipper(lformat!("could not open result of command '{command}'. For more information, run crowbook with `--verbose`.",
+                                               command = command_name))
+                    }
+                })?;
+            io::copy(&mut file, out)
+                .map_err(|_| Error::zipper(lformat!("error copying file '{file}'",
+                                                    file = in_file)))?;
+
             Ok(String::from_utf8_lossy(&output.stdout).into_owned())
         } else {
             Err(Error::zipper(lformat!("command didn't return succesfully: {output}",
@@ -170,7 +193,7 @@ This is forbidden because we are supposed \
     }
 }
 
-impl Drop for Zipper {
+impl<'a> Drop for Zipper<'a> {
     fn drop(&mut self) {
         if let Err(err) = fs::remove_dir_all(&self.path) {
             println!("Error in zipper: could not delete temporary directory {}, error: {}",

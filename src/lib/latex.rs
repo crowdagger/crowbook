@@ -89,7 +89,8 @@ impl<'a> LatexRenderer<'a> {
     pub fn render_pdf(&mut self, to: &mut io::Write) -> Result<String> {
         let content = self.render_book()?;
         let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
-                                     .unwrap())?;
+                                     .unwrap(),
+                                     &self.book.logger)?;
         zipper.write("result.tex", content.as_bytes(), false)?;
 
         // write image files

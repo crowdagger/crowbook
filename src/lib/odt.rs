@@ -62,7 +62,8 @@ impl<'a> OdtRenderer<'a> {
         let content = self.render_content()?;
 
         let mut zipper =
-            Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
+            Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap(),
+                        &self.book.logger)?;
 
         // Write template.odt there
         zipper.write("template.odt", odt::ODT, false)?;
