@@ -40,6 +40,8 @@ unreleased
     not "deflated" by the `zip` command).
   * Avoid initializing `syntect` (at the cost of performances) if it
     is not used.
+   * Avoid creating an empty file if some book renderer fails
+     (e.g. EPUB or ODT because `zip` command is not present).
 	
 
 0.11.1 (2017-01-05)
