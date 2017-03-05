@@ -255,7 +255,7 @@ msgstr "impossible de créer le fichier {file} : {err}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book_renderer.rs:45
 msgid "could not write book content to file '{file}': {err}"
-msgstr "impossible d'écrire le contenu du livre dans le fichier {file} : {error}"
+msgstr "impossible d'écrire le contenu du livre dans le fichier {file} : {err}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:51
 msgid "{:?} is not a string"
