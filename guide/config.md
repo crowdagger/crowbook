@@ -395,6 +395,12 @@ least should be) for all formats.
     also enabling syntax highlighting for LaTeX/PDF and EPUB formats;
     however syntect support is still experimental in Crowbook.
   * `none`: disable syntax highlighting.
+* `rendering.highlight.theme`: only used if `rendering.highlight` is
+  set to `syntect`, selects the theme to use for syntax
+  highlighting. Default is "InspiredGitHub". Valid theme names are
+  "InspiredGitHub", "Solarized (dark)", "Solarized (light)",
+  "base16-eighties.dark", "base16-mocha.dark", "base16-ocean.dark" and
+  "base16-ocean.light".
 * `rendering.num_depth`: an integer that represents the maximum level of numbering for your
 book. E.g., `1` will only number chapters, while `2` will number
 chapters, sections, but not anything below that. `6` is the maximum  level
@@ -432,6 +438,8 @@ the default HTML standalone renderer and the HTML multifile renderer):
   on the fields you can use.
 * `html.css` allow to set up a custom CSS file. You can also redefine
   the colours in a file and set it using `html.css.colours`. 
+* `html.highlight.theme`: similar to `rendering.highlight.theme` but
+  only sets the theme for HTML output. 
 
 #### Options for standalone HTML  ####
 
@@ -456,6 +464,8 @@ the generated PDF documents):
 * `tex.links_as_footnotes` can be set to `false` if you don't want
   links to also appear as footnotes (which means losing them
   if it is actually printed).
+* `tex.highlight.theme`: similar to `rendering.highlight.theme`, but
+  only sets the theme for LaTeX/PDF rendering.
   
 ### Options for EPUB rendering ###
 
@@ -463,7 +473,8 @@ There are also options specific to the EPUB format:
 
 * `epub.version` can be set to 2 or 3 (default 2).
 * `epub.css` can be useful if you want to specify a customized stylesheet.
-
+* `epub.highlight.theme`: similar to `rendering.highlight.theme` but
+  only sets a theme for EPUB output.
 
 ### Resources options ###
 
@@ -605,8 +616,12 @@ Here is the complete list of options. You can always look at it by running `crow
 ### Rendering options ###
 - **`rendering.highlight`**
     - **type**: string
-    - **default value**: `highlight.js`
-    -  If/how highligh code blocks. Possible values: "highlight.js" (HTML-only, default), "syntect", "none"
+    - **default value**: `syntect`
+    -  If/how highligh code blocks. Possible values: "syntect" (default, performed at runtime), "highlight.js" (HTML-only, uses Javascript), "none"
+- **`rendering.highlight.theme`**
+    - **type**: string
+    - **default value**: `InspiredGitHub`
+    -  Theme for syntax highlighting (if rendering.highlight is set to 'syntect')
 - **`rendering.initials`**
     - **type**: boolean
     - **default value**: `false`
@@ -655,6 +670,10 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: path
     - **default value**: `not set`
     -  Path to an icon to be used for the HTML files(s)
+- **`html.highlight.theme`**
+    - **type**: string
+    - **default value**: `not set`
+    -  If set, set theme for syntax highlighting for HTML output (syntect only)
 - **`html.header`**
     - **type**: string
     - **default value**: `not set`
@@ -725,6 +744,10 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: integer
     - **default value**: `2`
     -  EPUB version to generate (2 or 3)
+- **`epub.highlight.theme`**
+    - **type**: string
+    - **default value**: `not set`
+    -  If set, set theme for syntax highlighting for EPUB output (syntect only)
 - **`epub.css`**
     - **type**: template path
     - **default value**: `not set`
@@ -747,6 +770,10 @@ Here is the complete list of options. You can always look at it by running `crow
     -  Replace unicode non breaking spaces with HTML entities and CSS
 
 ### LaTeX options ###
+- **`tex.highlight.theme`**
+    - **type**: string
+    - **default value**: `not set`
+    -  If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)
 - **`tex.links_as_footnotes`**
     - **type**: boolean
     - **default value**: `true`
@@ -779,6 +806,10 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: integer
     - **default value**: `not set`
     -  Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)
+- **`tex.stdpage`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If set to true, use 'stdpage' package to format a manuscript according to standards
 
 ### Resources option ###
 - **`resources.files`**
@@ -865,10 +896,6 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: boolean
     - **default value**: `false`
     -  If set to false, will disactivate proofreading even if one of output.proofread.x is present
-- **`proofread.nb_spaces`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Highlight non breaking spaces so it is easier to see if typography is correct
 - **`proofread.languagetool`**
     - **type**: boolean
     - **default value**: `false`
@@ -901,7 +928,6 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: float
     - **default value**: `2.0`
     -  Threshold to detect a repetition
-
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
