@@ -25,7 +25,7 @@ output.proofread.pdf: book.proof.pdf
 # Resources options
 resources.base_path.images: img/  # where to find the cover
 
-proofread.repetitions: false
+proofread.repetitions: true
 proofread.languagetool: true
 
 # Rendering options
@@ -35,6 +35,9 @@ rendering.inline_toc: false
 rendering.chapter.template: "{{{number}}}\\. {{{chapter_title}}}"
 rendering.chapter.roman_numerals: false
 rendering.part.reset_counter: true
+rendering.highlight: syntect
+
+html.highlight.theme: "Solarized (dark)"
 
 # Html options
 html.icon: crowbook.svg
