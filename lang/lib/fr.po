@@ -249,9 +249,13 @@ msgstr ""
 msgid "could not compile '{template}': {error}"
 msgstr "impossible de compiler le template '{template}' : {error}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/book_renderer.rs:37
+#: /home/lise/Progs/rust/crowbook/src/lib/book_renderer.rs:40
 msgid "could not create file '{file}': {err}"
 msgstr "impossible de créer le fichier {file} : {err}"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/book_renderer.rs:45
+msgid "could not write book content to file '{file}': {err}"
+msgstr "impossible d'écrire le contenu du livre dans le fichier {file} : {error}"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoption.rs:51
 msgid "{:?} is not a string"
@@ -413,13 +417,16 @@ msgid ""
 "\""
 msgstr ""
 "Si et comment faire de la coloration syntaxique des blocs de code. Valeurs "
-"possibles :\"highlight.js\" (uniquement HTML, utilise javascript), \"syntect\" (effectué lors de l'utilisation de crowbook, valeur par défaut) et "
-"\"none\""
+"possibles :\"highlight.js\" (uniquement HTML, utilise javascript), \"syntect"
+"\" (effectué lors de l'utilisation de crowbook, valeur par défaut) et \"none"
+"\""
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:215
 msgid ""
 "Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"
-msgstr "Thème pour la coloration syntaxique (si rendering.highlight est placé à 'syntect')"
+msgstr ""
+"Thème pour la coloration syntaxique (si rendering.highlight est placé à "
+"'syntect')"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:216
 msgid "Use initials ('lettrines') for first letter of a chapter (experimental)"
@@ -756,17 +763,23 @@ msgstr "Seuil pour détecter une répétition"
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:293
 msgid ""
 "If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"
-msgstr "Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie LaTeX/PDF (syntect uniquement)"
+msgstr ""
+"Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie "
+"LaTeX/PDF (syntect uniquement)"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:294
 msgid ""
 "If set, set theme for syntax highlighting for HTML output (syntect only)"
-msgstr "Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie HTML (syntect uniquement)"
+msgstr ""
+"Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie "
+"HTML (syntect uniquement)"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:295
 msgid ""
 "If set, set theme for syntax highlighting for EPUB output (syntect only)"
-msgstr "Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie EPUB (syntect uniquement)"
+msgstr ""
+"Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie "
+"EPUB (syntect uniquement)"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:297
 msgid "Renamed"
@@ -1288,7 +1301,8 @@ msgstr ""
 #: /home/lise/Progs/rust/crowbook/src/lib/syntax.rs:45
 msgid ""
 "could not set syntect theme to {theme}, defaulting to \"InspiredGithub\""
-msgstr "impossible de placer le thème à {theme}, on se rabat sur \"InspiredGithub\""
+msgstr ""
+"impossible de placer le thème à {theme}, on se rabat sur \"InspiredGithub\""
 
 #: /home/lise/Progs/rust/crowbook/src/lib/syntax.rs:47
 msgid "valid theme names are: {themes}"
@@ -1344,7 +1358,8 @@ msgid ""
 "failed to run command '{name}'.\n"
 "Command output: \n"
 "{error}"
-msgstr "impossible d'exécuter la commande '{name}'.\n"
+msgstr ""
+"impossible d'exécuter la commande '{name}'.\n"
 "Sortie de la commande :\n"
 "{error}"
 
@@ -1352,14 +1367,17 @@ msgstr "impossible d'exécuter la commande '{name}'.\n"
 msgid ""
 "failed to run command '{name}'. For more information, run crowbook with `--"
 "verbose`."
-msgstr "Impossible d'exécuter la commande '{name}'. Pour plus d'informations, lancez crowbook avec l'option `--verbose`."
+msgstr ""
+"Impossible d'exécuter la commande '{name}'. Pour plus d'informations, lancez "
+"crowbook avec l'option `--verbose`."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:146
 msgid ""
 "could not open result of command '{command}'\n"
 "Command output:\n"
 "{output}'"
-msgstr "impossible de lire le résultat de la commande '{command}'\n"
+msgstr ""
+"impossible de lire le résultat de la commande '{command}'\n"
 "Sortie de la commande :\n"
 "{output}"
 
@@ -1367,8 +1385,9 @@ msgstr "impossible de lire le résultat de la commande '{command}'\n"
 msgid ""
 "could not open result of command '{command}'. For more information, run "
 "crowbook with `--verbose`."
-msgstr "impossible de lire le résultat de la commande '{command}'. Pour plus"
-"d'informations, lancez crowbook avec l'option `--verbose`."
+msgstr ""
+"impossible de lire le résultat de la commande '{command}'. Pour "
+"plusd'informations, lancez crowbook avec l'option `--verbose`."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/zipper.rs:157
 msgid "error copying file '{file}'"
