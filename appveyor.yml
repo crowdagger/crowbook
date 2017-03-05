@@ -33,10 +33,10 @@ build: false
 # Equivalent to Travis' `script` phase
 # TODO modify this phase as you see fit
 test_script:
-  - cargo build --verbose --features "syntect/static-onig"#--no-default-features --features="clap proofread" --verbose
-  - cargo run --features "syntect/static-onig"# --no-default-features --features="clap proofread"
-  - cargo test --features "syntect/static-onig"# --no-default-features --features="clap proofread" 
-  - cargo build --release --features "syntect/static-onig"# --no-default-features --features="clap proofread"
+  - cargo build --verbose --features "syntect/static-onig" #--no-default-features --features="clap proofread" --verbose
+  - cargo run --features "syntect/static-onig" # --no-default-features --features="clap proofread"
+  - cargo test --features "syntect/static-onig" # --no-default-features --features="clap proofread" 
+  - cargo build --release --features "syntect/static-onig" # --no-default-features --features="clap proofread"
 
 # Equivalent to `before_deploy` phase
 after_test:
