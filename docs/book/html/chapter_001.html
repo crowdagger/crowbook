@@ -11,12 +11,6 @@
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
           media = "print" />
-    <link rel = "stylesheet" href = "highlight.css" type = "text/css"
-          />
-    <script src = "highlight.js"></script>
-    <script>
-      hljs.initHighlightingOnLoad();
-    </script>
    <script>
 function on(name) {
     var elements = document.getElementsByClassName(name);
@@ -133,37 +127,38 @@ function toggle() {
 </ul>
 </li>
 <li><a href = "chapter_007.html#link-106">ChangeLog</a>
-<ul><li><a href = "chapter_007.html#link-107">0.11.1 (2017-01-05)</a></li>
-<li><a href = "chapter_007.html#link-108">0.11.0 (2016-12-31)</a></li>
-<li><a href = "chapter_007.html#link-109">0.10.4 (2016-12-16)</a></li>
-<li><a href = "chapter_007.html#link-110">0.10.3 (2016-11-19)</a></li>
-<li><a href = "chapter_007.html#link-111">0.10.2 (2016-10-21)</a></li>
-<li><a href = "chapter_007.html#link-112">0.10.1 (2016-10-18)</a></li>
-<li><a href = "chapter_007.html#link-113">0.10.0 (2016-10-18)</a></li>
-<li><a href = "chapter_007.html#link-114">0.9.1 (2016-09-29)</a></li>
-<li><a href = "chapter_007.html#link-115">0.9.0 (2016-09-23)</a></li>
-<li><a href = "chapter_007.html#link-116">0.8.0 (2016-09-19)</a></li>
-<li><a href = "chapter_007.html#link-117">0.7.0 (2016-09-11)</a></li>
-<li><a href = "chapter_007.html#link-118">0.6.0 (2016-09-09)</a></li>
-<li><a href = "chapter_007.html#link-119">0.5.1 (2016-04-14)</a></li>
-<li><a href = "chapter_007.html#link-120">0.5.0 (2016-04-02)</a></li>
-<li><a href = "chapter_007.html#link-121">0.4.0 (2016-03-01)</a></li>
-<li><a href = "chapter_007.html#link-122">0.3.0 (2016-02-27)</a></li>
-<li><a href = "chapter_007.html#link-123">0.2.2 (2016-02-25)</a></li>
-<li><a href = "chapter_007.html#link-124">0.2.1 (2016-02-25)</a></li>
-<li><a href = "chapter_007.html#link-125">0.2.0 (2016-02-25)</a></li>
-<li><a href = "chapter_007.html#link-126">0.1.0 (2016-02-21)</a></li>
+<ul><li><a href = "chapter_007.html#link-107">unreleased</a></li>
+<li><a href = "chapter_007.html#link-108">0.11.1 (2017-01-05)</a></li>
+<li><a href = "chapter_007.html#link-109">0.11.0 (2016-12-31)</a></li>
+<li><a href = "chapter_007.html#link-110">0.10.4 (2016-12-16)</a></li>
+<li><a href = "chapter_007.html#link-111">0.10.3 (2016-11-19)</a></li>
+<li><a href = "chapter_007.html#link-112">0.10.2 (2016-10-21)</a></li>
+<li><a href = "chapter_007.html#link-113">0.10.1 (2016-10-18)</a></li>
+<li><a href = "chapter_007.html#link-114">0.10.0 (2016-10-18)</a></li>
+<li><a href = "chapter_007.html#link-115">0.9.1 (2016-09-29)</a></li>
+<li><a href = "chapter_007.html#link-116">0.9.0 (2016-09-23)</a></li>
+<li><a href = "chapter_007.html#link-117">0.8.0 (2016-09-19)</a></li>
+<li><a href = "chapter_007.html#link-118">0.7.0 (2016-09-11)</a></li>
+<li><a href = "chapter_007.html#link-119">0.6.0 (2016-09-09)</a></li>
+<li><a href = "chapter_007.html#link-120">0.5.1 (2016-04-14)</a></li>
+<li><a href = "chapter_007.html#link-121">0.5.0 (2016-04-02)</a></li>
+<li><a href = "chapter_007.html#link-122">0.4.0 (2016-03-01)</a></li>
+<li><a href = "chapter_007.html#link-123">0.3.0 (2016-02-27)</a></li>
+<li><a href = "chapter_007.html#link-124">0.2.2 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-125">0.2.1 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-126">0.2.0 (2016-02-25)</a></li>
+<li><a href = "chapter_007.html#link-127">0.1.0 (2016-02-21)</a></li>
 
 </ul>
 </li>
-<li><a href = "chapter_008.html#link-127">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
+<li><a href = "chapter_008.html#link-128">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
 
 </ul>
 
   </nav>
 
   <div id = "content">
-    <div id = "top"><p id = "para-298">Crowbook User Guide 0.11.1</p>
+    <div id = "top"><p id = "para-298">Crowbook User Guide 0.11.2</p>
 </div>
     <div id = "page">
       <header>
@@ -179,7 +174,7 @@ function toggle() {
 </p>
       <h1 id = "link-22">2. Arguments</h1>
 <p id = "para-44">Crowbook can take a number of arguments:</p>
-<pre><code class = "language-text">Render a Markdown book in EPUB, PDF or HTML.
+<pre><span style="color:#839496;">Render a Markdown book in EPUB, PDF or HTML.
 
 USAGE:
     crowbook [OPTIONS] [--] [BOOK]
@@ -188,7 +183,7 @@ FLAGS:
     -h, --help            Print help information
     -l, --list-options    List all possible options
     -p, --proofread       Enable proofreading
-    -q, --quiet           Don't print info/error messages
+    -q, --quiet           Don&#39;t print info/error messages
     -s, --single          Use a single Markdown file instead of a book configuration file
     -v, --verbose         Print warnings in parsing/rendering
     -V, --version         Print version information
@@ -202,21 +197,19 @@ OPTIONS:
 
 ARGS:
     &lt;BOOK&gt;    File containing the book configuration file, or a Markdown file when called with --single
-</code></pre>
-<p id = "para-45">The most important option is obviously &lt;BOOK&gt;, i.e. the book configuration file. It is mandatory in most cases: if you don’t pass it, Crowbook will simply display this help message. In a normal use case this is the only argument you’ll need to pass, and Crowbook will generate the book in all formats specified in the configuration file.</p>
+</span></pre><p id = "para-45">The most important option is obviously &lt;BOOK&gt;, i.e. the book configuration file. It is mandatory in most cases: if you don’t pass it, Crowbook will simply display this help message. In a normal use case this is the only argument you’ll need to pass, and Crowbook will generate the book in all formats specified in the configuration file.</p>
 <p id = "para-46">It is, however, possible to pass more arguments to <code>crowbook</code>:</p>
 <h2 id = "link-23">2.1. <code>--create</code></h2>
 <p id = "para-47"><b>Usage</b>: <code>crowbook [BOOK] --create file_1.md file_2.md ...</code></p>
 <p id = "para-48">Creates a new book from a list of Markdown files. It will generate a book configuration file with all file names specified as chapters. It either prints the result to stdout (if <code>BOOK</code> is not specified) or generate the file <code>BOOK</code> (or abort if it already exists).</p>
 <h3 id = "link-24">Examples</h3>
-<pre><code class = "language-bash">crowbook foo.book --create  README.md ChangeLog.md LICENSE.md
-</code></pre>
-<p id = "para-49">will generate a file <code>foo.book</code> containing:</p>
-<pre><code class = "language-yaml">author: Your name
-title: Your title
-lang: en
+<pre><span style="color:#839496;">crowbook foo.book --create  README.md ChangeLog.md LICENSE.md
+</span></pre><p id = "para-49">will generate a file <code>foo.book</code> containing:</p>
+<pre><span style="color:#268bd2;">author</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#268bd2;">Your name</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">title</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#268bd2;">Your title</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">lang</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#2aa198;">en</span><span style="color:#839496;">
 
-# Uncomment and fill to generate files
+</span><span style="color:#586e75;">#</span><span style="color:#586e75;"> Uncomment and fill to generate files
 # output.html: some_file.html
 # output.epub: some_file.epub
 # output.pdf: some_file.pdf
@@ -228,50 +221,42 @@ lang: en
 + README.md
 + ChangeLog.md
 + LICENSE.md
-</code></pre>
-<p id = "para-50">while</p>
-<pre><code class = "language-bash">crowbook --create README.md ChangeLog.md LICENSE.md
-</code></pre>
-<p id = "para-51">will print the same result, but to stdout (without creating a file).</p>
+</span></pre><p id = "para-50">while</p>
+<pre><span style="color:#839496;">crowbook --create README.md ChangeLog.md LICENSE.md
+</span></pre><p id = "para-51">will print the same result, but to stdout (without creating a file).</p>
 <p id = "para-52">When <code>crowbook</code> is run with <code>--create</code>, it can also use the keys/values set by <code>--set</code> (see below):</p>
-<pre><code class = "language-bash">$ crowbook foo.book --create file1.md file2.md --set author "Pierre Dupont" title "Mon œuvre" lang fr
-</code></pre>
-<p id = "para-53">will generate a <code>foo.book</code> file containing:</p>
-<pre><code class = "language-yaml">author: Pierre Dupont
-title: Mon œuvre
-lang: fr
+<pre><span style="color:#839496;">$ crowbook foo.book --create file1.md file2.md --</span><span style="color:#859900;">set</span><span style="color:#839496;"> author </span><span style="color:#839496;">&quot;</span><span style="color:#2aa198;">Pierre Dupont</span><span style="color:#839496;">&quot;</span><span style="color:#839496;"> title </span><span style="color:#839496;">&quot;</span><span style="color:#2aa198;">Mon œuvre</span><span style="color:#839496;">&quot;</span><span style="color:#839496;"> lang fr
+</span></pre><p id = "para-53">will generate a <code>foo.book</code> file containing:</p>
+<pre><span style="color:#268bd2;">author</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#268bd2;">Pierre Dupont</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">title</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#268bd2;">Mon œuvre</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">lang</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#2aa198;">fr</span><span style="color:#839496;">
 
-# List of chapters
+</span><span style="color:#586e75;">#</span><span style="color:#586e75;"> List of chapters
 + file1.md
 + file2.md
-</code></pre>
-<h2 id = "link-25">2.2. <code>--single</code></h2>
+</span></pre><h2 id = "link-25">2.2. <code>--single</code></h2>
 <p id = "para-54"><b>usage</b>: <code>crowbook --single &lt;FILE&gt;</code></p>
 <p id = "para-55">(or <code>crowbook -s &lt;FILE&gt;</code>)</p>
 <p id = "para-56">This argument allows to give <code>crowbook</code> a single Markdown file. This file can contain an inline YAML block to set some book options. Inline YAML blocks must start and end with a line containing only <code>---</code> (three dashes). E.g:</p>
-<pre><code class = "language-yaml">---
-author: Joan Doe
-title: A short story
-output.html: short.html
----
-</code></pre>
-<p id = "para-57">If this YAML block is not at the beginning of a file, it must also be preceded by a blank line.</p>
+<pre><span style="color:#839496;">---</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">author</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#268bd2;">Joan Doe</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">title</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#268bd2;">A short story</span><span style="color:#839496;">
+</span><span style="color:#268bd2;">output.html</span><span style="color:#839496;">:</span><span style="color:#839496;"> </span><span style="color:#2aa198;">short.html</span><span style="color:#839496;">
+</span><span style="color:#839496;">---</span><span style="color:#839496;">
+</span></pre><p id = "para-57">If this YAML block is not at the beginning of a file, it must also be preceded by a blank line.</p>
 <p id = "para-58">This allows to not have to write a <code>.book</code> configuration file for a short story or an article. <code>crowbook -s foo.md</code> is rougly equivalent to having a book configuration file containing:</p>
-<pre><code class = "language-yaml">! foo.md
-</code></pre>
-<p id = "para-59">That is, the chapter heading (if any) won’t be displayed in the output documents (though they still appear in the TOC).</p>
+<pre><span style="color:#268bd2;">!</span><span style="color:#839496;"> </span><span style="color:#2aa198;">foo.md</span><span style="color:#839496;">
+</span></pre><p id = "para-59">That is, the chapter heading (if any) won’t be displayed in the output documents (though they still appear in the TOC).</p>
 <blockquote><p id = "para-60">Note that by default, using <code>--single</code> or <code>-s</code> sets the default LaTeX class of the book to <code>article</code> instead of <code>book</code>.</p>
 </blockquote>
 <h2 id = "link-26">2.3. <code>--set</code></h2>
 <p id = "para-61"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --set [KEY] [VALUE]...</code></p>
 <p id = "para-62">This argument takes a list of <code>KEY</code> <code>VALUE</code> pairs and allows setting or overriding a book configuration option. All valid options in the configuration files are valid as keys. For more information, see <a href = "chapter_002.html">the configuration file</a>.</p>
 <h3 id = "link-27">Examples</h3>
-<pre><code class = "language-bash">$ crowbook foo.book --set html.css style.css
-</code></pre>
-<p id = "para-63">will override the CSS for HTML generation (the <code>html.css</code> key) to the file <code>style.css</code>.</p>
-<pre><code class = "language-bash">$ crowbook foo.book --set author Foo title Bar
-</code></pre>
-<p id = "para-64">will override the book title to <code>Bar</code> and its author to <code>Foo</code>.</p>
+<pre><span style="color:#839496;">$ crowbook foo.book --</span><span style="color:#859900;">set</span><span style="color:#839496;"> html.css style.css
+</span></pre><p id = "para-63">will override the CSS for HTML generation (the <code>html.css</code> key) to the file <code>style.css</code>.</p>
+<pre><span style="color:#839496;">$ crowbook foo.book --</span><span style="color:#859900;">set</span><span style="color:#839496;"> author Foo title Bar
+</span></pre><p id = "para-64">will override the book title to <code>Bar</code> and its author to <code>Foo</code>.</p>
 <h2 id = "link-28">2.4. <code>--proofread</code></h2>
 <p id = "para-65"><b>usage</b>: <code>crowbook --proofread &lt;BOOK&gt;</code></p>
 <p id = "para-66">(or <code>crowbook -p &lt;BOOK&gt;</code>)</p>
@@ -283,12 +268,11 @@ output.html: short.html
 <h2 id = "link-30">2.6. <code>--print-template</code></h2>
 <p id = "para-71"><b>usage</b>: <code>crowbook --print-template template</code></p>
 <p id = "para-72">Prints the built-in template to stdout. Useful if you want to customize the appearance of your document. E.g., if you want to modify the CSS used for HTML rendering:</p>
-<pre><code class = "language-bash">$ crowbook --print-template html.css &gt; my_style.css
-# edit my_style.css in your favourite editor
-$ crowbook my.book --set html.css my_style.css
-# or add "html.css: my_style.css" in my.book
-</code></pre>
-<h2 id = "link-31">2.7. <code>--verbose</code></h2>
+<pre><span style="color:#839496;">$ crowbook --print-template html.css </span><span style="color:#859900;">&gt;</span><span style="color:#839496;"> my_style.css
+</span><span style="color:#586e75;">#</span><span style="color:#586e75;"> edit my_style.css in your favourite editor</span><span style="color:#839496;">
+$ crowbook my.book --</span><span style="color:#859900;">set</span><span style="color:#839496;"> html.css my_style.css
+</span><span style="color:#586e75;">#</span><span style="color:#586e75;"> or add &quot;html.css: my_style.css&quot; in my.book</span><span style="color:#839496;">
+</span></pre><h2 id = "link-31">2.7. <code>--verbose</code></h2>
 <p id = "para-73"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --verbose</code></p>
 <p id = "para-74">If this flag is set, Crowbook will print the warnings it detects while parsing and rendering. These warnings are typically related to the inclusion of non-local images, linking to Markdown files that are not part of the book, and so on.</p>
 <h2 id = "link-32">2.8. <code>--to</code></h2>
@@ -297,12 +281,10 @@ $ crowbook my.book --set html.css my_style.css
 <p id = "para-77">Generate only the specified format. <code>FORMAT</code> must be either <code>epub</code>, <code>pdf</code>, <code>html</code>, <code>html.dir</code>, <code>odt</code> or <code>tex</code>.</p>
 <p id = "para-78">If an output file for the format is not specified in the book configuration file, <code>crowbook</code> will fail to render PDF, ODT and EPUB, whereas it will print HTML and TeX files on stdout. It is, however, possible to specify a file with the <code>--output</code> option.</p>
 <h3 id = "link-33">Examples</h3>
-<pre><code class = "language-bash">crowbook --to html foo.book
-</code></pre>
-<p id = "para-79">will generate some HTML, and prints it either to the file specified by <code>output.html</code> in <code>foo.book</code>, or to stdout if it is not specified.</p>
-<pre><code class = "language-bash">crowbook --to pdf --output foo.pdf foo.book
-</code></pre>
-<p id = "para-80">will generate a <code>foo.pdf</code> file.</p>
+<pre><span style="color:#839496;">crowbook --to html foo.book
+</span></pre><p id = "para-79">will generate some HTML, and prints it either to the file specified by <code>output.html</code> in <code>foo.book</code>, or to stdout if it is not specified.</p>
+<pre><span style="color:#839496;">crowbook --to pdf --output foo.pdf foo.book
+</span></pre><p id = "para-80">will generate a <code>foo.pdf</code> file.</p>
 <h2 id = "link-34">2.9. <code>--output</code></h2>
 <p id = "para-81"><b>usage</b>: <code>crowbook &lt;BOOK&gt; --to &lt;FORMAT&gt; --output &lt;FILE&gt;</code></p>
 <p id = "para-82">(or <code>crowbook -t &lt;FORMAT&gt; -o &lt;FILE&gt; &lt;BOOK&gt;</code>)</p>
@@ -323,7 +305,7 @@ $ crowbook my.book --set html.css my_style.css
   </a>
 </p>
     </div>
-    <footer id = "footer"><p id = "para-297">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.11.1</p>
+    <footer id = "footer"><p id = "para-297">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.11.2-pre</p>
 </footer>
   </div>
   </body>

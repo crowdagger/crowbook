@@ -173,10 +173,10 @@ table.notes tr td p {
 
 span.initial { 
     float: left;
-    font-size: 2em;
+    font-size: 285%;
     font-weight: bold;
     margin-right: 0.05em;
-    line-height: 1em;
+    line-height: 0.8em;
 }
 
 p.first-para {
@@ -185,9 +185,12 @@ p.first-para {
 
 /* Use this for escape narrow space so it is non-breaking */
 .nnbsp {
-    white-space: nowrap;
+    /* white-space: nowrap;*/
+    word-spacing: -0.13em;
+    /* Following necessary for Kobo EPUB3 reader??? */
+    margin: 0;
+    padding: 0;
 }
-
 
 /* Default  HTML CSS file includes default EPUB CSS file */
 
@@ -253,7 +256,9 @@ footer a:hover, #top a:hover {
 /* Additional elements */
 /* Grammar error */
 .grammar-error {
-    background: #d966ff;
+    color: red;
+    text-decoration-line: underline;
+    text-decoration-style: double;
 }
 
 
