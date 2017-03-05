@@ -49,7 +49,7 @@ impl<'a> HtmlDirRenderer<'a> {
     pub fn new(book: &'a Book) -> HtmlDirRenderer<'a> {
         let mut html = HtmlRenderer::new(book,
                                          book.options
-                                         .get_str("epub.highlight.theme")
+                                         .get_str("html.highlight.theme")
                                          .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()));
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
