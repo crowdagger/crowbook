@@ -26,7 +26,8 @@ You can also play with the [online demo version](http://vps.crowdagger.fr/crowbo
 Installing
 ----------
 
-There are two ways to install Crowbook:
+There are two ways to install Crowbook: either using precompiled
+binaries, or compiling it using `cargo`.
 
 ### Binaries ###
 
@@ -54,6 +55,9 @@ $ cargo install crowbook
 will automatically download the latest `crowbook` release on
 [crates.io](https://crates.io/crates/crowbook), compile it, and
 install it on your system.
+
+> Some dependencies also require building C libraries; you might thus
+> also need to install a C compiler and `make`/`cmake` build tools. 
 
 Dependencies
 ------------
@@ -166,11 +170,8 @@ texts that only contain one "chapter".
 ### Proofreading ###
 
 Crowbook can also generate "proofreading" copies in HTML or PDF,
-highlighting grammar errors and repetitions.
-
-> This feature has been introduced in version `0.9.1` and is still
-> experimental. For more information, see
-> [the proofreading chapter of the guide](guide/proofreading.md). 
+highlighting grammar errors and repetitions. For more information, see
+[the proofreading chapter of the guide](guide/proofreading.md). 
 
 ### Bugs ###
 
