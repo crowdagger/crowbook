@@ -1,16 +1,12 @@
 ChangeLog
 =========
 
-unreleased
-------------
-* When there is an error setting an option from the book configuration
-  file (e.g. because it is an invalid key), print an error but do not
-  abort, only ignore this specific option.
-* Proofreading:
-  * Repetition detection is now a bit less of an hack, and should
-    cause less problems when used in conjunction with grammar
-    checking. It now also works on PDF output (so the way it is
-    highlighted could be improved).
+0.11.2 (2017-03-05)
+-----------------------
+* General: 
+  * When there is an error setting an option from the book configuration
+	file (e.g. because it is an invalid key), print an error but do not
+    abort, only ignore this specific option.
 * New options:
   * `tex.stdpage`: if set to `true`, will use the `stdpage` package to
     render the book according to standards for submitting manuscripts.
@@ -26,15 +22,18 @@ unreleased
   * `[syntect](https://crates.io/crates/syntect)` is now the default
     for `rendering.highlight`. Concretely, this means that by default
     syntax highlighting is now done when `crowbook` is run instead of
-    using `[highlight.js](https://highlightjs.org/)`. (EDIT: bad idea
-    since syntect seems to have trouble building on windows, at least
-    on appveyor? Revert it before release?)
+    using `[highlight.js](https://highlightjs.org/)`. 
   * EPUB:
     * Now sets the "cover-image" property and meta so readers should
       display cover correctly.
 	* Narrow non-breaking spaces should display more correctly on KOBO
       ereaders (hoping this won't break the way they are displayed
       everywhere else).
+* Proofreading:
+  * Repetition detection is now a bit less of an hack, and should
+    cause less problems when used in conjunction with grammar
+    checking. It now also works on PDF output (so the way it is
+    highlighted could be improved).
 * Bugfixes:
   * Fix `mimetype` of EPUB files (make sure it is always "stored" and
     not "deflated" by the `zip` command).
