@@ -16,6 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use token::Token;
+use token::Alignment;
 use error::{Result, Error, Source};
 use logger::Logger;
 
@@ -234,7 +235,11 @@ impl Parser {
             Tag::Item => Token::Item(res),
             Tag::BlockQuote => Token::BlockQuote(res),
             Tag::CodeBlock(language) => Token::CodeBlock(language.into_owned(), res),
-            Tag::Table(n) => Token::Table(n, res),
+            Tag::Table(v) => {
+                // TODO: acutally use v's alignments
+                let aligns = vec!{Alignment::Center; v.len()};
+                Token::Table(aligns, res)
+            },
             Tag::TableHead => Token::TableHead(res),
             Tag::TableRow => Token::TableRow(res),
             Tag::TableCell => Token::TableCell(res),

@@ -168,7 +168,7 @@ fn table_simple() {
 | bla           | bla           |  bla  |
 | bla           | bla           |  bla  |
 ";
-    let expected = "[Table(3, [TableHead([TableCell([Str(\" A             \")]), \
+    let expected = "[Table([Center, Center, Center], [TableHead([TableCell([Str(\" A             \")]), \
                     TableCell([Str(\" Simple        \")]), TableCell([Str(\" Table \")])]), \
                     TableRow([TableCell([Str(\" bla           \")]), TableCell([Str(\" bla           \
                     \")]), TableCell([Str(\"  bla  \")])]), TableRow([TableCell([Str(\" bla           \

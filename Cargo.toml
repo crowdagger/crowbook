@@ -40,7 +40,7 @@ crowbook-intl = "0.2"
 
 [dependencies]
 mime_guess = "1"
-pulldown-cmark = "0.0.8"
+pulldown-cmark = "0.0.9"
 yaml-rust = "0.3"
 mustache = "0.8"
 uuid = { version = "0.4", features = ["v4"] }
