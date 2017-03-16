@@ -7,8 +7,9 @@ repository = "https://github.com/lise-henry/crowbook"
 documentation = "https://docs.rs/crowbook/"
 readme = "README.md"
 keywords = ["markdown", "book"]
+categories = ["command-line-utilities", "text-processing"]
 license = "LGPL-2.1+"
-publish = true
+publish = false
 build = "build.rs"
 
 exclude = [
