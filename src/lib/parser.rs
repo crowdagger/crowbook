@@ -237,7 +237,7 @@ impl Parser {
             Tag::CodeBlock(language) => Token::CodeBlock(language.into_owned(), res),
             Tag::Table(v) => {
                 // TODO: acutally use v's alignments
-                let aligns = vec!{Alignment::Center; v.len()};
+                let aligns = vec!{Alignment::None; v.len()};
                 Token::Table(aligns, res)
             },
             Tag::TableHead => Token::TableHead(res),
