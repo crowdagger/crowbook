@@ -207,6 +207,10 @@ impl<'a> LatexRenderer<'a> {
             .insert_bool("tex_title", self.book.options.get_bool("tex.title").unwrap())
             .insert_str("papersize", self.book.options.get_str("tex.paper_size").unwrap())
             .insert_bool("stdpage", self.book.options.get_bool("tex.stdpage").unwrap())
+            .insert_bool("use_url", self.book.features.url)
+            .insert_bool("use_tables", self.book.features.table)
+            .insert_bool("use_codeblocks", self.book.features.codeblock)
+            .insert_bool("use_images", self.book.features.image)
             .insert_str("tex_lang", tex_lang);
         if let Ok(tex_tmpl_add) = self.book.options.get_str("tex.template.add") {
             data = data.insert_str("additional_code", tex_tmpl_add);

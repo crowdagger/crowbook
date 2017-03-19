@@ -11,23 +11,35 @@
 \usepackage[<<&tex_lang>>]{babel}
 
 \usepackage{fancyhdr}
+<<#use_tables>>
+% Only included if document contains tables
 \usepackage{tabularx}
-\usepackage{spverbatim}
-\usepackage{graphicx}
+<</use_tables>>
+<<#use_codeblocks>>
+% Only included if document contains code blocks
 \usepackage{color}
 \usepackage[
   topline=false,
   rightline=false,
   bottomline=false]{mdframed}
-<<#initials>> % only if use_initials is set to true
-\usepackage{lettrine}
-<</initials>>
-
+\usepackage{spverbatim}
+<</use_codeblocks>>
+<<#use_images>>
+% Only included if document contains images
+\usepackage{graphicx}
+<</use_images>>
+<<#use_url>>
+% Only included if URLs are used in the document
 \usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
 
 <<^xelatex>>
 \usepackage[anythingbreaks]{breakurl}
 <</xelatex>>
+<</use_url>>
+
+<<#initials>> % only if use_initials is set to true
+\usepackage{lettrine}
+<</initials>>
 
 <<#stdpage>>
 \usepackage[<<&papersize>>]{geometry}
