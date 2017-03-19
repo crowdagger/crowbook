@@ -10,6 +10,8 @@ unreleased
     time such a feature is encountered.
   * The LaTeX and HTML/EPUB renderers only initialize `syntect` (which
     can take some time) if code blocks are used in the document.
+  * The LaTeX renderer only requires LaTeX packages that are actually
+    used in the document.
 * Command-line interface:
   * Warnings are now displayed by default.
   * The (undocumented) `--debug` argument has been removed.
