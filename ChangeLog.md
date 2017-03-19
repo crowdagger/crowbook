@@ -8,6 +8,8 @@ features are used. This is useful in various ways:
 * The ODT renderer only displays a global warning showing the lists of
   used features that are not implemented, instead of a warning each
   time such a feature is encountered.
+* The LaTeX and HTML/EPUB renderers only initialize `syntect` (which
+  can take some time) if code blocks are used in the document.
 * Command-line interface:
   * Warnings are now displayed by default.
   * The (undocumented) `--debug` argument has been removed.
