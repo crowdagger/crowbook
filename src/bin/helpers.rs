@@ -125,7 +125,6 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref VERBOSE: String = lformat!("Print warnings in parsing/rendering");
         static ref QUIET: String = lformat!("Don't print info/error messages");
         static ref PROOFREAD: String = lformat!("Enable proofreading");
-        static ref DEBUG: String = lformat!("Print debugging information");
         static ref CREATE: String = lformat!("Create a new book with existing Markdown files");
         static ref OUTPUT: String = lformat!("Specify output file");
         static ref LANG: String = lformat!("Set the runtime language used by Crowbook");
@@ -164,15 +163,10 @@ ARGS:
         .arg(Arg::from_usage("-v, --verbose").help(VERBOSE.as_str()))
         .arg(Arg::from_usage("-q, --quiet")
             .help(QUIET.as_str())
-            .conflicts_with("verbose")
-            .conflicts_with("debug"))
+            .conflicts_with("verbose"))
         .arg(Arg::from_usage("-h, --help").help(HELP.as_str()))
         .arg(Arg::from_usage("-V, --version").help(VERSION.as_str()))
         .arg(Arg::from_usage("-p, --proofread").help(PROOFREAD.as_str()))
-        .arg(Arg::from_usage("-d, --debug")
-            .help(DEBUG.as_str())
-            .conflicts_with("verbose")
-            .hidden(true))
         .arg(Arg::from_usage("-c, --create [FILES]...").help(CREATE.as_str()))
         .arg(Arg::from_usage("-o, --output [FILE]")
             .help(OUTPUT.as_str())

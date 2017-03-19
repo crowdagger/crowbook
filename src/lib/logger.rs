@@ -14,9 +14,9 @@ use std::fmt::Display;
 pub enum InfoLevel {
     /// Debug: the lowest level
     Debug = 0,
-    /// Warning: won't be displayed by default
+    /// Warning: will be displayed by default
     Warning,
-    /// Info: won't be displayed by default
+    /// Info: will be displayed by default
     Info,
     /// Error
     Error,
@@ -110,7 +110,7 @@ pub struct Logger {
 impl Logger {
     /// Creates a new logger with default verbosity (`Info`).
     pub fn new() -> Logger {
-        Logger { verbosity: InfoLevel::Info }
+        Logger { verbosity: InfoLevel::Warning }
     }
 
     /// Get verbosity

@@ -130,14 +130,12 @@ pub fn try_main() -> Result<()> {
 
     // ok to unwrap since clap checks it's there
     let s = matches.value_of("BOOK").unwrap();
-    let verbosity = if matches.is_present("debug") {
+    let verbosity = if matches.is_present("verbose") {
         InfoLevel::Debug
-    } else if matches.is_present("verbose") {
-        InfoLevel::Warning
     } else if matches.is_present("quiet") {
         InfoLevel::Quiet
     } else {
-        InfoLevel::Info
+        InfoLevel::Warning
     };
 
     let mut book = Book::new();
