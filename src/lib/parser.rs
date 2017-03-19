@@ -41,6 +41,7 @@ pub struct Features {
     pub ordered_list: bool,
     pub footnote: bool,
     pub table: bool,
+    pub url: bool,
 }
 
 impl Features {
@@ -53,6 +54,7 @@ impl Features {
             ordered_list: false,
             footnote: false,
             table: false,
+            url: false,
         }
     }
 }
@@ -69,6 +71,7 @@ impl BitOr for Features {
             ordered_list: self.ordered_list | rhs.ordered_list,
             footnote: self.footnote | rhs.footnote,
             table: self.table | rhs.table,
+            url: self.url | rhs.url,
         }
     }
 }
@@ -274,7 +277,10 @@ impl Parser {
             Tag::Strong => Token::Strong(res),
             Tag::Code => Token::Code(res),
             Tag::Header(x) => Token::Header(x, res),
-            Tag::Link(url, title) => Token::Link(url.into_owned(), title.into_owned(), res),
+            Tag::Link(url, title) => {
+                self.features.url = true;
+                Token::Link(url.into_owned(), title.into_owned(), res)
+            },
             Tag::Image(url, title) => {
                 self.features.image = true;
                 Token::Image(url.into_owned(), title.into_owned(), res)
@@ -298,6 +304,7 @@ impl Parser {
                 Token::CodeBlock(language.into_owned(), res)
             },
             Tag::Table(v) => {
+                self.features.table = true;
                 // TODO: actually use v's alignments
                 Token::Table(v.len() as i32, res)
             },
