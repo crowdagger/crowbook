@@ -115,8 +115,6 @@ input.yaml_blocks:bool:false        # {yaml}
 # {crowbook_opt}
 crowbook.temp_dir:path:             # {tmp_dir}
 crowbook.zip.command:str:zip        # {zip}
-crowbook.verbose:bool:false         # {verbose}
-
 
 # {prf_opt}
 output.proofread.html:path          # {prf_html}
@@ -174,6 +172,7 @@ proofread.nb_spaces:alias                           # {removed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
+crowbook.verbose:alias                              # {removed}
 ",
                                          metadata = lformat!("Metadata"),
                                          metadata2 = lformat!("Additional metadata"),
@@ -275,7 +274,6 @@ html.crowbook_link:alias                            # {removed}
                                          yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
-                                         verbose = lformat!("Make Crowbook display more messages"),
                                          
                                          prf_html = lformat!("Output file name for HTML rendering with proofread features"),
                                          prf_html_dir = lformat!("Output directory name for HTML rendering with proofread features"),
