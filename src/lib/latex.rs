@@ -433,9 +433,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Footnote(ref vec) => {
                 Ok(format!("\\protect\\footnote{{{}}}", self.render_vec(vec)?))
             }
-            Token::Table(ref v, ref vec) => {
+            Token::Table(n, ref vec) => {
                 let mut cols = String::new();
-                for _ in 0..v.len() {
+                for _ in 0..n {
                     cols.push_str("|X");
                 }
                 cols.push_str("|");

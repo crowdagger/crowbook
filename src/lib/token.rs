@@ -15,8 +15,6 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-// use cmark::parse::Alignment as CmarkAlignment;
-
 #[derive(Debug, Clone, PartialEq)]
 /// The inner type for an annotation.
 ///
@@ -27,26 +25,6 @@ pub enum Data {
     Repetition(String),
     __NonExhaustive,
 }
-
-#[derive(Copy, Clone, Debug, PartialEq)]
-/// Algnment, used for table columns.
-pub enum Alignment {
-    None,
-    Left,
-    Center,
-    Right,
-}
-
-// impl Alignment {
-//     pub fn from_cmark(alig: cmark::Alignment) -> Alignment {
-//         match alig {
-//             cmark::Alignment::None => Alignment::None,
-//             cmark::Alignment::Left => Alignment::Left,
-//             cmark::Alignment::Center => Alignment::Center,
-//             cmark::Alignment::Right => Alignment::Right,
-//         }
-//     }
-// }
 
 /// A single token representing a Markdown element.
 ///
@@ -80,8 +58,8 @@ pub enum Token {
     /// Item of a list
     Item(Vec<Token>),
 
-    /// Table with a list of alignments (one by column), and a list of `TableHead` and `TableRows`
-    Table(Vec<Alignment>, Vec<Token>),
+    /// Table with number of rows, and a list of `TableHead` and `TableRows`
+    Table(i32, Vec<Token>),
     /// Table header, contains `TableCell`s
     TableHead(Vec<Token>),
     /// Row of a table, contains `TableCell`s
