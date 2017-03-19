@@ -150,7 +150,7 @@ impl<'r> ResourceHandler<'r> {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            self.logger.error(lformat!("Resources: could not find a in-book match for link \
+            self.logger.warning(lformat!("Resources: could not find an in-book match for link \
                                         {file}",
                                        file = from));
             from
