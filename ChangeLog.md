@@ -3,6 +3,11 @@ ChangeLog
 
 unreleased
 -------------
+When crowbook parses the book's contents, it now detects which
+features are used. This is useful in various ways:
+* The ODT renderer only displays a global warning showing the lists of
+  used features that are not implemented, instead of a warning each
+  time such a feature is encountered.
 * Command-line interface:
   * Warnings are now displayed by default.
   * The (undocumented) `--debug` argument has been removed.
