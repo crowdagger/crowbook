@@ -872,10 +872,6 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: string
     - **default value**: `zip`
     -  Command to use to zip files (for EPUB/ODT)
-- **`crowbook.verbose`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  Make Crowbook display more messages
 
 ### Output options (for proofreading) ###
 - **`output.proofread.html`**
