@@ -78,6 +78,23 @@ impl<'a> OdtRenderer<'a> {
 
     /// Render content.xml
     fn render_content(&mut self) -> Result<String> {
+        // Print a warning for the features that aren't supported in ODT.
+        let mut missing = vec![];
+        if self.book.features.image { missing.push(lformat!("images")); }
+        if self.book.features.blockquote { missing.push(lformat!("blockquotes")); }
+        if self.book.features.codeblock { missing.push(lformat!("codeblocks")); }
+        if self.book.features.ordered_list { missing.push(lformat!("ordered lists")); }
+        if self.book.features.footnote { missing.push(lformat!("footnotes")); }
+        if self.book.features.table { missing.push(lformat!("tables")); }
+
+        if !missing.is_empty() {
+            let missing = missing.join(", ");
+            self.book.logger.warning(lformat!("The document uses the following features, that are not implemented for ODT output: {features}",
+                                         features = missing));
+            self.book.logger.warning(lformat!("They will be ignored in the generated document."));
+        }
+
+        
         let mut content = String::new();
 
         for chapter in &self.book.chapters {
@@ -169,10 +186,6 @@ impl<'a> OdtRenderer<'a> {
             }
             Token::List(ref vec) => format!("<text:list>\n{}</text:list>\n", self.render_vec(vec)),
             Token::OrderedList(_, ref vec) => {
-                self.book
-                    .logger
-                    .warning(lformat!("ODT: ordered list not currently implemented for this \
-                                       format, fallbacking to unordered one"));
                 format!("<text:list>\n{}</text:list>\n", self.render_vec(vec))
             }
             Token::Item(ref vec) => {
@@ -190,10 +203,6 @@ impl<'a> OdtRenderer<'a> {
             }
             Token::BlockQuote(ref vec) |
             Token::CodeBlock(_, ref vec) => {
-                self.book
-                    .logger
-                    .warning(lformat!("ODT: blockquotes and codeblocks are not currently \
-                                       implemented for ODT"));
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
                         self.render_vec(vec))
             }
@@ -201,26 +210,15 @@ impl<'a> OdtRenderer<'a> {
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),
             Token::Image(_, _, _) |
             Token::StandaloneImage(_, _, _) => {
-                self.book
-                    .logger
-                    .warning(lformat!("ODT: images not currently implemented for this format"));
                 String::from(" ")
             }
             Token::Table(_, _) |
             Token::TableHead(_) |
             Token::TableRow(_) |
             Token::TableCell(_) => {
-                self.book
-                    .logger
-                    .warning(lformat!("ODT: tables are not currently implemented for this format"));
                 String::from(" ")
             }
             Token::Footnote(_) => {
-                self.book
-                    .logger
-                    .warning(lformat!("ODT: footnotes are not yet implemented in this format, \
-                                       ignoring {:?}",
-                                      token));
                 String::new()
             }
             Token::Annotation(_, ref vec) => self.render_vec(vec),
