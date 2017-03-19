@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.11.3 (2017-03-19)
+-----------------------
 * When crowbook parses the book's contents, it now detects which
   features are used. This is useful in various ways:
   * The ODT renderer only displays a global warning showing the lists of
