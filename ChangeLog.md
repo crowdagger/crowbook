@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+unreleased
+-------------
+* Command-line interface:
+  * Warnings are now displayed by default.
+  * The (undocumented) `--debug` argument has been removed.
+
 0.11.2 (2017-03-05)
 -----------------------
 * General: 
