@@ -6,6 +6,8 @@ unreleased
 * Command-line interface:
   * Warnings are now displayed by default.
   * The (undocumented) `--debug` argument has been removed.
+  * The status of some messages have been modified ("warning" to
+  "debug" or "error" to "warning").
 * Deprecated option:
   * `crowbook.verbose` has been deprecated, at it should be set by the CLI.
 
