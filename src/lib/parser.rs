@@ -25,8 +25,54 @@ use std::path::Path;
 use std::convert::AsRef;
 use std::io::Read;
 use std::collections::HashMap;
+use std::ops::BitOr;
 
 use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OPTION_ENABLE_TABLES};
+
+
+
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+/// The list of features used in a document.
+pub struct Features {
+    pub image: bool,
+    pub blockquote: bool,
+    pub codeblock: bool,
+    pub ordered_list: bool,
+    pub footnote: bool,
+    pub table: bool,
+}
+
+impl Features {
+    /// Creates a new set of features where all are set to false
+    pub fn new() -> Features {
+        Features {
+            image: false,
+            blockquote: false,
+            codeblock: false,
+            ordered_list: false,
+            footnote: false,
+            table: false,
+        }
+    }
+}
+
+
+impl BitOr for Features {
+    type Output = Self;
+
+    fn bitor(self, rhs: Self) -> Self {
+        Features {
+            image: self.image | rhs.image,
+            blockquote: self.blockquote | rhs.blockquote,
+            codeblock: self.codeblock | rhs.codeblock,
+            ordered_list: self.ordered_list | rhs.ordered_list,
+            footnote: self.footnote | rhs.footnote,
+            table: self.table | rhs.table,
+        }
+    }
+}
+
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 ///
@@ -56,6 +102,7 @@ use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OP
 pub struct Parser {
     footnotes: HashMap<String, Vec<Token>>,
     source: Source,
+    features: Features,
 }
 
 impl Parser {
@@ -64,6 +111,7 @@ impl Parser {
         Parser {
             footnotes: HashMap::new(),
             source: Source::empty(),
+            features: Features::new(),
         }
     }
 
@@ -72,7 +120,7 @@ impl Parser {
         self.source = Source::new(s);
     }
 
-    /// Parse a file and returns an AST or an error
+    /// Parse a file and returns an AST or  an error
     pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
         let mut f = File::open(path)
@@ -92,7 +140,7 @@ impl Parser {
         self.parse(&s)
     }
 
-    /// Parse a string and returns an AST, or an Error.
+    /// Parse a string and returns an AST  an Error.
     pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
         let mut opts = Options::empty();
         opts.insert(OPTION_ENABLE_TABLES);
@@ -130,6 +178,11 @@ impl Parser {
         } else {
             Ok(tokens)
         }
+    }
+
+    /// Returns the list of features used by this parser
+    pub fn features(&self) -> Features {
+        self.features
     }
 
 
@@ -222,18 +275,28 @@ impl Parser {
             Tag::Code => Token::Code(res),
             Tag::Header(x) => Token::Header(x, res),
             Tag::Link(url, title) => Token::Link(url.into_owned(), title.into_owned(), res),
-            Tag::Image(url, title) => Token::Image(url.into_owned(), title.into_owned(), res),
+            Tag::Image(url, title) => {
+                self.features.image = true;
+                Token::Image(url.into_owned(), title.into_owned(), res)
+            },
             Tag::Rule => Token::Rule,
             Tag::List(opt) => {
                 if let Some(n) = opt {
+                    self.features.ordered_list = true;
                     Token::OrderedList(n, res)
                 } else {
                     Token::List(res)
                 }
             }
             Tag::Item => Token::Item(res),
-            Tag::BlockQuote => Token::BlockQuote(res),
-            Tag::CodeBlock(language) => Token::CodeBlock(language.into_owned(), res),
+            Tag::BlockQuote => {
+                self.features.blockquote = true;
+                Token::BlockQuote(res)
+            },
+            Tag::CodeBlock(language) => {
+                self.features.codeblock = true;
+                Token::CodeBlock(language.into_owned(), res)
+            },
             Tag::Table(v) => {
                 // TODO: actually use v's alignments
                 Token::Table(v.len() as i32, res)

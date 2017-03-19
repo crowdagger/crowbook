@@ -19,6 +19,7 @@ use error::{Error, Result, Source};
 use cleaner::{Cleaner, CleanerParams, French, Off, Default};
 use bookoptions::BookOptions;
 use parser::Parser;
+use parser::Features;
 use epub::{Epub};
 use html_single::{HtmlSingle, ProofHtmlSingle};
 use html_dir::{HtmlDir, ProofHtmlDir};
@@ -120,6 +121,10 @@ pub struct Book {
     #[doc(hidden)]
     pub source: Source,
 
+    /// Features used in the book content
+    #[doc(hidden)]
+    pub features: Features,
+
     cleaner: Box<Cleaner>,
     chapter_template: Option<Template>,
     part_template: Option<Template>,
@@ -143,6 +148,7 @@ impl Book {
             checker: None,
             detector: None,
             formats: HashMap::new(),
+            features: Features::new(),
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
             .add_format("proofread.html", lformat!("HTML (standalone page/proofreading)"), Box::new(ProofHtmlSingle{}))
@@ -787,6 +793,7 @@ impl Book {
         let mut parser = Parser::new();
         parser.set_source_file(file);
         let mut tokens = parser.parse(&content)?;
+        self.features = self.features | parser.features();
 
         // transform the AST to make local links and images relative to `book` directory
         let offset = if let Some(f) = Path::new(file).parent() {
