@@ -56,7 +56,8 @@ impl<'a> LatexRenderer<'a> {
     pub fn new(book: &'a Book) -> LatexRenderer<'a> {
         let mut handler = ResourceHandler::new(&book.logger);
         handler.set_images_mapping(true);
-        let syntax = if book.options.get_str("rendering.highlight").unwrap() == "syntect" {
+        let syntax = if book.options.get_str("rendering.highlight").unwrap() == "syntect"
+        || book.features.codeblock {
             Some(Syntax::new(book,
                              book.options
                              .get_str("tex.highlight.theme")

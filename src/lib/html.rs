@@ -110,7 +110,14 @@ pub struct HtmlRenderer<'a> {
 impl<'a> HtmlRenderer<'a> {
     fn get_highlight(book: &Book, theme: &str) -> (Highlight, Option<Syntax>) {
         match book.options.get_str("rendering.highlight").unwrap() {
-            "syntect" => (Highlight::Syntect, Some(Syntax::new(book, theme))),
+            "syntect" => {
+                // Don't init syntect if codeblocks are not used
+                if book.features.codeblock {
+                    (Highlight::Syntect, Some(Syntax::new(book, theme)))
+                } else {
+                    (Highlight::None, None)
+                }
+            },
             "none" => (Highlight::None, None),
             "highlight.js" => (Highlight::Js, None),
             value => {
