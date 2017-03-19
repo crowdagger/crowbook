@@ -9,7 +9,7 @@ readme = "README.md"
 keywords = ["markdown", "book"]
 categories = ["command-line-utilities", "text-processing"]
 license = "LGPL-2.1+"
-publish = false
+publish = true
 build = "build.rs"
 
 exclude = [
