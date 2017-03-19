@@ -79,7 +79,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 self.html
                     .book
                     .logger
-                    .warning(lformat!("{path} already exists, deleting it",
+                    .debug(lformat!("{path} already exists, deleting it",
                                       path = dest_path.display()));
                 fs::remove_dir_all(&dest_path)
                     .map_err(|e| {

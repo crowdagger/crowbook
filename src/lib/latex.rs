@@ -190,7 +190,7 @@ impl<'a> LatexRenderer<'a> {
             _ => {
                 self.book
                     .logger
-                    .error(lformat!("LaTeX: can't find a tex equivalent for lang '{lang}', \
+                    .warning(lformat!("LaTeX: can't find a tex equivalent for lang '{lang}', \
                                      fallbacking on english",
                                     lang = self.book.options.get_str("lang").unwrap()));
                 "english"
@@ -409,7 +409,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 } else {
                     self.book
                         .logger
-                        .error(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                        .warning(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
                                          local; ignoring it.",
                                         source = self.source,
                                         url = url));
@@ -423,7 +423,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 } else {
                     self.book
                         .logger
-                        .error(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                        .warning(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
                                          local; ignoring it.",
                                         source = self.source,
                                         url = url));
