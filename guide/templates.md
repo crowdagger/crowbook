@@ -238,10 +238,12 @@ For every template, Crowbook exports all of the metadata:
 
 These metadata can contain Markdown, which will be rendered. E.g.,
 setting `date: "20th of **september**"` will render `september` in
-bold, using `<b>` tag for HTML or `\textbf` for LaTeX. (It might be a
-bad idea to insert Markdown into `author` or `title` fields, and it
-certainly is for `lang`, but it can be useful for custom metadata or
-for fields like `description`).
+bold, using `<b>` tag for HTML or `\textbf` for LaTeX. If you need to
+use these data in places that don't support formatted text (e.g. in
+meta tags), you can use the raw content by accessing `xxx_raw` instead
+(e.g., `author_raw`, `title_raw`, ...). (Note that the content of the
+raw metadata is *not* HTML-escaped, so in this case you might want to
+use `{{xxx_raw}}` instead of `{{{xxx_raw}}}`.)
 
 For each metadata `foo` that is set, Crowbook also inserts a `has_foo` bool set to true. This allows to use Mustache's section for some logic, e.g.:
 
@@ -261,7 +263,11 @@ For all templates, Crowbook also exports some localisation strings `loc_foo`. Th
 | Localisation key            | Value in english             |
 |-----------------------------|------------------------------|
 | `loc_toc`                   | Table of contents            |
+| `loc_cover`                 | Cover                        |
+| `loc_title`                 | Title                        |
 | `loc_chapter`               | Chapter                      |
+| `loc_part`                  | Part                         |
+| `loc_notes`                 | Notes                        |
 | `loc_display_all`           | Display all chapters         |
 | `loc_display_one`           | Display one chapter          |
 
@@ -283,6 +289,7 @@ below.
 | `style` | The CSS file for this HTML document, that is, a rendered version of `html.css` | `html.standalone.template` |
 | A variable whose name corresponds to `lang` in book options (e.g. `lang_en` if lang is set to "en", `lang_fr` if it is set to "fr", ...) | `true`  | `html.css`, `epub.css` |
 | `chapter_title` | The title of current chapter | `html.dir.template`, `epub.chapter.xhtml`, `rendering.chapter.template` |
+| `chapter_title_raw` | The title of current chapter (raw text without HTML formatting) | `html.dir.template`, `epub.chapter.xhtml`, `rendering.chapter.template` |
 | `highlight_code` | True if `html.highlight_code` is true | `html.standalone.template`, `html.dir.template` |
 | `highlight_css` | The content of `html.highlight.css` | `html.standalone.template` |
 | `highlight_js` | The base64-encoded content of `html.highlight.js` | `html.standalone.tempate` |
