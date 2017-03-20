@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+unreleased
+-------------
+* Rendering:
+  * HTML/EPUB: 
+    * Standalone images are now displayed centered.
+
 0.11.3 (2017-03-19)
 -----------------------
 * When crowbook parses the book's contents, it now detects which
