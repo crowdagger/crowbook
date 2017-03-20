@@ -34,6 +34,7 @@ use misc;
 use book_renderer::BookRenderer;
 use chapter::Chapter;
 use token::Token;
+use text_view::view_as_text;
 
 #[cfg(feature = "proofread")]
 use repetition_check::RepetitionDetector;
@@ -1088,9 +1089,10 @@ impl Book {
                     "lang" => Ok(s.to_string()),
                     _ => f(s),
                 };
+                let raw = view_as_text(&Parser::new().parse(s)?);
                 match content {
                     Ok(content) => {
-                        mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), s.to_string());
+                        mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), raw);
                         mapbuilder = mapbuilder.insert_str(&key, content);
                         mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
                     }
