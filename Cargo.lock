@@ -3,11 +3,11 @@ name = "crowbook"
 version = "0.11.4-pre"
 dependencies = [
  "caribon 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "clap 2.21.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clap 2.21.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-text-processing 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "epub-builder 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "epub-builder 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "hyper 0.10.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "mime_guess 1.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -153,7 +153,7 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "2.21.1"
+version = "2.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -168,7 +168,7 @@ dependencies = [
 
 [[package]]
 name = "cmake"
-version = "0.1.21"
+version = "0.1.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "gcc 0.3.45 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -220,7 +220,7 @@ dependencies = [
 
 [[package]]
 name = "epub-builder"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "chrono 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -448,7 +448,7 @@ name = "onig_sys"
 version = "61.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "cmake 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cmake 0.1.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.21 (registry+https://github.com/rust-lang/crates.io-index)",
  "pkg-config 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -540,7 +540,7 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.1.16"
+version = "0.1.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -691,7 +691,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.21 (registry+https://github.com/rust-lang/crates.io-index)",
- "redox_syscall 0.1.16 (registry+https://github.com/rust-lang/crates.io-index)",
+ "redox_syscall 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -838,14 +838,14 @@ dependencies = [
 "checksum cfg-if 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "de1e760d7b6535af4241fca8bd8adf68e2e7edacc6b29f5d399050c5e48cf88c"
 "checksum chrono 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)" = "9213f7cd7c27e95c2b57c49f0e69b1ea65b27138da84a170133fd21b07659c00"
 "checksum chrono 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "158b0bd7d75cbb6bf9c25967a48a2e9f77da95876b858eadfabaa99cd069de6e"
-"checksum clap 2.21.1 (registry+https://github.com/rust-lang/crates.io-index)" = "74a80f603221c9cd9aa27a28f52af452850051598537bb6b359c38a7d61e5cda"
-"checksum cmake 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)" = "e1acc68a3f714627af38f9f5d09706a28584ba60dfe2cca68f40bf779f941b25"
+"checksum clap 2.21.2 (registry+https://github.com/rust-lang/crates.io-index)" = "58ad5e8142f3a5eab0c1cba5011aa383e009842936107fe4d94f1a8d380a1aec"
+"checksum cmake 0.1.22 (registry+https://github.com/rust-lang/crates.io-index)" = "d18d68987ed4c516dcc3e7913659bfa4076f5182eea4a7e0038bb060953e76ac"
 "checksum crowbook-intl 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "04db38a154dbc8411c49a39b0c514fc29951deaf179bebee581ceb9f72a52c85"
 "checksum crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "62cf6ec512b4d7fb7d8683efa703b17e5b8f5e24a9eb7ec9fb92237f039d941c"
 "checksum crowbook-text-processing 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "38d32422dff38865b65cfd9545fd772b8a495bbc857624fdc1aa033d9efb8578"
 "checksum dbghelp-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "97590ba53bcb8ac28279161ca943a924d1fd4a8fb3fa63302591647c4fc5b850"
 "checksum deque 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "1614659040e711785ed8ea24219140654da1729f3ec8a47a9719d041112fe7bf"
-"checksum epub-builder 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "59d957be722f76d9182fd1a5e29f75dc5a1a5ef53aad2c45488931f819304726"
+"checksum epub-builder 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "51ebcc5f0a32876aac0e1748ccebbfb4f9699ad46a071ecdbd608af7daa31116"
 "checksum error-chain 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d9435d864e017c3c6afeac1654189b06cdb491cf2ff73dbf0d73b0f292f42ff8"
 "checksum flate2 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)" = "d4e4d0c15ef829cbc1b7cda651746be19cceeb238be7b1049227b14891df9e25"
 "checksum fnv 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)" = "6cc484842f1e2884faf56f529f960cc12ad8c71ce96cc7abba0a067c98fee344"
@@ -884,7 +884,7 @@ dependencies = [
 "checksum pulldown-cmark 0.0.10 (registry+https://github.com/rust-lang/crates.io-index)" = "b0b0f7b64fd9ff618da552df85b0d356a1487e5ef41df8b5727b0f73bd1215a1"
 "checksum rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "022e0636ec2519ddae48154b028864bdce4eaf7d35226ab8e65c611be97b189d"
 "checksum rayon 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "50c575b58c2b109e2fbc181820cbe177474f35610ff9e357dc75f6bac854ffbf"
-"checksum redox_syscall 0.1.16 (registry+https://github.com/rust-lang/crates.io-index)" = "8dd35cc9a8bdec562c757e3d43c1526b5c6d2653e23e2315065bc25556550753"
+"checksum redox_syscall 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)" = "29dbdfd4b9df8ab31dec47c6087b7b13cbf4a776f335e4de8efba8288dda075b"
 "checksum regex 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "4278c17d0f6d62dfef0ab00028feb45bd7d2102843f80763474eeb1be8a10c01"
 "checksum regex-syntax 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2f9191b1f57603095f105d317e375d19b1c9c5c3185ea9633a99a6dcbed04457"
 "checksum rustc-demangle 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "3058a43ada2c2d0b92b3ae38007a2d0fa5e9db971be260e0171408a4ff471c95"
