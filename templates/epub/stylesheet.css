@@ -84,8 +84,13 @@ h2.author {
     width: 100%;
 }
 
-.image img {
+.image {
+    margin: auto;
     width: 80%;
+}
+
+.image img {
+    width: 100%;
 }
 
 .rule {
