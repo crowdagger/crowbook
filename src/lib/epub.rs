@@ -26,6 +26,7 @@ use renderer::Renderer;
 use parser::Parser;
 use lang;
 use book_renderer::BookRenderer;
+use text_view::view_as_text;
 
 use mustache::Template;
 use crowbook_text_processing::escape;
@@ -160,9 +161,9 @@ impl<'a> EpubRenderer<'a> {
             let n = chapter.number;
             let v = &chapter.content;
             self.html.chapter_config(i, n, filenamer(i));
-            let chapter = self.render_chapter(v, &template_chapter)?;
+            let rendered_chapter = self.render_chapter(v, &template_chapter)?;
 
-            let mut content = EpubContent::new(filenamer(i), chapter.as_bytes());
+            let mut content = EpubContent::new(filenamer(i), rendered_chapter.as_bytes());
             if i == 0 {
                 content = content.reftype(ReferenceType::Text);
             }
@@ -170,7 +171,13 @@ impl<'a> EpubRenderer<'a> {
             // todo: find cleaner way
             for element in &self.html.toc.elements {
                 if element.url.contains(&filenamer(i)) {
-                    content = content.title(element.title.as_ref());
+                    /* We don't want to use element.title as it may contain HTML */
+                    for token in &chapter.content {
+                        if let Token::Header(1, ref v) = *token {
+                            content = content.title(view_as_text(v));
+                            break;
+                        }
+                    }
                     content.toc.children = element.children.clone();
                     break;
                 }
