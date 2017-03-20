@@ -6,7 +6,10 @@ unreleased
 * An image can now be considered standalone even if it is inside a
   link.
 * Bugfixes:
-  * EPUB: escape title and author before feeding them to epub-builder.
+  * EPUB: 
+      * Escape title and author before feeding them to epub-builder.
+	  * Fix content.opf issue by not rendering first
+        chapter's title (marked as beginning of document) in `<guide>`.
 * Rendering:
   * HTML/EPUB: standalone images are now displayed centered.
 
