@@ -3,9 +3,9 @@ ChangeLog
 
 unreleased
 -------------
-* Rendering:
-  * HTML/EPUB: 
-    * Standalone images are now displayed centered.
+* An image can be considered standalone even if it is inside a link.
+* HTML/EPUB: 
+  * Standalone images are now displayed centered.
 
 0.11.3 (2017-03-19)
 -----------------------
