@@ -25,6 +25,7 @@ use resource_handler;
 use renderer::Renderer;
 use parser::Parser;
 use book_renderer::BookRenderer;
+use text_view::view_as_text;
 
 use std::io;
 use std::io::Read;
@@ -178,17 +179,21 @@ impl<'a> HtmlDirRenderer<'a> {
     // Render each chapter and write them, and index.html too
     fn write_html(&mut self) -> Result<()> {
         let mut chapters = vec![];
+        
         let mut titles = vec![];
+        let mut titles_raw = vec![];
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             let n = chapter.number;
             let v = &chapter.content;
             self.html.chapter_config(i, n, filenamer(i));
             let mut title = String::new();
+            let mut title_raw = String::new();
             for token in v {
                 match *token {
                     Token::Header(1, ref vec) => {
                         if self.html.current_hide || self.html.current_numbering == 0 {
                             title = self.html.render_vec(vec)?;
+                            title_raw = view_as_text(vec);
                         } else {
                             title = self.html
                                 .book
@@ -197,6 +202,14 @@ impl<'a> HtmlDirRenderer<'a> {
                                                     |s| {
                                                         self.render_vec(&Parser::new()
                                                                         .parse_inline(s)?)
+                                                    })?;
+                            title_raw = self.html
+                                .book
+                                .get_chapter_header(self.html.current_chapter[1] + 1,
+                                                    view_as_text(vec),
+                                                    |s| {
+                                                        Ok(view_as_text(&Parser::new()
+                                                                     .parse_inline(s)?))
                                                     })?;
                         }
                         break;
@@ -207,6 +220,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 }
             }
             titles.push(title);
+            titles_raw.push(title_raw);
 
             let chapter = HtmlRenderer::render_html(self, v, true);
             chapters.push(chapter);
@@ -250,9 +264,9 @@ impl<'a> HtmlDirRenderer<'a> {
                 .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
                 .insert_str("content", content?)
                 .insert_str("chapter_title",
-                            format!("{} – {}",
-                                    self.html.book.options.get_str("title").unwrap(),
-                                    titles[i]))
+                            titles[i].clone())
+                .insert_str("chapter_title_raw",
+                            titles_raw[i].clone())
                 .insert_str("toc", toc.clone())
                 .insert_str("prev_chapter", prev_chapter)
                 .insert_str("next_chapter", next_chapter)
