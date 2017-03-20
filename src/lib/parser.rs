@@ -381,6 +381,7 @@ fn find_standalone(ast: &mut Vec<Token>) {
                     }
                 } else {
                     // If paragraph only contains a link only containing an image, ok too
+                    // Fixme: messy code and unnecessary clone
                     if let Token::Link(ref url, ref alt, ref mut inner) = inner[0] {
                         if inner[0].is_image() {
                             if let Token::Image(source, title, inner) = mem::replace(&mut inner[0],
