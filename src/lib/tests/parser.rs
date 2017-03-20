@@ -161,6 +161,14 @@ fn image_standalone() {
 }
 
 #[test]
+fn image_link_standalone() {
+    let doc = "[![alt text](http://foo.bar/baz.png \"Title\")](http://foo.bar)";
+    let expected = r#"[Link("http://foo.bar", "", [StandaloneImage("http://foo.bar/baz.png", "Title", [Str("alt text")])])]"#;
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+}
+
+#[test]
 fn table_simple() {
     let doc = "
 | A             | Simple        | Table |

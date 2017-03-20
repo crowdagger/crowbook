@@ -380,7 +380,21 @@ fn find_standalone(ast: &mut Vec<Token>) {
                         unreachable!();
                     }
                 } else {
-                    continue;
+                    // If paragraph only contains a link only containing an image, ok too
+                    if let Token::Link(ref url, ref alt, ref mut inner) = inner[0] {
+                        if inner[0].is_image() {
+                            if let Token::Image(source, title, inner) = mem::replace(&mut inner[0],
+                                                                                     Token::Rule) {
+                                Token::Link(url.clone(), alt.clone(), vec![Token::StandaloneImage(source, title, inner)])
+                            } else {
+                                unreachable!();
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
                 }
             } else {
                 continue;
