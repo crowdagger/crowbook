@@ -52,6 +52,7 @@ pub struct EpubRenderer<'a> {
     toc: Vec<String>,
     html: HtmlRenderer<'a>,
     chapter_title: String,
+    chapter_title_raw: String,
 }
 
 impl<'a> EpubRenderer<'a> {
@@ -67,6 +68,7 @@ impl<'a> EpubRenderer<'a> {
             html: html,
             toc: vec![],
             chapter_title: String::new(),
+            chapter_title_raw: String::new(),
         }
     }
 
@@ -306,8 +308,11 @@ impl<'a> EpubRenderer<'a> {
         if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
             let number = self.html.current_chapter[1] + 1;
             self.chapter_title = self.html.book.get_chapter_header(number, "".to_owned(), |s| {
-                    self.render_vec(&Parser::new().parse_inline(s)?)
-                })?;
+                self.render_vec(&Parser::new().parse_inline(s)?)
+            })?;
+            self.chapter_title_raw = self.html.book.get_chapter_header(number, "".to_owned(), |s| {
+                Ok(view_as_text(&Parser::new().parse_inline(s)?))
+            })?;
         }
         self.toc.push(self.chapter_title.clone());
 
@@ -315,9 +320,12 @@ impl<'a> EpubRenderer<'a> {
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
+            .insert_str("chapter_title_raw",
+                        mem::replace(&mut self.chapter_title_raw, String::new()))
             .insert_str("chapter_title",
                         mem::replace(&mut self.chapter_title, String::new()))
             .build();
+        self.chapter_title = String::new();
         let mut res: Vec<u8> = vec![];
         template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
@@ -331,6 +339,7 @@ impl<'a> EpubRenderer<'a> {
         if self.html.current_hide || self.html.current_numbering == 0 {
             if self.chapter_title.is_empty() {
                 self.chapter_title = self.html.render_vec(vec)?;
+                self.chapter_title_raw = view_as_text(vec);
             } else {
                 self.html
                     .book
@@ -347,9 +356,15 @@ impl<'a> EpubRenderer<'a> {
                                                             self.render_vec(&(Parser::new()
                                                                 .parse_inline(s)?))
                                                         });
-            let s = res.unwrap();
+            let s = res?;
             if self.chapter_title.is_empty() {
                 self.chapter_title = s;
+                self.chapter_title_raw = self.html.book.get_chapter_header(self.html.current_chapter[1] + 1,
+                                                                           view_as_text(vec),
+                                                                           |s| {
+                                                                               Ok(view_as_text(&(Parser::new()
+                                                                                                 .parse_inline(s)?)))
+                                                                           })?;
             } else {
                 self.html
                     .book
