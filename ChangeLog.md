@@ -7,7 +7,8 @@ unreleased
   link.
 * Bugfixes:
   * HTML/EPUB: use raw (not HTML rendered) metadata in the places
-    where HTML code is not appropriate.
+    where HTML code is not appropriate. Templates can use this
+    metadata with the `foo_raw` value.
   * EPUB: 
       * Escape title and author before feeding them to epub-builder.
 	  * Fix content.opf issue by not rendering first
