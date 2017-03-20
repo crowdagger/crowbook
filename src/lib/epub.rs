@@ -83,8 +83,8 @@ impl<'a> EpubRenderer<'a> {
         let lang = self.html.book.options.get_str("lang").unwrap();
         let toc_extras = self.html.book.options.get_bool("epub.toc.extras").unwrap();
         maker.metadata("lang", lang)?;
-        maker.metadata("author", self.html.book.options.get_str("author").unwrap())?;
-        maker.metadata("title", self.html.book.options.get_str("title").unwrap())?;
+        maker.metadata("author", escape::html(self.html.book.options.get_str("author").unwrap()))?;
+        maker.metadata("title", escape::html(self.html.book.options.get_str("title").unwrap()))?;
         maker.metadata("generator", "crowbook")?;
         maker.metadata("toc_name", lang::get_str(lang,
                                                  "toc"))?;
