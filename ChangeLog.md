@@ -6,6 +6,8 @@ unreleased
 * An image can now be considered standalone even if it is inside a
   link.
 * Bugfixes:
+  * HTML/EPUB: use raw (not HTML rendered) metadata in the places
+    where HTML code is not appropriate.
   * EPUB: 
       * Escape title and author before feeding them to epub-builder.
 	  * Fix content.opf issue by not rendering first
