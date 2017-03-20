@@ -1083,14 +1083,14 @@ impl Book {
             if let Ok(s) = self.options.get_str(key) {
                 let key = key.replace(".", "_");
 
-                // Only render some metadata as markdown
-                // (actually, currently treat them all as markdown)
+                // Don't render lang as markdown
                 let content = match key.as_ref() {
-                    "author" | "title" | "lang" => f(s),
+                    "lang" => Ok(s.to_string()),
                     _ => f(s),
                 };
                 match content {
                     Ok(content) => {
+                        mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), s.to_string());
                         mapbuilder = mapbuilder.insert_str(&key, content);
                         mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
                     }
