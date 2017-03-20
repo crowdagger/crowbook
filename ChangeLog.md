@@ -3,9 +3,12 @@ ChangeLog
 
 unreleased
 -------------
-* An image can be considered standalone even if it is inside a link.
-* HTML/EPUB: 
-  * Standalone images are now displayed centered.
+* An image can now be considered standalone even if it is inside a
+  link.
+* Bugfixes:
+  * EPUB: escape title and author before feeding them to epub-builder.
+* Rendering:
+  * HTML/EPUB: standalone images are now displayed centered.
 
 0.11.3 (2017-03-19)
 -----------------------
