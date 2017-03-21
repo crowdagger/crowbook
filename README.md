@@ -1,7 +1,7 @@
 Crowbook
 ========
 
-[![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
+Current status: [![Build Status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook) [![Build status](https://ci.appveyor.com/api/projects/status/bnj1rg76khth0aia?svg=true)](https://ci.appveyor.com/project/lise-henry/crowbook)
 
 Render a book written in markdown to HTML, EPUB and/or PDF.
 
