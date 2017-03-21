@@ -39,7 +39,7 @@ rendering.initials:bool:false                                        # {renderin
 rendering.inline_toc:bool:false                                      # {inline_toc}
 rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
-rendering.chapter.template:str:\"{{{{{{number}}}}}}\\\\. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+rendering.chapter.template:str:\"{{{{{{number}}}}}}. {{{{{{chapter_title}}}}}}\" # {chapter_template}
 rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
 rendering.part.template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
 rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
