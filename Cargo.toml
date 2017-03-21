@@ -1,6 +1,6 @@
 [package]
 name = "crowbook"
-version = "0.11.4-pre"
+version = "0.11.4"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Render a Markdown book in HTML, PDF or Epub"
 repository = "https://github.com/lise-henry/crowbook"
@@ -8,6 +8,8 @@ documentation = "https://docs.rs/crowbook/"
 readme = "README.md"
 keywords = ["markdown", "book"]
 categories = ["command-line-utilities", "text-processing"]
+travis-ci = { repository = "lise-henry/crowbook" }
+appveyor = { repository = "lise-henry/crowbook" }
 license = "LGPL-2.1+"
 publish = true
 build = "build.rs"
@@ -53,7 +55,7 @@ lazy_static = "0.2.1"
 term = "0.4"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"
-epub-builder = "^0.2.0"
+epub-builder = "0.2"
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
 url =  { version = "1", optional = true }
