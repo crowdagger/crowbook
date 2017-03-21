@@ -12,7 +12,7 @@ cp target/$TARGET/release/crowbook staging
 cd staging
 
 # release tarball will look like 'rust-everywhere-v1.2.3-x86_64-unknown-linux-gnu.tar.gz'
-tar czf ../${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz *
+tar czf ../${PROJECT_NAME}_${TRAVIS_TAG}_${TARGET}.tar.gz *
 
 
 
