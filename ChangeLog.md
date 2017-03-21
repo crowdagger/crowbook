@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.11.4 (2017-03-21)
+-----------------------
 * An image can now be considered standalone even if it is inside a
   link.
 * Bugfixes:
