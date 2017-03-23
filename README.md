@@ -234,6 +234,9 @@ Contributing
 
 See [how you can contribute to Crowbook](guide/contribute.md).
 
+If you find this project useful, you can also support its author
+by [making a Paypal donation](https://www.paypal.me/crowdagger).
+
 Library
 -------
 
