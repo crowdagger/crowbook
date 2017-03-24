@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+unreleased
+-------------
+* Bugfixes:
+  * EPUB: add unnamed but numbered chapters to the TOC.
+
 0.11.4 (2017-03-21)
 -----------------------
 * An image can now be considered standalone even if it is inside a

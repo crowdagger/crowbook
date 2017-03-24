@@ -163,23 +163,17 @@ impl<'a> EpubRenderer<'a> {
             let n = chapter.number;
             let v = &chapter.content;
             self.html.chapter_config(i, n, filenamer(i));
-            let rendered_chapter = self.render_chapter(v, &template_chapter)?;
+            let (rendered_chapter, raw_title) = self.render_chapter(v, &template_chapter)?;
 
             let mut content = EpubContent::new(filenamer(i), rendered_chapter.as_bytes());
             if i == 0 {
                 content = content.reftype(ReferenceType::Text);
             }
-            // horrible hack
+            // horrible hack to add subtoc of this chapter to epub's toc
             // todo: find cleaner way
             for element in &self.html.toc.elements {
                 if element.url.contains(&filenamer(i)) {
-                    /* We don't want to use element.title as it may contain HTML */
-                    for token in &chapter.content {
-                        if let Token::Header(1, ref v) = *token {
-                            content = content.title(view_as_text(v));
-                            break;
-                        }
-                    }
+                    content = content.title(raw_title);
                     content.toc.children = element.children.clone();
                     break;
                 }
@@ -296,7 +290,9 @@ impl<'a> EpubRenderer<'a> {
 
 
     /// Render a chapter
-    pub fn render_chapter(&mut self, v: &[Token], template: &Template) -> Result<String> {
+    ///
+    /// Return chapter content and raw title
+    pub fn render_chapter(&mut self, v: &[Token], template: &Template) -> Result<(String, String)> {
         let mut content = String::new();
 
         for token in v {
@@ -321,7 +317,7 @@ impl<'a> EpubRenderer<'a> {
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
             .insert_str("chapter_title_raw",
-                        mem::replace(&mut self.chapter_title_raw, String::new()))
+                        self.chapter_title_raw.clone())
             .insert_str("chapter_title",
                         mem::replace(&mut self.chapter_title, String::new()))
             .build();
@@ -330,7 +326,7 @@ impl<'a> EpubRenderer<'a> {
         template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!(lformat!("generated HTML was not utf-8 valid")),
-            Ok(res) => Ok(res),
+            Ok(res) => Ok((res, mem::replace(&mut self.chapter_title_raw, String::new())))
         }
     }
 

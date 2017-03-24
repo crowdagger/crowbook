@@ -1,6 +1,6 @@
 [root]
 name = "crowbook"
-version = "0.11.4"
+version = "0.11.5-pre"
 dependencies = [
  "caribon 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.21.2 (registry+https://github.com/rust-lang/crates.io-index)",
