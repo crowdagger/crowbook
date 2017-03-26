@@ -62,6 +62,7 @@ epub.version: 3
 + README.md
 + guide/arguments.md
 + guide/config.md
++ guide/markdown.md
 + guide/templates.md
 + guide/proofreading.md
 + guide/misc.md
