@@ -187,6 +187,22 @@ fn table_simple() {
 }
 
 #[test]
+fn superscript() {
+    let doc = "Some text^up^";
+    let expected = "[Paragraph([Str(\"Some text\"), Superscript([Str(\"up\")])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+}
+
+#[test]
+fn subscript() {
+    let doc = "Some text~down~";
+    let expected = "[Paragraph([Str(\"Some text\"), Subscript([Str(\"down\")])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+}
+
+#[test]
 fn foonote_correct() {
     let doc = "A foonote[^1]...
 
