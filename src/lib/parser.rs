@@ -470,13 +470,9 @@ fn parse_super_sub(s: &str, c: u8) -> Option<Vec<Token>> {
 
 /// Replace consecutives Strs by a Str of both, collapse soft breaks to previous std and so on
 fn collapse(ast: &mut Vec<Token>) {
-    if ast.len() < 2 {
-        return;
-    }
-
     let mut i = 0;
     while i < ast.len() {
-        if ast[i].is_str() && i < ast.len() - 1 {
+        if ast[i].is_str() && i + 1 < ast.len() {
             if ast[i + 1].is_str() {
                 // Two consecutives Str, concatenate them
                 let token = ast.remove(i + 1);
