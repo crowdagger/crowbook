@@ -31,7 +31,7 @@ proofread.languagetool: true
 rendering.num_depth: 2
 rendering.initials: false
 rendering.inline_toc: false
-rendering.chapter.template: "{{{number}}}\\. {{{chapter_title}}}"
+rendering.chapter.template: "{{{number}}}. {{{chapter_title}}}"
 rendering.chapter.roman_numerals: false
 rendering.part.reset_counter: true
 rendering.highlight: syntect
