@@ -170,6 +170,7 @@ impl Parser {
         for mut token in &mut res {
             if let Some(mut v) = token.inner_mut() {
                 self.parse_super_vec(&mut v);
+                self.parse_sub_vec(&mut v);
             }
         }
         
@@ -248,7 +249,7 @@ impl Parser {
     fn parse_super_vec(&mut self, mut v: &mut Vec<Token>) {
         for i in 0..v.len() {
             let new = if let Token::Str(ref s) = v[i] {
-                parse_super_str(s)
+                parse_super_sub(s, b'^')
             } else {
                 None
             };
@@ -257,6 +258,26 @@ impl Parser {
                 let mut post = v.split_off(i);
                 post.remove(0);
                 self.parse_super_vec(&mut post);
+                v.append(&mut new);
+                v.append(&mut post);
+                return;
+            }
+        }
+    }
+
+    /// Looks for subscript in a vector of token
+    fn parse_sub_vec(&mut self, mut v: &mut Vec<Token>) {
+        for i in 0..v.len() {
+            let new = if let Token::Str(ref s) = v[i] {
+                parse_super_sub(s, b'~')
+            } else {
+                None
+            };
+            if let Some(mut new) = new {
+                self.features.subscript = true;
+                let mut post = v.split_off(i);
+                post.remove(0);
+                self.parse_sub_vec(&mut post);
                 v.append(&mut new);
                 v.append(&mut post);
                 return;
@@ -363,12 +384,20 @@ impl Parser {
 }
 
 
-/// Look to a string and see if there is some superscript in it. If true, returns a vec of toens
-fn parse_super_str(s: &str) -> Option<Vec<Token>> {
-    fn escape(s: String) -> String {
-        s.replace("\\^", "^")
+/// Look to a string and see if there is some superscript or subscript in it.
+/// If there, returns a vec of tokens.
+///
+/// params: s: the string to parse, c, either b'^' for superscript or b'~' for subscript.
+fn parse_super_sub(s: &str, c: u8) -> Option<Vec<Token>> {
+    let match_indices:Vec<_> = s.match_indices(c as char).collect();
+    if match_indices.is_empty() {
+        return None;
     }
-    let match_indices = s.match_indices('^');
+    let to_escape = format!("\\{}", c as char);
+    let escaped = format!("{}", c as char);
+    let escape = |s: String| -> String {
+        s.replace(&to_escape, &escaped)
+    };
     for (begin, _) in match_indices {
         let bytes = s.as_bytes();
         let len = bytes.len();
@@ -387,8 +416,8 @@ fn parse_super_str(s: &str) -> Option<Vec<Token>> {
                         if i+1 < len && bytes[i+1] == b' ' {
                             sup.push(b' ');
                             i += 2;
-                        } else if i + 1 < len && bytes[i+1] == b'^' {
-                            sup.push(b'^');
+                        } else if i + 1 < len && bytes[i+1] == c {
+                            sup.push(c);
                             i += 2;
                         } else {
                             sup.push(b'\\');
@@ -398,7 +427,7 @@ fn parse_super_str(s: &str) -> Option<Vec<Token>> {
                     b' ' => {
                         return None;
                     },
-                    b'^' => {
+                    b if b == c => {
                         end = Some(i);
                         break;
                     },
@@ -417,10 +446,14 @@ fn parse_super_str(s: &str) -> Option<Vec<Token>> {
                     tokens.push(Token::Str(escape(pre_part)));
                 }
                 let sup_part = String::from_utf8(sup).unwrap();
-                tokens.push(Token::Superscript(vec![Token::Str(sup_part)]));
+                match c {
+                    b'^' => tokens.push(Token::Superscript(vec![Token::Str(sup_part)])),
+                    b'~' => tokens.push(Token::Subscript(vec![Token::Str(sup_part)])),
+                    _ => unimplemented!(),
+                }
                 if end+1 < len {
                     let post_part = String::from_utf8((&bytes[end + 1..]).to_owned()).unwrap();
-                    if let Some(mut v) = parse_super_str(&post_part) {
+                    if let Some(mut v) = parse_super_sub(&post_part, c) {
                         tokens.append(&mut v);
                     } else {
                         tokens.push(Token::Str(escape(post_part)));
@@ -433,41 +466,6 @@ fn parse_super_str(s: &str) -> Option<Vec<Token>> {
         }
     }
     return None;
-}
-
-#[test]
-fn test_parse_super_str() {
-    assert!(parse_super_str("String without superscript").is_none());
-    assert!(parse_super_str("String \\^without\\^ superscript").is_none());
-    assert!(parse_super_str("String ^without superscript").is_none());
-    assert!(parse_super_str("String ^without superscript^").is_none());
-    assert_eq!(parse_super_str("^up^"), Some(vec!(Token::Superscript(vec!(Token::Str(String::from("up")))))));
-    assert_eq!(parse_super_str("foo^up^ bar"),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str(" bar".to_owned()))));
-    assert_eq!(parse_super_str("foo^up^ bar^up^baz"),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str(" bar".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str("baz".to_owned()))));
-    assert_eq!(parse_super_str("foo^up^ bar^baz"),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str(" bar^baz".to_owned()))));
-    assert_eq!(parse_super_str("foo\\^bar^up^"),
-               Some(vec!(Token::Str("foo^bar".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))))));
-    assert_eq!(parse_super_str("foo^bar\\^up^"),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("bar^up".to_owned()))))));
-    assert_eq!(parse_super_str("foo^bar up^"),
-               None);
-    assert_eq!(parse_super_str("foo^bar\\ up^"),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("bar up".to_owned()))))));
-
 }
 
 /// Replace consecutives Strs by a Str of both, collapse soft breaks to previous std and so on
@@ -548,4 +546,79 @@ fn find_standalone(ast: &mut Vec<Token>) {
 
         *token = res;
     }
+}
+
+
+#[test]
+fn test_parse_super_str() {
+    let c = b'^';
+    assert!(parse_super_sub("String without superscript", c).is_none());
+    assert!(parse_super_sub("String \\^without\\^ superscript", c).is_none());
+    assert!(parse_super_sub("String ^without superscript", c).is_none());
+    assert!(parse_super_sub("String ^without superscript^", c).is_none());
+    assert_eq!(parse_super_sub("^up^", c),
+               Some(vec!(Token::Superscript(vec!(Token::Str(String::from("up")))))));
+    assert_eq!(parse_super_sub("foo^up^ bar", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
+                         Token::Str(" bar".to_owned()))));
+    assert_eq!(parse_super_sub("foo^up^ bar^up^baz", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
+                         Token::Str(" bar".to_owned()),
+                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
+                         Token::Str("baz".to_owned()))));
+    assert_eq!(parse_super_sub("foo^up^ bar^baz", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
+                         Token::Str(" bar^baz".to_owned()))));
+    assert_eq!(parse_super_sub("foo\\^bar^up^", c),
+               Some(vec!(Token::Str("foo^bar".to_owned()),
+                         Token::Superscript(vec!(Token::Str("up".to_owned()))))));
+    assert_eq!(parse_super_sub("foo^bar\\^up^", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Superscript(vec!(Token::Str("bar^up".to_owned()))))));
+    assert_eq!(parse_super_sub("foo^bar up^", c),
+               None);
+    assert_eq!(parse_super_sub("foo^bar\\ up^", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Superscript(vec!(Token::Str("bar up".to_owned()))))));
+
+}
+
+#[test]
+fn test_parse_supb_str() {
+    let c = b'~';
+    assert!(parse_super_sub("String without subscript", c).is_none());
+    assert!(parse_super_sub("String \\~without\\~ subscript", c).is_none());
+    assert!(parse_super_sub("String ~without subscript", c).is_none());
+    assert!(parse_super_sub("String ~without subscript~", c).is_none());
+    assert_eq!(parse_super_sub("~down~", c),
+               Some(vec!(Token::Subscript(vec!(Token::Str(String::from("down")))))));
+    assert_eq!(parse_super_sub("foo~down~ bar", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
+                         Token::Str(" bar".to_owned()))));
+    assert_eq!(parse_super_sub("foo~down~ bar~down~baz", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
+                         Token::Str(" bar".to_owned()),
+                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
+                         Token::Str("baz".to_owned()))));
+    assert_eq!(parse_super_sub("foo~down~ bar~baz", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
+                         Token::Str(" bar~baz".to_owned()))));
+    assert_eq!(parse_super_sub("foo\\~bar~down~", c),
+               Some(vec!(Token::Str("foo~bar".to_owned()),
+                         Token::Subscript(vec!(Token::Str("down".to_owned()))))));
+    assert_eq!(parse_super_sub("foo~bar\\~down~", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Subscript(vec!(Token::Str("bar~down".to_owned()))))));
+    assert_eq!(parse_super_sub("foo~bar down~", c),
+               None);
+    assert_eq!(parse_super_sub("foo~bar\\ down~", c),
+               Some(vec!(Token::Str("foo".to_owned()),
+                         Token::Subscript(vec!(Token::Str("bar down".to_owned()))))));
+
 }
