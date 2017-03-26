@@ -115,7 +115,7 @@ impl<'a> OdtRenderer<'a> {
                     self.current_numbering = 0;
                     self.current_hide = true;
                 }
-            }
+           } 
             if n.is_part() {
                 self.book.logger.error(lformat!("Parts are not supported yet in ODT"));
             }
@@ -201,6 +201,7 @@ impl<'a> OdtRenderer<'a> {
                 format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>",
                         self.render_vec(vec))
             }
+            Token::Subscript(ref vec) | Token::Superscript(ref vec) => self.render_vec(vec),
             Token::BlockQuote(ref vec) |
             Token::CodeBlock(_, ref vec) => {
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",

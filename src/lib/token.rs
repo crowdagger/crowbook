@@ -51,6 +51,11 @@ pub enum Token {
     /// Code block with language and content
     CodeBlock(String, Vec<Token>),
 
+    /// Superscript, indicated with ^...^
+    Superscript(Vec<Token>),
+    /// Subscript, indicated with ~...~
+    Subscript(Vec<Token>),
+
     /// Unordered list, with a vector of `Item`s
     List(Vec<Token>),
     /// Ordered list, with a starting number, and a list of `Item`s
@@ -107,6 +112,8 @@ impl Token {
             Code(ref v) |
             BlockQuote(ref v) |
             CodeBlock(_, ref v) |
+            Subscript(ref v) |
+            Superscript(ref v) |
             List(ref v) |
             OrderedList(_, ref v) |
             Item(ref v) |
@@ -137,6 +144,8 @@ impl Token {
             Code(ref mut v) |
             BlockQuote(ref mut v) |
             CodeBlock(_, ref mut v) |
+            Subscript(ref mut v) |
+            Superscript(ref mut v) |
             List(ref mut v) |
             OrderedList(_, ref mut v) |
             Item(ref mut v) |

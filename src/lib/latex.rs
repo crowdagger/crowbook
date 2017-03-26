@@ -347,6 +347,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Strong(ref vec) => Ok(format!("\\textbf{{{}}}", self.render_vec(vec)?)),
             Token::Code(ref vec) => Ok(format!("\\texttt{{{}}}",
                                                insert_breaks(&self.render_vec(vec)?))),
+            Token::Superscript(ref vec) => Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?)),
+            Token::Subscript(ref vec) => Ok(format!("\\textsubscript{{{}}}", self.render_vec(vec)?)),
             Token::BlockQuote(ref vec) => {
                 Ok(format!("\\begin{{quotation}}{{\\itshape\n{}}}\\end{{quotation}}\n",
                            self.render_vec(vec)?))
