@@ -3,6 +3,10 @@ ChangeLog
 
 unreleased
 -------------
+* Markdown:
+  * Added support for superscript and subscript features, using
+  respectively `foo^up^` or `bar~down~` syntax.
+
 * Bugfixes:
   * EPUB: add unnamed but numbered chapters to the TOC.
 
