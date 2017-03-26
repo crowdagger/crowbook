@@ -86,6 +86,8 @@ impl<'a> OdtRenderer<'a> {
         if self.book.features.ordered_list { missing.push(lformat!("ordered lists")); }
         if self.book.features.footnote { missing.push(lformat!("footnotes")); }
         if self.book.features.table { missing.push(lformat!("tables")); }
+        if self.book.features.superscript { missing.push(lformat!("superscript")); }
+        if self.book.features.subscript { missing.push(lformat!("subscript")); }
 
         if !missing.is_empty() {
             let missing = missing.join(", ");
