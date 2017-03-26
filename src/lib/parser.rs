@@ -248,9 +248,19 @@ impl Parser {
     /// Looks for super script in a vector of token
     fn parse_super_vec(&mut self, mut v: &mut Vec<Token>) {
         for i in 0..v.len() {
-            let new = if let Token::Str(ref s) = v[i] {
-                parse_super_sub(s, b'^')
+            let new = if v[i].is_str() {
+                if let Token::Str(ref s) = v[i] {
+                    parse_super_sub(s, b'^')
+                } else {
+                    unreachable!()
+                }
             } else {
+                if v[i].is_code() {
+                    continue;
+                } 
+                if let Some(ref mut inner) = v[i].inner_mut() {
+                    self.parse_super_vec(inner);
+                }
                 None
             };
             if let Some(mut new) = new {
@@ -268,9 +278,19 @@ impl Parser {
     /// Looks for subscript in a vector of token
     fn parse_sub_vec(&mut self, mut v: &mut Vec<Token>) {
         for i in 0..v.len() {
-            let new = if let Token::Str(ref s) = v[i] {
-                parse_super_sub(s, b'~')
+            let new = if v[i].is_str() {
+                if let Token::Str(ref s) = v[i] {
+                    parse_super_sub(s, b'~')
+                } else {
+                    unreachable!()
+                }
             } else {
+                if v[i].is_code() {
+                    continue;
+                } 
+                if let Some(ref mut inner) = v[i].inner_mut() {
+                    self.parse_sub_vec(inner);
+                }
                 None
             };
             if let Some(mut new) = new {
@@ -396,6 +416,7 @@ fn parse_super_sub(s: &str, c: u8) -> Option<Vec<Token>> {
     let to_escape = format!("\\{}", c as char);
     let escaped = format!("{}", c as char);
     let escape = |s: String| -> String {
+        println!("escaping '{}'", s);
         s.replace(&to_escape, &escaped)
     };
     for (begin, _) in match_indices {
@@ -436,6 +457,9 @@ fn parse_super_sub(s: &str, c: u8) -> Option<Vec<Token>> {
                         i += 1;
                     },
                 }
+            }
+            if sup.is_empty() {
+                return None;
             }
             if let Some(end) = end {
                 let mut tokens = vec![];

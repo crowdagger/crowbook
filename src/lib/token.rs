@@ -182,4 +182,12 @@ impl Token {
             false
         }
     }
+
+    /// Returns true if token is code or code block
+    pub fn is_code(&self) -> bool {
+        match *self {
+            Token::CodeBlock(..) | Token::Code(..) => true,
+            _ => false
+        }
+    }
 }

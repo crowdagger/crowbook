@@ -84,7 +84,7 @@ normal paragraph
 > blockquote
 ";
     let expected = "[Paragraph([Str(\"normal paragraph\")]), \
-                    BlockQuote([Paragraph([Str(\"some\"), SoftBreak, Str(\"blockquote\")])])]";
+                    BlockQuote([Paragraph([Str(\"some blockquote\")])])]";
     let result = format!("{:?}", parse_from_str(doc));
     test_eq(&result, expected);
 }
@@ -192,12 +192,57 @@ fn superscript() {
     let expected = "[Paragraph([Str(\"Some text\"), Superscript([Str(\"up\")])])]";
     let result = format!("{:?}", parse_from_str(doc));
     test_eq(&result, expected);
+
+    let doc = "*Some text^up^*";
+    let expected = "[Paragraph([Emphasis([Str(\"Some text\"), Superscript([Str(\"up\")])])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    let doc = "1^2^3";
+    let expected = "[Paragraph([Str(\"1\"), Superscript([Str(\"2\")]), Str(\"3\")])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    let doc = "`1^2^3`";
+    let expected = r#"[Paragraph([Code([Str("1^2^3")])])]"#;
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    let doc = "*Some text^up^*";
+    let expected = "[Paragraph([Emphasis([Str(\"Some text\"), Superscript([Str(\"up\")])])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    let doc = r"Some text^up\ and\ more^";
+    let expected = "[Paragraph([Str(\"Some text\"), Superscript([Str(\"up and more\")])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    // let doc = r"Some text\^notup^";
+    // let expected = "[Paragraph([Str(\"Some text^notup^\")])]";
+    // let result = format!("{:?}", parse_from_str(doc));
+    // test_eq(&result, expected);
+
+    let doc = "Some text^not up^";
+    let expected = "[Paragraph([Str(\"Some text^not up^\")])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    let doc = "Some text^^notup^^";
+    let expected = "[Paragraph([Str(\"Some text^^notup^^\")])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
 }
 
 #[test]
 fn subscript() {
     let doc = "Some text~down~";
     let expected = "[Paragraph([Str(\"Some text\"), Subscript([Str(\"down\")])])]";
+    let result = format!("{:?}", parse_from_str(doc));
+    test_eq(&result, expected);
+
+    let doc = "*Some text~down~*";
+    let expected = "[Paragraph([Emphasis([Str(\"Some text\"), Subscript([Str(\"down\")])])])]";
     let result = format!("{:?}", parse_from_str(doc));
     test_eq(&result, expected);
 }
