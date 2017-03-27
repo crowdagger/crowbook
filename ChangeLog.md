@@ -15,7 +15,10 @@ unreleased
 * Rendering:
   * Change the way chapters are displayed by default.
 * Bugfixes:
-  * EPUB: add unnamed but numbered chapters to the TOC.
+  * EPUB:
+    * Add unnamed but numbered chapters to the TOC.
+	* Fix HTML escaping issue for chapter titles.
+  
 
 0.11.4 (2017-03-21)
 -----------------------
