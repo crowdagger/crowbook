@@ -3,6 +3,10 @@ ChangeLog
 
 unreleased
 -------------
+* Book configuration file:
+  * It is now possible to include subchapters using the `--` command
+    (with one dash per sublvel: `--- foo.md` will include `foo.md` as
+    a subsection).
 * Markdown:
   * Added support for superscript and subscript features, using
   respectively `foo^up^` or `bar~down~` syntax.
@@ -19,6 +23,8 @@ unreleased
 * Rendering:
   * Change the way chapters are displayed by default.
 * Bugfixes:
+  * LaTeX:
+    * Fix bug in syntax highlighting.
   * EPUB:
     * Add unnamed but numbered chapters to the TOC.
 	* Fix HTML escaping issue for chapter titles.
