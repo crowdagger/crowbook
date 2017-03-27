@@ -154,7 +154,6 @@ impl<'r> ResourceHandler<'r> {
             let new_from = format!("{}", Path::new(from)
                 .with_extension("md")
                 .display());
-            println!("trying {}", new_from);
             if let Some(link) = self.links.get(&new_from) {
                 link
             } else {
