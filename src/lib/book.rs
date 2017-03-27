@@ -897,6 +897,39 @@ impl Book {
     }
 
     /// Adds a chapter, as a file name, to the book
+    pub fn add_subchapter(&mut self, level: i32, file: &str) -> Result<&mut Self> {
+        let number = {
+            if let Some(chapter) = self.chapters.last() {
+                chapter.number
+            } else {
+                Number::Hidden
+            }
+        };
+        self.add_chapter(number, file)?;
+
+        // Adjust header levels
+        {
+            let last = self.chapters.last_mut().unwrap();
+            for mut token in &mut last.content {
+                match *token {
+                    Token::Header(ref mut n, _) => {
+                        let new = *n + level;
+                        if new > 6 || new < 0 {
+                            return Err(Error::parser(Source::new(file),
+                                                     lformat!("this subchapter contains a heading that, when adjustes, is not in the right range ({} instead of [0-6])", new)));
+                        }
+                        *n = new;
+                    },
+                    _ => {},
+                }
+            }
+        }
+        
+        Ok(self)
+    }
+    
+
+    /// Adds a chapter, as a file name, to the book
     ///
     /// `Book` will then parse the file and store the AST (i.e., a vector
     /// of `Token`s).
