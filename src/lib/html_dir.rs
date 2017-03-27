@@ -47,14 +47,14 @@ pub struct HtmlDirRenderer<'a> {
 
 impl<'a> HtmlDirRenderer<'a> {
     /// Creates a new HtmlDirRenderer
-    pub fn new(book: &'a Book) -> HtmlDirRenderer<'a> {
+    pub fn new(book: &'a Book) -> Result<HtmlDirRenderer<'a>> {
         let mut html = HtmlRenderer::new(book,
                                          book.options
                                          .get_str("html.highlight.theme")
-                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()));
+                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()))?;
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
-        HtmlDirRenderer { html: html }
+        Ok(HtmlDirRenderer { html: html })
     }
 
     /// Set aproofreading to true
@@ -440,7 +440,7 @@ impl BookRenderer for HtmlDir {
     }
     
     fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
-        HtmlDirRenderer::new(book)
+        HtmlDirRenderer::new(book)?
             .render_book(path)?;
         Ok(())
     }
@@ -453,7 +453,7 @@ impl BookRenderer for ProofHtmlDir {
     }
     
     fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
-        HtmlDirRenderer::new(book)
+        HtmlDirRenderer::new(book)?
             .proofread()
             .render_book(path)?;
         Ok(())

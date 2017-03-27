@@ -37,6 +37,8 @@ use crowbook_text_processing::escape;
 use numerals::roman::Roman;
 use epub_builder::Toc;
 use epub_builder::TocElement;
+use mustache::Template;
+use mustache::MapBuilder;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 /// If/how to highlight code
@@ -107,6 +109,9 @@ pub struct HtmlRenderer<'a> {
     pub link_number: u32,
 
     syntax: Option<Syntax>,
+
+    part_template_html: Template,
+    chapter_template_html: Template,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -131,7 +136,7 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Creates a new HTML renderer
-    pub fn new(book: &'a Book, theme: &str) -> HtmlRenderer<'a> {
+    pub fn new(book: &'a Book, theme: &str) -> Result<HtmlRenderer<'a>> {
         let (highlight, syntax) = Self::get_highlight(book, theme);
 
         let mut html = HtmlRenderer {
@@ -155,10 +160,21 @@ impl<'a> HtmlRenderer<'a> {
             proofread: false,
             syntax: syntax,
             highlight: highlight,
+            part_template_html: compile_str(book.options
+                                            .get_str("html.part.template")
+                                            .unwrap(),
+                                            Source::empty(),
+                                            "html.part.template")?,
+            chapter_template_html: compile_str(book.options
+                                            .get_str("html.chapter.template")
+                                            .unwrap(),
+                                            Source::empty(),
+                                            "html.chapter.template")?,
+
         };
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
-        html
+        Ok(html)
     }
 
     /// Add a footnote which will be renderer later on
@@ -263,23 +279,19 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     Header::Chapter
                 };
-                match header_type {
-                    Header::Part => {
-                        Ok(format!("<h2 class = \"part\">{header} {number}</h2>
-<h1 id = \"link-{link}\" class = \"part\">{title}</h1>\n",
-                                   header = data.header,
-                                   number = data.number,
-                                   link = self.link_number,
-                                   title = data.title))
-                    },
-                    Header::Chapter => {
-                        Ok(format!("<h1 id = \"link-{link}\"><b>{header} {number}</b><br />{title}</h1>\n",
-                                   header = data.header,
-                                   number = data.number,
-                                   link = self.link_number,
-                                   title = data.title))
-                    },
-                }
+                let template = match header_type {
+                    Header::Part => &self.part_template_html,
+                    Header::Chapter => &self.chapter_template_html
+                };
+                let mut data = MapBuilder::new()
+                    .insert_str("header", data.header)
+                    .insert_str("number", data.number)
+                    .insert_str("link", format!("{}", self.link_number))
+                    .insert_str("title", data.title)
+                    .build();
+                let mut res = vec![];
+                template.render_data(&mut res, &data)?;
+                Ok(String::from_utf8(res)?)
             }
         } else {
             Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",

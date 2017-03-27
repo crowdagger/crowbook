@@ -22,6 +22,7 @@ use std::error;
 use std::result;
 use std::fmt;
 use std::borrow::Cow;
+use std::string::FromUtf8Error;
 
 #[derive(Debug, PartialEq, Clone)]
 /// Source of an error.
@@ -372,6 +373,14 @@ impl From<epub_builder::Error> for Error {
     fn from(err: epub_builder::Error) -> Error {
         Error::render(Source::empty(),
                       lformat!("error during EPUB generation: {error}",
+                               error = err))
+    }
+}
+
+impl From<FromUtf8Error> for Error {
+    fn from(err: FromUtf8Error) -> Error {
+        Error::render(Source::empty(),
+                      lformat!("UTF-8 error: {error}",
                                error = err))
     }
 }

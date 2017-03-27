@@ -40,14 +40,14 @@ pub struct HtmlSingleRenderer<'a> {
 
 impl<'a> HtmlSingleRenderer<'a> {
     /// Creates a new HtmlSingleRenderer
-    pub fn new(book: &'a Book) -> HtmlSingleRenderer<'a> {
+    pub fn new(book: &'a Book) -> Result<HtmlSingleRenderer<'a>> {
         let mut html = HtmlRenderer::new(book,
                                          book.options
                                          .get_str("html.highlight.theme")
-                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()));
+                                         .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()))?;
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
-        HtmlSingleRenderer { html: html }
+        Ok(HtmlSingleRenderer { html: html })
     }
 
     /// Set aproofreading to true
@@ -268,7 +268,7 @@ pub struct ProofHtmlSingle {}
 
 impl BookRenderer for HtmlSingle {
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
-        let mut html = HtmlSingleRenderer::new(book);
+        let mut html = HtmlSingleRenderer::new(book)?;
         let result = html.render_book()?;
         to.write_all(result.as_bytes())
             .map_err(|e| {
@@ -281,7 +281,7 @@ impl BookRenderer for HtmlSingle {
 
 impl BookRenderer for ProofHtmlSingle {
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
-        let mut html = HtmlSingleRenderer::new(book)
+        let mut html = HtmlSingleRenderer::new(book)?
             .proofread();
         let result = html.render_book()?;
         to.write_all(result.as_bytes())
