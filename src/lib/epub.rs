@@ -173,7 +173,7 @@ impl<'a> EpubRenderer<'a> {
             // todo: find cleaner way
             for element in &self.html.toc.elements {
                 if element.url.contains(&filenamer(i)) {
-                    content = content.title(raw_title);
+                    content = content.title(escape::html(raw_title));
                     content.toc.children = element.children.clone();
                     break;
                 }
