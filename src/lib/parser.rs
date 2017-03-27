@@ -416,7 +416,6 @@ fn parse_super_sub(s: &str, c: u8) -> Option<Vec<Token>> {
     let to_escape = format!("\\{}", c as char);
     let escaped = format!("{}", c as char);
     let escape = |s: String| -> String {
-        println!("escaping '{}'", s);
         s.replace(&to_escape, &escaped)
     };
     for (begin, _) in match_indices {
