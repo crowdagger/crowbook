@@ -834,7 +834,7 @@ impl Book {
         };
         if offset.starts_with("..") {
             self.logger
-                .warning(lformat!("Warning: book contains chapter '{file}' in a directory above \
+                .debug(lformat!("Warning: book contains chapter '{file}' in a directory above \
                                    the book file, this might cause problems",
                                   file = misc::normalize(file)));
         }
