@@ -279,7 +279,11 @@ impl<'a> HtmlRenderer<'a> {
                 } else {
                     &self.chapter_template_html
                 };
+                let has_number = !data.header.is_empty();
+                let has_title = !data.title.is_empty();
                 let mut data = MapBuilder::new()
+                    .insert_bool("has_number", has_number)
+                    .insert_bool("has_title", has_title)
                     .insert_str("header", data.header)
                     .insert_str("number", data.number)
                     .insert_str("link", format!("{}", self.link_number))

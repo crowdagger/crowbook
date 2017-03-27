@@ -68,7 +68,7 @@ html.highlight.js:tpl               # {highlight_js}
 html.highlight.css:tpl              # {highlight_css}
 html.side_notes:bool:false          # {side_notes}
 html.escape_nb_spaces:bool:true     # {nb_spaces}
-html.chapter.template:str:\"<h1 id = 'link-{{{{{{link}}}}}}'><span class = 'chapter-header'>{{{{{{header}}}}}} {{{{{{number}}}}}}</span><br />{{{{{{title}}}}}}</h1>\" # {html_chapter_template}
+html.chapter.template:str:\"<h1 id = 'link-{{{{{{link}}}}}}'>{{{{#has_number}}}}<span class = 'chapter-header'>{{{{{{header}}}}}} {{{{{{number}}}}}}</span>{{{{#has_title}}}}<br />{{{{/has_title}}}}{{{{/has_number}}}}{{{{{{title}}}}}}</h1>\" # {html_chapter_template}
 html.part.template:str:\"<h2 class = 'part'>{{{{{{header}}}}}} {{{{{{number}}}}}}</h2> <h1 id = 'link-{{{{{{link}}}}}}' class = 'part'>{{{{{{title}}}}}}</h1>\" # {html_part_template}
 
 # {html_single_opt}
@@ -913,7 +913,7 @@ impl BookOptions {
                 out.push((&line[1..], None, None, None));
                 continue;
             }
-            let v: Vec<_> = line.split('#').collect();
+            let v: Vec<_> = line.split(" #").collect();
             let content = v[0];
             let comment = v[1];
             let v: Vec<_> = content.split(':').collect();
