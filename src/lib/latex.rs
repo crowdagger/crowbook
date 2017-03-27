@@ -391,7 +391,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Link(ref url, _, ref vec) => {
                 let content = self.render_vec(vec)?;
 
-                if self.hyperref && ResourceHandler::is_local(url) {
+                if self.hyperref && self.handler.contains_link(url) {
                     Ok(format!("\\hyperref[{}]{{{}}}", escape::tex(self.handler.get_link(url)), content))
                 } else {
                     let url = escape::tex(url.as_ref());

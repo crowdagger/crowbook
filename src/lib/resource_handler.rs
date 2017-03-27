@@ -150,15 +150,40 @@ impl<'r> ResourceHandler<'r> {
         if let Some(link) = self.links.get(from) {
             link
         } else {
-            self.logger.warning(lformat!("Resources: could not find an in-book match for link \
+            // Try to get a link by changing the extension
+            let new_from = format!("{}", Path::new(from)
+                .with_extension("md")
+                .display());
+            println!("trying {}", new_from);
+            if let Some(link) = self.links.get(&new_from) {
+                link
+            } else {
+                self.logger.warning(lformat!("Resources: could not find an in-book match for link \
                                         {file}",
-                                       file = from));
-            from
+                                             file = from));
+                from
+            }
         }
     }
 
 
     /// Tell whether a file name is a local resource or net
+    pub fn contains_link(&self, from: &str) -> bool {
+        if self.links.contains_key(from) {
+            true
+        } else {
+            // Try to get a link by changing the extension
+            let new_from = format!("{}", Path::new(from)
+                .with_extension("md")
+                .display());
+            if self.links.contains_key(&new_from) {
+                true
+            } else {
+                false
+            }
+        }
+    }
+    
     pub fn is_local(path: &str) -> bool {
         !path.contains("://") // todo: use better algorithm
     }
