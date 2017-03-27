@@ -10,6 +10,8 @@ unreleased
   * `rendering.chapter`: change what is displayed in place of
     "chapter".
   * `rendering.part`: change what is displayed in place of "part".
+  * `html.chapter.template` and `html.part.template` allow to tune a
+    little how the chapters and parts are displayed in HTML.
 * Rendering:
   * Change the way chapters are displayed by default.
 * Bugfixes:
