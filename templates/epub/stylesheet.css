@@ -55,6 +55,11 @@ h2.part {
     text-align: center;
 }
 
+/* The "Chapter X" section of a chapter */
+span.chapter-header {
+    font-size: 75%;
+}
+
 /* Title of the book */
 h1.title {
     text-align: center;
