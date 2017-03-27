@@ -41,8 +41,7 @@ Some paragraph
 
 [& some link](http://foo/bar?baz=42&coin=plop)
 ";
-    let expected = r#"<h1 id = "link-1">Foo</h1>
-<pre><code class = "language-rust">fn min(x: &amp;u32, y: u32) -&gt; &amp;u32 {
+    let expected = r#"<h1 id = 'link-1'>Foo</h1><pre><code class = "language-rust">fn min(x: &amp;u32, y: u32) -&gt; &amp;u32 {
     if x &lt; y { x } else { y }
 }
 </code></pre>
