@@ -12,6 +12,10 @@ unreleased
   * `rendering.part`: change what is displayed in place of "part".
   * `html.chapter.template` and `html.part.template` allow to tune a
     little how the chapters and parts are displayed in HTML.
+  * `tex.hyperref`, if set to `false`, will disable hyperrefs for
+    local links. Can be useful for some files.
+  * `crowbook.html_as_text`, if set to false, will not treat HTML as
+    text but ignore it.
 * Rendering:
   * Change the way chapters are displayed by default.
 * Bugfixes:
