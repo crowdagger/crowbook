@@ -18,7 +18,9 @@ unreleased
   * EPUB:
     * Add unnamed but numbered chapters to the TOC.
 	* Fix HTML escaping issue for chapter titles.
-  
+	* Fix the way parts were handled in the TOC.
+  * Book configuration file:
+	* Fix issue when setting custom number for parts.
 
 0.11.4 (2017-03-21)
 -----------------------
