@@ -556,8 +556,21 @@ impl Book {
             let line = line.trim();
             if line.is_empty() || line.starts_with('#') {
                 continue;
-            }
-            if line.starts_with('-') {
+            } if line.starts_with("--") {
+                // Subchapter
+                let mut level = 0;
+                for b in line.bytes() {
+                    if b == b'-' {
+                        level += 1;
+                    } else {
+                        break;
+                    }
+                }
+                assert!(level > 1);
+                level -= 1;
+                let file = get_filename(&self.source, &line[level..])?;
+                self.add_subchapter(level as i32, file)?;
+            } else if line.starts_with('-') {
                 // unnumbered chapter
                 let file = get_filename(&self.source, line)?;
                 self.add_chapter(Number::Unnumbered, file)?;
