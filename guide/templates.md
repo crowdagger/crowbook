@@ -212,7 +212,13 @@ Crowbook also has some inline templates, that are set in the book configuration 
   `\begin{document}` tag.
 * `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
 * `rendering.chapter.template` sets the naming scheme for chapters,
-  while `rendering.part.template` does the same for part.
+  while `rendering.part.template` does the same for part. These are
+  used only for text-only output, such as in the
+  TOC. `html.chapter.template` and `html.part.template` allow to do
+  change the HTML formatting for parts and chapters. *These options
+  should probably only be used if you know what you're doing, as they
+  can break the document.* If you only need to change the name of
+  chapters or parts, use `rendering.part` and `rendering.chapter` instead.
 
 
 
