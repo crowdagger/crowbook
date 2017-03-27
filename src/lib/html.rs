@@ -281,7 +281,7 @@ impl<'a> HtmlRenderer<'a> {
                 };
                 let has_number = !data.header.is_empty();
                 let has_title = !data.title.is_empty();
-                let mut data = MapBuilder::new()
+                let data = MapBuilder::new()
                     .insert_bool("has_number", has_number)
                     .insert_bool("has_title", has_title)
                     .insert_str("header", data.header)
