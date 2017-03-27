@@ -274,14 +274,10 @@ impl<'a> HtmlRenderer<'a> {
             if self.current_hide {
                 Ok(format!("<h1 id = \"link-{}\"></h1>", self.link_number))
             } else {
-                let header_type = if self.current_part {
-                    Header::Part
+                let template = if self.current_part {
+                    &self.part_template_html
                 } else {
-                    Header::Chapter
-                };
-                let template = match header_type {
-                    Header::Part => &self.part_template_html,
-                    Header::Chapter => &self.chapter_template_html
+                    &self.chapter_template_html
                 };
                 let mut data = MapBuilder::new()
                     .insert_str("header", data.header)

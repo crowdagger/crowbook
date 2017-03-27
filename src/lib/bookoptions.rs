@@ -41,11 +41,14 @@ rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {
 rendering.num_depth:int:1                                            # {num_depth}
 rendering.chapter:str                                                # {chapter}
 rendering.part:str                                                   # {part}
-rendering.chapter.template:str:\"{{{{{{number}}}}}}. {{{{{{chapter_title}}}}}}\" # {chapter_template}
 rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
-rendering.part.template:str:\"{{{{{{number}}}}}}. {{{{{{part_title}}}}}}\" # {part_template}
 rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
 rendering.part.reset_counter:bool:true                                      # {reset_counter}
+rendering.chapter.template:str:\"{{{{{{number}}}}}}. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+
+rendering.part.template:str:\"{{{{{{number}}}}}}. {{{{{{part_title}}}}}}\" # {part_template}
+
+
 
 
 # {special_ops}
@@ -65,6 +68,8 @@ html.highlight.js:tpl               # {highlight_js}
 html.highlight.css:tpl              # {highlight_css}
 html.side_notes:bool:false          # {side_notes}
 html.escape_nb_spaces:bool:true     # {nb_spaces}
+html.chapter.template:str:\"<h1 id = 'link-{{{{{{link}}}}}}'><span class = 'chapter-header'>{{{{{{header}}}}}} {{{{{{number}}}}}}</span><br />{{{{{{title}}}}}}</h1>\" # {html_chapter_template}
+html.part.template:str:\"<h2 class = 'part'>{{{{{{header}}}}}} {{{{{{number}}}}}}</h2> <h1 id = 'link-{{{{{{link}}}}}}' class = 'part'>{{{{{{title}}}}}}</h1>\" # {html_part_template}
 
 # {html_single_opt}
 html.standalone.template:tpl                # {single_html}
@@ -220,8 +225,8 @@ crowbook.verbose:alias                              # {removed}
                                          num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
                                          part = lformat!("How to call parts (or 'books', 'episodes', ..."),
                                          chapter = lformat!("How to call chapters"),
-                                         chapter_template = lformat!("Naming scheme of chapters"),
-                                         part_template = lformat!("Naming scheme of parts"),
+                                         chapter_template = lformat!("Naming scheme of chapters, for TOC"),
+                                         part_template = lformat!("Naming scheme of parts, for TOC"),
                                          roman_numerals_parts = lformat!("If set to true, display part number with roman numerals"),
                                          roman_numerals_chapters = lformat!("If set to true, display chapter number with roman numerals"),
                                          reset_counter = lformat!("If set to true, reset chapter number at each part"),
@@ -244,7 +249,9 @@ crowbook.verbose:alias                              # {removed}
                                          one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
                                          single_html = lformat!("Path of an HTML template for standalone HTML"),
                                          single_js = lformat!("Path of a javascript file"),
-                                         
+
+                                         html_chapter_template = lformat!("Inline template for HTML chapter formatting"),
+                                         html_part_template = lformat!("Inline template for HTML part formatting"),
                                          html_dir_template = lformat!("Path of a HTML template for multifile HTML"),
                                          
                                          epub_ver = lformat!("EPUB version to generate (2 or 3)"),
