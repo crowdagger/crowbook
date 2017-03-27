@@ -121,6 +121,7 @@ input.yaml_blocks:bool:false        # {yaml}
 
 
 # {crowbook_opt}
+crowbook.html_as_text:bool:true     # {html_as_text}
 crowbook.temp_dir:path:             # {tmp_dir}
 crowbook.zip.command:str:zip        # {zip}
 
@@ -285,6 +286,7 @@ crowbook.verbose:alias                              # {removed}
                                          ligature_dashes = lformat!("If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"),
                                          ligature_guillemets = lformat!("If enabled, replaces '<<' and '>>' to french \"guillemets\" ('«' and '»')"),
                                          yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
+                                         html_as_text = lformat!("Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored."),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
                                          

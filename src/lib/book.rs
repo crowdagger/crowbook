@@ -245,8 +245,7 @@ impl Book {
         for &(key, value) in options {
             if let Err(err) = self.options.set(key, value) {
                 self.logger
-                    .error(lformat!("Error initializing book: could not set {key} to {value}: \
-                                     {error}",
+                    .error(lformat!("Error initializing book: could not set {key} to {value}: {error}",
                                     key = key,
                                     value = value,
                                     error = err));
@@ -603,7 +602,7 @@ impl Book {
                 let subline = &line[1..];
                 if subline.starts_with(|c: char| c.is_whitespace()) {
                     let subline = subline.trim();
-                    let ast = Parser::new()
+                    let ast = Parser::from(&self)
                         .parse_inline(subline)?;
                     let ast = vec!(Token::Header(1, ast));
                     self.chapters.push(Chapter::new(Number::DefaultPart, String::new(), ast));
@@ -834,7 +833,7 @@ impl Book {
         self.parse_yaml(&mut content);
 
         // parse the file
-        let mut parser = Parser::new();
+        let mut parser = Parser::from(self);
         parser.set_source_file(file);
         let mut tokens = parser.parse(&content)?;
         self.features = self.features | parser.features();
@@ -1178,7 +1177,7 @@ impl Book {
                     "lang" => Ok(s.to_string()),
                     _ => f(s),
                 };
-                let raw = view_as_text(&Parser::new().parse(s)?);
+                let raw = view_as_text(&Parser::from(&self).parse(s)?);
                 match content {
                     Ok(content) => {
                         mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), raw);

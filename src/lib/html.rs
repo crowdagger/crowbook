@@ -247,7 +247,8 @@ impl<'a> HtmlRenderer<'a> {
             };
             self.book
                 .get_header(header, number, c_title, |s| {
-                    self.render_vec(&Parser::new().parse_inline(s)?)
+                    let mut parser = Parser::from(&self.book);
+                    self.render_vec(&parser.parse_inline(s)?)
                 })
         } else if self.current_numbering >= n {
             let numbers = self.get_numbers();
@@ -664,7 +665,7 @@ impl<'a> HtmlRenderer<'a> {
         if content.is_empty() {
             Ok(content)
         } else {
-            let tokens = Parser::new().parse(&content)?;
+            let tokens = Parser::from(&this.as_ref().book).parse(&content)?;
             let content = this.render_vec(&tokens)?;
             Ok(format!("<footer id = \"footer\">{}</footer>", content))
         }
@@ -678,8 +679,9 @@ impl<'a> HtmlRenderer<'a> {
         if let Ok(top) = this.as_ref().book.options.get_str("html.header") {
             match this.as_mut().templatize(top) {
                 Ok(content) => {
+                    let tokens = Parser::from(&this.as_ref().book).parse(&content)?;
                     Ok(format!("<div id = \"top\">{}</div>",
-                               this.render_vec(&Parser::new().parse(&content)?)?))
+                               this.render_vec(&tokens)?))
                 }
                 Err(err) => {
                     Err(Error::render(&this.as_ref().book.source,

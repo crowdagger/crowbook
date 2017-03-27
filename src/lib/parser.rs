@@ -18,6 +18,7 @@
 use token::Token;
 use error::{Result, Error, Source};
 use logger::Logger;
+use book::Book;
 
 use std::mem;
 use std::fs::File;
@@ -112,6 +113,8 @@ pub struct Parser {
     footnotes: HashMap<String, Vec<Token>>,
     source: Source,
     features: Features,
+
+    html_as_text: bool,
 }
 
 impl Parser {
@@ -121,7 +124,20 @@ impl Parser {
             footnotes: HashMap::new(),
             source: Source::empty(),
             features: Features::new(),
+            html_as_text: true,
         }
+    }
+
+    /// Creates a parser with options from a book configuration file
+    pub fn from(book: &Book) -> Parser {
+        let mut parser = Parser::new();
+        parser.html_as_text(book.options.get_bool("crowbook.html_as_text").unwrap());
+        parser
+    }
+    
+    /// Enable/disable HTML as text
+    pub fn html_as_text(&mut self, b: bool) {
+        self.html_as_text = b;
     }
 
     /// Sets a parser's source file
@@ -312,8 +328,14 @@ impl Parser {
                         -> Result<()> {
         while let Some(event) = p.next() {
             match event {
-                Event::Html(text) |
-                Event::InlineHtml(text) |
+                Event::Html(text) | Event::InlineHtml(text) => {
+                    if self.html_as_text {
+                        v.push(Token::Str(text.into_owned()));
+                    } else {
+                        Logger::display_debug(lformat!("ignoring HTML block '{}'", text));
+                    }
+                }, 
+
                 Event::Text(text) => {
                     v.push(Token::Str(text.into_owned()));
                 }
