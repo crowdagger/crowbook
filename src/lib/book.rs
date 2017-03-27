@@ -928,9 +928,10 @@ impl Book {
                         let new = *n + level;
                         if new > 6 || new < 0 {
                             return Err(Error::parser(Source::new(file),
-                                                     lformat!("this subchapter contains a heading that, when adjustes, is not in the right range ({} instead of [0-6])", new)));
+                                                     lformat!("this subchapter contains a heading that, when adjusted, is not in the right range ({} instead of [0-6])", new)));
                         }
                         *n = new;
+
                     },
                     _ => {},
                 }
