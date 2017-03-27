@@ -555,7 +555,7 @@ pub fn insert_breaks(text: &str) -> String {
     let mut result = String::with_capacity(text.len());
     for c in text.chars() {
         match c {
-            '.' | '_' | ')' | '(' | '-' | '/' => {
+            '.' | '_' | ')' | '(' | '-' | '/' | ':'  => {
                 result.push(c);
                 result.push_str("\\allowbreak{}");
             },
