@@ -160,16 +160,21 @@ impl<'a> EpubRenderer<'a> {
             compile_str(self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
                         &self.html.book.source,
                         "epub.chapter.xhtml")?;
+        let mut rendered = vec![];
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             let n = chapter.number;
             let v = &chapter.content;
             self.html.chapter_config(i, n, filenamer(i));
-            let (rendered_chapter, raw_title) = self.render_chapter(v, &template_chapter)?;
+            let this_chapter = self.render_chapter(v, &template_chapter)?;
+            rendered.push(this_chapter);
+        }
 
+        for (i, (rendered_chapter, raw_title)) in rendered.into_iter().enumerate() {
             let mut content = EpubContent::new(filenamer(i), rendered_chapter.as_bytes());
             if i == 0 {
                 content = content.reftype(ReferenceType::Text);
             }
+
             // horrible hack to add subtoc of this chapter to epub's toc
             // todo: find cleaner way
             for element in &self.html.toc.elements {
