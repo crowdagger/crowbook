@@ -416,7 +416,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 } else {
                     self.book
                         .logger
-                        .warning(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                        .debug(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
                                          local; ignoring it.",
                                         source = self.source,
                                         url = url));
@@ -430,7 +430,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 } else {
                     self.book
                         .logger
-                        .warning(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                        .debug(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
                                          local; ignoring it.",
                                         source = self.source,
                                         url = url));
