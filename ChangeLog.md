@@ -6,7 +6,12 @@ unreleased
 * Markdown:
   * Added support for superscript and subscript features, using
   respectively `foo^up^` or `bar~down~` syntax.
-
+* New options:
+  * `rendering.chapter`: change what is displayed in place of
+    "chapter".
+  * `rendering.part`: change what is displayed in place of "part".
+* Rendering:
+  * Change the way chapters are displayed by default.
 * Bugfixes:
   * EPUB: add unnamed but numbered chapters to the TOC.
 
