@@ -49,6 +49,7 @@ pub struct LatexRenderer<'a> {
     is_short: bool,
     proofread: bool,
     syntax: Option<Syntax>,
+    hyperref: bool,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -76,6 +77,7 @@ impl<'a> LatexRenderer<'a> {
             is_short: book.options.get_str("tex.class").unwrap() == "article",
             proofread: false,
             syntax: syntax,
+            hyperref: book.options.get_bool("tex.hyperref").unwrap(),
         }
     }
 
@@ -389,8 +391,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Link(ref url, _, ref vec) => {
                 let content = self.render_vec(vec)?;
 
-                if ResourceHandler::is_local(url) {
-                    Ok(format!("\\hyperref[{}]{{{}}}", self.handler.get_link(url), content))
+                if self.hyperref && ResourceHandler::is_local(url) {
+                    Ok(format!("\\hyperref[{}]{{{}}}", escape::tex(self.handler.get_link(url)), content))
                 } else {
                     let url = escape::tex(url.as_ref());
                     if &content == &url {
