@@ -58,9 +58,10 @@ impl Syntax {
             theme: theme,
         }
     }
-
+    
     /// Convert a string containing code to HTML
     pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
+        let language = strip_language(language);
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
@@ -71,6 +72,7 @@ impl Syntax {
     }
 
     pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
+        let language = strip_language(language);
         use latex::insert_breaks;
         use syntect::highlighting::{BLACK, FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
         let syntax = self.syntax_set.find_syntax_by_token(language)
@@ -109,6 +111,19 @@ impl Syntax {
         Ok(format!("{{\\sloppy {}}}", result))
     }
 }
+
+/// Strip language name of possible other infos, e.g. "rust,ignore" -> "rust"
+/// Currently only ',' is done
+fn strip_language(language: &str) -> &str {
+    let splits: Vec<_> = language
+        .split(|c: char| match c {
+            ',' => true,
+            _ => false
+        })
+        .collect();
+    splits[0].trim()
+}
+
 
 #[cfg(not(feature="syntect"))]
 impl Syntax {
