@@ -22,6 +22,9 @@ unreleased
     text but ignore it.
 * Rendering:
   * Change the way chapters are displayed by default.
+  * Internal links are a bit more flexible, e.g. if you link to
+    `Readme.html` it will now try to link to the chapter corresponding
+    to `Readme.md`.
 * Bugfixes:
   * LaTeX:
     * Fix bug in syntax highlighting.
