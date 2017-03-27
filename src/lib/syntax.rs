@@ -82,7 +82,7 @@ impl Syntax {
         for (style, text) in regions {
             let mut content = escape::tex(text).into_owned();
             content = insert_breaks(&content);
-            content = content.replace('\n', "\\\\\n")
+            content = content.replace('\n', "\\\\{}\n")
                 .replace(' ', "\\hphantom{ }\\allowbreak{}");
             content = format!("\\texttt{{{}}}", content);
             if style.foreground != BLACK {
