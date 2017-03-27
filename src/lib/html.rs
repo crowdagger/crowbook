@@ -19,6 +19,8 @@ use error::{Result, Error, Source};
 use token::Token;
 use token::Data;
 use book::{Book, compile_str};
+use book::Header;
+use book::HeaderData;
 use number::Number;
 use resource_handler::ResourceHandler;
 use renderer::Renderer;
@@ -210,49 +212,81 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Renders a title (without `<h1>` tags), increasing header number beforehand
     #[doc(hidden)]
-    pub fn render_title(&mut self, n: i32, vec: &[Token]) -> Result<String> {
+    pub fn render_title(&mut self, n: i32, vec: &[Token]) -> Result<HeaderData> {
         let n = if self.current_part {
             n -1
         } else {
             n
         };
         self.inc_header(n);
-        let s = if n == 1 && self.current_numbering >= 1 {
-            let chapter = self.current_chapter[1];
-            let c_title = self.render_vec(vec)?;
-            let res = self.book.get_chapter_header(chapter, c_title, |s| {
-                self.render_vec(&Parser::new().parse_inline(s)?)
-            });
-            res?
+        
+        let number = self.current_chapter[n as usize];
+        let c_title = self.render_vec(vec)?;
+        
+        if n <= 1 && self.current_numbering >= 1 {
+            let header = if n == 0 {
+                Header::Part
+            } else {
+                Header::Chapter
+            };
+            self.book
+                .get_header(header, number, c_title, |s| {
+                    self.render_vec(&Parser::new().parse_inline(s)?)
+                })
         } else if self.current_numbering >= n {
-            format!("{} {}", self.get_numbers(), self.render_vec(vec)?)
+            let numbers = self.get_numbers();
+            Ok(HeaderData {
+                text: format!("{} {}", numbers, c_title),
+                number: numbers,
+                header: String::new(),
+                title: c_title,
+            })
         } else {
-            self.render_vec(vec)?
-        };
-        Ok(s)
+            Ok(HeaderData {
+                text: c_title.clone(),
+                number: String::new(),
+                header: String::new(),
+                title: c_title,
+            })
+        }
     }
 
     /// Renders a title, including `<h1>` tags and appropriate links
     #[doc(hidden)]
-    pub fn render_title_full(&mut self, n: i32, inner: String) -> Result<String> {
-        if n == 1 && self.current_hide {
-            Ok(format!("<h1 id = \"link-{}\"></h1>", self.link_number))
-        } else if n == 1 && self.current_part {
-            let part = self.current_chapter[0];
-            let res = self.book.get_part_header(part, |s| {
-                self.render_vec(&Parser::new().parse_inline(s)?)
-            })?;
-            Ok(format!("<h2 class = \"part\">{}</h2>
-<h1 id = \"link-{}\" class = \"part\">{}</h1>\n",
-                    res,
-                    self.link_number,
-                    inner))
+    pub fn render_title_full(&mut self, n: i32, data: HeaderData) -> Result<String> {
+        if n == 1 {
+            if self.current_hide {
+                Ok(format!("<h1 id = \"link-{}\"></h1>", self.link_number))
+            } else {
+                let header_type = if self.current_part {
+                    Header::Part
+                } else {
+                    Header::Chapter
+                };
+                match header_type {
+                    Header::Part => {
+                        Ok(format!("<h2 class = \"part\">{header} {number}</h2>
+<h1 id = \"link-{link}\" class = \"part\">{title}</h1>\n",
+                                   header = data.header,
+                                   number = data.number,
+                                   link = self.link_number,
+                                   title = data.title))
+                    },
+                    Header::Chapter => {
+                        Ok(format!("<h1 id = \"link-{link}\"><b>{header} {number}</b><br />{title}</h1>\n",
+                                   header = data.header,
+                                   number = data.number,
+                                   link = self.link_number,
+                                   title = data.title))
+                    },
+                }
+            }
         } else {
             Ok(format!("<h{} id = \"link-{}\">{}</h{}>\n",
-                    n,
-                    self.link_number,
-                    inner,
-                    n))
+                       n,
+                       self.link_number,
+                       data.text,
+                       n))                
         }
     }
 
@@ -433,31 +467,21 @@ impl<'a> HtmlRenderer<'a> {
                 Ok(format!("<p id = \"para-{}\"{}>{}</p>\n", par, class, content))
             }
             Token::Header(n, ref vec) => {
-                let s = this.as_mut().render_title(n, vec)?;
+                let data = this.as_mut().render_title(n, vec)?;
                 if n <= this.as_ref().book.options.get_i32("rendering.num_depth").unwrap() {
                     let url = format!("{}#link-{}",
                                       this.as_ref().filename,
                                       this.as_ref().link_number);
                     if !this.as_ref().current_part {
-                        this.as_mut().toc.add(TocElement::new(url, s.clone())
+                        this.as_mut().toc.add(TocElement::new(url, data.text.clone())
                                               .level(n));
 
                     } else {
-                        let is_roman = this.as_ref().book.options.get_bool("rendering.part.roman_numerals").unwrap();
-                        let number = this.as_ref().current_chapter[0];
-                        let number = if is_roman && number >= 1 {
-                            format!("{:X}", Roman::from(number as i16))
-                        } else {
-                            format!("{}", number)
-                        };
-                        let toc_content = format!("{number} {content}",
-                                                  content = s,
-                                                  number = number);
-                        this.as_mut().toc.add(TocElement::new(url, toc_content)
+                        this.as_mut().toc.add(TocElement::new(url, data.text.clone())
                                               .level(n - 1));
                     }
                 }
-                Ok(this.as_mut().render_title_full(n, s)?)
+                Ok(this.as_mut().render_title_full(n, data)?)
             }
             Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", this.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("<b>{}</b>", this.render_vec(vec)?)),

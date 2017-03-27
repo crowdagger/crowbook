@@ -202,7 +202,8 @@ impl<'a> HtmlDirRenderer<'a> {
                                                     |s| {
                                                         self.render_vec(&Parser::new()
                                                                         .parse_inline(s)?)
-                                                    })?;
+                                                    })?
+                                .text;
                             title_raw = self.html
                                 .book
                                 .get_chapter_header(self.html.current_chapter[1] + 1,
@@ -210,7 +211,8 @@ impl<'a> HtmlDirRenderer<'a> {
                                                     |s| {
                                                         Ok(view_as_text(&Parser::new()
                                                                      .parse_inline(s)?))
-                                                    })?;
+                                                    })?
+                                .text;
                         }
                         break;
                     }

@@ -112,7 +112,8 @@ impl<'a> HtmlSingleRenderer<'a> {
                                                     |s| {
                                                         self.render_vec(&Parser::new()
                                                             .parse_inline(s)?)
-                                                    })?;
+                                                    })?
+                                .text;
                         }
                         break;
                     }

@@ -303,12 +303,18 @@ impl<'a> EpubRenderer<'a> {
 
         if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
             let number = self.html.current_chapter[1] + 1;
-            self.chapter_title = self.html.book.get_chapter_header(number, "".to_owned(), |s| {
-                self.render_vec(&Parser::new().parse_inline(s)?)
-            })?;
-            self.chapter_title_raw = self.html.book.get_chapter_header(number, "".to_owned(), |s| {
-                Ok(view_as_text(&Parser::new().parse_inline(s)?))
-            })?;
+            self.chapter_title = self.html
+                .book
+                .get_chapter_header(number, "".to_owned(), |s| {
+                    self.render_vec(&Parser::new().parse_inline(s)?)
+                })?
+                .text;
+            self.chapter_title_raw = self.html
+                .book
+                .get_chapter_header(number, "".to_owned(), |s| {
+                    Ok(view_as_text(&Parser::new().parse_inline(s)?))
+                })?
+                .text;
         }
         self.toc.push(self.chapter_title.clone());
 
@@ -354,13 +360,16 @@ impl<'a> EpubRenderer<'a> {
                                                         });
             let s = res?;
             if self.chapter_title.is_empty() {
-                self.chapter_title = s;
-                self.chapter_title_raw = self.html.book.get_chapter_header(self.html.current_chapter[1] + 1,
-                                                                           view_as_text(vec),
-                                                                           |s| {
-                                                                               Ok(view_as_text(&(Parser::new()
-                                                                                                 .parse_inline(s)?)))
-                                                                           })?;
+                self.chapter_title = s.text;
+                self.chapter_title_raw = self.html
+                    .book
+                    .get_chapter_header(self.html.current_chapter[1] + 1,
+                                        view_as_text(vec),
+                                        |s| {
+                                            Ok(view_as_text(&(Parser::new()
+                                                              .parse_inline(s)?)))
+                                        })?
+                    .text;
             } else {
                 self.html
                     .book

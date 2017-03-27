@@ -170,7 +170,7 @@ impl<'a> OdtRenderer<'a> {
                     let res = self.book.get_chapter_header(chapter, self.render_vec(vec), |s| {
                         Ok(self.render_vec(&Parser::new().parse_inline(s)?))
                     });
-                    res.unwrap()
+                    res.unwrap().text
                 } else {
                     self.render_vec(vec)
                 };

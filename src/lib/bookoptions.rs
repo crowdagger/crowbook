@@ -39,9 +39,11 @@ rendering.initials:bool:false                                        # {renderin
 rendering.inline_toc:bool:false                                      # {inline_toc}
 rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
+rendering.chapter:str                                                # {chapter}
+rendering.part:str                                                   # {part}
 rendering.chapter.template:str:\"{{{{{{number}}}}}}. {{{{{{chapter_title}}}}}}\" # {chapter_template}
 rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
-rendering.part.template:str:\"{{{{{{loc_part}}}}}} {{{{{{number}}}}}}\" # {part_template}
+rendering.part.template:str:\"{{{{{{number}}}}}}. {{{{{{part_title}}}}}}\" # {part_template}
 rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
 rendering.part.reset_counter:bool:true                                      # {reset_counter}
 
@@ -216,6 +218,8 @@ crowbook.verbose:alias                              # {removed}
                                          inline_toc = lformat!("Display a table of content in the document"),
                                          toc_name = lformat!("Name of the table of contents if it is displayed in document"),
                                          num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
+                                         part = lformat!("How to call parts (or 'books', 'episodes', ..."),
+                                         chapter = lformat!("How to call chapters"),
                                          chapter_template = lformat!("Naming scheme of chapters"),
                                          part_template = lformat!("Naming scheme of parts"),
                                          roman_numerals_parts = lformat!("If set to true, display part number with roman numerals"),
