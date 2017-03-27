@@ -604,7 +604,7 @@ impl Book {
                     self.add_chapter(Number::UnnumberedPart, file)?;
                 } else if subline.starts_with(|c: char| c.is_digit(10)) {
                     /* Specified  part*/
-                    let parts: Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
+                    let parts: Vec<_> = subline.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
                         .collect();
                     if parts.len() != 2 {
                         return Err(Error::config_parser(&self.source,
