@@ -20,8 +20,10 @@ unreleased
     local links. Can be useful for some files.
   * `crowbook.html_as_text`, if set to false, will not treat HTML as
     text but ignore it.
+  * `subtitle`, as its name suggest, set the subtitle of a book.
 * Rendering:
   * Change the way chapters are displayed by default.
+  * PDF output now has a better-looking (hopefully) title page.
   * Internal links are a bit more flexible, e.g. if you link to
     `Readme.html` it will now try to link to the chapter corresponding
     to `Readme.md`.
