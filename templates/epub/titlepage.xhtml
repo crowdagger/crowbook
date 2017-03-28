@@ -9,7 +9,8 @@
   <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-  <h1 class="title">{{{title}}}</h1>
   <h2 class="author">{{{author}}}</h2>
+  <h1 class="title">{{{title}}}</h1>
+  {{#has_subtitle}}<h2 class="subtitle">{{{subtitle}}}</h2>{{/has_subtitle}}
 </body>
 </html>

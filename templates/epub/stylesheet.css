@@ -71,6 +71,12 @@ h2.author {
     font-size:  200%;
 }
 
+/* Subtitle */
+h2.subtitle {
+    text-align: center;
+    font-size: 200%;
+}
+
 /* When toc is displayed inlined */
 #toc ol, #toc ul {
     padding: 0;

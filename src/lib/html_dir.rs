@@ -306,6 +306,16 @@ impl<'a> HtmlDirRenderer<'a> {
             String::new()
         };
 
+        content = format!("<h2 class = 'author'>{author}</h2>
+<h1 class = 'title'>{title}</h1>
+<h2 class = 'subtitle'>{subtitle}</h2>
+{content}",
+                          author = self.html.book.options.get_str("author")?,
+                          title = self.html.book.options.get_str("title")?,
+                          content = content,
+                          subtitle = self.html.book.options.get_str("subtitle")
+                             .unwrap_or_else(|_| ""));
+
         // Insert toc inline if option is set
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
 
