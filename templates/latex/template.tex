@@ -94,43 +94,43 @@
   \vspace*{\stretch{2}}
   
   \newpage
+    \thispagestyle{empty}
+  \cleardoublepage
+%  \pagebreak
+%  \newpage
+    \begin{center}  
   \thispagestyle{empty}
-  
-  \pagebreak
-  \newpage
-  
-  \thispagestyle{empty}
-  \chapter*{}
-  \vspace*{\stretch{1}}
-  \begin{center}
+  \vspace*{\baselineskip}
+  \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+  \rule{\textwidth}{0.4pt}\\[\baselineskip]
+
     %    {\Huge \@author \\[5mm]}
-    {\Huge \@title   \\[5mm]}
+      {\Huge\scshape \@title   \\[5mm]}
+      {\Large <<&subtitle>>}
     %    {\huge \today   \\[5mm]}    
-  \end{center}
-  
+
+    \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+    \rule{\textwidth}{1.6pt}\\[\baselineskip]
+
+
+    \vspace*{2\baselineskip}
+
+    {\Large \@author}
+    \vfill
+%    <<#has_version>>{<<&version>>\\[5mm]}<</has_version>>
+    <<#has_date>>\@date<</has_date>>
+    \end{center}
   %  \HRule
   
-  \vspace*{\stretch{2}}
-  
-  \begin{center}
-    {\large \@author}
-  \end{center}
-  
-  
-  \vspace*{\stretch{1}}
-
-  
-  \vspace*{\stretch{1}}
-
-  \begin{center}
-    <<#has_version>>{<<&version>>\\[5mm]}<</has_version>>
-    <<#has_date>>\@date<</has_date>>
-  \end{center}
-
-  
   \pagebreak
   \newpage
   \thispagestyle{empty}
+  \null\vfill
+  \noindent
+  \begin{center}
+    {\emph{\@title}<<#has_version>>{ <<&version>>}<</has_version>>, <<&loc_by>> \@author \\[5mm]}
+    <<#has_license>>{<<&license>>\\[5mm]}<</has_license>>
+  \end{center}
   \pagebreak
   \newpage
 }

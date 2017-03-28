@@ -19,6 +19,7 @@ description:meta                    # {description}
 cover:path                          # {cover}
         
 # {metadata2}
+subtitle:meta                       # {subtitle}
 license:meta                        # {license}
 version:meta                        # {version}
 date:meta                           # {date}
@@ -206,8 +207,9 @@ crowbook.verbose:alias                              # {removed}
                                          subject = lformat!("Subject of the book (used for EPUB metadata)"),
                                          description = lformat!("Description of the book (used for EPUB metadata)"),
                                          cover = lformat!("Path to the cover of the book"),
-                                         
-                                         license = lformat!("License of the book"),
+
+                                         subtitle = lformat!("Subtitle of the book"),
+                                         license = lformat!("License of the book. This information will be displayed on PDF documents"),
                                          version = lformat!("Version of the book"),
                                          date = lformat!("Date the book was revised"),
                                          
