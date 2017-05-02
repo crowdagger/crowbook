@@ -4,7 +4,7 @@ environment:
     # TODO change the project name
     PROJECT_NAME: crowbook
     # TODO you may want to change which stable Rust version is used
-    RUST_VERSION: 1.14.0
+    RUST_VERSION: 1.17.0
   # TODO feel free to delete targets you are not interested in
   matrix:
     - TARGET: i686-pc-windows-gnu
