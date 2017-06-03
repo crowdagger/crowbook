@@ -183,6 +183,17 @@ impl Token {
         }
     }
 
+    /// Checks whether token is a header.
+    ///
+    /// **Returns** `true` if and only if token is Header variant.
+    pub fn is_header(&self) -> bool {
+        if let Token::Header(..) = *self {
+            true
+        } else {
+            false
+        }
+    }
+
     /// Returns true if token is code or code block
     pub fn is_code(&self) -> bool {
         match *self {

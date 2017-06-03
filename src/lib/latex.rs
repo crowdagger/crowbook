@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -141,11 +141,16 @@ impl<'a> LatexRenderer<'a> {
             let n = chapter.number;
             let v = &chapter.content;
             self.source = Source::new(chapter.filename.as_str());
+            let mut offset = 0;
+            if !v.is_empty() && v[0].is_header() {
+                content.push_str(&self.render_token(&v[0])?);
+                offset = 1;
+            }
             write!(content,
-                   "\\label{{chapter-{}}}",
+                   "\\label{{chapter-{}}}\n",
                    i)?;
             self.current_chapter = n;
-            content.push_str(&self.render_vec(v)?);
+            content.push_str(&self.render_vec(&v[offset..])?);
         }
         self.source = Source::empty();
 
