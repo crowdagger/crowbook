@@ -31,6 +31,7 @@ output.html.dir:path                # {output_html_dir}
 output.tex:path                     # {output_tex}
 output.pdf:path                     # {output_pdf}
 output.odt:path                     # {output_odt}
+output.html.if:path                 # {output_if}
 output.base_path:path:\"\"            # {output_base_path}
 
 # {render_opt}
@@ -218,6 +219,7 @@ crowbook.verbose:alias                              # {removed}
                                          output_tex = lformat!("Output file name for LaTeX rendering"),
                                          output_pdf = lformat!("Output file name for PDF rendering"),
                                          output_odt = lformat!("Output file name for ODT rendering"),
+                                         output_if = lformat!("Output file name for HTML (interactive fiction) rendering"),
                                          output_html_dir = lformat!("Output directory name for HTML rendering"),
                                          output_base_path = lformat!("Directory where those output files will we written"),
 
@@ -717,7 +719,8 @@ impl BookOptions {
             "output.odt" |
             "output.proofread.html" |
             "output.proofread.html.dir" |
-            "output.proofread.pdf" => {
+            "output.proofread.pdf" |
+            "output.html.if" => {
                 // Translate according to output.base_path
                 let base = self.get_path("output.base_path").unwrap();
                 Path::new(&base).join(path)

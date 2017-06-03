@@ -98,13 +98,5 @@ window.onload = function(){
     }
 
 };
-//insérez ce bout de code au début de votre code pour observer les changements de hash dans l'URL
-if(!window.HashChangeEvent)(function(){
-	var lastURL=document.URL;
-	window.addEventListener("hashchange",function(event){
-		Object.defineProperty(event,"oldURL",{enumerable:true,configurable:true,value:lastURL});
-		Object.defineProperty(event,"newURL",{enumerable:true,configurable:true,value:document.URL});
-		lastURL=document.URL;
-	});
-}());
+
 {{/one_chapter}}

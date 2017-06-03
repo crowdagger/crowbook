@@ -23,6 +23,7 @@ use parser::Features;
 use epub::{Epub};
 use html_single::{HtmlSingle, ProofHtmlSingle};
 use html_dir::{HtmlDir, ProofHtmlDir};
+use html_if::{HtmlIf};
 use latex::{Latex, ProofLatex, Pdf, ProofPdf};
 use odt::{Odt};
 use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
@@ -190,7 +191,8 @@ impl Book {
             .add_format("pdf", lformat!("PDF"), Box::new(Pdf{}))
             .add_format("proofread.pdf", lformat!("PDF (proofreading)"), Box::new(ProofPdf{}))
             .add_format("epub", lformat!("EPUB"), Box::new(Epub{}))
-            .add_format("odt", lformat!("ODT"), Box::new(Odt{}));
+            .add_format("odt", lformat!("ODT"), Box::new(Odt{}))
+            .add_format("html.if", lformat!("HTML (interactive fiction)"), Box::new(HtmlIf{}));
         book
     }
 

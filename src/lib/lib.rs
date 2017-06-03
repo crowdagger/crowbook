@@ -167,6 +167,7 @@ mod lang;
 mod renderer;
 mod book_renderer;
 mod html_single;
+mod html_if;
 mod syntax;
 
 mod zipper;
