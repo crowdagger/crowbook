@@ -57,7 +57,7 @@ will automatically download the latest `crowbook` release on
 install it on your system.
 
 > Some dependencies also require building C libraries; you might thus
-> also need to install a C compiler and `make`/`cmake` build tools. 
+> also need to install a C compiler and `make`/`cmake` build tools.
 
 Dependencies
 ------------
