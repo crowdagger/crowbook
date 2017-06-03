@@ -30,6 +30,7 @@ unreleased
 * Bugfixes:
   * LaTeX:
     * Fix bug in syntax highlighting.
+	* Fix label placements (and thus navigation inside PDF document).
   * EPUB:
     * Add unnamed but numbered chapters to the TOC.
 	* Fix HTML escaping issue for chapter titles.
