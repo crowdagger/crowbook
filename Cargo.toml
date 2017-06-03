@@ -46,10 +46,10 @@ mime_guess = "1"
 pulldown-cmark = "0.0.14"
 yaml-rust = "0.3"
 mustache = "0.8"
-uuid = { version = "0.4", features = ["v4"] }
+uuid = { version = "0.5", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
-rayon = "0.6"
+rayon = "0.7"
 crowbook-text-processing = "^0.2.6"
 lazy_static = "0.2.1"
 term = "0.4"
