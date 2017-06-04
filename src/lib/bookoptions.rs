@@ -82,6 +82,9 @@ html.standalone.js:tpl                  # {single_js}
 # {html_dir_opt}
 html.dir.template:tpl               # {html_dir_template}
 
+# {html_if_opt}
+html.if.js:tpl                      # {if_js}
+
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}
 epub.highlight.theme:str            # {epub_theme}
@@ -193,6 +196,7 @@ crowbook.verbose:alias                              # {removed}
                                          html_opt = lformat!("HTML options"),
                                          html_single_opt = lformat!("Standalone HTML options"),
                                          html_dir_opt = lformat!("Multifile HTML options"),
+                                         html_if_opt = lformat!("Interactive fiction HTML options"),
                                          epub_opt = lformat!("EPUB options"),
                                          tex_opt = lformat!("LaTeX options"),
                                          rs_opt = lformat!("Resources option"),
@@ -255,6 +259,7 @@ crowbook.verbose:alias                              # {removed}
                                          one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
                                          single_html = lformat!("Path of an HTML template for standalone HTML"),
                                          single_js = lformat!("Path of a javascript file"),
+                                         if_js = lformat!("Path of a javascript file"),
 
                                          html_chapter_template = lformat!("Inline template for HTML chapter formatting"),
                                          html_part_template = lformat!("Inline template for HTML part formatting"),

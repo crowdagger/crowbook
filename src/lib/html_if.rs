@@ -20,21 +20,25 @@ use html::HtmlRenderer;
 use html::Highlight;
 use book::{Book, compile_str};
 use token::Token;
-use templates::img;
 use renderer::Renderer;
 use book_renderer::BookRenderer;
 use parser::Parser;
+use text_view::view_as_text;
 
 use rustc_serialize::base64::{self, ToBase64};
 
 use std::convert::{AsMut, AsRef};
 use std::io;
+use std::mem;
 
 /// Interactive fiction HTML renderer
 ///
 /// Renders a standalone, self-contained HTML file
 pub struct HtmlIfRenderer<'a> {
     html: HtmlRenderer<'a>,
+    n_fn: u32,
+    curr_init: String,
+    fn_defs: String,
 }
 
 impl<'a> HtmlIfRenderer<'a> {
@@ -46,7 +50,14 @@ impl<'a> HtmlIfRenderer<'a> {
                                          .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()))?;
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
-        Ok(HtmlIfRenderer { html: html })
+        Ok(
+            HtmlIfRenderer {
+                html: html,
+                n_fn: 0,
+                curr_init: String::new(),
+                fn_defs: String::new(),
+            }
+        )
     }
 
     /// Renders a token
@@ -61,9 +72,24 @@ impl<'a> HtmlIfRenderer<'a> {
         AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer
     {
         match *token {
-            Token::CodeBlock(ref language, _) if language == "" => {
-                // Todo: allow for javascript code inclusion
-                HtmlRenderer::static_render_token(this, token)
+            Token::CodeBlock(ref language, ref v) if language == "" => {
+                let mut html_if: &mut HtmlIfRenderer = this.as_mut();
+                let code = view_as_text(v);
+                let id = html_if.n_fn;
+                html_if.fn_defs
+                    .push_str(&format!("function fn_{id}() {{
+    {code}
+}}\n",
+                                       id = id,
+                                       code = code));
+                html_if.curr_init
+                    .push_str(&format!("    document.getElementById(\"result_{id}\").innerHTML = fn_{id}();\n",
+                                       id = id));
+                let content = format!("<p id = \"result_{}\"></p>\n",
+                                      (html_if.n_fn));
+                html_if.n_fn += 1;
+                Ok(content)
+                
             },
             _ => HtmlRenderer::static_render_token(this, token)
         }
@@ -71,15 +97,6 @@ impl<'a> HtmlIfRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
-        let menu_svg = img::MENU_SVG.to_base64(base64::STANDARD);
-        let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
-
-        let book_svg = img::BOOK_SVG.to_base64(base64::STANDARD);
-        let book_svg = format!("data:image/svg+xml;base64,{}", book_svg);
-
-        let pages_svg = img::PAGES_SVG.to_base64(base64::STANDARD);
-        let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
-
         let mut content = String::new();
 
         let mut titles = vec![];
@@ -90,7 +107,7 @@ impl<'a> HtmlIfRenderer<'a> {
             self.html.handler.add_link(chapter.filename.as_ref(),
                                        format!("#chapter-{}", i));
         }
-        
+
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             let n = chapter.number;
             let v = &chapter.content;
@@ -127,7 +144,13 @@ impl<'a> HtmlIfRenderer<'a> {
 </div>",
                                   i,
                                   HtmlRenderer::render_html(self, v, render_notes_chapter)?));
+            self.fn_defs.push_str(&format!("initFns.push(function () {{
+    {code}
+}})\n",
+                                           code = self.curr_init));
+            self.curr_init = String::new();
         }
+        
         self.html.source = Source::empty();
 
         for chapter in &chapters {
@@ -135,8 +158,6 @@ impl<'a> HtmlIfRenderer<'a> {
         }
         self.html.render_end_notes(&mut content);
 
-
-        let toc = self.html.toc.render(false);
 
         // Render the CSS
         let template_css = compile_str(self.html.book.get_template("html.css")?
@@ -158,13 +179,12 @@ impl<'a> HtmlIfRenderer<'a> {
 
         // Render the JS
         let template_js =
-            compile_str(self.html.book.get_template("html.standalone.js")?.as_ref(),
+            compile_str(self.html.book.get_template("html.if.js")?.as_ref(),
                         &self.html.book.source,
                         "html.standalone.js")?;
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
-            .insert_str("book_svg", &book_svg)
-            .insert_str("pages_svg", &pages_svg)
             .insert_bool("one_chapter", true)
+            .insert_str("js_prelude", mem::replace(&mut self.fn_defs, String::new()))
             .insert_str("common_script",
                         self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
@@ -183,19 +203,13 @@ impl<'a> HtmlIfRenderer<'a> {
             .insert_str("style", css.as_ref())
             .insert_str("print_style",
                         self.html.book.get_template("html.css.print").unwrap())
-            .insert_str("menu_svg", menu_svg)
-            .insert_str("book_svg", book_svg)
-            .insert_str("pages_svg", pages_svg)
             .insert_str("footer", HtmlRenderer::get_footer(self)?)
-            .insert_str("header", HtmlRenderer::get_header(self)?);
+            .insert_str("header", HtmlRenderer::get_header(self)?)
+            .insert_bool("has_toc", false);
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
                 let favicon = self.html.handler.map_image(&self.html.book.source, favicon)?;
                 mapbuilder = mapbuilder.insert_str("favicon", format!("<link rel = \"icon\" href = \"{}\">", favicon));
             }
-        if !self.html.toc.is_empty() {
-            mapbuilder = mapbuilder.insert_bool("has_toc", true);
-            mapbuilder = mapbuilder.insert_str("toc", toc)
-        }
         if self.html.highlight == Highlight::Js {
             let highlight_js = self.html.book.get_template("html.highlight.js")?
                 .as_bytes()

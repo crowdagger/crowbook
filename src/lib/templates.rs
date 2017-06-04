@@ -44,6 +44,10 @@ pub mod html_dir {
     pub static TEMPLATE: &str = include_str!("../../templates/html_dir/template.html");
 }
 
+pub mod html_if {
+    pub static JS: &str = include_str!("../../templates/html_if/script.js");
+}
+
 pub mod latex {
     pub static TEMPLATE: &str = include_str!("../../templates/latex/template.tex");
 }

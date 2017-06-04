@@ -26,7 +26,7 @@ use html_dir::{HtmlDir, ProofHtmlDir};
 use html_if::{HtmlIf};
 use latex::{Latex, ProofLatex, Pdf, ProofPdf};
 use odt::{Odt};
-use templates::{epub, html, epub3, latex, html_dir, highlight, html_single};
+use templates::{epub, html, epub3, latex, html_dir, highlight, html_single, html_if};
 use number::Number;
 use resource_handler::ResourceHandler;
 use logger::{Logger, InfoLevel};
@@ -1023,6 +1023,7 @@ impl Book {
             "html.dir.template" => html_dir::TEMPLATE,
             "html.highlight.js" => highlight::JS,
             "html.highlight.css" => highlight::CSS,
+            "html.if.js" => html_if::JS,
             "tex.template" => latex::TEMPLATE,
             _ => {
                 return Err(Error::config_parser(&self.source,
