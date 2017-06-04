@@ -175,6 +175,7 @@ impl<'a> HtmlIfRenderer<'a> {
                                   i,
                                   HtmlRenderer::render_html(self, v, render_notes_chapter)?));
             self.fn_defs.push_str(&format!("initFns.push(function () {{
+    new_turn();
     {code}
 }})\n",
                                            code = self.curr_init));
@@ -215,6 +216,8 @@ impl<'a> HtmlIfRenderer<'a> {
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_bool("one_chapter", true)
             .insert_str("js_prelude", mem::replace(&mut self.fn_defs, String::new()))
+            .insert_str("new_turn", self.html.book.options.get_str("html.if.new_turn").unwrap())
+            .insert_str("new_game", self.html.book.options.get_str("html.if.new_game").unwrap())
             .insert_str("common_script",
                         self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
