@@ -77,3 +77,29 @@ You face a troll!
 > of embedding Javascript code. If you try to render a document
 > containing such code blocks to EPUB, PDF, or the "normal" HTML
 > renderer, they will be displayed as regular code blocks. 
+
+
+## Interactive fiction options 
+
+As other renderers, there are options specific to the interactive
+fiction.
+
+**html.if.new_game** allows you to specify Javascript code that will
+be run at the beginning of the game. Since this code is not embedded
+in a function and is at the root (and the beginning) of the document,
+it is a good place to declare the global variables you might need,
+e.g.:
+
+```yaml
+html.if.new_game: "var hp = 100;"
+```
+
+**html.if.new_turn** allows you to specify some Javascript code that
+will be executed at the beginning of each segment. E.g.:
+
+```yaml
+html.if.new_turn: "nb_turns += 1;"
+```
+
+**html.if.script** allows you to specify the name of a Javascript file
+to override the default script.
