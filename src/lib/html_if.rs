@@ -76,19 +76,21 @@ impl<'a> HtmlIfRenderer<'a> {
                 let mut html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = view_as_text(v);
                 let mut gen_code = String::new();
+                let mut contains_md = false;
                 let mut i = 0;
                 while let Some(begin) = code[i..].find("@\"") {
                     let begin = i + begin;
                     if let Some(len) = code[begin..].find("\"@") {
+                        contains_md = true;
                         let end = begin + len;
                         gen_code.push_str(&code[i..begin]);
-                        gen_code.push('"');
+                        gen_code.push_str("crowbook_return_variable += \"");
                         gen_code.push_str(&html_if.render_vec(
                             &Parser::new()
                                 .parse(&code[begin+2..end])?)?
                                           .replace('"', "\\\"")
                                           .replace('\n', "\\\n"));
-                        gen_code.push('"');
+                        gen_code.push_str("\";");
                         i = end + 2;
                     }  else {
                         gen_code.push_str(&code[i..begin+2]);
@@ -96,7 +98,13 @@ impl<'a> HtmlIfRenderer<'a> {
                     }
                 }
                 gen_code.push_str(&code[i..]);
-                let container = if i == 0 {
+                if contains_md {
+                    gen_code = format!("var crowbook_return_variable = \"\";
+{}
+return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
+                                       gen_code);
+                }
+                let container = if !contains_md {
                     "p"
                 } else {
                     "div"

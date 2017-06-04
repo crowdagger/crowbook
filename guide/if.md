@@ -60,23 +60,30 @@ You encounter a goblin, armed with a knife!
 	}
 ```
 
-If you want to include Markdown formatting in the text you return, you
-can use the `@"..."@` syntax:
-
-```markdown
-You face a troll!
-
-    if (user_has_sword) {
-	    return @"* [Attack him with your sword](fight_troll.md)"@;
-	} else {
-	    return @"* [Better run away](run_away.md)"@;
-	}
-```
-
 > Note that *only* the interactive fiction renderer supports this way
 > of embedding Javascript code. If you try to render a document
 > containing such code blocks to EPUB, PDF, or the "normal" HTML
 > renderer, they will be displayed as regular code blocks. 
+
+
+## Embedding Makdown in your Javascript code embedded in your Markdown
+
+If you want to include Markdown formatting in the Javascript code (to
+display a passage or another without having to write HTML code), you
+can use the `@"..."@` syntax:
+
+```markdown
+    @"You face a troll!"@
+    if (user_has_sword) {
+	    @"* [Attack him with your sword](fight_troll.md)"@
+	} else {
+        @"* [Better run away](run_away.md)"@
+	}
+```
+
+Note that in this case you don't need to return a value, this is done
+behind your back. Similarly, `@"..."@` blocks don't require
+semicolons.
 
 
 ## Interactive fiction options 
