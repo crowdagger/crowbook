@@ -75,13 +75,34 @@ impl<'a> HtmlIfRenderer<'a> {
             Token::CodeBlock(ref language, ref v) if language == "" => {
                 let mut html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = view_as_text(v);
+                let mut gen_code = String::new();
+                let mut i = 0;
+                while let Some(begin) = code[i..].find("@\"") {
+                    let begin = i + begin;
+                    if let Some(len) = code[begin..].find("\"@") {
+                        let end = begin + len;
+                        gen_code.push_str(&code[i..begin]);
+                        gen_code.push('"');
+                        gen_code.push_str(&html_if.render_vec(
+                            &Parser::new()
+                                .parse(&code[begin+2..end])?)?
+                                          .replace('"', "\\\"")
+                                          .replace('\n', "\\\n"));
+                        gen_code.push('"');
+                        i = end + 2;
+                    }  else {
+                        gen_code.push_str(&code[i..begin+2]);
+                        i = begin + 2;
+                    }
+                }
+                gen_code.push_str(&code[i..]);
                 let id = html_if.n_fn;
                 html_if.fn_defs
                     .push_str(&format!("function fn_{id}() {{
     {code}
 }}\n",
                                        id = id,
-                                       code = code));
+                                       code = gen_code));
                 html_if.curr_init
                     .push_str(&format!("    result = fn_{id}();
     if (result != undefined) {{
