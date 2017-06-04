@@ -68,6 +68,7 @@ epub.version: 3
 + guide/markdown.md
 + guide/templates.md
 + guide/proofreading.md
++ guide/if.md
 + guide/misc.md
 + guide/contribute.md
 - ChangeLog.md
