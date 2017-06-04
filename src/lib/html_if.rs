@@ -83,9 +83,12 @@ impl<'a> HtmlIfRenderer<'a> {
                                        id = id,
                                        code = code));
                 html_if.curr_init
-                    .push_str(&format!("    document.getElementById(\"result_{id}\").innerHTML = fn_{id}();\n",
+                    .push_str(&format!("    result = fn_{id}();
+    if (result != undefined) {{
+        document.getElementById(\"result_{id}\").innerHTML = fn_{id}();
+    }}\n",
                                        id = id));
-                let content = format!("<p id = \"result_{}\"></p>\n",
+                let content = format!("<div id = \"result_{}\"></div>\n",
                                       (html_if.n_fn));
                 html_if.n_fn += 1;
                 Ok(content)
