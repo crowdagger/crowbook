@@ -96,6 +96,11 @@ impl<'a> HtmlIfRenderer<'a> {
                     }
                 }
                 gen_code.push_str(&code[i..]);
+                let container = if i == 0 {
+                    "p"
+                } else {
+                    "div"
+                };
                 let id = html_if.n_fn;
                 html_if.fn_defs
                     .push_str(&format!("function fn_{id}() {{
@@ -106,11 +111,12 @@ impl<'a> HtmlIfRenderer<'a> {
                 html_if.curr_init
                     .push_str(&format!("    result = fn_{id}();
     if (result != undefined) {{
-        document.getElementById(\"result_{id}\").innerHTML = fn_{id}();
+        document.getElementById(\"result_{id}\").innerHTML = result;
     }}\n",
                                        id = id));
-                let content = format!("<div id = \"result_{}\"></div>\n",
-                                      (html_if.n_fn));
+                let content = format!("<{container} id = \"result_{id}\"></{container}>\n",
+                                      id = (html_if.n_fn),
+                                      container = container);
                 html_if.n_fn += 1;
                 Ok(content)
                 
