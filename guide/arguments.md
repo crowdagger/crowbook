@@ -1,38 +1,16 @@
 Arguments 
 =========
 
-Crowbook can take a number of arguments:
+Crowbook can take a number of arguments, generally in the form:
 
-```text
-Render a Markdown book in EPUB, PDF or HTML.
-
-USAGE:
-    crowbook [OPTIONS] [--] [BOOK]
-
-FLAGS:
-    -h, --help            Print help information
-    -l, --list-options    List all possible options
-    -p, --proofread       Enable proofreading
-    -q, --quiet           Don't print info/error messages
-    -s, --single          Use a single Markdown file instead of a book configuration file
-    -v, --verbose         Print warnings in parsing/rendering
-    -V, --version         Print version information
-
-OPTIONS:
-    -c, --create <FILES>...            Create a new book with existing Markdown files
-    -o, --output <FILE>                Specify output file
-        --print-template <TEMPLATE>    Prints the default content of a template
-        --set <KEY_VALUES>             Set a list of book options
-    -t, --to <FORMAT>                  Generate specific format
-
-ARGS:
-    <BOOK>    File containing the book configuration file, or a Markdown file when called with --single
+```bash
+crowbook [OPTIONS] [BOOK]
 ```
 
-The most important option is obviously <BOOK>, i.e. the book
+The most important argument is obviously the book
 configuration file. It is mandatory in most cases: if you don't 
-pass it, Crowbook will simply display this help message. In a normal use case this is
-the only argument you'll need to pass, and Crowbook will generate
+pass it, Crowbook will simply display an error. In a normal use case this is
+the only argument you'll need to pass, as most options will be set in the 
 the book in all formats specified in the configuration file.
 
 It is, however, possible to pass more arguments to `crowbook`:
@@ -105,7 +83,7 @@ lang: fr
 `--single`
 ----------
 
-**usage**: `crowbook --single <FILE>`
+**Usage**: `crowbook --single <FILE>`
 
 (or `crowbook -s <FILE>`)
 
@@ -119,6 +97,8 @@ author: Joan Doe
 title: A short story
 output.html: short.html
 ---
+
+Content of the story in Markdown.
 ```
 
 If this YAML block is not at the beginning of a file, it must also be
@@ -142,32 +122,25 @@ documents (though they still appear in the TOC).
 `--set` 
 -------
 
-**usage**: `crowbook <BOOK> --set [KEY] [VALUE]...`
+**Usage**: `crowbook <BOOK> --set [KEY] [VALUE]...`
 
 This argument takes a list of  `KEY` `VALUE` pairs and allows setting or
 overriding a book configuration option. All valid options in the
 configuration files are valid as keys. For more information, see
 [the configuration file](config.md).
 
-### Examples ###
+### Example ###
 
 ```bash
-$ crowbook foo.book --set html.css style.css
+$ crowbook foo.book --set tex.paper_size a4paper
 ```
 
-will override the CSS for HTML generation (the `html.css` key) to the
-file `style.css`.
-
-```bash
-$ crowbook foo.book --set author Foo title Bar
-```
-
-will override the book title to `Bar` and its author to `Foo`.
+will override the paper size for PDF generation. 
 
 `--proofread`
 -------------
 
-**usage**: `crowbook --proofread <BOOK>`
+**Usage**: `crowbook --proofread <BOOK>`
 
 (or `crowbook -p <BOOK>`)
 
@@ -176,7 +149,7 @@ Equivalent to `--set proofread true`. Enable proofreading. See [Proofreading](pr
 `--list-options`
 ----------------
 
-**usage**: `crowbook --list-options`
+**Usage**: `crowbook --list-options`
 
 (or `crowbook -l`)
 
@@ -186,7 +159,7 @@ file, with `--set`, or in an inline YAML block.
 `--print-template`
 ------------------
 
-**usage**: `crowbook --print-template template`
+**Usage**: `crowbook --print-template <TEMPLATE>`
 
 Prints the built-in template to stdout. Useful if you want to
 customize the appearance of your document. E.g., if you want to modify
@@ -202,17 +175,15 @@ $ crowbook my.book --set html.css my_style.css
 `--verbose`
 -----------
 
-**usage**: `crowbook <BOOK> --verbose`
+**Usage**: `crowbook <BOOK> --verbose`
 
-If this flag is set, Crowbook will print the warnings it detects while
-parsing and rendering. These warnings are typically related to the
-inclusion of non-local images, linking to Markdown files that are not
-part of the book, and so on.
+If this flag is set, Crowbook will print more warnings it detects while
+parsing and rendering.
 
 `--to`
 ------
 
-**usage**: `crowbook <BOOK>--to [FORMAT]`
+**Usage**: `crowbook <BOOK> --to [FORMAT]`
 
 (or `crowbook <BOOK> -t [FORMAT]`)
 
@@ -242,7 +213,7 @@ will generate a `foo.pdf` file.
 `--output`
 ---------
 
-**usage**: `crowbook <BOOK> --to <FORMAT> --output <FILE> `
+**Usage**: `crowbook <BOOK> --to <FORMAT> --output <FILE> `
 
 (or `crowbook -t <FORMAT> -o <FILE> <BOOK>`)
 
@@ -252,7 +223,7 @@ Specifies an output file. Only valid when `--to` is used.
 `--lang`
 ----------
 
-**usage**: `crowbook --lang <LANG>`
+**Usage**: `crowbook --lang <LANG>`
 
 (or `crowbook -L <LANG>`)
 
@@ -266,11 +237,11 @@ use such an option, such as Windows).
 
 `$ crowbook --lang fr --help`
 
-will display Crowbook's help messages in french.
+will display Crowbook's help message in french.
 
 > Note that this argument has nothing to do with the `lang` option
 > that you can set in the book configuration file, which specifies the
 > language *of the book*. This argument specifies the language of the text messages
-> that Crowbook will display while running.
+> that Crowbook will display while running, but has no effect on the generated documents.
 
 

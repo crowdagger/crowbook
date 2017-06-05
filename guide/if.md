@@ -54,7 +54,7 @@ inside the document according to the reader's previous choices:
 You encounter a goblin, armed with a knife!
 
     if (user_has_sword) {
-	    return "You kill him with your sword, congratulation!";
+	    return "You kill him with your sword, congratulations!";
 	} else {
 	    return "You don't have any weapon, you die :(";
 	}

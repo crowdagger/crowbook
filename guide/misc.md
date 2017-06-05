@@ -35,20 +35,6 @@ obvious:
 * `--output -` tells Crowbook to display the result on the
   stdout, even if you set `output.html` to `some_file.html`.
 
-### Limitations
-
-While it renders correctly, this only works really nicely on standalone
-Markdown files where you have specified, e.g.:
-
-```markdown
----
-author: Your name
-title: Some title
----
-```
-
-Else, it will sets `author` and `title` to the default values.
-
 ## Embedding fonts in an EPUB file 
 
 In order to embed fonts in an EPUB file, you'll first have to edit the
@@ -81,7 +67,7 @@ resources.files: my_font.ttf
 ```
 
 
-(Note that you'll have to repeat the process the different
+(Note that you'll have to repeat the process for the different
 `font-weight` and `font-style` variants of your font if you want it to
 display correctly when there is some text in **bold**, *italics*, or **_both_**.) 
 

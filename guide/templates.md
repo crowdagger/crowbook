@@ -214,7 +214,7 @@ Crowbook also has some inline templates, that are set in the book configuration 
 * `rendering.chapter.template` sets the naming scheme for chapters,
   while `rendering.part.template` does the same for part. These are
   used only for text-only output, such as in the
-  TOC. `html.chapter.template` and `html.part.template` allow to do
+  TOC. `html.chapter.template` and `html.part.template` allow to 
   change the HTML formatting for parts and chapters. *These options
   should probably only be used if you know what you're doing, as they
   can break the document.* If you only need to change the name of

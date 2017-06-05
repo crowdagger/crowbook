@@ -15,8 +15,7 @@ version that highlights your grammar errors or your repetitions).
 Current proofreading features are:
 
 * repetition detection;
-* grammar check;
-* highlighting non-breaking spaces.
+* grammar check.
 
 Enabling proofreading
 ---------------------
@@ -122,17 +121,5 @@ HTML or PDF proofreading output files.
 
 > Note: running a grammar check on a long book (like a novel) can take
 > up to a few minutes.
-
-
-Highlighting non-breaking spaces 
---------------------------------
-
-The last proofreading feature is a bit less important, but it can be
-useful in some cases. It is is dis/activated by setting
-`proofread.nb_spaces` to "true" or "false", and it will highlight
-different sort of non-breaking spaces in HTML proofreading output
-files. This can be useful in some cases, but it is mostly a debugging
-feature to check that the french cleaner of Crowbook correctly
-replaces spaces with correct non-breaking spaces in the relevant places.
 
 
