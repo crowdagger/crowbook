@@ -115,6 +115,7 @@ pub struct Parser {
     features: Features,
 
     html_as_text: bool,
+    superscript: bool,
 }
 
 impl Parser {
@@ -125,13 +126,15 @@ impl Parser {
             source: Source::empty(),
             features: Features::new(),
             html_as_text: true,
+            superscript: false,
         }
     }
 
     /// Creates a parser with options from a book configuration file
     pub fn from(book: &Book) -> Parser {
         let mut parser = Parser::new();
-        parser.html_as_text(book.options.get_bool("crowbook.html_as_text").unwrap());
+        parser.html_as_text = book.options.get_bool("crowbook.html_as_text").unwrap();
+        parser.superscript = book.options.get_bool("crowbook.markdown.superscript").unwrap();
         parser
     }
     
@@ -183,10 +186,12 @@ impl Parser {
         find_standalone(&mut res);
 
         // Transform superscript and subscript
-        for mut token in &mut res {
-            if let Some(mut v) = token.inner_mut() {
-                self.parse_super_vec(&mut v);
-                self.parse_sub_vec(&mut v);
+        if self.superscript {
+            for mut token in &mut res {
+                if let Some(mut v) = token.inner_mut() {
+                    self.parse_super_vec(&mut v);
+                    self.parse_sub_vec(&mut v);
+                }
             }
         }
         
