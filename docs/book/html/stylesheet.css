@@ -55,6 +55,11 @@ h2.part {
     text-align: center;
 }
 
+/* The "Chapter X" section of a chapter */
+span.chapter-header {
+    font-size: 75%;
+}
+
 /* Title of the book */
 h1.title {
     text-align: center;
@@ -64,6 +69,12 @@ h1.title {
 h2.author {
     text-align: right;
     font-size:  200%;
+}
+
+/* Subtitle */
+h2.subtitle {
+    text-align: center;
+    font-size: 200%;
 }
 
 /* When toc is displayed inlined */
