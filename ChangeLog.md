@@ -21,6 +21,7 @@ unreleased
   * `crowbook.html_as_text`, if set to false, will not treat HTML as
     text but ignore it.
   * `subtitle`, as its name suggest, set the subtitle of a book.
+  * `crowbook.markdown.superscript` can enable or disable superscript/subscript "extension".
 * Rendering:
   * Change the way chapters are displayed by default.
   * PDF output now has a better-looking (hopefully) title page.
