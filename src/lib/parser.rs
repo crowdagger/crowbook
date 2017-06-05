@@ -187,12 +187,14 @@ impl Parser {
 
         // Transform superscript and subscript
         if self.superscript {
-            for mut token in &mut res {
-                if let Some(mut v) = token.inner_mut() {
-                    self.parse_super_vec(&mut v);
-                    self.parse_sub_vec(&mut v);
-                }
-            }
+//            for mut token in &mut res {
+                self.parse_super_vec(&mut res);
+                self.parse_sub_vec(&mut res);
+//                if let Some(mut v) = token.inner_mut() {
+//                    self.parse_super_vec(&mut v);
+//                    self.parse_sub_vec(&mut v);
+//                }
+//            }
         }
         
         Ok(res)
@@ -266,7 +268,7 @@ impl Parser {
         Ok(())
     }
     
-    /// Looks for super script in a vector of token
+    /// Looks for super script in a vector of tokens
     fn parse_super_vec(&mut self, mut v: &mut Vec<Token>) {
         for i in 0..v.len() {
             let new = if v[i].is_str() {
