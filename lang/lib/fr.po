@@ -49,7 +49,7 @@ msgstr "ODT"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:195
 msgid "HTML (interactive fiction)"
-msgstr "HTML (fiction ineéractive)"
+msgstr "HTML (fiction interactive)"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:250
 msgid "Error initializing book: could not set {key} to {value}: {error}"
