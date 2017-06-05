@@ -7,7 +7,6 @@ var initFns = [];
 {{{js_prelude}}}
 
 function showChapter(chap, noreset){
-    console.log("showchapter called with " + chap);
     initFns[chap]();
     if (!displayAll) {
         var chapters = document.getElementsByClassName("chapter");
@@ -55,7 +54,6 @@ function getChapter(elem) {
 
 window.onhashchange = function() {
     var hash = document.location.hash;
-    console.log(hash);
     if(!hash) {
         showChapter(0, true);
     } else {
