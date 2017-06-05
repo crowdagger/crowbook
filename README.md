@@ -3,11 +3,10 @@ Crowbook
 
 [![Travis status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook) [![Appveyor status](https://ci.appveyor.com/api/projects/status/bnj1rg76khth0aia?svg=true)](https://ci.appveyor.com/project/lise-henry/crowbook)
 
-Render a book written in markdown to HTML, EPUB and/or PDF.
-
-Crowbook's purpose is to allow you to automatically generate multiple
-output formats from a book written in Markdown. Its focus is
-novels, and the default settings should (hopefully) generate readable
+Crowbook's aim is to allow you to write a book in Markdown without
+worrying about formatting or typography, and let the program generate
+HTML, PDF and EPUB output for you. Its focus is
+novels and fiction, and the default settings should (hopefully) generate readable
 books with correct typography without requiring you to worry about it.
     
 Example
@@ -57,7 +56,11 @@ will automatically download the latest `crowbook` release on
 install it on your system.
 
 > Some dependencies also require building C libraries; you might thus
-> also need to install a C compiler and `make`/`cmake` build tools.
+> also need to install a C compiler and `make`/`cmake` build
+> tools. You can also try to build a version of Crowbook without
+> optional features: `cargo install crowbook --no-default-features
+> --features "clap"` will disable syntactic highlighting and
+> proofreading, requiring less dependencies.
 
 Dependencies
 ------------
@@ -80,7 +83,7 @@ $ crowbook <BOOK>
 ```
 
 where `BOOK` is a configuration file. Crowbook will parse this
-file and generate a book in HTML, EPUB, and/or PDF,
+file and generate HTML, EPUB, and/or PDF output formats,
 according to the settings in the configuration file. 
 
 To create a new book, assuming you have a
@@ -105,7 +108,7 @@ $ crowbook -s text.md
 ```
 
 
-For more information see the chapters
+For more information, see the chapters
 on [the arguments supported by `crowbook`](guide/arguments.md) and on [the configuration file](guide/config.md).
 
 
@@ -133,15 +136,16 @@ that can also be generated in PDF (and maybe ODT).
 
 ### Typographic "cleaning" ###
 
-Maybe the most specific "feature" of Crowbook is that (by default, it
-can be deactivated) it tries to "clean" the input files. By default,
+Maybe the most specific "feature" of Crowbook is that it does its best
+to "clean" the input text before rendering it. By default,
 it removes superfluous spaces and tries to use curly quotes. If the 
-book's language is set to french, it also tries its best to respect french
+book's language is set to french, it also tries to respect french
 typography by replacing spaces with non-breaking ones when it is
 appropriate (e.g. before '?', '!', ';' or ':').
 
 > Please
-> [open an issue](https://github.com/lise-henry/crowbook/issues/new) describing typographic rules if you want it to be
+> [open an issue](https://github.com/lise-henry/crowbook/issues/new)
+> describing typographic rules if you want them to be
 > implemented for other languages.
 
 ### Links handling ###
@@ -173,6 +177,11 @@ Crowbook can also generate "proofreading" copies in HTML or PDF,
 highlighting grammar errors and repetitions. For more information, see
 [the proofreading chapter of the guide](guide/proofreading.md). 
 
+### Interactive fiction ####
+
+Crowbook has experimental support for writing interactive fiction
+(only for HTML). For more information, read the [interactive fiction chapter](guide/if.md).
+
 ### Bugs ###
 
 See the [github's issue tracker](https://github.com/lise-henry/crowbook/issues).
@@ -186,28 +195,27 @@ Acknowledgements
 ----------------
 
 Besides the [Rust](https://www.rust-lang.org/) compiler and standard
-library, Crowbook uses the following libraries:
+library, Crowbook uses the following
+libraries:
+[pulldown-cmark](https://crates.io/crates/pulldown-cmark),
+[yaml-rust](https://crates.io/crates/yaml-rust),
+[mustache](https://crates.io/crates/mustache),
+[clap](https://github.com/kbknapp/clap-rs),
+[chrono](https://crates.io/crates/chrono),
+[uuid](https://crates.io/crates/uuid),
+[mime_guess](https://crates.io/crates/mime_guess),
+[crossbeam](https://crates.io/crates/crossbeam),
+[walkdir](https://crates.io/crates/walkdir),
+[rustc-serialize](https://crates.io/crates/rustc-serialize),
+[caribon](https://crates.io/crates/caribon),
+[hyper](https://crates.io/crates/hyper),
+[url](https://crates.io/crates/url),
+[lazy_static](https://crates.io/crates/lazy_static),
+[regex](https://crates.io/crates/regex),
+[term](https://crates.io/crates/term),
+[numerals](https://crates.io/crates/numerals), [syntect](https://crates.io/crates/syntect).
 
-* [pulldown-cmark](https://crates.io/crates/pulldown-cmark) 
-* [yaml-rust](https://crates.io/crates/yaml-rust) 
-* [mustache](https://crates.io/crates/mustache) 
-* [clap](https://github.com/kbknapp/clap-rs)
-* [chrono](https://crates.io/crates/chrono) 
-* [uuid](https://crates.io/crates/uuid) 
-* [mime_guess](https://crates.io/crates/mime_guess)
-* [crossbeam](https://crates.io/crates/crossbeam)
-* [walkdir](https://crates.io/crates/walkdir)
-* [rustc-serialize](https://crates.io/crates/rustc-serialize)
-* [caribon](https://crates.io/crates/caribon)
-* [hyper](https://crates.io/crates/hyper)
-* [url](https://crates.io/crates/url)
-* [lazy_static](https://crates.io/crates/lazy_static)
-* [regex](https://crates.io/crates/regex)
-* [term](https://crates.io/crates/term)
-* [numerals](https://crates.io/crates/numerals)
-* [syntect](https://crates.io/crates/syntect)
-
-It also embeds [Highlight.js](https://highlightjs.org/) in HTML output
+It can also embed [Highlight.js](https://highlightjs.org/) in HTML output
 to enable syntax highlighting for code blocks.
 
 It also uses configuration files from
@@ -221,8 +229,8 @@ from [Pandoc](http://pandoc.org/) and
 [mdBook](https://github.com/azerupi/mdBook).
 
 Also, the [W3C HTML validator](https://validator.w3.org/) and the
-[IDPF EPUB validator](http://validator.idpf.org/) proved very useful
-during development.
+[IDPF EPUB validator](http://validator.idpf.org/) prove very useful
+during development and testing.
 
 ChangeLog
 -----------
