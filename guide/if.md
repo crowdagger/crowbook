@@ -91,21 +91,27 @@ semicolons.
 As other renderers, there are options specific to the interactive
 fiction.
 
-**html.if.new_game** allows you to specify Javascript code that will
+**html.if.new_game** allows you to specify the path to a Javascript  that will
 be run at the beginning of the game. Since this code is not embedded
 in a function and is at the root (and the beginning) of the document,
-it is a good place to declare the global variables you might need,
+it is a good place to declare all the functions and the global
+variables you might need for your interactive fiction mechanics.
 e.g.:
 
 ```yaml
-html.if.new_game: "var hp = 100;"
+html.if.new_game: some_file.js
 ```
 
-**html.if.new_turn** allows you to specify some Javascript code that
-will be executed at the beginning of each segment. E.g.:
+**html.if.new_turn** and **html.if.end_turn** allow you to specify some Javascript code that
+will be executed at the beginning and the end of each segment. Unlike
+`html.if.new_game`, the (usually shorter) code is specified inline,
+and can return a string value that will be displayed at the beginning
+and the end of each segment. This is exactly like including code
+blocks at the beginning or the end of each of your Markdown file. E.g.:
 
 ```yaml
 html.if.new_turn: "nb_turns += 1;"
+html.end_turn: "return 'Turn: ' + nb_turns;"
 ```
 
 **html.if.script** allows you to specify the name of a Javascript file
