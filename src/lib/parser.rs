@@ -187,14 +187,8 @@ impl Parser {
 
         // Transform superscript and subscript
         if self.superscript {
-//            for mut token in &mut res {
-                self.parse_super_vec(&mut res);
-                self.parse_sub_vec(&mut res);
-//                if let Some(mut v) = token.inner_mut() {
-//                    self.parse_super_vec(&mut v);
-//                    self.parse_sub_vec(&mut v);
-//                }
-//            }
+            self.parse_super_vec(&mut res);
+            self.parse_sub_vec(&mut res);
         }
         
         Ok(res)
@@ -278,7 +272,7 @@ impl Parser {
                     unreachable!()
                 }
             } else {
-                if v[i].is_code() {
+                if v[i].is_code() || !v[i].is_container() {
                     continue;
                 } 
                 if let Some(ref mut inner) = v[i].inner_mut() {
@@ -308,7 +302,7 @@ impl Parser {
                     unreachable!()
                 }
             } else {
-                if v[i].is_code() {
+                if v[i].is_code() || !v[i].is_container() {
                     continue;
                 } 
                 if let Some(ref mut inner) = v[i].inner_mut() {

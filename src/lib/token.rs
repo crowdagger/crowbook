@@ -201,4 +201,17 @@ impl Token {
             _ => false
         }
     }
+
+    /// Returns true if token is a container (paragraph, quote, code block, code, emphasis, ..., but not links, images, and so on).
+    pub fn is_container(&self) -> bool {
+        match *self {
+            Token::CodeBlock(..) | Token::Code(..) | Token::Paragraph(..)
+                | Token::Header(..) | Token::Emphasis(..) | Token::Strong(..)
+                | Token::List(..) | Token::OrderedList(..) | Token::Table(..)
+                | Token::TableHead(..) | Token::TableRow(..) | Token::Footnote(..)
+                | Token::TableCell(..) | Token::Annotation(..) | Token::Item(..)
+                | Token::BlockQuote(..) => true,
+            _ => false,
+        }
+    }
 }
