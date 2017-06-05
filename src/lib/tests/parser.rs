@@ -1,9 +1,12 @@
 use parser::Parser;
 use token::Token;
+use book::Book;
 use super::test_eq;
 
 fn parse_from_str(doc: &str) -> Vec<Token> {
-    let mut parser = Parser::new();
+    let mut book = Book::new();
+    book.set_options(&[("crowbook.markdown.superscript", "true")]);
+    let mut parser = Parser::from(&book);
     parser.parse(doc).unwrap()
 }
 

@@ -638,6 +638,7 @@ fn test_parse_supb_str() {
     assert!(parse_super_sub("String without subscript", c).is_none());
     assert!(parse_super_sub("String \\~without\\~ subscript", c).is_none());
     assert!(parse_super_sub("String ~without subscript", c).is_none());
+    assert!(parse_super_sub("String ~without\nsubscript", c).is_none());
     assert!(parse_super_sub("String ~without subscript~", c).is_none());
     assert_eq!(parse_super_sub("~down~", c),
                Some(vec!(Token::Subscript(vec!(Token::Str(String::from("down")))))));
