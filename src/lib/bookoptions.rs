@@ -86,7 +86,7 @@ html.dir.template:tpl               # {html_dir_template}
 html.if.js:tpl                      # {if_js}
 html.if.new_turn:str               # {if_new_turn}
 html.if.end_turn:str                # {if_end_turn}
-html.if.new_game:str:\"\"           # {if_new_game}
+html.if.new_game:tpl                # {if_new_game}
 
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}

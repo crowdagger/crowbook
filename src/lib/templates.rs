@@ -46,6 +46,7 @@ pub mod html_dir {
 
 pub mod html_if {
     pub static JS: &str = include_str!("../../templates/html_if/script.js");
+    pub static NEW_GAME: &str = "";
 }
 
 pub mod latex {

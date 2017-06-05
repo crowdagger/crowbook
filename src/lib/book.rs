@@ -1024,6 +1024,7 @@ impl Book {
             "html.highlight.js" => highlight::JS,
             "html.highlight.css" => highlight::CSS,
             "html.if.js" => html_if::JS,
+            "html.if.new_game" => html_if::NEW_GAME,
             "tex.template" => latex::TEMPLATE,
             _ => {
                 return Err(Error::config_parser(&self.source,

@@ -244,7 +244,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_bool("one_chapter", true)
             .insert_str("js_prelude", mem::replace(&mut self.fn_defs, String::new()))
-            .insert_str("new_game", self.html.book.options.get_str("html.if.new_game").unwrap())
+            .insert_str("new_game", self.html.book.get_template("html.if.new_game").unwrap())
             .insert_str("common_script",
                         self.html.book.get_template("html.js").unwrap().as_ref())
             .build();
