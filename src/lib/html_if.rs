@@ -65,19 +65,33 @@ impl<'a> HtmlIfRenderer<'a> {
         let mut gen_code = String::new();
         let mut contains_md = false;
         let mut i = 0;
+        let mut variables = vec![];
+        
         while let Some(begin) = code[i..].find("@\"") {
             let begin = i + begin;
             if let Some(len) = code[begin..].find("\"@") {
                 contains_md = true;
                 let end = begin + len;
                 gen_code.push_str(&code[i..begin]);
+                
+                let mut md_part = &code[begin+2..end];
+                let rendered = self.render_vec(&Parser::new().parse(md_part)?)?;
+                while let Some(b) = md_part.find("{{") {
+                    md_part = &md_part[b+2..];
+                    if let Some(l) = md_part.find("}}") {
+                        variables.push(md_part[..l].to_owned());
+                    }
+                }
                 gen_code.push_str("crowbook_return_variable += \"");
-                gen_code.push_str(&self.render_vec(
-                    &Parser::new()
-                        .parse(&code[begin+2..end])?)?
+                    gen_code.push_str(&rendered 
                                   .replace('"', "\\\"")
                                   .replace('\n', "\\\n"));
-                gen_code.push_str("\";");
+                gen_code.push('"');
+                for var in &variables {
+                    gen_code.push_str(&format!(".replace(/{{{{{var}}}}}/, {var})",
+                                               var = var));
+                }
+                gen_code.push(';');
                 i = end + 2;
             }  else {
                 gen_code.push_str(&code[i..begin+2]);

@@ -85,6 +85,13 @@ Note that in this case you don't need to return a value, this is done
 behind your back. Similarly, `@"..."@` blocks don't require
 semicolons.
 
+If you need to access the value of a Javascript variable inside this
+Markdown code, you can use the `{{...}}` syntax:
+
+```markdown
+    var name = prompt("Enter your name", "world");
+	@"Hello, {{name}}"@
+```
 
 ## Interactive fiction options 
 
