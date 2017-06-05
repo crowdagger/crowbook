@@ -1,11 +1,16 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.12.0 (2017-06-05)
+-----------------------
+This release includes a few new features, such as the possiblity to
+include Markdown files as section/subsections and not only as chapter,
+experimental support for superscript and subscript, and yet more
+experimental support for writing interactive fiction. 
+
 * Book configuration file:
   * It is now possible to include subchapters using the `--` command
-    (with one dash per sublvel: `--- foo.md` will include `foo.md` as
+    (with one dash per sublevel: `--- foo.md` will include `foo.md` as
     a subsection).
 * Markdown:
   * Added support for superscript and subscript features, using
