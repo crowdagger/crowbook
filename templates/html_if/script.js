@@ -4,10 +4,6 @@ var initFns = [];
 
 {{{new_game}}}
 
-function new_turn() {
-    {{{new_turn}}}
-}
-
 {{{js_prelude}}}
 
 function showChapter(chap, noreset){

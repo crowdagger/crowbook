@@ -84,7 +84,8 @@ html.dir.template:tpl               # {html_dir_template}
 
 # {html_if_opt}
 html.if.js:tpl                      # {if_js}
-html.if.new_turn:str:\"\"           # {if_new_turn}
+html.if.new_turn:str               # {if_new_turn}
+html.if.end_turn:str                # {if_end_turn}
 html.if.new_game:str:\"\"           # {if_new_game}
 
 # {epub_opt}
@@ -263,6 +264,7 @@ crowbook.verbose:alias                              # {removed}
                                          single_js = lformat!("Path of a javascript file"),
                                          if_js = lformat!("Path of a javascript file"),
                                          if_new_turn = lformat!("Javascript code that will be run at the beginning of each segment"),
+                                         if_end_turn = lformat!("Javascript code that will be run at the end of each segment"),
                                          if_new_game = lformat!("Javascript code that will be run at the beginning of a 'game'"),
 
                                          html_chapter_template = lformat!("Inline template for HTML chapter formatting"),

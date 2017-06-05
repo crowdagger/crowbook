@@ -60,6 +60,62 @@ impl<'a> HtmlIfRenderer<'a> {
         )
     }
 
+    /// Parse embedded javascript code
+    pub fn parse_inner_code(&mut self, code: &str) -> Result<String> {
+        let mut gen_code = String::new();
+        let mut contains_md = false;
+        let mut i = 0;
+        while let Some(begin) = code[i..].find("@\"") {
+            let begin = i + begin;
+            if let Some(len) = code[begin..].find("\"@") {
+                contains_md = true;
+                let end = begin + len;
+                gen_code.push_str(&code[i..begin]);
+                gen_code.push_str("crowbook_return_variable += \"");
+                gen_code.push_str(&self.render_vec(
+                    &Parser::new()
+                        .parse(&code[begin+2..end])?)?
+                                  .replace('"', "\\\"")
+                                  .replace('\n', "\\\n"));
+                gen_code.push_str("\";");
+                i = end + 2;
+            }  else {
+                gen_code.push_str(&code[i..begin+2]);
+                i = begin + 2;
+            }
+        }
+        gen_code.push_str(&code[i..]);
+        if contains_md {
+            gen_code = format!("var crowbook_return_variable = \"\";
+{}
+return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
+                                       gen_code);
+        }
+        let container = if !contains_md {
+            "p"
+        } else {
+            "div"
+        };
+        let id = self.n_fn;
+        self.fn_defs
+            .push_str(&format!("function fn_{id}() {{
+    {code}
+}}\n",
+                               id = id,
+                               code = gen_code));
+        self.curr_init
+            .push_str(&format!("    result = fn_{id}();
+    if (result != undefined) {{
+        document.getElementById(\"result_{id}\").innerHTML = result;
+    }}\n",
+                               id = id));
+        let content = format!("<{container} id = \"result_{id}\"></{container}>\n",
+                              id = (self.n_fn),
+                              container = container);
+        self.n_fn += 1;
+        Ok(content)
+    }
+
     /// Renders a token
     ///
     /// Used by render_token implementation of Renderer trait. Separate function
@@ -75,57 +131,7 @@ impl<'a> HtmlIfRenderer<'a> {
             Token::CodeBlock(ref language, ref v) if language == "" => {
                 let mut html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = view_as_text(v);
-                let mut gen_code = String::new();
-                let mut contains_md = false;
-                let mut i = 0;
-                while let Some(begin) = code[i..].find("@\"") {
-                    let begin = i + begin;
-                    if let Some(len) = code[begin..].find("\"@") {
-                        contains_md = true;
-                        let end = begin + len;
-                        gen_code.push_str(&code[i..begin]);
-                        gen_code.push_str("crowbook_return_variable += \"");
-                        gen_code.push_str(&html_if.render_vec(
-                            &Parser::new()
-                                .parse(&code[begin+2..end])?)?
-                                          .replace('"', "\\\"")
-                                          .replace('\n', "\\\n"));
-                        gen_code.push_str("\";");
-                        i = end + 2;
-                    }  else {
-                        gen_code.push_str(&code[i..begin+2]);
-                        i = begin + 2;
-                    }
-                }
-                gen_code.push_str(&code[i..]);
-                if contains_md {
-                    gen_code = format!("var crowbook_return_variable = \"\";
-{}
-return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
-                                       gen_code);
-                }
-                let container = if !contains_md {
-                    "p"
-                } else {
-                    "div"
-                };
-                let id = html_if.n_fn;
-                html_if.fn_defs
-                    .push_str(&format!("function fn_{id}() {{
-    {code}
-}}\n",
-                                       id = id,
-                                       code = gen_code));
-                html_if.curr_init
-                    .push_str(&format!("    result = fn_{id}();
-    if (result != undefined) {{
-        document.getElementById(\"result_{id}\").innerHTML = result;
-    }}\n",
-                                       id = id));
-                let content = format!("<{container} id = \"result_{id}\"></{container}>\n",
-                                      id = (html_if.n_fn),
-                                      container = container);
-                html_if.n_fn += 1;
+                let content = html_if.parse_inner_code(&code)?;
                 Ok(content)
                 
             },
@@ -145,6 +151,11 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             self.html.handler.add_link(chapter.filename.as_ref(),
                                        format!("#chapter-{}", i));
         }
+
+        let pre_code = self.html.book.options.get_str("html.if.new_turn")
+            .unwrap_or("");
+        let post_code = self.html.book.options.get_str("html.if.end_turn")
+            .unwrap_or("");
 
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             let n = chapter.number;
@@ -177,13 +188,22 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             }
             titles.push(title);
 
+            let mut chapter_content = String::new();
+
+            if !pre_code.is_empty() {
+                chapter_content.push_str(&self.parse_inner_code(pre_code)?);
+            }
+            chapter_content.push_str(&HtmlRenderer::render_html(self, v, render_notes_chapter)?);
+            if !post_code.is_empty() {
+                chapter_content.push_str(&self.parse_inner_code(post_code)?);
+            }
+            
             chapters.push(format!("<div id = \"chapter-{}\" class = \"chapter\">
   {}
 </div>",
                                   i,
-                                  HtmlRenderer::render_html(self, v, render_notes_chapter)?));
+                                  chapter_content));
             self.fn_defs.push_str(&format!("initFns.push(function () {{
-    new_turn();
     {code}
 }})\n",
                                            code = self.curr_init));
@@ -224,7 +244,6 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_bool("one_chapter", true)
             .insert_str("js_prelude", mem::replace(&mut self.fn_defs, String::new()))
-            .insert_str("new_turn", self.html.book.options.get_str("html.if.new_turn").unwrap())
             .insert_str("new_game", self.html.book.options.get_str("html.if.new_game").unwrap())
             .insert_str("common_script",
                         self.html.book.get_template("html.js").unwrap().as_ref())
