@@ -149,6 +149,26 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                 Ok(content)
                 
             },
+            Token::CodeBlock(ref language, ref v) if language.starts_with(|c| c == '<' || c == '>') => {
+                let mut html_if: &mut HtmlIfRenderer = this.as_mut();
+                let code = format!("if (passageCount(state.current_id) {expr}) {{
+    {code};
+}}\n",
+                                   code = view_as_text(v),
+                                   expr = language);
+                let content = html_if.parse_inner_code(&code)?;
+                Ok(content)
+            },
+            Token::CodeBlock(ref language, ref v) if language.parse::<u32>().is_ok() => {
+                let mut html_if: &mut HtmlIfRenderer = this.as_mut();
+                let code = format!("if (passageCount(state.current_id) == {n}) {{
+    {code};
+}}\n",
+                                   code = view_as_text(v),
+                                   n = language.parse::<u32>().unwrap());
+                let content = html_if.parse_inner_code(&code)?;
+                Ok(content)
+            },
             _ => HtmlRenderer::static_render_token(this, token)
         }
     }
@@ -218,6 +238,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                                   i,
                                   chapter_content));
             self.fn_defs.push_str(&format!("initFns.push(function () {{
+    state.visited.push(state.current_id);
     {code}
 }})\n",
                                            code = self.curr_init));

@@ -1,3 +1,28 @@
+var default_actions = {};
+var state = {
+    current_id: 0,
+    visited: [],
+    actions: {},
+};
+
+function perform_action(action) {
+    var act = state.actions[action];
+    if (act != null) {
+	return act();
+    } else {
+	act = default_actions[action];
+	if (act != null) {
+	    return act();
+	}
+    }
+}
+
+function passageCount(n) {
+    var count = state.visited.filter(v => v === n).length;
+    console.log("passagecount(" + n + ") = " + count);
+    return count;
+}
+
 {{{common_script}}}
 
 var initFns = [];
@@ -7,6 +32,8 @@ var initFns = [];
 {{{js_prelude}}}
 
 function showChapter(chap, noreset){
+    state.current_id = chap;
+    console.log(state.visited);
     initFns[chap]();
     if (!displayAll) {
         var chapters = document.getElementsByClassName("chapter");

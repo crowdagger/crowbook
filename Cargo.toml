@@ -1,6 +1,6 @@
 [package]
 name = "crowbook"
-version = "0.12.0"
+version = "0.12.1-pre"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Render a Markdown book in HTML, PDF or Epub"
 repository = "https://github.com/lise-henry/crowbook"
