@@ -1,11 +1,11 @@
 INSTALL_DIR = /usr/bin/
 BINARYNAME = crowbook
-TARGET = x86_64-unknown-linux-musl
+TARGET = x86_64-unknown-linux-gnu
 BINARY = target/$(TARGET)/release/$(BINARYNAME)
 
 PKGNAME= $(BINARYNAME)
 MAINTAINER = "Élisabeth Henry \<liz.henry@ouvaton.org\>"
-PKGVERSION = "0.11.4"
+PKGVERSION = "0.12.1"
 PKGLICENSE = "LGPL-2.1+"
 
 default: $(BINARY)
