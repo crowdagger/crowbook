@@ -93,6 +93,26 @@ Markdown code, you can use the `{{...}}` syntax:
 	@"Hello, {{name}}"@
 ```
 
+## Conditional blocks
+
+Sometimes, you want some text (or Javascript code) to only be
+displayed (or run) when the reader reads this passage the first time,
+or alternatively when she goes back to it. While it is trivial to add
+some code to check that, it is a common enough pattern to justify its
+own variant : you'll juste have to insert a named code block with the number:
+
+    ```1
+    @"Only displayed at first passage"@
+    ```
+    
+	```2 
+    @"Only displayed at second passage"@
+    ```
+
+    ```>2
+    @"Displayed at passage 3, 4 and so on.
+    ```
+
 ## Interactive fiction options 
 
 As other renderers, there are options specific to the interactive
