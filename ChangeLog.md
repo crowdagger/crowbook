@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+unreleased
+------------
+* Interactive fiction:
+  * Added conditional blocks.
+* Bugfixes:
+  * LaTeX: fix rendering of part/chapter (part previously displayed as
+    chapter and its first chapter as part)
+
 0.12.0 (2017-06-05)
 -----------------------
 This release includes a few new features, such as the possiblity to
