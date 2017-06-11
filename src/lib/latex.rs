@@ -139,6 +139,7 @@ impl<'a> LatexRenderer<'a> {
         
         for (i, chapter) in self.book.chapters.iter().enumerate() {
             let n = chapter.number;
+            self.current_chapter = n;
             let v = &chapter.content;
             self.source = Source::new(chapter.filename.as_str());
             let mut offset = 0;
@@ -149,7 +150,6 @@ impl<'a> LatexRenderer<'a> {
             write!(content,
                    "\\label{{chapter-{}}}\n",
                    i)?;
-            self.current_chapter = n;
             content.push_str(&self.render_vec(&v[offset..])?);
         }
         self.source = Source::empty();
