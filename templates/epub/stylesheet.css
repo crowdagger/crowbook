@@ -107,7 +107,7 @@ h2.subtitle {
 }
 
 .rule {
-    text-align: center;
+    text-align: center !important;
     margin-top: 1em;
     margin-bottom: 1em;
     font-weight: bold;
