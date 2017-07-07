@@ -311,7 +311,7 @@ impl fmt::Display for Error {
             Inner::GrammarCheck(ref s) => {
                 write!(f,
                        "{}",
-                       lformat!("Error connecting to language tool server: {error}",
+                       lformat!("Error while trying to check grammar: {error}",
                                 error = s))
             }
             Inner::Parser(ref s) => {

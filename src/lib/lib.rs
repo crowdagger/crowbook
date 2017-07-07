@@ -179,6 +179,8 @@ mod text_view;
 #[cfg(feature = "proofread")]
 mod grammar_check;
 #[cfg(feature = "proofread")]
+mod grammalecte;
+#[cfg(feature = "proofread")]
 mod repetition_check;
 
 

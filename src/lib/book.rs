@@ -42,12 +42,23 @@ use repetition_check::RepetitionDetector;
 
 #[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
+#[cfg(feature = "proofread")]
+use grammalecte::GrammalecteChecker;
 
 // Dummy grammarchecker thas does nothing to let the compiler compile
 #[cfg(not(feature = "proofread"))]
 struct GrammarChecker {}
 #[cfg(not(feature = "proofread"))]
 impl GrammarChecker {
+    fn check_chapter(&self, _: &[Token]) -> Result<()> {
+        Ok(())
+    }
+}
+// Dummy grammalectechecker thas does nothing to let the compiler compile
+#[cfg(not(feature = "proofread"))]
+struct GrammalecteChecker {}
+#[cfg(not(feature = "proofread"))]
+impl GrammalecteChecker {
     fn check_chapter(&self, _: &[Token]) -> Result<()> {
         Ok(())
     }
@@ -161,6 +172,7 @@ pub struct Book {
     chapter_template: Option<Template>,
     part_template: Option<Template>,
     checker: Option<GrammarChecker>,
+    grammalecte: Option<GrammalecteChecker>,
     detector: Option<RepetitionDetector>,
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
 }
@@ -178,6 +190,7 @@ impl Book {
             chapter_template: None,
             part_template: None,
             checker: None,
+            grammalecte: None,
             detector: None,
             formats: HashMap::new(),
             features: Features::new(),
@@ -668,7 +681,19 @@ impl Book {
                     Ok(checker) => self.checker = Some(checker),
                     Err(e) => {
                         self.logger
-                            .error(lformat!("{error}. Proceeding without checking grammar.", error = e))
+                            .error(lformat!("{error}. Proceeding without using languagetool.", error = e))
+                    }
+                }
+            }
+            if self.options.get_bool("proofread.grammalecte").unwrap() {
+                let port = self.options.get_i32("proofread.grammalecte.port").unwrap() as usize;
+                let lang = self.options.get_str("lang").unwrap();
+                let checker = GrammalecteChecker::new(port, lang);
+                match checker {
+                    Ok(checker) => self.grammalecte = Some(checker),
+                    Err(e) => {
+                        self.logger
+                            .error(lformat!("{error}. Proceeding without using grammalecte.", error = e))
                     }
                 }
             }
@@ -883,11 +908,22 @@ impl Book {
         if cfg!(feature = "proofread") && self.is_proofread() {
             if let Some(ref checker) = self.checker {
                 self.logger
-                    .info(lformat!("Trying to run grammar check on {file}, this might take a \
+                    .info(lformat!("Trying to run languagetool on {file}, this might take a \
                                     while...",
                                    file = misc::normalize(file)));
                 if let Err(err) = checker.check_chapter(&mut tokens) {
-                    self.logger.error(lformat!("Error running grammar check on {file}: {error}",
+                    self.logger.error(lformat!("Error running languagetool on {file}: {error}",
+                                               file = misc::normalize(file),
+                                               error = err));
+                }
+            }
+            if let Some(ref checker) = self.grammalecte {
+                self.logger
+                    .info(lformat!("Trying to run grammalecte on {file}, this might take a \
+                                    while...",
+                                   file = misc::normalize(file)));
+                if let Err(err) = checker.check_chapter(&mut tokens) {
+                    self.logger.error(lformat!("Error running grammalecte on {file}: {error}",
                                                file = misc::normalize(file),
                                                error = err));
                 }

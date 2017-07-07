@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -29,16 +29,14 @@ use token::Token;
 use token::Data;
 use error::{Error, Result, Source};
 
-/// Represents a grammar error from language tool
+/// Represents a grammar error from Grammalecte
 ///
 /// Note: lots of fields are missing
 #[derive(RustcDecodable, RustcEncodable, Debug)]
-struct GrammarError {
-    pub message: String,
-    pub offset: usize,
-    pub length: usize,
-    pub short_message: Option<String>,
-    pub issue_type: Option<String>,
+struct GrammalecteError {
+    pub sMessage: String,
+    pub nStart: usize,
+    pub nEnd: usize,
 }
 
 /// Contains a list of matches to errors
@@ -47,30 +45,37 @@ struct GrammarError {
 ///
 /// Note: lots of fields are missing
 #[derive(RustcDecodable, RustcEncodable, Debug)]
-struct GrammarCheck {
-    pub matches: Vec<GrammarError>,
+struct GrammalecteData {
+    pub lGrammarErrors: Vec<GrammalecteError>,
 }
 
-/// GrammarChecker
-pub struct GrammarChecker {
-    lang: String,
+#[derive(RustcDecodable, RustcEncodable, Debug)]
+struct GrammalecteCheck {
+    data: Vec<GrammalecteData>,
+}
+    
+/// Grammalecte Checker
+pub struct GrammalecteChecker {
     port: usize,
 }
 
-impl GrammarChecker {
+impl GrammalecteChecker {
     /// Initialize the grammarchecker
-    pub fn new<S: Into<String>>(port: usize, lang: S) -> Result<GrammarChecker> {
-        let checker = GrammarChecker {
-            lang: lang.into(),
+    pub fn new<S: Into<String>>(port: usize, lang: S) -> Result<GrammalecteChecker> {
+        let lang = lang.into();
+        if !lang.starts_with("fr") {
+            return Err(Error::grammar_check(Source::empty(), lformat!("grammalecte only works with 'fr' lang")));
+        }
+        let checker = GrammalecteChecker {
             port: port,
         };
 
         let res = Client::new()
-            .get(&format!("http://localhost:{}/v2/languages", port))
+            .get(&format!("http://localhost:{}", port))
             .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
-                                     lformat!("could not connect to language tool server: {error}",
+                                     lformat!("could not connect to grammalecte server: {error}",
                                               error = e))
             })?;
         if res.status != hyper::Ok {
@@ -82,15 +87,15 @@ impl GrammarChecker {
     }
 
     /// Send a query to LanguageTools server and get back a list of errors
-    fn check(&self, text: &str) -> Result<GrammarCheck> {
+    fn check(&self, text: &str) -> Result<GrammalecteCheck> {
         let query: String = form_urlencoded::Serializer::new(String::new())
-            .append_pair("language", &self.lang)
             .append_pair("text", text)
+            .append_pair("options", "{\"apos\": false, \"nbsp\": false, \"esp\": false}")
             .finish();
 
         let client = Client::new();
 
-        let mut res = client.post(&format!("http://localhost:{}/v2/check", self.port))
+        let mut res = client.post(&format!("http://localhost:{}/gc_text/fr", self.port))
             .body(&query)
             .send()
             .map_err(|e| {
@@ -111,7 +116,7 @@ impl GrammarChecker {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not read response: {error}", error = e))
             })?;
-        let reponse: GrammarCheck = json::decode(&s)
+        let reponse: GrammalecteCheck = json::decode(&s)
             .map_err(|e| {
                 Error::default(Source::empty(),
                                lformat!("could not decode JSON: {error}", error = e))
@@ -121,7 +126,7 @@ impl GrammarChecker {
 }
 
 
-impl GrammarChecker {
+impl GrammalecteChecker {
     /// Check the grammar in a vector of tokens.
     ///
     /// This modifies the AST
@@ -135,11 +140,16 @@ impl GrammarChecker {
                     Token::List(ref mut v) |
                     Token::OrderedList(_, ref mut v) => {
                         let check = self.check(&view_as_text(v))?;
-                        for error in check.matches {
-                            insert_annotation(v,
-                                              &Data::GrammarError(error.message.clone()),
-                                              error.offset,
-                                              error.length);
+                        if check.data.len() >= 1 {
+                            for error in &check.data[0].lGrammarErrors {
+                                insert_annotation(v,
+                                                  &Data::GrammarError(error.sMessage.clone()),
+                                                  error.nStart,
+                                                  error.nEnd - error.nStart);
+                            }
+                        }
+                        if check.data.len() > 1 {
+                            println!("Warning!!! Too much data for us");
                         }
                         Ok(())
                     },

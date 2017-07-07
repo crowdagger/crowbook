@@ -143,6 +143,8 @@ output.proofread.pdf:path           # {prf_pdf}
 proofread:bool:false                              # {prf}
 proofread.languagetool:bool:false                 # {prf_lng}
 proofread.languagetool.port:int:8081              # {prf_lng_port}
+proofread.grammalecte:bool:false                  # {prf_grammalecte}
+proofread.grammalecte.port:int:8080               # {prf_grammalecte_port}
 proofread.repetitions:bool:false                  # {prf_repet}
 proofread.repetitions.max_distance:int:25         # {prf_max_dist}
 proofread.repetitions.fuzzy:bool:true             # {prf_fuzzy}
@@ -313,6 +315,8 @@ crowbook.verbose:alias                              # {removed}
                                          prf = lformat!("If set to false, will disactivate proofreading even if one of output.proofread.x is present"),
                                          prf_lng = lformat!("If true, try to use language tool server to grammar check the book"),
                                          prf_lng_port = lformat!("Port to connect to languagetool-server"),
+                                         prf_grammalecte = lformat!("If true, try to use grammalecte server to grammar check the book"),
+                                         prf_grammalecte_port = lformat!("Port to connect to grammalecte server"),
                                          prf_repet = lformat!("If set to true, use Caribon to detect repetitions"),
                                          prf_max_dist = lformat!("Max distance between two occurences so it is considered a repetition"),
                                          prf_fuzzy = lformat!("Enable fuzzy string matching"),
