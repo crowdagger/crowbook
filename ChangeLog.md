@@ -3,6 +3,7 @@ ChangeLog
 
 unreleased
 ------------
+* Add support for grammalecte grammar checker.
 * Interactive fiction:
   * Added conditional blocks.
 * Bugfixes:

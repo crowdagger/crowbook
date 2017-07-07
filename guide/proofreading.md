@@ -89,6 +89,8 @@ For more information, see
 Grammar checking
 ----------------
 
+## With languagetool
+
 Crowbook can also use [LanguageTool](https://languagetool.org/) to
 detect grammar errors in your text. It is, however, a bit more
 complex to activate. 
@@ -122,4 +124,26 @@ HTML or PDF proofreading output files.
 > Note: running a grammar check on a long book (like a novel) can take
 > up to a few minutes.
 
+## With Grammalecte
 
+[Grammalecte](http://grammalecte.net/) is a grammar checker
+specialized for french language. If the language of your book is
+french, you can use it in a similar fashion to languagetool: 
+
+```yaml
+# Activate grammalecte support
+proofread.grammalecte: true
+# (Optional) Sets the port number to connect to (default below)
+proofread.grammalecte.port: 8080
+```
+
+You'll also need to run the Grammalecte server. First [download the CLI
+and server version](https://www.dicollecte.org/#download_div), then:
+
+```bash
+$ python3 server.py
+```
+
+You can then run Crowbook with `--proofread` to check the grammar of
+your book. It is possible to run both LanguageTool and Grammalecte on
+the same book (though might take some minutes a long book...).
