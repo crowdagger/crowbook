@@ -33,7 +33,7 @@ use error::{Error, Result, Source};
 ///
 /// Note: lots of fields are missing
 #[derive(RustcDecodable, RustcEncodable, Debug)]
-pub struct GrammarError {
+struct GrammarError {
     pub message: String,
     pub offset: usize,
     pub length: usize,
@@ -47,7 +47,7 @@ pub struct GrammarError {
 ///
 /// Note: lots of fields are missing
 #[derive(RustcDecodable, RustcEncodable, Debug)]
-pub struct GrammarCheck {
+struct GrammarCheck {
     pub matches: Vec<GrammarError>,
 }
 
