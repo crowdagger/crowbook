@@ -32,6 +32,7 @@ use error::{Error, Result, Source};
 /// Represents a grammar error from Grammalecte
 ///
 /// Note: lots of fields are missing
+#[allow(non_snake_case)]
 #[derive(RustcDecodable, RustcEncodable, Debug)]
 struct GrammalecteError {
     pub sMessage: String,
@@ -44,6 +45,7 @@ struct GrammalecteError {
 /// Corresponds to the JSON that LanguageTool-server sends back
 ///
 /// Note: lots of fields are missing
+#[allow(non_snake_case)]
 #[derive(RustcDecodable, RustcEncodable, Debug)]
 struct GrammalecteData {
     pub lGrammarErrors: Vec<GrammalecteError>,
