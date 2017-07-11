@@ -653,7 +653,7 @@ impl<'a> HtmlRenderer<'a> {
     {{#has_version}}"version": "{{{version}}}",{{/has_version}}
     {{#has_subtitle}}"alternateName": "{{{subtitle}}}",{{/has_subtitle}}
     {{#has_subject}}"keywords": "{{{subject}}}",{{/has_subject}}
-    {{#has_license}}"license": "{{{license}}",{{/has_license}
+    {{#has_license}}"license": "{{{license}}}",{{/has_license}}
     {{#has_description}}"about": "{{{description}}}",{{/has_description}}
     "inLanguage": "{{{lang}}}"
 
