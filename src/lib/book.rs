@@ -1233,6 +1233,8 @@ impl Book {
                                                           error = err)));
                     }
                 }
+            } else {
+                mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), false);
             }
         }
 
