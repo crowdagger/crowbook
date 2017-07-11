@@ -28,6 +28,7 @@ use text_view::insert_annotation;
 use token::Token;
 use token::Data;
 use error::{Error, Result, Source};
+use logger::Logger;
 
 /// Represents a grammar error from Grammalecte
 ///
@@ -151,7 +152,7 @@ impl GrammalecteChecker {
                             }
                         }
                         if check.data.len() > 1 {
-                            println!("Warning!!! Too much data for us");
+                            Logger::display_warning(lformat!("some error messages from Grammalecte were ignored because of format"));
                         }
                         Ok(())
                     },
