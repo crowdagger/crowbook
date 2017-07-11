@@ -30,8 +30,9 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
     match *token {
         Token::Str(ref s) => f(s),
 
+        Token::SoftBreak => f(" "),
+        
         Token::Rule |
-        Token::SoftBreak |
         Token::HardBreak => f("\n"),
 
         Token::Image(..) |
