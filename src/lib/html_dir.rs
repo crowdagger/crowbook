@@ -267,6 +267,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .insert_str("content", content?)
                 .insert_str("chapter_title",
                             titles[i].clone())
+                .insert_str("json_data", self.html.get_json_ld()?)
                 .insert_str("chapter_title_raw",
                             titles_raw[i].clone())
                 .insert_str("toc", toc.clone())

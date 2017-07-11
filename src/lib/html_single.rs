@@ -229,6 +229,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             .insert_str("menu_svg", menu_svg)
             .insert_str("book_svg", book_svg)
             .insert_str("pages_svg", pages_svg)
+            .insert_str("json_data", self.html.get_json_ld()?)
             .insert_str("footer", HtmlRenderer::get_footer(self)?)
             .insert_str("header", HtmlRenderer::get_header(self)?);
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
