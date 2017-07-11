@@ -296,6 +296,7 @@ below.
 | A variable whose name corresponds to `lang` in book options (e.g. `lang_en` if lang is set to "en", `lang_fr` if it is set to "fr", ...) | `true`  | `html.css`, `epub.css` |
 | `chapter_title` | The title of current chapter | `html.dir.template`, `epub.chapter.xhtml`, `rendering.chapter.template` |
 | `chapter_title_raw` | The title of current chapter (raw text without HTML formatting) | `html.dir.template`, `epub.chapter.xhtml`, `rendering.chapter.template` |
+| `json_data`  | Contains structured data with book's metadata in JSON-LD format | `html.standalone.template`, `html.dir.template` |
 | `highlight_code` | True if `html.highlight_code` is true | `html.standalone.template`, `html.dir.template` |
 | `highlight_css` | The content of `html.highlight.css` | `html.standalone.template` |
 | `highlight_js` | The base64-encoded content of `html.highlight.js` | `html.standalone.tempate` |
