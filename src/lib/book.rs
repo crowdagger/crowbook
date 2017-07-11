@@ -1223,7 +1223,11 @@ impl Book {
                     Ok(content) => {
                         mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), raw);
                         mapbuilder = mapbuilder.insert_str(&key, content);
-                        mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                        if !content.is_empty() {
+                            mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                        } else {
+                            mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), false);
+                        }
                     }
                     Err(err) => {
                         return Err(Error::render(&self.source,
