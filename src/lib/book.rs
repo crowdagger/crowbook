@@ -1221,9 +1221,10 @@ impl Book {
                 let raw = view_as_text(&Parser::from(&self).parse(s)?);
                 match content {
                     Ok(content) => {
-                        mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), raw);
-                        mapbuilder = mapbuilder.insert_str(&key, content);
                         if !content.is_empty() {
+                            mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), raw);
+                            mapbuilder = mapbuilder.insert_str(&key, content);
+
                             mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
                         } else {
                             mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), false);
