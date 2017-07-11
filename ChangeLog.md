@@ -6,6 +6,8 @@ unreleased
 * Add support for grammalecte grammar checker.
 * Interactive fiction:
   * Added conditional blocks.
+* HTML:
+  * Add JSON-LD structured data to the book's HTML files.
 * Bugfixes:
   * LaTeX: fix rendering of part/chapter (part previously displayed as
     chapter and its first chapter as part)
