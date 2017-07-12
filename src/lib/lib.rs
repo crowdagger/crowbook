@@ -143,6 +143,7 @@ pub use logger::{Logger, InfoLevel};
 pub use renderer::Renderer;
 pub use book_renderer::BookRenderer;
 pub use chapter::Chapter;
+pub use stats::Stats;
 
 #[macro_use]
 #[doc(hidden)]
@@ -169,6 +170,7 @@ mod book_renderer;
 mod html_single;
 mod html_if;
 mod syntax;
+mod stats;
 
 mod zipper;
 mod templates;
