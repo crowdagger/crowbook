@@ -16,8 +16,9 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use rustc_serialize::json;
-use reqwest;
-use reqwest::Client;
+use hyper;
+use hyper::Client;
+use url::form_urlencoded;
 use rayon::prelude::*;
 
 use std::io::Read;
@@ -72,13 +73,15 @@ impl GrammalecteChecker {
             port: port,
         };
 
-        let res = reqwest::get(&format!("http://localhost:{}/v2/languages", port))
+        let res = Client::new()
+            .get(&format!("http://localhost:{}", port))
+            .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not connect to grammalecte server: {error}",
                                               error = e))
             })?;
-        if !res.status().is_success() {
+        if res.status != hyper::Ok {
             return Err(Error::grammar_check(Source::empty(),
                                             lformat!("server didn't respond with a OK status \
                                                       code")));
@@ -88,28 +91,15 @@ impl GrammalecteChecker {
 
     /// Send a query to LanguageTools server and get back a list of errors
     fn check(&self, text: &str) -> Result<GrammalecteCheck> {
-        let params = [("text", text), ("options", "{\"apos\": false, \"nbsp\": false, \"esp\": false}")];
+        let query: String = form_urlencoded::Serializer::new(String::new())
+            .append_pair("text", text)
+            .append_pair("options", "{\"apos\": false, \"nbsp\": false, \"esp\": false}")
+            .finish();
 
-        let client = Client::new()
-            .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not start reqwest client: {error}",
-                                              error = e))
-            })?;
+        let client = Client::new();
 
-
-        let mut res = client.post(&format!("http://localhost:{}/v2/check", self.port))
-            .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not build post request: {error}",
-                                              error = e))
-            })?
-            .form(&params)
-            .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not build form: {error}",
-                                              error = e))
-            })?
+        let mut res = client.post(&format!("http://localhost:{}/gc_text/fr", self.port))
+            .body(&query)
             .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
@@ -117,7 +107,7 @@ impl GrammalecteChecker {
                                               error = e))
             })?;
 
-        if !res.status().is_success() {
+        if res.status != hyper::Ok {
             return Err(Error::grammar_check(Source::empty(),
                                             lformat!("server didn't respond with a OK status \
                                                       code")));

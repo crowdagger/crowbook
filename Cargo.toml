@@ -36,7 +36,7 @@ doc = false
 
 [features]
 default = ["clap", "proofread", "syntect"]
-proofread = ["caribon", "reqwest"]
+proofread = ["caribon", "hyper", "url"]
 
 [build-dependencies]
 crowbook-intl = "0.2"
@@ -49,7 +49,7 @@ mustache = "0.8"
 uuid = { version = "0.5", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
-rayon = "0.8"
+rayon = "0.7"
 crowbook-text-processing = "^0.2.6"
 lazy_static = "0.2.1"
 term = "0.4"
@@ -58,9 +58,10 @@ numerals = "0.1"
 epub-builder = "0.2"
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
+url =  { version = "1", optional = true }
 syntect = { version = "1", optional = true }
 
-[dependencies.reqwest]
-version = "0.7"
+[dependencies.hyper]
+version = "0.10"
 optional = true
-
+default-features = false
