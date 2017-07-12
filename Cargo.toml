@@ -43,13 +43,13 @@ crowbook-intl = "0.2"
 
 [dependencies]
 mime_guess = "1"
-pulldown-cmark = "0.0.14"
+pulldown-cmark = "0.0.15"
 yaml-rust = "0.3"
 mustache = "0.8"
 uuid = { version = "0.5", features = ["v4"] }
 walkdir = "1.0"
 rustc-serialize = "0.3"
-rayon = "0.7"
+rayon = "0.8"
 crowbook-text-processing = "^0.2.6"
 lazy_static = "0.2.1"
 term = "0.4"
