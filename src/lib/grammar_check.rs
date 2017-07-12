@@ -16,9 +16,8 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use rustc_serialize::json;
-use hyper;
-use hyper::Client;
-use url::form_urlencoded;
+use reqwest;
+use reqwest::Client;
 use rayon::prelude::*;
 
 use std::io::Read;
@@ -65,15 +64,13 @@ impl GrammarChecker {
             port: port,
         };
 
-        let res = Client::new()
-            .get(&format!("http://localhost:{}/v2/languages", port))
-            .send()
+        let res = reqwest::get(&format!("http://localhost:{}/v2/languages", port))
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not connect to language tool server: {error}",
                                               error = e))
             })?;
-        if res.status != hyper::Ok {
+        if !res.status().is_success() {
             return Err(Error::grammar_check(Source::empty(),
                                             lformat!("server didn't respond with a OK status \
                                                       code")));
@@ -83,15 +80,27 @@ impl GrammarChecker {
 
     /// Send a query to LanguageTools server and get back a list of errors
     fn check(&self, text: &str) -> Result<GrammarCheck> {
-        let query: String = form_urlencoded::Serializer::new(String::new())
-            .append_pair("language", &self.lang)
-            .append_pair("text", text)
-            .finish();
+        let params = [("language", self.lang.as_str()), ("text", text)];
 
-        let client = Client::new();
+        let client = Client::new()
+            .map_err(|e| {
+                Error::grammar_check(Source::empty(),
+                                     lformat!("could not start reqwest client: {error}",
+                                              error = e))
+            })?;
 
         let mut res = client.post(&format!("http://localhost:{}/v2/check", self.port))
-            .body(&query)
+            .map_err(|e| {
+                Error::grammar_check(Source::empty(),
+                                     lformat!("could not build post request: {error}",
+                                              error = e))
+            })?
+            .form(&params)
+            .map_err(|e| {
+                Error::grammar_check(Source::empty(),
+                                     lformat!("could not build form: {error}",
+                                              error = e))
+            })?
             .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
@@ -99,7 +108,7 @@ impl GrammarChecker {
                                               error = e))
             })?;
 
-        if res.status != hyper::Ok {
+        if !res.status().is_success()  {
             return Err(Error::grammar_check(Source::empty(),
                                             lformat!("server didn't respond with a OK status \
                                                       code")));

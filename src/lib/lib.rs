@@ -121,9 +121,7 @@ extern crate uuid;
 extern crate lazy_static;
 
 #[cfg(feature = "proofread")]
-extern crate hyper;
-#[cfg(feature = "proofread")]
-extern crate url;
+extern crate reqwest;
 #[cfg(feature = "proofread")]
 extern crate caribon;
 #[cfg(feature = "syntect")]
