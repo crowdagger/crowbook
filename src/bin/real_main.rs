@@ -21,6 +21,7 @@ use helpers::*;
 
 use crowbook::{Result, Book, BookOptions, InfoLevel};
 use crowbook_intl_runtime::set_lang;
+use crowbook::Stats;
 use clap::ArgMatches;
 use std::process::exit;
 use std::io;
@@ -155,6 +156,13 @@ pub fn try_main() -> Result<()> {
     }
 
     set_book_options(&mut book, &matches);
+
+    if matches.is_present("stats") {
+        let stats = Stats::new(&book);
+        println!("{}", stats);
+        exit(0);
+    }
+
     if let Some(format) = matches.value_of("to") {
         render_format(&mut book, &matches, format);
     } else {

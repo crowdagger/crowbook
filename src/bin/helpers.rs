@@ -134,6 +134,7 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref LIST_OPTIONS_MD: String = lformat!("List all possible options, formatted in Markdown");
         static ref PRINT_TEMPLATE: String = lformat!("Prints the default content of a template");
         static ref BOOK: String = lformat!("File containing the book configuration file, or a Markdown file when called with --single");
+        static ref STATS: String = lformat!("Print some project statistics");
         static ref TEMPLATE: String = lformat!("\
 {{bin}} {{version}} by {{author}}
 {{about}}
@@ -193,6 +194,7 @@ ARGS:
         .arg(Arg::from_usage("-L --lang [LANG]")
              .help(LANG.as_str()))
         .arg(Arg::from_usage("--print-template [TEMPLATE]").help(PRINT_TEMPLATE.as_str()))
+        .arg(Arg::from_usage("--stats -S").help(STATS.as_str()))
         .arg(Arg::with_name("BOOK")
             .index(1)
             .help(BOOK.as_str()))
