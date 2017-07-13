@@ -50,6 +50,7 @@ pub struct LatexRenderer<'a> {
     proofread: bool,
     syntax: Option<Syntax>,
     hyperref: bool,
+    enum_level: usize,
 }
 
 impl<'a> LatexRenderer<'a> {
@@ -78,6 +79,7 @@ impl<'a> LatexRenderer<'a> {
             proofread: false,
             syntax: syntax,
             hyperref: book.options.get_bool("tex.hyperref").unwrap(),
+            enum_level: 0,
         }
     }
 
@@ -389,17 +391,32 @@ impl<'a> Renderer for LatexRenderer<'a> {
                            self.render_vec(vec)?))
             }
             Token::OrderedList(n , ref vec) => {
+                self.enum_level += 1;
                 let n = n as i32;
-                Ok(format!("\\begin{{enumerate}}
+                let set_counter = if n == 1 {
+                    String::new()
+                } else {
+                    let counter = match self.enum_level {
+                        1 => "enumi",
+                        2 => "enumii",
+                        3 => "enumiii",
+                        4 => "enumiv",
+                        _ => return Err(Error::render(&self.source,
+                                                      lformat!("found {n} indented ordered lists, LaTeX only allows for 4",
+                                                               n = self.enum_level))),
+                    };
+                    format!("\\setcounter{{{counter}}}{{{n}}}\n",
+                            counter = counter,
+                            n = n - 1)
+                };
+                let result = format!("\\begin{{enumerate}}
 {number}{inner}
 \\end{{enumerate}}\n",
-                           number = if n == 1 {
-                               String::new()
-                           } else {
-                               format!("\\setcounter{{enumi}}{{{}}}\n", n - 1)
-                           },
-                           inner = self.render_vec(vec)?))
-            }
+                                     number = set_counter,
+                                     inner = self.render_vec(vec)?);
+                self.enum_level -= 1;
+                Ok(result)
+            },
             Token::Item(ref vec) => Ok(format!("\\item {}\n", self.render_vec(vec)?)),
             Token::Link(ref url, _, ref vec) => {
                 let content = self.render_vec(vec)?;

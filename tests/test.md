@@ -9,6 +9,14 @@ foo: "this should not be parsed"
 ...
 
 
+Ordered lists
+----------------
+
+2. Two
+3. Three 
+    7. Seven
+
+
 foo
 ---
 
