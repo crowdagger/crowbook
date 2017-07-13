@@ -21,6 +21,8 @@ unreleased
     chapter and its first chapter as part)
   * EPUB:
     * Fix `.rule` so it is centered despite KOBO CSS injection.
+  * Fix resources/images inclusion when they are symlinks to the
+    actual file.
 
 0.12.0 (2017-06-05)
 -----------------------
