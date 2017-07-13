@@ -11,23 +11,6 @@
 \usepackage[<<&tex_lang>>]{babel}
 
 \usepackage{fancyhdr}
-<<#use_tables>>
-% Only included if document contains tables
-\usepackage{tabularx}
-<</use_tables>>
-<<#use_codeblocks>>
-% Only included if document contains code blocks
-\usepackage{color}
-\usepackage[
-  topline=false,
-  rightline=false,
-  bottomline=false]{mdframed}
-\usepackage{spverbatim}
-<</use_codeblocks>>
-<<#use_images>>
-% Only included if document contains images
-\usepackage{graphicx}
-<</use_images>>
 <<#use_url>>
 % Only included if URLs are used in the document
 \usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
@@ -66,18 +49,6 @@
 <</stdpage>>
 
 \makeatletter
-
-\newcommand{\HRule}{
-  \nopagebreak
-  {\vskip 1em}
-  \nopagebreak
-  \begin{center}
-    ***
-  \end{center}
-  \nopagebreak
- {\vskip 1em}
- \nopagebreak
-}
 
 \date{<<&date>>}
 
@@ -148,6 +119,109 @@
 \cfoot{\fancyplain{}{}}
 
 <</stdpage>>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Command and environment definitions
+%
+% Here, commands are defined for all Markdown element (even if some
+% of them do nothing in this template.
+%
+% If you want to change the rendering of some elements, this is probably
+% what you should modify.
+%
+% Note that elements that already have a LaTeX semantic equivalent aren't redefined
+% : if you want to redefine headers, you'll have to renew \chapter, \section, \subsection,
+% ..., commands. If you want to change how emphasis is displayed, you'll have to renew
+% the \emph command, for list the itemize one, for ordered list the enumerate one,
+% for super/subscript the \textsuper/subscript ones.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Strong
+\newcommand\mdstrong[1]{\textbf{#1}}
+
+% Code
+\newcommand\mdcode[1]{\texttt{#1}}
+
+% Rule
+% Default impl : (displays centered asterisks)
+\newcommand\mdrule{
+  \nopagebreak
+  {\vskip 1em}
+  \nopagebreak
+  \begin{center}
+    ***
+  \end{center}
+  \nopagebreak
+ {\vskip 1em}
+ \nopagebreak
+}
+
+% Hardbreak
+\newcommand\mdhardbreak{\\}
+
+% Block quote$
+\newenvironment{mdblockquote}{%
+  \begin{quotation}
+    \itshape
+}{%
+  \end{quotation}
+}
+
+
+% Code block
+%
+% Only used if syntect is used for syntax highlighting is used, else
+% the spverbatim environment is preferred.
+<<#use_codeblocks>> % This part is only included if document contains code blocks
+\usepackage{spverbatim}
+\usepackage{color}
+\usepackage[
+  topline=false,
+  rightline=false,
+  bottomline=false]{mdframed}
+
+\newenvironment{mdcodeblock}{%
+  \begin{mdframed}
+}{%
+  \end{mdframed}
+} 
+<</use_codeblocks>>
+
+<<#use_images>>
+% Only included if document contains images
+\usepackage{graphicx}
+
+% Standalone image
+% (an image alone in its paragraph)
+\newcommand\mdstandaloneimage[1]{
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{#1}
+  \end{center}
+}
+
+% Image
+% (an image embedded in a pagraph or other element)
+\newcommand\mdimage[1]{\includegraphics{#1}}
+<</use_images>>
+
+<<#use_tables>>
+% Only included if document contains tables
+\usepackage{tabularx}
+
+% Table environment
+% Crowbook currently always insert \hline at beginning and end of the table
+
+
+\newenvironment{mdtable}[1]{%
+  \center
+  \tabularx{\textwidth}{#1}
+  \hline
+}{%
+  \endtabularx
+  \endcenter
+}
+<</use_tables>>
 
 <<&additional_code>>
 

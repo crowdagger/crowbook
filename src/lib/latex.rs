@@ -351,13 +351,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 Ok(content)
             }
             Token::Emphasis(ref vec) => Ok(format!("\\emph{{{}}}", self.render_vec(vec)?)),
-            Token::Strong(ref vec) => Ok(format!("\\textbf{{{}}}", self.render_vec(vec)?)),
-            Token::Code(ref vec) => Ok(format!("\\texttt{{{}}}",
+            Token::Strong(ref vec) => Ok(format!("\\mdstrong{{{}}}", self.render_vec(vec)?)),
+            Token::Code(ref vec) => Ok(format!("\\mdcode{{{}}}",
                                                insert_breaks(&self.render_vec(vec)?))),
             Token::Superscript(ref vec) => Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?)),
             Token::Subscript(ref vec) => Ok(format!("\\textsubscript{{{}}}", self.render_vec(vec)?)),
             Token::BlockQuote(ref vec) => {
-                Ok(format!("\\begin{{quotation}}{{\\itshape\n{}}}\\end{{quotation}}\n",
+                Ok(format!("\\begin{{mdblockquote}}\n{}\n\\end{{mdblockquote}}\n",
                            self.render_vec(vec)?))
             }
             Token::CodeBlock(ref language, ref vec) => {
@@ -376,21 +376,29 @@ impl<'a> Renderer for LatexRenderer<'a> {
 \\end{{spverbatim}}",
                             code = res)
                 };
-                res = format!("\\begin{{mdframed}}
+                res = format!("\\begin{{mdcodeblock}}
 {}
-\\end{{mdframed}}", res);
+\\end{{mdcodeblock}}", res);
                 Ok(res)
             }
-            Token::Rule => Ok(String::from("\\HRule\n")),
+            Token::Rule => Ok(String::from("\\mdrule\n")),
             Token::SoftBreak => Ok(String::from(" ")),
-            Token::HardBreak => Ok(String::from("\\\n")),
+            Token::HardBreak => Ok(String::from("\\mdhardbreak\n")),
             Token::List(ref vec) => {
                 Ok(format!("\\begin{{itemize}}\n{}\\end{{itemize}}",
                            self.render_vec(vec)?))
             }
-            Token::OrderedList(_, ref vec) => {
-                Ok(format!("\\begin{{enumerate}}\n{}\\end{{enumerate}}\n",
-                           self.render_vec(vec)?))
+            Token::OrderedList(n , ref vec) => {
+                let n = n as i32;
+                Ok(format!("\\begin{{enumerate}}
+{number}{inner}
+\\end{{enumerate}}\n",
+                           number = if n == 1 {
+                               String::new()
+                           } else {
+                               format!("\\setcounter{{enumi}}{{{}}}\n", n - 1)
+                           },
+                           inner = self.render_vec(vec)?))
             }
             Token::Item(ref vec) => Ok(format!("\\item {}\n", self.render_vec(vec)?)),
             Token::Link(ref url, _, ref vec) => {
@@ -415,9 +423,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     let img = self.handler.map_image(&self.source, url.as_ref())?;
-                    Ok(format!("\\begin{{center}}
-  \\includegraphics[width=0.8\\linewidth]{{{}}}
-\\end{{center}}",
+                    Ok(format!("\\mdstandaloneimage{{{}}}\n",
                                img))
 
                 } else {
@@ -432,7 +438,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
-                    Ok(format!("\\includegraphics{{{}}}",
+                    Ok(format!("\\mdimage{{{}}}",
                                self.handler.map_image(&self.source, url.as_ref())?))
                 } else {
                     self.book
@@ -453,13 +459,11 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     cols.push_str("|X");
                 }
                 cols.push_str("|");
-                Ok(format!("\\begin{{center}}
-\\begin{{tabularx}}{{\\textwidth}}{{{}}}
+                Ok(format!("\\begin{{mdtable}}{{{}}}
 \\hline
 {}
 \\hline
-\\end{{tabularx}}
-\\end{{center}}\n\n",
+\\end{{mdtable}}\n\n",
                            cols,
                            self.render_vec(vec)?))
             }
