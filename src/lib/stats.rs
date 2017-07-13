@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Élisabeth HENRY.
+// Copyright (C) 2017 Falco Hirschenberger.
 //
 // This file is part of Crowbook.
 //
