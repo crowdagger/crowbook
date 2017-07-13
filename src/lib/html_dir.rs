@@ -132,7 +132,8 @@ impl<'a> HtmlDirRenderer<'a> {
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = File::open(source)
+            let mut f = fs::canonicalize(source)
+                .and_then(|f| File::open(f))
                 .map_err(|_| {
                     Error::file_not_found(&self.html.book.source,
                                           lformat!("image or cover"),
@@ -157,7 +158,8 @@ impl<'a> HtmlDirRenderer<'a> {
             let list = resource_handler::get_files(list, &files_path)?;
             for path in list {
                 let abs_path = Path::new(&files_path).join(&path);
-                let mut f = File::open(&abs_path)
+                let mut f = fs::canonicalize(&abs_path)
+                    .and_then(|f| File::open(f))
                     .map_err(|_| {
                         Error::file_not_found(&self.html.book.source,
                                               lformat!("additional resource from resources.files"),

@@ -105,7 +105,8 @@ impl<'r> ResourceHandler<'r> {
                 format!("images/image_{}", self.images.len())
             }
         } else {
-            let mut f = match fs::File::open(file.as_ref()) {
+            let mut f = match fs::canonicalize(file.as_ref())
+                .and_then(|f| fs::File::open(f)) {
                 Ok(f) => f,
                 Err(_) => {
                     return Err(Error::file_not_found(source,

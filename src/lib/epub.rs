@@ -209,7 +209,9 @@ impl<'a> EpubRenderer<'a> {
         // Write all images (including cover)
         let cover = self.html.book.options.get_path("cover");
         for (source, dest) in self.html.handler.images_mapping() {
-            let f = File::open(source).map_err(|_| {
+            let f = fs::canonicalize(source)
+                .and_then(|f| File::open(f))
+                .map_err(|_| {
                 Error::file_not_found(&self.html.source,
                                       lformat!("image or cover"),
                                       source.to_owned())
@@ -230,7 +232,9 @@ impl<'a> EpubRenderer<'a> {
             let data_path = Path::new(self.html.book.options.get_relative_path("resources.out_path")?);
             for path in list {
                 let abs_path = Path::new(&base_path_files).join(&path);
-                let f = File::open(&abs_path).map_err(|_| {
+                let f = fs::canonicalize(&abs_path)
+                    .and_then(|f| File::open(f))
+                    .map_err(|_| {
                     Error::file_not_found(&self.html.book.source,
                                           lformat!("additional resource from resources.files"),
                                           abs_path.to_string_lossy().into_owned())

@@ -30,6 +30,7 @@ use syntax::Syntax;
 use crowbook_text_processing::escape;
 
 use std::iter::Iterator;
+use std::fs;
 use std::fs::File;
 use std::io;
 use std::io::Read;
@@ -100,7 +101,8 @@ impl<'a> LatexRenderer<'a> {
 
         // write image files
         for (source, dest) in self.handler.images_mapping() {
-            let mut f = File::open(source)
+            let mut f = fs::canonicalize(source)
+                .and_then(|f| File::open(f))
                 .map_err(|_| {
                     Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
                     })?;
