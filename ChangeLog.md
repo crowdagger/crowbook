@@ -4,10 +4,18 @@ ChangeLog
 unreleased
 ------------
 * Add support for grammalecte grammar checker.
+* `crowbook` command takes a new argument, `-S` or `--stats` which
+  displays stats on the books (currently, word count).
 * Interactive fiction:
   * Added conditional blocks.
 * HTML:
   * Add JSON-LD structured data to the book's HTML files.
+* LaTeX:
+  * Crowbook now uses custom command for most markdown elements,
+    defined in the template. This allow an user to redefine the way
+    the book is rendered without having to modify Crowbook
+    itself. Unfortunately, this is a breaking change, as tex templates
+    for previous Crowbook versions won't work anymore. 
 * Bugfixes:
   * LaTeX: fix rendering of part/chapter (part previously displayed as
     chapter and its first chapter as part)
