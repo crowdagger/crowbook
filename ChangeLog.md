@@ -5,9 +5,14 @@ unreleased
 ------------
 * Add support for grammalecte grammar checker.
 * `crowbook` command takes a new argument, `-S` or `--stats` which
-  displays stats on the books (currently, word count).
+  displays stats on the book (currently, words and characters count).
 * Interactive fiction:
   * Added conditional blocks.
+* Options: 
+  * `output.xxx` options can now take the "auto" value, which will infer the
+    output file name based on the book file name.
+   * `output` is a new option that can specify a series of format to
+     render, with default output file name.	
 * HTML:
   * Add JSON-LD structured data to the book's HTML files.
 * LaTeX:
