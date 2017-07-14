@@ -172,6 +172,14 @@ $ crowbook my.book --set html.css my_style.css
 # or add "html.css: my_style.css" in my.book
 ```
 
+`--stats`
+
+**Usage**: `crowbook --stats <BOOK>` 
+
+(or `crowbook -S <BOOK>`)
+
+Display some statistics (word and character counts) about the book.
+
 `--verbose`
 -----------
 

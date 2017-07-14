@@ -357,6 +357,40 @@ Current output options are:
 [Proofreading](proofreading.md), and interactive fiction,
 see [Interactive fiction](if.md).)
 
+
+#### The `output` option ####
+
+Setting output file names manually can be a bit tedious, and is not
+always necessary. You can also specify a list of output formats with
+the `output` option:
+
+```yaml
+output: [pdf, epub, html]
+```
+
+This is similar to the alternative syntax for YAML list:
+
+```yaml
+output:
+  - pdf
+  - epub
+  - html
+```
+
+This option will set default output path for PDF, EPUB and HTML
+according to the book configuration file name. So, if your book is
+`my_book.book` (or `my_book.md`), it will generate `my_book.pdf`,
+`my_book.html` and `my_book.epub`.
+
+> You can also infer the output file name by specifying "auto" to
+> e.g. `output.html`. The previous example is thus equivalent to 
+> 
+> ```yaml
+> output.pdf: auto
+> output.epub: auto
+> output.html: auto
+> ```
+
 #### `output.base_path` ####
 
 Additionally, the `output.base_path` option allows you to set where
@@ -499,11 +533,10 @@ These options allow to embed additional files for some formats
 
 #### resources.files ####
 
-A list of files or directories that should be added. It's a
-whitespace-separated list, so it can be, e.g.:
+A list of files or directories that should be added.
 
 ```yaml
-resources.files: font1.otf font2.otf
+resources.files: [font1.otf, font2.otf]
 ```
 
 It is also possible to specify a directory (or multiple
@@ -511,13 +544,13 @@ directories). So if you have a `fonts` directories containing
 `font1.otf` and `font2.otf`,
 
 ```yaml
-resources.files: fonts
+resources.files: [fonts]
 ```
 
 will be equivalent to:
 
 ```yaml
-resources.files: fonts/font1.otf fonts/font2.otf
+resources.files: [fonts/font1.otf, fonts/font2.otf]
 ```
 
 
@@ -538,7 +571,7 @@ directory would be copied. So assuming `fonts/` contains `font1.otf`
 and `font2.otf`
 
 ```yaml
-resources.files: fonts
+resources.files: [fonts]
 resources.path: data
 ```
 
@@ -548,7 +581,7 @@ will copy these two files to `data/fonts/font1.otf` and
 Similarly, the whole path of `resources.files` is copied, so
 
 ```yaml
-resources.files: fonts/font1.otf fonts/font2.otf
+resources.files: [fonts/font1.otf, fonts/font2.otf]
 ```
 
 will yield the same result.
@@ -557,7 +590,8 @@ will yield the same result.
 
 ## Full list of options ##
 
-Here is the complete list of options. You can always look at it by running `crowbook --list-options` or `crowbook -l`.
+Here is the complete list of options. You can always look at it by
+running `crowbook --list-options` or `crowbook -l`.
 
 ### Metadata ###
 - **`author`**
@@ -604,6 +638,10 @@ Here is the complete list of options. You can always look at it by running `crow
     -  Date the book was revised
 
 ### Output options ###
+- **`output`**
+    - **type**: list of strings
+    - **default value**: `not set`
+    -  Specify a list of output formats to render
 - **`output.epub`**
     - **type**: path
     - **default value**: `not set`
@@ -852,10 +890,26 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: string
     - **default value**: `book`
     -  LaTeX class to use
-- **`tex.paper_size`**
+- **`tex.paper.size`**
     - **type**: string
     - **default value**: `a5paper`
     -  Specifies the size of the page.
+- **`tex.margin.left`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)
+- **`tex.margin.right`**
+    - **type**: string
+    - **default value**: `not set`
+    -  Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)
+- **`tex.margin.top`**
+    - **type**: string
+    - **default value**: `"2cm"`
+    -  Specifies top margin
+- **`tex.margin.bottom`**
+    - **type**: string
+    - **default value**: `"1.5cm"`
+    -  Specifies left margin
 - **`tex.title`**
     - **type**: boolean
     - **default value**: `true`
@@ -875,7 +929,7 @@ Here is the complete list of options. You can always look at it by running `crow
 
 ### Resources option ###
 - **`resources.files`**
-    - **type**: string
+    - **type**: list of strings
     - **default value**: `not set`
     -  Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
 - **`resources.out_path`**
@@ -930,6 +984,10 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: boolean
     - **default value**: `true`
     -  Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored.
+- **`crowbook.markdown.superscript`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax.
 - **`crowbook.temp_dir`**
     - **type**: path
     - **default value**: ``
@@ -966,6 +1024,14 @@ Here is the complete list of options. You can always look at it by running `crow
     - **type**: integer
     - **default value**: `8081`
     -  Port to connect to languagetool-server
+- **`proofread.grammalecte`**
+    - **type**: boolean
+    - **default value**: `false`
+    -  If true, try to use grammalecte server to grammar check the book
+- **`proofread.grammalecte.port`**
+    - **type**: integer
+    - **default value**: `8080`
+    -  Port to connect to grammalecte server
 - **`proofread.repetitions`**
     - **type**: boolean
     - **default value**: `false`
@@ -994,8 +1060,12 @@ Here is the complete list of options. You can always look at it by running `crow
 
 Note that these options have a type, which in most case should be
 pretty straightforward (a boolean can be `true` or `false`, an integer
-must be composed by a number, a string is, well, any string). The `path`
-type might puzzle you a 
-bit, but it's equivalent to a string, except Crowbook will consider it
-relatively to the book file. The `template path` type is just the
-`path` of a template. Metadata are just strings.
+must be composed by a number, a string is, well, any string (note that
+you might need to use quotes if it includes some characters that may
+lead the YAML parser to read it as an array, an integer or a list), and a
+list of strings is a list containing only strings). The `path`
+type might puzzle you a bit, but it's equivalent to a string, except
+Crowbook will consider it relatively to the book file. The `template
+path` type is just the `path` of a template. Metadata are just
+strings.
+

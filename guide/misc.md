@@ -63,7 +63,7 @@ author: Me
 cover: cover.png
 output.epub: book.epub
 
-resources.files: my_font.ttf
+resources.files: [my_font.ttf]
 ```
 
 
