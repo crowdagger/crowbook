@@ -821,12 +821,31 @@ impl Book {
     /// * `render_format_to`, which writes in any `Write`able object.
     /// * `render_format`, which won't do anything if `output.{format}` isn't specified
     ///   in the book configuration file.
-    pub fn render_format_to_file<P:AsRef<Path>>(&self, format: &str, path: P) -> Result<()> {
+    pub fn render_format_to_file<P:Into<PathBuf>>(&self, format: &str, path: P) -> Result<()> {
         self.logger.debug(lformat!("Attempting to generate {format}...",
                                    format = format));
+        let path = path.into();
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
-                renderer.render_to_file(self, path.as_ref())?;
+                let path = if path.ends_with("auto") {
+                    let file = if let Some(s) = self.source
+                        .file
+                        .as_ref()
+                        .and_then(|f| Path::new(f).file_stem()) {
+                        s.to_string_lossy().into_owned()
+                    } else {
+                        return Err(Error::default(&self.source, lformat!("output to {format} set to auto but can't find book file name to infer it",
+                                                                     format = description)));
+                        };
+                    let file = renderer.auto_path(&file)
+                        .map_err(|_| Error::default(&self.source,
+                                                    lformat!("the {format} renderer does not support auto for output path",
+                                                             format = description)))?;
+                    path.with_file_name(file)
+                } else {
+                    path
+                };
+                renderer.render_to_file(self, &path)?;
                 self.logger.info(lformat!("Succesfully generated {format}: {path}",
                                           format = description,
                                           path = misc::normalize(path)));

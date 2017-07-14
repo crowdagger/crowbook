@@ -540,6 +540,10 @@ derive_html!{EpubRenderer<'a>, EpubRenderer::static_render_token}
 pub struct Epub {}
 
 impl BookRenderer for Epub {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.epub", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         EpubRenderer::new(book)?
             .render_book(to)?;

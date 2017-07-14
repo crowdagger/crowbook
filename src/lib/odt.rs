@@ -234,6 +234,10 @@ impl<'a> OdtRenderer<'a> {
 pub struct Odt {}
 
 impl BookRenderer for Odt {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.odt", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         OdtRenderer::new(book)
             .render_book(to)?;

@@ -447,6 +447,10 @@ pub struct HtmlDir {}
 pub struct ProofHtmlDir {}
 
 impl BookRenderer for HtmlDir {
+    fn auto_path(&self, _: &str) -> Result<String> {
+        Ok(String::from("output_html"))
+    }
+    
     fn render(&self, _: &Book, _: &mut io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("can only render HTML directory to a path, not to a stream")))
@@ -460,6 +464,10 @@ impl BookRenderer for HtmlDir {
 }
 
 impl BookRenderer for ProofHtmlDir {
+    fn auto_path(&self, _: &str) -> Result<String> {
+        Ok(String::from("output_html_proof"))
+    }
+    
     fn render(&self, _: &Book, _: &mut io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("can only render HTML directory to a path, not to a stream")))

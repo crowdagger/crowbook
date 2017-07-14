@@ -24,6 +24,12 @@ use std::path::Path;
 /// Thait that must be implemented by the various renderers to render a whole book.
 
 pub trait BookRenderer: Sync {
+    /// Path destination when output is set to auto
+    fn auto_path(&self, _book_file: &str) -> Result<String> {
+        Err(Error::default(Source::empty(),
+                           lformat!("This renderer does not support the auto output")))
+    }
+    
     /// Render the book and write the result to the specified writer
     fn render(&self, book: &Book, to: &mut Write) -> Result<()>;
 

@@ -332,6 +332,10 @@ derive_html!{HtmlIfRenderer<'a>, HtmlIfRenderer::static_render_token}
 pub struct HtmlIf {}
 
 impl BookRenderer for HtmlIf {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.html", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut html = HtmlIfRenderer::new(book)?;
         let result = html.render_book()?;

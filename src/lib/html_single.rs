@@ -268,6 +268,10 @@ pub struct HtmlSingle {}
 pub struct ProofHtmlSingle {}
 
 impl BookRenderer for HtmlSingle {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.html", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)?;
         let result = html.render_book()?;
@@ -281,6 +285,10 @@ impl BookRenderer for HtmlSingle {
 }
 
 impl BookRenderer for ProofHtmlSingle {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.proof.html", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)?
             .proofread();

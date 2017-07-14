@@ -535,6 +535,10 @@ pub struct ProofPdf;
 
 
 impl BookRenderer for Latex {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.tex", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
@@ -548,6 +552,10 @@ impl BookRenderer for Latex {
 }
 
 impl BookRenderer for ProofLatex {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.proof.tex", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book).proofread();
         let result = latex.render_book()?;
@@ -561,6 +569,10 @@ impl BookRenderer for ProofLatex {
 }
 
 impl BookRenderer for Pdf {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.pdf", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .render_pdf(to)?;
@@ -569,6 +581,10 @@ impl BookRenderer for Pdf {
 }
 
 impl BookRenderer for ProofPdf {
+    fn auto_path(&self, book_name: &str) -> Result<String> {
+        Ok(format!("{}.proof.pdf", book_name))
+    }
+    
     fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .proofread()
