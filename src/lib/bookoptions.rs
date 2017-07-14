@@ -105,7 +105,7 @@ tex.command:str:xelatex             # {tex_command}
 tex.template:tpl                    # {tex_tmpl}
 tex.template.add:str                # {tex_tmpl_add}
 tex.class:str:book                  # {tex_class}
-tex.paper_size:str:a5paper          # {tex_paper_size}
+tex.paper.size:str:a5paper          # {tex_paper_size}
 tex.title:bool:true                 # {tex_title}
 tex.font.size:int                   # {tex_font_size}
 tex.hyperref:bool:true              # {tex_hyperref}
@@ -187,6 +187,7 @@ output.html_dir:alias:output.html.dir               # {renamed}
 html_dir.index.html:alias:html.dir.template         # {renamed}
 html_dir.chapter.html:alias:html.dir.template       # {renamed}
 output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
+tex.paper_size:alias:tex.paper.size                 # {renamed}
 tex.font_size:alias:tex.font.size                   # {renamed}
 html.highlight_code:alias:rendering.highlight       # {renamed}
 proofread.nb_spaces:alias                           # {removed}

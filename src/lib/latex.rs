@@ -216,7 +216,7 @@ impl<'a> LatexRenderer<'a> {
             .insert_str("content", content)
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
             .insert_bool("tex_title", self.book.options.get_bool("tex.title").unwrap())
-            .insert_str("papersize", self.book.options.get_str("tex.paper_size").unwrap())
+            .insert_str("papersize", self.book.options.get_str("tex.paper.size").unwrap())
             .insert_bool("stdpage", self.book.options.get_bool("tex.stdpage").unwrap())
             .insert_bool("use_url", self.book.features.url)
             .insert_bool("use_tables", self.book.features.table)
