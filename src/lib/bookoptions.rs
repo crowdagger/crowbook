@@ -25,6 +25,7 @@ version:meta                        # {version}
 date:meta                           # {date}
 
 # {output_opt}
+output:strvec                       # {output}
 output.epub:path                    # {output_epub}
 output.html:path                    # {output_html}
 output.html.dir:path                # {output_html_dir}
@@ -197,6 +198,7 @@ crowbook.verbose:alias                              # {removed}
                                          metadata = lformat!("Metadata"),
                                          metadata2 = lformat!("Additional metadata"),
                                          output_opt = lformat!("Output options"),
+                                         output = lformat!("Specify a list of output formats to render"),
                                          render_opt = lformat!("Rendering options"),
                                          special_ops = lformat!("Special option"),
                                          html_opt = lformat!("HTML options"),
@@ -369,6 +371,7 @@ pub struct BookOptions {
     valid_paths: Vec<&'static str>,
     valid_ints: Vec<&'static str>,
     valid_floats: Vec<&'static str>,
+    valid_str_vecs: Vec<&'static str>,
     metadata: Vec<String>,
 
     /// Source for errors (unnecessary copy :/)
@@ -394,6 +397,7 @@ impl BookOptions {
             valid_strings: vec![],
             valid_paths: vec![],
             valid_tpls: vec![],
+            valid_str_vecs: vec![],
             metadata: vec![],
             root: PathBuf::new(),
             source: Source::empty(),
@@ -410,9 +414,8 @@ impl BookOptions {
                     options.metadata.push(key.to_owned());
                     options.valid_strings.push(key);
                 },
-                "str" => {
-                    options.valid_strings.push(key);
-                },
+                "str" => options.valid_strings.push(key),
+                "strvec" => options.valid_str_vecs.push(key),
                 "bool" => options.valid_bools.push(key),
                 "int" => options.valid_ints.push(key),
                 "float" => options.valid_floats.push(key),
@@ -468,7 +471,39 @@ impl BookOptions {
                                           lformat!("Expected a String as a key, found {:?}", key)));
         };
 
-        if self.valid_strings.contains(&key.as_ref()) {
+        if self.valid_str_vecs.contains(&key.as_ref()) {
+            // Value is a list of string
+            if let Yaml::Array(array) = value {
+                let mut inner:Vec<String> = vec!();
+                for value in array.into_iter() {
+                    if let Yaml::String(value) = value {
+                        inner.push(value);
+                    } else {
+                        return Err(Error::book_option(&self.source,
+                                       lformat!("Expected only string in the list for key {}, found {:?}",
+                                                &key,
+                                                &value)));
+                    }
+                }
+                // special case
+                if &key == "output" {
+                    for format in &inner {
+                        self.set_yaml(Yaml::String(format!("output.{}", format)),
+                                      Yaml::String(String::from("auto")))
+                            .map_err(|_| Error::book_option(&self.source,
+                                                            lformat!("The output format {format} for key {key} is not recognized",
+                                                                     key = key,
+                                                                     format = format)))?;
+                    }
+                }
+                Ok(self.options.insert(key, BookOption::StringVec(inner)))
+            } else {
+                Err(Error::book_option(&self.source,
+                                       lformat!("Expected a list as value for key {}, found {:?}",
+                                                &key,
+                                                &value)))
+            }
+        } else if self.valid_strings.contains(&key.as_ref()) {
             // value is a string
             if let Yaml::String(value) = value {
                 Ok(self.options.insert(key, BookOption::String(value)))
@@ -696,6 +731,11 @@ impl BookOptions {
     /// ```
     pub fn get_str(&self, key: &str) -> Result<&str> {
         self.get(key)?.as_str()
+    }
+
+    /// Get a stringvec option
+    pub fn get_str_vec(&self, key: &str) -> Result<&[String]> {
+        self.get(key)?.as_str_vec()
     }
 
     /// Get a path option.

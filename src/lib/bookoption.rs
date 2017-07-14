@@ -26,6 +26,9 @@ pub enum BookOption {
     /// Stored the same way as a string, but some base path is usually prepended to it
     Path(String),
 
+    /// Stores a list of strings
+    StringVec(Vec<String>),
+
     /// Hint that destructuring should not be exhaustive
     #[doc(hidden)]
     __NonExhaustive,
@@ -49,6 +52,14 @@ impl BookOption {
         match *self {
             BookOption::String(ref s) => Ok(s),
             _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a string", self))),
+        }
+    }
+
+    /// Returns the BookOption as a slice on a vector of strings
+    pub fn as_str_vec(&self) -> Result<&[String]> {
+        match *self {
+            BookOption::StringVec(ref v) => Ok(v),
+            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a string vector", self))),
         }
     }
 
