@@ -914,6 +914,7 @@ impl BookOptions {
                 "path" => lformat!("path"),
                 "tpl" => lformat!("template path"),
                 "meta" => lformat!("metadata"),
+                "strvec" => lformat!("list of strings"),
                 "alias" => lformat!("DEPRECATED"),
                 _ => unreachable!(),
             };
