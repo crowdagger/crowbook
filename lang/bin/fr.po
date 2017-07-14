@@ -28,107 +28,120 @@ msgid "Could not create file {}: it already exists!"
 msgstr "Impossible de créer le fichier {} : il existe déjà !"
 
 #: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:92
+#, fuzzy
 msgid ""
 "author: Your name\n"
 "title: Your title\n"
 "lang: en\n"
+"\n"
+"## Output formats\n"
 "\n"
 "# Uncomment and fill to generate files\n"
 "# output.html: some_file.html\n"
 "# output.epub: some_file.epub\n"
 "# output.pdf: some_file.pdf\n"
 "\n"
-"# Uncomment and fill to set cover image (for Epub)\n"
+"# Or uncomment the following to generate PDF, HTML and EPUB files based on "
+"this file's name\n"
+"# output: [pdf, epub, html]\n"
+"\n"
+"# Uncomment and fill to set cover image (for EPUB)\n"
 "# cover: some_cover.png\n"
 msgstr ""
 "author: Votre nom\n"
 "title: Le titre\n"
 "lang: fr\n"
 "\n"
+"## Formats de sortie\n"
+"\n"
 "# Décommenter et remplir pour générer des fichiers\n"
 "# output.html: un_fichier.html\n"
 "# output.epub: un_fichier.epub\n"
 "# output.pdf: un_fichier.pdf\n"
 "\n"
+"# Ou décommenter ce qui suit pour générer des fichiers PDF, HTML et EPUB selon le nom de ce fichier\n"
+"# output: [pdf, epub, html]\n"
+"\n"
 "# Décommenter et remplir pour configurer une image de couverture (pour "
 "l'Epub)\n"
 "# cover: une_couverture.png\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:105
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:110
+#, fuzzy
 msgid ""
 "\n"
-"# List of chapters\n"
+"## List of chapters\n"
 msgstr ""
 "\n"
-"# Liste des chapitres\n"
+"## Liste des chapitres\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:111
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:116
 msgid "Created {}, now you'll have to complete it!"
 msgstr "{} a été crée, maintenant vous n'avez plus qu'à le compléter !"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:121
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:126
 msgid "Print help information"
 msgstr "Affiche l'aide"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:122
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:127
 msgid "Print version information"
 msgstr "Affiche le numéro de version"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:123
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:128
 msgid "Render a Markdown book in EPUB, PDF or HTML."
 msgstr "Fait le rendu en EPUB, PDF ou HTML d'un livre écrit en Markdown."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:124
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:129
 msgid "Use a single Markdown file instead of a book configuration file"
 msgstr ""
 "Utilise un simple fichier Markdown au lieu d'un fichier de configuration de "
 "livre"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:125
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:130
 msgid "Print warnings in parsing/rendering"
 msgstr "Affiche les avertissements dans l'analyse et le rendu"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:126
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:131
 msgid "Don't print info/error messages"
 msgstr "N'affiche pas les messages d'erreurs ou d'information"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:127
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:132
 msgid "Enable proofreading"
 msgstr "Activer la génération de versions pour la relecture"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:128
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:133
 msgid "Create a new book with existing Markdown files"
 msgstr "Crée un nouveau livre à partir de fichiers Markdown existants"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:129
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:134
 msgid "Specify output file"
 msgstr "Spécifie un fichier de sortie"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:130
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:135
 msgid "Set the runtime language used by Crowbook"
 msgstr "Spécifie la langue à utiliser par Crowbook à l'exécution"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:131
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:136
 msgid "Generate specific format"
 msgstr "Génère un format spécifique"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:132
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:137
 msgid "Set a list of book options"
 msgstr "Règle une liste d'options pour le livre"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:133
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:138
 msgid "List all possible options"
 msgstr "Liste toutes les options possibles"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:134
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:139
 msgid "List all possible options, formatted in Markdown"
 msgstr "Liste toutes les options possibles, formatées en Markdown"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:135
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:140
 msgid "Prints the default content of a template"
 msgstr "Affiche le contenu par défaut d'un template"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:136
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:141
 msgid ""
 "File containing the book configuration file, or a Markdown file when called "
 "with --single"
@@ -136,11 +149,11 @@ msgstr ""
 "Fichier contenant la configuration du livre, ou un fichier Markdown avec "
 "l'argument --single"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:137
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:142
 msgid "Print some project statistics"
 msgstr "Affiche quelques statistiques sur le projet"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:138
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:143
 msgid ""
 "{{bin}} {{version}} by {{author}}\n"
 "{{about}}\n"
@@ -172,7 +185,7 @@ msgstr ""
 "ARGUMENTS:\n"
 "{{positionals}}\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:221
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:226
 msgid "A list of additional files is only valid with the --create option."
 msgstr ""
 "Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
