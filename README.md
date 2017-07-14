@@ -182,6 +182,12 @@ highlighting grammar errors and repetitions. For more information, see
 Crowbook has experimental support for writing interactive fiction
 (only for HTML). For more information, read the [interactive fiction chapter](guide/if.md).
 
+### Customization ###
+
+While the default settings will hopefully generate something that
+should look "good enough", it is possible to customize the output,
+essentially by providing different [templates](guide/templates.md).
+
 ### Bugs ###
 
 See the [github's issue tracker](https://github.com/lise-henry/crowbook/issues).
