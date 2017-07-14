@@ -106,6 +106,10 @@ tex.template:tpl                    # {tex_tmpl}
 tex.template.add:str                # {tex_tmpl_add}
 tex.class:str:book                  # {tex_class}
 tex.paper.size:str:a5paper          # {tex_paper_size}
+tex.margin.left:str                 # {tex_margin_left}
+tex.margin.right:str                # {tex_margin_right}
+tex.margin.top:str:\"2cm\"          # {tex_margin_top}
+tex.margin.bottom:str:\"1.5cm\"     # {tex_margin_bottom}
 tex.title:bool:true                 # {tex_title}
 tex.font.size:int                   # {tex_font_size}
 tex.hyperref:bool:true              # {tex_hyperref}
@@ -290,6 +294,10 @@ crowbook.verbose:alias                              # {removed}
                                          tex_class = lformat!("LaTeX class to use"),
                                          tex_title = lformat!("If true, generate a title with \\maketitle"),
                                          tex_paper_size = lformat!("Specifies the size of the page."),
+                                         tex_margin_left = lformat!("Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)"),
+                                         tex_margin_right = lformat!("Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)"),
+                                         tex_margin_top = lformat!("Specifies top margin"),
+                                         tex_margin_bottom = lformat!("Specifies left margin"),
                                          tex_font_size = lformat!("Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"),
                                          tex_hyperref = lformat!("If disabled, don't try to find references inside the document"),
                                          tex_stdpage = lformat!("If set to true, use 'stdpage' package to format a manuscript according to standards"),

@@ -46,8 +46,8 @@
 <</stdpage>>
 <<^stdpage>>
 % Included if the stdpage option if set to false
-\usepackage[<<&papersize>>, top=2cm, bottom=1.5cm,
-  <<#book>> left=2.5cm,right=1.5cm<</book>><<^book>> left=2cm,right=2cm<</book>>]{geometry}%A5 by default
+\usepackage[<<&papersize>>, top=<<&margin_top>>, bottom=<<&margin_bottom>>,
+  left=<<&margin_left>>,right=<<&margin_right>>]{geometry} % Set dimensions/margins of the parge
 <</stdpage>>
 
 \makeatletter

@@ -233,9 +233,18 @@ impl<'a> LatexRenderer<'a> {
         }
 
         // If class isn't book, set open_any to true, so margins are symetric.
+        let mut book = false;
         if self.book.options.get_str("tex.class").unwrap() == "book" {
             data = data.insert_bool("book", true);
+            book = true;
         }
+        data = data
+            .insert_str("margin_left", self.book.options.get_str("tex.margin.left").unwrap_or(if book { "1.5cm" } else { "2cm" }))
+            .insert_str("margin_right", self.book.options.get_str("tex.margin.right").unwrap_or(if book { "2cm" } else { "2cm" }))
+            .insert_str("margin_bottom", self.book.options.get_str("tex.margin.bottom").unwrap())
+            .insert_str("margin_top", self.book.options.get_str("tex.margin.top").unwrap());
+
+        
         if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);
         }
