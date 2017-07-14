@@ -113,7 +113,7 @@ tex.stdpage:bool:false              # {tex_stdpage}
 
 
 # {rs_opt}
-resources.files:str                  # {rs_files}
+resources.files:strvec               # {rs_files}
 resources.out_path:path:data         # {rs_out}
 resources.base_path:path             # {rs_base}
 resources.base_path.links:path       # {rs_links}
@@ -694,24 +694,6 @@ impl BookOptions {
             Error::invalid_option(&self.source,
                                   lformat!("option '{key}' is not present", key = key))
         })
-    }
-
-    /// Gets a list of path. Only used for resources.files.
-    #[doc(hidden)]
-    pub fn get_paths_list(&self, key: &str) -> Result<Vec<String>> {
-        if key != "resources.files" {
-            return Err(Error::book_option(&self.source,
-                                          lformat!("can't get '{key}' as a list of files, only \
-                                                    valid if key is resources.files",
-                                                   key = key)));
-        }
-
-        let list = self.get(key)?.as_str()?.split_whitespace();
-        let mut res = vec![];
-        for s in list {
-            res.push(s.to_owned());
-        }
-        Ok(res)
     }
 
     /// Gets a string option.

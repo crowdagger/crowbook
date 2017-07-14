@@ -151,7 +151,7 @@ impl<'a> HtmlDirRenderer<'a> {
         }
 
         // Write additional files
-        if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
+        if let Ok(list) = self.html.book.options.get_str_vec("resources.files") {
             let files_path = self.html.book.options.get_path("resources.base_path.files").unwrap();
             let data_path =
                 Path::new(self.html.book.options.get_relative_path("resources.out_path").unwrap());

@@ -229,7 +229,7 @@ impl<'r> ResourceHandler<'r> {
 ///
 /// # Returns
 /// A list of files (relative to `base`), or an error.
-pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
+pub fn get_files(list: &[String], base: &str) -> Result<Vec<String>> {
     let mut out: Vec<String> = vec![];
     let base = Path::new(base);
     for path in list {
@@ -244,7 +244,7 @@ pub fn get_files(list: Vec<String>, base: &str) -> Result<Vec<String>> {
             }
             Ok(metadata) => {
                 if metadata.is_file() {
-                    out.push(path);
+                    out.push(path.clone());
                 } else if metadata.is_dir() {
                     let files = WalkDir::new(&abs_path)
                         .follow_links(true)

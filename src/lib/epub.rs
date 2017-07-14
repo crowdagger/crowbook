@@ -225,7 +225,7 @@ impl<'a> EpubRenderer<'a> {
         }
 
         // Write additional resources
-        if let Ok(list) = self.html.book.options.get_paths_list("resources.files") {
+        if let Ok(list) = self.html.book.options.get_str_vec("resources.files") {
             let base_path_files =
                 self.html.book.options.get_path("resources.base_path.files").unwrap();
             let list = resource_handler::get_files(list, &base_path_files)?;
