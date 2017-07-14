@@ -27,7 +27,15 @@ Create and edit template
 Except for inline templates, which are set directly in the book configuration file:
 
 ```yaml
+# Template that modify how a chapter title is displayed
 rendering.chapter.template: "{{{loc_chapter}}} {{{number}}}: {{{chapter_title}}}"
+
+# CSS code added to default CSS templates (but don't override it)
+html.css.add: "h1 { background-color: red; }"
+epub.css.add: "h1 { background-color: gray; }"
+
+# LaTeX code added to default LaTeX template (but doesn't override it)
+template.tex.add: "\usepackage{libertineotf}"
 ```
 
 most templates must be in a separate file:
@@ -92,7 +100,7 @@ In this case, Crowbook sets a variable whose name is equal to
 `lang_foo` to `true`, allowing to have different styles for some
 elements according to the language.
 
-For more information about Mustache syntax, see
+For more information about Mustache syntax, see the
 [Mustache manual](http://mustache.github.io/mustache.5.html).
 
 #### Syntax in LaTeX ####
@@ -209,7 +217,7 @@ Crowbook also has some inline templates, that are set in the book configuration 
   inserted at the end of the template (allowing to redefine rules that
   are set by the template); for the LaTeX template, the code is
   inserted at the end of the preambule, just before the
-  `\begin{document}` tag.
+  `\begin{document}` tag, allowing to redefine commands.
 * `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
 * `rendering.chapter.template` sets the naming scheme for chapters,
   while `rendering.part.template` does the same for part. These are
@@ -233,6 +241,7 @@ For every template, Crowbook exports all of the metadata:
 
 * `author`;
 * `title`;
+* `subtitle`;
 * `lang`;
 * `subject`;
 * `description`;
@@ -314,5 +323,6 @@ below.
 | `tex_title` | Set to true to run `\maketitle` | `tex.template` |
 | `tex_size` | The font size to pass to the LaTeX class | `tex.template` |
 | `has_tex_size` | Set to true if `tex_size` is set | `tex.template` |
+| `margin_left`, `margin_right`, `margin_top`, `margin_bottom` | The margins of the document | `tex.template` |
 | `initials` | True if `rendering.initials` is true, not set else | `tex.template` | 
 | `additional_code` | Set to the content of `tex.template.add`, `html.css.add` or `epub.css.add` | `tex.template`, `html.css`, `epub.css` |

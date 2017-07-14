@@ -1,14 +1,15 @@
 Proofreading with Crowbook 
 ==========================
 
-Since version 0.9.1, Crowbook includes some proofreading features,
+Crowbook includes some proofreading features,
 that can be enabled if you set one of the
 
 * `output.proofread.html`
 * `output.proofread.html_dir`
 * `output.proofread.pdf`
 
-output files. This allows you to generate different files for
+output files (or include `proofread.pdf` in the list of formats to
+render to `output`). This allows you to generate different files for
 publishing and proofreading (you probably don't want to publish a
 version that highlights your grammar errors or your repetitions).
 
@@ -89,9 +90,9 @@ For more information, see
 Grammar checking
 ----------------
 
-## With languagetool
+### With Languagetool
 
-Crowbook can also use [LanguageTool](https://languagetool.org/) to
+Crowbook can use [LanguageTool](https://languagetool.org/) to
 detect grammar errors in your text. It is, however, a bit more
 complex to activate. 
 
@@ -124,10 +125,10 @@ HTML or PDF proofreading output files.
 > Note: running a grammar check on a long book (like a novel) can take
 > up to a few minutes.
 
-## With Grammalecte
+### With Grammalecte
 
 [Grammalecte](http://grammalecte.net/) is a grammar checker
-specialized for french language. If the language of your book is
+specialized for the french language. If the language of your book is
 french, you can use it in a similar fashion to languagetool: 
 
 ```yaml
@@ -146,4 +147,4 @@ $ python3 server.py
 
 You can then run Crowbook with `--proofread` to check the grammar of
 your book. It is possible to run both LanguageTool and Grammalecte on
-the same book (though might take some minutes a long book...).
+the same book (though might take a while for a long book...).

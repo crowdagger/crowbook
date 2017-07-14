@@ -13,7 +13,7 @@ author: Joan Doe
 title: Some book
 lang: en
 
-output.html: some_book.html
+output: [html, pdf, epub]
 
 # list of chapters
 - preface.md
@@ -45,7 +45,7 @@ author: Joan Doe
 title: Some (short) book
 lang: en
 
-output.html: some_book.html
+output: [html, pdf, epub]
 ---
 
 # Some (short) book
@@ -121,20 +121,8 @@ does not specify a chapter title, because it will read it directly in
 ```
 
 Ideally, you should have one and only one level-one header (i.e. chapter title)
-in each Markdown file.
-
-If you have more than one, Crowbook will print a warning and treat it
-as another chapter (numbered according to the scheme specified for
-including the file). It might however mess the table of contents in
-some cases (e.g. for EPUB). 
-
-If you do *not* have a level-1 header in a
-markdown file:
-* if it is a numbered chapter, Crowbook will infer a chapter name from
-the numbering scheme;
-* if it is not numbered, chapter's title will default to the empty
-string.
-
+in each Markdown file. If you have more than one, it might mess with
+the table of contents in some cases (e.g. for EPUB). 
 
 ### Parts ###
 
@@ -312,13 +300,13 @@ license: CC-BY-SA  # Override the license from common.book
 These options specify which files to generate.
 
 Note that all file paths are relative to the directory where the
-config file is, not to the one where you run `crowbook`. So if you set
+configuration file is, not to the one where you run `crowbook`. So if you set
 
 ```yaml
 output.epub: foo.epub
 ```
 
-and runs
+and run
 
 ```bash
 $ crowbook some/dir/config.book
@@ -433,11 +421,11 @@ These options allow to configure the rendering; they are used (or at
 least should be) for all formats.
 
 * `rendering.highlight` (default: `syntect`): specify if and how to perform syntax
-  highlighting for code blocks.  Other valid values are:
+  highlighting for code blocks.  Valid values are:
   * `syntect`: uses the [syntect](https://crates.io/crates/syntect)
     library to perform syntax highlighting. This has the advantage of
     also enabling syntax highlighting for LaTeX/PDF and EPUB formats;
-    however syntect support is still experimental in Crowbook.
+    however syntect support doesn't seem to work on Windows.
   * `highlight.js`: this  will use (and
     embed) [`highlight.js`](https://highlightjs.org/) for HTML 
     rendering, and will not perform any syntax highlighting for other
@@ -455,7 +443,8 @@ will default to `none` if you try to use it.
 * `rendering.num_depth`: an integer that represents the maximum level of numbering for your
 book. E.g., `1` will only number chapters, while `2` will number
 chapters, sections, but not anything below that. `6` is the maximum  level
-and turns numbering on for all headers. (Default is `1`.)
+and turns numbering on for all headers. (Default is `1`.) This also
+affects what levels will be displayed in the table of contents.
 * `rendering.chapter` and `rendering.part`: the
   strings that will be used to design chapter and part. E.g., if you want
   your parts to show as "Book III" instead of "Part III", you can set
@@ -486,10 +475,12 @@ the default HTML standalone renderer and the HTML multifile renderer):
   metadata, such as `{{{author}}}`, `{{{title}}}`, or `{{{version}}}`
   in it. See the [template](templates.md) chapter for more information
   on the fields you can use.
-* `html.css` allow to set up a custom CSS file. You can also redefine
+* `html.css` allows to set up a custom CSS file. You can also redefine
   the colours in a file and set it using `html.css.colours`. 
-* `html.highlight.theme` is similar to `rendering.highlight.theme` and
-  only sets the theme for EPUB output. 
+* `html.css.add` allows you to add some specific lines of CSS in your
+  book configuration file, that will be appended after the default CSS template.
+* `html.highlight.theme` is similar to `rendering.highlight.theme` but
+  only sets the theme for HTML output.
 
 #### Options for standalone HTML  ####
 
@@ -509,8 +500,10 @@ the generated PDF documents):
 
 * `tex.template` specifies a different LaTeX template.
 * `tex.class` changes the LaTeX class used.
-* `tex.paper_size` and `tex.font.size` (default `a5paper` and `10pt`)
+* `tex.paper.size` and `tex.font.size` (default `a5paper` and `10pt`)
   allows to modify the page and font size .
+* `tex.margin.left`, `tex.margin.right`, `tex.margin.top` and
+  `tex.margin.bottom` specify the margin of the page.
 * `tex.links_as_footnotes` can be set to `false` if you don't want
   links to also appear as footnotes (which means losing them
   if it is actually printed).
@@ -1063,7 +1056,7 @@ pretty straightforward (a boolean can be `true` or `false`, an integer
 must be composed by a number, a string is, well, any string (note that
 you might need to use quotes if it includes some characters that may
 lead the YAML parser to read it as an array, an integer or a list), and a
-list of strings is a list containing only strings). The `path`
+list of strings is a list containing only strings, see [YAML syntax](https://en.wikipedia.org/wiki/YAML#Basic_components)). The `path`
 type might puzzle you a bit, but it's equivalent to a string, except
 Crowbook will consider it relatively to the book file. The `template
 path` type is just the `path` of a template. Metadata are just

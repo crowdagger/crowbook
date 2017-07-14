@@ -10,8 +10,7 @@ crowbook [OPTIONS] [BOOK]
 The most important argument is obviously the book
 configuration file. It is mandatory in most cases: if you don't 
 pass it, Crowbook will simply display an error. In a normal use case this is
-the only argument you'll need to pass, as most options will be set in the 
-the book in all formats specified in the configuration file.
+the only argument you'll need to pass, as most options will be set in this configuration file. 
 
 It is, however, possible to pass more arguments to `crowbook`:
 
@@ -20,65 +19,51 @@ It is, however, possible to pass more arguments to `crowbook`:
 
 **Usage**: `crowbook [BOOK] --create file_1.md file_2.md ...`
 
+(or `crowbook [BOOK] -c file_1.md file_2.md ...`)
+
 Creates a new book from a list of Markdown files. It will generate a
 book configuration file with all file names specified as
 chapters. It either prints the result to stdout (if `BOOK` is not
 specified) or generate the file `BOOK` (or abort if it already
 exists). 
 
-### Examples ###
-
 ```bash
-crowbook foo.book --create  README.md ChangeLog.md LICENSE.md
+crowbook foo.book --create  chapter_1.md chapter_2.md chapter_3.md
 ```
 
-will generate a file `foo.book` containing:
+will thus generate a file `foo.book` containing:
 
 ```yaml
 author: Your name
 title: Your title
 lang: en
 
+## Output formats
+
 # Uncomment and fill to generate files
 # output.html: some_file.html
 # output.epub: some_file.epub
 # output.pdf: some_file.pdf
 
-# Uncomment and fill to set cover image (for Epub)
+# Or uncomment the following to generate PDF, HTML and EPUB files based on this file's name
+# output: [pdf, epub, html]
+
+# Uncomment and fill to set cover image (for EPUB)
 # cover: some_cover.png
 
-# List of chapters
-+ README.md
-+ ChangeLog.md
-+ LICENSE.md
+## List of chapters
++ chapter_1.md
++ chapter_2.md
++ chapter_3.md
 ```
 
 while
 
 ```bash
-crowbook --create README.md ChangeLog.md LICENSE.md
+crowbook --create chapter_1.md chapter_2.md chapter_3.md
 ```
 
 will print the same result, but to stdout (without creating a file).
-
-When `crowbook` is run with `--create`, it can also use the
-keys/values set by `--set` (see below):
-
-```bash
-$ crowbook foo.book --create file1.md file2.md --set author "Pierre Dupont" title "Mon œuvre" lang fr
-```
-
-will generate a `foo.book` file containing:
-
-```yaml
-author: Pierre Dupont
-title: Mon œuvre
-lang: fr
-
-# List of chapters
-+ file1.md
-+ file2.md
-```
 
 `--single`
 ----------
@@ -87,7 +72,7 @@ lang: fr
 
 (or `crowbook -s <FILE>`)
 
-This argument allows to give `crowbook` a single Markdown file. This
+This argument allows you to give `crowbook` a single Markdown file. This
 file can contain an inline YAML block to set some book options. Inline
 YAML blocks must start and end with a line containing only `---` (three dashes). E.g:
 
@@ -95,7 +80,7 @@ YAML blocks must start and end with a line containing only `---` (three dashes).
 ---
 author: Joan Doe
 title: A short story
-output.html: short.html
+output: [html, epub, pdf]
 ---
 
 Content of the story in Markdown.
@@ -129,22 +114,11 @@ overriding a book configuration option. All valid options in the
 configuration files are valid as keys. For more information, see
 [the configuration file](config.md).
 
-### Example ###
-
 ```bash
-$ crowbook foo.book --set tex.paper_size a4paper
+$ crowbook foo.book --set tex.paper.size a4paper
 ```
 
 will override the paper size for PDF generation. 
-
-`--proofread`
--------------
-
-**Usage**: `crowbook --proofread <BOOK>`
-
-(or `crowbook -p <BOOK>`)
-
-Equivalent to `--set proofread true`. Enable proofreading. See [Proofreading](proofreading.md).
 
 `--list-options`
 ----------------
@@ -153,7 +127,7 @@ Equivalent to `--set proofread true`. Enable proofreading. See [Proofreading](pr
 
 (or `crowbook -l`)
 
-Displays all the valid options to use, whether in a book configuration
+Displays all the valid options that can be used, whether in a book configuration
 file, with `--set`, or in an inline YAML block.
 
 `--print-template`
@@ -173,12 +147,22 @@ $ crowbook my.book --set html.css my_style.css
 ```
 
 `--stats`
+------------
 
 **Usage**: `crowbook --stats <BOOK>` 
 
 (or `crowbook -S <BOOK>`)
 
 Display some statistics (word and character counts) about the book.
+
+`--proofread`
+-------------
+
+**Usage**: `crowbook --proofread <BOOK>`
+
+(or `crowbook -p <BOOK>`)
+
+Equivalent to `--set proofread true`. Enable proofreading. See [Proofreading](proofreading.md).
 
 `--verbose`
 -----------

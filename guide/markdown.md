@@ -100,6 +100,12 @@ two kind of images, according to their position in the document:
 Standalone images will typically be resized to fill the width of the
 page, while inline images are not resized. 
 
+This image is on its own paragraph, and thus considered "standalone" and resized to fit width:
+
+![Logo](../img/crowbook-small.png)
+
+While this one ![Logo](../img/crowbook-small.png) is embedded in a paragraph and its size is unchanged.
+
 ## Interactive fiction ##
 
 Crowbook also adds some syntax for interactive fiction, to make

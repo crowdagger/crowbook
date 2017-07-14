@@ -3,6 +3,11 @@ Interactive fiction
 
 Version `0.12.0` added experimental support for writing interactive fiction. 
 
+> Since this support is experimental, it means it can change at
+> anytime, and there is no guarentee that the interactive fiction you
+> write for the current version of Crowbook will work with the next
+> release, even if it isn't a major release.
+
 ## Basics ##
 
 If you want to have a non-linear story, you can simply use Markdown

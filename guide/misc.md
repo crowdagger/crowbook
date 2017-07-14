@@ -18,7 +18,7 @@ It is possible to use Crowbook for HTML previewing in this mode, which
 You can then use `markdown-preview` (or `C-c C-c p`) to run
 Crowbook on this file and preview it in your browser, or run
 `markdown-live-preview-mode` to see a live preview (updated each time
-you save you file) in Emacs' integrated browser. 
+you save your file) in Emacs' integrated browser. 
 
 ### Some explanations if it looks a bit cryptic to you 
 
