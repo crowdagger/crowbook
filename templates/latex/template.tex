@@ -1,39 +1,18 @@
-{{=<< >>=}}
+{{=<< >>=}} % Use <<&foo>> to include (non HTML-escape) variable foo instead of {{{foo}}}
 \documentclass<<#has_tex_size>>[<<&tex_size>>pt]<</has_tex_size>>{<<&class>>}
+
+%% Pacake inclusion
 <<#xelatex>>
+% Unicode support if xelatex is used
 \usepackage{fontspec}
 \usepackage{xunicode}
 <</xelatex>>
 <<^xelatex>>
+% Unicode support if xelatex is not used
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-<</xelatex>>
-\usepackage[<<&tex_lang>>]{babel}
 
-\usepackage{fancyhdr}
-<<#use_url>>
-% Only included if URLs are used in the document
-\usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
-
-<<^xelatex>>
-\usepackage[anythingbreaks]{breakurl}
-<</xelatex>>
-<</use_url>>
-
-<<#initials>> % only if use_initials is set to true
-\usepackage{lettrine}
-<</initials>>
-
-<<#stdpage>>
-\usepackage[<<&papersize>>]{geometry}
-<</stdpage>>
-<<^stdpage>>
-\usepackage[<<&papersize>>, top=2cm, bottom=1.5cm,
-  <<#book>> left=2.5cm,right=1.5cm<</book>><<^book>> left=2cm,right=2cm<</book>>]{geometry}%A5 by default
-<</stdpage>>
-
-<<^xelatex>>
-% Even with inputenc, not all unicode chars are recognized. This a
+% Even with inputenc, not all unicode chars are recognized when not using xelatex. This a
 % listof some I stumbled upon and manually added to fix
 \usepackage{newunicodechar}
 \newunicodechar{ }{ } % thin non breaking space
@@ -44,18 +23,41 @@
 \setlength\emergencystretch{.5\textwidth}
 <</xelatex>>
 
+\usepackage[<<&tex_lang>>]{babel} % Language support
+\usepackage{fancyhdr} % Headers
+
+<<#use_url>>
+% Only included if URLs are used in the document
+\usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
+<<^xelatex>>
+\usepackage[anythingbreaks]{breakurl}
+<</xelatex>>
+<</use_url>>
+
+<<#initials>>
+% Only included if use_initials is set to true
+\usepackage{lettrine}
+<</initials>>
+
 <<#stdpage>>
+% Only included if the stdpage option is set to true
+\usepackage[<<&papersize>>]{geometry}
 \usepackage[hyphen=false, parskip]{stdpage}
+<</stdpage>>
+<<^stdpage>>
+% Included if the stdpage option if set to false
+\usepackage[<<&papersize>>, top=2cm, bottom=1.5cm,
+  <<#book>> left=2.5cm,right=1.5cm<</book>><<^book>> left=2cm,right=2cm<</book>>]{geometry}%A5 by default
 <</stdpage>>
 
 \makeatletter
-
 \date{<<&date>>}
 
 <<^stdpage>>
-% Title
 <<#book>>
+% Redefine the \maketitle command, only for book class (not used if stdpage option is set to true)
 \renewcommand{\maketitle}{
+  % First page with only the title
   \thispagestyle{empty}
   \vspace*{\stretch{1}}
   
@@ -65,41 +67,38 @@
   \vspace*{\stretch{2}}
   
   \newpage
-    \thispagestyle{empty}
-  \cleardoublepage
-%  \pagebreak
-%  \newpage
-    \begin{center}  
+  % Empty left page
   \thispagestyle{empty}
-  \vspace*{\baselineskip}
-  \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
-  \rule{\textwidth}{0.4pt}\\[\baselineskip]
+  \cleardoublepage
 
-    %    {\Huge \@author \\[5mm]}
-      {\Huge\scshape \@title   \\[5mm]}
-      {\Large <<&subtitle>>}
-    %    {\huge \today   \\[5mm]}    
-
+  % Main title page, with author, title, subtitle, date
+  \begin{center}  
+    \thispagestyle{empty}
+    \vspace*{\baselineskip}
+    \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+    \rule{\textwidth}{0.4pt}\\[\baselineskip]
+    
+    {\Huge\scshape \@title   \\[5mm]}
+    {\Large <<&subtitle>>}
+    
     \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
     \rule{\textwidth}{1.6pt}\\[\baselineskip]
-
 
     \vspace*{4\baselineskip}
 
     {\Large \@author}
     \vfill
-%    <<#has_version>>{<<&version>>\\[5mm]}<</has_version>>
     <<#has_date>>\@date<</has_date>>
-    \end{center}
-  %  \HRule
+  \end{center}
   
   \pagebreak
   \newpage
+  % Copyright page with author, version, and license
   \thispagestyle{empty}
   \null\vfill
   \noindent
   \begin{center}
-    {\emph{\@title}<<#has_version>>{, <<&version>>}<</has_version>>, © \@author.\\[5mm]}
+    {\emph{\@title}<<#has_version>>{, <<&version>>}<</has_version>><<#has_author>>, © \@author<</has_author>>.\\[5mm]}
     <<#has_license>>{<<&license>>\\[5mm]}<</has_license>>
   \end{center}
   \pagebreak
@@ -108,7 +107,7 @@
 <</book>>
 
 
-% Headers
+% Redefine headers
 \pagestyle{fancyplain} 
 \lhead[\fancyplain{}{}]{\fancyplain{}{}}
 % Right header
