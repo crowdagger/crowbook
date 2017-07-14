@@ -93,16 +93,21 @@ pub fn create_book(matches: &ArgMatches) -> ! {
 title: Your title
 lang: en
 
+## Output formats
+
 # Uncomment and fill to generate files
 # output.html: some_file.html
 # output.epub: some_file.epub
 # output.pdf: some_file.pdf
 
-# Uncomment and fill to set cover image (for Epub)
+# Or uncomment the following to generate PDF, HTML and EPUB files based on this file's name
+# output: [pdf, epub, html]
+
+# Uncomment and fill to set cover image (for EPUB)
 # cover: some_cover.png\n").as_bytes())
                 .unwrap();
         }
-        f.write_all(lformat!("\n# List of chapters\n").as_bytes()).unwrap();
+        f.write_all(lformat!("\n## List of chapters\n").as_bytes()).unwrap();
         for file in values {
             f.write_all(format!("+ {}\n", file).as_bytes()).unwrap();
         }
