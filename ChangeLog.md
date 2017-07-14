@@ -1,8 +1,16 @@
 ChangeLog
 =========
 
-unreleased
-------------
+0.13.0 (2017-07-14)
+-----------------------
+* Breaking changes:
+	* The `template.tex` template was quite modified. Crowbook now
+    uses custom command for most markdown elements, defined in the
+    template. This allow an user to redefine the way the book is
+    rendered without having to modify Crowbook itself. Unfortunately, 
+	as tex templates for previous Crowbook versions won't work anymore. 
+   * the `resources.files` option is now a YAML list of strings, instead of a
+     comma-seprated string.  
 * Add support for grammalecte grammar checker.
 * `crowbook` command takes a new argument, `-S` or `--stats` which
   displays stats on the book (currently, words and characters count).
@@ -12,15 +20,16 @@ unreleased
   * `output.xxx` options can now take the "auto" value, which will infer the
     output file name based on the book file name.
    * `output` is a new option that can specify a series of format to
-     render, with default output file name.	
+     render, with default output file name.
+   * `proofread.grammalecte` and `proofread.grammalecte.port` allow
+     respectively to enable grammar checking with Grammalecte and
+     (optionnally) to specify the port to connect.
+   * `tex.margin.left`, `tex.margin.right`, `tex.margin.bottom` and
+     `tex.margin.top` are new options that allow to specify margins
+     for LaTeX/PDF outputs.
+   * `tex.paper_size` was renamed `tex.paper_size`.
 * HTML:
   * Add JSON-LD structured data to the book's HTML files.
-* LaTeX:
-  * Crowbook now uses custom command for most markdown elements,
-    defined in the template. This allow an user to redefine the way
-    the book is rendered without having to modify Crowbook
-    itself. Unfortunately, this is a breaking change, as tex templates
-    for previous Crowbook versions won't work anymore. 
 * Bugfixes:
   * LaTeX: fix rendering of part/chapter (part previously displayed as
     chapter and its first chapter as part)
