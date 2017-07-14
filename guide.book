@@ -7,12 +7,17 @@ description: >-
  demonstrate and test it.
 lang: en
 cover: cover.png
-version: 0.12.0
-date: 2017-06-05
+version: 0.13.0
+date: 2017-07-14
 license: >-
   This guide is published under the Creative Commons Attribution-ShareAlike 4.0-International license.
 
 # Options for generating files
+output:
+  - epub
+  - pdf
+  - html
+  - odt
 output.epub: book.epub
 output.html: book.html
 output.html.dir: html
@@ -57,6 +62,7 @@ html.highlight.css: guide/tomorrow-night.css
 # Latex options
 tex.class: book
 tex.links_as_footnotes: false
+tex.paper.size: a4paper
 
 # Epub options
 epub.version: 3
