@@ -144,11 +144,14 @@ msgstr "format inconnu : {format}"
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:837
 msgid ""
 "output to {format} set to auto but can't find book file name to infer it"
-msgstr "sortie de {format} mise à auto mais impossible de trouver le nom de fichier du livre pour l'inférer"
+msgstr ""
+"sortie de {format} mise à auto mais impossible de trouver le nom de fichier "
+"du livre pour l'inférer"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:842
 msgid "the {format} renderer does not support auto for output path"
-msgstr "le moteur de rendu pour {format} ne supporte pas auto comme chemin de sortie"
+msgstr ""
+"le moteur de rendu pour {format} ne supporte pas auto comme chemin de sortie"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/book.rs:849
 msgid "Succesfully generated {format}: {path}"
@@ -318,154 +321,154 @@ msgstr "{:?} n'est pas un i32"
 msgid "{:?} is not a f32"
 msgstr "{:?} n'est pas un f32"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:198
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:203
 msgid "Metadata"
 msgstr "Métadonnée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:199
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:204
 msgid "Additional metadata"
 msgstr "Métadonnées additionnelles"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:200
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:205
 msgid "Output options"
 msgstr "Options de sortie"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:201
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:206
 msgid "Specify a list of output formats to render"
 msgstr "Spécifie une liste de formats de sortie à générer"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:202
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:207
 msgid "Rendering options"
 msgstr "Options de rendu"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:203
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:208
 msgid "Special option"
 msgstr "Option spéciale"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:204
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:209
 msgid "HTML options"
 msgstr "Options HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:205
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:210
 msgid "Standalone HTML options"
 msgstr "Options pour le HTML autonome"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:206
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:211
 msgid "Multifile HTML options"
 msgstr "Options HTML multi-fichiers"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:207
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:212
 msgid "Interactive fiction HTML options"
 msgstr "Options HTML pour la fiction interactive"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:208
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:213
 msgid "EPUB options"
 msgstr "Options EPUB"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:209
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:214
 msgid "LaTeX options"
 msgstr "Options LaTeX"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:210
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:215
 msgid "Resources option"
 msgstr "Options de ressources"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:211
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:216
 msgid "Input options"
 msgstr "Options d'entrée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:212
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:217
 msgid "Crowbook options"
 msgstr "Options Crowbook"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:213
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:218
 msgid "Output options (for proofreading)"
 msgstr "Options de sortie (pour la relecture)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:214
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:219
 msgid "Proofreading options (only for output.proofread.* targets)"
 msgstr "Options de relecture (seulement pour les cibles output.proofread.*)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:215
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:895
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:220
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:904
 msgid "Deprecated options"
 msgstr "Options dépréciées"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:217
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:222
 msgid "Author of the book"
 msgstr "Auteur ou autrice du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:218
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:223
 msgid "Title of the book"
 msgstr "Titre du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:219
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:224
 msgid "Language of the book"
 msgstr "Langue du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:220
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:225
 msgid "Subject of the book (used for EPUB metadata)"
 msgstr "Sujet du livre (utilisé pour les métadonnées EPUB)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:221
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:226
 msgid "Description of the book (used for EPUB metadata)"
 msgstr "Description du livre (utilisé pour les métadonnées EPUB)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:222
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:227
 msgid "Path to the cover of the book"
 msgstr "Chemin de la couverture du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:224
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:229
 msgid "Subtitle of the book"
 msgstr "Sous-titre du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:225
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:230
 msgid ""
 "License of the book. This information will be displayed on PDF documents"
 msgstr ""
 "Licence tu livre. Cette information sera affichée dans les documents PDF."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:226
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:231
 msgid "Version of the book"
 msgstr "Version du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:227
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:232
 msgid "Date the book was revised"
 msgstr "Date de dernière révision du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:229
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:234
 msgid "Output file name for EPUB rendering"
 msgstr "Nom du fichier EPUB à générer"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:230
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:235
 msgid "Output file name for HTML rendering"
 msgstr "Nom de fichier pour le rendu HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:231
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:236
 msgid "Output file name for LaTeX rendering"
 msgstr "Fichier du format LaTeX à générer"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:232
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:237
 msgid "Output file name for PDF rendering"
 msgstr "Nom de fichier pour le PDF à générer"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:233
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:238
 msgid "Output file name for ODT rendering"
 msgstr "Nom de fichier pour la génération du format ODT"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:234
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:239
 msgid "Output file name for HTML (interactive fiction) rendering"
 msgstr "Nom de fichier pour le rendu HTML (fiction interactive)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:235
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:240
 msgid "Output directory name for HTML rendering"
 msgstr "Nom de répertoire où générer le HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:236
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:241
 msgid "Directory where those output files will we written"
 msgstr "Répertoire où ces fichiers de sortie seront écrits"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:238
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:243
 msgid ""
 "If/how highligh code blocks. Possible values: \"syntect\" (default, "
 "performed at runtime), \"highlight.js\" (HTML-only, uses Javascript), \"none"
@@ -476,28 +479,28 @@ msgstr ""
 "\" (effectué lors de l'utilisation de crowbook, valeur par défaut) et \"none"
 "\""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:239
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:244
 msgid ""
 "Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"
 msgstr ""
 "Thème pour la coloration syntaxique (si rendering.highlight est placé à "
 "'syntect')"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:240
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:245
 msgid "Use initials ('lettrines') for first letter of a chapter (experimental)"
 msgstr ""
 "Utilise des lettrines pour la première lettre de chaque chapitre "
 "(expérimental)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:241
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:246
 msgid "Display a table of content in the document"
 msgstr "Affiche une table des matières dans le document"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:242
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:247
 msgid "Name of the table of contents if it is displayed in document"
 msgstr "Nom de la table des matières si elle est affichée dans le document"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:243
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:248
 msgid ""
 "The  maximum heading levels that should be numbered (0: no numbering, 1: "
 "only chapters, ..., 6: all)"
@@ -505,187 +508,213 @@ msgstr ""
 "Le nombre maximum de niveaux qui devraient être numérotés (0 : aucune "
 "numérotation, 1 : seulement les chapitres, ..., 6 : tout)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:244
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:249
 msgid "How to call parts (or 'books', 'episodes', ..."
 msgstr "Comment nommer les parties (par exemple 'livres', 'épisodes' ...)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:245
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:250
 msgid "How to call chapters"
 msgstr "Comment nommer les chapitre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:246
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:251
 msgid "Naming scheme of chapters, for TOC"
 msgstr "Schéma de nommage des chapitres, pour la table des matières"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:247
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:252
 msgid "Naming scheme of parts, for TOC"
 msgstr "Schéma de nommage des parties, pour la table des matières"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:248
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:253
 msgid "If set to true, display part number with roman numerals"
 msgstr "Si activé, affiche les numéros de partie avec des chiffres romains"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:249
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:254
 msgid "If set to true, display chapter number with roman numerals"
 msgstr "Si activé, affiche les numéros de chapitre avec des chiffres romains"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:250
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:255
 msgid "If set to true, reset chapter number at each part"
 msgstr "Si activé, remet à zéro les numéros de chapitre à chaque partie"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:252
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:257
 msgid "Import another book configuration file"
 msgstr "Importe un autre fichier de configuration de livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:254
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:259
 msgid "Path to an icon to be used for the HTML files(s)"
 msgstr "Chemin vers une icone à utiliser pour le(s) fichier(s) HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:255
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:260
 msgid "Custom header to display at the beginning of html file(s)"
 msgstr "En-tête personnalisée à afficher au début de chaque fichier HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:256
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:261
 msgid "Custom footer to display at the end of HTML file(s)"
 msgstr "Pied de page personnalisé à afficher à la fin des fichiers HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:257
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:262
 msgid "Path of a stylesheet for HTML rendering"
 msgstr "Chemin d'une feuille de style pour le rendu HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:258
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:263
 msgid "Some inline CSS added to the stylesheet template"
 msgstr "Du code CSS en ligne à ajouter au template de la feuille de style"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:259
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:264
 msgid "Path of a stylesheet for the colours for HTML"
 msgstr "Chemin d'une feuille de style pour les couleurs pour le HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:260
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:269
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:270
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:265
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:274
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:275
 msgid "Path of a javascript file"
 msgstr "Chemin d'un fichier javascript"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:261
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:266
 msgid "Path of a media print stylesheet for HTML rendering"
 msgstr "Chemin d'une feuille de style pour l'impression, pour le rendu HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:262
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:267
 msgid "Set another highlight.js version than the bundled one"
 msgstr "Donne une autre version de highlight.js que celle qui est embarquée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:263
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:268
 msgid "Set another highlight.js CSS theme than the default one"
 msgstr "Donne un autre thème CSS highlight.js à utilise que celui par défaut"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:264
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:269
 msgid "Display footnotes as side notes in HTML/Epub (experimental)"
 msgstr ""
 "Affiche les notes de bas de pages sur le côté pour le HTML/EPUB "
 "(expérimental)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:265
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:270
 msgid "Replace unicode non breaking spaces with HTML entities and CSS"
 msgstr "Remplace les espaces insécables unicode par des entités HTML et du CSS"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:267
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:272
 msgid "Display only one chapter at a time (with a button to display all)"
 msgstr ""
 "N'affiche qu'un seul chapitre à la fois (avec un bouton pour les afficher "
 "tous)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:268
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:273
 msgid "Path of an HTML template for standalone HTML"
 msgstr "Chemin d'un template HTML pour le fichier HTML indépendant"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:271
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:276
 msgid "Javascript code that will be run at the beginning of each segment"
 msgstr "Code Javascript qui sera exécuté au début de chaque segment"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:272
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:277
 msgid "Javascript code that will be run at the end of each segment"
 msgstr "Code Javascript qui sera exécuté à la fin de chaque segment"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:273
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:278
 msgid "Javascript code that will be run at the beginning of a 'game'"
 msgstr "Code javascript qui sera exécuté au début d'un 'jeu'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:275
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:280
 msgid "Inline template for HTML chapter formatting"
 msgstr "Template en ligne pour le formatage HTML des titres de chapitre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:276
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:281
 msgid "Inline template for HTML part formatting"
 msgstr "Template en ligne pour le formatage HTML des titres de parties"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:277
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:282
 msgid "Path of a HTML template for multifile HTML"
 msgstr "Chemin d'un template HTML pour le HTML multi-fichiers"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:279
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:284
 msgid "EPUB version to generate (2 or 3)"
 msgstr "Version du format EPUB à générér (2 ou 3)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:280
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:285
 msgid "Path of a stylesheet for EPUB"
 msgstr "Chemin d'une feuille de style pour le fichier EPUB"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:281
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:286
 msgid "Inline CSS added to the EPUB stylesheet template"
 msgstr "Code CSS en ligne à ajouter au template de la feuille de style EPUB"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:282
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:287
 msgid "Path of an xhtml template for each chapter"
 msgstr "Chemin d'um template XHTML pour chaque chapitre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:283
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:288
 msgid "Add 'Title' and (if set) 'Cover' in the EPUB table of contents"
 msgstr ""
 "Ajoute 'Titre' et 'Couverture' (s'il y en a une) dans la table des matières "
 "EPUB"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:285
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:290
 msgid "Add foontotes to URL of links so they are readable when printed"
 msgstr ""
 "Ajoute des notes de bas de page à l'URL des liens pour qu'elle soit lisible "
 "à l'impression"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:286
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:291
 msgid "LaTeX command to use for generating PDF"
 msgstr "Commande LaTeX utilisée pour générer le PDF"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:287
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:292
 msgid "Path of a LaTeX template file"
 msgstr "Chemin d'un fichier template LaTeX"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:288
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:293
 msgid "Inline code added in the LaTeX template"
 msgstr "Code en ligne à ajouter au template LaTeX"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:289
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:294
 msgid "LaTeX class to use"
 msgstr "Classe LaTeX à utiliser"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:290
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:295
 msgid "If true, generate a title with \\maketitle"
 msgstr "Si activé, génère un titre avec la commande \\maketitle"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:291
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:296
 msgid "Specifies the size of the page."
 msgstr "Spécifie la taille de la page"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:292
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:297
+msgid ""
+"Specifies left margin (note that with book class left and right margins are "
+"reversed for odd pages, thus the default value is 1.5cm for book class and "
+"2cm else)"
+msgstr "Spécifie la marge gauche (notez qu'avec la classe 'book' les marges de "
+"gauche et de droite sont inversées pour les pages paires, par conséquent la "
+"valeur par défaut est 1.5cm pour la classe book et 2cm sinon)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:298
+msgid ""
+"Specifies right margin(note that with book class left and right margins are "
+"reversed for odd pages, thus the default value is 2.5cm for book class and "
+"2cm else)"
+msgstr "Spécifie la marge droite (notez qu'avec la classe 'book' les marges de "
+"gauche et de droite sont inversées pour les pages paires, par conséquent la "
+"valeur par défaut est 2.5cm pour la classe book et 2cm sinon)"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:299
+msgid "Specifies top margin"
+msgstr "Spécifie la marge supérieure"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:300
+msgid "Specifies left margin"
+msgstr "Spécifie la marge inférieure"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:301
 msgid "Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"
 msgstr ""
 "Spécifie la taille de la police (en pt, 10 (par défaut), 11 ou 12 sont "
 "acceptés)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:293
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:302
 msgid "If disabled, don't try to find references inside the document"
 msgstr "Si désactivé, n'essaie pas de trouver des références dans le document"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:294
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:303
 msgid ""
 "If set to true, use 'stdpage' package to format a manuscript according to "
 "standards"
@@ -693,7 +722,7 @@ msgstr ""
 "Si activé, utilise le package 'stdpage' pour formater le manuscrit "
 "seloncerrtains standards"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:296
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:305
 msgid ""
 "Whitespace-separated list of files to embed in e.g. EPUB file; useful for "
 "including e.g. fonts"
@@ -701,7 +730,7 @@ msgstr ""
 "Liste de fichiers, séparés par des espaces, à embarquer par exemple dans un "
 "fichier EPUB ; utile pour inclure des fontes."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:297
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:306
 msgid ""
 "Paths where additional resources should be copied in the EPUB file or HTML "
 "directory"
@@ -709,7 +738,7 @@ msgstr ""
 "Chemins où les ressources additionnelles devraient être copiées dans le "
 "fichier EPUB ou dans le répertoire HTML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:298
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:307
 msgid ""
 "Path where to find resources (in the source tree). By default, links and "
 "images are relative to the Markdown file. If this is set, it will be to this "
@@ -718,20 +747,20 @@ msgstr ""
 "Chemin où trouver les ressources. Par défaut, les liens et les images sont "
 "relatifs au fichier Markdown. Avec cette option, ce sera relatif à ce chemin."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:299
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:308
 msgid "Set base path but only for links. Useless if resources.base_path is set"
 msgstr ""
 "Donne un chemin de base mais seulement pour les liens. Inutile si resources."
 "base_path est réglé"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:300
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:309
 msgid ""
 "Set base path but only for images. Useless if resources.base_path is set"
 msgstr ""
 "Donne un chemin de base mais seulement pour les images. Inutile si resources."
 "base_path est réglé"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:301
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:310
 msgid ""
 "Set base path but only for additional files. Useless if resources.base_path "
 "is set."
@@ -739,7 +768,7 @@ msgstr ""
 "Donne un chemin de base mais seulement pour les fichiers additionnels. "
 "Inutile si resources.base_path est déjà réglé."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:302
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:311
 msgid ""
 "Set base path but only for templates files. Useless if resources.base_path "
 "is set"
@@ -747,29 +776,29 @@ msgstr ""
 "Règle le chemin de base mais seulement pour les fichiers templates. Inutile "
 "si resources.base_path est réglé"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:304
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:313
 msgid "Toggle typographic cleaning of input markdown according to lang"
 msgstr "Active le nettoyage du Markdown en entrée en fonction de la langue"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:305
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:314
 msgid "If enabled, tries to replace vertical quotations marks to curly ones"
 msgstr ""
 "Si activé, essaie de remplacer les apostrophes et guillemets droits par des "
 "apostrophes et guillemets typographiques"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:306
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:315
 msgid "If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"
 msgstr ""
 "Si activé, remplace '--' par un tiret demi-cadratin ('–') et '---' par un "
 "tiret cadratin ('—')"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:307
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:316
 msgid ""
 "If enabled, replaces '<<' and '>>' to french \"guillemets\" ('«' and '»')"
 msgstr ""
 "Si activé, remplace '<<' et '>>' par des guillemets français ('«' et '»')"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:308
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:317
 msgid ""
 "If enabled, allow support for superscript and subscript using respectively "
 "foo^up^  and bar~down~ syntax."
@@ -777,13 +806,13 @@ msgstr ""
 "Si activé, permet le support pour l'exposant et l'indice en utilisant "
 "respectivement la syntaxe foo^haut^ et bar~bas~."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:309
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:318
 msgid "Enable inline YAML blocks to override options set in config file"
 msgstr ""
 "Permet aux blocs YAML en ligne de rédéfinir des options déjà définies par le "
 "fichier de configuration"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:310
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:319
 msgid ""
 "Consider HTML blocks as text. This avoids having <foo> being considered as "
 "HTML and thus ignored."
@@ -791,7 +820,7 @@ msgstr ""
 "Considère les blocs HTML comme du texte. Cela évite d'avoir <foo> considéré "
 "comme du HTML et donc ignoré."
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:311
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:320
 msgid ""
 "Path where to create a temporary directory (default: uses result from Rust's "
 "std::env::temp_dir())"
@@ -799,23 +828,23 @@ msgstr ""
 "Chemin où créer un répertoire temporaire (par défaut, utilise le résultat de "
 "la fonction Rust std::env::temp_dir())"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:312
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:321
 msgid "Command to use to zip files (for EPUB/ODT)"
 msgstr "Commande à lancer pour zipper des fichiers (pour EPUB/ODT)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:314
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:323
 msgid "Output file name for HTML rendering with proofread features"
 msgstr "Ficher de sortie où générer le HTML avec options de relecture"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:315
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:324
 msgid "Output directory name for HTML rendering with proofread features"
 msgstr "Nom d'un répertoire où générer le HTML pour la relecture"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:316
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:325
 msgid "Output file name for PDF rendering with proofread features"
 msgstr "Nom de fichier pour le PDF à générer avec options de relecture"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:317
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:326
 msgid ""
 "If set to false, will disactivate proofreading even if one of output."
 "proofread.x is present"
@@ -823,223 +852,229 @@ msgstr ""
 "Si mis à faux, désactivera la génération de fichiers de relecture même si "
 "une des cibles output.proofread.x est présente"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:318
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:327
 msgid "If true, try to use language tool server to grammar check the book"
 msgstr ""
 "Si mis à vrai, essaie d'utiliser le serveur languagetool pour effectuer une "
 "correction grammaticale du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:319
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:328
 msgid "Port to connect to languagetool-server"
 msgstr "Port sur lequel se connecter à languagetool-server"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:320
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:329
 msgid "If true, try to use grammalecte server to grammar check the book"
 msgstr ""
 "Si mis à vrai, essaie d'utiliser le serveur grammalecte pour effectuer une "
 "correction grammaticale du livre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:321
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:330
 msgid "Port to connect to grammalecte server"
 msgstr "Port sur lequel se connecter au serveur grammalecte"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:322
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:331
 msgid "If set to true, use Caribon to detect repetitions"
 msgstr "Si mis à vrai, utilise Caribon pour détecter les répétitions"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:323
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:332
 msgid "Max distance between two occurences so it is considered a repetition"
 msgstr ""
 "Distance maximale entre deux occurrences d'un mot pour considérer qu'il "
 "s'agit d'une répétition"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:324
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:333
 msgid "Enable fuzzy string matching"
 msgstr "Active la correspondance approximative des chaînes de caractère"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:325
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:334
 msgid "Max threshold of differences to consider two strings a repetition"
 msgstr ""
 "Seuil maximal de différence pour considérer deux mots comme une répétition"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:326
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:335
 msgid "Ignore proper nouns for repetitions"
 msgstr "Ignore les noms propres pour les répétitions"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:327
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:336
 msgid "Threshold to detect a repetition"
 msgstr "Seuil pour détecter une répétition"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:329
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:338
 msgid ""
 "If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"
 msgstr ""
 "Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie "
 "LaTeX/PDF (syntect uniquement)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:330
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:339
 msgid ""
 "If set, set theme for syntax highlighting for HTML output (syntect only)"
 msgstr ""
 "Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie "
 "HTML (syntect uniquement)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:331
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:340
 msgid ""
 "If set, set theme for syntax highlighting for EPUB output (syntect only)"
 msgstr ""
 "Si activé, sélectionne le thème pour la coloration syntaxique pour la sortie "
 "EPUB (syntect uniquement)"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:333
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:342
 msgid "Renamed"
 msgstr "Renommé"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:334
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:343
 msgid "Removed"
 msgstr "Supprimé"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:433
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:442
 msgid "Ill-formatted OPTIONS string: unrecognized type '{option_type}'"
 msgstr "Chaîne OPTIONS mal formatée : type non reconnu '{option_type}'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:471
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:480
 msgid "Expected a String as a key, found {:?}"
 msgstr "Une String était attendue comme clé, pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:483
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:492
 msgid "Expected only string in the list for key {}, found {:?}"
-msgstr "Seules des chaînes de caractères étaient attendues dans la liste pour la clé {}, pas {:?}"
+msgstr ""
+"Seules des chaînes de caractères étaient attendues dans la liste pour la clé "
+"{}, pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:494
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:503
 msgid "The output format {format} for key {key} is not recognized"
 msgstr "Le format {format} pour la clé {key} n'est pas reconnu"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:502
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:511
 msgid "Expected a list as value for key {}, found {:?}"
 msgstr "Une liste était attendue pour la clé {}, pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:512
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:521
 msgid "Expected a string as value for key {}, found {:?}"
 msgstr "Une chaîne de caractères était attendue pour la clé {}, pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:527
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:536
 msgid "'{value}''s path contains invalid UTF-8 code"
 msgstr "le chemin de '{value}' contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:539
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:625
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:548
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:634
 msgid "expected a string as value for key '{}', found {:?}"
 msgstr ""
 "une chaîne de caractères était attendue comme valeur pour la clé '{}', pas "
 "{:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:550
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:559
 msgid "could not parse '{value}' as a char: does not contain exactly one char"
 msgstr ""
 "impossible d'analyser '{value}' comme un caractère : ne contient pas "
 "exactement un caractère "
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:558
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:567
 msgid "expected a string as value containing a char for key '{}', found {:?}"
 msgstr ""
 "une chaîne de caractère contenant un caractère comme valeur pour la clé "
 "'{}', pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:569
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:578
 msgid "expected a boolean as value for key '{}', found {:?}"
 msgstr "un booléen était attendue comme valeur pour la clé '{}', pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:580
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:589
 msgid "expected an integer as value for key '{}', found {:?}"
 msgstr "un entier était attendu comme valeur pour la clé '{}', pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:592
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:601
 msgid "could not parse '{value}' as a float for key '{key}'"
 msgstr "impossible d'analyser '{value}' comme un flottant pour la clé '{key}'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:600
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:609
 msgid "expected a float as value for key '{}', found {:?}"
 msgstr "un flottant était attendu comme valeur pour la clé '{}', pas {:?}"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:608
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:617
 msgid "'{old_key}' has been deprecated, you should now use '{new_key}'"
 msgstr ""
 "'{old_key}' a été déprécié, vous devriez maintenant utiliser '{new_key}'"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:615
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:624
 msgid "key '{key}' has been deprecated."
 msgstr "la clé '{key}' a été dépréciée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:633
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:642
 msgid "unrecognized key '{key}'"
 msgstr "clé '{key}' non reconnue"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:672
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:681
 msgid ""
 "value '{value}' for key '{key}' does not contain one and only one YAML value"
 msgstr ""
 "la valeur '{value}' pour la clé '{key}' ne contient pas une et une seule "
 "valeur YAML"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:679
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:688
 msgid "could not parse '{value}' as a valid YAML value"
 msgstr "impossible d'analyser '{value}' comme une valeur YAML valide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:695
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:704
 msgid "option '{key}' is not present"
 msgstr "l'option '{key}' n'est pas présente"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:780
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:867
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:789
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:876
 msgid "'{key}''s path contains invalid UTF-8 code"
 msgstr "le chemin de '{key}' contient de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:860
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:869
 msgid "could not get current directory!"
 msgstr "impossible d'obtenir le répertoire courant !"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:909
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:918
 msgid "boolean"
 msgstr "booléen"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:910
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:919
 msgid "float"
 msgstr "flottant"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:911
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:920
 msgid "integer"
 msgstr "entier"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:912
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:921
 msgid "char"
 msgstr "caractère"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:913
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:922
 msgid "string"
 msgstr "chaîne de caractères"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:914
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:923
 msgid "path"
 msgstr "chemin"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:915
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:924
 msgid "template path"
 msgstr "chemin d'un template"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:916
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:925
 msgid "metadata"
 msgstr "métadonnée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:917
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:926
+msgid "list of strings"
+msgstr "liste de chaînes de caractères"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:927
 msgid "DEPRECATED"
 msgstr "DÉPRÉCIÉ"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:923
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:933
 msgid "not set"
 msgstr "non défini"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:926
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:936
 msgid ""
 "- **`{key}`**\n"
 "    - **type**: {option_type}\n"
@@ -1051,11 +1086,11 @@ msgstr ""
 "    - **valeur par défaut** : `{default}`\n"
 "    - {comment}\n"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:938
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:948
 msgid "type:"
 msgstr "type :"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:941
+#: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:951
 msgid "default:"
 msgstr "défaut :"
 
@@ -1113,7 +1148,7 @@ msgstr ""
 "On part sur du png."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:465
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:271
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:280
 msgid "empty str token, could not find initial"
 msgstr "jeton str vide, impossible de trouver la lettrine"
 
@@ -1306,23 +1341,23 @@ msgstr ""
 "LaTeX: impossible de trouver un équivalent tex pour la langue '{lang}', "
 "utilisation de l'anglais par défaut"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:250
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:259
 msgid "generated LaTeX was not valid utf-8"
 msgstr "le fichier LaTeX généré contenait de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:407
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:416
 msgid "found {n} indented ordered lists, LaTeX only allows for 4"
 msgstr "liste ordonnée imbriqué à {n} niveau, LaTeX n'en permet que 4"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:451
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:465
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:460
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:474
 msgid "LaTeX ({source}): image '{url}' doesn't seem to be local; ignoring it."
 msgstr ""
 "LaTeX ({source}) : l'image '{url}' n'a pas l'air d'être locale, elle sera "
 "ignorée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:548
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:565
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:557
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:574
 msgid "problem when writing LaTeX: {error}"
 msgstr "problème en écrivant dans le fichier LaTeX : {error}"
 
