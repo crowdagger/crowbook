@@ -8,8 +8,6 @@ documentation = "https://docs.rs/crowbook/"
 readme = "README.md"
 keywords = ["markdown", "book"]
 categories = ["command-line-utilities", "text-processing"]
-travis-ci = { repository = "lise-henry/crowbook" }
-appveyor = { repository = "lise-henry/crowbook" }
 license = "LGPL-2.1+"
 publish = true
 build = "build.rs"
@@ -23,6 +21,10 @@ exclude = [
     ".travis.yml",
     "appveyor.yml",
 ]
+
+[badges]
+travis-ci = { repository = "lise-henry/crowbook" }
+appveyor = { repository = "lise-henry/crowbook" }
 
 [lib]
 name = "crowbook"
