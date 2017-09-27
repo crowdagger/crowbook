@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+unreleased
+-------------
+* Bugfixes:
+  * EPUB: escape quotes in content.opf
+
 0.13.0 (2017-07-14)
 -----------------------
 * Breaking changes:
