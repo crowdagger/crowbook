@@ -4,7 +4,8 @@ ChangeLog
 unreleased
 -------------
 * Bugfixes:
-  * EPUB: escape quotes in content.opf
+  * EPUB: escape quotes in content.opf.
+  * LaTeX/PDF: allow hyphenations in typewriter font.
 
 0.13.0 (2017-07-14)
 -----------------------
