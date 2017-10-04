@@ -614,7 +614,7 @@ impl BookOptions {
         } else if self.deprecated.contains_key(&key) {
             let opt = self.deprecated[&key].clone();
             if let Some(new_key) = opt {
-                Logger::display_warning(lformat!("'{old_key}' has been deprecated, you should \
+                warn!("{}", lformat!("'{old_key}' has been deprecated, you should \
                                                   now use '{new_key}'",
                                                  old_key = &key,
                                                  new_key = &new_key));

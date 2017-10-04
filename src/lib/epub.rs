@@ -362,13 +362,10 @@ impl<'a> EpubRenderer<'a> {
                 self.chapter_title = self.html.render_vec(vec)?;
                 self.chapter_title_raw = view_as_text(vec);
             } else {
-                self.html
-                    .book
-                    .logger
-                    .warning(lformat!("EPUB ({source}): detected two chapter titles inside the \
-                                       same markdown file, in a file where chapter titles are \
-                                       not even rendered.",
-                                      source = self.html.source));
+                warn!("{}", lformat!("EPUB ({source}): detected two chapter titles inside the \
+                                      same markdown file, in a file where chapter titles are \
+                                      not even rendered.",
+                                     source = self.html.source));
             }
         } else {
             let header;
@@ -401,19 +398,13 @@ impl<'a> EpubRenderer<'a> {
                                 })?
                     .text;
             } else {
-                self.html
-                    .book
-                    .logger
-                    .warning(lformat!("EPUB ({source}): detected two chapters inside the same \
-                                       markdown file.",
-                                      source = self.html.source));
-                self.html
-                    .book
-                    .logger
-                    .warning(lformat!("EPUB ({source}): conflict between: {title1} and {title2}",
-                                      source = self.html.source,
-                                      title1 = self.chapter_title,
-                                      title2 = s));
+                warn!("{}", lformat!("EPUB ({source}): detected two chapters inside the same \
+                                      markdown file.",
+                                     source = self.html.source));
+                warn!("{}", lformat!("EPUB ({source}): conflict between: {title1} and {title2}",
+                                     source = self.html.source,
+                                     title1 = self.chapter_title,
+                                     title2 = s));
             }
         }
         Ok(())
@@ -425,12 +416,9 @@ impl<'a> EpubRenderer<'a> {
         match opt {
             Some(s) => s.to_string(),
             None => {
-                self.html
-                    .book
-                    .logger
-                    .error(lformat!("EPUB: could not guess the format of {file} based on \
-                                     extension. Assuming png.",
-                                    file = s));
+                error!("{}", lformat!("EPUB: could not guess the format of {file} based on \
+                                       extension. Assuming png.",
+                                      file = s));
                 String::from("png")
             }
         }

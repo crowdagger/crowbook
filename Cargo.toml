@@ -37,8 +37,9 @@ path = "src/bin/main.rs"
 doc = false
 
 [features]
-default = ["clap", "proofread", "syntect"]
+default = ["binary", "proofread", "syntect"]
 proofread = ["caribon", "hyper", "url"]
+binary = ["clap", "simplelog"]
 
 [build-dependencies]
 crowbook-intl = "0.2"
@@ -58,8 +59,10 @@ term = "0.4"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"
 epub-builder = "0.3"
+log = "0.3"
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
+simplelog = { version = "0.4", optional = true }
 url =  { version = "1", optional = true }
 syntect = { version = "1", optional = true }
 
@@ -67,3 +70,5 @@ syntect = { version = "1", optional = true }
 version = "0.10"
 optional = true
 default-features = false
+
+

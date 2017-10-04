@@ -152,7 +152,7 @@ impl GrammalecteChecker {
                             }
                         }
                         if check.data.len() > 1 {
-                            Logger::display_warning(lformat!("some error messages from Grammalecte were ignored because of format"));
+                            warn!("{}", lformat!("some error messages from Grammalecte were ignored because of format"));
                         }
                         Ok(())
                     },

@@ -259,11 +259,10 @@ impl Book {
         // set options
         for &(key, value) in options {
             if let Err(err) = self.options.set(key, value) {
-                self.logger
-                    .error(lformat!("Error initializing book: could not set {key} to {value}: {error}",
-                                    key = key,
-                                    value = value,
-                                    error = err));
+                error!("{}", lformat!("Error initializing book: could not set {key} to {value}: {error}",
+                                      key = key,
+                                      value = value,
+                                      error = err));
             }
         }
         // set cleaner according to lang and autoclean settings
@@ -422,7 +421,7 @@ impl Book {
                     if let Yaml::Hash(hash) = docs.pop().unwrap() {
                         for (key, value) in hash {
                             if let Err(err) = self.options.set_yaml(key, value) {
-                                self.logger.error(format!("{}", err));
+                                error!("{}", err);
                             };
                         }
                     } else {
@@ -794,13 +793,13 @@ impl Book {
     /// * `render_format`, which won't do anything if `output.{format}` isn't specified
     ///   in the book configuration file.
     pub fn render_format_to<T: Write>(&self, format: &str, f: &mut T) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate {format}...",
-                                   format = format));
+        debug!("{}", lformat!("Attempting to generate {format}...",
+                              format = format));
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
                 renderer.render(self, f)?;
-                self.logger.info(lformat!("Succesfully generated {format}",
-                                          format = description));
+                info!("{}", lformat!("Succesfully generated {format}",
+                                     format = description));
                 Ok(())
             },
             None => {
@@ -822,8 +821,8 @@ impl Book {
     /// * `render_format`, which won't do anything if `output.{format}` isn't specified
     ///   in the book configuration file.
     pub fn render_format_to_file<P:Into<PathBuf>>(&self, format: &str, path: P) -> Result<()> {
-        self.logger.debug(lformat!("Attempting to generate {format}...",
-                                   format = format));
+        debug!("{}", lformat!("Attempting to generate {format}...",
+                              format = format));
         let path = path.into();
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
@@ -846,9 +845,9 @@ impl Book {
                     path
                 };
                 renderer.render_to_file(self, &path)?;
-                self.logger.info(lformat!("Succesfully generated {format}: {path}",
-                                          format = description,
-                                          path = misc::normalize(path)));
+                info!("{}", lformat!("Succesfully generated {format}: {path}",
+                                     format = description,
+                                     path = misc::normalize(path)));
                 Ok(())
             },
             None => {
@@ -891,8 +890,7 @@ impl Book {
             Path::new("")
         };
         if offset.starts_with("..") {
-            self.logger
-                .debug(lformat!("Warning: book contains chapter '{file}' in a directory above \
+            debug!("{}", lformat!("Warning: book contains chapter '{file}' in a directory above \
                                    the book file, this might cause problems",
                                   file = misc::normalize(file)));
         }
@@ -926,34 +924,31 @@ impl Book {
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
             if let Some(ref checker) = self.checker {
-                self.logger
-                    .info(lformat!("Trying to run languagetool on {file}, this might take a \
+                info!("{}", lformat!("Trying to run languagetool on {file}, this might take a \
                                     while...",
-                                   file = misc::normalize(file)));
+                                     file = misc::normalize(file)));
                 if let Err(err) = checker.check_chapter(&mut tokens) {
-                    self.logger.error(lformat!("Error running languagetool on {file}: {error}",
-                                               file = misc::normalize(file),
-                                               error = err));
+                    error!("{}", lformat!("Error running languagetool on {file}: {error}",
+                                          file = misc::normalize(file),
+                                          error = err));
                 }
             }
             if let Some(ref checker) = self.grammalecte {
-                self.logger
-                    .info(lformat!("Trying to run grammalecte on {file}, this might take a \
+                info!("{}", lformat!("Trying to run grammalecte on {file}, this might take a \
                                     while...",
                                    file = misc::normalize(file)));
                 if let Err(err) = checker.check_chapter(&mut tokens) {
-                    self.logger.error(lformat!("Error running grammalecte on {file}: {error}",
+                    error!("{}", lformat!("Error running grammalecte on {file}: {error}",
                                                file = misc::normalize(file),
                                                error = err));
                 }
             }
             if let Some(ref detector) = self.detector {
-                self.logger
-                    .info(lformat!("Trying to run repetition detector on {file}, this might take a \
-                                    while...",
-                                   file = misc::normalize(file)));
+                info!("{}", lformat!("Trying to run repetition detector on {file}, this might take a \
+                                      while...",
+                                     file = misc::normalize(file)));
                 if let Err(err) = detector.check_chapter(&mut tokens) {
-                    self.logger.error(lformat!("Error running repetition detector on {file}: {error}",
+                    error!("{}", lformat!("Error running repetition detector on {file}: {error}",
                                                file = misc::normalize(file),
                                                error = err));
                 }
@@ -1012,7 +1007,7 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
-        self.logger.debug(lformat!("Parsing chapter: {file}...",
+        debug!("{}", lformat!("Parsing chapter: {file}...",
                                    file = misc::normalize(file)));
 
         // try to open file
@@ -1338,7 +1333,7 @@ impl Book {
                                             }
                                         }
                                     } else {
-                                        self.logger.debug(lformat!("Ignoring YAML \
+                                        debug!("{}", lformat!("Ignoring YAML \
                                                                     block:\n---\n{block}---",
                                                                    block = &yaml_block));
                                     }

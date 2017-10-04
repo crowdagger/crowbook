@@ -200,11 +200,9 @@ impl<'a> LatexRenderer<'a> {
             "uk" => "ukrainian",
             "cy" => "welsh",
             _ => {
-                self.book
-                    .logger
-                    .warning(lformat!("LaTeX: can't find a tex equivalent for lang '{lang}', \
-                                     fallbacking on english",
-                                    lang = self.book.options.get_str("lang").unwrap()));
+                warn!("{}", lformat!("LaTeX: can't find a tex equivalent for lang '{lang}', \
+                                      fallbacking on english",
+                                     lang = self.book.options.get_str("lang").unwrap()));
                 "english"
             }
         });
@@ -455,12 +453,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
                                img))
 
                 } else {
-                    self.book
-                        .logger
-                        .debug(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
-                                         local; ignoring it.",
-                                        source = self.source,
-                                        url = url));
+                    debug!("{}", lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                                           local; ignoring it.",
+                                          source = self.source,
+                                          url = url));
                     Ok(String::new())
                 }
             }
@@ -469,12 +465,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     Ok(format!("\\mdimage{{{}}}",
                                self.handler.map_image(&self.source, url.as_ref())?))
                 } else {
-                    self.book
-                        .logger
-                        .debug(lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
-                                         local; ignoring it.",
-                                        source = self.source,
-                                        url = url));
+                    debug!("{}", lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                                           local; ignoring it.",
+                                          source = self.source,
+                                          url = url));
                     Ok(String::new())
                 }
             }

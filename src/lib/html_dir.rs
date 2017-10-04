@@ -77,10 +77,7 @@ impl<'a> HtmlDirRenderer<'a> {
                                                    directory",
                                                   path = dest_path.display())));
             } else if metadata.is_dir() {
-                self.html
-                    .book
-                    .logger
-                    .debug(lformat!("{path} already exists, deleting it",
+                debug!("{}", lformat!("{path} already exists, deleting it",
                                       path = dest_path.display()));
                 fs::remove_dir_all(&dest_path)
                     .map_err(|e| {

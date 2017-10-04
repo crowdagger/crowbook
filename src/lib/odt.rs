@@ -91,9 +91,9 @@ impl<'a> OdtRenderer<'a> {
 
         if !missing.is_empty() {
             let missing = missing.join(", ");
-            self.book.logger.warning(lformat!("ODT: The document uses the following features, that are not implemented for ODT output: {features}",
-                                         features = missing));
-            self.book.logger.warning(lformat!("ODT: They will be ignored in the generated document."));
+            warn!("{}", lformat!("ODT: The document uses the following features, that are not implemented for ODT output: {features}",
+                                 features = missing));
+            warn!("{}", lformat!("ODT: They will be ignored in the generated document."));
         }
 
         
@@ -119,7 +119,7 @@ impl<'a> OdtRenderer<'a> {
                 }
            } 
             if n.is_part() {
-                self.book.logger.error(lformat!("Parts are not supported yet in ODT"));
+                error!("{}", lformat!("Parts are not supported yet in ODT"));
             }
 
             for token in v {

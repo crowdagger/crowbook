@@ -1,29 +1,34 @@
 extern crate crowbook;
 extern crate crowbook_intl_runtime;
+#[macro_use]
+extern crate log;
 
-#[cfg(feature = "clap")]
+#[cfg(feature= "binary")]
+extern crate simplelog;
+
+#[cfg(feature = "binary")]
 extern crate clap;
 
 #[macro_use]
 mod localize_macros;
-#[cfg(feature = "clap")]
+#[cfg(feature = "binary")]
 mod real_main;
-#[cfg(feature = "clap")]
+#[cfg(feature = "binary")]
 mod helpers;
-#[cfg(feature = "clap")]
+#[cfg(feature = "binary")]
 
 
 
-#[cfg(feature = "clap")]
+#[cfg(feature = "binary")]
 #[macro_use]
 extern crate lazy_static;
 
-#[cfg(feature = "clap")]
+#[cfg(feature = "binary")]
 fn main() {
     real_main::real_main();
 }
 
-#[cfg(not(feature = "clap"))]
+#[cfg(not(feature = "binary"))]
 fn main() {
-    println!("Clap dependency is required to build the binary.");
+    println!("In order to work, the binary must be compiled with the \"binary\" feature.");
 }

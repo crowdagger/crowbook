@@ -26,7 +26,7 @@ use clap::ArgMatches;
 use std::process::exit;
 use std::io;
 use std::env;
-
+use simplelog::{Config, TermLogger, CombinedLogger, LogLevel, LogLevelFilter, SimpleLogger, SharedLogger};
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
@@ -131,17 +131,26 @@ pub fn try_main() -> Result<()> {
 
     // ok to unwrap since clap checks it's there
     let s = matches.value_of("BOOK").unwrap();
-    let verbosity = if matches.is_present("verbose") {
-        InfoLevel::Debug
-    } else if matches.is_present("quiet") {
-        InfoLevel::Quiet
-    } else {
-        InfoLevel::Warning
-    };
 
+    // Initalize logger
+    let verbosity = if matches.is_present("verbose") {
+        LogLevelFilter::Debug
+    } else if matches.is_present("quiet") {
+        LogLevelFilter::Error
+    } else {
+        LogLevelFilter::Info
+    };
+    let mut log_config = Config::default();
+    log_config.time = Some(LogLevel::Debug);
+        
+
+    if TermLogger::init(verbosity, log_config).is_err() {
+        SimpleLogger::init(verbosity, log_config).unwrap();
+    }
+
+    
     let mut book = Book::new();
-    book.set_verbosity(verbosity)
-        .set_options(&get_book_options(&matches));
+    book.set_options(&get_book_options(&matches));
 
     if matches.is_present("single") {
         if s != "-" {

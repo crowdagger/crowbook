@@ -22,11 +22,7 @@ pub fn get_lang() -> Option<String> {
 
 /// Prints an error on stderr and exit the program
 pub fn print_error(s: &str) -> ! {
-    writeln!(&mut io::stderr(),
-             "{} {}",
-             Format::Error(lformat!("Error:")),
-             s)
-        .unwrap();
+    error!("{}", s);
     exit(0);
 }
 

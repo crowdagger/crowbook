@@ -333,7 +333,7 @@ impl Parser {
                     if self.html_as_text {
                         v.push(Token::Str(text.into_owned()));
                     } else {
-                        Logger::display_debug(lformat!("ignoring HTML block '{}'", text));
+                        debug!("{}", lformat!("ignoring HTML block '{}'", text));
                     }
                 }, 
 
@@ -411,11 +411,11 @@ impl Parser {
             Tag::TableCell => Token::TableCell(res),
             Tag::FootnoteDefinition(reference) => {
                 if self.footnotes.contains_key(reference.as_ref()) {
-                    Logger::display_warning(lformat!("in {file}, found footnote definition for \
-                                                      note '{reference}' but previous \
-                                                      definition already exist, overriding it",
-                                                     file = self.source,
-                                                     reference = reference));
+                    warn!("{}", lformat!("in {file}, found footnote definition for \
+                                          note '{reference}' but previous \
+                                          definition already exist, overriding it",
+                                         file = self.source,
+                                         reference = reference));
                 }
                 self.footnotes.insert(reference.into_owned(), res);
                 Token::SoftBreak

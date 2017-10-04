@@ -128,8 +128,8 @@ impl<'a> HtmlRenderer<'a> {
             "none" => (Highlight::None, None),
             "highlight.js" => (Highlight::Js, None),
             value => {
-                Logger::display_error(lformat!("rendering.highlight set to '{}', not a valid value",
-                                                   value));
+                error!("{}", lformat!("rendering.highlight set to '{}', not a valid value",
+                                      value));
                 (Highlight::None, None)
             }
         }
@@ -347,8 +347,8 @@ impl<'a> HtmlRenderer<'a> {
                        "{:X}.",
                        Roman::from(self.current_chapter[i] as i16)).unwrap();
             } else {
-                self.book.logger.error(lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
-                                                    n = self.current_chapter[i]));
+                error!("{}", lformat!("can not use roman numerals with zero or negative chapter numbers ({n})",
+                                      n = self.current_chapter[i]));
             }
         }
         output

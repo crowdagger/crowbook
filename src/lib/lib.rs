@@ -118,6 +118,8 @@ extern crate numerals;
 extern crate epub_builder;
 extern crate uuid;
 #[macro_use]
+extern crate log;
+#[macro_use]
 extern crate lazy_static;
 
 #[cfg(feature = "proofread")]

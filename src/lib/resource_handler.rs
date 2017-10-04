@@ -68,10 +68,9 @@ impl<'r> ResourceHandler<'r> {
         // If image is not local, do nothing much
         let file = file.into();
         if !Self::is_local(file.as_ref()) {
-            self.logger
-                .warning(lformat!("Resources: book includes non-local image {file}, which might \
-                                   cause problem for proper inclusion.",
-                                  file = file));
+            warn!("{}", lformat!("Resources: book includes non-local image {file}, which might \
+                                  cause problem for proper inclusion.",
+                                 file = file));
             return Ok(file);
         }
 
@@ -98,10 +97,9 @@ impl<'r> ResourceHandler<'r> {
                         self.images.len(),
                         extension.to_string_lossy())
             } else {
-                self.logger
-                    .warning(lformat!("Resources: book includes image {file} which doesn't have \
-                                       an extension",
-                                      file = file));
+                warn!("{}", lformat!("Resources: book includes image {file} which doesn't have \
+                                      an extension",
+                                     file = file));
                 format!("images/image_{}", self.images.len())
             }
         } else {
@@ -116,15 +114,14 @@ impl<'r> ResourceHandler<'r> {
             };
             let mut content: Vec<u8> = vec![];
             if f.read_to_end(&mut content).is_err() {
-                self.logger.error(lformat!("Resources: could not read file {file}", file = file));
+                error!("{}", lformat!("Resources: could not read file {file}", file = file));
                 return Ok(file);
             }
             let base64 = content.to_base64(base64::STANDARD);
             match mime_guess::guess_mime_type_opt(file.as_ref()) {
                 None => {
-                    self.logger
-                        .error(lformat!("Resources: could not guess mime type of file {file}",
-                                        file = file));
+                    error!("{}", lformat!("Resources: could not guess mime type of file {file}",
+                                          file = file));
                     return Ok(file);
                 }
                 Some(s) => format!("data:{};base64,{}", s.to_string(), base64),
@@ -158,9 +155,9 @@ impl<'r> ResourceHandler<'r> {
             if let Some(link) = self.links.get(&new_from) {
                 link
             } else {
-                self.logger.warning(lformat!("Resources: could not find an in-book match for link \
-                                        {file}",
-                                             file = from));
+                warn!("{}", lformat!("Resources: could not find an in-book match for link \
+                                      {file}",
+                                     file = from));
                 from
             }
         }
