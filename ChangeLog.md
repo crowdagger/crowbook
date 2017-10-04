@@ -6,6 +6,10 @@ unreleased
 * Bugfixes:
   * EPUB: escape quotes in content.opf.
   * LaTeX/PDF: allow hyphenations in typewriter font.
+* User interface:
+  * Debug/warning/info levels should be displayed in a more coherent manner
+* Library interface:
+  * Removed `Book::set_verbosity` method (uses a logger library instead).
 
 0.13.0 (2017-07-14)
 -----------------------
