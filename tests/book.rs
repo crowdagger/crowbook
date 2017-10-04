@@ -1,12 +1,11 @@
 extern crate crowbook;
-use crowbook::{Book, InfoLevel};
+use crowbook::Book;
 use std::io;
 
 #[test]
 fn test_book() {
     let mut book = Book::new();
-    book.set_verbosity(InfoLevel::Error)
-        .load_file(&format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "tests/test.book"))
+    book.load_file(&format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "tests/test.book"))
         .unwrap();
     book.render_format_to("html", &mut io::sink()).unwrap();
     book.render_format_to("tex", &mut io::sink()).unwrap();
@@ -15,8 +14,7 @@ fn test_book() {
 #[test]
 fn book_example() {
     let mut book = Book::new();
-    book.set_verbosity(InfoLevel::Error)
-        .load_file(&format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "guide.book"))
+    book.load_file(&format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "guide.book"))
         .unwrap();
     book.render_format_to("html", &mut io::sink()).unwrap();
     book.render_format_to("tex", &mut io::sink()).unwrap();
