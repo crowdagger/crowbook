@@ -16,7 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use error::{Error, Result};
-use logger::{Logger, InfoLevel};
+use log::LogLevel::Debug;
 
 use std::path::{Path, PathBuf};
 use std::io;
@@ -27,19 +27,18 @@ use uuid;
 use std::ops::Drop;
 
 /// Struct used to create zip (using filesystem and zip command)
-pub struct Zipper<'a> {
+pub struct Zipper {
     args: Vec<String>,
     path: PathBuf,
-    logger: &'a Logger,
 }
 
-impl<'a> Zipper<'a> {
+impl Zipper {
     /// Creates new zipper
     ///
     /// # Arguments
     /// * `path`: the path to a temporary directory
     /// (zipper will create a random dir in it and clean it later)
-    pub fn new(path: &str, logger: &'a Logger) -> Result<Zipper<'a>> {
+    pub fn new(path: &str) -> Result<Zipper> {
         let uuid = uuid::Uuid::new_v4();
         let zipper_path = Path::new(path).join(uuid.simple().to_string());
 
@@ -54,7 +53,6 @@ impl<'a> Zipper<'a> {
         Ok(Zipper {
             args: vec![],
             path: zipper_path,
-            logger: logger,
         })
     }
 
@@ -127,7 +125,7 @@ This is forbidden because we are supposed \
             .current_dir(&self.path)
             .output()
             .map_err(|e| {
-                if self.logger.verbosity() <= InfoLevel::Warning {
+                if log_enabled!(Debug) {
                     Error::zipper(lformat!("failed to run command '{name}'.\n\
                                             Command output: \n\
                                             {error}",
@@ -142,7 +140,7 @@ This is forbidden because we are supposed \
         if output.status.success() {
             let mut file = File::open(self.path.join(in_file))
                 .map_err(|_| {
-                    if self.logger.verbosity() <= InfoLevel::Warning {
+                    if log_enabled!(Debug) {
                         Error::zipper(lformat!("could not open result of command '{command}'\n\
                                                 Command output:\n\
                                                 {output}'",
@@ -193,7 +191,7 @@ This is forbidden because we are supposed \
     }
 }
 
-impl<'a> Drop for Zipper<'a> {
+impl Drop for Zipper {
     fn drop(&mut self) {
         if let Err(err) = fs::remove_dir_all(&self.path) {
             println!("Error in zipper: could not delete temporary directory {}, error: {}",

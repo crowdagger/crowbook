@@ -26,7 +26,6 @@ use resource_handler::ResourceHandler;
 use renderer::Renderer;
 use parser::Parser;
 use syntax::Syntax;
-use logger::Logger;
 use lang;
 
 use std::borrow::Cow;
@@ -87,7 +86,7 @@ pub struct HtmlRenderer<'a> {
 
     /// Resource handler
     #[doc(hidden)]
-    pub handler: ResourceHandler<'a>,
+    pub handler: ResourceHandler,
 
     /// Current footnote number
     #[doc(hidden)]
@@ -120,7 +119,7 @@ impl<'a> HtmlRenderer<'a> {
             "syntect" => {
                 // Don't init syntect if codeblocks are not used
                 if book.features.codeblock {
-                    (Highlight::Syntect, Some(Syntax::new(book, theme)))
+                    (Highlight::Syntect, Some(Syntax::new(theme)))
                 } else {
                     (Highlight::None, None)
                 }
@@ -153,7 +152,7 @@ impl<'a> HtmlRenderer<'a> {
             footnotes: vec![],
             verbatim: false,
             filename: String::new(),
-            handler: ResourceHandler::new(&book.logger),
+            handler: ResourceHandler::new(),
             source: Source::empty(),
             first_letter: false,
             first_paragraph: true,

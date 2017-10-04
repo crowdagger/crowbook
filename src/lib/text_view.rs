@@ -20,7 +20,6 @@ use std::default::Default;
 
 use token::Token;
 use token::Data;
-use logger::Logger;
 
 pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
     where F1: Fn(&str) -> R,

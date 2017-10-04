@@ -42,7 +42,7 @@ use std::borrow::Cow;
 pub struct LatexRenderer<'a> {
     book: &'a Book,
     current_chapter: Number,
-    handler: ResourceHandler<'a>,
+    handler: ResourceHandler,
     source: Source,
     escape: bool,
     first_letter: bool,
@@ -57,14 +57,13 @@ pub struct LatexRenderer<'a> {
 impl<'a> LatexRenderer<'a> {
     /// Creates new LatexRenderer
     pub fn new(book: &'a Book) -> LatexRenderer<'a> {
-        let mut handler = ResourceHandler::new(&book.logger);
+        let mut handler = ResourceHandler::new();
         handler.set_images_mapping(true);
         let syntax = if book.options.get_str("rendering.highlight").unwrap() == "syntect"
             && book.features.codeblock {
-            Some(Syntax::new(book,
-                             book.options
-                             .get_str("tex.highlight.theme")
-                             .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap())))
+                Some(Syntax::new(book.options
+                                 .get_str("tex.highlight.theme")
+                                 .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap())))
         } else {
             None
         };
@@ -95,8 +94,7 @@ impl<'a> LatexRenderer<'a> {
     pub fn render_pdf(&mut self, to: &mut io::Write) -> Result<String> {
         let content = self.render_book()?;
         let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
-                                     .unwrap(),
-                                     &self.book.logger)?;
+                                     .unwrap())?;
         zipper.write("result.tex", content.as_bytes(), false)?;
 
         // write image files

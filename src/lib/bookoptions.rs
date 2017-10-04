@@ -1,7 +1,6 @@
 use error::{Error, Result, Source};
 use bookoption::BookOption;
 use book::Book;
-use logger::{Logger};
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;

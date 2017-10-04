@@ -29,7 +29,6 @@ use odt::{Odt};
 use templates::{epub, html, epub3, latex, html_dir, highlight, html_single, html_if};
 use number::Number;
 use resource_handler::ResourceHandler;
-use logger::{Logger, InfoLevel};
 use lang;
 use misc;
 use book_renderer::BookRenderer;
@@ -156,10 +155,6 @@ pub struct Book {
     #[doc(hidden)]
     pub root: PathBuf,
 
-    /// Logger
-    #[doc(hidden)]
-    pub logger: Logger,
-
     /// Source for error files
     #[doc(hidden)]
     pub source: Source,
@@ -186,7 +181,6 @@ impl Book {
             cleaner: Box::new(Off),
             root: PathBuf::new(),
             options: BookOptions::new(),
-            logger: Logger::new(),
             chapter_template: None,
             part_template: None,
             checker: None,
@@ -267,22 +261,6 @@ impl Book {
         }
         // set cleaner according to lang and autoclean settings
         self.update_cleaner();
-        self
-    }
-
-    /// Sets the verbosity of a book
-    ///
-    /// See `InfoLevel` for more information on verbosity
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use crowbook::{Book, InfoLevel};
-    /// let mut book = Book::new();
-    /// book.set_verbosity(InfoLevel::Warning);
-    /// ```
-    pub fn set_verbosity(&mut self, verbosity: InfoLevel) -> &mut Book {
-        self.logger.set_verbosity(verbosity);
         self
     }
 
@@ -679,8 +657,7 @@ impl Book {
                 match checker {
                     Ok(checker) => self.checker = Some(checker),
                     Err(e) => {
-                        self.logger
-                            .error(lformat!("{error}. Proceeding without using languagetool.", error = e))
+                        error!("{}", lformat!("{error}. Proceeding without using languagetool.", error = e))
                     }
                 }
             }
@@ -691,8 +668,7 @@ impl Book {
                 match checker {
                     Ok(checker) => self.grammalecte = Some(checker),
                     Err(e) => {
-                        self.logger
-                            .error(lformat!("{error}. Proceeding without using grammalecte.", error = e))
+                        error!("{}", lformat!("{error}. Proceeding without using grammalecte.", error = e))
                     }
                 }
             }
@@ -722,8 +698,7 @@ impl Book {
         if let Ok(path) = self.options.get_path(&key) {
             let result = self.render_format_to_file(format, path);
             if let Err(err) = result {
-                self.logger
-                    .error(lformat!("Error rendering {name}: {error}", name = format, error = err));
+                error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
             }
         }
     }
@@ -1306,29 +1281,26 @@ impl Book {
                                                 .set_yaml(key.clone(), value.clone()) {
                                                 Ok(opt) => {
                                                     if let Some(old_value) = opt {
-                                                        self.logger
-                                                            .debug(lformat!("Inline YAML block \
-                                                                             replaced {:?} \
-                                                                             previously set to \
+                                                        debug!("{}", lformat!("Inline YAML block \
+                                                                               replaced {:?} \
+                                                                               previously set to \
                                                                              {:?} to {:?}",
-                                                                            key,
-                                                                            old_value,
-                                                                            value));
+                                                                              key,
+                                                                              old_value,
+                                                                              value));
                                                     } else {
-                                                        self.logger
-                                                            .debug(lformat!("Inline YAML block \
-                                                                             set {:?} to {:?}",
-                                                                            key,
-                                                                            value));
+                                                        debug!("{}", lformat!("Inline YAML block \
+                                                                               set {:?} to {:?}",
+                                                                              key,
+                                                                              value));
                                                     }
                                                 }
                                                 Err(e) => {
-                                                    self.logger
-                                                        .error(lformat!("Inline YAML block could \
-                                                                        not set {:?} to {:?}: {}",
-                                                                       key,
-                                                                       value,
-                                                                       e))
+                                                    error!("{}", lformat!("Inline YAML block could \
+                                                                           not set {:?} to {:?}: {}",
+                                                                          key,
+                                                                          value,
+                                                                          e))
                                                 }
                                             }
                                         }
@@ -1340,15 +1312,13 @@ impl Book {
                                     valid_block = true;
                                 }
                                 Err(err) => {
-                                    self.logger
-                                        .error(lformat!("Found something that looked like a \
+                                    error!("{}", lformat!("Found something that looked like a \
                                                          YAML block:\n{block}",
                                                         block = &yaml_block));
-                                    self.logger
-                                        .error(lformat!("... but it didn't parse correctly as \
-                                                         YAML('{error}'), so treating it like \
-                                                         Markdown.",
-                                                        error = err));
+                                    error!("{}", lformat!("... but it didn't parse correctly as \
+                                                           YAML('{error}'), so treating it like \
+                                                           Markdown.",
+                                                          error = err));
                                 }
                             }
                             break;

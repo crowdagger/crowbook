@@ -28,7 +28,6 @@ use text_view::insert_annotation;
 use token::Token;
 use token::Data;
 use error::{Error, Result, Source};
-use logger::Logger;
 
 /// Represents a grammar error from Grammalecte
 ///

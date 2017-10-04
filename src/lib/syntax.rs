@@ -16,7 +16,6 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use error::Result;
-use book::Book;
 
 use crowbook_text_processing::escape;
 
@@ -37,7 +36,7 @@ pub struct Syntax {}
 #[cfg(feature="syntect")]
 impl Syntax {
     /// Creates a new Syntax wrapper
-    pub fn new(book: &Book, theme_name: &str) -> Syntax {
+    pub fn new(theme_name: &str) -> Syntax {
         let mut theme_set = syntect::highlighting::ThemeSet::load_defaults();
         let theme = match theme_set.themes.remove(theme_name) {
             Some(theme) => theme,
@@ -127,7 +126,7 @@ fn strip_language(language: &str) -> &str {
 
 #[cfg(not(feature="syntect"))]
 impl Syntax {
-    pub fn new(book: &Book, _: &str) -> Syntax {
+    pub fn new( _: &str) -> Syntax {
         error!("{}", lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
         Syntax {}
     }

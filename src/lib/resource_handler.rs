@@ -1,5 +1,4 @@
 use token::Token;
-use logger::Logger;
 use error::{Error, Result, Source};
 
 use std::collections::HashMap;
@@ -17,12 +16,11 @@ use mime_guess;
 /// Its task is to make sure that some resource (image, link) is available
 /// for the book and to list images used in Markdown files so they can be used for the book
 #[derive(Debug)]
-pub struct ResourceHandler<'r> {
+pub struct ResourceHandler {
     /// Maps an original url (e.g.) "foo/Readme.md" to a valid link
     /// (e.g.) chapter3.html
     links: HashMap<String, String>,
     map_images: bool,
-    logger: &'r Logger,
     base64: bool,
 
     /// Maps an original (local) file name to a new file name. Allows to
@@ -31,15 +29,14 @@ pub struct ResourceHandler<'r> {
     pub images: HashMap<String, String>,
 }
 
-impl<'r> ResourceHandler<'r> {
+impl ResourceHandler {
     /// Creates a new, empty Resource Handler
-    pub fn new(logger: &'r Logger) -> ResourceHandler {
+    pub fn new() -> ResourceHandler {
         ResourceHandler {
             links: HashMap::new(),
             images: HashMap::new(),
             map_images: false,
             base64: false,
-            logger: logger,
         }
     }
 

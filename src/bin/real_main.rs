@@ -19,14 +19,14 @@ extern crate clap;
 
 use helpers::*;
 
-use crowbook::{Result, Book, BookOptions, InfoLevel};
+use crowbook::{Result, Book, BookOptions};
 use crowbook_intl_runtime::set_lang;
 use crowbook::Stats;
 use clap::ArgMatches;
 use std::process::exit;
 use std::io;
 use std::env;
-use simplelog::{Config, TermLogger, CombinedLogger, LogLevel, LogLevelFilter, SimpleLogger, SharedLogger};
+use simplelog::{Config, TermLogger, LogLevel, LogLevelFilter, SimpleLogger};
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {

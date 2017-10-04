@@ -17,7 +17,6 @@
 
 use token::Token;
 use error::{Result, Error, Source};
-use logger::Logger;
 use book::Book;
 
 use std::mem;
