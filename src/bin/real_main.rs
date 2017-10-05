@@ -20,11 +20,14 @@ use helpers::*;
 use crowbook::{Result, Book, BookOptions};
 use crowbook_intl_runtime::set_lang;
 use crowbook::Stats;
+use tempdir::TempDir;
 use clap::ArgMatches;
 use std::process::exit;
 use std::io;
+use std::io::Read;
 use std::env;
-use simplelog::{Config, TermLogger, LogLevel, LogLevelFilter, SimpleLogger};
+use std::fs::File;
+use simplelog::{Config, TermLogger, LogLevel, LogLevelFilter, SimpleLogger, WriteLogger};
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
@@ -54,7 +57,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     };
     
     match result {
-        Err(err) => print_error(&format!("{}", err)),
+        Err(err) => print_error_and_exit(&format!("{}", err)),
         Ok(_) => {
             exit(0);
         }
@@ -101,7 +104,7 @@ pub fn try_main() -> Result<()> {
                 println!("{}", s);
                 exit(0);
             }
-            Err(_) => print_error(&lformat!("{} is not a valid template name.", template)),
+            Err(_) => print_error_and_exit(&lformat!("{} is not a valid template name.", template)),
         }
     }
 
@@ -120,7 +123,7 @@ pub fn try_main() -> Result<()> {
     }
 
     if !matches.is_present("BOOK") {
-        print_error(&lformat!("You must pass the file of a book configuration \
+        print_error_and_exit(&lformat!("You must pass the file of a book configuration \
                                file.\n\n{}\n\nFor more information try --help.",
                               matches.usage()));
     }
@@ -133,6 +136,7 @@ pub fn try_main() -> Result<()> {
     // Initalize logger
     let mut log_config = Config::default();
     log_config.target = None;
+    log_config.location = None;
     log_config.time = None;
     let mut pb = false;
     let verbosity = if matches.is_present("verbose") {
@@ -143,65 +147,85 @@ pub fn try_main() -> Result<()> {
         LogLevelFilter::Error
     } else {
         pb = true;
-        LogLevelFilter::Off
+        LogLevelFilter::Error
     };
 
 
-        
-
-    if TermLogger::init(verbosity, log_config).is_err() {
-        // If it failed, not much we can do, we just won't display log
-        let _ = SimpleLogger::init(verbosity, log_config);
+    let error_dir = TempDir::new("crowbook").unwrap();
+    let error_path = "error.log";
+    if true {
+        let errors = File::create(error_dir.path().join(error_path)).unwrap();
+        log_config.level = None;
+        let _ = WriteLogger::init(verbosity, log_config, errors);
+    } else {
+        if TermLogger::init(verbosity, log_config).is_err() {
+            // If it failed, not much we can do, we just won't display log
+            let _ = SimpleLogger::init(verbosity, log_config);
+        }
     }
-
-
-    let mut book = Book::new();
-    if pb {
-        book.add_progress_bar();
-    }
-    book.set_options(&get_book_options(&matches));
 
     {
-        let res = if matches.is_present("single") {
-            if s != "-" {
-                book.load_markdown_file(s)
-            } else {
-                book.read_markdown_config(io::stdin())
-            }
-        } else if s != "-" {
-            book.load_file(s)
-        } else {
-            book.read_config(io::stdin())
-        }.map(|_| ());
+        let mut book = Book::new();
+        if pb {
+            book.add_progress_bar();
+        }
+        book.set_options(&get_book_options(&matches));
         
-        match res {
-            Ok(..) => {},
+        {
+            let res = if matches.is_present("single") {
+                if s != "-" {
+                    book.load_markdown_file(s)
+                } else {
+                    book.read_markdown_config(io::stdin())
+                }
+            } else if s != "-" {
+                book.load_file(s)
+            } else {
+                book.read_config(io::stdin())
+            }.map(|_| ());
+            
+            match res {
+                Ok(..) => {},
             Err(err) => {
                 book.set_error(&format!("{}", err));
                 return Err(err);
             }
+            }
+        }
+        
+        set_book_options(&mut book, &matches);
+        
+        if matches.is_present("stats") {
+            let stats = Stats::new(&book);
+            println!("{}", stats);
+            exit(0);
+        }
+        
+        if let Some(format) = matches.value_of("to") {
+            render_format(&mut book, &matches, format);
+        } else {
+            book.render_all();
+        }
+    }
+    if true {
+        let mut errors = String::new();
+        let mut file = File::open(error_dir.path().join(error_path)).unwrap();
+        file.read_to_string(&mut errors).unwrap();
+        if !errors.is_empty() {
+            print_warning();
+            for line in errors.lines() {
+                print_error(line);
+            }
         }
     }
 
-    set_book_options(&mut book, &matches);
-
-    if matches.is_present("stats") {
-        let stats = Stats::new(&book);
-        println!("{}", stats);
-        exit(0);
-    }
-
-    if let Some(format) = matches.value_of("to") {
-        render_format(&mut book, &matches, format);
-    } else {
-        book.render_all();
-    }
-
+    
     Ok(())
 }
 
 pub fn real_main() {
+    display_header();
     if let Err(err) = try_main() {
-        print_error(&format!("{}", err));
+        print_error_and_exit(&format!("{}", err));
     }
 }

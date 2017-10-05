@@ -1,11 +1,29 @@
 use crowbook::Book;
 use clap::{App, Arg,  ArgMatches, AppSettings};
+use console::{style, Emoji};
 
 use std::io::{self, Write};
 use std::process::exit;
 use std::fs;
 use std::env;
 
+
+static BIRD: &str = "🐦 ";
+static ERROR: &str = "💣 ";
+static WARNING: &str = "⚠️ ";
+
+pub fn print_warning() {
+    eprint!("{}", style(WARNING).yellow());
+    eprintln!("{}", style(lformat!("Crowbook exited successfully, but the following errors occurred:")).yellow());
+}
+
+/// Display version number
+pub fn display_header() {
+    eprint!("{}", style(BIRD).magenta());
+    eprintln!("{crowbook} {version}",
+              crowbook = style("CROWBOOK").magenta().bold(),
+              version = style(env!("CARGO_PKG_VERSION")).blue());
+}
 
 /// Return the --lang option, if it is set
 pub fn get_lang() -> Option<String> {
@@ -20,9 +38,17 @@ pub fn get_lang() -> Option<String> {
     None
 }
 
+/// Prints an error
+pub fn print_error(s: &str) {
+    eprint!("{}", style(ERROR).red());
+    eprintln!("{} {}",
+              style(lformat!("ERROR")).bold().red(),
+              s);
+}
+
 /// Prints an error on stderr and exit the program
-pub fn print_error(s: &str) -> ! {
-    error!("{}", s);
+pub fn print_error_and_exit(s: &str) -> ! {
+    print_error(s);
     exit(0);
 }
 
@@ -32,7 +58,7 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
     if let Some(iter) = matches.values_of("set") {
         let v: Vec<_> = iter.collect();
         if v.len() % 2 != 0 {
-            print_error(&lformat!("An odd number of arguments was passed to --set, but it takes \
+            print_error_and_exit(&lformat!("An odd number of arguments was passed to --set, but it takes \
                                    a list of key value pairs."));
         }
 
@@ -60,7 +86,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     for (key, value) in options {
         let res = book.options.set(key, value);
         if let Err(err) = res {
-            print_error(&lformat!("Error in setting key {}: {}", key, err));
+            print_error_and_exit(&lformat!("Error in setting key {}: {}", key, err));
         }
         output.push_str(&format!("{}: {}\n", key, value));
     }
@@ -72,7 +98,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 pub fn create_book(matches: &ArgMatches) -> ! {
     let mut f: Box<Write> = if let Some(book) = matches.value_of("BOOK") {
         if fs::metadata(book).is_ok() {
-            print_error(&lformat!("Could not create file {}: it already exists!", book));
+            print_error_and_exit(&lformat!("Could not create file {}: it already exists!", book));
         }
         Box::new(fs::File::create(book).unwrap())
     } else {
@@ -219,7 +245,7 @@ ARGS:
 /// Pre-check the matches to see if there isn't illegal options not detected by clap
 fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
-        print_error(&lformat!("A list of additional files is only valid with the --create \
+        print_error_and_exit(&lformat!("A list of additional files is only valid with the --create \
                                option."));
     }
 }

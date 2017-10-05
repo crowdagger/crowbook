@@ -1,14 +1,16 @@
 extern crate crowbook;
 extern crate crowbook_intl_runtime;
-extern crate indicatif;
+extern crate console;
 #[macro_use]
 extern crate log;
 
 #[cfg(feature= "binary")]
 extern crate simplelog;
-
 #[cfg(feature = "binary")]
 extern crate clap;
+#[cfg(feature = "binary")]
+extern crate tempdir;
+
 
 #[macro_use]
 mod localize_macros;
@@ -17,7 +19,6 @@ mod real_main;
 #[cfg(feature = "binary")]
 mod helpers;
 #[cfg(feature = "binary")]
-
 
 
 #[cfg(feature = "binary")]
