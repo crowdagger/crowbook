@@ -39,6 +39,7 @@ use text_view::view_as_text;
 use std::thread;
 use std::sync::Arc;
 use std::mem;
+use std::iter::ExactSizeIterator;
 
 use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 
@@ -178,6 +179,7 @@ pub struct Book {
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
     multibar: Option<Arc<MultiProgress>>,
     mainbar: Option<ProgressBar>,
+    secondbar: Option<ProgressBar>,
     guard: Option<thread::JoinHandle<()>>,
 }
 
@@ -199,6 +201,7 @@ impl Book {
             features: Features::new(),
             multibar: None,
             mainbar: None,
+            secondbar: None,
             guard: None,
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
@@ -603,7 +606,19 @@ impl Book {
         }
 
         // Parse chapters
-        while let Some(line) = lines.next() {
+        let lines: Vec<_> = lines.collect();
+        if let Some(ref multibar) = self.multibar {
+            let bar = multibar.add(ProgressBar::new(lines.len() as u64));
+            bar.set_style(ProgressStyle::default_bar()
+                          .template("{bar:40.cyan/blue} {percent:>7}% {msg}")
+                          .progress_chars("##-"));
+            bar.set_message("Processing...");
+            self.secondbar = Some(bar);
+        }
+        for line in lines {
+            if let Some(ref bar) = self.secondbar {
+                bar.inc(1);
+            }
             line_number += 1;
             self.source.set_line(line_number);
             let line = line.trim();
@@ -693,6 +708,10 @@ impl Book {
                                                 lformat!("found invalid chapter definition in \
                                                           the chapter list")));
             }
+        }
+
+        if let Some(ref bar) = self.secondbar {
+            bar.finish_and_clear();
         }
 
         self.source.unset_line();
@@ -982,6 +1001,10 @@ impl Book {
                                                   file: &str,
                                                   mut source: R)
                                                   -> Result<&mut Self> {
+        if let Some(ref bar) = self.mainbar {
+            bar.set_message(&lformat!("Processing {file}...", file = file));
+            bar.tick();
+        }
         let mut content = String::new();
         source.read_to_string(&mut content)
             .map_err(|_| {
@@ -994,6 +1017,10 @@ impl Book {
         self.parse_yaml(&mut content);
 
         // parse the file
+        if let Some(ref bar) = self.secondbar {
+            bar.set_message(&lformat!("Parsing..."));
+            bar.tick();
+        }
         let mut parser = Parser::from(self);
         parser.set_source_file(file);
         let mut tokens = parser.parse(&content)?;
@@ -1041,8 +1068,8 @@ impl Book {
         if cfg!(feature = "proofread") && self.is_proofread() {
             let normalized = misc::normalize(file);
             if let Some(ref checker) = self.checker {
-                if let Some(ref bar) = self.mainbar {
-                    bar.set_message(&lformat!("Running languagetool on {file}...", file = &normalized));
+                if let Some(ref bar) = self.secondbar {
+                    bar.set_message(&lformat!("Running languagetool"));
                 }
 
                 info!("{}", lformat!("Trying to run languagetool on {file}, this might take a \
@@ -1055,8 +1082,8 @@ impl Book {
                 }
             }
             if let Some(ref checker) = self.grammalecte {
-                if let Some(ref bar) = self.mainbar {
-                    bar.set_message(&lformat!("Running grammalecte on {file}...", file = &normalized));
+                if let Some(ref bar) = self.secondbar {
+                    bar.set_message(&lformat!("Running grammalecte"));
                 }
 
                 info!("{}", lformat!("Trying to run grammalecte on {file}, this might take a \
@@ -1069,8 +1096,8 @@ impl Book {
                 }
             }
             if let Some(ref detector) = self.detector {
-                if let Some(ref bar) = self.mainbar {
-                    bar.set_message(&lformat!("Detecting repetitions in {file}...", file = &normalized));
+                if let Some(ref bar) = self.secondbar {
+                    bar.set_message(&lformat!("Detecting repetitions"));
                 }
 
                 info!("{}", lformat!("Trying to run repetition detector on {file}, this might take a \
@@ -1083,7 +1110,9 @@ impl Book {
                 }
             }
         }
-
+        if let Some(ref bar) = self.secondbar {
+            bar.set_message("");
+        }
         self.chapters.push(Chapter::new(number, file, tokens));
 
         Ok(self)
