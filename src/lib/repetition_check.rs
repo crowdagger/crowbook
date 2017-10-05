@@ -63,7 +63,7 @@ impl RepetitionDetector {
             .with_html(false)
             .with_ignore_proper(self.ignore_proper)
             .with_max_distance(self.max_distance as u32);
-        for mut token in tokens.iter_mut() {
+        for token in tokens.iter_mut() {
             match *token {
                 Token::Paragraph(ref mut v) |
                 Token::Header(_, ref mut v) |

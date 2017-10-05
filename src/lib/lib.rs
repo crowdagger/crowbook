@@ -113,12 +113,10 @@ extern crate rustc_serialize;
 extern crate rayon;
 extern crate crowbook_text_processing;
 extern crate crowbook_intl_runtime;
-extern crate term;
 extern crate numerals;
 extern crate epub_builder;
 extern crate uuid;
 extern crate indicatif;
-extern crate console;
 #[macro_use]
 extern crate log;
 #[macro_use]

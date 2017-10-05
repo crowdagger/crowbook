@@ -262,7 +262,7 @@ impl Parser {
     }
     
     /// Looks for super script in a vector of tokens
-    fn parse_super_vec(&mut self, mut v: &mut Vec<Token>) {
+    fn parse_super_vec(&mut self, v: &mut Vec<Token>) {
         for i in 0..v.len() {
             let new = if v[i].is_str() {
                 if let Token::Str(ref s) = v[i] {
@@ -292,7 +292,7 @@ impl Parser {
     }
 
     /// Looks for subscript in a vector of token
-    fn parse_sub_vec(&mut self, mut v: &mut Vec<Token>) {
+    fn parse_sub_vec(&mut self, v: &mut Vec<Token>) {
         for i in 0..v.len() {
             let new = if v[i].is_str() {
                 if let Token::Str(ref s) = v[i] {

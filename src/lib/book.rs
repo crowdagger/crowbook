@@ -39,7 +39,6 @@ use text_view::view_as_text;
 use std::thread;
 use std::sync::Arc;
 use std::mem;
-use std::iter::ExactSizeIterator;
 
 use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 
@@ -248,7 +247,7 @@ impl Book {
     pub fn add_progress_bar(&mut self) {
         let multibar = Arc::new(MultiProgress::new());
         self.multibar = Some(multibar.clone());
-        let mut b = self.multibar
+        let b = self.multibar
             .as_ref()
             .unwrap()
             .add(ProgressBar::new_spinner());
@@ -1142,7 +1141,7 @@ impl Book {
         // Adjust header levels
         {
             let last = self.chapters.last_mut().unwrap();
-            for mut token in &mut last.content {
+            for token in &mut last.content {
                 match *token {
                     Token::Header(ref mut n, _) => {
                         let new = *n + level;

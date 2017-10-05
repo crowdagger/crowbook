@@ -188,7 +188,7 @@ impl ResourceHandler {
             // nothing do to
             return;
         }
-        for mut token in ast {
+        for token in ast {
             match *token {
                 Token::Link(ref mut url, _, ref mut v) => {
                     if ResourceHandler::is_local(url) {

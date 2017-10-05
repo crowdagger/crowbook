@@ -143,14 +143,14 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
     {
         match *token {
             Token::CodeBlock(ref language, ref v) if language == "" => {
-                let mut html_if: &mut HtmlIfRenderer = this.as_mut();
+                let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = view_as_text(v);
                 let content = html_if.parse_inner_code(&code)?;
                 Ok(content)
                 
             },
             Token::CodeBlock(ref language, ref v) if language.starts_with(|c| c == '<' || c == '>') => {
-                let mut html_if: &mut HtmlIfRenderer = this.as_mut();
+                let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = format!("if (passageCount(state.current_id) {expr}) {{
     {code};
 }}\n",
@@ -160,7 +160,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                 Ok(content)
             },
             Token::CodeBlock(ref language, ref v) if language.parse::<u32>().is_ok() => {
-                let mut html_if: &mut HtmlIfRenderer = this.as_mut();
+                let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = format!("if (passageCount(state.current_id) == {n}) {{
     {code};
 }}\n",
