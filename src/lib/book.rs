@@ -219,7 +219,7 @@ impl Book {
     }
 
     /// Sets an error message to the progress bar, if it is set
-    pub fn set_error(&mut self, msg: &str) {
+    pub fn set_error(&self, msg: &str) {
         if let Some(ref mainbar) = self.mainbar {
             let sty = ProgressStyle::default_spinner()
             .tick_chars("/|\\-X")
@@ -227,6 +227,18 @@ impl Book {
             mainbar.set_style(sty);
             mainbar.set_message(msg);
         }
+    }
+
+    /// Sets a finished message to the progress bar, if it is set
+    pub fn set_finished(&self, msg: &str) {
+        if let Some(ref bar) = self.mainbar {
+            let sty = ProgressStyle::default_spinner()
+                .tick_chars("/|\\-V")
+                .template("{spinner:.dim.bold.cyan} {wide_msg}");
+            bar.set_style(sty);
+            bar.set_message(msg);
+        }
+
     }
    
 
@@ -770,24 +782,12 @@ impl Book {
             if let Some(bar) = bar {
                 bar.set_message(&lformat!("rendering..."));
             }
-            let result = self.render_format_to_file(format, path, bar);
+            let result = self.render_format_to_file_with_bar(format, path, bar);
             if let Err(err) = result {
                 if let Some(bar) = bar {
-                    bar.set_style(ProgressStyle::default_spinner()
-                                  .tick_chars("/|\\-X")
-                                  .template(&format!("{{spinner:.dim.bold.red}} {format}: {{wide_msg:.red}}",
-                                          format = format)));
-                    bar.finish_with_message(&format!("{}", err));
+                    self.finish_spinner_error(bar, format, &format!("{}", err));
                 }
                 error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
-            }
-        } else {
-            if let Some(bar) = bar {
-                bar.set_style(ProgressStyle::default_spinner()
-                              .tick_chars("/|\\- ")
-                              .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
-                                                 format = format)));
-                bar.finish_with_message(&lformat!("skipped"));
             }
         }
     }
@@ -853,20 +853,8 @@ impl Book {
 
         let mut bars = vec![];
         if let Some(ref multibar) = self.multibar {
-            if let Some(ref mainbar) = self.mainbar {
-                mainbar.set_message(&lformat!("Rendering..."));
-            }
-            
             for key in &keys {
-                let bar = multibar.add(ProgressBar::new_spinner());
-                let sty = ProgressStyle::default_spinner()
-                    .tick_chars("/|\\-X")
-                    .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{wide_msg:.yellow}}",
-                                       format = key));
-                bar.set_style(sty);
-                bar.enable_steady_tick(200);
-                bar.set_message(&lformat!("waiting..."));
-                bar.tick();
+                let bar = self.add_spinner_to_multibar(multibar, key);
                 bars.push(bar);
             }
         }
@@ -881,13 +869,7 @@ impl Book {
                 }
             });
 
-        if let Some(ref bar) = self.mainbar {
-            let sty = ProgressStyle::default_spinner()
-                .tick_chars("/|\\-V")
-                .template("{spinner:.dim.bold.cyan} {wide_msg}");
-            bar.set_style(sty);
-            bar.set_message(&lformat!("Finished"));
-        }
+        self.set_finished(&lformat!("Finished"));
 
         // if handles.is_empty() {
         //     Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
@@ -912,7 +894,17 @@ impl Book {
                               format = format));
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
-                renderer.render(self, f)?;
+                if let Some(ref multibar) = self.multibar {
+                    let bar = self.add_spinner_to_multibar(multibar, format);
+                    renderer.render(self, f)?;
+                    self.finish_spinner_success(&bar,
+                                                format,
+                                                &lformat!("generated {format}",
+                                                          format = format));
+                    self.set_finished(&lformat!("Finished"));
+                } else {
+                    renderer.render(self, f)?;
+                }
                 info!("{}", lformat!("Succesfully generated {format}",
                                      format = description));
                 Ok(())
@@ -941,10 +933,31 @@ impl Book {
     /// * `render_format_to`, which writes in any `Write`able object.
     /// * `render_format`, which won't do anything if `output.{format}` isn't specified
     ///   in the book configuration file.
+    
     pub fn render_format_to_file<P:Into<PathBuf>>(&self,
                                                   format: &str,
-                                                  path: P,
-                                                  bar: Option<&ProgressBar>) -> Result<()> {
+                                                  path: P) -> Result<()> {
+        if let Some(ref multibar) = self.multibar {
+            let bar = self.add_spinner_to_multibar(multibar, format);
+            let path = path.into();
+            let normalized = misc::normalize(&path);
+            self.render_format_to_file_with_bar(format, path, Some(&bar))?;
+            self.finish_spinner_success(&bar,
+                                        format,
+                                        &lformat!("generated {path}",
+                                                  path = normalized));
+            self.set_finished(&lformat!("Finished"));
+            Ok(())
+        } else {
+            self.render_format_to_file_with_bar(format, path, None)
+        }
+    }
+    
+    
+    fn render_format_to_file_with_bar<P:Into<PathBuf>>(&self,
+                                                       format: &str,
+                                                       path: P,
+                                                       bar: Option<&ProgressBar>) -> Result<()> {
         debug!("{}", lformat!("Attempting to generate {format}...",
                               format = format));
         let path = path.into();
@@ -975,13 +988,10 @@ impl Book {
                                      path = &path);
                 info!("{}", &msg);
                 if let Some(bar) = bar {
-                    let sty = ProgressStyle::default_spinner()
-                    .tick_chars("/|\\-V")
-                    .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
-                                       format = format));
-                    bar.set_style(sty);
-                    bar.finish_with_message(&lformat!("generated {path}",
-                                                      path = path));
+                    self.finish_spinner_success(bar,
+                                                     format,
+                                                     &lformat!("generated {path}",
+                                                               path = path));
                 }
                 Ok(())
             },
@@ -1555,6 +1565,43 @@ impl Book {
             self.cleaner = Box::new(Off);
         }
     }
+
+    /// Adds a spinner labeled key to the multibar, and set mainbar to "rendering"
+    fn add_spinner_to_multibar(&self, multibar: &MultiProgress, key: &str) -> ProgressBar {
+        if let Some(ref mainbar) = self.mainbar {
+            mainbar.set_message(&lformat!("Rendering..."));
+        }
+        
+        let bar = multibar.add(ProgressBar::new_spinner());
+        let sty = ProgressStyle::default_spinner()
+            .tick_chars("/|\\-X")
+            .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{wide_msg:.yellow}}",
+                               format = key));
+        bar.set_style(sty);
+        bar.enable_steady_tick(200);
+        bar.set_message(&lformat!("waiting..."));
+        bar.tick();
+        bar
+    }
+
+    // Finish a spinner with an error message
+    fn finish_spinner_error(&self, bar: &ProgressBar, key: &str, msg: &str) {
+        bar.set_style(ProgressStyle::default_spinner()
+                      .tick_chars("/|\\-X")
+                      .template(&format!("{{spinner:.dim.bold.red}} {format}: {{wide_msg:.red}}",
+                                         format = key)));
+        bar.finish_with_message(msg);
+    }
+
+    // Finish a spinner with success message
+    fn finish_spinner_success(&self, bar: &ProgressBar, key: &str, msg: &str) {
+        let sty = ProgressStyle::default_spinner()
+            .tick_chars("/|\\-V")
+            .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
+                               format = key));
+        bar.set_style(sty);
+        bar.finish_with_message(msg);
+    }
 }
 
 
@@ -1569,6 +1616,8 @@ impl Drop for Book {
         }
     }
 }
+
+
 
 /// Calls mustache::compile_str but catches panics and returns a result
 pub fn compile_str<O>(template: &str, source: O, template_name: &str) -> Result<mustache::Template>

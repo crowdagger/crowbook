@@ -30,7 +30,7 @@ use std::fs::File;
 use simplelog::{Config, TermLogger, LogLevel, LogLevelFilter, SimpleLogger, WriteLogger};
 
 /// Render a book to specific format
-fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
+fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) {
     let mut key = String::from("output.");
     key.push_str(format);
 
@@ -49,7 +49,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
 
     let result = match(file, res, stdout) {
         (Some(file), _, _) |
-        (None, Ok(file), false) => book.render_format_to_file(format, file, None),
+        (None, Ok(file), false) => book.render_format_to_file(format, file),
 
         (None, Err(_), _) |
         (None, _, true)
@@ -57,10 +57,8 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
     };
     
     match result {
-        Err(err) => print_error_and_exit(&format!("{}", err)),
-        Ok(_) => {
-            exit(0);
-        }
+        Err(err) => print_error(&format!("{}", err)),
+        Ok(_) => {}
     }
 }
 
@@ -186,10 +184,10 @@ pub fn try_main() -> Result<()> {
             
             match res {
                 Ok(..) => {},
-            Err(err) => {
-                book.set_error(&format!("{}", err));
-                return Err(err);
-            }
+                Err(err) => {
+                    book.set_error(&format!("{}", err));
+                    return Err(err);
+                }
             }
         }
         
