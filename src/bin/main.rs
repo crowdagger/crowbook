@@ -1,5 +1,6 @@
 extern crate crowbook;
 extern crate crowbook_intl_runtime;
+extern crate indicatif;
 #[macro_use]
 extern crate log;
 

@@ -6,6 +6,7 @@ use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
 use std::path::{PathBuf, Path};
 use std::env;
+use std::mem;
 
 lazy_static! {
     static ref OPTIONS: String = format!("\
@@ -537,7 +538,8 @@ impl BookOptions {
                                                                    value = &value)))?;
                     let mut book = Book::new();
                     book.load_file(file)?;
-                    self.merge(book.options)?;
+                    let options = mem::replace(&mut book.options, BookOptions::new());
+                    self.merge(options)?;
                     Ok(None)
             } else { 
                     Ok(self.options.insert(key, BookOption::Path(value)))

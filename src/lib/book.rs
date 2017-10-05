@@ -35,6 +35,10 @@ use book_renderer::BookRenderer;
 use chapter::Chapter;
 use token::Token;
 use text_view::view_as_text;
+use std::thread;
+use std::sync::Arc;
+
+use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 
 #[cfg(feature = "proofread")]
 use repetition_check::RepetitionDetector;
@@ -170,6 +174,8 @@ pub struct Book {
     grammalecte: Option<GrammalecteChecker>,
     detector: Option<RepetitionDetector>,
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
+    multibar: Option<Arc<MultiProgress>>,
+    mainbar: Option<ProgressBar>,
 }
 
 impl Book {
@@ -188,6 +194,8 @@ impl Book {
             detector: None,
             formats: HashMap::new(),
             features: Features::new(),
+            multibar: None,
+            mainbar: None,
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
             .add_format("proofread.html", lformat!("HTML (standalone page/proofreading)"), Box::new(ProofHtmlSingle{}))
@@ -201,6 +209,27 @@ impl Book {
             .add_format("odt", lformat!("ODT"), Box::new(Odt{}))
             .add_format("html.if", lformat!("HTML (interactive fiction)"), Box::new(HtmlIf{}));
         book
+    }
+
+    /// Adds a progress bar where where info should be written.
+    ///
+    /// See [indicatif doc](https://docs.rs/indicatif) for more information.
+    pub fn add_progress_bar(&mut self) {
+        let multibar = Arc::new(MultiProgress::new());
+        self.multibar = Some(multibar.clone());
+        let mut b = self.multibar
+            .as_ref()
+            .unwrap()
+            .add(ProgressBar::new_spinner());
+        let sty = ProgressStyle::default_spinner()
+            .tick_chars("/|\\-X")
+            .template("{spinner:.dim.bold.yellow} {prefix} {msg}");
+        b.set_style(sty);
+        b.set_prefix("");
+        b.enable_steady_tick(200);
+        self.mainbar = Some(b);
+        thread::spawn(move || multibar.join());
+
     }
 
     /// Register a format that can be rendered.
@@ -457,6 +486,12 @@ impl Book {
             Ok(words[0])
         }
 
+        if let Some(ref bar) = self.mainbar {
+            bar.set_prefix(&lformat!("Parsing book:"));
+            bar.set_message(&lformat!("setting options"));
+            bar.tick();
+        } 
+
         let mut s = String::new();
         source.read_to_string(&mut s)
             .map_err(|err| Error::config_parser(Source::empty(),
@@ -470,6 +505,10 @@ impl Book {
 
         let mut line_number = 0;
         let mut is_next_line_ok: bool;
+
+        if let Some(ref bar) = self.mainbar {
+            bar.tick();
+        }
 
         loop {
             if let Some(next_line) = lines.peek() {
@@ -539,6 +578,11 @@ impl Book {
 
         // Update grammar checker according to options (proofread.*)
         self.init_checker();
+
+        if let Some(ref bar) = self.mainbar {
+            bar.set_message(&lformat!("parsing chapters"));
+            bar.tick();
+        }
 
         // Parse chapters
         while let Some(line) = lines.next() {
@@ -681,6 +725,25 @@ impl Book {
     #[cfg(not(feature = "proofread"))]
     fn init_checker(&mut self) {}
 
+    /// Renders the book to the given format and reports to progress bar if set
+    pub fn render_format_with_bar(&self, format: &str, bar: Option<&ProgressBar>) -> () {
+        let mut key = String::from("output.");
+        key.push_str(format);
+        if let Ok(path) = self.options.get_path(&key) {
+            let result = self.render_format_to_file(format, path, bar);
+            if let Err(err) = result {
+                if let Some(bar) = bar {
+                    bar.set_style(ProgressStyle::default_spinner()
+                                  .tick_chars("/|\\-X")
+                                  .template(&format!("{{spinner:.dim.bold.red}} {format}: {{msg:.red}}",
+                                          format = format)));
+                    bar.finish_with_message(&format!("{}", err));
+                }
+                error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
+            }
+        }
+    }
+
     /// Renders the book to the given format if output.{format} is set;
     /// do nothing otherwise.
     ///
@@ -693,14 +756,7 @@ impl Book {
     /// book.render_format("pdf");
     /// ```
     pub fn render_format(&self, format: &str) -> () {
-        let mut key = String::from("output.");
-        key.push_str(format);
-        if let Ok(path) = self.options.get_path(&key) {
-            let result = self.render_format_to_file(format, path);
-            if let Err(err) = result {
-                error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
-            }
-        }
+        self.render_format_with_bar(format, None)
     }
 
     /// Generates output files acccording to book options.
@@ -746,8 +802,37 @@ impl Book {
             }
         });
 
+        let mut bars = vec![];
+        if let Some(ref multibar) = self.multibar {
+            if let Some(ref mainbar) = self.mainbar {
+                mainbar.set_prefix(&lformat!("Rendering..."));
+                mainbar.set_message("");
+            }
+            
+            for key in &keys {
+                let bar = multibar.add(ProgressBar::new_spinner());
+                let sty = ProgressStyle::default_spinner()
+                    .tick_chars("/|\\-X")
+                    .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{msg:.yellow}}",
+                                       format = key));
+                bar.set_style(sty);
+                bar.enable_steady_tick(200);
+                bar.set_message(&lformat!("waiting..."));
+                bar.tick();
+                bars.push(bar);
+            }
+        }
+
         keys.par_iter()
-            .for_each(|fmt| self.render_format(fmt));
+            .enumerate()
+            .for_each(|(i, fmt)| {
+                if self.multibar.is_some() {
+                    bars[i].set_message(&lformat!("rendering..."));
+                    self.render_format_with_bar(fmt, Some(&bars[i]));
+                } else {
+                    self.render_format_with_bar(fmt, None);
+                }
+            });
 
         // if handles.is_empty() {
         //     Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
@@ -791,11 +876,20 @@ impl Book {
     /// This method will fail if the format is not handled by the book, or if there is a
     /// problem during rendering.
     ///
+    /// # Arguments
+    ///
+    /// * `format`: the format to render;
+    /// * `path`: a path to the file that will be created;
+    /// * `bar`: a Progressbar, or `None`
+    ///
     /// # See also
     /// * `render_format_to`, which writes in any `Write`able object.
     /// * `render_format`, which won't do anything if `output.{format}` isn't specified
     ///   in the book configuration file.
-    pub fn render_format_to_file<P:Into<PathBuf>>(&self, format: &str, path: P) -> Result<()> {
+    pub fn render_format_to_file<P:Into<PathBuf>>(&self,
+                                                  format: &str,
+                                                  path: P,
+                                                  bar: Option<&ProgressBar>) -> Result<()> {
         debug!("{}", lformat!("Attempting to generate {format}...",
                               format = format));
         let path = path.into();
@@ -820,9 +914,20 @@ impl Book {
                     path
                 };
                 renderer.render_to_file(self, &path)?;
-                info!("{}", lformat!("Succesfully generated {format}: {path}",
+                let path = misc::normalize(path);
+                let msg = lformat!("Succesfully generated {format}: {path}",
                                      format = description,
-                                     path = misc::normalize(path)));
+                                     path = &path);
+                info!("{}", &msg);
+                if let Some(bar) = bar {
+                    let sty = ProgressStyle::default_spinner()
+                    .tick_chars("/|\\-V")
+                    .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{msg:.cyan}}",
+                                       format = format));
+                    bar.set_style(sty);
+                    bar.finish_with_message(&lformat!("generated {path}",
+                                                      path = path));
+                }
                 Ok(())
             },
             None => {
@@ -982,6 +1087,11 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
+        if let Some(ref bar) = self.mainbar {
+            bar.set_message(&lformat!("parsing chapter: {file}",
+                                      file = misc::normalize(file)));
+            bar.tick();
+        }
         debug!("{}", lformat!("Parsing chapter: {file}...",
                                    file = misc::normalize(file)));
 
@@ -1369,6 +1479,19 @@ impl Book {
     }
 }
 
+
+impl Drop for Book {
+    fn drop(&mut self) {
+        if let Some(ref bar) = self.mainbar {
+            let sty = ProgressStyle::default_spinner()
+                .tick_chars("/|\\-X")
+                .template("{spinner:.dim.bold.cyan} {prefix} {msg}");
+            bar.set_style(sty);
+            bar.set_prefix(&lformat!("Finished"));
+            bar.finish_with_message("");
+        }
+    }
+}
 
 /// Calls mustache::compile_str but catches panics and returns a result
 pub fn compile_str<O>(template: &str, source: O, template_name: &str) -> Result<mustache::Template>

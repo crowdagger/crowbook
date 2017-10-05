@@ -16,7 +16,6 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use error::{Error, Result};
-use log::LogLevel::Debug;
 
 use std::path::{Path, PathBuf};
 use std::io;
@@ -125,31 +124,23 @@ This is forbidden because we are supposed \
             .current_dir(&self.path)
             .output()
             .map_err(|e| {
-                if log_enabled!(Debug) {
-                    Error::zipper(lformat!("failed to run command '{name}'.\n\
-                                            Command output: \n\
-                                            {error}",
-                                           name = command_name,
-                                           error = e))
-                } else {
-                    Error::zipper(lformat!("failed to run command '{name}'. For more information, run crowbook with `--verbose`.",
-                                           name = command_name))
-                }
+                debug!("{}", lformat!("output for command {name}:\n{error}",
+                                        name = command_name,
+                                        error = e));
+                Error::zipper(lformat!("failed to run command '{name}'",
+                                       name = command_name))
             });
         let output = res_output?;
         if output.status.success() {
             let mut file = File::open(self.path.join(in_file))
                 .map_err(|_| {
-                    if log_enabled!(Debug) {
-                        Error::zipper(lformat!("could not open result of command '{command}'\n\
-                                                Command output:\n\
-                                                {output}'",
-                                               command = command_name,
-                                               output = String::from_utf8_lossy(&output.stdout)))
-                    } else {
-                        Error::zipper(lformat!("could not open result of command '{command}'. For more information, run crowbook with `--verbose`.",
-                                               command = command_name))
-                    }
+                    debug!("{}", lformat!("could not open result of command '{command}'\n\
+                                           Command output:\n\
+                                           {output}'",
+                                          command = command_name,
+                                          output = String::from_utf8_lossy(&output.stdout)));
+                    Error::zipper(lformat!("could not open result of command '{command}'",
+                                           command = command_name))
                 })?;
             io::copy(&mut file, out)
                 .map_err(|_| Error::zipper(lformat!("error copying file '{file}'",
@@ -157,8 +148,12 @@ This is forbidden because we are supposed \
 
             Ok(String::from_utf8_lossy(&output.stdout).into_owned())
         } else {
-            Err(Error::zipper(lformat!("command didn't return succesfully: {output}",
-                                       output = String::from_utf8_lossy(&output.stdout))))
+            debug!("{}",
+                   lformat!("{command} didn't return succesfully: {output}",
+                            command = command_name,
+                            output = String::from_utf8_lossy(&output.stdout)));
+            Err(Error::zipper(lformat!("{command} didn't return succesfully",
+                                       command = command_name)))
         }
     }
 

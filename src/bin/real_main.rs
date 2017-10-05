@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate clap;
-
 use helpers::*;
 
 use crowbook::{Result, Book, BookOptions};
@@ -48,7 +46,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) -> ! {
 
     let result = match(file, res, stdout) {
         (Some(file), _, _) |
-        (None, Ok(file), false) => book.render_format_to_file(format, file),
+        (None, Ok(file), false) => book.render_format_to_file(format, file, None),
 
         (None, Err(_), _) |
         (None, _, true)
@@ -133,23 +131,34 @@ pub fn try_main() -> Result<()> {
     let s = matches.value_of("BOOK").unwrap();
 
     // Initalize logger
+    let mut log_config = Config::default();
+    log_config.target = None;
+    log_config.time = None;
+    let mut pb = false;
     let verbosity = if matches.is_present("verbose") {
+        log_config.time = Some(LogLevel::Error);
+        log_config.target = Some(LogLevel::Error);
         LogLevelFilter::Debug
     } else if matches.is_present("quiet") {
         LogLevelFilter::Error
     } else {
-        LogLevelFilter::Info
+        pb = true;
+        LogLevelFilter::Off
     };
-    let mut log_config = Config::default();
-    log_config.time = Some(LogLevel::Debug);
+
+
         
 
     if TermLogger::init(verbosity, log_config).is_err() {
-        SimpleLogger::init(verbosity, log_config).unwrap();
+        // If it failed, not much we can do, we just won't display log
+        let _ = SimpleLogger::init(verbosity, log_config);
     }
 
-    
+
     let mut book = Book::new();
+    if pb {
+        book.add_progress_bar();
+    }
     book.set_options(&get_book_options(&matches));
 
     if matches.is_present("single") {
