@@ -151,7 +151,7 @@ pub fn try_main() -> Result<()> {
         fancy_ui = false;
         LogLevelFilter::Error
     } else if fancy_ui {
-        LogLevelFilter::Error
+        LogLevelFilter::Warn
     } else {
         LogLevelFilter::Info
     };
@@ -217,9 +217,18 @@ pub fn try_main() -> Result<()> {
         let mut file = File::open(error_dir.path().join(error_path)).unwrap();
         file.read_to_string(&mut errors).unwrap();
         if !errors.is_empty() {
-            print_warning();
-            for line in errors.lines() {
-                print_error(line);
+            print_warning(&lformat!("Crowbook exited successfully, but the following errors occurred:"));
+            let mut lines: Vec<_> = errors.lines().collect();
+            lines.sort();
+            lines.dedup();
+            for line in &lines {
+                if line.starts_with("[ERROR]") {
+                    let line = &line[8..];
+                    print_error(line);
+                } else if line.starts_with("[WARN]") {
+                    let line = &line[7..];
+                    print_warning(line);
+                }
             }
         }
     }

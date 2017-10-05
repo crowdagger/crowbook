@@ -90,9 +90,9 @@ impl<'a> OdtRenderer<'a> {
 
         if !missing.is_empty() {
             let missing = missing.join(", ");
-            warn!("{}", lformat!("ODT: The document uses the following features, that are not implemented for ODT output: {features}",
+            warn!("{}", lformat!("ODT: The document uses the following features, that are not implemented for ODT output: {features}.
+They will be ignored in the generated document.",
                                  features = missing));
-            warn!("{}", lformat!("ODT: They will be ignored in the generated document."));
         }
 
         

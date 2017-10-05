@@ -12,10 +12,27 @@ static BIRD: &str = "🐦 ";
 static ERROR: &str = "💣 ";
 static WARNING: &str = "⚠️ ";
 
-pub fn print_warning() {
+pub fn print_warning(msg: &str) {
     eprint!("{}", style(WARNING).yellow());
-    eprintln!("{}", style(lformat!("Crowbook exited successfully, but the following errors occurred:")).yellow());
+    eprintln!("{} {}",
+              style(lformat!("WARNING")).bold().yellow(),
+              msg);
 }
+
+/// Prints an error
+pub fn print_error(s: &str) {
+    eprint!("{}", style(ERROR).red());
+    eprintln!("{} {}",
+              style(lformat!("ERROR")).bold().red(),
+              s);
+}
+
+/// Prints an error on stderr and exit the program
+pub fn print_error_and_exit(s: &str) -> ! {
+    print_error(s);
+    exit(0);
+}
+
 
 /// Display version number
 pub fn display_header() {
@@ -38,19 +55,6 @@ pub fn get_lang() -> Option<String> {
     None
 }
 
-/// Prints an error
-pub fn print_error(s: &str) {
-    eprint!("{}", style(ERROR).red());
-    eprintln!("{} {}",
-              style(lformat!("ERROR")).bold().red(),
-              s);
-}
-
-/// Prints an error on stderr and exit the program
-pub fn print_error_and_exit(s: &str) -> ! {
-    print_error(s);
-    exit(0);
-}
 
 /// Gets the book options in a (key, value) list, or print an error
 pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> {
