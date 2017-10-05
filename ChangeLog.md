@@ -7,6 +7,7 @@ unreleased
   * EPUB: escape quotes in content.opf.
   * LaTeX/PDF: allow hyphenations in typewriter font.
 * User interface:
+   * User interface is quite fancier, with progress bars and all
   * Debug/warning/info levels should be displayed in a more coherent manner
 * Library interface:
   * Removed `Book::set_verbosity` method (uses a logger library instead).
