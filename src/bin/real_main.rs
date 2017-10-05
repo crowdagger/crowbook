@@ -80,11 +80,17 @@ pub fn try_main() -> Result<()> {
         }
     }
 
+    let mut fancy_ui = true;
+
     let (matches, help, version) = create_matches();
 
     if matches.is_present("list-options") {
         println!("{}", BookOptions::description(false));
         exit(0);
+    }
+
+    if matches.is_present("no-fancy") {
+        fancy_ui = false;
     }
 
     if matches.is_present("list-options-md") {
@@ -136,24 +142,25 @@ pub fn try_main() -> Result<()> {
     log_config.target = None;
     log_config.location = None;
     log_config.time = None;
-    let mut pb = false;
     let verbosity = if matches.is_present("verbose") {
         log_config.time = Some(LogLevel::Error);
         log_config.target = Some(LogLevel::Error);
+        fancy_ui = false;
         LogLevelFilter::Debug
     } else if matches.is_present("quiet") {
+        fancy_ui = false;
+        LogLevelFilter::Error
+    } else if fancy_ui {
         LogLevelFilter::Error
     } else {
-        pb = true;
-        LogLevelFilter::Error
+        LogLevelFilter::Info
     };
 
 
     let error_dir = TempDir::new("crowbook").unwrap();
     let error_path = "error.log";
-    if true {
+    if fancy_ui {
         let errors = File::create(error_dir.path().join(error_path)).unwrap();
-        log_config.level = None;
         let _ = WriteLogger::init(verbosity, log_config, errors);
     } else {
         if TermLogger::init(verbosity, log_config).is_err() {
@@ -164,7 +171,7 @@ pub fn try_main() -> Result<()> {
 
     {
         let mut book = Book::new();
-        if pb {
+        if fancy_ui {
             book.add_progress_bar();
         }
         book.set_options(&get_book_options(&matches));
@@ -205,7 +212,7 @@ pub fn try_main() -> Result<()> {
             book.render_all();
         }
     }
-    if true {
+    if fancy_ui {
         let mut errors = String::new();
         let mut file = File::open(error_dir.path().join(error_path)).unwrap();
         file.read_to_string(&mut errors).unwrap();

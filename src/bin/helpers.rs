@@ -157,6 +157,7 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref LANG: String = lformat!("Set the runtime language used by Crowbook");
         static ref TO: String = lformat!("Generate specific format");
         static ref SET: String = lformat!("Set a list of book options");
+        static ref NO_FANCY: String = lformat!("Disably fancy UI");
         static ref LIST_OPTIONS: String = lformat!("List all possible options");
         static ref LIST_OPTIONS_MD: String = lformat!("List all possible options, formatted in Markdown");
         static ref PRINT_TEMPLATE: String = lformat!("Prints the default content of a template");
@@ -188,6 +189,7 @@ ARGS:
         .setting(AppSettings::HidePossibleValuesInHelp)
         .about(ABOUT.as_str())
         .arg(Arg::from_usage("-s, --single").help(SINGLE.as_str()))
+        .arg(Arg::from_usage("-n, --no-fancy").help(NO_FANCY.as_str()))
         .arg(Arg::from_usage("-v, --verbose").help(VERBOSE.as_str()))
         .arg(Arg::from_usage("-q, --quiet")
             .help(QUIET.as_str())
