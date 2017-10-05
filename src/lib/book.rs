@@ -35,8 +35,10 @@ use book_renderer::BookRenderer;
 use chapter::Chapter;
 use token::Token;
 use text_view::view_as_text;
+
 use std::thread;
 use std::sync::Arc;
+use std::mem;
 
 use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 
@@ -176,6 +178,7 @@ pub struct Book {
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
     multibar: Option<Arc<MultiProgress>>,
     mainbar: Option<ProgressBar>,
+    guard: Option<thread::JoinHandle<()>>,
 }
 
 impl Book {
@@ -196,6 +199,7 @@ impl Book {
             features: Features::new(),
             multibar: None,
             mainbar: None,
+            guard: None,
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
             .add_format("proofread.html", lformat!("HTML (standalone page/proofreading)"), Box::new(ProofHtmlSingle{}))
@@ -228,7 +232,11 @@ impl Book {
         b.set_prefix("");
         b.enable_steady_tick(200);
         self.mainbar = Some(b);
-        thread::spawn(move || multibar.join());
+        self.guard = Some(thread::spawn(move || {
+            if let Err(_) = multibar.join() {
+                error!("{}", lformat!("could not display fancy UI, try running crowbook with --no-fancy"));
+            }
+        }));
 
     }
 
@@ -730,6 +738,9 @@ impl Book {
         let mut key = String::from("output.");
         key.push_str(format);
         if let Ok(path) = self.options.get_path(&key) {
+            if let Some(bar) = bar {
+                bar.set_message(&lformat!("rendering..."));
+            }
             let result = self.render_format_to_file(format, path, bar);
             if let Err(err) = result {
                 if let Some(bar) = bar {
@@ -740,6 +751,14 @@ impl Book {
                     bar.finish_with_message(&format!("{}", err));
                 }
                 error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
+            }
+        } else {
+            if let Some(bar) = bar {
+                bar.set_style(ProgressStyle::default_spinner()
+                              .tick_chars("/|\\- ")
+                              .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{msg:.cyan}}",
+                                                 format = format)));
+                bar.finish_with_message(&lformat!("skipped"));
             }
         }
     }
@@ -785,10 +804,11 @@ impl Book {
             .keys()
             .filter(|fmt| {
                 if !self.is_proofread() {
-                    !fmt.contains("proofread")
-                } else {
-                    true
+                    if fmt.contains("proofread") {
+                        return false;
+                    }
                 }
+                self.options.get_path(&format!("output.{}", fmt)).is_ok()
             })
             .collect();
         // Make sure that PDF comes first since running latex takes lots of time
@@ -827,7 +847,6 @@ impl Book {
             .enumerate()
             .for_each(|(i, fmt)| {
                 if self.multibar.is_some() {
-                    bars[i].set_message(&lformat!("rendering..."));
                     self.render_format_with_bar(fmt, Some(&bars[i]));
                 } else {
                     self.render_format_with_bar(fmt, None);
@@ -1488,7 +1507,12 @@ impl Drop for Book {
                 .template("{spinner:.dim.bold.cyan} {prefix} {msg}");
             bar.set_style(sty);
             bar.set_prefix(&lformat!("Finished"));
+            bar.tick();
             bar.finish_with_message("");
+            let guard = mem::replace(&mut self.guard, None);
+            guard.unwrap()
+                .join()
+                .unwrap();
         }
     }
 }
