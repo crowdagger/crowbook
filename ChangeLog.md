@@ -9,6 +9,8 @@ unreleased
 * User interface:
    * User interface is quite fancier, with progress bars and all
   * Debug/warning/info levels should be displayed in a more coherent manner
+  * New `--no-fancy` option if you don't like the fancy UI (or if it doesn't work
+    in your terminal)
 * Library interface:
   * Removed `Book::set_verbosity` method (uses a logger library instead).
 
