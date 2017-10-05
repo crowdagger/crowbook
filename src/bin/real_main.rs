@@ -161,16 +161,26 @@ pub fn try_main() -> Result<()> {
     }
     book.set_options(&get_book_options(&matches));
 
-    if matches.is_present("single") {
-        if s != "-" {
-            book.load_markdown_file(s)?;
+    {
+        let res = if matches.is_present("single") {
+            if s != "-" {
+                book.load_markdown_file(s)
+            } else {
+                book.read_markdown_config(io::stdin())
+            }
+        } else if s != "-" {
+            book.load_file(s)
         } else {
-            book.read_markdown_config(io::stdin())?;
+            book.read_config(io::stdin())
+        }.map(|_| ());
+        
+        match res {
+            Ok(..) => {},
+            Err(err) => {
+                book.set_error(&format!("{}", err));
+                return Err(err);
+            }
         }
-    } else if s != "-" {
-        book.load_file(s)?;
-    } else {
-        book.read_config(io::stdin())?;
     }
 
     set_book_options(&mut book, &matches);

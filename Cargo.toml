@@ -60,6 +60,7 @@ crowbook-intl-runtime = "0.1"
 numerals = "0.1"
 epub-builder = "0.3"
 log = "0.3"
+console = "0.5"
 indicatif = "0.7"
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }

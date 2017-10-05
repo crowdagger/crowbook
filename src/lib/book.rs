@@ -215,6 +215,18 @@ impl Book {
         book
     }
 
+    /// Sets an error message to the progress bar, if it is set
+    pub fn set_error(&mut self, msg: &str) {
+        if let Some(ref mainbar) = self.mainbar {
+            let sty = ProgressStyle::default_spinner()
+            .tick_chars("/|\\-X")
+                .template("{spinner:.dim.bold.red} {wide_msg}");
+            mainbar.set_style(sty);
+            mainbar.set_message(msg);
+        }
+    }
+   
+
     /// Adds a progress bar where where info should be written.
     ///
     /// See [indicatif doc](https://docs.rs/indicatif) for more information.
@@ -226,10 +238,9 @@ impl Book {
             .unwrap()
             .add(ProgressBar::new_spinner());
         let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-X")
-            .template("{spinner:.dim.bold.yellow} {prefix} {msg}");
+            .tick_chars("/|\\-V")
+            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
         b.set_style(sty);
-        b.set_prefix("");
         b.enable_steady_tick(200);
         self.mainbar = Some(b);
         self.guard = Some(thread::spawn(move || {
@@ -495,7 +506,6 @@ impl Book {
         }
 
         if let Some(ref bar) = self.mainbar {
-            bar.set_prefix(&lformat!("Parsing book:"));
             bar.set_message(&lformat!("setting options"));
             bar.tick();
         } 
@@ -746,7 +756,7 @@ impl Book {
                 if let Some(bar) = bar {
                     bar.set_style(ProgressStyle::default_spinner()
                                   .tick_chars("/|\\-X")
-                                  .template(&format!("{{spinner:.dim.bold.red}} {format}: {{msg:.red}}",
+                                  .template(&format!("{{spinner:.dim.bold.red}} {format}: {{wide_msg:.red}}",
                                           format = format)));
                     bar.finish_with_message(&format!("{}", err));
                 }
@@ -756,7 +766,7 @@ impl Book {
             if let Some(bar) = bar {
                 bar.set_style(ProgressStyle::default_spinner()
                               .tick_chars("/|\\- ")
-                              .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{msg:.cyan}}",
+                              .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
                                                  format = format)));
                 bar.finish_with_message(&lformat!("skipped"));
             }
@@ -825,15 +835,14 @@ impl Book {
         let mut bars = vec![];
         if let Some(ref multibar) = self.multibar {
             if let Some(ref mainbar) = self.mainbar {
-                mainbar.set_prefix(&lformat!("Rendering..."));
-                mainbar.set_message("");
+                mainbar.set_message(&lformat!("Rendering..."));
             }
             
             for key in &keys {
                 let bar = multibar.add(ProgressBar::new_spinner());
                 let sty = ProgressStyle::default_spinner()
                     .tick_chars("/|\\-X")
-                    .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{msg:.yellow}}",
+                    .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{wide_msg:.yellow}}",
                                        format = key));
                 bar.set_style(sty);
                 bar.enable_steady_tick(200);
@@ -852,6 +861,14 @@ impl Book {
                     self.render_format_with_bar(fmt, None);
                 }
             });
+
+        if let Some(ref bar) = self.mainbar {
+            let sty = ProgressStyle::default_spinner()
+                .tick_chars("/|\\-V")
+                .template("{spinner:.dim.bold.cyan} {wide_msg}");
+            bar.set_style(sty);
+            bar.set_message(&lformat!("Finished"));
+        }
 
         // if handles.is_empty() {
         //     Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
@@ -941,7 +958,7 @@ impl Book {
                 if let Some(bar) = bar {
                     let sty = ProgressStyle::default_spinner()
                     .tick_chars("/|\\-V")
-                    .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{msg:.cyan}}",
+                    .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
                                        format = format));
                     bar.set_style(sty);
                     bar.finish_with_message(&lformat!("generated {path}",
@@ -1022,33 +1039,46 @@ impl Book {
 
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
+            let normalized = misc::normalize(file);
             if let Some(ref checker) = self.checker {
+                if let Some(ref bar) = self.mainbar {
+                    bar.set_message(&lformat!("Running languagetool on {file}...", file = &normalized));
+                }
+
                 info!("{}", lformat!("Trying to run languagetool on {file}, this might take a \
                                     while...",
-                                     file = misc::normalize(file)));
+                                     file = &normalized));
                 if let Err(err) = checker.check_chapter(&mut tokens) {
                     error!("{}", lformat!("Error running languagetool on {file}: {error}",
-                                          file = misc::normalize(file),
+                                          file = &normalized,
                                           error = err));
                 }
             }
             if let Some(ref checker) = self.grammalecte {
+                if let Some(ref bar) = self.mainbar {
+                    bar.set_message(&lformat!("Running grammalecte on {file}...", file = &normalized));
+                }
+
                 info!("{}", lformat!("Trying to run grammalecte on {file}, this might take a \
                                     while...",
-                                   file = misc::normalize(file)));
+                                   file = &normalized));
                 if let Err(err) = checker.check_chapter(&mut tokens) {
                     error!("{}", lformat!("Error running grammalecte on {file}: {error}",
-                                               file = misc::normalize(file),
+                                               file = &normalized,
                                                error = err));
                 }
             }
             if let Some(ref detector) = self.detector {
+                if let Some(ref bar) = self.mainbar {
+                    bar.set_message(&lformat!("Detecting repetitions in {file}...", file = &normalized));
+                }
+
                 info!("{}", lformat!("Trying to run repetition detector on {file}, this might take a \
                                       while...",
-                                     file = misc::normalize(file)));
+                                     file = &normalized));
                 if let Err(err) = detector.check_chapter(&mut tokens) {
                     error!("{}", lformat!("Error running repetition detector on {file}: {error}",
-                                               file = misc::normalize(file),
+                                               file = &normalized,
                                                error = err));
                 }
             }
@@ -1107,7 +1137,7 @@ impl Book {
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
         if let Some(ref bar) = self.mainbar {
-            bar.set_message(&lformat!("parsing chapter: {file}",
+            bar.set_message(&lformat!("Parsing {file}",
                                       file = misc::normalize(file)));
             bar.tick();
         }
@@ -1502,13 +1532,7 @@ impl Book {
 impl Drop for Book {
     fn drop(&mut self) {
         if let Some(ref bar) = self.mainbar {
-            let sty = ProgressStyle::default_spinner()
-                .tick_chars("/|\\-X")
-                .template("{spinner:.dim.bold.cyan} {prefix} {msg}");
-            bar.set_style(sty);
-            bar.set_prefix(&lformat!("Finished"));
-            bar.tick();
-            bar.finish_with_message("");
+            bar.finish();
             let guard = mem::replace(&mut self.guard, None);
             guard.unwrap()
                 .join()

@@ -118,6 +118,7 @@ extern crate numerals;
 extern crate epub_builder;
 extern crate uuid;
 extern crate indicatif;
+extern crate console;
 #[macro_use]
 extern crate log;
 #[macro_use]

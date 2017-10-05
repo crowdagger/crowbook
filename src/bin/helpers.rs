@@ -1,5 +1,5 @@
 use crowbook::Book;
-use clap::{App, Arg, ArgMatches, AppSettings};
+use clap::{App, Arg,  ArgMatches, AppSettings};
 
 use std::io::{self, Write};
 use std::process::exit;

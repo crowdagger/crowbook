@@ -4,6 +4,7 @@ version = "0.14.0-pre"
 dependencies = [
  "caribon 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.26.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "console 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-text-processing 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
