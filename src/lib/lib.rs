@@ -171,6 +171,7 @@ mod html_single;
 mod html_if;
 mod syntax;
 mod stats;
+mod book_bars;
 
 mod zipper;
 mod templates;

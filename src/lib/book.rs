@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -40,7 +40,7 @@ use std::thread;
 use std::sync::Arc;
 use std::mem;
 
-use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
+use indicatif::{ProgressBar, MultiProgress};
 
 #[cfg(feature = "proofread")]
 use repetition_check::RepetitionDetector;
@@ -176,10 +176,15 @@ pub struct Book {
     grammalecte: Option<GrammalecteChecker>,
     detector: Option<RepetitionDetector>,
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
-    multibar: Option<Arc<MultiProgress>>,
-    mainbar: Option<ProgressBar>,
-    secondbar: Option<ProgressBar>,
-    guard: Option<thread::JoinHandle<()>>,
+
+    #[doc(hidden)]
+    pub multibar: Option<Arc<MultiProgress>>,
+    #[doc(hidden)]
+    pub mainbar: Option<ProgressBar>,
+    #[doc(hidden)]
+    pub secondbar: Option<ProgressBar>,
+    #[doc(hidden)]
+    pub guard: Option<thread::JoinHandle<()>>,
 }
 
 impl Book {
@@ -219,50 +224,16 @@ impl Book {
 
     /// Sets an error message to the progress bar, if it is set
     pub fn set_error(&self, msg: &str) {
-        if let Some(ref mainbar) = self.mainbar {
-            let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-X")
-                .template("{spinner:.dim.bold.red} {wide_msg}");
-            mainbar.set_style(sty);
-            mainbar.set_message(msg);
-        }
+        self.private_set_error(msg)
     }
 
-    /// Sets a finished message to the progress bar, if it is set
-    pub fn set_finished(&self, msg: &str) {
-        if let Some(ref bar) = self.mainbar {
-            let sty = ProgressStyle::default_spinner()
-                .tick_chars("/|\\-V")
-                .template("{spinner:.dim.bold.cyan} {wide_msg}");
-            bar.set_style(sty);
-            bar.set_message(msg);
-        }
-
-    }
    
 
     /// Adds a progress bar where where info should be written.
     ///
     /// See [indicatif doc](https://docs.rs/indicatif) for more information.
     pub fn add_progress_bar(&mut self) {
-        let multibar = Arc::new(MultiProgress::new());
-        self.multibar = Some(multibar.clone());
-        let b = self.multibar
-            .as_ref()
-            .unwrap()
-            .add(ProgressBar::new_spinner());
-        let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-V")
-            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
-        b.set_style(sty);
-        b.enable_steady_tick(200);
-        self.mainbar = Some(b);
-        self.guard = Some(thread::spawn(move || {
-            if let Err(_) = multibar.join() {
-                error!("{}", lformat!("could not display fancy UI, try running crowbook with --no-fancy"));
-            }
-        }));
-
+        self.private_add_progress_bar();
     }
 
     /// Register a format that can be rendered.
@@ -618,18 +589,9 @@ impl Book {
 
         // Parse chapters
         let lines: Vec<_> = lines.collect();
-        if let Some(ref multibar) = self.multibar {
-            let bar = multibar.add(ProgressBar::new(lines.len() as u64));
-            bar.set_style(ProgressStyle::default_bar()
-                          .template("{bar:40.cyan/blue} {percent:>7}% {msg}")
-                          .progress_chars("##-"));
-            bar.set_message("Processing...");
-            self.secondbar = Some(bar);
-        }
+        self.add_second_bar(&lformat!("Processing..."), lines.len() as u64);
         for line in lines {
-            if let Some(ref bar) = self.secondbar {
-                bar.inc(1);
-            }
+            self.inc_second_bar();
             line_number += 1;
             self.source.set_line(line_number);
             let line = line.trim();
@@ -721,10 +683,8 @@ impl Book {
             }
         }
 
-        if let Some(ref bar) = self.secondbar {
-            bar.finish_and_clear();
-        }
-
+        self.finish_second_bar();
+        
         self.source.unset_line();
         self.set_chapter_template()?;
         Ok(self)
@@ -1563,43 +1523,6 @@ impl Book {
         } else {
             self.cleaner = Box::new(Off);
         }
-    }
-
-    /// Adds a spinner labeled key to the multibar, and set mainbar to "rendering"
-    fn add_spinner_to_multibar(&self, multibar: &MultiProgress, key: &str) -> ProgressBar {
-        if let Some(ref mainbar) = self.mainbar {
-            mainbar.set_message(&lformat!("Rendering..."));
-        }
-        
-        let bar = multibar.add(ProgressBar::new_spinner());
-        let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-X")
-            .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{wide_msg:.yellow}}",
-                               format = key));
-        bar.set_style(sty);
-        bar.enable_steady_tick(200);
-        bar.set_message(&lformat!("waiting..."));
-        bar.tick();
-        bar
-    }
-
-    // Finish a spinner with an error message
-    fn finish_spinner_error(&self, bar: &ProgressBar, key: &str, msg: &str) {
-        bar.set_style(ProgressStyle::default_spinner()
-                      .tick_chars("/|\\-X")
-                      .template(&format!("{{spinner:.dim.bold.red}} {format}: {{wide_msg:.red}}",
-                                         format = key)));
-        bar.finish_with_message(msg);
-    }
-
-    // Finish a spinner with success message
-    fn finish_spinner_success(&self, bar: &ProgressBar, key: &str, msg: &str) {
-        let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-V")
-            .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
-                               format = key));
-        bar.set_style(sty);
-        bar.finish_with_message(msg);
     }
 }
 
