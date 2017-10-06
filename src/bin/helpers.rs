@@ -1,6 +1,6 @@
 use crowbook::Book;
 use clap::{App, Arg,  ArgMatches, AppSettings};
-use console::{style, Emoji};
+use console::style;
 
 use std::io::{self, Write};
 use std::process::exit;
