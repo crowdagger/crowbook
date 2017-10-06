@@ -23,7 +23,6 @@ use book::Book;
 use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 use std::sync::Arc;
 use std::thread;
-use std::mem;
 
 impl Book {
     /// Adds a progress bar where where info should be written.
