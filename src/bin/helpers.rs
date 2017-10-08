@@ -1,6 +1,7 @@
+
 use crowbook::Book;
 use clap::{App, Arg,  ArgMatches, AppSettings};
-use console::{style, Emoji};
+use console::style;
 
 use std::io::{self, Write};
 use std::process::exit;
@@ -11,35 +12,44 @@ use std::env;
 static BIRD: &str = "🐦 ";
 static ERROR: &str = "💣 ";
 static WARNING: &str = "⚠️ ";
+static BOOK: &str = "📚 ";
 
-pub fn print_warning(msg: &str) {
-    eprint!("{}", style(WARNING).yellow());
+pub fn print_warning(msg: &str, emoji: bool) {
+    if emoji {
+        eprint!("{}", style(WARNING).yellow());
+    }
     eprintln!("{} {}",
               style(lformat!("WARNING")).bold().yellow(),
               msg);
 }
 
 /// Prints an error
-pub fn print_error(s: &str) {
-    eprint!("{}", style(ERROR).red());
+pub fn print_error(s: &str, emoji: bool) {
+    if emoji {
+        eprint!("{}", style(ERROR).red());
+    }
     eprintln!("{} {}",
               style(lformat!("ERROR")).bold().red(),
               s);
 }
 
 /// Prints an error on stderr and exit the program
-pub fn print_error_and_exit(s: &str) -> ! {
-    print_error(s);
+pub fn print_error_and_exit(s: &str, emoji: bool) -> ! {
+    print_error(s, emoji);
     exit(0);
 }
 
 
 /// Display version number
-pub fn display_header() {
-    eprint!("{}", style(BIRD).magenta());
-    eprintln!("{crowbook} {version}",
-              crowbook = style("CROWBOOK").magenta().bold(),
-              version = style(env!("CARGO_PKG_VERSION")).blue());
+pub fn display_header(emoji: bool) {
+    if emoji {
+        eprint!("{}", style(BIRD).magenta());
+    }
+    eprint!("{}", style("CROWBOOK ").magenta().bold());
+    if emoji {
+        eprint!("{}", style(BOOK).magenta());
+    }
+    eprintln!("{}", style(env!("CARGO_PKG_VERSION")).blue());
 }
 
 /// Return the --lang option, if it is set
@@ -63,7 +73,7 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
         let v: Vec<_> = iter.collect();
         if v.len() % 2 != 0 {
             print_error_and_exit(&lformat!("An odd number of arguments was passed to --set, but it takes \
-                                   a list of key value pairs."));
+                                   a list of key value pairs."), false);
         }
 
         for i in 0..v.len() / 2 {
@@ -90,7 +100,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     for (key, value) in options {
         let res = book.options.set(key, value);
         if let Err(err) = res {
-            print_error_and_exit(&lformat!("Error in setting key {}: {}", key, err));
+            print_error_and_exit(&lformat!("Error in setting key {}: {}", key, err), false);
         }
         output.push_str(&format!("{}: {}\n", key, value));
     }
@@ -102,7 +112,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 pub fn create_book(matches: &ArgMatches) -> ! {
     let mut f: Box<Write> = if let Some(book) = matches.value_of("BOOK") {
         if fs::metadata(book).is_ok() {
-            print_error_and_exit(&lformat!("Could not create file {}: it already exists!", book));
+            print_error_and_exit(&lformat!("Could not create file {}: it already exists!", book), false);
         }
         Box::new(fs::File::create(book).unwrap())
     } else {
@@ -153,6 +163,7 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref VERSION: String = lformat!("Print version information");
         static ref ABOUT: String = lformat!("Render a Markdown book in EPUB, PDF or HTML.");
         static ref SINGLE: String = lformat!("Use a single Markdown file instead of a book configuration file");
+        static ref EMOJI: String = lformat!("Force emoji usage even if it might not work on your system");
         static ref VERBOSE: String = lformat!("Print warnings in parsing/rendering");
         static ref QUIET: String = lformat!("Don't print info/error messages");
         static ref PROOFREAD: String = lformat!("Enable proofreading");
@@ -192,6 +203,7 @@ ARGS:
         .setting(AppSettings::UnifiedHelpMessage)
         .setting(AppSettings::HidePossibleValuesInHelp)
         .about(ABOUT.as_str())
+        .arg(Arg::from_usage("-☺️, --force-emoji").help(EMOJI.as_str()))
         .arg(Arg::from_usage("-s, --single").help(SINGLE.as_str()))
         .arg(Arg::from_usage("-n, --no-fancy").help(NO_FANCY.as_str()))
         .arg(Arg::from_usage("-v, --verbose").help(VERBOSE.as_str()))
@@ -252,6 +264,6 @@ ARGS:
 fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
         print_error_and_exit(&lformat!("A list of additional files is only valid with the --create \
-                               option."));
+                               option."), false);
     }
 }

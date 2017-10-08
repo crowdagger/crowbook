@@ -1,8 +1,5 @@
 extern crate crowbook;
 extern crate crowbook_intl_runtime;
-extern crate console;
-#[macro_use]
-extern crate log;
 
 #[cfg(feature= "binary")]
 extern crate simplelog;
@@ -10,6 +7,8 @@ extern crate simplelog;
 extern crate clap;
 #[cfg(feature = "binary")]
 extern crate tempdir;
+#[cfg(feature= "binary")]
+extern crate console;
 
 
 #[macro_use]

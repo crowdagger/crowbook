@@ -17,6 +17,7 @@
 
 use helpers::*;
 
+use console;
 use crowbook::{Result, Book, BookOptions};
 use crowbook_intl_runtime::set_lang;
 use crowbook::Stats;
@@ -30,7 +31,7 @@ use std::fs::File;
 use simplelog::{Config, TermLogger, LogLevel, LogLevelFilter, SimpleLogger, WriteLogger};
 
 /// Render a book to specific format
-fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) {
+fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &str) {
     let mut key = String::from("output.");
     key.push_str(format);
 
@@ -57,7 +58,7 @@ fn render_format(book: &mut Book, matches: &ArgMatches, format: &str) {
     };
     
     match result {
-        Err(err) => print_error(&format!("{}", err)),
+        Err(err) => print_error(&format!("{}", err), emoji),
         Ok(_) => {}
     }
 }
@@ -81,8 +82,15 @@ pub fn try_main() -> Result<()> {
     }
 
     let mut fancy_ui = true;
+    let mut emoji = console::Term::stderr().want_emoji();
 
     let (matches, help, version) = create_matches();
+
+    if matches.is_present("force-emoji") {
+        emoji = true;
+    }
+
+    display_header(emoji);
 
     if matches.is_present("list-options") {
         println!("{}", BookOptions::description(false));
@@ -91,6 +99,7 @@ pub fn try_main() -> Result<()> {
 
     if matches.is_present("no-fancy") {
         fancy_ui = false;
+        emoji = false;
     }
 
     if matches.is_present("list-options-md") {
@@ -108,7 +117,9 @@ pub fn try_main() -> Result<()> {
                 println!("{}", s);
                 exit(0);
             }
-            Err(_) => print_error_and_exit(&lformat!("{} is not a valid template name.", template)),
+            Err(_) => print_error_and_exit(&lformat!("{} is not a valid template name.",
+                                                     template),
+                                           emoji),
         }
     }
 
@@ -129,7 +140,8 @@ pub fn try_main() -> Result<()> {
     if !matches.is_present("BOOK") {
         print_error_and_exit(&lformat!("You must pass the file of a book configuration \
                                file.\n\n{}\n\nFor more information try --help.",
-                              matches.usage()));
+                                       matches.usage()),
+                             emoji);
     }
 
 
@@ -172,7 +184,7 @@ pub fn try_main() -> Result<()> {
     {
         let mut book = Book::new();
         if fancy_ui {
-            book.add_progress_bar(true);
+            book.add_progress_bar(emoji);
         }
         book.set_options(&get_book_options(&matches));
         
@@ -207,7 +219,7 @@ pub fn try_main() -> Result<()> {
         }
         
         if let Some(format) = matches.value_of("to") {
-            render_format(&mut book, &matches, format);
+            render_format(&mut book, emoji,& matches, format);
         } else {
             book.render_all();
         }
@@ -217,17 +229,18 @@ pub fn try_main() -> Result<()> {
         let mut file = File::open(error_dir.path().join(error_path)).unwrap();
         file.read_to_string(&mut errors).unwrap();
         if !errors.is_empty() {
-            print_warning(&lformat!("Crowbook exited successfully, but the following errors occurred:"));
+            print_warning(&lformat!("Crowbook exited successfully, but the following errors occurred:"),
+                          emoji);
             let mut lines: Vec<_> = errors.lines().collect();
             lines.sort();
             lines.dedup();
             for line in &lines {
                 if line.starts_with("[ERROR]") {
                     let line = &line[8..];
-                    print_error(line);
+                    print_error(line, emoji);
                 } else if line.starts_with("[WARN]") {
                     let line = &line[7..];
-                    print_warning(line);
+                    print_warning(line, emoji);
                 }
             }
         }
@@ -238,8 +251,7 @@ pub fn try_main() -> Result<()> {
 }
 
 pub fn real_main() {
-    display_header();
     if let Err(err) = try_main() {
-        print_error_and_exit(&format!("{}", err));
+        print_error_and_exit(&format!("{}", err), false);
     }
 }
