@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.14.0-beta (2017-10-08)
+------------------------------
 * Bugfixes:
   * EPUB: escape quotes in content.opf.
   * LaTeX/PDF: allow hyphenations in typewriter font.
@@ -11,8 +11,10 @@ unreleased
   * Debug/warning/info levels should be displayed in a more coherent manner
   * New `--no-fancy` option if you don't like the fancy UI (or if it doesn't work
     in your terminal)
+  * New `--force-emoji` option to force emoji usage.
 * Library interface:
   * Removed `Book::set_verbosity` method (uses a logger library instead).
+* Now requires rustc >= 1.20.0
 
 0.13.0 (2017-07-14)
 -----------------------
