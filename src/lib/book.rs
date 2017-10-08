@@ -35,10 +35,10 @@ use book_renderer::BookRenderer;
 use chapter::Chapter;
 use token::Token;
 use text_view::view_as_text;
+use book_bars::Bars;
 
 use std::thread;
 use std::sync::Arc;
-use std::mem;
 
 use indicatif::{ProgressBar, MultiProgress};
 
@@ -178,13 +178,7 @@ pub struct Book {
     formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
 
     #[doc(hidden)]
-    pub multibar: Option<Arc<MultiProgress>>,
-    #[doc(hidden)]
-    pub mainbar: Option<ProgressBar>,
-    #[doc(hidden)]
-    pub secondbar: Option<ProgressBar>,
-    #[doc(hidden)]
-    pub guard: Option<thread::JoinHandle<()>>,
+    pub bars: Bars,
 }
 
 impl Book {
@@ -203,10 +197,7 @@ impl Book {
             detector: None,
             formats: HashMap::new(),
             features: Features::new(),
-            multibar: None,
-            mainbar: None,
-            secondbar: None,
-            guard: None,
+            bars: Bars::new(),
         };
         book.add_format("html", lformat!("HTML (standalone page)"), Box::new(HtmlSingle{}))
             .add_format("proofread.html", lformat!("HTML (standalone page/proofreading)"), Box::new(ProofHtmlSingle{}))
@@ -490,10 +481,7 @@ impl Book {
             Ok(words[0])
         }
 
-        if let Some(ref bar) = self.mainbar {
-            bar.set_message(&lformat!("setting options"));
-            bar.tick();
-        } 
+        self.mainbar_set_message(&lformat!("setting options"));
 
         let mut s = String::new();
         source.read_to_string(&mut s)
@@ -508,10 +496,6 @@ impl Book {
 
         let mut line_number = 0;
         let mut is_next_line_ok: bool;
-
-        if let Some(ref bar) = self.mainbar {
-            bar.tick();
-        }
 
         loop {
             if let Some(next_line) = lines.peek() {
@@ -582,10 +566,7 @@ impl Book {
         // Update grammar checker according to options (proofread.*)
         self.init_checker();
 
-        if let Some(ref bar) = self.mainbar {
-            bar.set_message(&lformat!("parsing chapters"));
-            bar.tick();
-        }
+        self.mainbar_set_message(&lformat!("Parsing chapters"));
 
         // Parse chapters
         let lines: Vec<_> = lines.collect();
@@ -733,24 +714,6 @@ impl Book {
     #[cfg(not(feature = "proofread"))]
     fn init_checker(&mut self) {}
 
-    /// Renders the book to the given format and reports to progress bar if set
-    pub fn render_format_with_bar(&self, format: &str, bar: Option<&ProgressBar>) -> () {
-        let mut key = String::from("output.");
-        key.push_str(format);
-        if let Ok(path) = self.options.get_path(&key) {
-            if let Some(bar) = bar {
-                bar.set_message(&lformat!("rendering..."));
-            }
-            let result = self.render_format_to_file_with_bar(format, path, bar);
-            if let Err(err) = result {
-                if let Some(bar) = bar {
-                    self.finish_spinner_error(bar, format, &format!("{}", err));
-                }
-                error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
-            }
-        }
-    }
-
     /// Renders the book to the given format if output.{format} is set;
     /// do nothing otherwise.
     ///
@@ -763,7 +726,8 @@ impl Book {
     /// book.render_format("pdf");
     /// ```
     pub fn render_format(&self, format: &str) -> () {
-        self.render_format_with_bar(format, None)
+        // TODO: check that it doesn't break everything, or use option?
+        self.render_format_with_bar(format, 0)
     }
 
     /// Generates output files acccording to book options.
@@ -787,7 +751,7 @@ impl Book {
     ///       .unwrap()
     ///       .render_all(); // renders foo.tex in /tmp
     /// ```
-    pub fn render_all(&self) -> () {
+    pub fn render_all(&mut self) -> () {
         let mut keys: Vec<_> = self.formats
             .keys()
             .filter(|fmt| {
@@ -798,6 +762,7 @@ impl Book {
                 }
                 self.options.get_path(&format!("output.{}", fmt)).is_ok()
             })
+            .map(|s| s.to_string())
             .collect();
         // Make sure that PDF comes first since running latex takes lots of time
         keys.sort_by(|fmt1, fmt2| {
@@ -810,22 +775,14 @@ impl Book {
             }
         });
 
-        let mut bars = vec![];
-        if let Some(ref multibar) = self.multibar {
-            for key in &keys {
-                let bar = self.add_spinner_to_multibar(multibar, key);
-                bars.push(bar);
-            }
+        for key in &keys {
+            self.add_spinner_to_multibar(key);
         }
 
         keys.par_iter()
             .enumerate()
             .for_each(|(i, fmt)| {
-                if self.multibar.is_some() {
-                    self.render_format_with_bar(fmt, Some(&bars[i]));
-                } else {
-                    self.render_format_with_bar(fmt, None);
-                }
+                self.render_format_with_bar(fmt, i);
             });
 
         self.set_finished(&lformat!("Finished"));
@@ -836,87 +793,24 @@ impl Book {
         // }
     }
 
-
-    /// Render book to specified format according to book options, and write the results
-    /// in the `Write` object.
-    ///
-    /// This method will fail if the format is not handled by the book, or if there is a
-    /// problem during rendering, or if the renderer can't render to a byte stream (e.g.
-    /// multiple files HTML renderer can't, as it must create a directory.)
-    ///
-    /// # See also
-    /// * `render_format_to_file`, which creates a new file (that *can* be a directory).
-    /// * `render_format`, which won't do anything if `output.{format}` isn't specified
-    ///   in the book configuration file.
-    pub fn render_format_to<T: Write>(&self, format: &str, f: &mut T) -> Result<()> {
-        debug!("{}", lformat!("Attempting to generate {format}...",
-                              format = format));
-        match self.formats.get(format) {
-            Some(&(ref description, ref renderer)) => {
-                if let Some(ref multibar) = self.multibar {
-                    let bar = self.add_spinner_to_multibar(multibar, format);
-                    renderer.render(self, f)?;
-                    self.finish_spinner_success(&bar,
-                                                format,
-                                                &lformat!("generated {format}",
-                                                          format = format));
-                    self.set_finished(&lformat!("Finished"));
-                } else {
-                    renderer.render(self, f)?;
-                }
-                info!("{}", lformat!("Succesfully generated {format}",
-                                     format = description));
-                Ok(())
-            },
-            None => {
-                Err(Error::default(Source::empty(),
-                                   lformat!("unknown format {format}",
-                                            format = format)))
+        /// Renders the book to the given format and reports to progress bar if set
+    pub fn render_format_with_bar(&self, format: &str, bar: usize) -> () {
+        let mut key = String::from("output.");
+        key.push_str(format);
+        if let Ok(path) = self.options.get_path(&key) {
+            self.nth_bar_set_message(bar, &lformat!("rendering..."));
+            let result = self.render_format_to_file_with_bar(format, path, bar);
+            if let Err(err) = result {
+                self.finish_nth_spinner_error(bar, format, &format!("{}", err));
+                error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
             }
         }
     }
 
-    /// Render book to specified format according to book options. Creates a new file
-    /// and write the result in it.
-    ///
-    /// This method will fail if the format is not handled by the book, or if there is a
-    /// problem during rendering.
-    ///
-    /// # Arguments
-    ///
-    /// * `format`: the format to render;
-    /// * `path`: a path to the file that will be created;
-    /// * `bar`: a Progressbar, or `None`
-    ///
-    /// # See also
-    /// * `render_format_to`, which writes in any `Write`able object.
-    /// * `render_format`, which won't do anything if `output.{format}` isn't specified
-    ///   in the book configuration file.
-    
-    pub fn render_format_to_file<P:Into<PathBuf>>(&self,
-                                                  format: &str,
-                                                  path: P) -> Result<()> {
-        if let Some(ref multibar) = self.multibar {
-            let bar = self.add_spinner_to_multibar(multibar, format);
-            let path = path.into();
-            let normalized = misc::normalize(&path);
-            self.render_format_to_file_with_bar(format, path, Some(&bar))?;
-            self.finish_spinner_success(&bar,
-                                        format,
-                                        &lformat!("generated {path}",
-                                                  path = normalized));
-            self.set_finished(&lformat!("Finished"));
-            Ok(())
-        } else {
-            self.render_format_to_file_with_bar(format, path, None)
-        }
-    }
-    
-    
-    fn render_format_to_file_with_bar<P:Into<PathBuf>>(&self,
-                                                       format: &str,
-                                                       path: P,
-                                                       bar: Option<&ProgressBar>) -> Result<()> {
+    pub fn render_format_to_file_with_bar<P:Into<PathBuf>>(&self,
+                                                           format: &str,
+                                                           path: P,
+                                                           bar: usize) -> Result<()> {
         debug!("{}", lformat!("Attempting to generate {format}...",
                               format = format));
         let path = path.into();
@@ -946,12 +840,10 @@ impl Book {
                                      format = description,
                                      path = &path);
                 info!("{}", &msg);
-                if let Some(bar) = bar {
-                    self.finish_spinner_success(bar,
-                                                     format,
-                                                     &lformat!("generated {path}",
-                                                               path = path));
-                }
+                self.finish_nth_spinner_success(bar,
+                                                format,
+                                                &lformat!("generated {path}",
+                                                          path = path));
                 Ok(())
             },
             None => {
@@ -962,6 +854,81 @@ impl Book {
         }
     }
 
+
+
+
+    /// Render book to specified format according to book options, and write the results
+    /// in the `Write` object.
+    ///
+    /// This method will fail if the format is not handled by the book, or if there is a
+    /// problem during rendering, or if the renderer can't render to a byte stream (e.g.
+    /// multiple files HTML renderer can't, as it must create a directory.)
+    ///
+    /// # See also
+    /// * `render_format_to_file`, which creates a new file (that *can* be a directory).
+    /// * `render_format`, which won't do anything if `output.{format}` isn't specified
+    ///   in the book configuration file.
+    pub fn render_format_to<T: Write>(&mut self, format: &str, f: &mut T) -> Result<()> {
+        debug!("{}", lformat!("Attempting to generate {format}...",
+                              format = format));
+        let bar = self.add_spinner_to_multibar(format);
+        match self.formats.get(format) {
+            Some(&(ref description, ref renderer)) => {
+                renderer.render(self, f)?;
+                self.finish_nth_spinner_success(bar,
+                                                format,
+                                                &lformat!("generated {format}",
+                                                          format = format));
+                self.set_finished(&lformat!("Finished"));
+                info!("{}", lformat!("Succesfully generated {format}",
+                                     format = description));
+                Ok(())
+            },
+            None => {
+                self.finish_nth_spinner_error(bar,
+                                              format,
+                                              &lformat!("unknown format"));
+                Err(Error::default(Source::empty(),
+                                   lformat!("unknown format {format}",
+                                            format = format)))
+            }
+        }
+    }
+
+    /// Render book to specified format according to book options. Creates a new file
+    /// and write the result in it.
+    ///
+    /// This method will fail if the format is not handled by the book, or if there is a
+    /// problem during rendering.
+    ///
+    /// # Arguments
+    ///
+    /// * `format`: the format to render;
+    /// * `path`: a path to the file that will be created;
+    /// * `bar`: a Progressbar, or `None`
+    ///
+    /// # See also
+    /// * `render_format_to`, which writes in any `Write`able object.
+    /// * `render_format`, which won't do anything if `output.{format}` isn't specified
+    ///   in the book configuration file.
+    
+    pub fn render_format_to_file<P:Into<PathBuf>>(&mut self,
+                                                  format: &str,
+                                                  path: P) -> Result<()> {
+        let bar = self.add_spinner_to_multibar(format);
+        let path = path.into();
+        let normalized = misc::normalize(&path);
+        self.render_format_to_file_with_bar(format, path, bar)?;
+        self.finish_nth_spinner_success(bar,
+                                        format,
+                                        &lformat!("generated {path}",
+                                                  path = normalized));
+        self.set_finished(&lformat!("Finished"));
+        Ok(())
+    }
+    
+    
+
     /// Adds a chapter to the book.
     ///
     /// This method is the backend used both by `add_chapter` and `add_chapter_from_source`.
@@ -970,10 +937,7 @@ impl Book {
                                                   file: &str,
                                                   mut source: R)
                                                   -> Result<&mut Self> {
-        if let Some(ref bar) = self.mainbar {
-            bar.set_message(&lformat!("Processing {file}...", file = file));
-            bar.tick();
-        }
+        self.mainbar_set_message(&lformat!("Processing {file}...", file = file));
         let mut content = String::new();
         source.read_to_string(&mut content)
             .map_err(|_| {
@@ -986,10 +950,8 @@ impl Book {
         self.parse_yaml(&mut content);
 
         // parse the file
-        if let Some(ref bar) = self.secondbar {
-            bar.set_message(&lformat!("Parsing..."));
-            bar.tick();
-        }
+        self.secondbar_set_message(&lformat!("Parsing..."));
+
         let mut parser = Parser::from(self);
         parser.set_source_file(file);
         let mut tokens = parser.parse(&content)?;
@@ -1037,9 +999,7 @@ impl Book {
         if cfg!(feature = "proofread") && self.is_proofread() {
             let normalized = misc::normalize(file);
             if let Some(ref checker) = self.checker {
-                if let Some(ref bar) = self.secondbar {
-                    bar.set_message(&lformat!("Running languagetool"));
-                }
+                self.secondbar_set_message(&lformat!("Running languagetool"));
 
                 info!("{}", lformat!("Trying to run languagetool on {file}, this might take a \
                                     while...",
@@ -1051,9 +1011,7 @@ impl Book {
                 }
             }
             if let Some(ref checker) = self.grammalecte {
-                if let Some(ref bar) = self.secondbar {
-                    bar.set_message(&lformat!("Running grammalecte"));
-                }
+                self.secondbar_set_message(&lformat!("Running grammalecte"));
 
                 info!("{}", lformat!("Trying to run grammalecte on {file}, this might take a \
                                     while...",
@@ -1065,9 +1023,7 @@ impl Book {
                 }
             }
             if let Some(ref detector) = self.detector {
-                if let Some(ref bar) = self.secondbar {
-                    bar.set_message(&lformat!("Detecting repetitions"));
-                }
+                self.secondbar_set_message(&lformat!("Detecting repetitions"));
 
                 info!("{}", lformat!("Trying to run repetition detector on {file}, this might take a \
                                       while...",
@@ -1079,9 +1035,8 @@ impl Book {
                 }
             }
         }
-        if let Some(ref bar) = self.secondbar {
-            bar.set_message("");
-        }
+        self.secondbar_set_message("");
+
         self.chapters.push(Chapter::new(number, file, tokens));
 
         Ok(self)
@@ -1134,11 +1089,8 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
-        if let Some(ref bar) = self.mainbar {
-            bar.set_message(&lformat!("Parsing {file}",
-                                      file = misc::normalize(file)));
-            bar.tick();
-        }
+        self.mainbar_set_message(&lformat!("Parsing {file}",
+                                           file = misc::normalize(file)));
         debug!("{}", lformat!("Parsing chapter: {file}...",
                                    file = misc::normalize(file)));
 
@@ -1525,20 +1477,6 @@ impl Book {
         }
     }
 }
-
-
-impl Drop for Book {
-    fn drop(&mut self) {
-        if let Some(ref bar) = self.mainbar {
-            bar.finish();
-            let guard = mem::replace(&mut self.guard, None);
-            guard.unwrap()
-                .join()
-                .unwrap();
-        }
-    }
-}
-
 
 
 /// Calls mustache::compile_str but catches panics and returns a result
