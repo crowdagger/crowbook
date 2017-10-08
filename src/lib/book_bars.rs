@@ -162,14 +162,14 @@ impl Book {
         };
         
         let color = match state {
-            CrowbarState::Running => "magenta",
+            CrowbarState::Running => "yellow",
             CrowbarState::Success => "cyan",
             CrowbarState::Error => "red",
         };
         let tick_chars = match (bar, emoji) {
             (Crowbar::Main, false)  | (Crowbar::Spinner(_), false) => "-\\|/",
             (Crowbar::Main, true) => "🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚",
-            (Crowbar::Spinner(_), true) => "-\\|/",
+            (Crowbar::Spinner(_), true) => "◐◓◑◒",
             (_, _) => ""
         };
         let end_tick = match (state, emoji) {
