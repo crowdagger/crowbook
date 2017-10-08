@@ -36,7 +36,7 @@ doc = false
 
 [features]
 default = ["binary", "proofread", "syntect"]
-proofread = ["caribon", "hyper", "url"]
+proofread = ["caribon", "hyper", "url", "serde", "serde", "serde_json", "serde_derive"]
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif"]
 
 [build-dependencies]
@@ -57,6 +57,9 @@ crowbook-intl-runtime = "0.1"
 numerals = "0.1"
 epub-builder = "0.3"
 log = "0.3"
+serde = { version = "1", optional = true }
+serde_json = { version = "1", optional = true }
+serde_derive = { version = "1", optional = true }
 indicatif = { version = "0.7", optional = true }
 console = { version = "0.5", optional = true }
 caribon = { version = "0.8", optional = true }

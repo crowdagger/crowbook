@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use rustc_serialize::json;
+use serde_json;
 use hyper;
 use hyper::Client;
 use url::form_urlencoded;
@@ -32,7 +32,7 @@ use error::{Error, Result, Source};
 /// Represents a grammar error from language tool
 ///
 /// Note: lots of fields are missing
-#[derive(RustcDecodable, RustcEncodable, Debug)]
+#[derive(Deserialize, Debug)]
 struct GrammarError {
     pub message: String,
     pub offset: usize,
@@ -46,7 +46,7 @@ struct GrammarError {
 /// Corresponds to the JSON that LanguageTool-server sends back
 ///
 /// Note: lots of fields are missing
-#[derive(RustcDecodable, RustcEncodable, Debug)]
+#[derive(Deserialize, Debug)]
 struct GrammarCheck {
     pub matches: Vec<GrammarError>,
 }
@@ -111,7 +111,7 @@ impl GrammarChecker {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not read response: {error}", error = e))
             })?;
-        let reponse: GrammarCheck = json::decode(&s)
+        let reponse: GrammarCheck = serde_json::from_str(&s)
             .map_err(|e| {
                 Error::default(Source::empty(),
                                lformat!("could not decode JSON: {error}", error = e))

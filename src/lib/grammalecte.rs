@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use rustc_serialize::json;
+use serde_json;
 use hyper;
 use hyper::Client;
 use url::form_urlencoded;
@@ -32,12 +32,12 @@ use error::{Error, Result, Source};
 /// Represents a grammar error from Grammalecte
 ///
 /// Note: lots of fields are missing
-#[allow(non_snake_case)]
-#[derive(RustcDecodable, RustcEncodable, Debug)]
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct GrammalecteError {
-    pub sMessage: String,
-    pub nStart: usize,
-    pub nEnd: usize,
+    pub s_message: String,
+    pub n_start: usize,
+    pub n_end: usize,
 }
 
 /// Contains a list of matches to errors
@@ -45,13 +45,14 @@ struct GrammalecteError {
 /// Corresponds to the JSON that LanguageTool-server sends back
 ///
 /// Note: lots of fields are missing
-#[allow(non_snake_case)]
-#[derive(RustcDecodable, RustcEncodable, Debug)]
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct GrammalecteData {
-    pub lGrammarErrors: Vec<GrammalecteError>,
+    pub l_grammar_errors: Vec<GrammalecteError>,
 }
 
-#[derive(RustcDecodable, RustcEncodable, Debug)]
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct GrammalecteCheck {
     data: Vec<GrammalecteData>,
 }
@@ -118,7 +119,7 @@ impl GrammalecteChecker {
                 Error::grammar_check(Source::empty(),
                                      lformat!("could not read response: {error}", error = e))
             })?;
-        let reponse: GrammalecteCheck = json::decode(&s)
+        let reponse: GrammalecteCheck = serde_json::from_str(&s)
             .map_err(|e| {
                 Error::default(Source::empty(),
                                lformat!("could not decode JSON: {error}", error = e))
@@ -143,11 +144,11 @@ impl GrammalecteChecker {
                     Token::OrderedList(_, ref mut v) => {
                         let check = self.check(&view_as_text(v))?;
                         if check.data.len() >= 1 {
-                            for error in &check.data[0].lGrammarErrors {
+                            for error in &check.data[0].l_grammar_errors {
                                 insert_annotation(v,
-                                                  &Data::GrammarError(error.sMessage.clone()),
-                                                  error.nStart,
-                                                  error.nEnd - error.nStart);
+                                                  &Data::GrammarError(error.s_message.clone()),
+                                                  error.n_start,
+                                                  error.n_end - error.n_start);
                             }
                         }
                         if check.data.len() > 1 {

@@ -129,6 +129,13 @@ extern crate hyper;
 extern crate url;
 #[cfg(feature = "proofread")]
 extern crate caribon;
+#[cfg(feature = "proofread")]
+extern crate serde;
+#[cfg(feature = "proofread")]
+extern crate serde_json;
+#[cfg(feature = "proofread")]
+#[macro_use]
+extern crate serde_derive;
 #[cfg(feature = "syntect")]
 extern crate syntect;
 
