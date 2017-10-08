@@ -116,12 +116,13 @@ extern crate crowbook_intl_runtime;
 extern crate numerals;
 extern crate epub_builder;
 extern crate uuid;
-extern crate indicatif;
 #[macro_use]
 extern crate log;
 #[macro_use]
 extern crate lazy_static;
 
+#[cfg(feature = "indicatif")]
+extern crate indicatif;
 #[cfg(feature = "proofread")]
 extern crate hyper;
 #[cfg(feature = "proofread")]
@@ -171,7 +172,11 @@ mod html_single;
 mod html_if;
 mod syntax;
 mod stats;
+
+#[cfg(feature = "indicatif")]
 mod book_bars;
+#[cfg(not(feature = "indicatif"))]
+mod book_bars_stubs;
 
 mod zipper;
 mod templates;

@@ -37,7 +37,7 @@ doc = false
 [features]
 default = ["binary", "proofread", "syntect"]
 proofread = ["caribon", "hyper", "url"]
-binary = ["clap", "simplelog", "tempdir", "console"]
+binary = ["clap", "simplelog", "tempdir", "console", "indicatif"]
 
 [build-dependencies]
 crowbook-intl = "0.2"
@@ -57,7 +57,7 @@ crowbook-intl-runtime = "0.1"
 numerals = "0.1"
 epub-builder = "0.3"
 log = "0.3"
-indicatif = "0.7"
+indicatif = { version = "0.7", optional = true }
 console = { version = "0.5", optional = true }
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }

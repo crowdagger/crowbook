@@ -18,19 +18,18 @@
 // Progress bars implementation. Moved into a different file so it is possible
 // to make some dependencies (incidacitf) optional.
 
-use book::Book;
-use error::{Result, Error, Source};
-use misc;
+use book::{Book, Crowbar, CrowbarState};
 
 use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 
 use std::sync::Arc;
 use std::thread;
 use std::mem;
-use std::path::{Path, PathBuf};
 
 /// Store the progress bars needed for the book
 pub struct Bars {
+    /// Whether or not to use emoji
+    pub emoji: bool,
     /// Container for the progress bars
     pub multibar: Option<Arc<MultiProgress>>,
     /// Main progress bar (actually a spinner)
@@ -47,6 +46,7 @@ impl Bars {
     /// Create a new bars storage
     pub fn new() -> Bars {
         Bars {
+            emoji: false,
             multibar: None,
             mainbar: None,
             secondbar: None,
@@ -56,24 +56,28 @@ impl Bars {
     }
 }
 
+
+/// Return the style of a bar
+
 impl Book {
     /// Adds a progress bar where where info should be written.
     ///
     /// See [indicatif doc](https://docs.rs/indicatif) for more information.
-    pub fn private_add_progress_bar(&mut self) {
+    pub fn private_add_progress_bar(&mut self, emoji: bool) {
+        self.bars.emoji = emoji;
         let multibar = Arc::new(MultiProgress::new());
         self.bars.multibar = Some(multibar.clone());
         let b = self.bars.multibar
             .as_ref()
             .unwrap()
             .add(ProgressBar::new_spinner());
-        let sty = ProgressStyle::default_spinner()
-            .tick_chars("🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚V")
-//            .tick_chars("/|\\-V")
-            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
-        b.set_style(sty);
         b.enable_steady_tick(200);
         self.bars.mainbar = Some(b);
+//        let sty = ProgressStyle::default_spinner()
+//            .tick_chars("🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚V")
+//            .tick_chars("/|\\-V")
+//            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
+        self.bar_set_style(Crowbar::Main, CrowbarState::Running);
         self.bars.guard = Some(thread::spawn(move || {
             if let Err(_) = multibar.join() {
                 error!("{}", lformat!("could not display fancy UI, try running crowbook with --no-fancy"));
@@ -81,46 +85,28 @@ impl Book {
         }));
     }
 
-    /// Sets an error message to the progress bar, if it is set
-    pub fn private_set_error(&self, msg: &str) {
-        if let Some(ref mainbar) = self.bars.mainbar {
-            let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-X")
-                .template("{spinner:.dim.bold.red} {wide_msg}");
-            mainbar.set_style(sty);
-            mainbar.set_message(msg);
-        }
-    }
-
-
     /// Sets a finished message to the progress bar, if it is set
-    pub fn set_finished(&self, msg: &str) {
-        if let Some(ref bar) = self.bars.mainbar {
-            let sty = ProgressStyle::default_spinner()
-                .tick_chars("/|\\-V")
-                .template("{spinner:.dim.bold.cyan} {wide_msg}");
-            bar.set_style(sty);
-            bar.set_message(msg);
-        }
+    pub fn bar_finish(&self, bar: Crowbar, state: CrowbarState, msg: &str) {
+        self.bar_set_style(bar, state);
+        let pb = match bar {
+            Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
+            Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
+            Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
+        };
 
+        match bar {
+            Crowbar::Second => pb.finish_and_clear(),
+            _ => pb.finish_with_message(msg),
+        };
     }
 
     /// Adds a secondary progress bar to display progress of book parsing
     pub fn add_second_bar(&mut self, msg: &str, len: u64)  {
         if let Some(ref multibar) = self.bars.multibar {
             let bar = multibar.add(ProgressBar::new(len));
-            bar.set_style(ProgressStyle::default_bar()
-                          .template("{bar:40.cyan/blue} {percent:>7}% {msg}")
-                          .progress_chars("##-"));
+            self.bar_set_style(Crowbar::Second, CrowbarState::Running);
             bar.set_message(msg);
             self.bars.secondbar = Some(bar);
-        }
-    }
-
-    /// Finish secondary prograss bar
-    pub fn finish_second_bar(&self) {
-        if let Some(ref bar) = self.bars.secondbar {
-            bar.finish_and_clear();
         }
     }
 
@@ -139,87 +125,82 @@ impl Book {
             }
             
             let bar = multibar.add(ProgressBar::new_spinner());
-            let sty = ProgressStyle::default_spinner()
-                .tick_chars("/|\\-X")
-                .template(&format!("{{spinner:.dim.bold.yellow}} {format}: {{wide_msg:.yellow}}",
-                                   format = key));
-            bar.set_style(sty);
             bar.enable_steady_tick(200);
             bar.set_message(&lformat!("waiting..."));
-            bar.tick();
+            bar.set_prefix(&format!("{}:", key));
+            let i = self.bars.spinners.len();
             self.bars.spinners.push(bar);
-            return self.bars.spinners.len() - 1;
+            self.bar_set_style(Crowbar::Spinner(i), CrowbarState::Running);
+
+            i
         } else {
             0
         }
     }
 
-    pub fn mainbar_set_message(&self, msg: &str) {
-        if let Some(ref bar) = self.bars.mainbar {
-            bar.set_message(msg);
-            bar.tick();
-        } 
+    pub fn bar_set_message(&self, bar: Crowbar, msg: &str) {
+        let bar = match bar {
+            Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
+            Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
+            Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
+        };
+        bar.set_message(msg);
     }
 
-    pub fn secondbar_set_message(&self, msg: &str) {
-        if let Some(ref bar) = self.bars.secondbar {
-            bar.set_message(msg);
-            bar.tick();
-        } 
-    }
-
-    pub fn nth_bar_set_message(&self, bar: usize, msg: &str) {
-        if bar < self.bars.spinners.len() {
-            let bar = &self.bars.spinners[bar];
-            bar.set_message(msg);
-            bar.tick();
+    /// Sets the style of a  bar
+    fn bar_set_style(&self, bar: Crowbar, state: CrowbarState) -> () {
+        let pb = match bar {
+            Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
+            Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
+            Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
+            
+        };
+        let emoji = self.bars.emoji;
+        let mut style = match bar {
+            Crowbar::Second => ProgressStyle::default_bar(),
+            _ => ProgressStyle::default_spinner()
+        };
+        
+        let color = match state {
+            CrowbarState::Running => "magenta",
+            CrowbarState::Success => "cyan",
+            CrowbarState::Error => "red",
+        };
+        let tick_chars = match (bar, emoji) {
+            (Crowbar::Main, false)  | (Crowbar::Spinner(_), false) => "-\\|/",
+            (Crowbar::Main, true) => "🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚",
+            (Crowbar::Spinner(_), true) => "-\\|/",
+            (_, _) => ""
+        };
+        let end_tick = match (state, emoji) {
+            (CrowbarState::Running, _) => "V",
+            (CrowbarState::Success, true) => "✔",
+            (CrowbarState::Error, true) => "❌",
+            (CrowbarState::Success, false) => "V",
+            (CrowbarState::Error, false) => "X",
+        };
+        match bar {
+            Crowbar::Second => {
+                style = style.template("{bar:40.cyan/blue} {percent:>7} {wide_msg}")
+                    .progress_chars("##-");
+            },
+            bar => {
+                style = style.tick_chars(&format!("{}{}", tick_chars, end_tick));
+                match bar {
+                    Crowbar::Spinner(_) => {
+                        style = style
+                            .template(&format!("{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}",
+                                               color = color));
+                    },
+                    _ => {
+                        style = style
+                            .template(&format!("{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}",
+                                               color = color));
+                    },
+                };
+            },
         }
-    }
-
-    // Finish a spinner with an error message
-    pub fn finish_nth_spinner_error(&self, bar: usize, key: &str, msg: &str) {
-        if bar < self.bars.spinners.len() {
-            let bar = &self.bars.spinners[bar];
-            bar.set_style(ProgressStyle::default_spinner()
-                          .tick_chars("/|\\-X")
-                          .template(&format!("{{spinner:.dim.bold.red}} {format}: {{wide_msg:.red}}",
-                                             format = key)));
-            bar.finish_with_message(msg);
-        }
-    }
-
-    // Finish a spinner with success message
-    pub fn finish_nth_spinner_success(&self, bar: usize, key: &str, msg: &str) {
-        if bar < self.bars.spinners.len() {
-            let bar = &self.bars.spinners[bar];
-            let sty = ProgressStyle::default_spinner()
-                .tick_chars("/|\\-V")
-                .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
-                                   format = key));
-            bar.set_style(sty);
-            bar.finish_with_message(msg);
-        }
-    }
-
-
-    // Finish a spinner with an error message
-    pub fn finish_spinner_error(&self, bar: &ProgressBar, key: &str, msg: &str) {
-        bar.set_style(ProgressStyle::default_spinner()
-                      .tick_chars("/|\\-X")
-                      .template(&format!("{{spinner:.dim.bold.red}} {format}: {{wide_msg:.red}}",
-                                         format = key)));
-        bar.finish_with_message(msg);
-    }
-
-    
-    // Finish a spinner with success message
-    pub fn finish_spinner_success(&self, bar: &ProgressBar, key: &str, msg: &str) {
-        let sty = ProgressStyle::default_spinner()
-            .tick_chars("/|\\-V")
-            .template(&format!("{{spinner:.dim.bold.cyan}} {format}: {{wide_msg:.cyan}}",
-                               format = key));
-        bar.set_style(sty);
-        bar.finish_with_message(msg);
+        pb.set_style(style);
     }
 }
 

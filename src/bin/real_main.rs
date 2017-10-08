@@ -172,7 +172,7 @@ pub fn try_main() -> Result<()> {
     {
         let mut book = Book::new();
         if fancy_ui {
-            book.add_progress_bar();
+            book.add_progress_bar(true);
         }
         book.set_options(&get_book_options(&matches));
         

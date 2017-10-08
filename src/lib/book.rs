@@ -35,21 +35,18 @@ use book_renderer::BookRenderer;
 use chapter::Chapter;
 use token::Token;
 use text_view::view_as_text;
+
+#[cfg(feature = "indicatif")]
 use book_bars::Bars;
-
-use std::thread;
-use std::sync::Arc;
-
-use indicatif::{ProgressBar, MultiProgress};
+#[cfg(not(feature = "indicatif"))]
+use book_bars_stubs::Bars;
 
 #[cfg(feature = "proofread")]
 use repetition_check::RepetitionDetector;
-
 #[cfg(feature = "proofread")]
 use grammar_check::GrammarChecker;
 #[cfg(feature = "proofread")]
 use grammalecte::GrammalecteChecker;
-
 // Dummy grammarchecker thas does nothing to let the compiler compile
 #[cfg(not(feature = "proofread"))]
 struct GrammarChecker {}
@@ -116,6 +113,23 @@ pub struct HeaderData {
     /// Only the title
     pub title: String,
 }
+
+/// The types of bars
+#[derive(Copy, Clone)]
+pub enum Crowbar {
+    Main,
+    Second,
+    Spinner(usize),
+}
+
+/// The state of bars
+#[derive(Copy, Clone)]
+pub enum CrowbarState {
+    Running,
+    Success,
+    Error,
+}
+
 
 impl fmt::Display for HeaderData {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -215,7 +229,7 @@ impl Book {
 
     /// Sets an error message to the progress bar, if it is set
     pub fn set_error(&self, msg: &str) {
-        self.private_set_error(msg)
+        self.bar_finish(Crowbar::Main, CrowbarState::Error, msg)
     }
 
    
@@ -223,8 +237,8 @@ impl Book {
     /// Adds a progress bar where where info should be written.
     ///
     /// See [indicatif doc](https://docs.rs/indicatif) for more information.
-    pub fn add_progress_bar(&mut self) {
-        self.private_add_progress_bar();
+    pub fn add_progress_bar(&mut self, emoji: bool) {
+        self.private_add_progress_bar(emoji);
     }
 
     /// Register a format that can be rendered.
@@ -481,7 +495,7 @@ impl Book {
             Ok(words[0])
         }
 
-        self.mainbar_set_message(&lformat!("setting options"));
+        self.bar_set_message(Crowbar::Main, &lformat!("setting options"));
 
         let mut s = String::new();
         source.read_to_string(&mut s)
@@ -566,7 +580,7 @@ impl Book {
         // Update grammar checker according to options (proofread.*)
         self.init_checker();
 
-        self.mainbar_set_message(&lformat!("Parsing chapters"));
+        self.bar_set_message(Crowbar::Main, &lformat!("Parsing chapters"));
 
         // Parse chapters
         let lines: Vec<_> = lines.collect();
@@ -664,7 +678,7 @@ impl Book {
             }
         }
 
-        self.finish_second_bar();
+        self.bar_finish(Crowbar::Second, CrowbarState::Success, "");
         
         self.source.unset_line();
         self.set_chapter_template()?;
@@ -785,7 +799,7 @@ impl Book {
                 self.render_format_with_bar(fmt, i);
             });
 
-        self.set_finished(&lformat!("Finished"));
+        self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
 
         // if handles.is_empty() {
         //     Logger::display_warning(lformat!("Crowbook generated no file because no output file was \
@@ -798,10 +812,12 @@ impl Book {
         let mut key = String::from("output.");
         key.push_str(format);
         if let Ok(path) = self.options.get_path(&key) {
-            self.nth_bar_set_message(bar, &lformat!("rendering..."));
+            self.bar_set_message(Crowbar::Spinner(bar), &lformat!("rendering..."));
             let result = self.render_format_to_file_with_bar(format, path, bar);
             if let Err(err) = result {
-                self.finish_nth_spinner_error(bar, format, &format!("{}", err));
+                self.bar_finish(Crowbar::Spinner(bar),
+                                CrowbarState::Error,
+                                &format!("{}", err));
                 error!("{}", lformat!("Error rendering {name}: {error}", name = format, error = err));
             }
         }
@@ -840,10 +856,10 @@ impl Book {
                                      format = description,
                                      path = &path);
                 info!("{}", &msg);
-                self.finish_nth_spinner_success(bar,
-                                                format,
-                                                &lformat!("generated {path}",
-                                                          path = path));
+                self.bar_finish(Crowbar::Spinner(bar),
+                                CrowbarState::Success,
+                                &lformat!("generated {path}",
+                                          path = path));
                 Ok(())
             },
             None => {
@@ -875,19 +891,19 @@ impl Book {
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
                 renderer.render(self, f)?;
-                self.finish_nth_spinner_success(bar,
-                                                format,
-                                                &lformat!("generated {format}",
-                                                          format = format));
-                self.set_finished(&lformat!("Finished"));
+                self.bar_finish(Crowbar::Spinner(bar),
+                                CrowbarState::Success,
+                                &lformat!("generated {format}",
+                                          format = format));
+                self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
                 info!("{}", lformat!("Succesfully generated {format}",
                                      format = description));
                 Ok(())
             },
             None => {
-                self.finish_nth_spinner_error(bar,
-                                              format,
-                                              &lformat!("unknown format"));
+                self.bar_finish(Crowbar::Spinner(bar),
+                                CrowbarState::Error,
+                                &lformat!("unknown format"));
                 Err(Error::default(Source::empty(),
                                    lformat!("unknown format {format}",
                                             format = format)))
@@ -919,11 +935,11 @@ impl Book {
         let path = path.into();
         let normalized = misc::normalize(&path);
         self.render_format_to_file_with_bar(format, path, bar)?;
-        self.finish_nth_spinner_success(bar,
-                                        format,
-                                        &lformat!("generated {path}",
-                                                  path = normalized));
-        self.set_finished(&lformat!("Finished"));
+        self.bar_finish(Crowbar::Spinner(bar),
+                                CrowbarState::Success,
+                                &lformat!("generated {path}",
+                                          path = normalized));
+        self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
         Ok(())
     }
     
@@ -937,7 +953,7 @@ impl Book {
                                                   file: &str,
                                                   mut source: R)
                                                   -> Result<&mut Self> {
-        self.mainbar_set_message(&lformat!("Processing {file}...", file = file));
+        self.bar_set_message(Crowbar::Main, &lformat!("Processing {file}...", file = file));
         let mut content = String::new();
         source.read_to_string(&mut content)
             .map_err(|_| {
@@ -950,7 +966,7 @@ impl Book {
         self.parse_yaml(&mut content);
 
         // parse the file
-        self.secondbar_set_message(&lformat!("Parsing..."));
+        self.bar_set_message(Crowbar::Second, &lformat!("Parsing..."));
 
         let mut parser = Parser::from(self);
         parser.set_source_file(file);
@@ -999,7 +1015,7 @@ impl Book {
         if cfg!(feature = "proofread") && self.is_proofread() {
             let normalized = misc::normalize(file);
             if let Some(ref checker) = self.checker {
-                self.secondbar_set_message(&lformat!("Running languagetool"));
+                self.bar_set_message(Crowbar::Second, &lformat!("Running languagetool"));
 
                 info!("{}", lformat!("Trying to run languagetool on {file}, this might take a \
                                     while...",
@@ -1011,7 +1027,7 @@ impl Book {
                 }
             }
             if let Some(ref checker) = self.grammalecte {
-                self.secondbar_set_message(&lformat!("Running grammalecte"));
+                self.bar_set_message(Crowbar::Second, &lformat!("Running grammalecte"));
 
                 info!("{}", lformat!("Trying to run grammalecte on {file}, this might take a \
                                     while...",
@@ -1023,7 +1039,7 @@ impl Book {
                 }
             }
             if let Some(ref detector) = self.detector {
-                self.secondbar_set_message(&lformat!("Detecting repetitions"));
+                self.bar_set_message(Crowbar::Second, &lformat!("Detecting repetitions"));
 
                 info!("{}", lformat!("Trying to run repetition detector on {file}, this might take a \
                                       while...",
@@ -1035,7 +1051,7 @@ impl Book {
                 }
             }
         }
-        self.secondbar_set_message("");
+        self.bar_set_message(Crowbar::Second, "");
 
         self.chapters.push(Chapter::new(number, file, tokens));
 
@@ -1089,8 +1105,9 @@ impl Book {
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
     pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
-        self.mainbar_set_message(&lformat!("Parsing {file}",
-                                           file = misc::normalize(file)));
+        self.bar_set_message(Crowbar::Main,
+                             &lformat!("Parsing {file}",
+                                       file = misc::normalize(file)));
         debug!("{}", lformat!("Parsing chapter: {file}...",
                                    file = misc::normalize(file)));
 
