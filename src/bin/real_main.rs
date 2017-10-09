@@ -97,7 +97,7 @@ pub fn try_main() -> Result<()> {
         exit(0);
     }
 
-    if matches.is_present("no-fancy") {
+    if matches.is_present("no-fancy") || matches.is_present("stats") { 
         fancy_ui = false;
         emoji = false;
     }
