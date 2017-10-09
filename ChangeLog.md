@@ -6,6 +6,7 @@ unreleased
 * New option:
   * `autograph` is an autograph added after title.
 * User interface:
+  * new argument `--autograph` prompts for an autograph.
   * `--list-options` and `--stats` now use colours if available.
   * options description with `--list-options` are now wrapped.
 
