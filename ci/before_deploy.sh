@@ -1,20 +1,33 @@
-# `before_deploy` phase: here we package the build artifacts
+# This script takes care of building your crate and packaging it for release
 
 set -ex
 
-# create a "staging" directory
-mkdir staging
+main() {
+    local src=$(pwd) \
+          stage=
 
-# TODO update this part to copy the artifacts that make sense for your project
-# NOTE All Cargo build artifacts will be under the 'target/$TARGET/{debug,release}'
-cp target/$TARGET/release/crowbook staging
+    case $TRAVIS_OS_NAME in
+        linux)
+            stage=$(mktemp -d)
+            ;;
+        osx)
+            stage=$(mktemp -d -t tmp)
+            ;;
+    esac
 
-cd staging
+    test -f Cargo.lock || cargo generate-lockfile
 
-# release tarball will look like 'rust-everywhere-v1.2.3-x86_64-unknown-linux-gnu.tar.gz'
-tar czf ../${PROJECT_NAME}_${TRAVIS_TAG}_${TARGET}.tar.gz *
+    # TODO Update this to build the artifacts that matter to you
+    cross rustc --bin hello --target $TARGET --release -- -C lto
 
+    # TODO Update this to package the right artifacts
+    cp target/$TARGET/release/hello $stage/
 
+    cd $stage
+    tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
+    cd $src
 
+    rm -rf $stage
+}
 
-
+main

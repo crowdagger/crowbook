@@ -1,36 +1,24 @@
-# `script` phase: you usually build, test and generate docs in this phase
+# This script takes care of testing your crate
 
 set -ex
 
-# TODO modify this phase as you see fit
-# PROTIP Always pass `--target $TARGET` to cargo commands, this makes cargo output build artifacts
-# to target/$TARGET/{debug,release} which can reduce the number of needed conditionals in the
-# `before_deploy`/packaging phase
+# TODO This is the "test phase", tweak it as you see fit
+main() {
+    cross build --target $TARGET
+    cross build --target $TARGET --release
 
-case $TARGET in
-  # use an emulator to run the cross compiled binaries
-  arm-unknown-linux-gnueabihf)
-    # build tests but don't run them
-    cargo test --target $TARGET --no-run
+    if [ ! -z $DISABLE_TESTS ]; then
+        return
+    fi
 
-    # run tests in emulator
-    find target/$TARGET/debug -maxdepth 1 -executable -type f | \
-      xargs qemu-arm -L /usr/arm-linux-gnueabihf
+    cross test --target $TARGET
+    cross test --target $TARGET --release
 
-    # build the main executable
-    cargo build --target $TARGET
+    cross run --target $TARGET
+    cross run --target $TARGET --release
+}
 
-    # run the main executable using the emulator
-    qemu-arm -L /usr/arm-linux-gnueabihf target/$TARGET/debug/crowbook
-    ;;
-  *)
-    cargo build --target $TARGET --verbose
-    cargo run --target $TARGET
-    cargo test --target $TARGET
-    ;;
-esac
-
-cargo build --target $TARGET --release
-
-# sanity check the file type
-file target/$TARGET/release/crowbook
+# we don't run the "test phase" when doing deploys
+if [ -z $TRAVIS_TAG ]; then
+    main
+fi

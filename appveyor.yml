@@ -1,71 +1,92 @@
+# Based on the "trust" template v0.1.1
+# https://github.com/japaric/trust/tree/v0.1.1
+
 environment:
   global:
-    # This will be used as part of the zipfile name
-    # TODO change the project name
-    PROJECT_NAME: crowbook
-    # TODO you may want to change which stable Rust version is used
-    RUST_VERSION: 1.20.0
-  # TODO feel free to delete targets you are not interested in
-  matrix:
-    - TARGET: i686-pc-windows-gnu
-      MSYS2_BITS: 32
-    - TARGET: i686-pc-windows-msvc
-    - TARGET: x86_64-pc-windows-gnu
-      MSYS2_BITS: 64
-    - TARGET: x86_64-pc-windows-msvc
+  # TODO This is the Rust channel that build jobs will use by default but can be
+  # overridden on a case by case basis down below
+    RUST_VERSION: stable
 
-# Install Rust and Cargo
-# (Shamelessly stolen from https://github.com/rust-lang/libc/blob/master/appveyor.yml)
+    # TODO Update this to match the name of your project.
+    CRATE_NAME: crowbook
+
+  # TODO These are all the build jobs. Adjust as necessary. Comment out what you
+  # don't need
+  matrix:
+    # MinGW
+    - TARGET: i686-pc-windows-gnu
+    - TARGET: x86_64-pc-windows-gnu
+
+    # MSVC
+#    - TARGET: i686-pc-windows-msvc
+#    - TARGET: x86_64-pc-windows-msvc
+
+    # Testing other channels
+    - TARGET: x86_64-pc-windows-gnu
+      RUST_VERSION: nightly
+    - TARGET: x86_64-pc-windows-msvc
+      RUST_VERSION: nightly
+
 install:
-  - ps: Start-FileDownload "https://static.rust-lang.org/dist/rust-${env:RUST_VERSION}-${env:TARGET}.exe"
-  - rust-%RUST_VERSION%-%TARGET%.exe /VERYSILENT /NORESTART /DIR="C:\Program Files (x86)\Rust"
-  - SET PATH=%PATH%;C:\Program Files (x86)\Rust\bin
-  - if defined MSYS2_BITS set PATH=%PATH%;C:\msys64\mingw%MSYS2_BITS%\bin
-  - rustc -V
+  - ps: >-
+      If ($Env:TARGET -eq 'x86_64-pc-windows-gnu') {
+        $Env:PATH += ';C:\msys64\mingw64\bin'
+      } ElseIf ($Env:TARGET -eq 'i686-pc-windows-gnu') {
+        $Env:PATH += ';C:\msys64\mingw32\bin'
+      }
+  - curl -sSf -o rustup-init.exe https://win.rustup.rs/
+  - rustup-init.exe -y --default-host %TARGET% --default-toolchain %RUST_VERSION%
+  - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - rustc -Vv
   - cargo -V
 
-# ???
-build: false
-
-# Equivalent to Travis' `script` phase
-# TODO modify this phase as you see fit
+# TODO This is the "test phase", tweak it as you see fit
 test_script:
-  - cargo build --no-default-features --features="binary proofread" --verbose
-  - cargo run --no-default-features --features="binary proofread"
-  - cargo test --no-default-features --features="binary proofread" 
-  - cargo build --release --no-default-features --features="binary proofread"
+  # we don't run the "test phase" when doing deploys
+  - if [%APPVEYOR_REPO_TAG%]==[false] (
+      cargo build --no-default-features --features="binary proofread" --target %TARGET% &&
+      cargo build --no-default-features --features="binary proofread" --target %TARGET% --release &&
+      cargo test --no-default-features --features="binary proofread"  --target %TARGET% &&
+      cargo test --no-default-features --features="binary proofread"  --target %TARGET% --release 
+      cargo run --no-default-features --features="binary proofread" --target %TARGET% -- --help
+    )
 
-# Equivalent to `before_deploy` phase
-after_test:
-  - mkdir staging
-  # TODO update this part to copy the artifacts that make sense for your project
-  - copy target\release\crowbook.exe staging
-  - cd staging
-    # release zipfile will look like 'rust-everywhere-v1.2.3-x86_64-pc-windows-msvc'
-  - 7z a ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip *
-
-# IMPORTANT All the artifacts need to be listed here, or they won't be uploaded to GitHub
-artifacts:
-  - path: $(PROJECT_NAME)-$(APPVEYOR_REPO_TAG_NAME)-$(TARGET).zip
-    name: $(PROJECT_NAME)-$(APPVEYOR_REPO_TAG_NAME)-$(TARGET).zip
-    type: zip
+before_deploy:
+  # TODO Update this to build the artifacts that matter to you
+  - cargo rustc --target %TARGET% --release --bin crowbook -- -C lto
+  - ps: ci\before_deploy.ps1
 
 deploy:
-  description: 'Windows release'
-  # All the zipped artifacts will be deployed
   artifact: /.*\.zip/
-  # TODO Regenerate this auth_token for your project, this one won't work for you. Here's how:
-  # - Go to 'https://github.com/settings/tokens/new' and generate a Token with only the
-  # `public_repo` scope enabled
-  # - Then go to 'https://ci.appveyor.com/tools/encrypt' and enter the newly generated token.
-  # - Enter the "encrypted value" below
+  # TODO update `auth_token.secure`
+  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
+  # - Encrypt it. Go to https://ci.appveyor.com/tools/encrypt
+  # - Paste the output down here
   auth_token:
     secure: aPjwgGIsU16/omdaviAuV3F6FiLNFF9PaX4ju8OtOnOgGQMayyoCga1VhUuNNoWo
-  provider: GitHub
-  # deploy when a new tag is pushed
+  description: ''
   on:
+    # TODO Here you can pick which targets will generate binary releases
+    # In this example, there are some targets that are tested using the stable
+    # and nightly channels. This condition makes sure there is only one release
+    # for such targets and that's generated using the stable channel
+    RUST_VERSION: stable
     appveyor_repo_tag: true
+  provider: GitHub
+
+cache:
+  - C:\Users\appveyor\.cargo\registry
+  - target
 
 branches:
   only:
+    # Release tags
+    - /^v\d+\.\d+\.\d+.*$/
     - master
+
+notifications:
+  - provider: Email
+    on_build_success: false
+
+# Building is done in the test phase, so we disable Appveyor's build phase.
+build: false

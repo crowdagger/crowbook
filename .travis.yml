@@ -1,92 +1,103 @@
-sudo: false
+# Based on the "trust" template v0.1.1
+# https://github.com/japaric/trust/tree/v0.1.1
 
+dist: trusty
 language: rust
+services: docker
+sudo: required
 
-# NOTE This configuration has only be tested on the stable channel
-rust: 1.20.0
-
-os:
-  - linux
-  - osx
+# TODO Rust builds on stable by default, this can be
+# overridden on a case by case basis down below.
 
 env:
   global:
-    # This will be part of the release tarball
-    # TODO change the project name
-    - PROJECT_NAME=crowbook
+    - CRATE_NAME=crowbook
 
 matrix:
-  # Clear the whole matrix
-  exclude:
-    - os: linux
-    - os: osx
-  # Add each target manually
-  # pattern shown below
+  # TODO These are all the build jobs. Adjust as necessary. Comment out what you
+  # don't need
   include:
-    # WARNING Experimental target. Tests are executed using qemu user emulation, but this approach
-    # may have problems when too many threads are spawned. Also, by the next Rust stable release,
-    # this target will be replaced by `armv7-unknown-linux-gnueabihf`.
-    # - os: linux
-    #   env: TARGET=arm-unknown-linux-gnueabihf
-    #   # Extra packages only for this build job
-    #   addons:
-    #     apt:
-    #       packages:
-    #         # Cross compiler and cross compiled C libraries
-    #         - gcc-arm-linux-gnueabihf
-    #         - libc6-armhf-cross
-    #         - libc6-dev-armhf-cross
-    #         # Emulator
-    #         - qemu-user
-    # - os: linux
-    # env: TARGET=i686-unknown-linux-gnu
-    # addons:
-    #     apt:
-    #       packages:
-    #         # Cross compiler and cross compiled C libraries
-    #         - gcc-multilib
-    # - os: linux
-    #   env: TARGET=x86_64-unknown-linux-gnu
-    # - os: linux
-    #   env: TARGET=x86_64-unknown-linux-musl
-    #    - os: osx
-    #      env: TARGET=i686-apple-darwin
-    - os: osx
-      env: TARGET=x86_64-apple-darwin
+    # Linux
+    - env: TARGET=i686-unknown-linux-gnu
+#    - env: TARGET=i686-unknown-linux-musl
+    - env: TARGET=x86_64-unknown-linux-gnu
+#    - env: TARGET=x86_64-unknown-linux-musl
+
+    # OSX
+    - env: TARGET=i686-apple-darwin
+      os: osx
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+
+    # *BSD
+    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+
+    # Other architectures
+#    - env: TARGET=aarch64-unknown-linux-gnu
+#    - env: TARGET=armv7-unknown-linux-gnueabihf
+#    - env: TARGET=mips-unknown-linux-gnu
+#    - env: TARGET=mips64-unknown-linux-gnuabi64
+#    - env: TARGET=mips64el-unknown-linux-gnuabi64
+#    - env: TARGET=mipsel-unknown-linux-gnu
+#    - env: TARGET=powerpc-unknown-linux-gnu
+#    - env: TARGET=powerpc64-unknown-linux-gnu
+#    - env: TARGET=powerpc64le-unknown-linux-gnu
+#    - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+
+    # Testing other channels
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+      rust: nightly
+
+before_install:
+  - set -e
+  - rustup self update
 
 install:
   - sh ci/install.sh
+  - source ~/.cargo/env || true
 
 script:
-  - sh ci/script.sh
+  - bash ci/script.sh
+
+after_script: set +e
 
 before_deploy:
   - sh ci/before_deploy.sh
 
 deploy:
-  provider: releases
-  # TODO Regenerate this api_key for your project, this one won't work for you. Here's how:
-  # - Go to 'https://github.com/settings/tokens/new' and generate a Token with only the
-  # `public_repo` scope enabled
-  # - Call `travis encrypt $github_token` where $github_token is the token you got in the previous
-  # step and `travis` is the official Travis CI gem (see https://rubygems.org/gems/travis/)
-  # - Enter the "encrypted value" below
+  # TODO update `api_key.secure`
+  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
+  # - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
+  # - Paste the output down here
   api_key:
     secure: WN+505gb8SCS+KEPXN2bVcLIArrNV0/xbesSXfwJDBej+e2EjVKrsE9QeqWewhZL461pkYy2PfQPpNst3phgBK61qc2qvSO2R1C3G3Vzg+BD/ySHGNko0W2sYCG7fywrsLDsfNN367aMYUt3UweEvuL2ySd64iQwmvk10Wf4wyl8JdBWgBhzIDy97u0hkh2DaO3EyyM8HSfkWsa5X2uOtM50+OhLEg2SqMVXtaHvhzgBOkT4Qz0USpM9zqyJ12SeMJ7+PoWSgsZRfL5mQUStJnxURyffIiL2guUBRNALHpWTgqjyKrj97t76r9hUywoZwOkA+UCbmNbVCFOzklEl5+ocrbzRWuD+AdLQI3+fVSzgLvVg5cIjXPUApfSPWkiSlxfYEsK2XrVIDZu8QemaMSABaeyzkBt2cNiy2jIHYMBPTxD1aOxKn5bKmh5rQNJvAxBOX7oNwFdrNrj6soerJhZlmOJvUPdkA7H4vbT43cq6UgM1N8vs3sMmeaDifK5HFzA5XYHlkfSKWy3zNrM918oP8B5WxFEDns4WzjXL9CEJZsD3c9+PwvF3w6NnkxR7mjCm6QPoA2NZ1MZdaR1KM15nCwP5znbhBfSGELCMI/4ahhfRafAmCXzDdJ7M1Yx+Kl0H9Xm9HRLEWGTzbYwTOBBH1xooFN1xLKti09iykcM=
-  file: ${PROJECT_NAME}_${TRAVIS_TAG}_${TARGET}.tar.gz
-  # don't delete the artifacts from previous phases
-  skip_cleanup: true
-  # deploy when a new tag is pushed
+  file_glob: true
+  file: $CRATE_NAME_$TRAVIS_TAG_$TARGET.*
   on:
+    # TODO Here you can pick which targets will generate binary releases
+    # In this example, there are some targets that are tested using the stable
+    # and nightly channels. This condition makes sure there is only one release
+    # for such targets and that's generated using the stable channel
+    condition: $TRAVIS_RUST_VERSION = stable
     tags: true
+  provider: releases
+  skip_cleanup: true
+
+cache: cargo
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
 
 branches:
   only:
-    # Pushes and PR to the master branch
-    - master
-    # IMPORTANT Ruby regex to match tags. Required, or travis won't trigger deploys when a new tag
-    # is pushed. This regex matches semantic versions like v1.2.3-rc4+2016.02.22
+    # release tags
     - /^v\d+\.\d+\.\d+.*$/
+    - master
 
 notifications:
   email:
