@@ -123,6 +123,10 @@ extern crate lazy_static;
 
 #[cfg(feature = "indicatif")]
 extern crate indicatif;
+#[cfg(feature = "binary")]
+extern crate console;
+#[cfg(feature = "binary")]
+extern crate textwrap;
 #[cfg(feature = "proofread")]
 extern crate hyper;
 #[cfg(feature = "proofread")]
@@ -180,10 +184,20 @@ mod html_if;
 mod syntax;
 mod stats;
 
+#[cfg(feature = "binary")]
+mod style;
+#[cfg(not(feature = "binary"))]
+mod style_stubs;
+#[cfg(not(feature = "binary"))]
+use style_stubs as style;
+
 #[cfg(feature = "indicatif")]
 mod book_bars;
 #[cfg(not(feature = "indicatif"))]
 mod book_bars_stubs;
+#[cfg(not(feature = "indicatif"))]
+use book_bars_stubs as book_bars;
+
 
 mod zipper;
 mod templates;

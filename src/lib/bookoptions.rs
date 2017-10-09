@@ -1,6 +1,7 @@
 use error::{Error, Result, Source};
 use bookoption::BookOption;
 use book::Book;
+use style;
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;
@@ -910,7 +911,11 @@ impl BookOptions {
                     out.push_str("\n");
                     previous_is_comment = true;
                 }
-                let header = format!("### {} ###\n", comment.trim());
+                let header = if md {
+                    format!("### {} ###\n", comment.trim())
+                } else {
+                    format!("{}\n", style::header(&comment.trim().to_uppercase()))
+                };
                 out.push_str(&header);
                 continue;
             }
@@ -945,13 +950,13 @@ impl BookOptions {
             } else {
                 out.push_str(&format!("{key}
   {type} {option_type} ({msg} {default})
-  {comment}\n",
-                                      type = lformat!("type:"),
-                                      key = key.unwrap(),
-                                      option_type = o_type,
+{comment}\n",
+                                      type = style::field(&lformat!("type:")),
+                                      key = style::element(key.unwrap()),
+                                      option_type = style::tipe(&o_type),
                                       msg = lformat!("default:"),
-                                      default = def,
-                                      comment = comment.trim()));
+                                      default = style::value(&def),
+                                      comment = style::fill(comment.trim(), "  ")));
             }
         }
         out

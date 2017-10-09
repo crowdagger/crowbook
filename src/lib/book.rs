@@ -35,11 +35,7 @@ use book_renderer::BookRenderer;
 use chapter::Chapter;
 use token::Token;
 use text_view::view_as_text;
-
-#[cfg(feature = "indicatif")]
 use book_bars::Bars;
-#[cfg(not(feature = "indicatif"))]
-use book_bars_stubs::Bars;
 
 #[cfg(feature = "proofread")]
 use repetition_check::RepetitionDetector;

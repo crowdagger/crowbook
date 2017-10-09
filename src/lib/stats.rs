@@ -17,6 +17,7 @@
 
 use book::Book;
 use text_view::view_as_text;
+use style;
 
 use std::fmt;
 
@@ -53,12 +54,12 @@ impl Stats {
 impl fmt::Display for Stats {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:<30} {:>6} {:>7}\n---------\n",
-               lformat!("Chapter"),
-               lformat!("Words"),
-               lformat!("Chars"))?;
+               style::header(&lformat!("Chapter")),
+               style::header(&lformat!("Words")),
+               style::header(&lformat!("Chars")))?;
         for c in &self.chapters {
             write!(f, "{:<30} {:>6} {:>7}\n",
-                   c.name,
+                   style::element(&c.name),
                    c.word_count,
                    c.char_count)?;
         }
@@ -66,7 +67,7 @@ impl fmt::Display for Stats {
             .iter()
             .fold((0, 0), |acc, c| (acc.0 + c.word_count, acc.1 + c.char_count));
         write!(f, "---------\n{:<30} {:>6} {:>7}\n",
-               lformat!("TOTAL:"),
+               style::element(&lformat!("TOTAL:")),
                total.0,
                total.1)
     }
