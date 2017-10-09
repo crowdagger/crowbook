@@ -1,5 +1,6 @@
 extern crate crowbook;
 extern crate crowbook_intl_runtime;
+extern crate yaml_rust;
 
 #[cfg(feature= "binary")]
 extern crate simplelog;

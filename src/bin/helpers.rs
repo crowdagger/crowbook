@@ -91,7 +91,7 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
 
 /// Sets the book options according to command line arguments
 /// Also print these options to a string, so it can be used at
-/// the creation of a book to check that parameters are OK and t
+/// the creation of a book to check that parameters are OK and 
 /// then print them to file
 pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     let mut output = String::new();
@@ -168,6 +168,7 @@ pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
         static ref QUIET: String = lformat!("Don't print info/error messages");
         static ref PROOFREAD: String = lformat!("Enable proofreading");
         static ref CREATE: String = lformat!("Create a new book with existing Markdown files");
+        static ref AUTOGRAPH: String = lformat!("Prompts for an autograph for this book");
         static ref OUTPUT: String = lformat!("Specify output file");
         static ref LANG: String = lformat!("Set the runtime language used by Crowbook");
         static ref TO: String = lformat!("Generate specific format");
@@ -207,6 +208,7 @@ ARGS:
         .arg(Arg::from_usage("-s, --single").help(SINGLE.as_str()))
         .arg(Arg::from_usage("-n, --no-fancy").help(NO_FANCY.as_str()))
         .arg(Arg::from_usage("-v, --verbose").help(VERBOSE.as_str()))
+        .arg(Arg::from_usage("-a, --autograph").help(AUTOGRAPH.as_str()))
         .arg(Arg::from_usage("-q, --quiet")
             .help(QUIET.as_str())
             .conflicts_with("verbose"))

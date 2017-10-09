@@ -17,6 +17,7 @@
 
 use helpers::*;
 
+use yaml_rust::Yaml;
 use console;
 use crowbook::{Result, Book, BookOptions};
 use crowbook_intl_runtime::set_lang;
@@ -183,6 +184,18 @@ pub fn try_main() -> Result<()> {
 
     {
         let mut book = Book::new();
+        if matches.is_present("autograph") {
+            println!("{}", &lformat!("Enter autograph: "));
+            let mut autograph = String::new();
+            match io::stdin().read_to_string(&mut autograph) {
+                Ok(_) => {
+                    println!("{}", autograph);
+                    book.options.set_yaml(Yaml::String("autograph".to_string()), Yaml::String(autograph)).unwrap();
+                },
+                Err(_) => print_error(&lformat!("could not read autograph from stdin"), emoji),
+            }
+        }
+
         if fancy_ui {
             book.add_progress_bar(emoji);
         }
@@ -209,7 +222,7 @@ pub fn try_main() -> Result<()> {
                 }
             }
         }
-        
+
         set_book_options(&mut book, &matches);
         
         if matches.is_present("stats") {
