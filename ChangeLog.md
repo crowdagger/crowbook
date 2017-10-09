@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+unreleased
+-------------
+* New option:
+  * `autograph` is an autograph added after title.
+* User interface:
+  * `--list-options` and `--stats` now use colours if available.
+  * options description with `--list-options` are now wrapped.
+
 0.14.0-beta (2017-10-08)
 ------------------------------
 * Bugfixes:
