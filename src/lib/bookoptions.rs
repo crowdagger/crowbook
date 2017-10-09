@@ -24,6 +24,7 @@ subtitle:meta                       # {subtitle}
 license:meta                        # {license}
 version:meta                        # {version}
 date:meta                           # {date}
+autograph:meta                      # {autograph}
 
 # {output_opt}
 output:strvec                       # {output}
@@ -231,6 +232,7 @@ crowbook.verbose:alias                              # {removed}
                                          license = lformat!("License of the book. This information will be displayed on PDF documents"),
                                          version = lformat!("Version of the book"),
                                          date = lformat!("Date the book was revised"),
+                                         autograph = lformat!("An autograph"),
                                          
                                          output_epub = lformat!("Output file name for EPUB rendering"),
                                          output_html = lformat!("Output file name for HTML rendering"),
