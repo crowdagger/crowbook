@@ -243,11 +243,11 @@ crowbook.verbose:alias                              # {removed}
 
                                          rendering_highlight = lformat!("If/how highligh code blocks. Possible values: \"syntect\" (default, performed at runtime), \"highlight.js\" (HTML-only, uses Javascript), \"none\""),
                                          rendering_highlight_theme = lformat!("Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"),
-                                         rendering_initials = lformat!("Use initials ('lettrines') for first letter of a chapter (experimental)"),
+                                         rendering_initials = lformat!("Use initials ('lettrines') for first letter of a chapter"),
                                          inline_toc = lformat!("Display a table of content in the document"),
                                          toc_name = lformat!("Name of the table of contents if it is displayed in document"),
                                          num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
-                                         part = lformat!("How to call parts (or 'books', 'episodes', ..."),
+                                         part = lformat!("How to call parts (or 'books', 'episodes', ...)"),
                                          chapter = lformat!("How to call chapters"),
                                          chapter_template = lformat!("Naming scheme of chapters, for TOC"),
                                          part_template = lformat!("Naming scheme of parts, for TOC"),
