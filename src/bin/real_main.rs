@@ -189,7 +189,6 @@ pub fn try_main() -> Result<()> {
             let mut autograph = String::new();
             match io::stdin().read_to_string(&mut autograph) {
                 Ok(_) => {
-                    println!("{}", autograph);
                     book.options.set_yaml(Yaml::String("autograph".to_string()), Yaml::String(autograph)).unwrap();
                 },
                 Err(_) => print_error(&lformat!("could not read autograph from stdin"), emoji),
