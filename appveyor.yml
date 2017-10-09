@@ -43,13 +43,14 @@ install:
 # TODO This is the "test phase", tweak it as you see fit
 test_script:
   # we don't run the "test phase" when doing deploys
-  - if [%APPVEYOR_REPO_TAG%]==[false] (
+ - if [%APPVEYOR_REPO_TAG%]==[false] (
       cargo build --no-default-features --features="binary proofread" --target %TARGET% &&
       cargo build --no-default-features --features="binary proofread" --target %TARGET% --release &&
       cargo test --no-default-features --features="binary proofread"  --target %TARGET% &&
-      cargo test --no-default-features --features="binary proofread"  --target %TARGET% --release 
+      cargo test --no-default-features --features="binary proofread"  --target %TARGET% --release
+  )
 #      cargo run --no-default-features --features="binary proofread" --target %TARGET% -- --help
-    )
+ 
 
 before_deploy:
   # TODO Update this to build the artifacts that matter to you
