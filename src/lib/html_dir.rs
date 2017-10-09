@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -7,7 +7,7 @@
 // by the Free Software Foundation, either version 2.1 of the License, or
 // (at your option) any later version.
 //
-// Caribon is distributed in the hope that it will be useful,
+// Crowbook is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
@@ -306,15 +306,24 @@ impl<'a> HtmlDirRenderer<'a> {
             String::new()
         };
 
-        content = format!("<h2 class = 'author'>{author}</h2>
+        content = {
+            let mut f = |key| {
+                self.render_vec(&Parser::new().parse_inline(self.html.book.options.get_str(key)?)?)
+            };
+    
+            format!("<h2 class = 'author'>{author}</h2>
 <h1 class = 'title'>{title}</h1>
 <h2 class = 'subtitle'>{subtitle}</h2>
+<div class = \"autograph\">
+{autograph}
+</div>
 {content}",
-                          author = self.html.book.options.get_str("author")?,
-                          title = self.html.book.options.get_str("title")?,
-                          content = content,
-                          subtitle = self.html.book.options.get_str("subtitle")
-                             .unwrap_or_else(|_| ""));
+                    author = f("author")?,
+                    title = f("title")?,
+                    autograph = f("autograph").unwrap_or_else(|_| String::new()),
+                    content = content,
+                    subtitle = f("subtitle").unwrap_or_else(|_| String::new()))
+        };
 
         // Insert toc inline if option is set
         if self.html.book.options.get_bool("rendering.inline_toc").unwrap() {
