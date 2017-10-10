@@ -24,7 +24,7 @@ main() {
     cp target/$TARGET/release/crowbook $stage/
 
     cd $stage
-    tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
+    tar czf $src/$CRATE_NAME_$TRAVIS_TAG_$TARGET.tar.gz *
     cd $src
 
     rm -rf $stage
