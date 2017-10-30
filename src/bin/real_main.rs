@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2017 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -91,7 +91,9 @@ pub fn try_main() -> Result<()> {
         emoji = true;
     }
 
-    display_header(emoji);
+    if !matches.is_present("quiet") {
+        display_header(emoji);
+    }
 
     if matches.is_present("list-options") {
         println!("{}", BookOptions::description(false));
