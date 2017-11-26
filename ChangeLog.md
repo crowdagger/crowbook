@@ -9,6 +9,10 @@ unreleased
   * new argument `--autograph` prompts for an autograph.
   * `--list-options` and `--stats` now use colours if available.
   * options description with `--list-options` are now wrapped.
+* Bugfixes:
+  * Preserve errors/warnings order with fancy UI.
+  * Clean secondary bar when there is an error instead of hanging the UI.
+  * LaTeX: fancy headers only applies to fancy pages (not chapter pages).
 
 0.14.0-beta (2017-10-08)
 ------------------------------
