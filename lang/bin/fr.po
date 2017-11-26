@@ -7,15 +7,15 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:17
-msgid "Crowbook exited successfully, but the following errors occurred:"
-msgstr "Crowbook s'est terminé avec succès, mais les erreurs suivantes se sont produites :"
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:22
+msgid "WARNING"
+msgstr "AVERTISSEMENT"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:45
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:32
 msgid "ERROR"
 msgstr "ERREUR"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:61
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:75
 msgid ""
 "An odd number of arguments was passed to --set, but it takes a list of key "
 "value pairs."
@@ -23,15 +23,15 @@ msgstr ""
 "Un nombre impair d'arguments a été donné à --set, alors qu'il prend une "
 "liste de paires clé-valeur."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:89
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:103
 msgid "Error in setting key {}: {}"
 msgstr "Erreur en initialisant la clé {}: {}"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:101
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:115
 msgid "Could not create file {}: it already exists!"
 msgstr "Impossible de créer le fichier {} : il existe déjà !"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:114
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:128
 msgid ""
 "author: Your name\n"
 "title: Your title\n"
@@ -70,7 +70,7 @@ msgstr ""
 "l'Epub)\n"
 "# cover: une_couverture.png\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:132
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:146
 msgid ""
 "\n"
 "## List of chapters\n"
@@ -78,73 +78,85 @@ msgstr ""
 "\n"
 "## Liste des chapitres\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:138
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:152
 msgid "Created {}, now you'll have to complete it!"
 msgstr "{} a été crée, maintenant vous n'avez plus qu'à le compléter !"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:148
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:162
 msgid "Print help information"
 msgstr "Affiche l'aide"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:149
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:163
 msgid "Print version information"
 msgstr "Affiche le numéro de version"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:150
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:164
 msgid "Render a Markdown book in EPUB, PDF or HTML."
 msgstr "Fait le rendu en EPUB, PDF ou HTML d'un livre écrit en Markdown."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:151
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:165
 msgid "Use a single Markdown file instead of a book configuration file"
 msgstr ""
 "Utilise un simple fichier Markdown au lieu d'un fichier de configuration de "
 "livre"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:152
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:166
+msgid "Force emoji usage even if it might not work on your system"
+msgstr "Force l'utilisation d'emoji même si cela risque de ne pas fonctionner sur votre système"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:167
 msgid "Print warnings in parsing/rendering"
 msgstr "Affiche les avertissements dans l'analyse et le rendu"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:153
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:168
 msgid "Don't print info/error messages"
 msgstr "N'affiche pas les messages d'erreurs ou d'information"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:154
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:169
 msgid "Enable proofreading"
 msgstr "Activer la génération de versions pour la relecture"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:155
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:170
 msgid "Create a new book with existing Markdown files"
 msgstr "Crée un nouveau livre à partir de fichiers Markdown existants"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:156
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:171
+msgid "Prompts for an autograph for this book"
+msgstr "Demande un autographe pour ce livre"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:172
 msgid "Specify output file"
 msgstr "Spécifie un fichier de sortie"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:157
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:173
 msgid "Set the runtime language used by Crowbook"
 msgstr "Spécifie la langue à utiliser par Crowbook à l'exécution"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:158
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:174
 msgid "Generate specific format"
 msgstr "Génère un format spécifique"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:159
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:175
 msgid "Set a list of book options"
 msgstr "Règle une liste d'options pour le livre"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:160
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:176
+msgid "Disably fancy UI"
+msgstr "Désactive l'interface 'avancée'"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:177
 msgid "List all possible options"
 msgstr "Liste toutes les options possibles"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:161
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:178
 msgid "List all possible options, formatted in Markdown"
 msgstr "Liste toutes les options possibles, formatées en Markdown"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:162
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:179
 msgid "Prints the default content of a template"
 msgstr "Affiche le contenu par défaut d'un template"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:163
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:180
 msgid ""
 "File containing the book configuration file, or a Markdown file when called "
 "with --single"
@@ -152,11 +164,11 @@ msgstr ""
 "Fichier contenant la configuration du livre, ou un fichier Markdown avec "
 "l'argument --single"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:164
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:181
 msgid "Print some project statistics"
 msgstr "Affiche quelques statistiques sur le projet"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:165
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:182
 msgid ""
 "{{bin}} {{version}} by {{author}}\n"
 "{{about}}\n"
@@ -188,16 +200,16 @@ msgstr ""
 "ARGUMENTS:\n"
 "{{positionals}}\n"
 
-#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:248
+#: /home/lise/Progs/rust/crowbook/src/bin/helpers.rs:268
 msgid "A list of additional files is only valid with the --create option."
 msgstr ""
 "Une liste de fichiers additionnels n'est valide qu'avec l'option --create."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:105
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:121
 msgid "{} is not a valid template name."
 msgstr "{} n'est pas un nom de template valide."
 
-#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:124
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:142
 msgid ""
 "You must pass the file of a book configuration file.\n"
 "\n"
@@ -210,6 +222,20 @@ msgstr ""
 "{}\n"
 "\n"
 "Pour plus d'informations, essayez --help."
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:188
+msgid "Enter autograph: "
+msgstr "Entrez l'autographe : "
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:194
+msgid "could not read autograph from stdin"
+msgstr "impossible de lire l'autographe depuis l'entrée standard"
+
+#: /home/lise/Progs/rust/crowbook/src/bin/real_main.rs:244
+msgid "Crowbook exited successfully, but the following errors occurred:"
+msgstr ""
+"Crowbook s'est terminé avec succès, mais les erreurs suivantes se sont "
+"produites :"
 
 #~ msgid "Error:"
 #~ msgstr "Erreur :"
