@@ -73,7 +73,7 @@ impl Syntax {
     pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
         use latex::insert_breaks;
-        use syntect::highlighting::{BLACK, FONT_STYLE_BOLD, FONT_STYLE_ITALIC, FONT_STYLE_UNDERLINE};
+        use syntect::highlighting::{Color, FontStyle};
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
@@ -86,7 +86,7 @@ impl Syntax {
             content = content.replace('\n', "\\\\{}\n")
                 .replace(' ', "\\hphantom{ }\\allowbreak{}");
             content = format!("\\texttt{{{}}}", content);
-            if style.foreground != BLACK {
+            if style.foreground != Color::BLACK {
                 let r = style.foreground.r as f32 / 255.0;
                 let g = style.foreground.g as f32 / 255.0;
                 let b = style.foreground.b as f32 / 255.0;
@@ -96,13 +96,13 @@ impl Syntax {
                                   b = b,
                                   text = content);
             }
-            if style.font_style.contains(FONT_STYLE_BOLD) {
+            if style.font_style.contains(FontStyle::BOLD) {
                 content = format!("\\textbf{{{}}}", content);
             }
-            if style.font_style.contains(FONT_STYLE_ITALIC) {
+            if style.font_style.contains(FontStyle::ITALIC) {
                 content = format!("\\emph{{{}}}", content);
             }
-            if style.font_style.contains(FONT_STYLE_UNDERLINE) {
+            if style.font_style.contains(FontStyle::UNDERLINE) {
                 content = format!("\\underline{{{}}}", content);
             }
             result.push_str(&content);
