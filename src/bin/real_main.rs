@@ -245,9 +245,20 @@ pub fn try_main() -> Result<()> {
         if !errors.is_empty() {
             print_warning(&lformat!("Crowbook exited successfully, but the following errors occurred:"),
                           emoji);
-            let mut lines: Vec<_> = errors.lines().collect();
-            lines.sort();
-            lines.dedup();
+            // Non-efficient dedup algorithm but we need to keep the order
+            let mut lines: Vec<String> = vec!();
+            for line in errors.lines().into_iter() {
+                let mut contains = false;
+                for l in &lines {
+                    if &*l == line {
+                        contains = true;
+                        break;
+                    }
+                }
+                if !contains {
+                    lines.push(line.to_string());
+                }
+            }
             for line in &lines {
                 if line.starts_with("[ERROR]") {
                     let line = &line[8..];
