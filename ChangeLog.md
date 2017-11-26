@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.14.0 (2017-11-26)
+-----------------------
 * New option:
   * `autograph` is an autograph added after title.
 * User interface:
