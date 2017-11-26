@@ -206,6 +206,9 @@ impl Book {
 
 impl Drop for Book {
     fn drop(&mut self) {
+        if let Some(ref bar) = self.bars.secondbar {
+            bar.finish_and_clear();
+        }
         if let Some(ref bar) = self.bars.mainbar {
             bar.finish();
             let guard = mem::replace(&mut self.bars.guard, None);
