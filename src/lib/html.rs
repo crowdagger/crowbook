@@ -46,7 +46,7 @@ pub enum Highlight {
     Js,
     Syntect,
 }
-    
+
 
 /// Base structure for rendering HTML files
 ///
@@ -206,7 +206,7 @@ impl<'a> HtmlRenderer<'a> {
             },
         } //          _ => panic!("Parts are not supported yet"),
         self.current_part = n.is_part();
-        
+
         self.filename = filename;
     }
 
@@ -234,10 +234,10 @@ impl<'a> HtmlRenderer<'a> {
             n
         };
         self.inc_header(n);
-        
+
         let number = self.current_chapter[n as usize];
         let c_title = self.render_vec(vec)?;
-        
+
         if n <= 1 && self.current_numbering >= 1 {
             let header = if n == 0 {
                 Header::Part
@@ -298,7 +298,7 @@ impl<'a> HtmlRenderer<'a> {
                        n,
                        self.link_number,
                        data.text,
-                       n))                
+                       n))
         }
     }
 
@@ -658,9 +658,9 @@ impl<'a> HtmlRenderer<'a> {
 
 
 
-    
+
 }
-</script>"#;        
+</script>"#;
         self.templatize(json)
     }
 
@@ -708,8 +708,8 @@ impl<'a> HtmlRenderer<'a> {
                 }
                 Err(err) => {
                     Err(Error::render(&this.as_ref().book.source,
-                                      (lformat!("rendering 'html.header' template:\n{error}",
-                                                error = err))))
+                                      lformat!("rendering 'html.header' template:\n{error}",
+                                                error = err)))
                 }
             }
         } else {

@@ -39,7 +39,7 @@
 //! * read the chapters (written in Markdown) listed in this
 //!   configuration file and pass them to to `Parser`, get back an AST and store it in memory
 //! * call the various renderers according to the book's parameters
-//! and generate the appopriate files. 
+//! and generate the appopriate files.
 //!
 //! ## Example
 //!
@@ -116,6 +116,8 @@ extern crate crowbook_intl_runtime;
 extern crate numerals;
 extern crate epub_builder;
 extern crate uuid;
+extern crate punkt;
+extern crate hyphenation;
 #[macro_use]
 extern crate log;
 #[macro_use]
