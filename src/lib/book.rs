@@ -632,22 +632,22 @@ impl Book {
                 self.add_chapter(Number::Specified(number), file)?;
             } else if line.starts_with('@') {
                 /* Part */
-                let subline = &line[1..].trim();
-                if subline.starts_with('-') {
-                    /* Unnumbered part */
-                    let file = get_filename(&self.source, subline)?;
-                    self.add_chapter(Number::UnnumberedPart, file)?;
-                } else if subline.starts_with(|c: char| c.is_whitespace()) {
+                let subline = &line[1..];
+                if subline.starts_with(|c: char| c.is_whitespace()) {
                     let subline = subline.trim();
                     let ast = Parser::from(&self)
                         .parse_inline(subline)?;
                     let ast = vec!(Token::Header(1, ast));
                     self.chapters.push(Chapter::new(Number::DefaultPart, String::new(), ast));
+                } else if subline.starts_with('-') {
+                    /* Unnumbered part */
+                    let file = get_filename(&self.source, subline)?;
+                    self.add_chapter(Number::UnnumberedPart, file)?;
                 } else if subline.starts_with('+') {
                     /* Numbered part */
                     let file = get_filename(&self.source, subline)?;
                     self.add_chapter(Number::DefaultPart, file)?;
-                }else if subline.starts_with(|c: char| c.is_digit(10)) {
+                } else if subline.starts_with(|c: char| c.is_digit(10)) {
                     /* Specified  part*/
                     let parts: Vec<_> = subline.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
                         .collect();
