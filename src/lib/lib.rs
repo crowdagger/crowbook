@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -116,7 +116,6 @@ extern crate crowbook_intl_runtime;
 extern crate numerals;
 extern crate epub_builder;
 extern crate uuid;
-extern crate punkt;
 extern crate hyphenation;
 #[macro_use]
 extern crate log;
@@ -144,6 +143,8 @@ extern crate serde_json;
 extern crate serde_derive;
 #[cfg(feature = "syntect")]
 extern crate syntect;
+#[cfg(feature = "nightly")]
+extern crate punkt;
 
 
 pub use parser::Parser;
