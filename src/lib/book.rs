@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017 Élisabeth HENRY.
+// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -633,7 +633,11 @@ impl Book {
             } else if line.starts_with('@') {
                 /* Part */
                 let subline = &line[1..];
-                if subline.starts_with(|c: char| c.is_whitespace()) {
+                if subline.starts_with('-') {
+                    /* Unnumbered part */
+                    let file = get_filename(&self.source, line)?;
+                    self.add_chapter(Number::UnnumberedPart, file)?;
+                } else if subline.starts_with(|c: char| c.is_whitespace()) {
                     let subline = subline.trim();
                     let ast = Parser::from(&self)
                         .parse_inline(subline)?;
@@ -643,11 +647,7 @@ impl Book {
                     /* Numbered part */
                     let file = get_filename(&self.source, subline)?;
                     self.add_chapter(Number::DefaultPart, file)?;
-                } else if subline.starts_with('-') {
-                    /* Unnumbered part */
-                    let file = get_filename(&self.source, line)?;
-                    self.add_chapter(Number::UnnumberedPart, file)?;
-                } else if subline.starts_with(|c: char| c.is_digit(10)) {
+                }else if subline.starts_with(|c: char| c.is_digit(10)) {
                     /* Specified  part*/
                     let parts: Vec<_> = subline.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
                         .collect();
