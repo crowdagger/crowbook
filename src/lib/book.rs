@@ -632,10 +632,10 @@ impl Book {
                 self.add_chapter(Number::Specified(number), file)?;
             } else if line.starts_with('@') {
                 /* Part */
-                let subline = &line[1..];
+                let subline = &line[1..].trim();
                 if subline.starts_with('-') {
                     /* Unnumbered part */
-                    let file = get_filename(&self.source, line)?;
+                    let file = get_filename(&self.source, subline)?;
                     self.add_chapter(Number::UnnumberedPart, file)?;
                 } else if subline.starts_with(|c: char| c.is_whitespace()) {
                     let subline = subline.trim();
