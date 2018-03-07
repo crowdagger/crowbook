@@ -48,7 +48,7 @@ mime_guess = "1"
 pulldown-cmark = { version = "0.1.0", default-features = false}
 yaml-rust = "0.4"
 mustache = "0.8"
-uuid = { version = "0.5", features = ["v4"] }
+uuid = { version = "0.6", features = ["v4"] }
 walkdir = "2"
 rustc-serialize = "0.3"
 rayon = "1.0"
