@@ -60,7 +60,7 @@ epub-builder = "0.3"
 log = "0.3"
 punkt = { version = "1.0", optional = true }
 hyphenation = "0.6"
-textwrap = { version = "0.9", optional = true }
+textwrap = { version = "0.10", optional = true }
 serde = { version = "1", optional = true }
 serde_json = { version = "1", optional = true }
 serde_derive = { version = "1", optional = true }
