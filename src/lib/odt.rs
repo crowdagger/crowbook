@@ -130,7 +130,7 @@ impl<'a> OdtRenderer<'a> {
                                    "could not compile template for content.xml")?;
         let data = self.book.get_metadata(|s| Ok(s.to_owned()))?
             .insert_str("content", content)
-            .insert_str("automatic_styles", &self.automatic_styles)
+            .insert_str("automatic_styles", self.automatic_styles.clone())
             .build();
 
         let mut res: Vec<u8> = vec![];

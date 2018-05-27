@@ -47,7 +47,7 @@ crowbook-intl = "0.2"
 mime_guess = "1"
 pulldown-cmark = { version = "0.1.0", default-features = false}
 yaml-rust = "0.4"
-mustache = "0.8"
+mustache = "0.9"
 uuid = { version = "0.6", features = ["v4"] }
 walkdir = "2"
 rustc-serialize = "0.3"
@@ -70,7 +70,7 @@ caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
 simplelog = { version = "0.4", optional = true }
 url =  { version = "1", optional = true }
-syntect = { version = "1", optional = true }
+syntect = { version = "2", optional = true }
 tempdir = { version = "0.3", optional = true }
 
 [dependencies.hyper]

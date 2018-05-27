@@ -203,8 +203,8 @@ impl<'a> HtmlSingleRenderer<'a> {
                         &self.html.book.source,
                         "html.standalone.js")?;
         let data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?
-            .insert_str("book_svg", &book_svg)
-            .insert_str("pages_svg", &pages_svg)
+            .insert_str("book_svg", book_svg.clone())
+            .insert_str("pages_svg", pages_svg.clone())
             .insert_bool("one_chapter",
                          self.html.book.options.get_bool("html.standalone.one_chapter").unwrap())
             .insert_str("common_script",

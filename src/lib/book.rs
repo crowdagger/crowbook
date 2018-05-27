@@ -1241,7 +1241,7 @@ impl Book {
         };
         let mut data = self.get_metadata(&mut f)?;
         if !title.is_empty() {
-            data = data.insert_bool(&format!("has_{}_title", header_type),
+            data = data.insert_bool(format!("has_{}_title", header_type),
                                     true);
         }
         let number = self.get_header_number(header, n)?;
@@ -1316,7 +1316,7 @@ impl Book {
         let mut mapbuilder = MapBuilder::new();
         mapbuilder = mapbuilder.insert_str("crowbook_version", env!("CARGO_PKG_VERSION"));
         mapbuilder =
-            mapbuilder.insert_bool(&format!("lang_{}", self.options.get_str("lang").unwrap()),
+            mapbuilder.insert_bool(format!("lang_{}", self.options.get_str("lang").unwrap()),
                                    true);
 
         // Add metadata to mapbuilder
@@ -1333,12 +1333,12 @@ impl Book {
                 match content {
                     Ok(content) => {
                         if !content.is_empty() {
-                            mapbuilder = mapbuilder.insert_str(&format!("{}_raw", key), raw);
-                            mapbuilder = mapbuilder.insert_str(&key, content);
+                            mapbuilder = mapbuilder.insert_str(format!("{}_raw", key), raw);
+                            mapbuilder = mapbuilder.insert_str(key.clone(), content);
 
-                            mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), true);
+                            mapbuilder = mapbuilder.insert_bool(format!("has_{}", key), true);
                         } else {
-                            mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), false);
+                            mapbuilder = mapbuilder.insert_bool(format!("has_{}", key), false);
                         }
                     }
                     Err(err) => {
@@ -1350,7 +1350,7 @@ impl Book {
                     }
                 }
             } else {
-                mapbuilder = mapbuilder.insert_bool(&format!("has_{}", key), false);
+                mapbuilder = mapbuilder.insert_bool(format!("has_{}", key), false);
             }
         }
 
@@ -1359,7 +1359,7 @@ impl Book {
         for (key, value) in hash {
             let key = format!("loc_{}", key.as_str().unwrap());
             let value = value.as_str().unwrap();
-            mapbuilder = mapbuilder.insert_str(&key, value);
+            mapbuilder = mapbuilder.insert_str(key, value);
         }
         Ok(mapbuilder)
     }
