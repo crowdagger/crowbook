@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+unreleased
+-----------
+* `--stats` can now display more statistics
+
 0.14.0 (2017-11-26)
 -----------------------
 * New option:

@@ -70,13 +70,14 @@ impl ChapterStats {
 
 pub struct Stats {
     chapters: Vec<ChapterStats>,
+    advanced: bool,
 }
 
 impl Stats {
     pub fn new(book: &Book, advanced: bool) -> Stats {
         let lang = book.options.get_str("lang").unwrap();
         let lang = Stats::language_from_str(lang);
-        let mut stats = Stats { chapters: vec![] };
+        let mut stats = Stats { chapters: vec![], advanced: advanced };
 
         for c in &book.chapters {
             let name = c.filename.clone();
@@ -251,19 +252,31 @@ impl fmt::Display for Stats {
             .name
             .chars()
             .count() + 3;
-        write!(
-            f,
-            "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11} {:>16} {:>29}\n---------\n",
-            style::header(&lformat!("Chapter")),
-            style::header(&lformat!("Chars")),
-            style::header(&lformat!("Syllables")),
-            style::header(&lformat!("Words")),
-            style::header(&lformat!("Sentences")),
-            style::header(&lformat!("Chars/Word")),
-            style::header(&lformat!("Words/Sentence")),
-            style::header(&lformat!("Flesch reading ease index")),
-            width = max_chapter_length
-        )?;
+        if self.advanced {
+            write!(
+                f,
+                "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11} {:>16} {:>29}\n---------\n",
+                style::header(&lformat!("Chapter")),
+                style::header(&lformat!("Chars")),
+                style::header(&lformat!("Syllables")),
+                style::header(&lformat!("Words")),
+                style::header(&lformat!("Sentences")),
+                style::header(&lformat!("Chars/Word")),
+                style::header(&lformat!("Words/Sentence")),
+                style::header(&lformat!("Flesch reading ease index")),
+                width = max_chapter_length
+            )?;
+        } else {
+            write!(
+                f,
+                "{:<width$} {:>8} {:>10} {:>11}\n---------\n",
+                style::header(&lformat!("Chapter")),
+                style::header(&lformat!("Chars")),
+                style::header(&lformat!("Words")),
+                style::header(&lformat!("Chars/Word")),
+                width = max_chapter_length
+            )?;
+        }
         for c in &self.chapters {
             if let Some(ref adv) = c.advanced {
                 write!(
@@ -283,16 +296,11 @@ impl fmt::Display for Stats {
             } else {
                 write!(
                     f,
-                    "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16} {:>8} => {:>17}\n",
+                    "{:<width$} {:>8} {:>10} {:>11.2}\n",
                     style::element(&c.name),
                     c.char_count,
-                    c.syllable_count,
                     c.word_count,
-                    "n/a",
                     c.char_count as f64 / c.word_count as f64,
-                    "n/a",
-                    "n/a",
-                    "n/a",
                     width = max_chapter_length
                 )?;
             }
@@ -316,19 +324,30 @@ impl fmt::Display for Stats {
                 acc.5 + 1,
             )
         });
-        write!(
-            f,
-            "---------\n{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16.2} {:>8.1} => {:>17}\n",
-            style::element(&lformat!("TOTAL:")),
-            total.0,
-            total.1,
-            total.2,
-            total.3,
-            total.0 as f64 / total.2 as f64,
-            total.2 as f64 / total.3 as f64,
-            total.4 / total.5 as f64,
-            Self::flesch_text(total.4 / total.5 as f64),
-            width = max_chapter_length
-        )
+        if self.advanced {
+            write!(
+                f,
+                "---------\n{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16.2} {:>8.1} => {:>17}\n",
+                style::element(&lformat!("TOTAL:")),
+                total.0,
+                total.1,
+                total.2,
+                total.3,
+                total.0 as f64 / total.2 as f64,
+                total.2 as f64 / total.3 as f64,
+                total.4 / total.5 as f64,
+                width = max_chapter_length
+            )             
+        } else {
+            write!(
+                f,
+                "---------\n{:<width$} {:>8} {:>10} {:>11.2}\n",
+                style::element(&lformat!("TOTAL:")),
+                total.0,
+                total.2,
+                total.0 as f64 / total.2 as f64,
+                width = max_chapter_length
+            )
+        }
     }
 }
