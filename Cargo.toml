@@ -11,6 +11,7 @@ categories = ["command-line-utilities", "text-processing"]
 license = "LGPL-2.1+"
 publish = true
 build = "build.rs"
+autobins = false
 
 exclude = [
     "docs/*",
