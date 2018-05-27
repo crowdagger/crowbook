@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017 Élisabeth HENRY.
+// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -29,7 +29,7 @@ use std::io;
 use std::io::Read;
 use std::env;
 use std::fs::File;
-use simplelog::{Config, TermLogger, LogLevel, LogLevelFilter, SimpleLogger, WriteLogger};
+use simplelog::{Config, TermLogger, Level, LevelFilter, SimpleLogger, WriteLogger};
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &str) {
@@ -158,17 +158,17 @@ pub fn try_main() -> Result<()> {
     log_config.location = None;
     log_config.time = None;
     let verbosity = if matches.is_present("verbose") {
-        log_config.time = Some(LogLevel::Error);
-        log_config.target = Some(LogLevel::Error);
+        log_config.time = Some(Level::Error);
+        log_config.target = Some(Level::Error);
         fancy_ui = false;
-        LogLevelFilter::Debug
+        LevelFilter::Debug
     } else if matches.is_present("quiet") {
         fancy_ui = false;
-        LogLevelFilter::Error
+        LevelFilter::Error
     } else if fancy_ui {
-        LogLevelFilter::Warn
+        LevelFilter::Warn
     } else {
-        LogLevelFilter::Info
+        LevelFilter::Info
     };
 
 
