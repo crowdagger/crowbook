@@ -227,7 +227,7 @@ pub fn try_main() -> Result<()> {
         set_book_options(&mut book, &matches);
         
         if matches.is_present("stats") {
-            let stats = Stats::new(&book);
+            let stats = Stats::new(&book, matches.is_present("verbose"));
             println!("{}", stats);
             exit(0);
         }

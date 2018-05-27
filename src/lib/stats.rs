@@ -73,7 +73,7 @@ pub struct Stats {
 }
 
 impl Stats {
-    pub fn new(book: &Book) -> Stats {
+    pub fn new(book: &Book, advanced: bool) -> Stats {
         let lang = book.options.get_str("lang").unwrap();
         let lang = Stats::language_from_str(lang);
         let mut stats = Stats { chapters: vec![] };
@@ -97,7 +97,9 @@ impl Stats {
                 syllable_count: syl,
                 advanced: None,
             };
-            chapter_stats.fill_advanced(lang, &text);
+            if advanced {
+                chapter_stats.fill_advanced(lang, &text);
+            }
             stats.chapters.push(chapter_stats);
         }
         stats
