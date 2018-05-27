@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2017 Élisabeth HENRY.
+// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -448,7 +448,7 @@ impl<'a> HtmlRenderer<'a> {
                 let mut content = if this.as_ref().verbatim {
                     Cow::Borrowed(text.as_ref())
                 } else {
-                    escape::html(this.as_ref().book.clean(text.as_ref(), false))
+                    escape::html(this.as_ref().book.clean(text.as_str(), false))
                 };
                 if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
@@ -533,7 +533,7 @@ impl<'a> HtmlRenderer<'a> {
             }
             Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", this.render_vec(vec)?)),
             Token::Link(ref url, ref title, ref vec) => {
-                let url = escape::html(url.as_ref());
+                let url = escape::html(url.as_str());
                 let url = if ResourceHandler::is_local(&url) {
                     Cow::Owned(this.as_ref().handler.get_link(&url).to_owned())
                 } else {
@@ -553,7 +553,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::StandaloneImage(ref url, ref title, ref alt) => {
                 let content = this.render_vec(alt)?;
                 let html: &mut HtmlRenderer = this.as_mut();
-                let url = html.handler.map_image(&html.source, url.as_ref())?;
+                let url = html.handler.map_image(&html.source, url.as_str())?;
 
                 if token.is_image() {
                     Ok(format!("<img src = \"{}\" title = \"{}\" alt = \"{}\" />",

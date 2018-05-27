@@ -441,7 +441,7 @@ impl<'a> EpubRenderer<'a> {
                 let content = if html.verbatim {
                     Cow::Borrowed(text.as_ref())
                 } else {
-                    escape::html(html.book.clean(text.as_ref(), false))
+                    escape::html(html.book.clean(text.as_str(), false))
                 };
                 let mut content = if html.first_letter {
                     html.first_letter = false;

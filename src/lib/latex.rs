@@ -137,7 +137,7 @@ impl<'a> LatexRenderer<'a> {
         }
 
         for (i, chapter) in self.book.chapters.iter().enumerate() {
-            self.handler.add_link(chapter.filename.as_ref(), format!("chapter-{}", i));
+            self.handler.add_link(chapter.filename.as_str(), format!("chapter-{}", i));
         }
         
         for (i, chapter) in self.book.chapters.iter().enumerate() {
@@ -264,9 +264,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.escape {
-                    self.book.clean(escape::tex(text.as_ref()), true)
+                    self.book.clean(escape::tex(text.as_str()), true)
                 } else {
-                    Cow::Borrowed(text.as_ref())
+                    Cow::Borrowed(text.as_str())
                 };
                 if self.first_letter {
                     self.first_letter = false;
@@ -432,7 +432,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 if self.hyperref && self.handler.contains_link(url) {
                     Ok(format!("\\hyperref[{}]{{{}}}", escape::tex(self.handler.get_link(url)), content))
                 } else {
-                    let url = escape::tex(url.as_ref());
+                    let url = escape::tex(url.as_str());
                     if &content == &url {
                         Ok(format!("\\url{{{}}}", content))
                     } else if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
@@ -447,7 +447,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
-                    let img = self.handler.map_image(&self.source, url.as_ref())?;
+                    let img = self.handler.map_image(&self.source, url.as_str())?;
                     Ok(format!("\\mdstandaloneimage{{{}}}\n",
                                img))
 
@@ -462,7 +462,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     Ok(format!("\\mdimage{{{}}}",
-                               self.handler.map_image(&self.source, url.as_ref())?))
+                               self.handler.map_image(&self.source, url.as_str())?))
                 } else {
                     debug!("{}", lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
                                            local; ignoring it.",
