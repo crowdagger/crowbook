@@ -138,7 +138,7 @@ impl Stats {
             },
         }
     }
-    
+
     // The Flesch reading index formulae for different languages are from the `YoastSEO.js` text
     // analysis library. See: https://github.com/Yoast/YoastSEO.js/issues/267
     #[cfg(feature = "nightly")]
@@ -336,8 +336,9 @@ impl fmt::Display for Stats {
                 total.0 as f64 / total.2 as f64,
                 total.2 as f64 / total.3 as f64,
                 total.4 / total.5 as f64,
+                Self::flesch_text(total.4 / total.5 as f64),
                 width = max_chapter_length
-            )             
+            )
         } else {
             write!(
                 f,
