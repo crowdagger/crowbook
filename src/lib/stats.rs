@@ -77,7 +77,20 @@ impl Stats {
     pub fn new(book: &Book, advanced: bool) -> Stats {
         let lang = book.options.get_str("lang").unwrap();
         let lang = Stats::language_from_str(lang);
-        let mut stats = Stats { chapters: vec![], advanced: advanced };
+        
+        let mut stats;
+
+        if cfg!(not(feature = "nightly")) {
+            if advanced {
+                warn!("{}", lformat!("This version of crowboook has been compiled without support for advanced statistics"));
+            }
+            stats = Stats { chapters: vec![], advanced: false };
+        } else {
+            stats = Stats { chapters: vec![], advanced: advanced };
+            if !advanced {
+                info!("{}", lformat!("For more advanced statistics, use the --verbose or -v option"));
+            }
+        }
 
         for c in &book.chapters {
             let name = c.filename.clone();
