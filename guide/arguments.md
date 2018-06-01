@@ -153,7 +153,10 @@ $ crowbook my.book --set html.css my_style.css
 
 (or `crowbook -S <BOOK>`)
 
-Display some statistics (word and character counts) about the book.
+Display some statistics (word and character counts) about the book. If
+you use the `--verbose` or `-v` option (and your version of Crowbook
+has been compiled with support for this feature) you will get advanced
+statistics such as Felsch readability index.
 
 `--proofread`
 -------------
