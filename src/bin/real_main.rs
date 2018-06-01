@@ -157,7 +157,7 @@ pub fn try_main() -> Result<()> {
     log_config.target = None;
     log_config.location = None;
     log_config.time = None;
-    let verbosity = if matches.is_present("verbose") {
+    let verbosity = if matches.is_present("verbose") && !matches.is_present("stats") {
         log_config.time = Some(Level::Error);
         log_config.target = Some(Level::Error);
         fancy_ui = false;
