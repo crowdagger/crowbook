@@ -1028,7 +1028,7 @@ msgstr ""
 msgid "EPUB: could not guess the format of {file} based on extension. Assuming png."
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:453 /home/lise/Progs/rust/crowbook/src/lib/latex.rs:277
+#: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:453 /home/lise/Progs/rust/crowbook/src/lib/latex.rs:282
 msgid "empty str token, could not find initial"
 msgstr ""
 
@@ -1200,19 +1200,19 @@ msgstr ""
 msgid "LaTeX: can't find a tex equivalent for lang '{lang}', fallbacking on english"
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:256
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:261
 msgid "generated LaTeX was not valid utf-8"
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:413
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:418
 msgid "found {n} indented ordered lists, LaTeX only allows for 4"
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:455 /home/lise/Progs/rust/crowbook/src/lib/latex.rs:467
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:460 /home/lise/Progs/rust/crowbook/src/lib/latex.rs:472
 msgid "LaTeX ({source}): image '{url}' doesn't seem to be local; ignoring it."
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:550 /home/lise/Progs/rust/crowbook/src/lib/latex.rs:567
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:555 /home/lise/Progs/rust/crowbook/src/lib/latex.rs:572
 msgid "problem when writing LaTeX: {error}"
 msgstr ""
 
@@ -1316,19 +1316,47 @@ msgstr ""
 msgid "error in epub rendering: {path} is neither a file nor a directory"
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:57
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:85
+msgid "This version of crowboook has been compiled without support for advanced statistics"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:91
+msgid "For more advanced statistics, use the --verbose or -v option"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:272 /home/lise/Progs/rust/crowbook/src/lib/stats.rs:286
 msgid "Chapter"
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:58
-msgid "Words"
-msgstr ""
-
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:59
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:273 /home/lise/Progs/rust/crowbook/src/lib/stats.rs:287
 msgid "Chars"
 msgstr ""
 
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:70
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:274
+msgid "Syllables"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:275 /home/lise/Progs/rust/crowbook/src/lib/stats.rs:288
+msgid "Words"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:276
+msgid "Sentences"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:277 /home/lise/Progs/rust/crowbook/src/lib/stats.rs:289
+msgid "Chars/Word"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:278
+msgid "Words/Sentence"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:279
+msgid "Flesch reading ease index"
+msgstr ""
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:344 /home/lise/Progs/rust/crowbook/src/lib/stats.rs:359
 msgid "TOTAL:"
 msgstr ""
 

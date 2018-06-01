@@ -1225,7 +1225,7 @@ msgstr ""
 "On part sur du png."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/epub.rs:453
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:277
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:282
 msgid "empty str token, could not find initial"
 msgstr "jeton str vide, impossible de trouver la lettrine"
 
@@ -1422,23 +1422,23 @@ msgstr ""
 "LaTeX: impossible de trouver un équivalent tex pour la langue '{lang}', "
 "utilisation de l'anglais par défaut"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:256
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:261
 msgid "generated LaTeX was not valid utf-8"
 msgstr "le fichier LaTeX généré contenait de l'UTF-8 invalide"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:413
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:418
 msgid "found {n} indented ordered lists, LaTeX only allows for 4"
 msgstr "liste ordonnée imbriqué à {n} niveau, LaTeX n'en permet que 4"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:455
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:467
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:460
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:472
 msgid "LaTeX ({source}): image '{url}' doesn't seem to be local; ignoring it."
 msgstr ""
 "LaTeX ({source}) : l'image '{url}' n'a pas l'air d'être locale, elle sera "
 "ignorée"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:550
-#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:567
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:555
+#: /home/lise/Progs/rust/crowbook/src/lib/latex.rs:572
 msgid "problem when writing LaTeX: {error}"
 msgstr "problème en écrivant dans le fichier LaTeX : {error}"
 
@@ -1480,7 +1480,8 @@ msgid ""
 "ODT output: {features}. They will be ignored in the generated document."
 msgstr ""
 "ODT : Le document utilise les fonctionnalités suivantes qui ne sont pas "
-"implementées pour le rendu ODT : {features}. Elles seront ignorées dans le document généré."
+"implementées pour le rendu ODT : {features}. Elles seront ignorées dans le "
+"document généré."
 
 #: /home/lise/Progs/rust/crowbook/src/lib/odt.rs:120
 msgid "Parts are not supported yet in ODT"
@@ -1560,19 +1561,54 @@ msgid "error in epub rendering: {path} is neither a file nor a directory"
 msgstr ""
 "erreur dans le rendu EPUB : {path} n'est ni un fichier ni un répertoire"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:57
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:85
+msgid ""
+"This version of crowboook has been compiled without support for advanced "
+"statistics"
+msgstr "Cette version de crowbook a été compilée sans support pour les statistiques avancées"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:91
+msgid "For more advanced statistics, use the --verbose or -v option"
+msgstr "Pour des statistiques plus avancées, utilisez l'option --verbose ou -v"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:272
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:286
 msgid "Chapter"
 msgstr "Chapitre"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:58
-msgid "Words"
-msgstr "Mots"
-
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:59
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:273
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:287
 msgid "Chars"
 msgstr "Signes"
 
-#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:70
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:274
+msgid "Syllables"
+msgstr "Syllabes"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:275
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:288
+msgid "Words"
+msgstr "Mots"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:276
+msgid "Sentences"
+msgstr "Phrases"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:277
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:289
+msgid "Chars/Word"
+msgstr "Signes/Mot"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:278
+msgid "Words/Sentence"
+msgstr "Mots/Phrase"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:279
+msgid "Flesch reading ease index"
+msgstr "Indice de Flesch"
+
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:344
+#: /home/lise/Progs/rust/crowbook/src/lib/stats.rs:359
 msgid "TOTAL:"
 msgstr "TOTAL :"
 
