@@ -53,6 +53,7 @@
   left=<<&margin_left>>,right=<<&margin_right>>]{geometry} % Set dimensions/margins of the parge
 <</stdpage>>
 
+
 \makeatletter
 \date{<<&date>>}
 
@@ -236,6 +237,19 @@
 \author{<<&author>>}
 
 \begin{document}
+
+% Redefine chapter and part names if they needs to be
+% Needs to be after \begin{document} because babel
+<<#chapter_name>>
+\makeatletter
+\renewcommand{\@chapapp}{<<&chapter_name>>}
+\makeatother
+<</chapter_name>>
+
+<<#part_name>>
+\renewcommand{\partname}{<<&part_name>>}
+<</part_name>>
+
 
 <<#tex_title>>
 \maketitle

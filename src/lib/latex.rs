@@ -241,7 +241,12 @@ impl<'a> LatexRenderer<'a> {
             .insert_str("margin_bottom", self.book.options.get_str("tex.margin.bottom").unwrap())
             .insert_str("margin_top", self.book.options.get_str("tex.margin.top").unwrap());
 
-        
+        if let Ok(chapter_name) = self.book.options.get_str("rendering.chapter") {
+            data = data.insert_str("chapter_name", chapter_name);
+        }
+        if let Ok(part_name) = self.book.options.get_str("rendering.part") {
+            data = data.insert_str("part_name", part_name);
+        }
         if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);
         }
