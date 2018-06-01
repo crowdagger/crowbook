@@ -3,7 +3,11 @@ ChangeLog
 
 unreleased
 -----------
-* `--stats` can now display more statistics
+* `--stats` can now display more statistics when used with the
+  `--verbose` option (if support for advanced statistics is compiled) 
+* LaTeX outputs now make uses of user-defined `rendering.chapter` and
+  `rendering.part`
+* Dependencies update
 
 0.14.0 (2017-11-26)
 -----------------------
