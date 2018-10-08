@@ -26,7 +26,7 @@
 //! default features that are mostly useful for the binary:
 //!
 //! ```ignore
-//! crowbook = {version = "0.11", default-features = false}
+//! crowbook = {version = "0.14.1", default-features = false}
 //! ```
 //!
 //! # Book
