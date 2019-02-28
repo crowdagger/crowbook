@@ -15,8 +15,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error, Result, Source};
-use book::Book;
+use crate::error::{Error, Result, Source};
+use crate::book::Book;
+
 use std::io::Write;
 use std::fs::File;
 use std::path::Path;

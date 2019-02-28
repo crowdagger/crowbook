@@ -27,7 +27,7 @@ extern crate lazy_static;
 
 #[cfg(feature = "binary")]
 fn main() {
-    real_main::real_main();
+    crate::real_main::real_main();
 }
 
 #[cfg(not(feature = "binary"))]

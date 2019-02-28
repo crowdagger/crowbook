@@ -17,7 +17,7 @@
 
 //! Misc utility functions used across crowbook
 
-use token::Token;
+use crate::token::Token;
 
 use std;
 use std::path::{Path, PathBuf};

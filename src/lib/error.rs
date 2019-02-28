@@ -73,12 +73,12 @@ impl Source {
 impl fmt::Display for Source {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let Some(ref file) = self.file {
-            try!(write!(f, "{}", file));
+            write!(f, "{}", file)?;
             if let Some(line) = self.line {
-                try!(write!(f, ":{}", line));
+                write!(f, ":{}", line)?;
             }
         } else {
-            try!(write!(f, "<UNKNOWN FILE>"));
+            write!(f, "<UNKNOWN FILE>")?;
         }
         Ok(())
     }
@@ -299,14 +299,14 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let source = &self.source;
         if let Some(ref file) = source.file {
-            try!(write!(f, "{}", file));
+            write!(f, "{}", file)?;
             if let Some(line) = source.line {
-                try!(write!(f, ":{}", line));
+                write!(f, ":{}", line)?;
             }
-            try!(write!(f, ": "));
+            write!(f, ": ")?;
         }
 
-        try!(match self.inner {
+        match self.inner {
             Inner::Default(ref s) => write!(f, "{}", s),
             Inner::GrammarCheck(ref s) => {
                 write!(f,
@@ -320,7 +320,7 @@ impl fmt::Display for Error {
                        lformat!("Error parsing markdown: {error}", error = s))
             }
             Inner::ConfigParser(ref s) => {
-                try!(f.write_str(&lformat!("Error parsing configuration file: ")));
+                f.write_str(&lformat!("Error parsing configuration file: "))?;
                 f.write_str(s)
             }
             Inner::FileNotFound(ref description, ref file) => {
@@ -336,22 +336,22 @@ impl fmt::Display for Error {
                        lformat!("Error compiling template: {template}", template = s))
             }
             Inner::Render(ref s) => {
-                try!(f.write_str(&lformat!("Error during rendering: ")));
+                f.write_str(&lformat!("Error during rendering: "))?;
                 f.write_str(s)
             }
             Inner::Zipper(ref s) => {
-                try!(f.write_str(&lformat!("Error during temporary files editing: ")));
+                f.write_str(&lformat!("Error during temporary files editing: "))?;
                 f.write_str(s)
             }
             Inner::BookOption(ref s) => {
-                try!(f.write_str(&lformat!("Error converting BookOption: ")));
+                f.write_str(&lformat!("Error converting BookOption: "))?;
                 f.write_str(s)
             }
             Inner::InvalidOption(ref s) => {
-                try!(f.write_str(&lformat!("Error accessing book option: ")));
+                f.write_str(&lformat!("Error accessing book option: "))?;
                 f.write_str(s)
             }
-        });
+        }?;
         Ok(())
     }
 }

@@ -15,19 +15,19 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error, Result, Source};
-use token::Token;
-use html::HtmlRenderer;
-use book::{Book, compile_str};
-use book::Header;
-use templates::epub::*;
-use templates::epub3;
-use resource_handler;
-use renderer::Renderer;
-use parser::Parser;
-use lang;
-use book_renderer::BookRenderer;
-use text_view::view_as_text;
+use crate::error::{Error, Result, Source};
+use crate::token::Token;
+use crate::html::HtmlRenderer;
+use crate::book::{Book, compile_str};
+use crate::book::Header;
+use crate::templates::epub::*;
+use crate::templates::epub3;
+use crate::resource_handler;
+use crate::renderer::Renderer;
+use crate::parser::Parser;
+use crate::lang;
+use crate::book_renderer::BookRenderer;
+use crate::text_view::view_as_text;
 
 use mustache::Template;
 use crowbook_text_processing::escape;

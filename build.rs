@@ -1,4 +1,4 @@
-extern crate crowbook_intl;
+
 use crowbook_intl::{Localizer, Extractor};
 
 use std::path::Path;

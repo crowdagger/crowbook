@@ -23,11 +23,11 @@ use rayon::prelude::*;
 
 use std::io::Read;
 
-use text_view::view_as_text;
-use text_view::insert_annotation;
-use token::Token;
-use token::Data;
-use error::{Error, Result, Source};
+use crate::text_view::view_as_text;
+use crate::text_view::insert_annotation;
+use crate::token::Token;
+use crate::token::Data;
+use crate::error::{Error, Result, Source};
 
 /// Represents a grammar error from Grammalecte
 ///

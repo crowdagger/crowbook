@@ -18,7 +18,7 @@
 // Progress bars implementation. Moved into a different file so it is possible
 // to make some dependencies (incidacitf) optional.
 
-use book::{Book, Crowbar, CrowbarState};
+use crate::book::{Book, Crowbar, CrowbarState};
 
 use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 

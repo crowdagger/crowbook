@@ -1,7 +1,7 @@
-use error::{Error, Result, Source};
-use bookoption::BookOption;
-use book::Book;
-use style;
+use crate::error::{Error, Result, Source};
+use crate::bookoption::BookOption;
+use crate::book::Book;
+use crate::style;
 
 use yaml_rust::{Yaml, YamlLoader};
 use std::collections::HashMap;

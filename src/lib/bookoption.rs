@@ -1,4 +1,4 @@
-use error::{Error, Result, Source};
+use crate::error::{Error, Result, Source};
 
 /// Structure for storing a book option
 ///

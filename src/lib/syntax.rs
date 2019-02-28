@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::Result;
+use crate::error::Result;
 
 use crowbook_text_processing::escape;
 
@@ -72,7 +72,7 @@ impl Syntax {
 
     pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
-        use latex::insert_breaks;
+        use crate::latex::insert_breaks;
         use syntect::highlighting::{Color, FontStyle};
         let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());

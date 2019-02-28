@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use book::Book;
-use text_view::view_as_text;
-use style;
+use crate::book::Book;
+use crate::text_view::view_as_text;
+use crate::style;
 
 use std::fmt;
 use std::f64;

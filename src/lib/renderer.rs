@@ -15,8 +15,8 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use token::Token;
-use error::Result;
+use crate::token::Token;
+use crate::error::Result;
 
 /// Renderer trait, implemented by various renderer to render a list of `Token`s.
 pub trait Renderer {

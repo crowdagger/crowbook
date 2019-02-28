@@ -17,7 +17,7 @@
 
 // Progress bars non-implementation. Used when indicatif is not compiled.
 
-use book::{Book, Crowbar, CrowbarState};
+use crate::book::{Book, Crowbar, CrowbarState};
 
 /// Dummy bars implementation
 pub struct Bars {

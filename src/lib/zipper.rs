@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error, Result};
+use crate::error::{Error, Result};
 
 use std::path::{Path, PathBuf};
 use std::io;
@@ -118,7 +118,7 @@ This is forbidden because we are supposed \
                        mut command: Command,
                        command_name: &str,
                        in_file: &str,
-                       out: &mut Write)
+                       out: &mut dyn Write)
                        -> Result<String> {
         let res_output = command.args(&self.args)
             .current_dir(&self.path)
@@ -158,7 +158,7 @@ This is forbidden because we are supposed \
     }
 
     /// zip all files in zipper's tmp dir to a given file name and write to odt file
-    pub fn generate_odt(&mut self, command_name: &str, odt_file: &mut Write) -> Result<String> {
+    pub fn generate_odt(&mut self, command_name: &str, odt_file: &mut dyn Write) -> Result<String> {
         let mut command = Command::new(command_name);
         command.arg("-r");
         command.arg("result.odt");
@@ -171,7 +171,7 @@ This is forbidden because we are supposed \
     pub fn generate_pdf(&mut self,
                         command_name: &str,
                         tex_file: &str,
-                        pdf_file: &mut Write)
+                        pdf_file: &mut dyn Write)
                         -> Result<String> {
         // first pass
         let _ = Command::new(command_name)

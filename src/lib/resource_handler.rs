@@ -1,5 +1,5 @@
-use token::Token;
-use error::{Error, Result, Source};
+use crate::token::Token;
+use crate::error::{Error, Result, Source};
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};

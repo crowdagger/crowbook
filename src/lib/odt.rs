@@ -1,11 +1,11 @@
-use token::Token;
-use book::{Book, compile_str};
-use number::Number;
-use error::Result;
-use templates::odt;
-use zipper::Zipper;
-use parser::Parser;
-use book_renderer::BookRenderer;
+use crate::token::Token;
+use crate::book::{Book, compile_str};
+use crate::number::Number;
+use crate::error::Result;
+use crate::templates::odt;
+use crate::zipper::Zipper;
+use crate::parser::Parser;
+use crate::book_renderer::BookRenderer;
 
 use crowbook_text_processing::escape;
 

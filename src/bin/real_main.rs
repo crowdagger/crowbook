@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use helpers::*;
+use crate::helpers::*;
 
 use yaml_rust::Yaml;
 use console;

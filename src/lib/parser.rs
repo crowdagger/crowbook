@@ -15,9 +15,9 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use token::Token;
-use error::{Result, Error, Source};
-use book::Book;
+use crate::token::Token;
+use crate::error::{Result, Error, Source};
+use crate::book::Book;
 
 use std::mem;
 use std::fs::File;

@@ -15,18 +15,18 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Result, Error, Source};
-use token::Token;
-use token::Data;
-use book::{Book, compile_str};
-use book::Header;
-use book::HeaderData;
-use number::Number;
-use resource_handler::ResourceHandler;
-use renderer::Renderer;
-use parser::Parser;
-use syntax::Syntax;
-use lang;
+use crate::error::{Result, Error, Source};
+use crate::token::Token;
+use crate::token::Data;
+use crate::book::{Book, compile_str};
+use crate::book::Header;
+use crate::book::HeaderData;
+use crate::number::Number;
+use crate::resource_handler::ResourceHandler;
+use crate::renderer::Renderer;
+use crate::parser::Parser;
+use crate::syntax::Syntax;
+use crate::lang;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};

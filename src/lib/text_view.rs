@@ -18,8 +18,8 @@
 use std::mem;
 use std::default::Default;
 
-use token::Token;
-use token::Data;
+use crate::token::Token;
+use crate::token::Data;
 
 pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
     where F1: Fn(&str) -> R,

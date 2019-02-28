@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use number::Number;
-use token::Token;
+use crate::number::Number;
+use crate::token::Token;
 
 /// Represents the content of a chapter.
 #[derive(Debug)]

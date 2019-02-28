@@ -15,17 +15,17 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error, Result, Source};
-use html::HtmlRenderer;
-use html::Highlight;
-use book::{Book, compile_str};
-use token::Token;
-use templates::img;
-use resource_handler;
-use renderer::Renderer;
-use parser::Parser;
-use book_renderer::BookRenderer;
-use text_view::view_as_text;
+use crate::error::{Error, Result, Source};
+use crate::html::HtmlRenderer;
+use crate::html::Highlight;
+use crate::book::{Book, compile_str};
+use crate::token::Token;
+use crate::templates::img;
+use crate::resource_handler;
+use crate::renderer::Renderer;
+use crate::parser::Parser;
+use crate::book_renderer::BookRenderer;
+use crate::text_view::view_as_text;
 
 use std::io;
 use std::io::Read;

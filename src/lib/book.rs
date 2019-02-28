@@ -15,34 +15,34 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use error::{Error, Result, Source};
-use cleaner::{Cleaner, CleanerParams, French, Off, Default};
-use bookoptions::BookOptions;
-use parser::Parser;
-use parser::Features;
-use epub::{Epub};
-use html_single::{HtmlSingle, ProofHtmlSingle};
-use html_dir::{HtmlDir, ProofHtmlDir};
-use html_if::{HtmlIf};
-use latex::{Latex, ProofLatex, Pdf, ProofPdf};
-use odt::{Odt};
-use templates::{epub, html, epub3, latex, html_dir, highlight, html_single, html_if};
-use number::Number;
-use resource_handler::ResourceHandler;
-use lang;
-use misc;
-use book_renderer::BookRenderer;
-use chapter::Chapter;
-use token::Token;
-use text_view::view_as_text;
-use book_bars::Bars;
+use crate::error::{Error, Result, Source};
+use crate::cleaner::{Cleaner, CleanerParams, French, Off, Default};
+use crate::bookoptions::BookOptions;
+use crate::parser::Parser;
+use crate::parser::Features;
+use crate::epub::{Epub};
+use crate::html_single::{HtmlSingle, ProofHtmlSingle};
+use crate::html_dir::{HtmlDir, ProofHtmlDir};
+use crate::html_if::{HtmlIf};
+use crate::latex::{Latex, ProofLatex, Pdf, ProofPdf};
+use crate::odt::{Odt};
+use crate::templates::{epub, html, epub3, latex, html_dir, highlight, html_single, html_if};
+use crate::number::Number;
+use crate::resource_handler::ResourceHandler;
+use crate::lang;
+use crate::misc;
+use crate::book_renderer::BookRenderer;
+use crate::chapter::Chapter;
+use crate::token::Token;
+use crate::text_view::view_as_text;
+use crate::book_bars::Bars;
 
 #[cfg(feature = "proofread")]
-use repetition_check::RepetitionDetector;
+use crate::repetition_check::RepetitionDetector;
 #[cfg(feature = "proofread")]
-use grammar_check::GrammarChecker;
+use crate::grammar_check::GrammarChecker;
 #[cfg(feature = "proofread")]
-use grammalecte::GrammalecteChecker;
+use crate::grammalecte::GrammalecteChecker;
 // Dummy grammarchecker thas does nothing to let the compiler compile
 #[cfg(not(feature = "proofread"))]
 struct GrammarChecker {}
