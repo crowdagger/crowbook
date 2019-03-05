@@ -1,4 +1,3 @@
-extern crate crowbook;
 use crowbook::Book;
 use std::io;
 
