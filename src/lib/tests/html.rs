@@ -1,9 +1,9 @@
-use html::HtmlRenderer;
-use book::Book;
-use parser::Parser;
-use token::Token;
+use crate::html::HtmlRenderer;
+use crate::book::Book;
+use crate::parser::Parser;
+use crate::token::Token;
 use super::test_eq;
-use renderer::Renderer;
+use crate::renderer::Renderer;
 
 fn ast_to_html(v: &[Token]) -> String {
     let mut book = Book::new();

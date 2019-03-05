@@ -1,4 +1,4 @@
-use book::Book;
+use crate::book::Book;
 use super::test_eq;
 
 #[test]

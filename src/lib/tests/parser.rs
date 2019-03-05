@@ -1,6 +1,6 @@
-use parser::Parser;
-use token::Token;
-use book::Book;
+use crate::parser::Parser;
+use crate::token::Token;
+use crate::book::Book;
 use super::test_eq;
 
 fn parse_from_str(doc: &str) -> Vec<Token> {
