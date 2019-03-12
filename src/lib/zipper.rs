@@ -39,7 +39,7 @@ impl Zipper {
     /// (zipper will create a random dir in it and clean it later)
     pub fn new(path: &str) -> Result<Zipper> {
         let uuid = uuid::Uuid::new_v4();
-        let zipper_path = Path::new(path).join(uuid.simple().to_string());
+        let zipper_path = Path::new(path).join(uuid.to_simple().to_string());
 
         DirBuilder::new()
             .recursive(true)

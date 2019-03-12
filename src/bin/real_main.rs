@@ -83,7 +83,7 @@ pub fn try_main() -> Result<()> {
     }
 
     let mut fancy_ui = true;
-    let mut emoji = console::Term::stderr().want_emoji();
+    let mut emoji = console::Term::stderr().features().wants_emoji();
 
     let (matches, help, version) = create_matches();
 
