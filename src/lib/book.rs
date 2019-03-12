@@ -382,7 +382,7 @@ impl Book {
                                       .as_os_str());
 
         // Update grammar checker according to options
-        self.add_chapter(Number::Hidden, &relative_path.to_string_lossy())?;
+        self.add_chapter(Number::Hidden, &relative_path.to_string_lossy(), false)?;
 
         Ok(self)
     }
@@ -414,7 +414,7 @@ impl Book {
         self.options.set("input.yaml_blocks", "true").unwrap();
 
         // Update grammar checker according to options
-        self.add_chapter_from_source(Number::Hidden, source)?;
+        self.add_chapter_from_source(Number::Hidden, source, false)?;
 
         Ok(self)
     }
@@ -605,15 +605,15 @@ impl Book {
             } else if line.starts_with('-') {
                 // unnumbered chapter
                 let file = get_filename(&self.source, line)?;
-                self.add_chapter(Number::Unnumbered, file)?;
+                self.add_chapter(Number::Unnumbered, file, true)?;
             } else if line.starts_with('+') {
                 // numbered chapter
                 let file = get_filename(&self.source, line)?;
-                self.add_chapter(Number::Default, file)?;
+                self.add_chapter(Number::Default, file, true)?;
             } else if line.starts_with('!') {
                 // hidden chapter
                 let file = get_filename(&self.source, line)?;
-                self.add_chapter(Number::Hidden, file)?;
+                self.add_chapter(Number::Hidden, file, true)?;
             } else if line.starts_with(|c: char| c.is_digit(10)) {
                 // chapter with specific number
                 let parts: Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
@@ -629,7 +629,7 @@ impl Book {
                         Error::config_parser(&self.source,
                                              lformat!("error parsing chapter number: {error}",
                                              error = err))})?;
-                self.add_chapter(Number::Specified(number), file)?;
+                self.add_chapter(Number::Specified(number), file, true)?;
             } else if line.starts_with('@') {
                 /* Part */
                 let subline = &line[1..];
@@ -642,11 +642,11 @@ impl Book {
                 } else if subline.starts_with('-') {
                     /* Unnumbered part */
                     let file = get_filename(&self.source, subline)?;
-                    self.add_chapter(Number::UnnumberedPart, file)?;
+                    self.add_chapter(Number::UnnumberedPart, file, true)?;
                 } else if subline.starts_with('+') {
                     /* Numbered part */
                     let file = get_filename(&self.source, subline)?;
-                    self.add_chapter(Number::DefaultPart, file)?;
+                    self.add_chapter(Number::DefaultPart, file, true)?;
                 } else if subline.starts_with(|c: char| c.is_digit(10)) {
                     /* Specified  part*/
                     let parts: Vec<_> = subline.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
@@ -662,7 +662,7 @@ impl Book {
                             Error::config_parser(&self.source,
                                                  lformat!("error parsing part number: {error}",
                                                           error = err))})?;
-                    self.add_chapter(Number::SpecifiedPart(number), file)?;
+                    self.add_chapter(Number::SpecifiedPart(number), file, true)?;
                 } else {
                     return Err(Error::config_parser(&self.source,
                                                     lformat!("found invalid part definition in the chapter list")));
@@ -947,7 +947,8 @@ impl Book {
     pub fn add_chapter_from_named_source<R: Read>(&mut self,
                                                   number: Number,
                                                   file: &str,
-                                                  mut source: R)
+                                                  mut source: R,
+                                                  add_title_if_empty: bool)
                                                   -> Result<&mut Self> {
         self.bar_set_message(Crowbar::Main, &lformat!("Processing {file}...", file = file));
         let mut content = String::new();
@@ -1004,8 +1005,10 @@ impl Book {
         // add offset
         ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut tokens);
 
-        // Add a title if there is none in the chapter
-        misc::insert_title(&mut tokens);
+        // Add a title if there is none in the chapter (unless this is subchapter)
+        if add_title_if_empty {
+            misc::insert_title(&mut tokens);
+        }
 
         // If one of the renderers requires it, perform grammarcheck
         if cfg!(feature = "proofread") && self.is_proofread() {
@@ -1063,7 +1066,7 @@ impl Book {
                 Number::Hidden
             }
         };
-        self.add_chapter(number, file)?;
+        self.add_chapter(number, file, false)?;
 
         // Adjust header levels
         {
@@ -1100,7 +1103,7 @@ impl Book {
     ///
     /// **Returns** an error if `file` does not exist, could not be read, of if there was
     /// some error parsing it.
-    pub fn add_chapter(&mut self, number: Number, file: &str) -> Result<&mut Self> {
+    pub fn add_chapter(&mut self, number: Number, file: &str,  add_title_if_empty: bool) -> Result<&mut Self> {
         self.bar_set_message(Crowbar::Main,
                              &lformat!("Parsing {file}",
                                        file = misc::normalize(file)));
@@ -1116,7 +1119,7 @@ impl Book {
                                       format!("{}", path.display()))
             })?;
      
-        self.add_chapter_from_named_source(number, file, f)
+        self.add_chapter_from_named_source(number, file, f, add_title_if_empty)
     }
 
     /// Adds a chapter to the book from a source (any object implementing `Read`)
@@ -1130,8 +1133,8 @@ impl Book {
     /// * `content`: the content of the chapter.
     ///
     /// **Returns** an error if there was some errror parsing `content`.
-    pub fn add_chapter_from_source<R: Read>(&mut self, number: Number, source: R) -> Result<&mut Self> {
-        self.add_chapter_from_named_source(number, "", source)
+    pub fn add_chapter_from_source<R: Read>(&mut self, number: Number, source: R, add_title_if_empty: bool) -> Result<&mut Self> {
+        self.add_chapter_from_named_source(number, "", source, add_title_if_empty)
     }
 
 
