@@ -2,8 +2,23 @@ ChangeLog
 =========
 
 unreleased
------------
-* `--stats` can now display more statistics
+-------------
+* New option: 
+  * `crowbook.files_mean_chapters` allow to enforce that each files
+    means a chapter break or to make sure that it doesn't (by default,
+    only true for numbered chapters).
+* By default, don't add an empty chapter title for non numbered
+  "chapters" that don't contain a title.
+* Dependencies update.
+
+
+0.14.1 (2018-06-01)
+-------------------
+* `--stats` can now display more statistics when used with the
+  `--verbose` option (if support for advanced statistics is compiled) 
+* LaTeX outputs now make uses of user-defined `rendering.chapter` and
+  `rendering.part`
+* Dependencies update
 
 0.14.0 (2017-11-26)
 -----------------------

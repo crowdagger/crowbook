@@ -61,23 +61,23 @@ impl Syntax {
     /// Convert a string containing code to HTML
     pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
-        let syntax = self.syntax_set.find_syntax_by_token(language)
+        let syntax = self.syntax_set.find_syntax_by_name(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
-        let regions = h.highlight(code);
+        let regions = h.highlight(code, &self.syntax_set);
+        let bg = syntect::html::IncludeBackground::No;
         Ok(format!("<pre>{}</pre>",
-                   syntect::html::styles_to_coloured_html(&regions[..],
-                                                          syntect::html::IncludeBackground::No)))
+                   syntect::html::styled_line_to_highlighted_html(&regions[..], bg)))
     }
 
     pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
         use crate::latex::insert_breaks;
         use syntect::highlighting::{Color, FontStyle};
-        let syntax = self.syntax_set.find_syntax_by_token(language)
+        let syntax = self.syntax_set.find_syntax_by_name(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
-        let regions = h.highlight(code);
+        let regions = h.highlight(code, &self.syntax_set);
         
         let mut result = String::with_capacity(code.len());
         for (style, text) in regions {
