@@ -137,6 +137,7 @@ input.yaml_blocks:bool:false        # {yaml}
 
 # {crowbook_opt}
 crowbook.html_as_text:bool:true     # {html_as_text}
+crowbook.files_mean_chapters:bool   # {files_mean_chapters}
 crowbook.markdown.superscript:bool:false  # {superscript}
 crowbook.temp_dir:path:             # {tmp_dir}
 crowbook.zip.command:str:zip        # {zip}
@@ -320,6 +321,7 @@ crowbook.verbose:alias                              # {removed}
                                          superscript = lformat!("If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax."),
                                          yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
                                          html_as_text = lformat!("Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored."),
+                                         files_mean_chapters = lformat!("Consider that a new file is always a new chapter, even if it does not include heading (default: only for numbered chapters)"),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
                                          

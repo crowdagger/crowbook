@@ -605,7 +605,7 @@ impl Book {
             } else if line.starts_with('-') {
                 // unnumbered chapter
                 let file = get_filename(&self.source, line)?;
-                self.add_chapter(Number::Unnumbered, file, true)?;
+                self.add_chapter(Number::Unnumbered, file, false)?;
             } else if line.starts_with('+') {
                 // numbered chapter
                 let file = get_filename(&self.source, line)?;
@@ -613,7 +613,7 @@ impl Book {
             } else if line.starts_with('!') {
                 // hidden chapter
                 let file = get_filename(&self.source, line)?;
-                self.add_chapter(Number::Hidden, file, true)?;
+                self.add_chapter(Number::Hidden, file, false)?;
             } else if line.starts_with(|c: char| c.is_digit(10)) {
                 // chapter with specific number
                 let parts: Vec<_> = line.splitn(2, |c: char| c == '.' || c == ':' || c == '+')
@@ -948,7 +948,7 @@ impl Book {
                                                   number: Number,
                                                   file: &str,
                                                   mut source: R,
-                                                  add_title_if_empty: bool)
+                                                  mut add_title_if_empty: bool)
                                                   -> Result<&mut Self> {
         self.bar_set_message(Crowbar::Main, &lformat!("Processing {file}...", file = file));
         let mut content = String::new();
@@ -1005,6 +1005,11 @@ impl Book {
         // add offset
         ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut tokens);
 
+        // If files_mean_chapters is set, override the default setting
+        if let Ok(x) = self.options.get_bool("crowbook.files_mean_chapters") {
+            add_title_if_empty = x;
+        }
+        
         // Add a title if there is none in the chapter (unless this is subchapter)
         if add_title_if_empty {
             misc::insert_title(&mut tokens);
