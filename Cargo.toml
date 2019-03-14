@@ -38,7 +38,7 @@ doc = false
 
 [features]
 default = ["binary", "proofread", "syntect"]
-proofread = ["caribon", "hyper", "url", "serde", "serde", "serde_json", "serde_derive"]
+proofread = ["caribon", "reqwest", "url", "serde", "serde", "serde_json", "serde_derive"]
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
 nightly = ["punkt"]
 
@@ -75,9 +75,8 @@ url =  { version = "1", optional = true }
 syntect = { version = "3", optional = true }
 tempdir = { version = "0.3", optional = true }
 
-[dependencies.hyper]
-version = "0.10"
+[dependencies.reqwest]
+version = "0.9"
 optional = true
-default-features = false
 
 

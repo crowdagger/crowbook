@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Élisabeth HENRY.
+// Copyright (C) 2017, 2018, 2019 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -16,8 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use serde_json;
-use hyper;
-use hyper::Client;
+use reqwest;
 use url::form_urlencoded;
 use rayon::prelude::*;
 
@@ -60,6 +59,7 @@ struct GrammalecteCheck {
 /// Grammalecte Checker
 pub struct GrammalecteChecker {
     port: usize,
+    client: reqwest::Client,
 }
 
 impl GrammalecteChecker {
@@ -71,9 +71,10 @@ impl GrammalecteChecker {
         }
         let checker = GrammalecteChecker {
             port: port,
+            client: reqwest::Client::new(),
         };
 
-        let res = Client::new()
+        let res = checker.client
             .get(&format!("http://localhost:{}", port))
             .send()
             .map_err(|e| {
@@ -81,11 +82,11 @@ impl GrammalecteChecker {
                                      lformat!("could not connect to grammalecte server: {error}",
                                               error = e))
             })?;
-        if res.status != hyper::Ok {
-            return Err(Error::grammar_check(Source::empty(),
-                                            lformat!("server didn't respond with a OK status \
-                                                      code")));
-        }
+//        if res.status != reqwest::Ok {
+//            return Err(Error::grammar_check(Source::empty(),
+//                                            lformat!("server didn't respond with a OK status \
+//                                                      code")));
+//        }
         Ok(checker)
     }
 
@@ -96,10 +97,8 @@ impl GrammalecteChecker {
             .append_pair("options", "{\"apos\": false, \"nbsp\": false, \"esp\": false}")
             .finish();
 
-        let client = Client::new();
-
-        let mut res = client.post(&format!("http://localhost:{}/gc_text/fr", self.port))
-            .body(&query)
+        let mut res = self.client.post(&format!("http://localhost:{}/gc_text/fr", self.port))
+            .body(query)
             .send()
             .map_err(|e| {
                 Error::grammar_check(Source::empty(),
@@ -107,11 +106,11 @@ impl GrammalecteChecker {
                                               error = e))
             })?;
 
-        if res.status != hyper::Ok {
-            return Err(Error::grammar_check(Source::empty(),
-                                            lformat!("server didn't respond with a OK status \
-                                                      code")));
-        }
+//        if res.status != hyper::Ok {
+//            return Err(Error::grammar_check(Source::empty(),
+//                                            lformat!("server didn't respond with a OK status \
+//                                                      code")));
+//        }
 
         let mut s = String::new();
         res.read_to_string(&mut s)

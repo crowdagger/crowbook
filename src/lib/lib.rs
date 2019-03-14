@@ -105,46 +105,14 @@
 //! ```
 
 extern crate pulldown_cmark as cmark;
-extern crate mustache;
-extern crate yaml_rust;
-extern crate mime_guess;
-extern crate walkdir;
-extern crate rustc_serialize;
-extern crate rayon;
-extern crate crowbook_text_processing;
-extern crate crowbook_intl_runtime;
-extern crate numerals;
-extern crate epub_builder;
-extern crate uuid;
-extern crate hyphenation;
 #[macro_use]
 extern crate log;
 #[macro_use]
 extern crate lazy_static;
 
-#[cfg(feature = "indicatif")]
-extern crate indicatif;
-#[cfg(feature = "binary")]
-extern crate console;
-#[cfg(feature = "binary")]
-extern crate textwrap;
-#[cfg(feature = "proofread")]
-extern crate hyper;
-#[cfg(feature = "proofread")]
-extern crate url;
-#[cfg(feature = "proofread")]
-extern crate caribon;
-#[cfg(feature = "proofread")]
-extern crate serde;
-#[cfg(feature = "proofread")]
-extern crate serde_json;
 #[cfg(feature = "proofread")]
 #[macro_use]
 extern crate serde_derive;
-#[cfg(feature = "syntect")]
-extern crate syntect;
-#[cfg(feature = "nightly")]
-extern crate punkt;
 
 
 pub use parser::Parser;
