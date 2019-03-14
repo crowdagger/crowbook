@@ -74,11 +74,11 @@ impl GrammarChecker {
                                      lformat!("could not connect to language tool server: {error}",
                                               error = e))
             })?;
-//        if res.status != hyper::Ok {
-//            return Err(Error::grammar_check(Source::empty(),
-//                                            lformat!("server didn't respond with a OK status \
-//                                                      code")));
-//        }
+        if !res.status().is_success() {
+            return Err(Error::grammar_check(Source::empty(),
+                                            lformat!("server didn't respond with a OK status \
+                                                      code")));
+        }
         Ok(checker)
     }
 
@@ -98,11 +98,11 @@ impl GrammarChecker {
                                               error = e))
             })?;
 
-//        if res.status != hyper::Ok {
-//            return Err(Error::grammar_check(Source::empty(),
-//                                            lformat!("server didn't respond with a OK status \
-//                                                      code")));
-//        }
+        if !res.status().is_success() {
+            return Err(Error::grammar_check(Source::empty(),
+                                            lformat!("server didn't respond with a OK status \
+                                                      code")));
+        }
 
         let mut s = String::new();
         res.read_to_string(&mut s)
