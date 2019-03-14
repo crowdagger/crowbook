@@ -1,4 +1,4 @@
-// Copyright (C) 2017, 2018 Falco Hirschenberger, Élisabeth Henry.
+// Copyright (C) 2017, 2018, 2019 Falco Hirschenberger, Élisabeth Henry.
 //
 // This file is part of Crowbook.
 //
@@ -21,7 +21,9 @@ use crate::style;
 
 use std::fmt;
 use std::f64;
+#[cfg(feature = "nightly")]
 use hyphenation;
+#[cfg(feature = "nightly")]
 use hyphenation::{Hyphenation, Language};
 #[cfg(feature = "nightly")]
 use punkt::{SentenceTokenizer, TrainingData};
@@ -32,24 +34,32 @@ use punkt::params::Standard;
 struct AdvancedStats {
     pub sentence_count: usize,
     pub flesch_score: f64,
+    pub syllable_count: usize,
 }
 
 struct ChapterStats {
     pub name: String,
     pub word_count: usize,
     pub char_count: usize,
-    pub syllable_count: usize,
     pub advanced: Option<AdvancedStats>,
 }
 
 impl ChapterStats {
     #[cfg(feature = "nightly")]
-    pub fn fill_advanced(&mut self, lang: Language, text: &str) {
+    pub fn fill_advanced(&mut self, lang: &str, text: &str) {
+        let words: Vec<_> = text.split_whitespace().collect();
+        let corp = hyphenation::load(language_from_str(lang)).unwrap();
+        // Count the number of syllables for earch word.
+        let syl = words
+            .iter()
+            .fold(0, |acc, w| acc + w.opportunities(&corp).len() + 1);
+        
         let (td, flesch_func) = Stats::language_data(lang);
         let sc = SentenceTokenizer::<Standard>::new(&text, &td).count();
         let stats = AdvancedStats {
             sentence_count: sc,
             flesch_score: f64::NAN,
+            syllable_count: syl,
         };
         self.advanced = Some(stats);
         let score = if let Some(ref f) = flesch_func {
@@ -63,7 +73,7 @@ impl ChapterStats {
     }
 
     #[cfg(not(feature = "nightly"))]
-    pub fn fill_advanced(&mut self, _: Language, _: &str) {
+    pub fn fill_advanced(&mut self, _: &str, _: &str) {
     }
 }
 
@@ -76,7 +86,6 @@ pub struct Stats {
 impl Stats {
     pub fn new(book: &Book, advanced: bool) -> Stats {
         let lang = book.options.get_str("lang").unwrap();
-        let lang = Stats::language_from_str(lang);
         
         let mut stats;
 
@@ -99,16 +108,11 @@ impl Stats {
             let wc = words.len();
             // Note: Don't count the bytes with `len()` count the actual (multibyte-)characters
             let cc = text.chars().count();
-            let corp = hyphenation::load(lang).unwrap();
-            // Count the number of syllables for earch word.
-            let syl = words
-                .iter()
-                .fold(0, |acc, w| acc + w.opportunities(&corp).len() + 1);
+
             let mut chapter_stats = ChapterStats {
                 name: name,
                 word_count: wc,
                 char_count: cc,
-                syllable_count: syl,
                 advanced: None,
             };
             if advanced {
@@ -120,7 +124,8 @@ impl Stats {
     }
 
 
-    // Returns the Languuage (defined by Hyphenation crate) according to the str code
+    // Returns the Language (defined by Hyphenation crate) according to the str code
+    #[cfg(feature = "nightly")]
     fn language_from_str(lang: &str) -> Language {
         // FIXME: handle case where lang is e.g. fr_FR or en_GB
         match lang {
@@ -168,7 +173,7 @@ impl Stats {
                 TrainingData::dutch(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                        206.84 - 77.0 * (s.syllable_count as f64 / s.word_count as f64)
+                        206.84 - 77.0 * (adv.syllable_count as f64 / s.word_count as f64)
                             - 0.93 * (s.word_count as f64 / adv.sentence_count as f64)
                     } else {
                         unreachable!("If nightly build is set, it should always return Some(thing)");
@@ -179,7 +184,7 @@ impl Stats {
                 TrainingData::english(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                    206.835 - 0.77 * (s.syllable_count as f64 * 100.0 / s.word_count as f64)
+                    206.835 - 0.77 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
                         - 0.93 * (s.word_count as f64 / adv.sentence_count as f64)
                     } else {
                         unreachable!();
@@ -192,7 +197,7 @@ impl Stats {
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
                         207.0 - 1.015 * (s.word_count as f64 / adv.sentence_count as f64)
-                            - 73.6 * (s.syllable_count as f64 / s.word_count as f64)
+                            - 73.6 * (adv.syllable_count as f64 / s.word_count as f64)
                     } else {
                         unreachable!();
                     }})),
@@ -202,7 +207,7 @@ impl Stats {
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
                         180.0 - (s.word_count as f64 / adv.sentence_count as f64)
-                            - 84.6 * (s.syllable_count as f64 / s.word_count as f64)
+                            - 84.6 * (adv.syllable_count as f64 / s.word_count as f64)
                     } else {
                         unreachable!();
                     }
@@ -214,7 +219,7 @@ impl Stats {
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
                         217.0 - 1.3 * (s.word_count as f64 / adv.sentence_count as f64)
-                            - 60.0 * (s.syllable_count as f64 * 100.0 / s.word_count as f64)
+                            - 60.0 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
                     } else {
                         unreachable!();
                     }
@@ -229,7 +234,7 @@ impl Stats {
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
                         206.84 - 1.02 * (s.word_count as f64 / adv.sentence_count as f64)
-                        - 60.0 * (s.syllable_count as f64 * 100.0 / s.word_count as f64)
+                        - 60.0 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
                     } else {
                         unreachable!();
                     }})),
@@ -297,7 +302,7 @@ impl fmt::Display for Stats {
                     "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16.2} {:>8.1} => {:>17}\n",
                     style::element(&c.name),
                     c.char_count,
-                    c.syllable_count,
+                    adv.syllable_count,
                     c.word_count,
                     adv.sentence_count,
                     c.char_count as f64 / c.word_count as f64,
@@ -321,16 +326,19 @@ impl fmt::Display for Stats {
         let total = self.chapters.iter().fold((0, 0, 0, 0, 0.0, 0), |acc, c| {
             let sentence_count;
             let flesch_score;
+            let syllable_count;
             if let Some(ref adv) = c.advanced {
                 sentence_count = adv.sentence_count;
                 flesch_score = adv.flesch_score;
+                syllable_count = adv.syllable_count;
             } else {
                 sentence_count = 0;
                 flesch_score = f64::NAN;
+                syllable_count = 0;
             };
             (
                 acc.0 + c.char_count,
-                acc.1 + c.syllable_count,
+                acc.1 + syllable_count,
                 acc.2 + c.word_count,
                 acc.3 + sentence_count,
                 acc.4 + flesch_score,

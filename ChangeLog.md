@@ -9,6 +9,8 @@ unreleased
     only true for numbered chapters).
 * By default, don't add an empty chapter title for non numbered
   "chapters" that don't contain a title.
+* Now uses `reqwest` instead of `hyper` to connect to languagetool/grammalecte.
+* `hyphenation` dependency is now optional.
 * Dependencies update.
 
 
