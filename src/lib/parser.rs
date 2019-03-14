@@ -27,7 +27,7 @@ use std::io::Read;
 use std::collections::HashMap;
 use std::ops::BitOr;
 
-use cmark::{Parser as CMParser, Event, Tag, Options, OPTION_ENABLE_FOOTNOTES, OPTION_ENABLE_TABLES};
+use cmark::{Parser as CMParser, Event, Tag, Options};
 
 
 
@@ -170,8 +170,8 @@ impl Parser {
     /// Parse a string and returns an AST  an Error.
     pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
         let mut opts = Options::empty();
-        opts.insert(OPTION_ENABLE_TABLES);
-        opts.insert(OPTION_ENABLE_FOOTNOTES);
+        opts.insert(Options::ENABLE_TABLES);
+        opts.insert(Options::ENABLE_FOOTNOTES);
         let mut p = CMParser::new_ext(s, opts);
 
 
