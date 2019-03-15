@@ -370,7 +370,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Strong(ref vec) => Ok(format!("\\mdstrong{{{}}}", self.render_vec(vec)?)),
             Token::Strikethrough(ref vec) => Ok(format!("\\sout{{{}}}", self.render_vec(vec)?)),
             Token::Code(ref s) => Ok(format!("\\mdcode{{{}}}",
-                                               insert_breaks(s))),
+                                               insert_breaks(&escape::tex(s)))),
             Token::Superscript(ref vec) => Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?)),
             Token::Subscript(ref vec) => Ok(format!("\\textsubscript{{{}}}", self.render_vec(vec)?)),
             Token::BlockQuote(ref vec) => {
