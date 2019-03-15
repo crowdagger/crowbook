@@ -32,6 +32,9 @@ use comrak::nodes::{AstNode, NodeValue, ListType};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 /// The list of features used in a document.
+///
+/// This is used by the renderers to only require some packages if they
+/// are needed.
 pub struct Features {
     pub image: bool,
     pub footnote: bool,
@@ -178,7 +181,7 @@ impl Parser {
         options.ext_table = true;
         options.ext_autolink = true;
         options.ext_tasklist = true;
-        options.ext_superscript = false;
+        options.ext_superscript = self.superscript;
         options.ext_footnotes = true;
         options.ext_description_lists = true;
 
