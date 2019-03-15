@@ -83,8 +83,10 @@ pub enum Token {
     /// Cell of a table
     TableCell(Vec<Token>),
 
-    /// A footnote, contains the content it is pointing to.
-    Footnote(Vec<Token>),
+    /// A footnote reference, only contains the identifier of the footnote
+    FootnoteReference(String),
+    /// A footnote definition, contains the name and the content of the footnote
+    FootnoteDefinition(String, Vec<Token>),
 
     /// Horizontal rule
     Rule,
@@ -114,7 +116,8 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any)
     pub fn inner(&self) -> Option<&[Token]> {
         match *self {
-            Rule | SoftBreak | HardBreak | Str(_) | CodeBlock(_, _) | Code(_) => None,
+            Rule | SoftBreak | HardBreak | Str(_) |
+            CodeBlock(_, _) | Code(_) | FootnoteReference(_) => None,
 
             Paragraph(ref v) |
             Header(_, ref v) |
@@ -134,7 +137,7 @@ impl Token {
             TableHead(ref v) |
             TableRow(ref v) |
             TableCell(ref v) |
-            Footnote(ref v) |
+            FootnoteDefinition(_, ref v) |
             Link(_, _, ref v) |
             Image(_, _, ref v) |
             StandaloneImage(_, _, ref v) |
@@ -148,7 +151,8 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any) (mutable version)
     pub fn inner_mut(&mut self) -> Option<&mut Vec<Token>> {
         match *self {
-            Rule | SoftBreak | HardBreak | Str(_) | CodeBlock(_, _) | Code(_) => None,
+            Rule | SoftBreak | HardBreak | Str(_) |
+            CodeBlock(_, _) | Code(_) | FootnoteReference(_) => None,
 
             Paragraph(ref mut v) |
             Annotation(_, ref mut v) |
@@ -169,7 +173,7 @@ impl Token {
             TableHead(ref mut v) |
             TableRow(ref mut v) |
             TableCell(ref mut v) |
-            Footnote(ref mut v) |
+            FootnoteDefinition(_, ref mut v) |
             Link(_, _, ref mut v) |
             Image(_, _, ref mut v) |
             Strikethrough(ref mut v) |
@@ -225,7 +229,7 @@ impl Token {
              Token::Paragraph(..)
                 | Token::Header(..) | Token::Emphasis(..) | Token::Strong(..)
                 | Token::List(..) | Token::OrderedList(..) | Token::Table(..)
-                | Token::TableHead(..) | Token::TableRow(..) | Token::Footnote(..)
+                | Token::TableHead(..) | Token::TableRow(..) | Token::FootnoteDefinition(..)
                 | Token::TableCell(..) | Token::Annotation(..) | Token::Item(..)
                 | Token::BlockQuote(..) => true,
             _ => false,

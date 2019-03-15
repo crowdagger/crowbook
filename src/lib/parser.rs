@@ -24,7 +24,6 @@ use std::fs::File;
 use std::path::Path;
 use std::convert::AsRef;
 use std::io::Read;
-use std::collections::HashMap;
 use std::ops::BitOr;
 
 use comrak::{parse_document, Arena, ComrakOptions};
@@ -35,10 +34,10 @@ use comrak::nodes::{AstNode, NodeValue, ListType};
 /// The list of features used in a document.
 pub struct Features {
     pub image: bool,
+    pub footnote: bool,
     pub blockquote: bool,
     pub codeblock: bool,
     pub ordered_list: bool,
-    pub footnote: bool,
     pub table: bool,
     pub url: bool,
     pub subscript: bool,
@@ -111,7 +110,6 @@ impl BitOr for Features {
 /// assert!(result.is_err());
 /// ```
 pub struct Parser {
-    footnotes: HashMap<String, Vec<Token>>,
     source: Source,
     features: Features,
 
@@ -123,7 +121,6 @@ impl Parser {
     /// Creates a parser
     pub fn new() -> Parser {
         Parser {
-            footnotes: HashMap::new(),
             source: Source::empty(),
             features: Features::new(),
             html_as_text: true,
@@ -181,7 +178,7 @@ impl Parser {
         options.ext_table = true;
         options.ext_autolink = true;
         options.ext_tasklist = true;
-        options.ext_superscript = true;
+        options.ext_superscript = false;
         options.ext_footnotes = true;
         options.ext_description_lists = true;
 
@@ -189,8 +186,6 @@ impl Parser {
         let root = parse_document(&arena, s, &options);
 
         let mut res = self.parse_node(root)?;
-
-        self.parse_footnotes(&mut res)?;
 
         collapse(&mut res);
 
@@ -226,46 +221,6 @@ impl Parser {
         self.features
     }
 
-
-    /// Replace footnote reference with their definition
-    fn parse_footnotes(&mut self, v: &mut Vec<Token>) -> Result<()> {
-        for token in v {
-            match *token {
-                Token::Footnote(ref mut content) => {
-                    let reference = if let Token::Str(ref text) = content[0] {
-                        text.clone()
-                    } else {
-                        panic!("Reference is not a vector of a single Token::Str");
-                    };
-                    if let Some(in_vec) = self.footnotes.get(&reference) {
-                        *content = in_vec.clone();
-                    } else {
-                        return Err(Error::parser(&self.source,
-                                                 lformat!("footnote reference {reference} does \
-                                                           not have a matching definition",
-                                                          reference = &reference)));
-                    }
-                }
-                Token::Paragraph(ref mut vec) |
-                Token::Header(_, ref mut vec) |
-                Token::Emphasis(ref mut vec) |
-                Token::Strong(ref mut vec) |
-                Token::BlockQuote(ref mut vec) |
-                Token::List(ref mut vec) |
-                Token::OrderedList(_, ref mut vec) |
-                Token::Item(ref mut vec) |
-                Token::Table(_, ref mut vec) |
-                Token::TableHead(ref mut vec) |
-                Token::TableRow(ref mut vec) |
-                Token::TableCell(ref mut vec) |
-                Token::Link(_, _, ref mut vec) |
-                Token::Image(_, _, ref mut vec) => self.parse_footnotes(vec)?,
-                _ => (),
-            }
-        }
-        Ok(())
-    }
-    
 
     fn parse_node<'a>(&mut self,
                       node: &'a AstNode<'a>)
@@ -327,15 +282,7 @@ impl Parser {
             NodeValue::ThematicBreak => vec![Token::Rule],
             NodeValue::FootnoteDefinition(ref def) => {
                 let reference = String::from_utf8(def.clone()).map_err(|_| Error::parser(&self.source, lformat!("Footnote definition contains invalid UTF-8")))?;
-                if self.footnotes.contains_key(&reference) {
-                    warn!("{}", lformat!("in {file}, found footnote definition for \
-                                          note '{reference}' but previous \
-                                          definition already exist, overriding it",
-                                         file = self.source,
-                                         reference = reference));
-                }
-                self.footnotes.insert(reference, inner);
-                vec![]
+                vec![Token::FootnoteDefinition(reference, inner)]
             },
             NodeValue::Text(ref text) => {
                 let text = String::from_utf8(text.clone()).map_err(|_| Error::parser(&self.source, lformat!("Markdown file contains invalid UTF-8")))?;
@@ -368,7 +315,8 @@ impl Parser {
             }
             NodeValue::FootnoteReference(ref name) => {
                 let name = String::from_utf8(name.clone()).map_err(|_| Error::parser(&self.source, lformat!("Footnote reference contains invalid UTF-8")))?;
-                vec![Token::Footnote(vec![Token::Str(name)])]
+
+                vec![Token::FootnoteReference(name)]
             },
             NodeValue::TableCell => vec![Token::TableCell(inner)],
             NodeValue::TableRow(header) => {

@@ -36,7 +36,8 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
 
         Token::Image(..) |
         Token::StandaloneImage(..) |
-        Token::Footnote(..) |
+        Token::FootnoteDefinition(..) |
+        Token::FootnoteReference(..) | 
         Token::Table(..) |
         Token::TableHead(..) |
         Token::TableRow(..) |

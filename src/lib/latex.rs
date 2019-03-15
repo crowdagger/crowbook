@@ -402,7 +402,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                            self.render_vec(v)?))
             },
             Token::DescriptionItem(ref v) => Ok(self.render_vec(v)?),
-            Token::DescriptionTerm(ref v) => Ok(format!("\\item[{}]\n", self.render_vec(v)?)),
+            Token::DescriptionTerm(ref v) => Ok(format!("\\item[{}]\n", self.render_vec(v)?.replace('\n', " "))),
             Token::DescriptionDetails(ref v) => Ok(self.render_vec(v)?),
             Token::List(ref vec) => {
                 Ok(format!("\\begin{{itemize}}\n{}\\end{{itemize}}",
@@ -481,8 +481,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     Ok(String::new())
                 }
             }
-            Token::Footnote(ref vec) => {
-                Ok(format!("\\protect\\footnote{{{}}}", self.render_vec(vec)?))
+            Token::FootnoteReference(ref reference) => {
+                Ok(format!("\\footnotemark[{}]", reference))
+            },
+            Token::FootnoteDefinition(ref reference, ref v) => {
+                Ok(format!("\\footnotetext[{}]{{{}}}",
+                           reference,
+                           self.render_vec(v)?))
             }
             Token::Table(n, ref vec) => {
                 let mut cols = String::new();

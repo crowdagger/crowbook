@@ -595,27 +595,25 @@ impl<'a> HtmlRenderer<'a> {
                 this.as_mut().table_head = false;
                 Ok(format!("<tr>\n{}</tr>\n", s))
             }
-            Token::Footnote(ref vec) => {
-                this.as_mut().footnote_number += 1;
-                let number = this.as_ref().footnote_number;
-                assert!(!vec.is_empty());
-
+            Token::FootnoteReference(ref reference) => {
+                Ok(format!("<a href = \"#note-dest-{}\"><sup id = \
+                            \"note-source-{}\">[{}]</sup></a>",
+                           reference,
+                           reference,
+                           reference))
+            },
+            Token::FootnoteDefinition(ref reference, ref vec) => {
                 let note_number = format!("<p class = \"note-number\">
   <a href = \"#note-source-{}\">[{}]</a>
 </p>\n",
-                                          number,
-                                          number);
+                                          reference,
+                                          reference);
 
                 let inner = format!("<aside id = \"note-dest-{}\">{}</aside>",
-                                    number,
+                                    reference,
                                     this.render_vec(vec)?);
                 this.as_mut().footnotes.push((note_number, inner));
-
-                Ok(format!("<a href = \"#note-dest-{}\"><sup id = \
-                            \"note-source-{}\">[{}]</sup></a>",
-                           number,
-                           number,
-                           number))
+                Ok(String::new())
             }
             Token::__NonExhaustive => unreachable!(),
         }

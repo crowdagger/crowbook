@@ -220,7 +220,7 @@ impl<'a> OdtRenderer<'a> {
             Token::TableCell(_) => {
                 String::from(" ")
             }
-            Token::Footnote(_) => {
+            Token::FootnoteReference(..) | Token::FootnoteDefinition(..) => {
                 String::new()
             }
             Token::Annotation(_, ref vec) => self.render_vec(vec),
