@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2019 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -27,9 +27,8 @@ use std::io::Read;
 use std::collections::HashMap;
 use std::ops::BitOr;
 
-use cmark::{Parser as CMParser, Event, Tag, Options};
-
-
+use comrak::{parse_document, format_html, Arena, ComrakOptions};
+use comrak::nodes::{AstNode, NodeValue, ListType};
 
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -169,14 +168,24 @@ impl Parser {
 
     /// Parse a string and returns an AST  an Error.
     pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
-        let mut opts = Options::empty();
-        opts.insert(Options::ENABLE_TABLES);
-        opts.insert(Options::ENABLE_FOOTNOTES);
-        let mut p = CMParser::new_ext(s, opts);
+        let arena = Arena::new();
 
+        // Set options for comrak
+        let mut options = ComrakOptions::default();
+        options.hardbreaks = false;
+        options.smart = false;
+        options.ext_strikethrough = true;
+        options.ext_table = true;
+        options.ext_autolink = true;
+        options.ext_tasklist = true;
+        options.ext_superscript = true;
+        options.ext_footnotes = true;
+        options.ext_description_lists = true;
 
-        let mut res = vec![];
-        self.parse_events(&mut p, &mut res, None)?;
+        
+        let root = parse_document(&arena, s, &options);
+
+        let mut res = self.parse_node(root)?;
 
         self.parse_footnotes(&mut res)?;
 
@@ -184,12 +193,7 @@ impl Parser {
 
         find_standalone(&mut res);
 
-        // Transform superscript and subscript
-        if self.superscript {
-            self.parse_super_vec(&mut res);
-            self.parse_sub_vec(&mut res);
-        }
-        
+       
         Ok(res)
     }
 
@@ -243,9 +247,7 @@ impl Parser {
                 Token::Header(_, ref mut vec) |
                 Token::Emphasis(ref mut vec) |
                 Token::Strong(ref mut vec) |
-                Token::Code(ref mut vec) |
                 Token::BlockQuote(ref mut vec) |
-                Token::CodeBlock(_, ref mut vec) |
                 Token::List(ref mut vec) |
                 Token::OrderedList(_, ref mut vec) |
                 Token::Item(ref mut vec) |
@@ -261,257 +263,126 @@ impl Parser {
         Ok(())
     }
     
-    /// Looks for super script in a vector of tokens
-    fn parse_super_vec(&mut self, v: &mut Vec<Token>) {
-        for i in 0..v.len() {
-            let new = if v[i].is_str() {
-                if let Token::Str(ref s) = v[i] {
-                    parse_super_sub(s, b'^')
-                } else {
-                    unreachable!()
-                }
-            } else {
-                if v[i].is_code() || !v[i].is_container() {
-                    continue;
-                } 
-                if let Some(ref mut inner) = v[i].inner_mut() {
-                    self.parse_super_vec(inner);
-                }
-                None
-            };
-            if let Some(mut new) = new {
-                self.features.superscript = true;
-                let mut post = v.split_off(i);
-                post.remove(0);
-                self.parse_super_vec(&mut post);
-                v.append(&mut new);
-                v.append(&mut post);
-                return;
-            }
+
+    fn parse_node<'a>(&mut self,
+                      node: &'a AstNode<'a>)
+                      -> Result<Vec<Token>> {
+        let mut inner = vec![];
+        for c in node.children() {
+            let mut v = self.parse_node(c)?;
+            inner.append(&mut v);
         }
-    }
-
-    /// Looks for subscript in a vector of token
-    fn parse_sub_vec(&mut self, v: &mut Vec<Token>) {
-        for i in 0..v.len() {
-            let new = if v[i].is_str() {
-                if let Token::Str(ref s) = v[i] {
-                    parse_super_sub(s, b'~')
-                } else {
-                    unreachable!()
-                }
-            } else {
-                if v[i].is_code() || !v[i].is_container() {
-                    continue;
-                } 
-                if let Some(ref mut inner) = v[i].inner_mut() {
-                    self.parse_sub_vec(inner);
-                }
-                None
-            };
-            if let Some(mut new) = new {
-                self.features.subscript = true;
-                let mut post = v.split_off(i);
-                post.remove(0);
-                self.parse_sub_vec(&mut post);
-                v.append(&mut new);
-                v.append(&mut post);
-                return;
-            }
-        }
-    }
-
-    fn parse_events<'a>(&mut self,
-                        p: &mut CMParser<'a>,
-                        v: &mut Vec<Token>,
-                        current_tag: Option<&Tag>)
-                        -> Result<()> {
-        while let Some(event) = p.next() {
-            match event {
-                Event::Html(text) | Event::InlineHtml(text) => {
-                    if self.html_as_text {
-                        v.push(Token::Str(text.into_owned()));
-                    } else {
-                        debug!("{}", lformat!("ignoring HTML block '{}'", text));
-                    }
-                }, 
-
-                Event::Text(text) => {
-                    v.push(Token::Str(text.into_owned()));
-                }
-                Event::Start(tag) => self.parse_tag(p, v, tag)?,
-                Event::End(tag) => {
-                    debug_assert!(format!("{:?}", Some(&tag)) == format!("{:?}", current_tag),
-                                  format!("Error: opening and closing tags mismatch!\n{:?} ≠ \
-                                           {:?}",
-                                          tag,
-                                          current_tag));
-                    break;
-                }
-                Event::SoftBreak => v.push(Token::SoftBreak),
-                Event::HardBreak => v.push(Token::HardBreak),
-                Event::FootnoteReference(text) => {
-                    v.push(Token::Footnote(vec![Token::Str(text.into_owned())]))
-                }
-            }
-        }
-        Ok(())
-    }
-
-    fn parse_tag<'a>(&mut self,
-                     p: &mut CMParser<'a>,
-                     v: &mut Vec<Token>,
-                     tag: Tag<'a>)
-                     -> Result<()> {
-        let mut res = vec![];
-
-        self.parse_events(p, &mut res, Some(&tag))?;
-
-
-        let token = match tag {
-            Tag::Paragraph => Token::Paragraph(res),
-            Tag::Emphasis => Token::Emphasis(res),
-            Tag::Strong => Token::Strong(res),
-            Tag::Code => Token::Code(res),
-            Tag::Header(x) => Token::Header(x, res),
-            Tag::Link(url, title) => {
-                self.features.url = true;
-                Token::Link(url.into_owned(), title.into_owned(), res)
-            },
-            Tag::Image(url, title) => {
-                self.features.image = true;
-                Token::Image(url.into_owned(), title.into_owned(), res)
-            },
-            Tag::Rule => Token::Rule,
-            Tag::List(opt) => {
-                if let Some(n) = opt {
-                    self.features.ordered_list = true;
-                    Token::OrderedList(n, res)
-                } else {
-                    Token::List(res)
-                }
-            }
-            Tag::Item => Token::Item(res),
-            Tag::BlockQuote => {
+        
+        inner = match node.data.borrow().value {
+            NodeValue::Document => inner,
+            NodeValue::BlockQuote => {
                 self.features.blockquote = true;
-                Token::BlockQuote(res)
+                vec![Token::BlockQuote(inner)]
             },
-            Tag::CodeBlock(language) => {
+            NodeValue::List(ref list) => {
+                // Todo: use "tight" feature?
+                match list.list_type {
+                    ListType::Bullet => vec![Token::List(inner)],
+                    ListType::Ordered => vec![Token::OrderedList(list.start, inner)]
+                }
+            },
+            NodeValue::Item(_) => vec![Token::Item(inner)],
+            NodeValue::DescriptionList => unimplemented!(),
+            NodeValue::DescriptionItem(_) => unimplemented!(),
+            NodeValue::DescriptionTerm => unimplemented!(),
+            NodeValue::DescriptionDetails => unimplemented!(),
+            NodeValue::CodeBlock(ref block) => {
+                let info = String::from_utf8(block.info.clone()).map_err(|_| Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8")))?;
+                let code = String::from_utf8(block.literal.clone()).map_err(|_| Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8")))?;
                 self.features.codeblock = true;
-                Token::CodeBlock(language.into_owned(), res)
+                vec!(Token::CodeBlock(info, code))
             },
-            Tag::Table(v) => {
-                self.features.table = true;
-                // TODO: actually use v's alignments
-                Token::Table(v.len() as i32, res)
+            NodeValue::HtmlBlock(ref block) => {
+                let text = String::from_utf8(block.literal.clone()).map_err(|_| Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8")))?;
+                if self.html_as_text {
+                    vec![Token::Str(text)]
+                } else {
+                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
+                    vec![]
+                }
             },
-            Tag::TableHead => Token::TableHead(res),
-            Tag::TableRow => Token::TableRow(res),
-            Tag::TableCell => Token::TableCell(res),
-            Tag::FootnoteDefinition(reference) => {
-                if self.footnotes.contains_key(reference.as_ref()) {
+            NodeValue::HtmlInline(ref html) => {
+                let text = String::from_utf8(html.clone()).map_err(|_| Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8")))?;
+                if self.html_as_text {
+                    vec![Token::Str(text)]
+                } else {
+                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
+                    vec![]
+                }
+            },
+            NodeValue::Paragraph => {
+                vec![Token::Paragraph(inner)]
+            }
+            NodeValue::Heading(ref heading) => {
+                vec![Token::Header(heading.level as i32, inner)]
+            },
+            NodeValue::ThematicBreak => vec![Token::Rule],
+            NodeValue::FootnoteDefinition(ref def) => {
+                let reference = String::from_utf8(def.clone()).map_err(|_| Error::parser(&self.source, lformat!("Footnote definition contains invalid UTF-8")))?;
+                if self.footnotes.contains_key(&reference) {
                     warn!("{}", lformat!("in {file}, found footnote definition for \
                                           note '{reference}' but previous \
                                           definition already exist, overriding it",
                                          file = self.source,
                                          reference = reference));
                 }
-                self.footnotes.insert(reference.into_owned(), res);
-                Token::SoftBreak
+                self.footnotes.insert(reference, inner);
+                vec![]
+            },
+            NodeValue::Text(ref text) => {
+                let text = String::from_utf8(text.clone()).map_err(|_| Error::parser(&self.source, lformat!("Markdown file contains invalid UTF-8")))?;
+                vec![Token::Str(text)]
+            },
+            NodeValue::Code(ref text) => {
+                let text = String::from_utf8(text.clone()).map_err(|_| Error::parser(&self.source, lformat!("Markdown file contains invalid UTF-8")))?;
+                vec![Token::Code(text)]
+            },
+            NodeValue::SoftBreak => vec![Token::SoftBreak],
+            NodeValue::LineBreak => vec![Token::HardBreak],
+            NodeValue::Emph => vec![Token::Emphasis(inner)],
+            NodeValue::Strong => vec![Token::Strong(inner)],
+            NodeValue::Strikethrough => unimplemented!(),
+            NodeValue::Superscript => vec![Token::Superscript(inner)],
+            NodeValue::Link(ref link) => {
+                self.features.url = true;
+                let url = String::from_utf8(link.url.clone()).map_err(|_| Error::parser(&self.source, lformat!("Link URL contains invalid UTF-8")))?;
+                let title = String::from_utf8(link.title.clone()).map_err(|_| Error::parser(&self.source, lformat!("Link title contains invalid UTF-8")))?;
+                vec![Token::Link(url, title, inner)]
+            },
+            NodeValue::Image(ref link) => {
+                self.features.image = true;
+                let url = String::from_utf8(link.url.clone()).map_err(|_| Error::parser(&self.source, lformat!("Image URL contains invalid UTF-8")))?;
+                let title = String::from_utf8(link.title.clone()).map_err(|_| Error::parser(&self.source, lformat!("Image title contains invalid UTF-8")))?;
+                vec![Token::Image(url, title, inner)]
             }
+            NodeValue::FootnoteReference(ref name) => {
+                let name = String::from_utf8(name.clone()).map_err(|_| Error::parser(&self.source, lformat!("Footnote reference contains invalid UTF-8")))?;
+                vec![Token::Footnote(vec![Token::Str(name)])]
+            },
+            NodeValue::TableCell => vec![Token::TableCell(inner)],
+            NodeValue::TableRow(header) => {
+                if header {
+                    vec![Token::TableHead(inner)]
+                } else {
+                    vec![Token::TableRow(inner)]
+                }
+            },
+            NodeValue::Table(ref aligns) => {
+                self.features.table = true;
+                // TODO: actually use alignements)
+                vec![Token::Table(aligns.len() as i32, inner)]
+            },
+            _ => unimplemented!(),
         };
-        v.push(token);
-        Ok(())
+        Ok(inner)
     }
-}
+}    
 
-
-/// Look to a string and see if there is some superscript or subscript in it.
-/// If there, returns a vec of tokens.
-///
-/// params: s: the string to parse, c, either b'^' for superscript or b'~' for subscript.
-fn parse_super_sub(s: &str, c: u8) -> Option<Vec<Token>> {
-    let match_indices:Vec<_> = s.match_indices(c as char).collect();
-    if match_indices.is_empty() {
-        return None;
-    }
-    let to_escape = format!("\\{}", c as char);
-    let escaped = format!("{}", c as char);
-    let escape = |s: String| -> String {
-        s.replace(&to_escape, &escaped)
-    };
-    for (begin, _) in match_indices {
-        let bytes = s.as_bytes();
-        let len = bytes.len();
-        // Check if ^ was escaped
-        if begin > 0 && bytes[begin - 1] == b'\\' {
-            continue;
-        } else if begin + 1 >= len {
-            return None;
-        } else {
-            let mut i = begin + 1;
-            let mut sup = vec![];
-            let mut end = None;
-            while i < len {
-                match bytes[i] {
-                    b'\\' => {
-                        if i+1 < len && bytes[i+1] == b' ' {
-                            sup.push(b' ');
-                            i += 2;
-                        } else if i + 1 < len && bytes[i+1] == c {
-                            sup.push(c);
-                            i += 2;
-                        } else {
-                            sup.push(b'\\');
-                            i += 1;
-                        }
-                    },
-                    b' ' => {
-                        return None;
-                    },
-                    b if b == c => {
-                        end = Some(i);
-                        break;
-                    },
-                    b => {
-                        sup.push(b);
-                        i += 1;
-                    },
-                }
-            }
-            if sup.is_empty() {
-                return None;
-            }
-            if let Some(end) = end {
-                let mut tokens = vec![];
-                if begin > 0 {
-                    let pre_part = String::from_utf8((&bytes[0..begin])
-                                                     .to_owned())
-                        .unwrap();
-                    tokens.push(Token::Str(escape(pre_part)));
-                }
-                let sup_part = String::from_utf8(sup).unwrap();
-                match c {
-                    b'^' => tokens.push(Token::Superscript(vec![Token::Str(sup_part)])),
-                    b'~' => tokens.push(Token::Subscript(vec![Token::Str(sup_part)])),
-                    _ => unimplemented!(),
-                }
-                if end+1 < len {
-                    let post_part = String::from_utf8((&bytes[end + 1..]).to_owned()).unwrap();
-                    if let Some(mut v) = parse_super_sub(&post_part, c) {
-                        tokens.append(&mut v);
-                    } else {
-                        tokens.push(Token::Str(escape(post_part)));
-                    }
-                }
-                return Some(tokens);
-            } else {
-                return None;
-            }
-        }
-    }
-    return None;
-}
 
 /// Replace consecutives Strs by a Str of both, collapse soft breaks to previous std and so on
 fn collapse(ast: &mut Vec<Token>) {
@@ -589,78 +460,3 @@ fn find_standalone(ast: &mut Vec<Token>) {
     }
 }
 
-
-#[test]
-fn test_parse_super_str() {
-    let c = b'^';
-    assert!(parse_super_sub("String without superscript", c).is_none());
-    assert!(parse_super_sub("String \\^without\\^ superscript", c).is_none());
-    assert!(parse_super_sub("String ^without superscript", c).is_none());
-    assert!(parse_super_sub("String ^without superscript^", c).is_none());
-    assert_eq!(parse_super_sub("^up^", c),
-               Some(vec!(Token::Superscript(vec!(Token::Str(String::from("up")))))));
-    assert_eq!(parse_super_sub("foo^up^ bar", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str(" bar".to_owned()))));
-    assert_eq!(parse_super_sub("foo^up^ bar^up^baz", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str(" bar".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str("baz".to_owned()))));
-    assert_eq!(parse_super_sub("foo^up^ bar^baz", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))),
-                         Token::Str(" bar^baz".to_owned()))));
-    assert_eq!(parse_super_sub("foo\\^bar^up^", c),
-               Some(vec!(Token::Str("foo^bar".to_owned()),
-                         Token::Superscript(vec!(Token::Str("up".to_owned()))))));
-    assert_eq!(parse_super_sub("foo^bar\\^up^", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("bar^up".to_owned()))))));
-    assert_eq!(parse_super_sub("foo^bar up^", c),
-               None);
-    assert_eq!(parse_super_sub("foo^bar\\ up^", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Superscript(vec!(Token::Str("bar up".to_owned()))))));
-
-}
-
-#[test]
-fn test_parse_supb_str() {
-    let c = b'~';
-    assert!(parse_super_sub("String without subscript", c).is_none());
-    assert!(parse_super_sub("String \\~without\\~ subscript", c).is_none());
-    assert!(parse_super_sub("String ~without subscript", c).is_none());
-    assert!(parse_super_sub("String ~without\nsubscript", c).is_none());
-    assert!(parse_super_sub("String ~without subscript~", c).is_none());
-    assert_eq!(parse_super_sub("~down~", c),
-               Some(vec!(Token::Subscript(vec!(Token::Str(String::from("down")))))));
-    assert_eq!(parse_super_sub("foo~down~ bar", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
-                         Token::Str(" bar".to_owned()))));
-    assert_eq!(parse_super_sub("foo~down~ bar~down~baz", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
-                         Token::Str(" bar".to_owned()),
-                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
-                         Token::Str("baz".to_owned()))));
-    assert_eq!(parse_super_sub("foo~down~ bar~baz", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Subscript(vec!(Token::Str("down".to_owned()))),
-                         Token::Str(" bar~baz".to_owned()))));
-    assert_eq!(parse_super_sub("foo\\~bar~down~", c),
-               Some(vec!(Token::Str("foo~bar".to_owned()),
-                         Token::Subscript(vec!(Token::Str("down".to_owned()))))));
-    assert_eq!(parse_super_sub("foo~bar\\~down~", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Subscript(vec!(Token::Str("bar~down".to_owned()))))));
-    assert_eq!(parse_super_sub("foo~bar down~", c),
-               None);
-    assert_eq!(parse_super_sub("foo~bar\\ down~", c),
-               Some(vec!(Token::Str("foo".to_owned()),
-                         Token::Subscript(vec!(Token::Str("bar down".to_owned()))))));
-
-}

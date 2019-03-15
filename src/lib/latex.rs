@@ -367,29 +367,23 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::Emphasis(ref vec) => Ok(format!("\\emph{{{}}}", self.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("\\mdstrong{{{}}}", self.render_vec(vec)?)),
-            Token::Code(ref vec) => Ok(format!("\\mdcode{{{}}}",
-                                               insert_breaks(&self.render_vec(vec)?))),
+            Token::Code(ref s) => Ok(format!("\\mdcode{{{}}}",
+                                               insert_breaks(s))),
             Token::Superscript(ref vec) => Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?)),
             Token::Subscript(ref vec) => Ok(format!("\\textsubscript{{{}}}", self.render_vec(vec)?)),
             Token::BlockQuote(ref vec) => {
                 Ok(format!("\\begin{{mdblockquote}}\n{}\n\\end{{mdblockquote}}\n",
                            self.render_vec(vec)?))
             }
-            Token::CodeBlock(ref language, ref vec) => {
-                self.escape = false;
-                let mut res = self.render_vec(vec)?;
-                // Remove trailing newline
-                if res.ends_with('\n') {
-                    res.pop();
-                }
-                self.escape = true;
+            Token::CodeBlock(ref language, ref code) => {
+                let mut res:String;
                 res = if let Some(ref syntax) = self.syntax {
-                    syntax.to_tex(&res, language)?
+                    syntax.to_tex(code, language)?
                 } else {
                     format!("\\begin{{spverbatim}}
 {code}
 \\end{{spverbatim}}",
-                            code = res)
+                            code = code)
                 };
                 res = format!("\\begin{{mdcodeblock}}
 {}

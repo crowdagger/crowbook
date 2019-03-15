@@ -45,11 +45,11 @@ pub enum Token {
     /// **Strong**, a.k.a. bold
     Strong(Vec<Token>),
     /// `Code`, a.k.a. verbatim
-    Code(Vec<Token>),
+    Code(String),
     /// A quote
     BlockQuote(Vec<Token>),
     /// Code block with language and content
-    CodeBlock(String, Vec<Token>),
+    CodeBlock(String, String),
 
     /// Superscript, indicated with ^...^
     Superscript(Vec<Token>),
@@ -103,15 +103,13 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any)
     pub fn inner(&self) -> Option<&[Token]> {
         match *self {
-            Rule | SoftBreak | HardBreak | Str(_) => None,
+            Rule | SoftBreak | HardBreak | Str(_) | CodeBlock(_, _) | Code(_) => None,
 
             Paragraph(ref v) |
             Header(_, ref v) |
             Emphasis(ref v) |
             Strong(ref v) |
-            Code(ref v) |
             BlockQuote(ref v) |
-            CodeBlock(_, ref v) |
             Subscript(ref v) |
             Superscript(ref v) |
             List(ref v) |
@@ -134,16 +132,14 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any) (mutable version)
     pub fn inner_mut(&mut self) -> Option<&mut Vec<Token>> {
         match *self {
-            Rule | SoftBreak | HardBreak | Str(_) => None,
+            Rule | SoftBreak | HardBreak | Str(_) | CodeBlock(_, _) | Code(_) => None,
 
             Paragraph(ref mut v) |
             Annotation(_, ref mut v) |
             Header(_, ref mut v) |
             Emphasis(ref mut v) |
             Strong(ref mut v) |
-            Code(ref mut v) |
             BlockQuote(ref mut v) |
-            CodeBlock(_, ref mut v) |
             Subscript(ref mut v) |
             Superscript(ref mut v) |
             List(ref mut v) |
@@ -202,10 +198,10 @@ impl Token {
         }
     }
 
-    /// Returns true if token is a container (paragraph, quote, code block, code, emphasis, ..., but not links, images, and so on).
+    /// Returns true if token is a container (paragraph, quote, emphasis, ..., but not links, images, and so on).
     pub fn is_container(&self) -> bool {
         match *self {
-            Token::CodeBlock(..) | Token::Code(..) | Token::Paragraph(..)
+             Token::Paragraph(..)
                 | Token::Header(..) | Token::Emphasis(..) | Token::Strong(..)
                 | Token::List(..) | Token::OrderedList(..) | Token::Table(..)
                 | Token::TableHead(..) | Token::TableRow(..) | Token::Footnote(..)

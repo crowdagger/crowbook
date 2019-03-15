@@ -197,15 +197,16 @@ impl<'a> OdtRenderer<'a> {
                         url,
                         self.render_vec(vec))
             }
-            Token::Code(ref vec) => {
+            Token::Code(ref s) => {
                 format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>",
-                        self.render_vec(vec))
+                        s)
             }
             Token::Subscript(ref vec) | Token::Superscript(ref vec) => self.render_vec(vec),
-            Token::BlockQuote(ref vec) |
-            Token::CodeBlock(_, ref vec) => {
+            Token::BlockQuote(ref vec) => format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
+                        self.render_vec(vec)),
+            Token::CodeBlock(_, ref s) => {
                 format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
-                        self.render_vec(vec))
+                        s)
             }
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),

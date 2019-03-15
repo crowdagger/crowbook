@@ -497,17 +497,15 @@ impl<'a> HtmlRenderer<'a> {
             }
             Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", this.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("<b>{}</b>", this.render_vec(vec)?)),
-            Token::Code(ref vec) => Ok(format!("<code>{}</code>", this.render_vec(vec)?)),
+            Token::Code(ref s) => Ok(format!("<code>{}</code>", escape::html(s))),
             Token::Subscript(ref vec) => Ok(format!("<sub>{}</sub>", this.render_vec(vec)?)),
             Token::Superscript(ref vec) => Ok(format!("<sup>{}</sup>", this.render_vec(vec)?)),
             Token::BlockQuote(ref vec) => {
                 Ok(format!("<blockquote>{}</blockquote>\n", this.render_vec(vec)?))
             }
-            Token::CodeBlock(ref language, ref vec) => {
-                this.as_mut().verbatim = true;
-                let s = this.render_vec(vec)?;
+            Token::CodeBlock(ref language, ref s) => {
                 let output = if let Some(ref syntax) = this.as_ref().syntax {
-                    syntax.to_html(&s, language)?
+                    syntax.to_html(s, language)?
                 } else if language.is_empty() {
                     format!("<pre><code>{}</code></pre>\n", s)
                 } else {
@@ -515,7 +513,6 @@ impl<'a> HtmlRenderer<'a> {
                             language,
                             escape::html(s))
                 };
-                this.as_mut().verbatim = false;
                 Ok(output)
             }
             Token::Rule => Ok(String::from("<p class = \"rule\">***</p>\n")),

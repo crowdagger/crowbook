@@ -142,29 +142,28 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         AsMut<HtmlRenderer<'a>>+AsRef<HtmlRenderer<'a>> + Renderer
     {
         match *token {
-            Token::CodeBlock(ref language, ref v) if language == "" => {
+            Token::CodeBlock(ref language, ref code) if language == "" => {
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
-                let code = view_as_text(v);
-                let content = html_if.parse_inner_code(&code)?;
+                let content = html_if.parse_inner_code(code)?;
                 Ok(content)
                 
             },
-            Token::CodeBlock(ref language, ref v) if language.starts_with(|c| c == '<' || c == '>') => {
+            Token::CodeBlock(ref language, ref code) if language.starts_with(|c| c == '<' || c == '>') => {
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = format!("if (passageCount(state.current_id) {expr}) {{
     {code};
 }}\n",
-                                   code = view_as_text(v),
+                                   code = code,
                                    expr = language);
                 let content = html_if.parse_inner_code(&code)?;
                 Ok(content)
             },
-            Token::CodeBlock(ref language, ref v) if language.parse::<u32>().is_ok() => {
+            Token::CodeBlock(ref language, ref code) if language.parse::<u32>().is_ok() => {
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = format!("if (passageCount(state.current_id) == {n}) {{
     {code};
 }}\n",
-                                   code = view_as_text(v),
+                                   code = code,
                                    n = language.parse::<u32>().unwrap());
                 let content = html_if.parse_inner_code(&code)?;
                 Ok(content)

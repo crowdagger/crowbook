@@ -104,7 +104,6 @@
 //! assert_eq!(count(&ast), 2);
 //! ```
 
-extern crate pulldown_cmark as cmark;
 #[macro_use]
 extern crate log;
 #[macro_use]
