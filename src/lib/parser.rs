@@ -43,6 +43,7 @@ pub struct Features {
     pub url: bool,
     pub subscript: bool,
     pub superscript: bool,
+    pub strikethrough: bool,
 }
 
 impl Features {
@@ -58,6 +59,7 @@ impl Features {
             url: false,
             subscript: false,
             superscript: false,
+            strikethrough: false,
         }
     }
 }
@@ -77,6 +79,7 @@ impl BitOr for Features {
             url: self.url | rhs.url,
             subscript: self.subscript | rhs.subscript,
             superscript: self.superscript | rhs.superscript,
+            strikethrough: self.strikethrough | rhs.strikethrough
         }
     }
 }
@@ -346,7 +349,10 @@ impl Parser {
             NodeValue::LineBreak => vec![Token::HardBreak],
             NodeValue::Emph => vec![Token::Emphasis(inner)],
             NodeValue::Strong => vec![Token::Strong(inner)],
-            NodeValue::Strikethrough => unimplemented!(),
+            NodeValue::Strikethrough => {
+                self.features.strikethrough = true;
+                vec![Token::Strikethrough(inner)]
+            },
             NodeValue::Superscript => vec![Token::Superscript(inner)],
             NodeValue::Link(ref link) => {
                 self.features.url = true;

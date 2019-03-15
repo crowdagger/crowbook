@@ -219,6 +219,7 @@ impl<'a> LatexRenderer<'a> {
             .insert_bool("use_tables", self.book.features.table)
             .insert_bool("use_codeblocks", self.book.features.codeblock)
             .insert_bool("use_images", self.book.features.image)
+            .insert_bool("use_strikethrough", self.book.features.strikethrough)
             .insert_str("tex_lang", tex_lang);
         if let Ok(tex_tmpl_add) = self.book.options.get_str("tex.template.add") {
             data = data.insert_str("additional_code", tex_tmpl_add);
@@ -367,6 +368,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::Emphasis(ref vec) => Ok(format!("\\emph{{{}}}", self.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("\\mdstrong{{{}}}", self.render_vec(vec)?)),
+            Token::Strikethrough(ref vec) => Ok(format!("\\sout{{{}}}", self.render_vec(vec)?)),
             Token::Code(ref s) => Ok(format!("\\mdcode{{{}}}",
                                                insert_breaks(s))),
             Token::Superscript(ref vec) => Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?)),

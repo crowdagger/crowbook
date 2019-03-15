@@ -228,8 +228,9 @@ impl<'a> OdtRenderer<'a> {
             Token::DescriptionList(ref v) |
             Token::DescriptionItem(ref v) |
             Token::DescriptionTerm(ref v) |
-            Token::DescriptionDetails(ref v) => {
-                warn!("{}", lformat!("ODT: Description list not handled in this output"));
+            Token::DescriptionDetails(ref v) |
+            Token::Strikethrough(ref v) => {
+                warn!("{}", lformat!("ODT: Description list and strikethrough not handled in this output"));
                 self.render_vec(v)
             }
         }

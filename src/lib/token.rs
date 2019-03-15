@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2019 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -45,6 +45,8 @@ pub enum Token {
     /// **Strong**, a.k.a. bold
     Strong(Vec<Token>),
     /// `Code`, a.k.a. verbatim
+    /// Strikethrough
+    Strikethrough(Vec<Token>),
     Code(String),
     /// A quote
     BlockQuote(Vec<Token>),
@@ -136,6 +138,7 @@ impl Token {
             Link(_, _, ref v) |
             Image(_, _, ref v) |
             StandaloneImage(_, _, ref v) |
+            Strikethrough(ref v) |
             Annotation(_, ref v) => Some(v),
 
             __NonExhaustive => unreachable!(),
@@ -169,6 +172,7 @@ impl Token {
             Footnote(ref mut v) |
             Link(_, _, ref mut v) |
             Image(_, _, ref mut v) |
+            Strikethrough(ref mut v) |
             StandaloneImage(_, _, ref mut v) => Some(v),
 
             __NonExhaustive => unreachable!(),

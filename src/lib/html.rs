@@ -497,6 +497,7 @@ impl<'a> HtmlRenderer<'a> {
             }
             Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", this.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("<b>{}</b>", this.render_vec(vec)?)),
+            Token::Strikethrough(ref vec) => Ok(format!("<del>{}</del>", this.render_vec(vec)?)),
             Token::Code(ref s) => Ok(format!("<code>{}</code>", escape::html(s))),
             Token::Subscript(ref vec) => Ok(format!("<sub>{}</sub>", this.render_vec(vec)?)),
             Token::Superscript(ref vec) => Ok(format!("<sup>{}</sup>", this.render_vec(vec)?)),
