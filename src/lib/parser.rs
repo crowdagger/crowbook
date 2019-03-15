@@ -15,20 +15,19 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::token::Token;
-use crate::error::{Result, Error, Source};
 use crate::book::Book;
+use crate::error::{Error, Result, Source};
+use crate::token::Token;
 
-use std::mem;
-use std::fs::File;
-use std::path::Path;
 use std::convert::AsRef;
+use std::fs::File;
 use std::io::Read;
+use std::mem;
 use std::ops::BitOr;
+use std::path::Path;
 
+use comrak::nodes::{AstNode, ListType, NodeValue};
 use comrak::{parse_document, Arena, ComrakOptions};
-use comrak::nodes::{AstNode, NodeValue, ListType};
-
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 /// The list of features used in a document.
@@ -66,7 +65,6 @@ impl Features {
     }
 }
 
-
 impl BitOr for Features {
     type Output = Self;
 
@@ -81,11 +79,10 @@ impl BitOr for Features {
             url: self.url | rhs.url,
             subscript: self.subscript | rhs.subscript,
             superscript: self.superscript | rhs.superscript,
-            strikethrough: self.strikethrough | rhs.strikethrough
+            strikethrough: self.strikethrough | rhs.strikethrough,
         }
     }
 }
-
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 ///
@@ -135,10 +132,13 @@ impl Parser {
     pub fn from(book: &Book) -> Parser {
         let mut parser = Parser::new();
         parser.html_as_text = book.options.get_bool("crowbook.html_as_text").unwrap();
-        parser.superscript = book.options.get_bool("crowbook.markdown.superscript").unwrap();
+        parser.superscript = book
+            .options
+            .get_bool("crowbook.markdown.superscript")
+            .unwrap();
         parser
     }
-    
+
     /// Enable/disable HTML as text
     pub fn html_as_text(&mut self, b: bool) {
         self.html_as_text = b;
@@ -152,20 +152,24 @@ impl Parser {
     /// Parse a file and returns an AST or  an error
     pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
-        let mut f = File::open(path)
-            .map_err(|_| {
-                Error::file_not_found(&self.source,
-                                      lformat!("markdown file"),
-                                      format!("{}", path.display()))
-            })?;
+        let mut f = File::open(path).map_err(|_| {
+            Error::file_not_found(
+                &self.source,
+                lformat!("markdown file"),
+                format!("{}", path.display()),
+            )
+        })?;
         let mut s = String::new();
 
-        f.read_to_string(&mut s)
-            .map_err(|_| {
-                Error::parser(&self.source,
-                              lformat!("file {file} contains invalid UTF-8, could not parse it",
-                                       file = path.display()))
-            })?;
+        f.read_to_string(&mut s).map_err(|_| {
+            Error::parser(
+                &self.source,
+                lformat!(
+                    "file {file} contains invalid UTF-8, could not parse it",
+                    file = path.display()
+                ),
+            )
+        })?;
         self.parse(&s)
     }
 
@@ -185,7 +189,6 @@ impl Parser {
         options.ext_footnotes = true;
         options.ext_description_lists = true;
 
-        
         let root = parse_document(&arena, s, &options);
 
         let mut res = self.parse_node(root)?;
@@ -194,7 +197,6 @@ impl Parser {
 
         find_standalone(&mut res);
 
-       
         Ok(res)
     }
 
@@ -224,77 +226,93 @@ impl Parser {
         self.features
     }
 
-
-    fn parse_node<'a>(&mut self,
-                      node: &'a AstNode<'a>)
-                      -> Result<Vec<Token>> {
+    fn parse_node<'a>(&mut self, node: &'a AstNode<'a>) -> Result<Vec<Token>> {
         let mut inner = vec![];
         for c in node.children() {
             let mut v = self.parse_node(c)?;
             inner.append(&mut v);
         }
-        
+
         inner = match node.data.borrow().value {
             NodeValue::Document => inner,
             NodeValue::BlockQuote => {
                 self.features.blockquote = true;
                 vec![Token::BlockQuote(inner)]
-            },
+            }
             NodeValue::List(ref list) => {
                 // Todo: use "tight" feature?
                 match list.list_type {
                     ListType::Bullet => vec![Token::List(inner)],
-                    ListType::Ordered => vec![Token::OrderedList(list.start, inner)]
+                    ListType::Ordered => vec![Token::OrderedList(list.start, inner)],
                 }
-            },
+            }
             NodeValue::Item(_) => vec![Token::Item(inner)],
             NodeValue::DescriptionList => vec![Token::DescriptionList(inner)],
             NodeValue::DescriptionItem(_) => vec![Token::DescriptionItem(inner)],
             NodeValue::DescriptionTerm => vec![Token::DescriptionTerm(inner)],
             NodeValue::DescriptionDetails => vec![Token::DescriptionDetails(inner)],
             NodeValue::CodeBlock(ref block) => {
-                let info = String::from_utf8(block.info.clone()).map_err(|_| Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8")))?;
-                let code = String::from_utf8(block.literal.clone()).map_err(|_| Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8")))?;
+                let info = String::from_utf8(block.info.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8"))
+                })?;
+                let code = String::from_utf8(block.literal.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8"))
+                })?;
                 self.features.codeblock = true;
-                vec!(Token::CodeBlock(info, code))
-            },
-            NodeValue::HtmlBlock(ref block) => {
-                let text = String::from_utf8(block.literal.clone()).map_err(|_| Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8")))?;
-                if self.html_as_text {
-                    vec![Token::Str(text)]
-                } else {
-                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
-                    vec![]
-                }
-            },
-            NodeValue::HtmlInline(ref html) => {
-                let text = String::from_utf8(html.clone()).map_err(|_| Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8")))?;
-                if self.html_as_text {
-                    vec![Token::Str(text)]
-                } else {
-                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
-                    vec![]
-                }
-            },
-            NodeValue::Paragraph => {
-                vec![Token::Paragraph(inner)]
+                vec![Token::CodeBlock(info, code)]
             }
-            NodeValue::Heading(ref heading) => {
-                vec![Token::Header(heading.level as i32, inner)]
-            },
+            NodeValue::HtmlBlock(ref block) => {
+                let text = String::from_utf8(block.literal.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8"))
+                })?;
+                if self.html_as_text {
+                    vec![Token::Str(text)]
+                } else {
+                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
+                    vec![]
+                }
+            }
+            NodeValue::HtmlInline(ref html) => {
+                let text = String::from_utf8(html.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8"))
+                })?;
+                if self.html_as_text {
+                    vec![Token::Str(text)]
+                } else {
+                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
+                    vec![]
+                }
+            }
+            NodeValue::Paragraph => vec![Token::Paragraph(inner)],
+            NodeValue::Heading(ref heading) => vec![Token::Header(heading.level as i32, inner)],
             NodeValue::ThematicBreak => vec![Token::Rule],
             NodeValue::FootnoteDefinition(ref def) => {
-                let reference = String::from_utf8(def.clone()).map_err(|_| Error::parser(&self.source, lformat!("Footnote definition contains invalid UTF-8")))?;
+                let reference = String::from_utf8(def.clone()).map_err(|_| {
+                    Error::parser(
+                        &self.source,
+                        lformat!("Footnote definition contains invalid UTF-8"),
+                    )
+                })?;
                 vec![Token::FootnoteDefinition(reference, inner)]
-            },
+            }
             NodeValue::Text(ref text) => {
-                let text = String::from_utf8(text.clone()).map_err(|_| Error::parser(&self.source, lformat!("Markdown file contains invalid UTF-8")))?;
+                let text = String::from_utf8(text.clone()).map_err(|_| {
+                    Error::parser(
+                        &self.source,
+                        lformat!("Markdown file contains invalid UTF-8"),
+                    )
+                })?;
                 vec![Token::Str(text)]
-            },
+            }
             NodeValue::Code(ref text) => {
-                let text = String::from_utf8(text.clone()).map_err(|_| Error::parser(&self.source, lformat!("Markdown file contains invalid UTF-8")))?;
+                let text = String::from_utf8(text.clone()).map_err(|_| {
+                    Error::parser(
+                        &self.source,
+                        lformat!("Markdown file contains invalid UTF-8"),
+                    )
+                })?;
                 vec![Token::Code(text)]
-            },
+            }
             NodeValue::SoftBreak => vec![Token::SoftBreak],
             NodeValue::LineBreak => vec![Token::HardBreak],
             NodeValue::Emph => vec![Token::Emphasis(inner)],
@@ -302,25 +320,38 @@ impl Parser {
             NodeValue::Strikethrough => {
                 self.features.strikethrough = true;
                 vec![Token::Strikethrough(inner)]
-            },
+            }
             NodeValue::Superscript => vec![Token::Superscript(inner)],
             NodeValue::Link(ref link) => {
                 self.features.url = true;
-                let url = String::from_utf8(link.url.clone()).map_err(|_| Error::parser(&self.source, lformat!("Link URL contains invalid UTF-8")))?;
-                let title = String::from_utf8(link.title.clone()).map_err(|_| Error::parser(&self.source, lformat!("Link title contains invalid UTF-8")))?;
+                let url = String::from_utf8(link.url.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("Link URL contains invalid UTF-8"))
+                })?;
+                let title = String::from_utf8(link.title.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("Link title contains invalid UTF-8"))
+                })?;
                 vec![Token::Link(url, title, inner)]
-            },
+            }
             NodeValue::Image(ref link) => {
                 self.features.image = true;
-                let url = String::from_utf8(link.url.clone()).map_err(|_| Error::parser(&self.source, lformat!("Image URL contains invalid UTF-8")))?;
-                let title = String::from_utf8(link.title.clone()).map_err(|_| Error::parser(&self.source, lformat!("Image title contains invalid UTF-8")))?;
+                let url = String::from_utf8(link.url.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("Image URL contains invalid UTF-8"))
+                })?;
+                let title = String::from_utf8(link.title.clone()).map_err(|_| {
+                    Error::parser(&self.source, lformat!("Image title contains invalid UTF-8"))
+                })?;
                 vec![Token::Image(url, title, inner)]
             }
             NodeValue::FootnoteReference(ref name) => {
-                let name = String::from_utf8(name.clone()).map_err(|_| Error::parser(&self.source, lformat!("Footnote reference contains invalid UTF-8")))?;
+                let name = String::from_utf8(name.clone()).map_err(|_| {
+                    Error::parser(
+                        &self.source,
+                        lformat!("Footnote reference contains invalid UTF-8"),
+                    )
+                })?;
 
                 vec![Token::FootnoteReference(name)]
-            },
+            }
             NodeValue::TableCell => vec![Token::TableCell(inner)],
             NodeValue::TableRow(header) => {
                 if header {
@@ -328,17 +359,16 @@ impl Parser {
                 } else {
                     vec![Token::TableRow(inner)]
                 }
-            },
+            }
             NodeValue::Table(ref aligns) => {
                 self.features.table = true;
                 // TODO: actually use alignements)
                 vec![Token::Table(aligns.len() as i32, inner)]
-            },
+            }
         };
         Ok(inner)
     }
-}    
-
+}
 
 /// Replace consecutives Strs by a Str of both, collapse soft breaks to previous std and so on
 fn collapse(ast: &mut Vec<Token>) {
@@ -348,8 +378,9 @@ fn collapse(ast: &mut Vec<Token>) {
             if ast[i + 1].is_str() {
                 // Two consecutives Str, concatenate them
                 let token = ast.remove(i + 1);
-                if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) = (&mut ast[i],
-                                                                                  token) {
+                if let (&mut Token::Str(ref mut dest), Token::Str(ref source)) =
+                    (&mut ast[i], token)
+                {
                     //                        dest.push(' ');
                     dest.push_str(source);
                     continue;
@@ -381,8 +412,9 @@ fn find_standalone(ast: &mut Vec<Token>) {
         let res = if let &mut Token::Paragraph(ref mut inner) = token {
             if inner.len() == 1 {
                 if inner[0].is_image() {
-                    if let Token::Image(source, title, inner) = mem::replace(&mut inner[0],
-                                                                             Token::Rule) {
+                    if let Token::Image(source, title, inner) =
+                        mem::replace(&mut inner[0], Token::Rule)
+                    {
                         Token::StandaloneImage(source, title, inner)
                     } else {
                         unreachable!();
@@ -392,9 +424,14 @@ fn find_standalone(ast: &mut Vec<Token>) {
                     // Fixme: messy code and unnecessary clone
                     if let Token::Link(ref url, ref alt, ref mut inner) = inner[0] {
                         if inner[0].is_image() {
-                            if let Token::Image(source, title, inner) = mem::replace(&mut inner[0],
-                                                                                     Token::Rule) {
-                                Token::Link(url.clone(), alt.clone(), vec![Token::StandaloneImage(source, title, inner)])
+                            if let Token::Image(source, title, inner) =
+                                mem::replace(&mut inner[0], Token::Rule)
+                            {
+                                Token::Link(
+                                    url.clone(),
+                                    alt.clone(),
+                                    vec![Token::StandaloneImage(source, title, inner)],
+                                )
                             } else {
                                 unreachable!();
                             }
@@ -415,4 +452,3 @@ fn find_standalone(ast: &mut Vec<Token>) {
         *token = res;
     }
 }
-

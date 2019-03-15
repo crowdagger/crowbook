@@ -6,5 +6,4 @@ pub fn test_eq(actual: &str, expected: &str) {
 }
 
 mod parser;
-mod html;
 mod book;
