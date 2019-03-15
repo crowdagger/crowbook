@@ -23,7 +23,6 @@ use crate::token::Token;
 use crate::renderer::Renderer;
 use crate::book_renderer::BookRenderer;
 use crate::parser::Parser;
-use crate::text_view::view_as_text;
 
 use rustc_serialize::base64::{self, ToBase64};
 

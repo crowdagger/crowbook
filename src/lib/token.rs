@@ -63,6 +63,15 @@ pub enum Token {
     /// Item of a list
     Item(Vec<Token>),
 
+    /// Description list, containing description items
+    DescriptionList(Vec<Token>),
+    /// Description item, containing term and details
+    DescriptionItem(Vec<Token>),
+    /// Description term
+    DescriptionTerm(Vec<Token>),
+    /// Description details
+    DescriptionDetails(Vec<Token>),
+
     /// Table with number of rows, and a list of `TableHead` and `TableRows`
     Table(i32, Vec<Token>),
     /// Table header, contains `TableCell`s
@@ -115,6 +124,10 @@ impl Token {
             List(ref v) |
             OrderedList(_, ref v) |
             Item(ref v) |
+            DescriptionList(ref v) |
+            DescriptionItem(ref v) |
+            DescriptionTerm(ref v) |
+            DescriptionDetails(ref v) |
             Table(_, ref v) |
             TableHead(ref v) |
             TableRow(ref v) |
@@ -145,6 +158,10 @@ impl Token {
             List(ref mut v) |
             OrderedList(_, ref mut v) |
             Item(ref mut v) |
+            DescriptionList(ref mut v) |
+            DescriptionItem(ref mut v) |
+            DescriptionTerm(ref mut v) |
+            DescriptionDetails(ref mut v) |
             Table(_, ref mut v) |
             TableHead(ref mut v) |
             TableRow(ref mut v) |

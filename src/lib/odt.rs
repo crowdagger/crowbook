@@ -177,8 +177,8 @@ impl<'a> OdtRenderer<'a> {
                         s)
             }
             Token::Emphasis(ref vec) => {
-                format!("<text:span text:style-name=\"T1\">{}</text:span>",
-                        self.render_vec(vec))
+                format!("<text:span text:style-name=\"T1\">{}</text:span>", 
+                       self.render_vec(vec))
             }
             Token::Strong(ref vec) => {
                 format!("<text:span text:style-name=\"T2\">{}</text:span>",
@@ -225,6 +225,13 @@ impl<'a> OdtRenderer<'a> {
             }
             Token::Annotation(_, ref vec) => self.render_vec(vec),
             Token::__NonExhaustive => unreachable!(),
+            Token::DescriptionList(ref v) |
+            Token::DescriptionItem(ref v) |
+            Token::DescriptionTerm(ref v) |
+            Token::DescriptionDetails(ref v) => {
+                warn!("{}", lformat!("ODT: Description list not handled in this output"));
+                self.render_vec(v)
+            }
         }
     }
 }

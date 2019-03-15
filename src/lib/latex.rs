@@ -393,6 +393,15 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::Rule => Ok(String::from("\\mdrule\n")),
             Token::SoftBreak => Ok(String::from(" ")),
             Token::HardBreak => Ok(String::from("\\mdhardbreak\n")),
+            Token::DescriptionList(ref v) => {
+                Ok(format!("\\begin{{description}}
+{}
+\\end{{description}}>",
+                           self.render_vec(v)?))
+            },
+            Token::DescriptionItem(ref v) => Ok(self.render_vec(v)?),
+            Token::DescriptionTerm(ref v) => Ok(format!("\\item[{}]\n", self.render_vec(v)?)),
+            Token::DescriptionDetails(ref v) => Ok(self.render_vec(v)?),
             Token::List(ref vec) => {
                 Ok(format!("\\begin{{itemize}}\n{}\\end{{itemize}}",
                            self.render_vec(vec)?))

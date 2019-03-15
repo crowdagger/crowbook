@@ -27,7 +27,7 @@ use std::io::Read;
 use std::collections::HashMap;
 use std::ops::BitOr;
 
-use comrak::{parse_document, format_html, Arena, ComrakOptions};
+use comrak::{parse_document, Arena, ComrakOptions};
 use comrak::nodes::{AstNode, NodeValue, ListType};
 
 
@@ -287,10 +287,10 @@ impl Parser {
                 }
             },
             NodeValue::Item(_) => vec![Token::Item(inner)],
-            NodeValue::DescriptionList => unimplemented!(),
-            NodeValue::DescriptionItem(_) => unimplemented!(),
-            NodeValue::DescriptionTerm => unimplemented!(),
-            NodeValue::DescriptionDetails => unimplemented!(),
+            NodeValue::DescriptionList => vec![Token::DescriptionList(inner)],
+            NodeValue::DescriptionItem(_) => vec![Token::DescriptionItem(inner)],
+            NodeValue::DescriptionTerm => vec![Token::DescriptionTerm(inner)],
+            NodeValue::DescriptionDetails => vec![Token::DescriptionDetails(inner)],
             NodeValue::CodeBlock(ref block) => {
                 let info = String::from_utf8(block.info.clone()).map_err(|_| Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8")))?;
                 let code = String::from_utf8(block.literal.clone()).map_err(|_| Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8")))?;
@@ -377,7 +377,6 @@ impl Parser {
                 // TODO: actually use alignements)
                 vec![Token::Table(aligns.len() as i32, inner)]
             },
-            _ => unimplemented!(),
         };
         Ok(inner)
     }

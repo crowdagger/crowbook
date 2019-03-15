@@ -529,6 +529,15 @@ impl<'a> HtmlRenderer<'a> {
                            this.render_vec(vec)?))
             }
             Token::Item(ref vec) => Ok(format!("<li>{}</li>\n", this.render_vec(vec)?)),
+            Token::DescriptionList(ref v) => {
+                Ok(format!("<dl>
+{}
+</dl>",
+                           this.render_vec(v)?))
+            },
+            Token::DescriptionItem(ref v) => Ok(this.render_vec(v)?),
+            Token::DescriptionTerm(ref v) => Ok(format!("<dt>{}</dt>\n", this.render_vec(v)?)),
+            Token::DescriptionDetails(ref v) => Ok(format!("<dd>{}</dd>\n", this.render_vec(v)?)),
             Token::Link(ref url, ref title, ref vec) => {
                 let url = escape::html(url.as_str());
                 let url = if ResourceHandler::is_local(&url) {
