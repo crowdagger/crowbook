@@ -61,7 +61,7 @@ impl Syntax {
     /// Convert a string containing code to HTML
     pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
-        let syntax = self.syntax_set.find_syntax_by_name(language)
+        let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
         let regions = h.highlight(code, &self.syntax_set);
@@ -74,7 +74,7 @@ impl Syntax {
         let language = strip_language(language);
         use crate::latex::insert_breaks;
         use syntect::highlighting::{Color, FontStyle};
-        let syntax = self.syntax_set.find_syntax_by_name(language)
+        let syntax = self.syntax_set.find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
         let regions = h.highlight(code, &self.syntax_set);
