@@ -16,19 +16,19 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use crate::book::Book;
-use crate::text_view::view_as_text;
 use crate::style;
+use crate::text_view::view_as_text;
 
-use std::fmt;
-use std::f64;
 #[cfg(feature = "nightly")]
 use hyphenation;
 #[cfg(feature = "nightly")]
 use hyphenation::{Hyphenation, Language};
 #[cfg(feature = "nightly")]
-use punkt::{SentenceTokenizer, TrainingData};
-#[cfg(feature = "nightly")]
 use punkt::params::Standard;
+#[cfg(feature = "nightly")]
+use punkt::{SentenceTokenizer, TrainingData};
+use std::f64;
+use std::fmt;
 
 /* Only collected on nightly */
 struct AdvancedStats {
@@ -48,12 +48,13 @@ impl ChapterStats {
     #[cfg(feature = "nightly")]
     pub fn fill_advanced(&mut self, lang: &str, text: &str) {
         let words: Vec<_> = text.split_whitespace().collect();
-        let corp = hyphenation::load(language_from_str(lang)).unwrap();
+        let lang = Stats::language_from_str(lang);
+        let corp = hyphenation::load(lang).unwrap();
         // Count the number of syllables for earch word.
         let syl = words
             .iter()
             .fold(0, |acc, w| acc + w.opportunities(&corp).len() + 1);
-        
+
         let (td, flesch_func) = Stats::language_data(lang);
         let sc = SentenceTokenizer::<Standard>::new(&text, &td).count();
         let stats = AdvancedStats {
@@ -73,10 +74,8 @@ impl ChapterStats {
     }
 
     #[cfg(not(feature = "nightly"))]
-    pub fn fill_advanced(&mut self, _: &str, _: &str) {
-    }
+    pub fn fill_advanced(&mut self, _: &str, _: &str) {}
 }
-
 
 pub struct Stats {
     chapters: Vec<ChapterStats>,
@@ -86,18 +85,27 @@ pub struct Stats {
 impl Stats {
     pub fn new(book: &Book, advanced: bool) -> Stats {
         let lang = book.options.get_str("lang").unwrap();
-        
+
         let mut stats;
 
         if cfg!(not(feature = "nightly")) {
             if advanced {
                 warn!("{}", lformat!("This version of crowboook has been compiled without support for advanced statistics"));
             }
-            stats = Stats { chapters: vec![], advanced: false };
+            stats = Stats {
+                chapters: vec![],
+                advanced: false,
+            };
         } else {
-            stats = Stats { chapters: vec![], advanced: advanced };
+            stats = Stats {
+                chapters: vec![],
+                advanced: advanced,
+            };
             if !advanced {
-                info!("{}", lformat!("For more advanced statistics, use the --verbose or -v option"));
+                info!(
+                    "{}",
+                    lformat!("For more advanced statistics, use the --verbose or -v option")
+                );
             }
         }
 
@@ -123,7 +131,6 @@ impl Stats {
         stats
     }
 
-
     // Returns the Language (defined by Hyphenation crate) according to the str code
     #[cfg(feature = "nightly")]
     fn language_from_str(lang: &str) -> Language {
@@ -146,26 +153,21 @@ impl Stats {
             "es" => Language::Spanish,
             "sv" => Language::Swedish,
             "tk" => Language::Turkish,
-            _ =>  {
+            _ => {
                 warn!(
                     //FIXME: display localized warning (or use Result?)
                     "Unknown language: '{}' for text statistics, using 'en' default.",
                     lang
                 );
                 Language::English_GB
-            },
+            }
         }
     }
 
     // The Flesch reading index formulae for different languages are from the `YoastSEO.js` text
     // analysis library. See: https://github.com/Yoast/YoastSEO.js/issues/267
     #[cfg(feature = "nightly")]
-    fn language_data(
-        lang: Language
-    ) -> (
-        TrainingData,
-        Option<Box<Fn(&ChapterStats) -> f64>>,
-    ) {
+    fn language_data(lang: Language) -> (TrainingData, Option<Box<Fn(&ChapterStats) -> f64>>) {
         match lang {
             Language::Czech => (TrainingData::czech(), None),
             Language::Danish => (TrainingData::danish(), None),
@@ -173,10 +175,13 @@ impl Stats {
                 TrainingData::dutch(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                        206.84 - 77.0 * (adv.syllable_count as f64 / s.word_count as f64)
+                        206.84
+                            - 77.0 * (adv.syllable_count as f64 / s.word_count as f64)
                             - 0.93 * (s.word_count as f64 / adv.sentence_count as f64)
                     } else {
-                        unreachable!("If nightly build is set, it should always return Some(thing)");
+                        unreachable!(
+                            "If nightly build is set, it should always return Some(thing)"
+                        );
                     }
                 })),
             ),
@@ -184,11 +189,13 @@ impl Stats {
                 TrainingData::english(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                    206.835 - 0.77 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
-                        - 0.93 * (s.word_count as f64 / adv.sentence_count as f64)
+                        206.835
+                            - 0.77 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
+                            - 0.93 * (s.word_count as f64 / adv.sentence_count as f64)
                     } else {
                         unreachable!();
-                    }})),
+                    }
+                })),
             ),
             Language::Estonian => (TrainingData::estonian(), None),
             Language::Finnish => (TrainingData::finnish(), None),
@@ -196,17 +203,20 @@ impl Stats {
                 TrainingData::french(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                        207.0 - 1.015 * (s.word_count as f64 / adv.sentence_count as f64)
+                        207.0
+                            - 1.015 * (s.word_count as f64 / adv.sentence_count as f64)
                             - 73.6 * (adv.syllable_count as f64 / s.word_count as f64)
                     } else {
                         unreachable!();
-                    }})),
+                    }
+                })),
             ),
             Language::German_1996 => (
                 TrainingData::german(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                        180.0 - (s.word_count as f64 / adv.sentence_count as f64)
+                        180.0
+                            - (s.word_count as f64 / adv.sentence_count as f64)
                             - 84.6 * (adv.syllable_count as f64 / s.word_count as f64)
                     } else {
                         unreachable!();
@@ -218,7 +228,8 @@ impl Stats {
                 TrainingData::italian(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                        217.0 - 1.3 * (s.word_count as f64 / adv.sentence_count as f64)
+                        217.0
+                            - 1.3 * (s.word_count as f64 / adv.sentence_count as f64)
                             - 60.0 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
                     } else {
                         unreachable!();
@@ -233,17 +244,21 @@ impl Stats {
                 TrainingData::spanish(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
-                        206.84 - 1.02 * (s.word_count as f64 / adv.sentence_count as f64)
-                        - 60.0 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
+                        206.84
+                            - 1.02 * (s.word_count as f64 / adv.sentence_count as f64)
+                            - 60.0 * (adv.syllable_count as f64 * 100.0 / s.word_count as f64)
                     } else {
                         unreachable!();
-                    }})),
+                    }
+                })),
             ),
             Language::Swedish => (TrainingData::swedish(), None),
             Language::Turkish => (TrainingData::turkish(), None),
             _ => {
-                unreachable!("language_data should handle all casess returned by language_from_str");
-            },
+                unreachable!(
+                    "language_data should handle all casess returned by language_from_str"
+                );
+            }
         }
     }
 
@@ -263,13 +278,15 @@ impl Stats {
 
 impl fmt::Display for Stats {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let max_chapter_length = self.chapters
+        let max_chapter_length = self
+            .chapters
             .iter()
             .max_by_key(|e| e.name.chars().count())
             .unwrap()
             .name
             .chars()
-            .count() + 3;
+            .count()
+            + 3;
         if self.advanced {
             write!(
                 f,
