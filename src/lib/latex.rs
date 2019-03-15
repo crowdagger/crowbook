@@ -398,7 +398,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::DescriptionList(ref v) => {
                 Ok(format!("\\begin{{description}}
 {}
-\\end{{description}}>",
+\\end{{description}}",
                            self.render_vec(v)?))
             },
             Token::DescriptionItem(ref v) => Ok(self.render_vec(v)?),
