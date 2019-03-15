@@ -6,8 +6,8 @@ use std::env;
 
 
 fn main() {
-//    println!("cargo:rerun-if-changed=build.rs");
-    //    println!("cargo:rerun-if-changed=lang/fr.po");
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=lang/fr.po");
     // Extract and localize src/lib
     let mut extractor = Extractor::new();
     extractor.add_messages_from_dir(concat!(env!("CARGO_MANIFEST_DIR"), "/src/lib")).unwrap();

@@ -6,7 +6,7 @@ unreleased
 * Moved from `pulldown-cmark` to `comrak` for parsing Markdown. This may have some
   performances drawbacks but allows for a few more features:
   * Description lists
-
+  * Strikethrough
 * New option: 
   * `crowbook.files_mean_chapters` allow to enforce that each files
     means a chapter break or to make sure that it doesn't (by default,
