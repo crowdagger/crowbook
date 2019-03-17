@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
--------------
+0.15.0-beta1 (2019-03-17)
+------------------------------
 * Moved from `pulldown-cmark` to `comrak` for parsing Markdown. This may have some
   performances drawbacks but allows for a few more features:
   * Description lists

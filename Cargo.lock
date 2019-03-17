@@ -367,7 +367,7 @@ dependencies = [
 
 [[package]]
 name = "crowbook"
-version = "0.15.0-unreleased"
+version = "0.15.0-beta1"
 dependencies = [
  "caribon 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
