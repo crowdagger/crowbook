@@ -127,6 +127,7 @@ prevent mustache HTML-escaping the value. This is not good because:
 2) escaping HTML in a LaTeX document won't probably look good.
 
 
+
 List of templates 
 -----------------
 
