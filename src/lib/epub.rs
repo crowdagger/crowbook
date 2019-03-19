@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2019 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -31,11 +31,7 @@ use crate::text_view::view_as_text;
 
 use mustache::Template;
 use crowbook_text_processing::escape;
-use epub_builder::EpubBuilder;
-use epub_builder::EpubVersion;
-use epub_builder::EpubContent;
-use epub_builder::ZipCommand;
-use epub_builder::ReferenceType;
+use epub_builder::{EpubBuilder, EpubVersion, EpubContent, ZipCommand, ZipLibrary, ZipCommandOrLibrary, ReferenceType};
 
 use std::io::Write;
 use std::convert::{AsRef, AsMut};
@@ -79,7 +75,12 @@ impl<'a> EpubRenderer<'a> {
         let mut zip = ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)?;
         zip.command(self.html.book.options.get_str("crowbook.zip.command")
                     .unwrap());
-        let mut maker = EpubBuilder::new(zip)?;
+        let wrapper = if zip.test().is_ok() {
+            ZipCommandOrLibrary::Command(zip)
+        } else {
+            ZipCommandOrLibrary::Library(ZipLibrary::new()?)
+        };
+        let mut maker = EpubBuilder::new(wrapper)?;
         if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
             maker.epub_version(EpubVersion::V30);
         }

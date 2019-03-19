@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.15.0-beta1 (2019-03-17)
+unreleased
 ------------------------------
 * Moved from `pulldown-cmark` to `comrak` for parsing Markdown. This may have some
   performances drawbacks but allows for a few more features:
@@ -11,6 +11,7 @@ ChangeLog
   * `crowbook.files_mean_chapters` allow to enforce that each files
     means a chapter break or to make sure that it doesn't (by default,
     only true for numbered chapters).
+* Fallback on Rust zip library when there is no `zip` command.
 * By default, don't add an empty chapter title for non numbered
   "chapters" that don't contain a title.
 * Now uses `reqwest` instead of `hyper` to connect to languagetool/grammalecte.
