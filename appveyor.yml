@@ -1,5 +1,5 @@
 # Based on the "trust" template v0.1.1
-# https://github.com/japaric/trust/tree/v0.1.1
+# https://github.com/japaric/trust/tree/v0.1.
 
 environment:
   global:
@@ -58,13 +58,13 @@ before_deploy:
   - ps: ci\before_deploy.ps1
 
 deploy:
-  artifact: /.*\.zip/
+  artifact: /.*\.exe/
   # TODO update `auth_token.secure`
   # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
   # - Encrypt it. Go to https://ci.appveyor.com/tools/encrypt
   # - Paste the output down here
   auth_token:
-    secure: aPjwgGIsU16/omdaviAuV3F6FiLNFF9PaX4ju8OtOnOgGQMayyoCga1VhUuNNoWo
+    secure: TTRYCoO8JhUxzqOpRPznQYD1uXH9B73K0EzCBT0iPctjQnoYN/T/hkkIWXICfDU/
   description: ''
   on:
     # TODO Here you can pick which targets will generate binary releases
