@@ -45,6 +45,7 @@ pub struct Features {
     pub subscript: bool,
     pub superscript: bool,
     pub strikethrough: bool,
+    pub taskitem: bool,
 }
 
 impl Features {
@@ -61,6 +62,7 @@ impl Features {
             subscript: false,
             superscript: false,
             strikethrough: false,
+            taskitem: false,
         }
     }
 }
@@ -80,6 +82,7 @@ impl BitOr for Features {
             subscript: self.subscript | rhs.subscript,
             superscript: self.superscript | rhs.superscript,
             strikethrough: self.strikethrough | rhs.strikethrough,
+            taskitem: self.taskitem | rhs.taskitem,
         }
     }
 }
@@ -316,6 +319,10 @@ impl Parser {
             NodeValue::SoftBreak => vec![Token::SoftBreak],
             NodeValue::LineBreak => vec![Token::HardBreak],
             NodeValue::Emph => vec![Token::Emphasis(inner)],
+            NodeValue::TaskItem(checked) => {
+                self.features.taskitem = true;
+                vec![Token::TaskItem(checked, inner)]
+            },
             NodeValue::Strong => vec![Token::Strong(inner)],
             NodeValue::Strikethrough => {
                 self.features.strikethrough = true;

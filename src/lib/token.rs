@@ -58,6 +58,9 @@ pub enum Token {
     /// Subscript, indicated with ~...~
     Subscript(Vec<Token>),
 
+    /// TaskItem. `bool` indicates wheteh it is checked.
+    TaskItem(bool, Vec<Token>),
+
     /// Unordered list, with a vector of `Item`s
     List(Vec<Token>),
     /// Ordered list, with a starting number, and a list of `Item`s
@@ -142,6 +145,7 @@ impl Token {
             Image(_, _, ref v) |
             StandaloneImage(_, _, ref v) |
             Strikethrough(ref v) |
+            TaskItem(_, ref v) |
             Annotation(_, ref v) => Some(v),
 
             __NonExhaustive => unreachable!(),
@@ -177,6 +181,7 @@ impl Token {
             Link(_, _, ref mut v) |
             Image(_, _, ref mut v) |
             Strikethrough(ref mut v) |
+            TaskItem(_, ref mut v) |
             StandaloneImage(_, _, ref mut v) => Some(v),
 
             __NonExhaustive => unreachable!(),

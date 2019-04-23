@@ -78,6 +78,7 @@ impl<'a> EpubRenderer<'a> {
         let wrapper = if zip.test().is_ok() {
             ZipCommandOrLibrary::Command(zip)
         } else {
+            warn!("{}", lformat!("Could not run zip command, falling back to zip library"));
             ZipCommandOrLibrary::Library(ZipLibrary::new()?)
         };
         let mut maker = EpubBuilder::new(wrapper)?;

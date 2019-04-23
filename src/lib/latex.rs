@@ -216,6 +216,7 @@ impl<'a> LatexRenderer<'a> {
             .insert_str("papersize", self.book.options.get_str("tex.paper.size").unwrap())
             .insert_bool("stdpage", self.book.options.get_bool("tex.stdpage").unwrap())
             .insert_bool("use_url", self.book.features.url)
+            .insert_bool("use_taskitem", self.book.features.taskitem)
             .insert_bool("use_tables", self.book.features.table)
             .insert_bool("use_codeblocks", self.book.features.codeblock)
             .insert_bool("use_images", self.book.features.image)
@@ -366,6 +367,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 content.push_str("}\n");
                 Ok(content)
             }
+            Token::TaskItem(checked, ref vec) =>
+                Ok(format!("[{}] {}",
+                           if checked { r"$\boxtimes$" } else { r"$\square$" },
+                           self.render_vec(vec)?)),
             Token::Emphasis(ref vec) => Ok(format!("\\emph{{{}}}", self.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("\\mdstrong{{{}}}", self.render_vec(vec)?)),
             Token::Strikethrough(ref vec) => Ok(format!("\\sout{{{}}}", self.render_vec(vec)?)),

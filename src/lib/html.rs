@@ -495,6 +495,10 @@ impl<'a> HtmlRenderer<'a> {
                 }
                 Ok(this.as_mut().render_title_full(n, data)?)
             }
+            Token::TaskItem(checked, ref vec) =>
+                Ok(format!("<input type = \"checkbox\" disabled = \"\" {}/>{}",
+                           if checked { "checked = \"\"" } else { "" },
+                           this.render_vec(vec)?)),
             Token::Emphasis(ref vec) => Ok(format!("<em>{}</em>", this.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("<b>{}</b>", this.render_vec(vec)?)),
             Token::Strikethrough(ref vec) => Ok(format!("<del>{}</del>", this.render_vec(vec)?)),
