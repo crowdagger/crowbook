@@ -47,7 +47,7 @@ crowbook-intl = "0.2"
 
 [dependencies]
 mime_guess = "1"
-comrak = {git = "https://github.com/kivikakk/comrak.git"}
+comrak = "0.6"
 yaml-rust = "0.4"
 mustache = "0.9"
 uuid = { version = "0.7", features = ["v4"] }
