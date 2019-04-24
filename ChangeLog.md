@@ -7,6 +7,7 @@ unreleased
   performances drawbacks but allows for a few more features:
   * Description lists
   * Strikethrough
+  * Task items
 * New option: 
   * `crowbook.files_mean_chapters` allow to enforce that each files
     means a chapter break or to make sure that it doesn't (by default,
