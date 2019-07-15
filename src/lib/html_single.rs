@@ -89,7 +89,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             self.html.book.options.get_bool("html.standalone.one_chapter").unwrap();
 
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
-            self.html.handler.add_link(chapter.filename.as_ref(),
+            self.html.handler.add_link(chapter.filename.as_str(),
                                        format!("#chapter-{}", i));
         }
         
