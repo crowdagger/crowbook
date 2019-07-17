@@ -180,7 +180,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         let render_notes_chapter = true;
 
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
-            self.html.handler.add_link(chapter.filename.as_ref(),
+            self.html.handler.add_link(chapter.filename.as_str(),
                                        format!("#chapter-{}", i));
         }
 

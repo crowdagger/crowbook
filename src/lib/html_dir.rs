@@ -67,7 +67,7 @@ impl<'a> HtmlDirRenderer<'a> {
     pub fn render_book(&mut self, dest_path: &Path) -> Result<()> {
         // Add internal files to resource handler
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
-            self.html.handler.add_link(chapter.filename.as_ref(), filenamer(i));
+            self.html.handler.add_link(chapter.filename.as_str(), filenamer(i));
         }
 
         if let Ok(metadata) = fs::metadata(&dest_path) {
