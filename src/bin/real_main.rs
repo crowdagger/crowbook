@@ -178,7 +178,7 @@ pub fn try_main() -> Result<()> {
         let errors = File::create(error_dir.path().join(error_path)).unwrap();
         let _ = WriteLogger::init(verbosity, log_config, errors);
     } else {
-        if TermLogger::init(verbosity, log_config).is_err() {
+        if TermLogger::init(verbosity, log_config, simplelog::TerminalMode::Stderr).is_err() {
             // If it failed, not much we can do, we just won't display log
             let _ = SimpleLogger::init(verbosity, log_config);
         }
