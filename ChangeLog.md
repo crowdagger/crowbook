@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-unreleased
-------------------------------
+0.15.0 (2019-07-18)
+-----------------------
 * Moved from `pulldown-cmark` to `comrak` for parsing Markdown. This may have some
   performances drawbacks but allows for a few more features:
   * Description lists
@@ -18,6 +18,7 @@ unreleased
 * Now uses `reqwest` instead of `hyper` to connect to languagetool/grammalecte.
 * `hyphenation` dependency is now optional.
 * Dependencies update.
+* Fix type deduction issues for new rustc compliler
 
 
 0.14.1 (2018-06-01)
