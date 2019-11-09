@@ -22,7 +22,7 @@ use crate::text_view::view_as_text;
 #[cfg(feature = "nightly")]
 use hyphenation;
 #[cfg(feature = "nightly")]
-use hyphenation::{Hyphenation, Language};
+use hyphenation::{Hyphenator, Language, Load};
 #[cfg(feature = "nightly")]
 use punkt::params::Standard;
 #[cfg(feature = "nightly")]
@@ -49,11 +49,11 @@ impl ChapterStats {
     pub fn fill_advanced(&mut self, lang: &str, text: &str) {
         let words: Vec<_> = text.split_whitespace().collect();
         let lang = Stats::language_from_str(lang);
-        let corp = hyphenation::load(lang).unwrap();
+        let corp = hyphenation::Standard::from_embedded(lang).unwrap();
         // Count the number of syllables for earch word.
         let syl = words
             .iter()
-            .fold(0, |acc, w| acc + w.opportunities(&corp).len() + 1);
+            .fold(0, |acc, w| acc + corp.opportunities(w).len() + 1);
 
         let (td, flesch_func) = Stats::language_data(lang);
         let sc = SentenceTokenizer::<Standard>::new(&text, &td).count();
@@ -139,14 +139,14 @@ impl Stats {
             "cz" => Language::Czech,
             "da" => Language::Danish,
             "nl" => Language::Dutch,
-            "en" => Language::English_GB,
+            "en" => Language::EnglishGB,
             "et" => Language::Estonian,
             "fi" => Language::Finnish,
             "fr" => Language::French,
-            "de" => Language::German_1996,
-            "el" => Language::Greek_Poly,
+            "de" => Language::German1996,
+            "el" => Language::GreekPoly,
             "it" => Language::Italian,
-            "no" => Language::Norwegian_Bokmal,
+            "no" => Language::NorwegianBokmal,
             "pl" => Language::Polish,
             "pt" => Language::Portuguese,
             "sl" => Language::Slovenian,
@@ -159,7 +159,7 @@ impl Stats {
                     "Unknown language: '{}' for text statistics, using 'en' default.",
                     lang
                 );
-                Language::English_GB
+                Language::EnglishGB
             }
         }
     }
@@ -185,7 +185,7 @@ impl Stats {
                     }
                 })),
             ),
-            Language::English_GB => (
+            Language::EnglishGB => (
                 TrainingData::english(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
@@ -211,7 +211,7 @@ impl Stats {
                     }
                 })),
             ),
-            Language::German_1996 => (
+            Language::German1996 => (
                 TrainingData::german(),
                 Some(Box::new(|s: &ChapterStats| {
                     if let Some(ref adv) = s.advanced {
@@ -223,7 +223,7 @@ impl Stats {
                     }
                 })),
             ),
-            Language::Greek_Poly => (TrainingData::greek(), None),
+            Language::GreekPoly => (TrainingData::greek(), None),
             Language::Italian => (
                 TrainingData::italian(),
                 Some(Box::new(|s: &ChapterStats| {
@@ -236,7 +236,7 @@ impl Stats {
                     }
                 })),
             ),
-            Language::Norwegian_Bokmal => (TrainingData::norwegian(), None),
+            Language::NorwegianBokmal => (TrainingData::norwegian(), None),
             Language::Polish => (TrainingData::polish(), None),
             Language::Portuguese => (TrainingData::portuguese(), None),
             Language::Slovenian => (TrainingData::slovene(), None),
