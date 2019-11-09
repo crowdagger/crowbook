@@ -37,7 +37,7 @@ path = "src/bin/main.rs"
 doc = false
 
 [features]
-default = ["binary", "proofread", "syntect", "nightly"]
+default = ["binary", "proofread", "syntect"]
 proofread = ["caribon", "reqwest", "url", "serde", "serde", "serde_json", "serde_derive"]
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
