@@ -457,7 +457,7 @@ impl BookRenderer for HtmlDir {
         Ok(String::from("output_html"))
     }
     
-    fn render(&self, _: &Book, _: &mut io::Write) -> Result<()> {
+    fn render(&self, _: &Book, _: &mut dyn io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("can only render HTML directory to a path, not to a stream")))
     }
@@ -474,7 +474,7 @@ impl BookRenderer for ProofHtmlDir {
         Ok(String::from("output_html_proof"))
     }
     
-    fn render(&self, _: &Book, _: &mut io::Write) -> Result<()> {
+    fn render(&self, _: &Book, _: &mut dyn io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("can only render HTML directory to a path, not to a stream")))
     }

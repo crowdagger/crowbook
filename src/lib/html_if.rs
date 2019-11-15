@@ -334,7 +334,7 @@ impl BookRenderer for HtmlIf {
         Ok(format!("{}.html", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut html = HtmlIfRenderer::new(book)?;
         let result = html.render_book()?;
         to.write_all(result.as_bytes())

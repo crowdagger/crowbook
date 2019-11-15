@@ -179,13 +179,13 @@ pub struct Book {
     #[doc(hidden)]
     pub features: Features,
 
-    cleaner: Box<Cleaner>,
+    cleaner: Box<dyn Cleaner>,
     chapter_template: Option<Template>,
     part_template: Option<Template>,
     checker: Option<GrammarChecker>,
     grammalecte: Option<GrammalecteChecker>,
     detector: Option<RepetitionDetector>,
-    formats: HashMap<&'static str, (String, Box<BookRenderer>)>,
+    formats: HashMap<&'static str, (String, Box<dyn BookRenderer>)>,
 
     #[doc(hidden)]
     pub bars: Bars,
@@ -262,7 +262,7 @@ impl Book {
     pub fn add_format<S: Into<String>>(&mut self,
                                        format: &'static str,
                                        description: S,
-                                       renderer: Box<BookRenderer>) -> &mut Self {
+                                       renderer: Box<dyn BookRenderer>) -> &mut Self {
         self.formats.insert(format, (description.into(), renderer));
         self
     }
@@ -1487,7 +1487,7 @@ impl Book {
         };
         if self.options.get_bool("input.clean").unwrap() {
             let lang = self.options.get_str("lang").unwrap().to_lowercase();
-            let cleaner: Box<Cleaner> = if lang.starts_with("fr") {
+            let cleaner: Box<dyn Cleaner> = if lang.starts_with("fr") {
                 Box::new(French::new(params))
             } else {
                 Box::new(Default::new(params))

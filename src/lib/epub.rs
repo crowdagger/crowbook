@@ -70,7 +70,7 @@ impl<'a> EpubRenderer<'a> {
     }
 
     /// Render a book
-    pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
+    pub fn render_book(&mut self, to: &mut dyn Write) -> Result<String> {
         // Initialize the EPUB builder
         let mut zip = ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)?;
         zip.command(self.html.book.options.get_str("crowbook.zip.command")
@@ -541,7 +541,7 @@ impl BookRenderer for Epub {
         Ok(format!("{}.epub", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn Write) -> Result<()> {
         EpubRenderer::new(book)?
             .render_book(to)?;
         Ok(())

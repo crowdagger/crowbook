@@ -91,7 +91,7 @@ impl<'a> LatexRenderer<'a> {
     }
 
     /// Render pdf to a file
-    pub fn render_pdf(&mut self, to: &mut io::Write) -> Result<String> {
+    pub fn render_pdf(&mut self, to: &mut dyn io::Write) -> Result<String> {
         let content = self.render_book()?;
         debug!("{}", lformat!("Attempting to run LaTeX on generated file"));
         let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
@@ -561,7 +561,7 @@ impl BookRenderer for Latex {
         Ok(format!("{}.tex", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
         to.write_all(result.as_bytes())
@@ -578,7 +578,7 @@ impl BookRenderer for ProofLatex {
         Ok(format!("{}.proof.tex", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book).proofread();
         let result = latex.render_book()?;
         to.write_all(result.as_bytes())
@@ -595,7 +595,7 @@ impl BookRenderer for Pdf {
         Ok(format!("{}.pdf", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .render_pdf(to)?;
         Ok(())
@@ -607,7 +607,7 @@ impl BookRenderer for ProofPdf {
         Ok(format!("{}.proof.pdf", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .proofread()
             .render_pdf(to)?;

@@ -32,7 +32,7 @@ pub trait BookRenderer: Sync {
     }
     
     /// Render the book and write the result to the specified writer
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()>;
+    fn render(&self, book: &Book, to: &mut dyn Write) -> Result<()>;
 
     /// Render the book to a given file.
     ///

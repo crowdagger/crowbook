@@ -272,7 +272,7 @@ impl BookRenderer for HtmlSingle {
         Ok(format!("{}.html", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)?;
         let result = html.render_book()?;
         to.write_all(result.as_bytes())
@@ -289,7 +289,7 @@ impl BookRenderer for ProofHtmlSingle {
         Ok(format!("{}.proof.html", book_name))
     }
     
-    fn render(&self, book: &Book, to: &mut io::Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)?
             .proofread();
         let result = html.render_book()?;

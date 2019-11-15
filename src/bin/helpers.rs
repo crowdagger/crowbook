@@ -126,7 +126,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 /// create a book file with the command line arguments
 /// and exit the process at the end
 pub fn create_book(matches: &ArgMatches) -> ! {
-    let mut f: Box<Write> = if let Some(book) = matches.value_of("BOOK") {
+    let mut f: Box<dyn Write> = if let Some(book) = matches.value_of("BOOK") {
         if fs::metadata(book).is_ok() {
             print_error_and_exit(&lformat!("Could not create file {}: it already exists!", book), false);
         }
