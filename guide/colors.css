@@ -34,7 +34,8 @@ body {
     color: #cdd4da;
 }
 
-pre, code {
+pre,
+code {
     background-color: #1d1f21;
 }
 
@@ -49,11 +50,13 @@ footer {
     color: #181818;
 }
 
-footer a, #top a {
+footer a,
+#top a {
     color: #040C62;
 }
 
-footer a:hover, #top a:hover {
+footer a:hover,
+#top a:hover {
     color: #00A8F6;
 }
 
