@@ -1,7 +1,6 @@
-Templates 
-=========
+# Templates
 
-Crowbook allows the user to specify a number of templates.[^1] 
+Crowbook allows the user to specify a number of templates.[^1]
 
 Each of this template can be overriden by a custom one, by setting e.g.:
 
@@ -9,20 +8,18 @@ Each of this template can be overriden by a custom one, by setting e.g.:
 html.css: my_template.css
 ```
 
-in the book configuration file. The templates that you are most
-susceptible to modify are the following:
+in the book configuration file.
+The templates that you are most susceptible to modify are the following:
 
 * `html.css`: stylesheet for HTML output;
 * `epub.css`: stylesheet for EPUB output;
 * `tex.template`: template of a LaTeX file.
 
-[^1]: Some of them, though, are not "real" templates, they are just
-files that are inserted, but can't contain mustache tags. This will
-probably evolve in future versions.
+[^1]: Some of them, though, are not "real" templates, they are just files that are inserted, but can't contain mustache tags.
+This will probably evolve in future versions.
 
 
-Create and edit template 
-------------------------
+## Create and edit template
 
 Except for inline templates, which are set directly in the book configuration file:
 
@@ -43,9 +40,11 @@ most templates must be in a separate file:
 ```yaml
 tex.template: my_template.tex
 ```
-### `--print-template` ###
 
-The easiest way to create a new template is to start with the default one. In order to do so, you can use the `--print-template` argument:
+### `--print-template`
+
+The easiest way to create a new template is to start with the default one.
+In order to do so, you can use the `--print-template` argument:
 
 ```bash
 $ crowbook --print-template tex.template > my_template.tex
@@ -57,22 +56,21 @@ In order to get the `chapter.xhtml` template for EPUB3, you'll also have to use 
 $ crowbook --print-template epub.chapter.xhtml --set epub.version 3 > my_epub3_template.xhtml
 ```
 
-### Mustache syntax ###
+### Mustache syntax
 
-Crowbook uses [rust-mustache](https://crates.io/crates/mustache) as
-its templating engine, which allows to use
-[Mustache](http://mustache.github.io/) syntax in the templates. 
+Crowbook uses
+[rust-mustache](https://crates.io/crates/mustache) as its templating engine, which allows to use
+[Mustache](http://mustache.github.io/)
+syntax in the templates.
 
-It mainly boils down to using `{{{foo}}}`[^2] to insert the value of
-variable `foo` in the document:
+It mainly boils down to using `{{{foo}}}`[^2] to insert the value of variable `foo` in the document:
 
 ```html
 <h1 class = "title" >{{{title}}}<h1>
 <h2 class = "author">{{{author}}}</h2>
 ```
 
-Mustache also provides the possibility of checking whether a variable
-is set:
+Mustache also provides the possibility of checking whether a variable is set:
 
 ```
 {{#foo}}
@@ -83,8 +81,8 @@ Foo does not exist
 {{^foo}}
 ```
 
-Crowbook uses this and sets some variables to `true` to allow
-templates to conditionally include some portions. E.g., in `html.css`:
+Crowbook uses this and sets some variables to `true` to allow templates to conditionally include some portions.
+E.g., in `html.css`:
 
 ```css
 {{#lang_fr}}
@@ -96,17 +94,14 @@ ul li {
 {{/lang_fr}}
 ```
 
-In this case, Crowbook sets a variable whose name is equal to 
-`lang_foo` to `true`, allowing to have different styles for some
-elements according to the language.
+In this case, Crowbook sets a variable whose name is equal to `lang_foo` to `true`, allowing to have different styles for some elements according to the language.
 
 For more information about Mustache syntax, see the
 [Mustache manual](http://mustache.github.io/mustache.5.html).
 
 #### Syntax in LaTeX ####
 
-Since LaTeX already uses a lot of curly brackets, the default template
-sets an altenative syntax to access variables, with `<<&foo>>`[^3]:
+Since LaTeX already uses a lot of curly brackets, the default template sets an altenative syntax to access variables, with `<<&foo>>`[^3]:
 
 ```latex
 \title{<<&title>>}
@@ -115,128 +110,102 @@ sets an altenative syntax to access variables, with `<<&foo>>`[^3]:
 ```
 
 
-[^2]: Mustache also provides the `{{foo}}` variant, which HTML-escapes
-the content of the variable. You should not use this, as Crowbook
-already renders and correctly escapes the variables it sets for use in
-templates.
+[^2]: Mustache also provides the `{{foo}}` variant, which HTML-escapes the content of the variable.
+You should not use this, as Crowbook a ready renders and correctly escapes the variables it sets for use in templates.
 
 
-[^3]: `<<foo>>` might also work, but the ampersand is required to
-prevent mustache HTML-escaping the value. This is not good because:
+[^3]: `<<foo>>` might also work, but the ampersand is required to prevent mustache HTML-escaping the value.
+This is not good because:
 1) escaping is already done by Crowbook before setting variable content;
 2) escaping HTML in a LaTeX document won't probably look good.
 
+## List of templates
 
-
-List of templates 
------------------
-
-### html.js ###
+### html.js
 
 The javascript file used by both the standalone HTML renderer and the multiple files HTML renderer.
 
-This is not currently an actual template, just a plain
-javascript file which cannot contain `mustache` tags.
+This is not currently an actual template, just a plain javascript file which cannot contain `mustache` tags.
 
-### html.css ###
+### html.css
 
-The main CSS file used by both the standalone HTML renderer and the
-multiple files HTML renderer.
+The main CSS file used by both the standalone HTML renderer and the multiple files HTML renderer.
 
-### html.css.colors ###
+### html.css.colors
 
-A CSS file containing only colour settings. Used by `html.css`.
+A CSS file containing only colour settings.
+Used by `html.css`.
 
-This is not currently an actual template, just a plain
-CSS file which cannot contain `mustache` tags.
+This is not currently an actual template, just a plain CSS file which cannot contain `mustache` tags.
 
-### html.css.print ###
+### html.css.print
 
-An additional CSS file used by both the standalone HTML renderer and
-the multiple files HTML renderer. Its purpose is to provide CSS
-instructions for printing (i.e., when the user clicks the `print`
-button in her browser).
+An additional CSS file used by both the standalone HTML renderer and the multiple files HTML renderer.
+Its purpose is to provide CSS instructions for printing (i.e., when the user clicks the `print` button in her browser).
 
-This is not currently an actual template, just a plain
-CSS file which cannot contain `mustache` tags.
+This is not currently an actual template, just a plain CSS file which cannot contain `mustache` tags.
 
-### html.highlight.js ###
+### html.highlight.js
 
-A javascript file used by both HTML renderers to highlight codes in
-code blocks. It should be a variant of
+A javascript file used by both HTML renderers to highlight codes in code blocks.
+It should be a variant of
 [highlight.js](https://highlightjs.org/).
 
 This is not an actual template, just a plain javascript file.
 
-### html.highlight.css ###
+### html.highlight.css
 
 A CSS file used by both HTML renderers to set the theme of
-[highlight.js](https://highlightjs.org/). It should, though, be an
-highlight.js theme. 
+[highlight.js](https://highlightjs.org/).
+It should, though, be an `highlight.js` theme.
 
 This is not an actual template, just a plain CSS file.
 
-### html.standalone.js ###
+### html.standalone.js
 
-A javascript file used only by the standalone HTML renderer. Its main
-purpose is to handle the displaying of a single chapter at a time when
-`one_chapter` is set to true.
+A javascript file used only by the standalone HTML renderer.
+Its main purpose is to handle the displaying of a single chapter at a time when `one_chapter` is set to true.
 
-
-### html.standalone.template ###
+### html.standalone.template
 
 The main HTML template for standalone HTML renderer.
 
-### html.dir.template ###
+### html.dir.template
 
-The main HTML template for multiple files HTML renderer. 
+The main HTML template for multiple files HTML renderer.
 
-
-### tex.template ###
+### tex.template
 
 The main (and currently only) template used by the LaTeX renderer.
 
+### epub.chapter.xhtml
 
-### epub.chapter.xhtml ###
+This template is the main template used by the Epub renderer.
+It contains the XHTML template that will be used for each chapter.
 
-This template is the main template used by the Epub renderer. It
-contains the XHTML template that will be used for each chapter.
+### epub.css
 
-### epub.css ###
+This template is used by the Epub renderer and contains the style sheet.
 
-This template is used by the Epub renderer and contains the style
-sheet.
-
-### Inline templates ###
+### Inline templates
 
 Crowbook also has some inline templates, that are set in the book configuration file:
 
-* `tex.template.add`, `html.css.add` and `epub.css.add` allow to
-  specify some LaTeX or CSS code directly in the book configuration
-  file. This code will be added respectively to `tex.template`,
-  `html.css` or `epub.css` template. For CSS templates, this code is
-  inserted at the end of the template (allowing to redefine rules that
-  are set by the template); for the LaTeX template, the code is
-  inserted at the end of the preambule, just before the
-  `\begin{document}` tag, allowing to redefine commands.
-* `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed. By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
-* `rendering.chapter.template` sets the naming scheme for chapters,
-  while `rendering.part.template` does the same for part. These are
-  used only for text-only output, such as in the
-  TOC. `html.chapter.template` and `html.part.template` allow to 
-  change the HTML formatting for parts and chapters. *These options
-  should probably only be used if you know what you're doing, as they
-  can break the document.* If you only need to change the name of
-  chapters or parts, use `rendering.part` and `rendering.chapter` instead.
+* `tex.template.add`, `html.css.add` and `epub.css.add` allow to specify some LaTeX or CSS code directly in the book configuration file.
+  This code will be added respectively to `tex.template`, `html.css` or `epub.css` template.
+  For CSS templates, this code is inserted at the end of the template (allowing to redefine rules that are set by the template);
+  for the LaTeX template, the code is inserted at the end of the preambule, just before the `\begin{document}` tag, allowing to redefine commands.
+* `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed.
+  By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
+* `rendering.chapter.template` sets the naming scheme for chapters, while `rendering.part.template` does the same for part.
+  These are used only for text-only output, such as in the TOC.
+  `html.chapter.template` and `html.part.template` allow to change the HTML formatting for parts and chapters.
+  *These options should probably only be used if you know what you're doing, as they can break the document.*
+  If you only need to change the name of chapters or parts, use `rendering.part` and `rendering.chapter` instead.
 
+## List of accessible variables
 
-
-
-
-List of accessible variables 
-----------------------------
-
-### Metadata ###
+### Metadata
 
 For every template, Crowbook exports all of the metadata:
 
@@ -249,19 +218,15 @@ For every template, Crowbook exports all of the metadata:
 * `license`;
 * `version`;
 * `date`;
-* any option `metadata.foo` defined in the book
-  configuration file will also be exported as `metadata_foo`.
+* any option `metadata.foo` defined in the book configuration file will also be exported as `metadata_foo`.
 
-These metadata can contain Markdown, which will be rendered. E.g.,
-setting `date: "20th of **september**"` will render `september` in
-bold, using `<b>` tag for HTML or `\textbf` for LaTeX. If you need to
-use these data in places that don't support formatted text (e.g. in
-meta tags), you can use the raw content by accessing `xxx_raw` instead
-(e.g., `author_raw`, `title_raw`, ...). (Note that the content of the
-raw metadata is *not* HTML-escaped, so in this case you might want to
-use `{{xxx_raw}}` instead of `{{{xxx_raw}}}`.)
+These metadata can contain Markdown, which will be rendered.
+E.g., setting `date: "20th of **september**"` will render `september` in bold, using `<b>` tag for HTML or `\textbf` for LaTeX.
+If you need to use these data in places that don't support formatted text (e.g. in meta tags), you can use the raw content by accessing `xxx_raw` instead (e.g., `author_raw`, `title_raw`, ...).
+(Note that the content of the raw metadata is *not* HTML-escaped, so in this case you might want to use `{{xxx_raw}}` instead of `{{{xxx_raw}}}`.)
 
-For each metadata `foo` that is set, Crowbook also inserts a `has_foo` bool set to true. This allows to use Mustache's section for some logic, e.g.:
+For each metadata `foo` that is set, Crowbook also inserts a `has_foo` bool set to true.
+This allows to use Mustache's section for some logic, e.g.:
 
 ```
 {{{title}}}
@@ -270,11 +235,10 @@ For each metadata `foo` that is set, Crowbook also inserts a `has_foo` bool set 
 
 will avoid rendering ", version" when `version` is not set.
 
+### Localisation strings
 
-### Localisation strings ###
-
-For all templates, Crowbook also exports some localisation strings `loc_foo`. They currently include:
-
+For all templates, Crowbook also exports some localisation strings `loc_foo`.
+They currently include:
 
 | Localisation key            | Value in english             |
 |-----------------------------|------------------------------|
@@ -287,11 +251,9 @@ For all templates, Crowbook also exports some localisation strings `loc_foo`. Th
 | `loc_display_all`           | Display all chapters         |
 | `loc_display_one`           | Display one chapter          |
 
+### Template-dependent values
 
-### Template-dependent values ###
-
-Crowbook also exports some additional fields for some templates, see
-below.
+Crowbook also exports some additional fields for some templates, see below.
 
 |    Mustache tag     |    Value    |   Available in...   |
 |---------------------|-------------|---------------------|
