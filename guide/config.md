@@ -476,7 +476,7 @@ the default HTML standalone renderer and the HTML multifile renderer):
   in it. See the [template](templates.md) chapter for more information
   on the fields you can use.
 * `html.css` allows to set up a custom CSS file. You can also redefine
-  the colours in a file and set it using `html.css.colours`. 
+  the colors in a file and set it using `html.css.colors`. 
 * `html.css.add` allows you to add some specific lines of CSS in your
   book configuration file, that will be appended after the default CSS template.
 * `html.highlight.theme` is similar to `rendering.highlight.theme` but
@@ -753,10 +753,10 @@ running `crowbook --list-options` or `crowbook -l`.
     - **type**: string
     - **default value**: `not set`
     -  Some inline CSS added to the stylesheet template
-- **`html.css.colours`**
+- **`html.css.colors`**
     - **type**: template path
     - **default value**: `not set`
-    -  Path of a stylesheet for the colours for HTML
+    -  Path of a stylesheet for the colors for HTML
 - **`html.js`**
     - **type**: template path
     - **default value**: `not set`

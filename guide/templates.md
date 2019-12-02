@@ -143,7 +143,7 @@ javascript file which cannot contain `mustache` tags.
 The main CSS file used by both the standalone HTML renderer and the
 multiple files HTML renderer.
 
-### html.css.colours ###
+### html.css.colors ###
 
 A CSS file containing only colour settings. Used by `html.css`.
 
@@ -298,7 +298,7 @@ below.
 | `content` | A rendered version of the book or chapter's content | `html.standalone.template`, `html.dir.template`, `tex.template`, `epub.chapter.xhtml` |
 | `toc` | A rendered version of the table of contents | `html.standalone.template`, `html.dir.template` |
 | `has_toc`| Set to `true` if the table of contents is not empty | `html.standalone.template` |
-| `colours`| The content of `html.css.colours` | `html.css` |
+| `colors`| The content of `html.css.colors` | `html.css` |
 | `footer` | The content of `html.footer` | `html.standalone.template`, `html.dir.template` |
 | `header` | The content of `html.header` | `html.standalone.template`, `html.dirtemplate` |
 | `script` | The javascript file for this HTML document | `html.standalone.template`, `html.dir.template` |

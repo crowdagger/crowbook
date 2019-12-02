@@ -35,7 +35,7 @@ ChangeLog
   * `autograph` is an autograph added after title.
 * User interface:
   * new argument `--autograph` prompts for an autograph.
-  * `--list-options` and `--stats` now use colours if available.
+  * `--list-options` and `--stats` now use colors if available.
   * options description with `--list-options` are now wrapped.
 * Bugfixes:
   * Preserve errors/warnings order with fancy UI.
@@ -347,11 +347,11 @@ support for parts!
 * CommandLine Interface:
   * Crowbook displays clearer error messages when unable to launch
     `latex` or `zip` commands.
-  * Crowbook uses `term` library in order to display colours correctly
+  * Crowbook uses `term` library in order to display colors correctly
     on e.g. Windows.
   * The new argument `--lang` (or `-L`) allows to set the runtime
     language used by Crowbook, overriding `LANG` environment variable.
-  * `--list-options` no longer uses colours as it caused problems
+  * `--list-options` no longer uses colors as it caused problems
     depending on the terminal or when piping to `less`.
 
 0.10.2 (2016-10-21)
@@ -391,9 +391,9 @@ variable is set to french.
       public, but the features it provided are also available in
       `crowbook_text_processing`. 
 * New options:
-  * `html.css.colours` allows to provide a CSS file that only redefine
+  * `html.css.colors` allows to provide a CSS file that only redefine
     the colour scheme. Such a file can be built from `crowbook
-    --print-template html.css.colours`.
+    --print-template html.css.colors`.
   * `input.smart_quotes`: if set to `true`, tries to replace `'` and `"` by curly quotes.
 * Command line interface:
   * Crowbook is now (imperfectly) localized in french, and can be
@@ -529,7 +529,7 @@ More detailed changes for this release:
     paths. 
 * Crowbook program:
   * Still working to improve error messages.
-  * `crowbook --list-options` uses colours. This might hurt your eyes.
+  * `crowbook --list-options` uses colors. This might hurt your eyes.
   * Display an error message when mustache can't compile a template,
     instead of panicking.
 * Internal/API:
@@ -724,7 +724,7 @@ Mostly rendering fixes:
 * Bugfixes:
     * Fixed a bug of filename "resolution" when Crowbook was called
       with `--single` (e.g., `crowbook -s tests/test.md` would
-      previously try to load `tests/tests/test.md).
+      previously try to load `tests/tests/test.md)`.
     * Epub renderer now uses the `mime_guess` library to guess the
       mime type based on extension, which should fix the mime type
       guessed for a wide range of extensions (e.g., svg).
@@ -761,7 +761,7 @@ displayed:
     * Added a `--debug` option to the binary.
     * Internal: added a `Logger` struct.
     * Different levels of information (debug/warning/info/error) get
-      different colours.
+      different colors.
 * Bugfixes:
     * Crowbook no longer crashes when called with the `--to` argument
       if it can't create a file. 

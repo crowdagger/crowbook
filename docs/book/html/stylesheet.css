@@ -212,7 +212,7 @@ p.first-para {
 
 /* Default  HTML CSS file includes default EPUB CSS file */
 
-/* Colours for the navigation menu (toc) */
+/* Colors for the navigation menu (toc) */
 nav {
     background: #181818;
     color: #cdd4da;
@@ -252,7 +252,7 @@ pre, code {
     background-color: #1d1f21;
 }
 
-/* Colours for top and footer */
+/* Colors for top and footer */
 #top {
     background-color: #cdd4da;
     color: #181818;
