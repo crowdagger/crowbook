@@ -70,7 +70,7 @@ indicatif = { version = "0.13", optional = true }
 console = { version = "0.9", optional = true }
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
-simplelog = { version = "0.6", optional = true }
+simplelog = { version = "0.7", optional = true }
 url =  { version = "2", optional = true }
 syntect = { version = "3", optional = true }
 tempdir = { version = "0.3", optional = true }

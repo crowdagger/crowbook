@@ -29,7 +29,7 @@ use std::io;
 use std::io::Read;
 use std::env;
 use std::fs::File;
-use simplelog::{Config, TermLogger, Level, LevelFilter, SimpleLogger, WriteLogger};
+use simplelog::{Config, ConfigBuilder, TermLogger, Level, LevelFilter, SimpleLogger, WriteLogger};
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &str) {
@@ -153,13 +153,13 @@ pub fn try_main() -> Result<()> {
     let s = matches.value_of("BOOK").unwrap();
 
     // Initalize logger
-    let mut log_config = Config::default();
-    log_config.target = None;
-    log_config.location = None;
-    log_config.time = None;
+    let mut builder = ConfigBuilder::new();
+    builder.set_target_level(LevelFilter::Off);
+    builder.set_location_level(LevelFilter::Off);
+    builder.set_time_level(LevelFilter::Off);
     let verbosity = if matches.is_present("verbose") && !matches.is_present("stats") {
-        log_config.time = Some(Level::Error);
-        log_config.target = Some(Level::Error);
+        builder.set_time_level(LevelFilter::Error);
+        builder.set_target_level(LevelFilter::Error);
         fancy_ui = false;
         LevelFilter::Debug
     } else if matches.is_present("quiet") {
@@ -170,6 +170,7 @@ pub fn try_main() -> Result<()> {
     } else {
         LevelFilter::Info
     };
+    let log_config = builder.build();
 
 
     let error_dir = TempDir::new("crowbook").unwrap();
@@ -178,7 +179,7 @@ pub fn try_main() -> Result<()> {
         let errors = File::create(error_dir.path().join(error_path)).unwrap();
         let _ = WriteLogger::init(verbosity, log_config, errors);
     } else {
-        if TermLogger::init(verbosity, log_config, simplelog::TerminalMode::Stderr).is_err() {
+        if TermLogger::init(verbosity, log_config.clone(), simplelog::TerminalMode::Stderr).is_err() {
             // If it failed, not much we can do, we just won't display log
             let _ = SimpleLogger::init(verbosity, log_config);
         }
@@ -260,8 +261,8 @@ pub fn try_main() -> Result<()> {
                 }
             }
             for line in &lines {
-                if line.starts_with("[ ERROR]") {
-                    let line = &line[9..];
+                if line.starts_with("[ERROR]") {
+                    let line = &line[8..];
                     print_error(line, emoji);
                 } else if line.starts_with("[ WARN]") {
                     let line = &line[8..];
