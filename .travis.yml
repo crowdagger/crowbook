@@ -43,6 +43,7 @@ matrix:
         apt:
           packages:
             - llvm
+            - llvm-dev
     # - env: TARGET=i686-unknown-linux-musl
     # - env: TARGET=mips-unknown-linux-gnu
     # - env: TARGET=mips64-unknown-linux-gnuabi64
