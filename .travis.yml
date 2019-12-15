@@ -39,11 +39,6 @@ matrix:
     # - env: TARGET=arm-unknown-linux-gnueabi
     # - env: TARGET=armv7-unknown-linux-gnueabihf
     - env: TARGET=i686-unknown-linux-gnu
-      addons: &llvm
-        apt:
-          packages:
-            - llvm
-            - llvm-dev
     # - env: TARGET=i686-unknown-linux-musl
     # - env: TARGET=mips-unknown-linux-gnu
     # - env: TARGET=mips64-unknown-linux-gnuabi64
@@ -54,7 +49,6 @@ matrix:
     # - env: TARGET=powerpc64le-unknown-linux-gnu
     # - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
     - env: TARGET=x86_64-unknown-linux-gnu
-      addons: *llvm
     - env: TARGET=x86_64-unknown-linux-musl
 
     # OSX
@@ -87,6 +81,7 @@ matrix:
     #   rust: nightly
 
 before_install:
+  - sudo apt-get -y install llvm llvm-dev
   - set -e
   - rustup self update
 
