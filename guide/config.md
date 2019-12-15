@@ -1,11 +1,9 @@
-The configuration file
-======================
+# The configuration file
 
-If you want to use Crowbook for your book, this configuration file
-is all you'll have to add, beside the Markdown files containing the
-text of your book. 
+If you want to use Crowbook for your book, this configuration file is all you'll have to add, beside the Markdown files containing the text of your book.
 
-The format is not very complicated. This is an example of it:
+The format is not very complicated.
+This is an example of it:
 
 ```yaml
 # metadata
@@ -23,6 +21,7 @@ output: [html, pdf, epub]
 + chapter_4.md
 - epilogue.md
 ```
+
 Basically, it is divided in two parts:
 
 * a list of options, under the form `key: value`, following YAML syntax.
@@ -30,14 +29,10 @@ Basically, it is divided in two parts:
 
 Lines starting with the `#` characters are comments and are discarded.
 
+## Configuration in an inline YAML block
 
-Configuration in an inline YAML block
----------------------------------------------
-
-Sometimes, you only have one Markdown file and might not want to have
-a separate configuration file. In this case, you can specify options
-at the beginning of your Markdown file, using an inline YAML block,
-separated by two lines containing only `---`:
+Sometimes, you only have one Markdown file and might not want to have a separate configuration file.
+In this case, you can specify options at the beginning of your Markdown file, using an inline YAML block, separated by two lines containing only `---`:
 
 ```markdown
 ---
@@ -53,11 +48,10 @@ output: [html, pdf, epub]
 The book content, formatted in Markdown.
 ```
 
-This method only allows to set up options: you can't include a list of
-chapters in this way, since the only "chapter" that will be included
-is this Markdown file itself.
+This method only allows to set up options:
+you can't include a list of chapters in this way, since the only "chapter" that will be included is this Markdown file itself.
 
-You can then use 
+You can then use
 
 ```bash
 crowbook -s some_book.md
@@ -65,22 +59,19 @@ crowbook -s some_book.md
 
 to generate output formats from this Markdown file.
 
-> By default (unless `input.yaml_blocks` is set to true), Crowboook
-> will only read those inline blocks when it is runned with `crowbook
-> --single` (or `crowbook -s`). 
+> By default (unless `input.yaml_blocks` is set to true), Crowboook will only
+> read those inline blocks when it is runned with `crowbook --single`
+> (or `crowbook -s`).
 
 
-The list of files
------------------
+## The list of files
 
 There are various options to include a Markdown file.
 
 * `+ file_name.md` includes a numbered chapter.
 * `- file_name.md` includes an unnumbered chapter.
-* `! file_name.md` includes a chapter whose title won't be displayed
-  (except in the table of contents); this is useful for e.g. including a
-  copyright at the beginning or the book, or for short stories where
-  there is only one chapter.
+* `! file_name.md` includes a chapter whose title won't be displayed (except in the table of contents);
+  this is useful for e.g. including a copyright at the beginning or the book, or for short stories where there is only one chapter.
 * `42. file_name.md` specifies the number for a chapter.
 * `@` includes a part instead of a chapter.
 
@@ -99,32 +90,28 @@ So a typical usage might look like this:
 There are two important things to note:
 
 1. you must *not* use quotes around the file names.
-2. the paths of these files are relative to the directory where your
-   configuration file is. This means you can run `crowbook
-   books/my_trilogy/first_book/config.book` without being in the
-   book's directory.
+2. the paths of these files are relative to the directory where your configuration file is.
+   This means you can run `crowbook books/my_trilogy/first_book/config.book` without being in the book's directory.
 
-Also note that you don't have to specify a title. This is because the title
-of the chapter is inferred from the Markdown document. To go back to
-our previous example:
+Also note that you don't have to specify a title.
+This is because the title of the chapter is inferred from the Markdown document.
+To go back to our previous example:
 
 ```
 + chapter_1.md
 ```
 
-does not specify a chapter title, because it will read it directly in
-`chapter_1.md`, e.g.:
+does not specify a chapter title, because it will read it directly in `chapter_1.md`, e.g.:
 
 ```markdown
 # The day I was born #
 ...
 ```
 
-Ideally, you should have one and only one level-one header (i.e. chapter title)
-in each Markdown file. If you have more than one, it might mess with
-the table of contents in some cases (e.g. for EPUB). 
+Ideally, you should have one and only one level-one header (i.e. chapter title) in each Markdown file.
+If you have more than one, it might mess with the table of contents in some cases (e.g. for EPUB).
 
-### Parts ###
+### Parts
 
 Parts are included using the `@` character, followed by the same characters than for chapters:
 
@@ -139,11 +126,7 @@ Parts are included using the `@` character, followed by the same characters than
 + chapter_05.md
 ```
 
-However, you usually don't really want to have a content directly
-below the part, only chapters (though it can be useful to add an
-introduction before the first chapter of this part), so there is also
-a more straighforward way to use parts, using only the `@` character
-followed by the (markdown-formatted) title of this part:
+However, you usually don't really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straighforward way to use parts, using only the `@` character followed by the (markdown-formatted) title of this part:
 
 ```
 @ Beginning
@@ -156,14 +139,13 @@ followed by the (markdown-formatted) title of this part:
 - notes.md
 ```
 
-With this shortcut, parts are always numbered. 
+With this shortcut, parts are always numbered.
 
-### Subchapters ###
+### Subchapters
 
-If you write your book to be rendered by Crowbook, it is better to
-have one Markdown file per chapter. It is, however, possible to work
-with divisions at lower levels. In order to properly include these
-files, you can use the following syntax: 
+If you write your book to be rendered by Crowbook, it is better to have one Markdown file per chapter.
+It is, however, possible to work with divisions at lower levels.
+In order to properly include these files, you can use the following syntax:
 
 ```
 -- section.md
@@ -171,47 +153,34 @@ files, you can use the following syntax:
 ---- subsubsection.md
 ```
 
-> Note that there isn't different syntax for numbered or unnumbered
-> sections/subsections: you can only change the numbering scheme at
-> the chapter level.
+> Note that there isn't different syntax for numbered or unnumbered sections/subsections:
+> you can only change the numbering scheme at the chapter level.
 
-When including those files, Crowbook will include them in the table of
-content as part of the previous chapter (or section for subsections,
-and so on). It will also adjust the header levels of the Markdown
-files, so, in the previous example, a level-1 header in `section.md`
-will be displayed as a level-2 header in the book, and a level-1
-header in `subsection.md` as a level-3 header. 
+When including those files, Crowbook will include them in the table of content as part of the previous chapter (or section for subsections, and so on).
+It will also adjust the header levels of the Markdown files, so, in the previous example, a level-1 header in `section.md` will be displayed as a level-2 header in the book, and a level-1 header in `subsection.md` as a level-3 header.
 
 > This can cause issues as only six levels of headers are supported;
-> hence, if you include a level-5 header in `subsubsection.md`, it
-> will cause an error. 
+> hence, if you include a level-5 header in `subsubsection.md`, it will cause an error.
 
+## Crowbook options
 
-
-
-Crowbook options 
-----------------
-
-The first part of the configuration file is dedicated to pass options
-to Crowbook. This is
-[YAML syntax](https://en.wikipedia.org/wiki/YAML), so each line should
-be of the form `key: value`. Note that in most cases you don't have to
-put string in quotes, e.g.:
+The first part of the configuration file is dedicated to pass options to Crowbook.
+This is
+[YAML syntax](https://en.wikipedia.org/wiki/YAML),
+so each line should be of the form `key: value`.
+Note that in most cases you don't have to put string in quotes, e.g.:
 
 ```yaml
 title: My title
 ```
 
-It is however possible (and sometimes necessary) to escape some
-characters using quotes around strings:
+It is however possible (and sometimes necessary) to escape some characters using quotes around strings:
 
 ```yaml
 title: "My: title!"
 ```
 
-
-It is possible to use multiline strings with `>-` and
-then indenting the lines that are part of the string:
+It is possible to use multiline strings with `>-` and then indenting the lines that are part of the string:
 
 ```yaml
 title: >-
@@ -221,28 +190,25 @@ title: >-
 author: Joan Doe
 ```
 
-will set `title` to `"A long title"`. See
+will set `title` to `"A long title"`.
+See
 [block literals in YAML](https://en.wikipedia.org/wiki/YAML#Block_literals)
-for more information on the various way to insert multiline strings
-(which mostly change the way newlines will or won't be inserted).
+for more information on the various way to insert multiline strings (which mostly change the way newlines will or won't be inserted).
 
-A final note on the syntax: all options must be set *before* the first
-chapter inclusion (that is, a line beginning with '+', '-', 'x.'
-(where `x` is a number) or '!'). 
+A final note on the syntax:
+all options must be set *before* the first chapter inclusion (that is, a line beginning with '+', '-', 'x.' (where `x` is a number) or '!').
 
+### Metadata
 
-
-
-### Metadata ###
-
-Metadata are data about the book. Except for `cover`, which points to
-an image file, all its fields are strings. The main metadata are:
+Metadata are data about the book.
+Except for `cover`, which points to an image file, all its fields are strings.
+The main metadata are:
 
 * `author`
 * `title`
 * `subtitle`
-* `lang`, the language of the book. The unicode language code should
-be used, e.g. `en_GB` or `en`, `fr_FR`, or `fr`...
+* `lang`, the language of the book.
+  The unicode language code should be used, e.g. `en_GB` or `en`, `fr_FR`, or `fr`...
 * `cover`, a path to an image file for the cover of the book (not displayed in all output formats).
 
 There are also additional metadata:
@@ -253,18 +219,15 @@ There are also additional metadata:
 * `version`
 * `date`
 
-You can define your own metadata by starting an option name with
-`metadata.foo`.
+You can define your own metadata by starting an option name with `metadata.foo`.
 
 All metadata are accessible from templates, see
 [Templates](templates.md).
 
-### The `import` special option ###
+### The `import` special option
 
-The special `import` option allows you to include the options
-of another book configuration file. E.g., assuming that
-you want some common options to be applied to both `foo.book`
-and `bar.book`, you can create a `common.book` file:
+The special `import` option allows you to include the options of another book configuration file.
+E.g., assuming that you want some common options to be applied to both `foo.book` and `bar.book`, you can create a `common.book` file:
 
 ```yaml
 author: Joan Doe
@@ -295,12 +258,12 @@ license: CC-BY-SA  # Override the license from common.book
 + bar_01.md
 ```
 
-### Output options ###
+### Output options
 
 These options specify which files to generate.
 
-Note that all file paths are relative to the directory where the
-configuration file is, not to the one where you run `crowbook`. So if you set
+Note that all file paths are relative to the directory where the configuration file is, not to the one where you run `crowbook`.
+So if you set:
 
 ```yaml
 output.epub: foo.epub
@@ -312,26 +275,21 @@ and run
 $ crowbook some/dir/config.book
 ```
 
-`foo.epub` will be generated in `some/dir`, not in your current
-directory.
+`foo.epub` will be generated in `some/dir`, not in your current directory.
 
-Crowbook will try to generate each of the `output.xxx` files that are
-specified. That means that you'll have to set at least one of those if you want a call to
+Crowbook will try to generate each of the `output.xxx` files that are specified.
+That means that you'll have to set at least one of those if you want a call to
 
 ```bash
 $ crowbook my.book
 ```
 
-to generate anything. (It's still possible to generate a specific
-format, and only this one, by using the `--to` and `--output` argument on the command
-line).
+to generate anything.
+(It's still possible to generate a specific format, and only this one, by using the `--to` and `--output` argument on the command line).
 
-Note that some formats depend on some commands being installed on your
-system. Most notably, Crowbook depends on LaTeX (`xelatex` by
-default, though you can specify another command to use with `tex.command`) to generate a PDF file,
-so PDF rendering won't work if it is not installed on your
-system. Crowbook also uses the `zip` command to generate the EPUB and
-ODT files.
+Note that some formats depend on some commands being installed on your system.
+Most notably, Crowbook depends on LaTeX (`xelatex` by default, though you can specify another command to use with `tex.command`) to generate a PDF file, so PDF rendering won't work if it is not installed on your system.
+Crowbook also uses the `zip` command to generate the EPUB and ODT files.
 
 Current output options are:
 
@@ -342,15 +300,14 @@ Current output options are:
 * `output.pdf`: renders a PDF file (using `tex.command`).
 
 (There are other output options for generating proofreading files, see
-[Proofreading](proofreading.md), and interactive fiction,
-see [Interactive fiction](if.md).)
+[Proofreading](proofreading.md),
+and interactive fiction, see
+[Interactive fiction](if.md).)
 
+#### The `output` option
 
-#### The `output` option ####
-
-Setting output file names manually can be a bit tedious, and is not
-always necessary. You can also specify a list of output formats with
-the `output` option:
+Setting output file names manually can be a bit tedious, and is not always necessary.
+You can also specify a list of output formats with the `output` option:
 
 ```yaml
 output: [pdf, epub, html]
@@ -365,25 +322,22 @@ output:
   - html
 ```
 
-This option will set default output path for PDF, EPUB and HTML
-according to the book configuration file name. So, if your book is
-`my_book.book` (or `my_book.md`), it will generate `my_book.pdf`,
-`my_book.html` and `my_book.epub`.
+This option will set default output path for PDF, EPUB and HTML according to the book configuration file name.
+So, if your book is `my_book.book` (or `my_book.md`), it will generate `my_book.pdf`, `my_book.html` and `my_book.epub`.
 
 > You can also infer the output file name by specifying "auto" to
-> e.g. `output.html`. The previous example is thus equivalent to 
-> 
+> e.g. `output.html`. The previous example is thus equivalent to
+>
 > ```yaml
 > output.pdf: auto
 > output.epub: auto
 > output.html: auto
 > ```
 
-#### `output.base_path` ####
+#### `output.base_path`
 
-Additionally, the `output.base_path` option allows you to set where
-the output files will be written (relatively to the book configuration
-file). E.g.,
+Additionally, the `output.base_path` option allows you to set where the output files will be written (relatively to the book configuration file).
+E.g.,
 
 ```yaml
 output.base_path: docs/book
@@ -392,139 +346,144 @@ output.epub: book.epub
 
 will render the EPUB file in `docs/book/book.epub`.
 
-### Input options ###
+### Input options
 
-Crowbook does its best to improve the typography of your text. Default
-settings should be good enough for most usages, but you 
-can enable/disable specific options: 
+Crowbook does its best to improve the typography of your text.
+Default settings should be good enough for most usages, but you can enable/disable specific options:
 
-* `input.clean` (default: `true`): if set to `false`, will disable all typographic
-  "cleaning". The algorithm is
-  dependent on the language, though currently there is only a variant
-  implemented for `fr` (french), dealing with the specific
-  non-breaking spaces rules for this language.
-* `input.clean.smart_quotes` (default: `true`): if set to `false`, disable the "smart
-  quote" feature, that (tries to) replace straight quotes with curly
-  ones. As it is an heuristics and can't be perfect, you might want to
-  disable it in some circumstances.
-* `input.clean.ligature_dashes` (default: `false`): if set to `true`, will convert `--`
-  to en dash (`–`) and `---` to em dash (`—`). This can be useful if
-  you want to use these characters but can't access them easily on
-  your keymap; however, as it can also cause problems if you *do* want
-  to have two successive dashes, it is disabled by default.
-* `input.clean.ligature_guillemets` (default: `false`) is a similar feature for french 'guillemets', replacing
-  `<<` and `>>` to `«` and `»`. 
+* `input.clean` (default: `true`):
+  if set to `false`, will disable all typographic "cleaning".
+  The algorithm is dependent on the language, though currently there is only a variant implemented for `fr` (french), dealing with the specific non-breaking spaces rules for this language.
+* `input.clean.smart_quotes` (default: `true`):
+  if set to `false`, disable the "smart quote" feature, that (tries to) replace straight quotes with curly ones.
+  As it is an heuristics and can't be perfect, you might want to disable it in some circumstances.
+* `input.clean.ligature_dashes` (default: `false`):
+  if set to `true`, will convert `--` to en dash (`–`) and `---` to em dash (`—`).
+  This can be useful if you want to use these characters but can't access them easily on your keymap;
+  however, as it can also cause problems if you *do* want to have two successive dashes, it is disabled by default.
+* `input.clean.ligature_guillemets` (default: `false`):
+  is a similar feature for french 'guillemets', replacing `<<` and `>>` to `«` and `»`.
 
-### Generic options for rendering  ###
+### Generic options for rendering
 
-These options allow to configure the rendering; they are used (or at
-least should be) for all formats.
+These options allow to configure the rendering;
+they are used (or at least should be) for all formats.
 
-* `rendering.highlight` (default: `syntect`): specify if and how to perform syntax
-  highlighting for code blocks.  Valid values are:
-  * `syntect`: uses the [syntect](https://crates.io/crates/syntect)
-    library to perform syntax highlighting. This has the advantage of
-    also enabling syntax highlighting for LaTeX/PDF and EPUB formats;
+* `rendering.highlight` (default: `syntect`):
+  specify if and how to perform syntax highlighting for code blocks.
+  Valid values are:
+  * `syntect`:
+    uses the
+    [syntect](https://crates.io/crates/syntect)
+    library to perform syntax highlighting.
+    This has the advantage of also enabling syntax highlighting for LaTeX/PDF and EPUB formats;
     however syntect support doesn't seem to work on Windows.
-  * `highlight.js`: this  will use (and
-    embed) [`highlight.js`](https://highlightjs.org/) for HTML 
-    rendering, and will not perform any syntax highlighting for other
-    output formats.
-  * `none`: disable syntax highlighting.
-If your version of Crowbook (as is the case for Windows builds) isn't
-built with `syntect` support, it 
-will default to `none` if you try to use it.
-* `rendering.highlight.theme`: only used if `rendering.highlight` is
-  set to `syntect`, selects the theme to use for syntax
-  highlighting. Default is "InspiredGitHub". Valid theme names are
-  "InspiredGitHub", "Solarized (dark)", "Solarized (light)",
-  "base16-eighties.dark", "base16-mocha.dark", "base16-ocean.dark" and
-  "base16-ocean.light".
-* `rendering.num_depth`: an integer that represents the maximum level of numbering for your
-book. E.g., `1` will only number chapters, while `2` will number
-chapters, sections, but not anything below that. `6` is the maximum  level
-and turns numbering on for all headers. (Default is `1`.) This also
-affects what levels will be displayed in the table of contents.
-* `rendering.chapter` and `rendering.part`: the
-  strings that will be used to design chapter and part. E.g., if you want
-  your parts to show as "Book III" instead of "Part III", you can set
-  `rendering.part: Book`. 
-* `rendering.part.roman_numerals` and
-  `rendering.chapter.roman_numerals`: these two booleans allow you to
-  specify if you want roman numerals for part or chapter numbers
-  (default is `true` for part numbers, and `false` for chapter
-  numbers).
-* `rendering.inline_toc`: if set to true, Crowbook will include a table of contents at the
-beginning of the document.
-* `rendering.inline_toc.name`: the name of this table of contents as
-  it should be displayed in the document.
-* `rendering.initials`: if set to true, Crowbook will use initials, or "lettrines", displaying
-the first letter of each chapter bigger than the others.
-* `rendering.part.reset_counter`: set it to `false` if you don't want
-your chapter numbers to start again at 1 at each part.
+  * `highlight.js`:
+    this  will use (and embed)
+    [`highlight.js`](https://highlightjs.org/)
+    for HTML rendering, and will not perform any syntax highlighting for other output formats.
+  * `none`:
+    disable syntax highlighting.
 
-### HTML Options ###
+If your version of Crowbook (as is the case for Windows builds) isn't built with `syntect` support, it  will default to `none` if you try to use it.
 
-These options allow you to customize the HTML rendering (used both by
-the default HTML standalone renderer and the HTML multifile renderer):
+* `rendering.highlight.theme`:
+  only used if `rendering.highlight` is set to `syntect`, selects the theme to use for syntax highlighting.
+  Default is "InspiredGitHub".
+  Valid theme names are:
+  * "InspiredGitHub"
+  * "Solarized (dark)"
+  * "Solarized (light)"
+  * "base16-eighties.dark"
+  * "base16-mocha.dark"
+  * "base16-ocean.dark"
+  * and "base16-ocean.light".
+* `rendering.num_depth`:
+  an integer that represents the maximum level of numbering for your book.
+  E.g., `1` will only number chapters, while `2` will number chapters, sections, but not anything below that.
+  `6` is the maximum  level and turns numbering on for all headers.
+  (Default is `1`.)
+  This also affects what levels will be displayed in the table of contents.
+* `rendering.chapter` and `rendering.part`:
+  the strings that will be used to design chapter and part.
+  E.g., if you want your parts to show as "Book III" instead of "Part III", you can set `rendering.part: Book`.
+* `rendering.part.roman_numerals` and `rendering.chapter.roman_numerals`:
+  these two booleans allow you to specify if you want roman numerals for part or chapter numbers
+  (default is `true` for part numbers, and `false` for chapter numbers).
+* `rendering.inline_toc`:
+  if set to true, Crowbook will include a table of contents at the beginning of the document.
+* `rendering.inline_toc.name`:
+  the name of this table of contents as it should be displayed in the document.
+* `rendering.initials`:
+  if set to true, Crowbook will use initials, or "lettrines", displaying the first letter of each chapter bigger than the others.
+* `rendering.part.reset_counter`:
+  set it to `false` if you don't want your chapter numbers to start again at 1 at each part.
 
-* `html.icon`: allows to set a `favicon` for the page.
-* `html.header` and `html.footer` allow to set a custom (Markdown)
-  string at the top and at the bottom of the HTML page. This is
-  actually a template, so you can access
-  metadata, such as `{{{author}}}`, `{{{title}}}`, or `{{{version}}}`
-  in it. See the [template](templates.md) chapter for more information
-  on the fields you can use.
-* `html.css` allows to set up a custom CSS file. You can also redefine
-  the colours in a file and set it using `html.css.colours`. 
-* `html.css.add` allows you to add some specific lines of CSS in your
-  book configuration file, that will be appended after the default CSS template.
-* `html.highlight.theme` is similar to `rendering.highlight.theme` but
-  only sets the theme for HTML output.
+### HTML Options
 
-#### Options for standalone HTML  ####
+These options allow you to customize the HTML rendering (used both by the default HTML standalone renderer and the HTML multifile renderer):
 
-There are a few options specific to the standalone HTML renderer
-(default, set with `output.html`):
+* `html.icon`:
+  allows to set a `favicon` for the page.
+* `html.header` and `html.footer`:
+  allow to set a custom (Markdown) string at the top and at the bottom of the HTML page.
+  This is actually a template, so you can access metadata, such as `{{{author}}}`, `{{{title}}}`, or `{{{version}}}` in it.
+  See the
+  [template](templates.md)
+  chapter for more information on the fields you can use.
+* `html.css`:
+  allows to set up a custom CSS file.
+  You can also redefine the colors in a file and set it using `html.css.colors`.
+* `html.css.add`:
+  allows you to add some specific lines of CSS in your book configuration file, that will be appended after the default CSS template.
+* `html.highlight.theme`:
+  is similar to `rendering.highlight.theme` but only sets the theme for HTML output.
 
-* `html.standalone.one_chapter`, if set to true, will only display one
-  chapter at a time (using Javascript), making it look similarly to
-  the multifile HTML.
-* `html.standalone.template` allows you to change or modify the HTML
-  template for standalone HTML.
+#### Options for standalone HTML
 
-### Options for LaTeX/PDF rendering ###
+There are a few options specific to the standalone HTML renderer (default, set with `output.html`):
 
-These options allow you to customize the LaTeX renderer (and, thus,
-the generated PDF documents):
+* `html.standalone.one_chapter`:
+  if set to true, will only display one chapter at a time (using Javascript), making it look similarly to the multifile HTML.
+* `html.standalone.template`:
+  allows you to change or modify the HTML template for standalone HTML.
 
-* `tex.template` specifies a different LaTeX template.
-* `tex.class` changes the LaTeX class used.
-* `tex.paper.size` and `tex.font.size` (default `a5paper` and `10pt`)
-  allows to modify the page and font size .
-* `tex.margin.left`, `tex.margin.right`, `tex.margin.top` and
-  `tex.margin.bottom` specify the margin of the page.
-* `tex.links_as_footnotes` can be set to `false` if you don't want
-  links to also appear as footnotes (which means losing them
-  if it is actually printed).
-* `tex.highlight.theme`: similar to `rendering.highlight.theme`, but
-  only sets the theme for LaTeX/PDF rendering.
-  
-### Options for EPUB rendering ###
+### Options for LaTeX/PDF rendering
+
+These options allow you to customize the LaTeX renderer (and, thus, the generated PDF documents):
+
+* `tex.template`:
+  specifies a different LaTeX template.
+* `tex.class`:
+  changes the LaTeX class used.
+* `tex.paper.size` and `tex.font.size`:
+  (default `a5paper` and `10pt`)
+  allows to modify the page and font size.
+* `tex.margin.left`, `tex.margin.right`, `tex.margin.top` and `tex.margin.bottom`:
+  specify the margin of the page.
+* `tex.links_as_footnotes`:
+  can be set to `false` if you don't want links to also appear as footnotes
+  (which means losing them if it is actually printed).
+* `tex.highlight.theme`:
+  similar to `rendering.highlight.theme`, but only sets the theme for LaTeX/PDF rendering.
+
+### Options for EPUB rendering
 
 There are also options specific to the EPUB format:
 
-* `epub.version` can be set to 2 or 3 (default 2).
-* `epub.css` can be useful if you want to specify a customized stylesheet.
-* `epub.highlight.theme`: similar to `rendering.highlight.theme` but
-  only sets a theme for EPUB output.
+* `epub.version`:
+  can be set to 2 or 3 (default 2).
+* `epub.css`:
+  can be useful if you want to specify a customized stylesheet.
+* `epub.highlight.theme`:
+  similar to `rendering.highlight.theme` but only sets a theme for EPUB output.
 
-### Resources options ###
+### Resources options
 
-These options allow to embed additional files for some formats
-(currently, only EPUB). This can be useful for embedding fonts.
+These options allow to embed additional files for some formats (currently, only EPUB).
+This can be useful for embedding fonts.
 
-#### resources.files ####
+#### resources.files
 
 A list of files or directories that should be added.
 
@@ -532,9 +491,8 @@ A list of files or directories that should be added.
 resources.files: [font1.otf, font2.otf]
 ```
 
-It is also possible to specify a directory (or multiple
-directories). So if you have a `fonts` directories containing
-`font1.otf` and `font2.otf`,
+It is also possible to specify a directory (or multiple directories).
+So if you have a `fonts` directories containing `font1.otf` and `font2.otf`,
 
 ```yaml
 resources.files: [fonts]
@@ -546,30 +504,23 @@ will be equivalent to:
 resources.files: [fonts/font1.otf, fonts/font2.otf]
 ```
 
-
 **default**: not set
 
-#### resources.out_path ####
+#### resources.out_path
 
-This option determine where (in which directory), *in the resulting
-document*, those files will be copied. The default is `data`, so by
-default the `resources.files` in the first example above will search
-`font1.otf` and `font2.otf` *in the same directory than the `.book`
-file*, and will copy them to `data/font1.otf` and `data/font2.otf` *in
-the EPUB file*. This is therefore this last path that you should use
-if you want to access those files e.g. in a custom CSS stylesheet.
+This option determine where (in which directory), *in the resulting document*, those files will be copied.
+The default is `data`, so by default the `resources.files` in the first example above will search `font1.otf` and `font2.otf` *in the same directory than the `.book` file*, and will copy them to `data/font1.otf` and `data/font2.otf` *in the EPUB file*.
+This is therefore this last path that you should use if you want to access those files e.g. in a custom CSS stylesheet.
 
-Note that if you pass directories to `resources.files`, the whole
-directory would be copied. So assuming `fonts/` contains `font1.otf`
-and `font2.otf`
+Note that if you pass directories to `resources.files`, the whole directory would be copied.
+So assuming `fonts/` contains `font1.otf` and `font2.otf`
 
 ```yaml
 resources.files: [fonts]
 resources.path: data
 ```
 
-will copy these two files to `data/fonts/font1.otf` and
-`data/fonts/font2.otf` (and not `data/font1.otf` and `data/font2.otf`).
+will copy these two files to `data/fonts/font1.otf` and `data/fonts/font2.otf` (and not `data/font1.otf` and `data/font2.otf`).
 
 Similarly, the whole path of `resources.files` is copied, so
 
@@ -581,12 +532,13 @@ will yield the same result.
 
 **default**: `data`
 
-## Full list of options ##
+## Full list of options
 
-Here is the complete list of options. You can always look at it by
-running `crowbook --list-options` or `crowbook -l`.
+Here is the complete list of options.
+You can always look at it by running `crowbook --list-options` or `crowbook -l`.
 
-### Metadata ###
+### Metadata
+
 - **`author`**
     - **type**: metadata
     - **default value**: `""`
@@ -612,7 +564,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `not set`
     -  Path to the cover of the book
 
-### Additional metadata ###
+### Additional metadata
+
 - **`subtitle`**
     - **type**: metadata
     - **default value**: `not set`
@@ -630,7 +583,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `not set`
     -  Date the book was revised
 
-### Output options ###
+### Output options
+
 - **`output`**
     - **type**: list of strings
     - **default value**: `not set`
@@ -668,7 +622,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `""`
     -  Directory where those output files will we written
 
-### Rendering options ###
+### Rendering options
+
 - **`rendering.highlight`**
     - **type**: string
     - **default value**: `syntect`
@@ -722,13 +677,15 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `"{{{number}}}. {{{part_title}}}"`
     -  Naming scheme of parts, for TOC
 
-### Special option ###
+### Special option
+
 - **`import`**
     - **type**: path
     - **default value**: `not set`
     -  Import another book configuration file
 
-### HTML options ###
+### HTML options
+
 - **`html.icon`**
     - **type**: path
     - **default value**: `not set`
@@ -753,10 +710,10 @@ running `crowbook --list-options` or `crowbook -l`.
     - **type**: string
     - **default value**: `not set`
     -  Some inline CSS added to the stylesheet template
-- **`html.css.colours`**
+- **`html.css.colors`**
     - **type**: template path
     - **default value**: `not set`
-    -  Path of a stylesheet for the colours for HTML
+    -  Path of a stylesheet for the colors for HTML
 - **`html.js`**
     - **type**: template path
     - **default value**: `not set`
@@ -790,7 +747,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `"<h2 class = 'part'>{{{header}}} {{{number}}}</h2> <h1 id = 'link-{{{link}}}' class = 'part'>{{{title}}}</h1>"`
     -  Inline template for HTML part formatting
 
-### Standalone HTML options ###
+### Standalone HTML options
+
 - **`html.standalone.template`**
     - **type**: template path
     - **default value**: `not set`
@@ -804,13 +762,15 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `not set`
     -  Path of a javascript file
 
-### Multifile HTML options ###
+### Multifile HTML options
+
 - **`html.dir.template`**
     - **type**: template path
     - **default value**: `not set`
     -  Path of a HTML template for multifile HTML
 
-### Interactive fiction HTML options ###
+### Interactive fiction HTML options
+
 - **`html.if.js`**
     - **type**: template path
     - **default value**: `not set`
@@ -828,7 +788,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `not set`
     -  Javascript code that will be run at the beginning of a 'game'
 
-### EPUB options ###
+### EPUB options
+
 - **`epub.version`**
     - **type**: integer
     - **default value**: `2`
@@ -858,7 +819,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `true`
     -  Replace unicode non breaking spaces with HTML entities and CSS
 
-### LaTeX options ###
+### LaTeX options
+
 - **`tex.highlight.theme`**
     - **type**: string
     - **default value**: `not set`
@@ -920,7 +882,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `false`
     -  If set to true, use 'stdpage' package to format a manuscript according to standards
 
-### Resources option ###
+### Resources option
+
 - **`resources.files`**
     - **type**: list of strings
     - **default value**: `not set`
@@ -950,7 +913,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `.`
     -  Set base path but only for templates files. Useless if resources.base_path is set
 
-### Input options ###
+### Input options
+
 - **`input.clean`**
     - **type**: boolean
     - **default value**: `true`
@@ -972,11 +936,12 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `false`
     -  Enable inline YAML blocks to override options set in config file
 
-### Crowbook options ###
+### Crowbook options
+
 - **`crowbook.html_as_text`**
     - **type**: boolean
     - **default value**: `true`
-    -  Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored.
+    -  Consider HTML blocks as text. This avoids having `<foo>` being considered as HTML and thus ignored.
 - **`crowbook.markdown.superscript`**
     - **type**: boolean
     - **default value**: `false`
@@ -990,7 +955,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `zip`
     -  Command to use to zip files (for EPUB/ODT)
 
-### Output options (for proofreading) ###
+### Output options (for proofreading)
+
 - **`output.proofread.html`**
     - **type**: path
     - **default value**: `not set`
@@ -1004,7 +970,8 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `not set`
     -  Output file name for PDF rendering with proofread features
 
-### Proofreading options (only for output.proofread.* targets) ###
+### Proofreading options (only for output.proofread.* targets)
+
 - **`proofread`**
     - **type**: boolean
     - **default value**: `false`
@@ -1050,15 +1017,6 @@ running `crowbook --list-options` or `crowbook -l`.
     - **default value**: `2.0`
     -  Threshold to detect a repetition
 
-
-Note that these options have a type, which in most case should be
-pretty straightforward (a boolean can be `true` or `false`, an integer
-must be composed by a number, a string is, well, any string (note that
-you might need to use quotes if it includes some characters that may
-lead the YAML parser to read it as an array, an integer or a list), and a
-list of strings is a list containing only strings, see [YAML syntax](https://en.wikipedia.org/wiki/YAML#Basic_components)). The `path`
-type might puzzle you a bit, but it's equivalent to a string, except
-Crowbook will consider it relatively to the book file. The `template
-path` type is just the `path` of a template. Metadata are just
-strings.
-
+Note that these options have a type, which in most case should be pretty straightforward (a boolean can be `true` or `false`, an integer must be composed by a number, a string is, well, any string (note that you might need to use quotes if it includes some characters that may lead the YAML parser to read it as an array, an integer or a list), and a list of strings is a list containing only strings, see
+[YAML syntax](https://en.wikipedia.org/wiki/YAML#Basic_components)).
+The `path` type might puzzle you a bit, but it's equivalent to a string, except Crowbook will consider it relatively to the book file. The `template path` type is just the `path` of a template. Metadata are just strings.

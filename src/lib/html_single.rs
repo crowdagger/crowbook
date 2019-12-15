@@ -187,8 +187,8 @@ impl<'a> HtmlSingleRenderer<'a> {
         let mut data = self.html
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("colours",
-                        self.html.book.get_template("html.css.colours")?);
+            .insert_str("colors",
+                        self.html.book.get_template("html.css.colors")?);
         if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
             data = data.insert_str("additional_code", html_css_add);
         }

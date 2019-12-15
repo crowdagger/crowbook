@@ -1,5 +1,4 @@
-Interactive fiction
-=======================
+# Interactive fiction
 
 Version `0.12.0` added experimental support for writing interactive fiction. 
 
@@ -8,26 +7,22 @@ Version `0.12.0` added experimental support for writing interactive fiction.
 > write for the current version of Crowbook will work with the next
 > release, even if it isn't a major release.
 
-## Basics ##
+## Basics
 
-If you want to have a non-linear story, you can simply use Markdown
-links just as you would for any other link:
+If you want to have a non-linear story, you can simply use Markdown links just as you would for any other link:
 
 ```markdown
 * [Open the treasure chest](open_chest.md)
 * [It might be trapped, stay away from it](stay_away.md)
 ```
 
-All Crowbook renderers should render this correctly, allowing the
-reader to "choose her adventure". Note, however, that you still need
-to include all these Markdown files in you book configuration files. 
+All Crowbook renderers should render this correctly, allowing the reader to "choose her adventure".
+Note, however, that you still need to include all these Markdown files in you book configuration files. 
 
-## The interactive fiction renderer ##
+## The interactive fiction renderer
 
-While the above allows you to generate correct EPUB and PDF files, it
-will still display all the content if the reader chooses to read your
-book linearly. While this may not be a problem, you might want to only
-display the part of the book that the reader is actually exploring. 
+While the above allows you to generate correct EPUB and PDF files, it will still display all the content if the reader chooses to read your book linearly.
+While this may not be a problem, you might want to only display the part of the book that the reader is actually exploring. 
 
 In order to do so, you can use the interactive fiction html renderer:
 
@@ -35,16 +30,12 @@ In order to do so, you can use the interactive fiction html renderer:
 output.html.if: my_book.html
 ```
 
-This output is similar to the standalone HTML output, except the
-option to display only a chapter at a time is always true, and there
-is no way to display the table of contents. 
+This output is similar to the standalone HTML output, except the option to display only a chapter at a time is always true, and there is no way to display the table of contents.
 
 ## Using Javascript in your interactive fiction
 
-While the above allows the reader to choose his own path, its
-interactivity is quite limited. With the interactive fiction renderer,
-it is possible to include Javascript code in your Markdown files,
-using a code block element: 
+While the above allows the reader to choose his own path, its interactivity is quite limited.
+With the interactive fiction renderer, it is possible to include Javascript code in your Markdown files, using a code block element: 
 
 ```markdown
 You open the chest, and you find a shiny sword. Yay!
@@ -52,8 +43,7 @@ You open the chest, and you find a shiny sword. Yay!
     user_has_sword = true;
 ```
 
-This Javascript code can return a string value, which will be displayed
-inside the document according to the reader's previous choices:
+This Javascript code can return a string value, which will be displayed inside the document according to the reader's previous choices:
 
 ```markdown
 You encounter a goblin, armed with a knife!
@@ -70,12 +60,9 @@ You encounter a goblin, armed with a knife!
 > containing such code blocks to EPUB, PDF, or the "normal" HTML
 > renderer, they will be displayed as regular code blocks. 
 
-
 ## Embedding Makdown in your Javascript code embedded in your Markdown
 
-If you want to include Markdown formatting in the Javascript code (to
-display a passage or another without having to write HTML code), you
-can use the `@"..."@` syntax:
+If you want to include Markdown formatting in the Javascript code (to display a passage or another without having to write HTML code), you can use the `@"..."@` syntax:
 
 ```markdown
     @"You face a troll!"@
@@ -86,12 +73,10 @@ can use the `@"..."@` syntax:
 	}
 ```
 
-Note that in this case you don't need to return a value, this is done
-behind your back. Similarly, `@"..."@` blocks don't require
-semicolons.
+Note that in this case you don't need to return a value, this is done behind your back.
+Similarly, `@"..."@` blocks don't require semicolons.
 
-If you need to access the value of a Javascript variable inside this
-Markdown code, you can use the `{{...}}` syntax:
+If you need to access the value of a Javascript variable inside this Markdown code, you can use the `{{...}}` syntax:
 
 ```markdown
     var name = prompt("Enter your name", "world");
@@ -100,11 +85,10 @@ Markdown code, you can use the `{{...}}` syntax:
 
 ## Conditional blocks
 
-Sometimes, you want some text (or Javascript code) to only be
-displayed (or run) when the reader reads this passage the first time,
-or alternatively when she goes back to it. While it is trivial to add
-some code to check that, it is a common enough pattern to justify its
-own variant : you'll juste have to insert a named code block with the number:
+Sometimes, you want some text (or Javascript code) to only be displayed (or run) when the reader reads this passage the first time, or alternatively when she goes back to it.
+While it is trivial to add some code to check that, it is a common enough pattern to justify its
+own variant:
+you'll juste have to insert a named code block with the number:
 
     ```1
     @"Only displayed at first passage"@
@@ -120,31 +104,24 @@ own variant : you'll juste have to insert a named code block with the number:
 
 ## Interactive fiction options 
 
-As other renderers, there are options specific to the interactive
-fiction.
+As other renderers, there are options specific to the interactive fiction.
 
-**html.if.new_game** allows you to specify the path to a Javascript  that will
-be run at the beginning of the game. Since this code is not embedded
-in a function and is at the root (and the beginning) of the document,
-it is a good place to declare all the functions and the global
-variables you might need for your interactive fiction mechanics.
+**html.if.new_game** allows you to specify the path to a Javascript that will be run at the beginning of the game.
+Since this code is not embedded in a function and is at the root (and the beginning) of the document, it is a good place to declare all the functions and the global variables you might need for your interactive fiction mechanics.
 e.g.:
 
 ```yaml
 html.if.new_game: some_file.js
 ```
 
-**html.if.new_turn** and **html.if.end_turn** allow you to specify some Javascript code that
-will be executed at the beginning and the end of each segment. Unlike
-`html.if.new_game`, the (usually shorter) code is specified inline,
-and can return a string value that will be displayed at the beginning
-and the end of each segment. This is exactly like including code
-blocks at the beginning or the end of each of your Markdown file. E.g.:
+**html.if.new_turn** and **html.if.end_turn** allow you to specify some Javascript code that will be executed at the beginning and the end of each segment.
+Unlike `html.if.new_game`, the (usually shorter) code is specified inline, and can return a string value that will be displayed at the beginning and the end of each segment.
+This is exactly like including code blocks at the beginning or the end of each of your Markdown file.
+E.g.:
 
 ```yaml
 html.if.new_turn: "nb_turns += 1;"
 html.end_turn: "return 'Turn: ' + nb_turns;"
 ```
 
-**html.if.script** allows you to specify the name of a Javascript file
-to override the default script.
+**html.if.script** allows you to specify the name of a Javascript file to override the default script.

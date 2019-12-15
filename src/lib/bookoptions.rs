@@ -66,7 +66,7 @@ html.header:str                     # {html_header}
 html.footer:str                     # {html_footer}
 html.css:tpl                        # {html_css}
 html.css.add:str                    # {html_css_add}
-html.css.colours:tpl                # {css_colours}
+html.css.colors:tpl                # {css_colors}
 html.js:tpl                         # {html_js}
 html.css.print:tpl                  # {css_print}
 html.highlight.js:tpl               # {highlight_js}
@@ -160,7 +160,10 @@ proofread.repetitions.fuzzy.threshold:float:0.2   # {prf_fuzzy_t}
 proofread.repetitions.ignore_proper:bool:true     # {prf_ignore}
 proofread.repetitions.threshold:float:2.0         # {prf_threshold}
 
+
+
 # {deprecated_opt}
+html.css.colours:alias:html.css.colors              # {renamed}
 input.smart_quotes:alias:input.clean.smart_quotes   # {renamed}
 input.autoclean:alias:input.clean                   # {renamed}
 base_path:alias:resources.base_path                 # {renamed}
@@ -265,7 +268,7 @@ crowbook.verbose:alias                              # {removed}
                                          html_footer = lformat!("Custom footer to display at the end of HTML file(s)"),
                                          html_css = lformat!("Path of a stylesheet for HTML rendering"),
                                          html_css_add = lformat!("Some inline CSS added to the stylesheet template"),
-                                         css_colours = lformat!("Path of a stylesheet for the colours for HTML"),
+                                         css_colors = lformat!("Path of a stylesheet for the colors for HTML"),
                                          html_js = lformat!("Path of a javascript file"),
                                          css_print = lformat!("Path of a media print stylesheet for HTML rendering"),
                                          highlight_js = lformat!("Set another highlight.js version than the bundled one"),

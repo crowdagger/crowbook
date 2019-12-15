@@ -1,4 +1,4 @@
-/* Colours for the navigation menu (toc) */
+/* Colors for the navigation menu (toc) */
 nav {
     background: #181818;
     color: #cdd4da;
@@ -34,11 +34,12 @@ body {
     color: #cdd4da;
 }
 
-pre, code {
+pre,
+code {
     background-color: #1d1f21;
 }
 
-/* Colours for top and footer */
+/* Colors for top and footer */
 #top {
     background-color: #cdd4da;
     color: #181818;
@@ -49,11 +50,13 @@ footer {
     color: #181818;
 }
 
-footer a, #top a {
+footer a,
+#top a {
     color: #040C62;
 }
 
-footer a:hover, #top a:hover {
+footer a:hover,
+#top a:hover {
     color: #00A8F6;
 }
 

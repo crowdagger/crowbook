@@ -636,7 +636,7 @@ msgid "Some inline CSS added to the stylesheet template"
 msgstr "Du code CSS en ligne à ajouter au template de la feuille de style"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:268
-msgid "Path of a stylesheet for the colours for HTML"
+msgid "Path of a stylesheet for the colors for HTML"
 msgstr "Chemin d'une feuille de style pour les couleurs pour le HTML"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/bookoptions.rs:269
