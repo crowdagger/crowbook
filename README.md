@@ -261,4 +261,4 @@ by Mozilla Corporation.
 Crowbook includes binary (minified) CSS and Javascript files from
 [Highlight.js](https://highlightjs.org/),
 written by Ivan Sagalaev, see
-[`../templates/highlight/LICENSE`](../templates/highlight/LICENSE).
+[license](https://raw.githubusercontent.com/lise-henry/crowbook/master/templates/highlight/LICENSE)
