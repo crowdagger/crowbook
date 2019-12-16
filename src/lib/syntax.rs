@@ -41,7 +41,7 @@ impl Syntax {
         let theme = match theme_set.themes.remove(theme_name) {
             Some(theme) => theme,
             None => {
-                error!("{}", lformat!("could not set syntect theme to {theme}, defaulting to \"InspiredGithub\"",
+                error!("{}", lformat!("could not set syntect theme to {theme}, defaulting to \"InspiredGitHub\"",
                                            theme = theme_name));
                 info!("{}", lformat!("valid theme names are: {themes}",
                                           themes = theme_set.themes
@@ -57,7 +57,7 @@ impl Syntax {
             theme: theme,
         }
     }
-    
+
     /// Convert a string containing code to HTML
     pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
@@ -78,7 +78,7 @@ impl Syntax {
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
         let regions = h.highlight(code, &self.syntax_set);
-        
+
         let mut result = String::with_capacity(code.len());
         for (style, text) in regions {
             let mut content = escape::tex(text).into_owned();
