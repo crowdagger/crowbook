@@ -29,6 +29,15 @@
 % Allows hyphenatations in \texttt
 \usepackage[htt]{hyphenat}
 
+% make page background slightly grey for enhanced readability
+% and to emphasize code blocks
+\usepackage[
+  usenames,
+  dvipsnames,
+  svgnames
+]{xcolor}
+\pagecolor{Gray!15}
+
 <<#use_strikethrough>>
 % Only included if strikethrough is used in the document
 \usepackage[normalem]{ulem}
@@ -38,7 +47,38 @@
 <</use_taskitem>>
 <<#use_url>>
 % Only included if URLs are used in the document
-\usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
+\usepackage[
+  backref=page,
+  bookmarks=true,
+  bookmarksdepth=subsection,
+  bookmarksnumbered=false,
+  bookmarksopen=true,
+  breaklinks=true,
+  citecolor=Black,
+  colorlinks=true,
+  filecolor=NavyBlue,
+  hyperindex=true,
+  hyperfootnotes=true,
+  hypertexnames=false,
+  linkcolor=NavyBlue,
+  pagebackref=true,
+  <<#has_author>>pdfauthor={<<&author>>},<</has_author>>
+  pdfcreator={crowbook},
+  pdfdisplaydoctitle=true,
+  pdfencoding=auto,
+  pdffitwindow=false,
+  pdflang=<<&tex_lang>>,
+  pdfmenubar=true,
+  pdfnewwindow=true,
+  pdfpagemode=UseOutlines,
+  pdfpagelayout=TwoColumnRight,
+  pdfstartview={FitV},
+  <<#has_subtitle>>pdfsubject={<<&subtitle>>},<</has_subtitle>>
+  <<#has_title>>pdftitle={<<&title>>},<</has_title>>
+  pdftoolbar=true,
+  unicode=true,
+  urlcolor=NavyBlue
+]{hyperref}
 <<^xelatex>>
 \usepackage[anythingbreaks]{breakurl}
 <</xelatex>>
@@ -71,27 +111,27 @@
   % First page with only the title
   \thispagestyle{empty}
   \vspace*{\stretch{1}}
-  
+
   \begin{center}
     {\Huge \@title   \\[5mm]}
   \end{center}
   \vspace*{\stretch{2}}
-  
+
   \newpage
   % Empty left page
   \thispagestyle{empty}
   \cleardoublepage
 
   % Main title page, with author, title, subtitle, date
-  \begin{center}  
+  \begin{center}
     \thispagestyle{empty}
     \vspace*{\baselineskip}
     \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
     \rule{\textwidth}{0.4pt}\\[\baselineskip]
-    
+
     {\Huge\scshape \@title   \\[5mm]}
     {\Large <<&subtitle>>}
-    
+
     \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
     \rule{\textwidth}{1.6pt}\\[\baselineskip]
 
@@ -99,15 +139,15 @@
 
     {\Large \@author}
     <<#has_autograph>>
-    
+
     \vspace*{10\baselineskip}
-    
+
     <<&autograph>>
     <</has_autograph>>
     \vfill
     <<#has_date>>\@date<</has_date>>
   \end{center}
-  
+
   \pagebreak
   \newpage
   % Copyright page with author, version, and license
@@ -126,9 +166,17 @@
 
 % Redefine headers
 \pagestyle{fancy}
-\fancyhead{}
-\fancyhead[CO,CE]{\thepage}
-\fancyfoot{}
+\renewcommand{\chaptermark}[1]{\markboth{\sffamily\normalsize\bfseries\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\sffamily\normalsize\thesection.\ #1}{}}
+\fancyhf{}
+\fancyhead[LE,RO]{\sffamily\normalsize\thepage}
+\fancyhead[LO]{\rightmark}
+\fancyhead[RE]{\leftmark}
+\renewcommand{\headrulewidth}{0.5pt}
+\addtolength{\headheight}{2.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\fancyfoot[CE,CO]{<<&title>>, Version: <<&version>>, Date: <<&date>>}
+\fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrulewidth}{0pt}}
 
 
 <</stdpage>>
@@ -198,7 +246,7 @@
   \begin{mdframed}
 }{%
   \end{mdframed}
-} 
+}
 <</use_codeblocks>>
 
 <<#use_images>>
