@@ -2,7 +2,11 @@
 
 ## Using Crowbook with Emacs' markdown mode
 
-If you use [Emacs](https://www.gnu.org/software/emacs/) as a text editor, there is a nice [Markdown mode](http://jblevins.org/projects/markdown-mode/) to edit Markdown files.
+If you use
+[Emacs](https://www.gnu.org/software/emacs/)
+as a text editor, there is a nice
+[Markdown mode](http://jblevins.org/projects/markdown-mode/)
+to edit Markdown files.
 
 It is possible to use Crowbook for HTML previewing in this mode, which [requires only minimal configuration and tweaking](http://xkcd.com/1742/):
 
@@ -12,9 +16,9 @@ It is possible to use Crowbook for HTML previewing in this mode, which [requires
 ```
 
 You can then use `markdown-preview` (or `C-c C-c p`) to run Crowbook on this file and preview it in your browser.
-Or run `markdown-live-preview-mode` to see a live preview (updated each time you save your file) in Emacs' integrated browser. 
+Or run `markdown-live-preview-mode` to see a live preview (updated each time you save your file) in Emacs' integrated browser.
 
-### Some explanations if it looks a bit cryptic to you 
+### Some explanations if it looks a bit cryptic to you
 
 We set `markdown-command` to `crowbook`, the reason for this is a bit obvious.
 The arguments we give to crowbook might be a bit less obvious:
@@ -25,7 +29,7 @@ The arguments we give to crowbook might be a bit less obvious:
 * `--to html` specifies that HTML must be generated;
 * `--output -` tells Crowbook to display the result on the stdout, even if you set `output.html` to `some_file.html`.
 
-## Embedding fonts in an EPUB file 
+## Embedding fonts in an EPUB file
 
 In order to embed fonts in an EPUB file, you'll first have to edit the stylesheet, which you can first obtain with:
 

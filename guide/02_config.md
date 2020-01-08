@@ -97,7 +97,7 @@ Also note that you don't have to specify a title.
 This is because the title of the chapter is inferred from the Markdown document.
 To go back to our previous example:
 
-```
+```text
 + chapter_1.md
 ```
 
@@ -115,7 +115,7 @@ If you have more than one, it might mess with the table of contents in some case
 
 Parts are included using the `@` character, followed by the same characters than for chapters:
 
-```
+```text
 @+ numbered_part.md
 + chapter_01.md
 + chapter_02.md
@@ -128,7 +128,7 @@ Parts are included using the `@` character, followed by the same characters than
 
 However, you usually don't really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straighforward way to use parts, using only the `@` character followed by the (markdown-formatted) title of this part:
 
-```
+```text
 @ Beginning
 + chapter_01.md
 + chapter_02.md
@@ -143,11 +143,11 @@ With this shortcut, parts are always numbered.
 
 ### Subchapters
 
-If you write your book to be rendered by Crowbook, it is better to have one Markdown file per chapter.
+If you write your book to be rendered by `crowbook`, it is better to have one Markdown file per chapter.
 It is, however, possible to work with divisions at lower levels.
 In order to properly include these files, you can use the following syntax:
 
-```
+```text
 -- section.md
 --- subsection.md
 ---- subsubsection.md
@@ -196,7 +196,7 @@ See
 for more information on the various way to insert multiline strings (which mostly change the way newlines will or won't be inserted).
 
 A final note on the syntax:
-all options must be set *before* the first chapter inclusion (that is, a line beginning with '+', '-', 'x.' (where `x` is a number) or '!').
+all options must be set *before* the first chapter inclusion (that is, a line beginning with `+`, `-`, `x.` (where `x` is a number) or `!`).
 
 ### Metadata
 
@@ -385,7 +385,7 @@ they are used (or at least should be) for all formats.
   * `none`:
     disable syntax highlighting.
 
-If your version of Crowbook (as is the case for Windows builds) isn't built with `syntect` support, it  will default to `none` if you try to use it.
+If your version of `crowbook` (as is the case for Windows builds) isn't built with `syntect` support, it  will default to `none` if you try to use it.
 
 * `rendering.highlight.theme`:
   only used if `rendering.highlight` is set to `syntect`, selects the theme to use for syntax highlighting.
@@ -483,7 +483,7 @@ There are also options specific to the EPUB format:
 These options allow to embed additional files for some formats (currently, only EPUB).
 This can be useful for embedding fonts.
 
-#### resources.files
+#### `resources.files`
 
 A list of files or directories that should be added.
 
@@ -506,7 +506,7 @@ resources.files: [fonts/font1.otf, fonts/font2.otf]
 
 **default**: not set
 
-#### resources.out_path
+#### `resources.out_path`
 
 This option determine where (in which directory), *in the resulting document*, those files will be copied.
 The default is `data`, so by default the `resources.files` in the first example above will search `font1.otf` and `font2.otf` *in the same directory than the `.book` file*, and will copy them to `data/font1.otf` and `data/font2.otf` *in the EPUB file*.
@@ -537,486 +537,686 @@ will yield the same result.
 Here is the complete list of options.
 You can always look at it by running `crowbook --list-options` or `crowbook -l`.
 
-### Metadata
-
-- **`author`**
-    - **type**: metadata
-    - **default value**: `""`
-    -  Author of the book
-- **`title`**
-    - **type**: metadata
-    - **default value**: `""`
-    -  Title of the book
-- **`lang`**
-    - **type**: metadata
-    - **default value**: `en`
-    -  Language of the book
-- **`subject`**
-    - **type**: metadata
-    - **default value**: `not set`
-    -  Subject of the book (used for EPUB metadata)
-- **`description`**
-    - **type**: metadata
-    - **default value**: `not set`
-    -  Description of the book (used for EPUB metadata)
-- **`cover`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Path to the cover of the book
-
-### Additional metadata
-
-- **`subtitle`**
-    - **type**: metadata
-    - **default value**: `not set`
-    -  Subtitle of the book
-- **`license`**
-    - **type**: metadata
-    - **default value**: `not set`
-    -  License of the book. This information will be displayed on PDF documents
-- **`version`**
-    - **type**: metadata
-    - **default value**: `not set`
-    -  Version of the book
-- **`date`**
-    - **type**: metadata
-    - **default value**: `not set`
-    -  Date the book was revised
-
-### Output options
-
-- **`output`**
-    - **type**: list of strings
-    - **default value**: `not set`
-    -  Specify a list of output formats to render
-- **`output.epub`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for EPUB rendering
-- **`output.html`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for HTML rendering
-- **`output.html.dir`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output directory name for HTML rendering
-- **`output.tex`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for LaTeX rendering
-- **`output.pdf`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for PDF rendering
-- **`output.odt`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for ODT rendering
-- **`output.html.if`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for HTML (interactive fiction) rendering
-- **`output.base_path`**
-    - **type**: path
-    - **default value**: `""`
-    -  Directory where those output files will we written
-
-### Rendering options
-
-- **`rendering.highlight`**
-    - **type**: string
-    - **default value**: `syntect`
-    -  If/how highligh code blocks. Possible values: "syntect" (default, performed at runtime), "highlight.js" (HTML-only, uses Javascript), "none"
-- **`rendering.highlight.theme`**
-    - **type**: string
-    - **default value**: `InspiredGitHub`
-    -  Theme for syntax highlighting (if rendering.highlight is set to 'syntect')
-- **`rendering.initials`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  Use initials ('lettrines') for first letter of a chapter (experimental)
-- **`rendering.inline_toc`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  Display a table of content in the document
-- **`rendering.inline_toc.name`**
-    - **type**: string
-    - **default value**: `"{{{loc_toc}}}"`
-    -  Name of the table of contents if it is displayed in document
-- **`rendering.num_depth`**
-    - **type**: integer
-    - **default value**: `1`
-    -  The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
-- **`rendering.chapter`**
-    - **type**: string
-    - **default value**: `not set`
-    -  How to call chapters
-- **`rendering.part`**
-    - **type**: string
-    - **default value**: `not set`
-    -  How to call parts (or 'books', 'episodes', ...
-- **`rendering.chapter.roman_numerals`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If set to true, display chapter number with roman numerals
-- **`rendering.part.roman_numerals`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  If set to true, display part number with roman numerals
-- **`rendering.part.reset_counter`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  If set to true, reset chapter number at each part
-- **`rendering.chapter.template`**
-    - **type**: string
-    - **default value**: `"{{{number}}}. {{{chapter_title}}}"`
-    -  Naming scheme of chapters, for TOC
-- **`rendering.part.template`**
-    - **type**: string
-    - **default value**: `"{{{number}}}. {{{part_title}}}"`
-    -  Naming scheme of parts, for TOC
-
-### Special option
-
-- **`import`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Import another book configuration file
-
-### HTML options
-
-- **`html.icon`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Path to an icon to be used for the HTML files(s)
-- **`html.highlight.theme`**
-    - **type**: string
-    - **default value**: `not set`
-    -  If set, set theme for syntax highlighting for HTML output (syntect only)
-- **`html.header`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Custom header to display at the beginning of html file(s)
-- **`html.footer`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Custom footer to display at the end of HTML file(s)
-- **`html.css`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a stylesheet for HTML rendering
-- **`html.css.add`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Some inline CSS added to the stylesheet template
-- **`html.css.colors`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a stylesheet for the colors for HTML
-- **`html.js`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a javascript file
-- **`html.css.print`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a media print stylesheet for HTML rendering
-- **`html.highlight.js`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Set another highlight.js version than the bundled one
-- **`html.highlight.css`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Set another highlight.js CSS theme than the default one
-- **`html.side_notes`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  Display footnotes as side notes in HTML/Epub (experimental)
-- **`html.escape_nb_spaces`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Replace unicode non breaking spaces with HTML entities and CSS
-- **`html.chapter.template`**
-    - **type**: string
-    - **default value**: `"<h1 id = 'link-{{{link}}}'>{{#has_number}}<span class = 'chapter-header'>{{{header}}} {{{number}}}</span>{{#has_title}}<br />{{/has_title}}{{/has_number}}{{{title}}}</h1>"`
-    -  Inline template for HTML chapter formatting
-- **`html.part.template`**
-    - **type**: string
-    - **default value**: `"<h2 class = 'part'>{{{header}}} {{{number}}}</h2> <h1 id = 'link-{{{link}}}' class = 'part'>{{{title}}}</h1>"`
-    -  Inline template for HTML part formatting
-
-### Standalone HTML options
-
-- **`html.standalone.template`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of an HTML template for standalone HTML
-- **`html.standalone.one_chapter`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  Display only one chapter at a time (with a button to display all)
-- **`html.standalone.js`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a javascript file
-
-### Multifile HTML options
-
-- **`html.dir.template`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a HTML template for multifile HTML
-
-### Interactive fiction HTML options
-
-- **`html.if.js`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a javascript file
-- **`html.if.new_turn`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Javascript code that will be run at the beginning of each segment
-- **`html.if.end_turn`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Javascript code that will be run at the end of each segment
-- **`html.if.new_game`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Javascript code that will be run at the beginning of a 'game'
-
-### EPUB options
-
-- **`epub.version`**
-    - **type**: integer
-    - **default value**: `2`
-    -  EPUB version to generate (2 or 3)
-- **`epub.highlight.theme`**
-    - **type**: string
-    - **default value**: `not set`
-    -  If set, set theme for syntax highlighting for EPUB output (syntect only)
-- **`epub.css`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a stylesheet for EPUB
-- **`epub.css.add`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Inline CSS added to the EPUB stylesheet template
-- **`epub.chapter.xhtml`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of an xhtml template for each chapter
-- **`epub.toc.extras`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Add 'Title' and (if set) 'Cover' in the EPUB table of contents
-- **`epub.escape_nb_spaces`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Replace unicode non breaking spaces with HTML entities and CSS
-
-### LaTeX options
-
-- **`tex.highlight.theme`**
-    - **type**: string
-    - **default value**: `not set`
-    -  If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)
-- **`tex.links_as_footnotes`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Add foontotes to URL of links so they are readable when printed
-- **`tex.command`**
-    - **type**: string
-    - **default value**: `xelatex`
-    -  LaTeX command to use for generating PDF
-- **`tex.template`**
-    - **type**: template path
-    - **default value**: `not set`
-    -  Path of a LaTeX template file
-- **`tex.template.add`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Inline code added in the LaTeX template
-- **`tex.class`**
-    - **type**: string
-    - **default value**: `book`
-    -  LaTeX class to use
-- **`tex.paper.size`**
-    - **type**: string
-    - **default value**: `a5paper`
-    -  Specifies the size of the page.
-- **`tex.margin.left`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)
-- **`tex.margin.right`**
-    - **type**: string
-    - **default value**: `not set`
-    -  Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)
-- **`tex.margin.top`**
-    - **type**: string
-    - **default value**: `"2cm"`
-    -  Specifies top margin
-- **`tex.margin.bottom`**
-    - **type**: string
-    - **default value**: `"1.5cm"`
-    -  Specifies left margin
-- **`tex.title`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  If true, generate a title with \maketitle
-- **`tex.font.size`**
-    - **type**: integer
-    - **default value**: `not set`
-    -  Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)
-- **`tex.hyperref`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  If disabled, don't try to find references inside the document
-- **`tex.stdpage`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If set to true, use 'stdpage' package to format a manuscript according to standards
-
-### Resources option
-
-- **`resources.files`**
-    - **type**: list of strings
-    - **default value**: `not set`
-    -  Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
-- **`resources.out_path`**
-    - **type**: path
-    - **default value**: `data`
-    -  Paths where additional resources should be copied in the EPUB file or HTML directory
-- **`resources.base_path`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
-- **`resources.base_path.links`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Set base path but only for links. Useless if resources.base_path is set
-- **`resources.base_path.images`**
-    - **type**: path
-    - **default value**: `.`
-    -  Set base path but only for images. Useless if resources.base_path is set
-- **`resources.base_path.files`**
-    - **type**: path
-    - **default value**: `.`
-    -  Set base path but only for additional files. Useless if resources.base_path is set.
-- **`resources.base_path.templates`**
-    - **type**: path
-    - **default value**: `.`
-    -  Set base path but only for templates files. Useless if resources.base_path is set
-
-### Input options
-
-- **`input.clean`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Toggle typographic cleaning of input markdown according to lang
-- **`input.clean.smart_quotes`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  If enabled, tries to replace vertical quotations marks to curly ones
-- **`input.clean.ligature.dashes`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')
-- **`input.clean.ligature.guillemets`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If enabled, replaces '<<' and '>>' to french "guillemets" ('«' and '»')
-- **`input.yaml_blocks`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  Enable inline YAML blocks to override options set in config file
-
-### Crowbook options
-
-- **`crowbook.html_as_text`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Consider HTML blocks as text. This avoids having `<foo>` being considered as HTML and thus ignored.
-- **`crowbook.markdown.superscript`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax.
-- **`crowbook.temp_dir`**
-    - **type**: path
-    - **default value**: ``
-    -  Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
-- **`crowbook.zip.command`**
-    - **type**: string
-    - **default value**: `zip`
-    -  Command to use to zip files (for EPUB/ODT)
-
-### Output options (for proofreading)
-
-- **`output.proofread.html`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for HTML rendering with proofread features
-- **`output.proofread.html.dir`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output directory name for HTML rendering with proofread features
-- **`output.proofread.pdf`**
-    - **type**: path
-    - **default value**: `not set`
-    -  Output file name for PDF rendering with proofread features
-
-### Proofreading options (only for output.proofread.* targets)
-
-- **`proofread`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If set to false, will disactivate proofreading even if one of output.proofread.x is present
-- **`proofread.languagetool`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If true, try to use language tool server to grammar check the book
-- **`proofread.languagetool.port`**
-    - **type**: integer
-    - **default value**: `8081`
-    -  Port to connect to languagetool-server
-- **`proofread.grammalecte`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If true, try to use grammalecte server to grammar check the book
-- **`proofread.grammalecte.port`**
-    - **type**: integer
-    - **default value**: `8080`
-    -  Port to connect to grammalecte server
-- **`proofread.repetitions`**
-    - **type**: boolean
-    - **default value**: `false`
-    -  If set to true, use Caribon to detect repetitions
-- **`proofread.repetitions.max_distance`**
-    - **type**: integer
-    - **default value**: `25`
-    -  Max distance between two occurences so it is considered a repetition
-- **`proofread.repetitions.fuzzy`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Enable fuzzy string matching
-- **`proofread.repetitions.fuzzy.threshold`**
-    - **type**: float
-    - **default value**: `0.2`
-    -  Max threshold of differences to consider two strings a repetition
-- **`proofread.repetitions.ignore_proper`**
-    - **type**: boolean
-    - **default value**: `true`
-    -  Ignore proper nouns for repetitions
-- **`proofread.repetitions.threshold`**
-    - **type**: float
-    - **default value**: `2.0`
-    -  Threshold to detect a repetition
-
 Note that these options have a type, which in most case should be pretty straightforward (a boolean can be `true` or `false`, an integer must be composed by a number, a string is, well, any string (note that you might need to use quotes if it includes some characters that may lead the YAML parser to read it as an array, an integer or a list), and a list of strings is a list containing only strings, see
 [YAML syntax](https://en.wikipedia.org/wiki/YAML#Basic_components)).
 The `path` type might puzzle you a bit, but it's equivalent to a string, except Crowbook will consider it relatively to the book file. The `template path` type is just the `path` of a template. Metadata are just strings.
+
+### Metadata
+
+#### `author`
+
+- **type**: metadata
+- **default value**: `""`
+-  Author of the book
+
+#### `title`
+
+- **type**: metadata
+- **default value**: `""`
+-  Title of the book
+
+#### `lang`
+
+- **type**: metadata
+- **default value**: `en`
+-  Language of the book
+
+#### `subject`
+
+- **type**: metadata
+- **default value**: `not set`
+-  Subject of the book (used for EPUB metadata)
+
+#### `description`
+
+- **type**: metadata
+- **default value**: `not set`
+-  Description of the book (used for EPUB metadata)
+
+#### `cover`
+
+- **type**: path
+- **default value**: `not set`
+-  Path to the cover of the book
+
+### Additional metadata
+
+#### `subtitle`
+
+- **type**: metadata
+- **default value**: `not set`
+-  Subtitle of the book
+
+#### `license`
+
+- **type**: metadata
+- **default value**: `not set`
+-  License of the book. This information will be displayed on PDF documents
+
+#### `version`
+
+- **type**: metadata
+- **default value**: `not set`
+-  Version of the book
+
+#### `date`
+
+- **type**: metadata
+- **default value**: `not set`
+-  Date the book was revised
+
+### Output options
+
+#### `output`
+
+- **type**: list of strings
+- **default value**: `not set`
+-  Specify a list of output formats to render
+
+#### `output.epub`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for EPUB rendering
+
+#### `output.html`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for HTML rendering
+
+#### `output.html.dir`
+
+- **type**: path
+- **default value**: `not set`
+-  Output directory name for HTML rendering
+
+#### `output.tex`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for LaTeX rendering
+
+#### `output.pdf`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for PDF rendering
+
+#### `output.odt`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for ODT rendering
+
+#### `output.html.if`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for HTML (interactive fiction) rendering
+
+#### `output.base_path`
+
+- **type**: path
+- **default value**: `""`
+-  Directory where those output files will we written
+
+### Rendering options
+
+#### `rendering.highlight`
+
+- **type**: string
+- **default value**: `syntect`
+-  If/how highligh code blocks. Possible values: "syntect" (default, performed at runtime), "highlight.js" (HTML-only, uses Javascript), "none"
+
+#### `rendering.highlight.theme`
+
+- **type**: string
+- **default value**: `InspiredGitHub`
+-  Theme for syntax highlighting (if rendering.highlight is set to 'syntect')
+
+#### `rendering.initials`
+
+- **type**: boolean
+- **default value**: `false`
+-  Use initials ('lettrines') for first letter of a chapter (experimental)
+
+#### `rendering.inline_toc`
+
+- **type**: boolean
+- **default value**: `false`
+-  Display a table of content in the document
+
+#### `rendering.inline_toc.name`
+
+- **type**: string
+- **default value**: `"{{{loc_toc}}}"`
+-  Name of the table of contents if it is displayed in document
+
+#### `rendering.num_depth`
+
+- **type**: integer
+- **default value**: `1`
+-  The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)
+
+#### `rendering.chapter`
+
+- **type**: string
+- **default value**: `not set`
+-  How to call chapters
+
+#### `rendering.part`
+
+- **type**: string
+- **default value**: `not set`
+-  How to call parts (or 'books', 'episodes', ...
+
+#### `rendering.chapter.roman_numerals`
+
+- **type**: boolean
+- **default value**: `false`
+-  If set to true, display chapter number with roman numerals
+
+#### `rendering.part.roman_numerals`
+
+- **type**: boolean
+- **default value**: `true`
+-  If set to true, display part number with roman numerals
+
+#### `rendering.part.reset_counter`
+
+- **type**: boolean
+- **default value**: `true`
+-  If set to true, reset chapter number at each part
+
+#### `rendering.chapter.template`
+
+- **type**: string
+- **default value**: `"{{{number}}}. {{{chapter_title}}}"`
+-  Naming scheme of chapters, for TOC
+
+#### `rendering.part.template`
+
+- **type**: string
+- **default value**: `"{{{number}}}. {{{part_title}}}"`
+-  Naming scheme of parts, for TOC
+
+### Special option
+
+#### `import`
+
+- **type**: path
+- **default value**: `not set`
+-  Import another book configuration file
+
+### HTML options
+
+#### `html.icon`
+
+- **type**: path
+- **default value**: `not set`
+-  Path to an icon to be used for the HTML files(s)
+
+#### `html.highlight.theme`
+
+- **type**: string
+- **default value**: `not set`
+-  If set, set theme for syntax highlighting for HTML output (syntect only)
+
+#### `html.header`
+
+- **type**: string
+- **default value**: `not set`
+-  Custom header to display at the beginning of html file(s)
+
+#### `html.footer`
+
+- **type**: string
+- **default value**: `not set`
+-  Custom footer to display at the end of HTML file(s)
+
+#### `html.css`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a stylesheet for HTML rendering
+
+#### `html.css.add`
+
+- **type**: string
+- **default value**: `not set`
+-  Some inline CSS added to the stylesheet template
+
+#### `html.css.colors`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a stylesheet for the colors for HTML
+
+#### `html.js`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a javascript file
+
+#### `html.css.print`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a media print stylesheet for HTML rendering
+
+#### `html.highlight.js`
+
+- **type**: template path
+- **default value**: `not set`
+-  Set another highlight.js version than the bundled one
+
+#### `html.highlight.css`
+
+- **type**: template path
+- **default value**: `not set`
+-  Set another highlight.js CSS theme than the default one
+
+#### `html.side_notes`
+
+- **type**: boolean
+- **default value**: `false`
+-  Display footnotes as side notes in HTML/Epub (experimental)
+
+#### `html.escape_nb_spaces`
+
+- **type**: boolean
+- **default value**: `true`
+-  Replace unicode non breaking spaces with HTML entities and CSS
+
+#### `html.chapter.template`
+
+- **type**: string
+- **default value**: `"<h1 id = 'link-{{{link}}}'>{{#has_number}}<span class = 'chapter-header'>{{{header}}} {{{number}}}</span>{{#has_title}}<br />{{/has_title}}{{/has_number}}{{{title}}}</h1>"`
+-  Inline template for HTML chapter formatting
+
+#### `html.part.template`
+
+- **type**: string
+- **default value**: `"<h2 class = 'part'>{{{header}}} {{{number}}}</h2> <h1 id = 'link-{{{link}}}' class = 'part'>{{{title}}}</h1>"`
+-  Inline template for HTML part formatting
+
+### Standalone HTML options
+
+#### `html.standalone.template`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of an HTML template for standalone HTML
+
+#### `html.standalone.one_chapter`
+
+- **type**: boolean
+- **default value**: `false`
+-  Display only one chapter at a time (with a button to display all)
+
+#### `html.standalone.js`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a javascript file
+
+### Multifile HTML options
+
+#### `html.dir.template`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a HTML template for multifile HTML
+
+### Interactive fiction HTML options
+
+#### `html.if.js`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a javascript file
+
+#### `html.if.new_turn`
+
+- **type**: string
+- **default value**: `not set`
+-  Javascript code that will be run at the beginning of each segment
+
+#### `html.if.end_turn`
+
+- **type**: string
+- **default value**: `not set`
+-  Javascript code that will be run at the end of each segment
+
+#### `html.if.new_game`
+
+- **type**: template path
+- **default value**: `not set`
+-  Javascript code that will be run at the beginning of a 'game'
+
+### EPUB options
+
+#### `epub.version`
+
+- **type**: integer
+- **default value**: `2`
+-  EPUB version to generate (2 or 3)
+
+#### `epub.highlight.theme`
+
+- **type**: string
+- **default value**: `not set`
+-  If set, set theme for syntax highlighting for EPUB output (syntect only)
+
+#### `epub.css`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a stylesheet for EPUB
+
+#### `epub.css.add`
+
+- **type**: string
+- **default value**: `not set`
+-  Inline CSS added to the EPUB stylesheet template
+
+#### `epub.chapter.xhtml`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of an xhtml template for each chapter
+
+#### `epub.toc.extras`
+
+- **type**: boolean
+- **default value**: `true`
+-  Add 'Title' and (if set) 'Cover' in the EPUB table of contents
+
+#### `epub.escape_nb_spaces`
+
+- **type**: boolean
+- **default value**: `true`
+-  Replace unicode non breaking spaces with HTML entities and CSS
+
+### LaTeX options
+
+#### `tex.highlight.theme`
+
+- **type**: string
+- **default value**: `not set`
+-  If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)
+
+#### `tex.links_as_footnotes`
+
+- **type**: boolean
+- **default value**: `true`
+-  Add foontotes to URL of links so they are readable when printed
+
+#### `tex.command`
+
+- **type**: string
+- **default value**: `xelatex`
+-  LaTeX command to use for generating PDF
+
+#### `tex.template`
+
+- **type**: template path
+- **default value**: `not set`
+-  Path of a LaTeX template file
+
+#### `tex.template.add`
+
+- **type**: string
+- **default value**: `not set`
+-  Inline code added in the LaTeX template
+
+#### `tex.class`
+
+- **type**: string
+- **default value**: `book`
+-  LaTeX class to use
+
+#### `tex.paper.size`
+
+- **type**: string
+- **default value**: `a5paper`
+-  Specifies the size of the page.
+
+#### `tex.margin.left`
+
+- **type**: string
+- **default value**: `not set`
+-  Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)
+
+#### `tex.margin.right`
+
+- **type**: string
+- **default value**: `not set`
+-  Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)
+
+#### `tex.margin.top`
+
+- **type**: string
+- **default value**: `"2cm"`
+-  Specifies top margin
+
+#### `tex.margin.bottom`
+
+- **type**: string
+- **default value**: `"1.5cm"`
+-  Specifies left margin
+
+#### `tex.title`
+
+- **type**: boolean
+- **default value**: `true`
+-  If true, generate a title with \maketitle
+
+#### `tex.font.size`
+
+- **type**: integer
+- **default value**: `not set`
+-  Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)
+
+#### `tex.hyperref`
+
+- **type**: boolean
+- **default value**: `true`
+-  If disabled, don't try to find references inside the document
+
+#### `tex.stdpage`
+
+- **type**: boolean
+- **default value**: `false`
+-  If set to true, use 'stdpage' package to format a manuscript according to standards
+
+### Resources option
+
+#### `resources.files`
+
+- **type**: list of strings
+- **default value**: `not set`
+-  Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+
+#### `resources.out_path`
+
+- **type**: path
+- **default value**: `data`
+-  Paths where additional resources should be copied in the EPUB file or HTML directory
+
+#### `resources.base_path`
+
+- **type**: path
+- **default value**: `not set`
+-  Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
+
+#### `resources.base_path.links`
+
+- **type**: path
+- **default value**: `not set`
+-  Set base path but only for links. Useless if resources.base_path is set
+
+#### `resources.base_path.images`
+
+- **type**: path
+- **default value**: `.`
+-  Set base path but only for images. Useless if resources.base_path is set
+
+#### `resources.base_path.files`
+
+- **type**: path
+- **default value**: `.`
+-  Set base path but only for additional files. Useless if resources.base_path is set.
+
+#### `resources.base_path.templates`
+
+- **type**: path
+- **default value**: `.`
+-  Set base path but only for templates files. Useless if resources.base_path is set
+
+### Input options
+
+#### `input.clean`
+
+- **type**: boolean
+- **default value**: `true`
+-  Toggle typographic cleaning of input markdown according to lang
+
+#### `input.clean.smart_quotes`
+
+- **type**: boolean
+- **default value**: `true`
+-  If enabled, tries to replace vertical quotations marks to curly ones
+
+#### `input.clean.ligature.dashes`
+
+- **type**: boolean
+- **default value**: `false`
+-  If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')
+
+#### `input.clean.ligature.guillemets`
+
+- **type**: boolean
+- **default value**: `false`
+-  If enabled, replaces '<<' and '>>' to french "guillemets" ('«' and '»')
+
+#### `input.yaml_blocks`
+
+- **type**: boolean
+- **default value**: `false`
+-  Enable inline YAML blocks to override options set in config file
+
+### Crowbook options
+
+#### `crowbook.html_as_text`
+
+- **type**: boolean
+- **default value**: `true`
+-  Consider HTML blocks as text. This avoids having `<foo>` being considered as HTML and thus ignored.
+
+#### `crowbook.markdown.superscript`
+
+- **type**: boolean
+- **default value**: `false`
+-  If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax.
+
+#### `crowbook.temp_dir`
+
+- **type**: path
+- **default value**: ` ` (empty string)
+-  Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())
+
+#### `crowbook.zip.command`
+
+- **type**: string
+- **default value**: `zip`
+-  Command to use to zip files (for EPUB/ODT)
+
+### Output options (for proofreading)
+
+#### `output.proofread.html`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for HTML rendering with proofread features
+
+#### `output.proofread.html.dir`
+
+- **type**: path
+- **default value**: `not set`
+-  Output directory name for HTML rendering with proofread features
+
+#### `output.proofread.pdf`
+
+- **type**: path
+- **default value**: `not set`
+-  Output file name for PDF rendering with proofread features
+
+### Proofreading options (only for `output.proofread.*` targets)
+
+#### `proofread`
+
+- **type**: boolean
+- **default value**: `false`
+-  If set to false, will disactivate proofreading even if one of output.proofread.x is present
+
+#### `proofread.languagetool`
+
+- **type**: boolean
+- **default value**: `false`
+-  If true, try to use language tool server to grammar check the book
+
+#### `proofread.languagetool.port`
+
+- **type**: integer
+- **default value**: `8081`
+-  Port to connect to languagetool-server
+
+#### `proofread.grammalecte`
+
+- **type**: boolean
+- **default value**: `false`
+-  If true, try to use grammalecte server to grammar check the book
+
+#### `proofread.grammalecte.port`
+
+- **type**: integer
+- **default value**: `8080`
+-  Port to connect to grammalecte server
+
+#### `proofread.repetitions`
+
+- **type**: boolean
+- **default value**: `false`
+-  If set to true, use Caribon to detect repetitions
+
+#### `proofread.repetitions.max_distance`
+
+- **type**: integer
+- **default value**: `25`
+-  Max distance between two occurences so it is considered a repetition
+
+#### `proofread.repetitions.fuzzy`
+
+- **type**: boolean
+- **default value**: `true`
+-  Enable fuzzy string matching
+
+#### `proofread.repetitions.fuzzy.threshold`
+
+- **type**: float
+- **default value**: `0.2`
+-  Max threshold of differences to consider two strings a repetition
+
+#### `proofread.repetitions.ignore_proper`
+
+- **type**: boolean
+- **default value**: `true`
+-  Ignore proper nouns for repetitions
+
+#### `proofread.repetitions.threshold`
+
+- **type**: float
+- **default value**: `2.0`
+-  Threshold to detect a repetition

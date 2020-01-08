@@ -38,7 +38,7 @@ proofread: true
 
 in the book configuration file.
 
-## Repetition detection 
+## Repetition detection
 
 Repetition detection is enabled with:
 
@@ -54,7 +54,7 @@ Default are:
 
 ```yaml
 # The maximum distance between two identical words to
-# consider them a repetition 
+# consider them a repetition
 proofread.repetitions.max_distance: 25
 # The minimal number of occurences to consider it a repetition
 proofread.repetitions.threshold: 2.0
@@ -75,7 +75,6 @@ For more information, see
 [Caribon](https://github.com/lise-henry/caribon)'s
 documentation.
 
-
 > Currently, repetitions are not displayed in PDF proofreading output.
 
 ## Grammar checking
@@ -85,7 +84,7 @@ documentation.
 Crowbook can use
 [LanguageTool](https://languagetool.org/)
 to detect grammar errors in your text.
-It is, however, a bit more complex to activate. 
+It is, however, a bit more complex to activate.
 
 First, you'll have to activate this feature in your book configuration file:
 
@@ -115,7 +114,7 @@ You can then run Crowbook, and it will highlight grammar errors in HTML or PDF p
 ### With Grammalecte
 
 [Grammalecte](http://grammalecte.net/) is a grammar checker specialized for the french language.
-If the language of your book is french, you can use it in a similar fashion to languagetool: 
+If the language of your book is french, you can use it in a similar fashion to languagetool:
 
 ```yaml
 # Activate grammalecte support

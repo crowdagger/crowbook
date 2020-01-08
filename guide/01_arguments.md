@@ -1,4 +1,4 @@
-# Arguments 
+# Arguments
 
 Crowbook can take a number of arguments, generally in the form:
 
@@ -8,20 +8,28 @@ crowbook [OPTIONS] [BOOK]
 
 The most important argument is obviously the book configuration file.
 It is mandatory in most cases:
-if you don't pass it, Crowbook will simply display an error.
-In a normal use case this is the only argument you'll need to pass, as most options will be set in this configuration file. 
+if you don't pass it, `crowbook` will simply display an error.
+In a normal use case this is the only argument you'll need to pass, as most options will be set in this configuration file.
 
 It is, however, possible to pass more arguments to `crowbook`:
 
 ## `--create`
 
-**Usage**: `crowbook [BOOK] --create file_1.md file_2.md ...`
+**Usage**:
 
-(or `crowbook [BOOK] -c file_1.md file_2.md ...`)
+```bash
+crowbook [BOOK] --create file_1.md file_2.md ...
+```
+
+or:
+
+```bash
+crowbook [BOOK] -c file_1.md file_2.md ...
+```
 
 Creates a new book from a list of Markdown files.
 It will generate a book configuration file with all file names specified as chapters.
-It either prints the result to stdout (if `BOOK` is not specified) or generate the file `BOOK` (or abort if it already exists).
+It either prints the result to `stdout` (if `BOOK` is not specified) or generates the file `BOOK` (or abort if it already exists).
 
 ```bash
 crowbook foo.book --create  chapter_1.md chapter_2.md chapter_3.md
@@ -59,17 +67,26 @@ while
 crowbook --create chapter_1.md chapter_2.md chapter_3.md
 ```
 
-will print the same result, but to stdout (without creating a file).
+will print the same result, but to `stdout` (without creating a file).
 
 ## `--single`
 
-**Usage**: `crowbook --single <FILE>`
+**Usage**:
 
-(or `crowbook -s <FILE>`)
+```bash
+crowbook --single <FILE>
+```
+
+or:
+
+```bash
+crowbook -s <FILE>
+```
 
 This argument allows you to give `crowbook` a single Markdown file.
 This file can contain an inline YAML block to set some book options.
 Inline YAML blocks must start and end with a line containing only `---` (three dashes).
+
 E.g:
 
 ```yaml
@@ -95,10 +112,13 @@ That is, the chapter heading (if any) won't be displayed in the output documents
 
 > Note that by default, using `--single` or `-s` sets the default LaTeX class of the book to `article` instead of `book`.
 
+## `--set`
 
-## `--set` 
+**Usage**:
 
-**Usage**: `crowbook <BOOK> --set [KEY] [VALUE]...`
+```bash
+crowbook <BOOK> --set [KEY] [VALUE]...
+```
 
 This argument takes a list of  `KEY` `VALUE` pairs and allows setting or overriding a book configuration option.
 All valid options in the configuration files are valid as keys.
@@ -108,22 +128,35 @@ For more information, see [the configuration file](config.md).
 $ crowbook foo.book --set tex.paper.size a4paper
 ```
 
-will override the paper size for PDF generation. 
+will override the paper size for PDF generation.
 
 ## `--list-options`
 
-**Usage**: `crowbook --list-options`
+**Usage**:
 
-(or `crowbook -l`)
+```bash
+crowbook --list-options
+```
+
+or:
+
+```bash
+crowbook -l
+```
 
 Displays all the valid options that can be used, whether in a book configuration file, with `--set`, or in an inline YAML block.
 
 ## `--print-template`
 
-**Usage**: `crowbook --print-template <TEMPLATE>`
+**Usage**:
 
-Prints the built-in template to stdout.
+```bash
+crowbook --print-template <TEMPLATE>
+```
+
+Prints the built-in template to `stdout`.
 Useful if you want to customize the appearance of your document.
+
 E.g., if you want to modify the CSS used for HTML rendering:
 
 ```bash
@@ -135,33 +168,57 @@ $ crowbook my.book --set html.css my_style.css
 
 ## `--stats`
 
-**Usage**: `crowbook --stats <BOOK>` 
+**Usage**:
 
-(or `crowbook -S <BOOK>`)
+```bash
+crowbook --stats <BOOK>
+```
+
+or:
+
+```bash
+crowbook -S <BOOK>
+```
 
 Display some statistics (word and character counts) about the book.
 
 ## `--proofread`
 
-**Usage**: `crowbook --proofread <BOOK>`
+**Usage**:
 
-(or `crowbook -p <BOOK>`)
+```bash
+crowbook --proofread <BOOK>
+```
+
+or:
+
+```bash
+crowbook -p <BOOK>
+```
 
 Equivalent to `--set proofread true`, enables proofreading.
 See [Proofreading](proofreading.md).
 
 ## `--autograph`
 
-**Usage**: `crowbook --autograph <BOOK>`
+**Usage**:
 
-(or `crowbook -a <BOOK>`)
+```bash
+crowbook --autograph <BOOK>
+```
+
+or:
+
+```bash
+crowbook -a <BOOK>
+```
 
 Prompts for a an autograph execution.
 This is a Markdown block that will be inserted at the beginning of the book.
 
 ### Example
 
-```
+```text
 $ crowbook --autograph my.book
 CROWBOOK 0.14.0
 Enter autograph:
@@ -175,15 +232,27 @@ will add the block of text that was entered to all output files.
 
 ## `--verbose`
 
-**Usage**: `crowbook <BOOK> --verbose`
+**Usage**:
+
+```bash
+crowbook <BOOK> --verbose
+```
 
 If this flag is set, Crowbook will print more warnings it detects while parsing and rendering.
 
 ## `--to`
 
-**Usage**: `crowbook <BOOK> --to [FORMAT]`
+**Usage**:
 
-(or `crowbook <BOOK> -t [FORMAT]`)
+```bash
+crowbook <BOOK> --to [FORMAT]
+```
+
+or:
+
+```bash
+crowbook <BOOK> -t [FORMAT]
+```
 
 Generate only the specified format.
 `FORMAT` must be either `epub`, `pdf`, `html`, `html.dir`, `odt` or `tex`.
@@ -207,26 +276,44 @@ will generate a `foo.pdf` file.
 
 ## `--output`
 
-**Usage**: `crowbook <BOOK> --to <FORMAT> --output <FILE> `
+**Usage**:
 
-(or `crowbook -t <FORMAT> -o <FILE> <BOOK>`)
+```bash
+crowbook <BOOK> --to <FORMAT> --output <FILE>
+```
+
+or:
+
+```bash
+crowbook -t <FORMAT> -o <FILE> <BOOK>
+```
 
 Specifies an output file.
 Only valid when `--to` is used.
 
 ## `--lang`
 
-**Usage**: `crowbook --lang <LANG>`
+**Usage**:
 
-(or `crowbook -L <LANG>`)
+```bash
+crowbook --lang <LANG>
+```
+
+or:
+
+```bash
+crowbook -L <LANG>
+```
 
 Set the runtime language used by Crowbook.
 Currently, only a french translation is available.
 By default, Crowbook uses the `LANG` environment variable to determine which language to use, but this option allows to override it (e.g. for operating systems that don't use such an option, such as Windows).
 
-### Example 
+### Example
 
-`$ crowbook --lang fr --help`
+```bash
+$ crowbook --lang fr --help
+```
 
 will display Crowbook's help message in french.
 
