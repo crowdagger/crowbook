@@ -55,7 +55,7 @@ struct GrammalecteData {
 struct GrammalecteCheck {
     data: Vec<GrammalecteData>,
 }
-    
+
 /// Grammalecte Checker
 pub struct GrammalecteChecker {
     port: usize,
@@ -155,7 +155,7 @@ impl GrammalecteChecker {
                         }
                         Ok(())
                     },
-                
+
                     _ => Ok(()),
                 }
             })

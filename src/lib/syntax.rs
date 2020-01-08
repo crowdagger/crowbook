@@ -57,7 +57,7 @@ impl Syntax {
             theme: theme,
         }
     }
-    
+
     /// Convert a string containing code to HTML
     pub fn to_html(&self, code: &str, language: &str) -> Result<String> {
         let language = strip_language(language);
@@ -78,7 +78,7 @@ impl Syntax {
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
         let regions = h.highlight(code, &self.syntax_set);
-        
+
         let mut result = String::with_capacity(code.len());
         for (style, text) in regions {
             let mut content = escape::tex(text).into_owned();

@@ -64,7 +64,7 @@ impl Default {
         }
     }
 }
-    
+
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
     fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {

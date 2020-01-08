@@ -94,7 +94,7 @@ impl<'a> OdtRenderer<'a> {
                                  features = missing));
         }
 
-        
+
         let mut content = String::new();
 
         for chapter in &self.book.chapters {
@@ -115,7 +115,7 @@ impl<'a> OdtRenderer<'a> {
                     self.current_numbering = 0;
                     self.current_hide = true;
                 }
-           } 
+           }
             if n.is_part() {
                 error!("{}", lformat!("Parts are not supported yet in ODT"));
             }
@@ -177,7 +177,7 @@ impl<'a> OdtRenderer<'a> {
                         s)
             }
             Token::Emphasis(ref vec) => {
-                format!("<text:span text:style-name=\"T1\">{}</text:span>", 
+                format!("<text:span text:style-name=\"T1\">{}</text:span>",
                        self.render_vec(vec))
             }
             Token::Strong(ref vec) => {
@@ -245,7 +245,7 @@ impl BookRenderer for Odt {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.odt", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
         OdtRenderer::new(book)
             .render_book(to)?;

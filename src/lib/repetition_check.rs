@@ -74,7 +74,7 @@ impl RepetitionDetector {
                         .map_err(|err| Error::default(Source::empty(),
                                                       lformat!("error detecting repetitions: {err}",
                                                        err = err)))?;
-                    
+
                     parser.detect_local(&mut ast, self.threshold);
                     let repetitions = parser.ast_to_repetitions(&ast);
                     for repetition in &repetitions {
@@ -91,4 +91,4 @@ impl RepetitionDetector {
         Ok(())
     }
 }
-    
+

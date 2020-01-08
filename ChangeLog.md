@@ -12,7 +12,7 @@ unreleased
   * Description lists
   * Strikethrough
   * Task items
-* New option: 
+* New option:
   * `crowbook.files_mean_chapters` allow to enforce that each files
     means a chapter break or to make sure that it doesn't (by default,
     only true for numbered chapters).
@@ -28,7 +28,7 @@ unreleased
 0.14.1 (2018-06-01)
 -------------------
 * `--stats` can now display more statistics when used with the
-  `--verbose` option (if support for advanced statistics is compiled) 
+  `--verbose` option (if support for advanced statistics is compiled)
 * LaTeX outputs now make uses of user-defined `rendering.chapter` and
   `rendering.part`
 * Dependencies update
@@ -67,16 +67,16 @@ unreleased
 	* The `template.tex` template was quite modified. Crowbook now
     uses custom command for most markdown elements, defined in the
     template. This allow an user to redefine the way the book is
-    rendered without having to modify Crowbook itself. Unfortunately, 
-	as tex templates for previous Crowbook versions won't work anymore. 
+    rendered without having to modify Crowbook itself. Unfortunately,
+	as tex templates for previous Crowbook versions won't work anymore.
    * the `resources.files` option is now a YAML list of strings, instead of a
-     comma-seprated string.  
+     comma-seprated string.
 * Add support for grammalecte grammar checker.
 * `crowbook` command takes a new argument, `-S` or `--stats` which
   displays stats on the book (currently, words and characters count).
 * Interactive fiction:
   * Added conditional blocks.
-* Options: 
+* Options:
   * `output.xxx` options can now take the "auto" value, which will infer the
     output file name based on the book file name.
    * `output` is a new option that can specify a series of format to
@@ -103,7 +103,7 @@ unreleased
 This release includes a few new features, such as the possiblity to
 include Markdown files as section/subsections and not only as chapter,
 experimental support for superscript and subscript, and yet more
-experimental support for writing interactive fiction. 
+experimental support for writing interactive fiction.
 
 * Book configuration file:
   * It is now possible to include subchapters using the `--` command
@@ -151,7 +151,7 @@ experimental support for writing interactive fiction.
     where HTML code is not appropriate. Templates can use this
     metadata with the `foo_raw` value.
   * HTML/EPUB: fix double-escaping/rendering issues in titles.
-  * EPUB: 
+  * EPUB:
       * Escape title and author before feeding them to epub-builder.
 	  * Fix content.opf issue by not rendering first
         chapter's title (marked as beginning of document) in `<guide>`.
@@ -179,7 +179,7 @@ experimental support for writing interactive fiction.
 
 0.11.2 (2017-03-05)
 -----------------------
-* General: 
+* General:
   * When there is an error setting an option from the book configuration
 	file (e.g. because it is an invalid key), print an error but do not
     abort, only ignore this specific option.
@@ -198,7 +198,7 @@ experimental support for writing interactive fiction.
   * `[syntect](https://crates.io/crates/syntect)` is now the default
     for `rendering.highlight`. Concretely, this means that by default
     syntax highlighting is now done when `crowbook` is run instead of
-    using `[highlight.js](https://highlightjs.org/)`. 
+    using `[highlight.js](https://highlightjs.org/)`.
   * EPUB:
     * Now sets the "cover-image" property and meta so readers should
       display cover correctly.
@@ -217,7 +217,7 @@ experimental support for writing interactive fiction.
     is not used.
    * Avoid creating an empty file if some book renderer fails
      (e.g. EPUB or ODT because `zip` command is not present).
-	
+
 
 0.11.1 (2017-01-05)
 -----------------------
@@ -260,10 +260,10 @@ support for parts!
   substantial options renaming (see below).
 * Crowbook now supports parts (above the "chapter" level), using the
   '@' character in the book configuration file.
-* Command-line interface: 
+* Command-line interface:
   * Behaviour of `--to` should now be consistent for all output
     formats.
-  * If `--output` is set to `-`, prints to stdout. 
+  * If `--output` is set to `-`, prints to stdout.
   * Conversely, if `<BOOK>` is set to `-`, reads from stdin.
   * Path specified by `--output` is now interpreted relatively to
     current directory (and not depending on where `<BOOK>` is or its
@@ -310,7 +310,7 @@ support for parts!
       ([#23](https://github.com/lise-henry/crowbook/issues/23)).
 	* Fix "previous chapter" links that were not displayed when
       "html.header" was set.
-  * HTML: 
+  * HTML:
     * Fix the way initial letter is displayed if `rendering.initials`
       is true.
 * Internationalization:
@@ -324,7 +324,7 @@ support for parts!
     the LaTeX class (must be 10, 11 or 12).
   * `tex.title` can be set to `false` to avoid rendering the title
     with `\maketitle`.
-  * `tex.paper_size` specifies the paper size for PDF output. 
+  * `tex.paper_size` specifies the paper size for PDF output.
   * `tex.template.add`, `html.css.add` and `epub.css.add`allow to
     specify inline LaTex or CSS code in the book configuration file
     that will be added respectively to `tex.template.add`,
@@ -341,13 +341,13 @@ support for parts!
 -----------------------
 * Building:
   * Crowbook now requires rustc >= 1.13.0 to build.
-  * Pre-built binaries now all include the proofreading feature. 
+  * Pre-built binaries now all include the proofreading feature.
   * Linux binaries are now linked against `musl` library so they
     should really work on any Linux platform.
 * Bugfixes:
   * Fixed escaping of `author` and `title` fields.
   * Fixed text cleaning in ODT rendering that causes corrupt files to
-    be generated. 
+    be generated.
 * CommandLine Interface:
   * Crowbook displays clearer error messages when unable to launch
     `latex` or `zip` commands.
@@ -384,16 +384,16 @@ Fixed a bug in `fr.po` translation that prevented building from fresh install.
 This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and
 the program should now be tranlated if your `LANG` environment
 variable is set to french.
-* **Breaking changes**: 
+* **Breaking changes**:
   * Templates:
-	* Conditional inclusion depending on `lang` must now be done using `lang_LANG` (e.g. 
-	`lang_fr`, `lang_en`, and so on). This might impact custom `epub.css` and `html.css` 
-	templates. 
+	* Conditional inclusion depending on `lang` must now be done using `lang_LANG` (e.g.
+	`lang_fr`, `lang_en`, and so on). This might impact custom `epub.css` and `html.css`
+	templates.
   * API:
     * The `escape` module has been moved to a separate crate,
       `crowbook_text_processing`. The `cleaner` module is no longer
       public, but the features it provided are also available in
-      `crowbook_text_processing`. 
+      `crowbook_text_processing`.
 * New options:
   * `html.css.colors` allows to provide a CSS file that only redefine
     the colour scheme. Such a file can be built from `crowbook
@@ -432,21 +432,21 @@ experimental.
      * `proofread.nb_spaces`, if set to true, highlights non-breaking spaces so it is
      easier to check the correct typography of a book. Note that it
      requires that `html.escape_nb_spaces` be set to true (default) to
-     work. 
+     work.
      * `proofread.reppetitions`, if set to true, uses
        [Caribon](https://github.com/lise-henry/caribon) to highlight
        repetitions in a document. It also uses the settings `proofread.repetitions.fuzzy`,
        `proofread.repetitions.max_distance`,
-       `proofread.repetitions.threshold`, 
+       `proofread.repetitions.threshold`,
        `proofread.repetitions.fuzzy.threshold`,
        `proofread.repetitions.ignore_proper`. Note that this feature
        is not built by default, you'll have to build crowbook with
        `cargo build --release --features "repetitions"`.
 * New default settings for options:
-  * `tex.command` is now `xelatex` by default. 
+  * `tex.command` is now `xelatex` by default.
 * Rendering:
   * LaTeX:
-    * Add support for xelatex in the default template. 
+    * Add support for xelatex in the default template.
   * Improved french cleaner (see [an article (in french)](https://crowdagger.github.io/textes/articles/heuristique.html)
     that talks about what it does).
 * Crowbook user guide: documentation has been updated to correctly
@@ -504,7 +504,7 @@ More detailed changes for this release:
   * `output.base_path` specifies a directory where the output files (set
     by `output.FORMAT` will be written.
   * `resources.base_path.templates` specifies where templates can be
-    found. 
+    found.
 * Rendering:
   * Metadata can now contain Markdown and will be rendered by the
     renderers. This might not be a good idea for common fields
@@ -522,7 +522,7 @@ More detailed changes for this release:
     * If `tex.class` is set to `article`, chapters will be displayed as
       `\sections` since `article` class doesn't handle chapters.
     * Except if `tex.class` is set to `book`, margins are now
-      symmetrical. 
+      symmetrical.
     * LaTex template now uses `version` and `date`.
 * Bugfixes:
   * `import_config` only import options from another book file that
@@ -530,7 +530,7 @@ More detailed changes for this release:
     set by the caller. E.g., `author: foo` then `import_config:
     bar.book` won't erase the author previously set.
   * `import_config` now correctly translates the imported book's
-    paths. 
+    paths.
 * Crowbook program:
   * Still working to improve error messages.
   * `crowbook --list-options` uses colors. This might hurt your eyes.
@@ -540,7 +540,7 @@ More detailed changes for this release:
   * Added static methods to `Logger` to allows displaying messages
     more easily/prettily.
   * Reduce pubic API's surface so less changes will need to be
-    considered breaking in the future. 
+    considered breaking in the future.
 
 0.8.0 (2016-09-19)
 ------------------
@@ -642,7 +642,7 @@ paragraph or inside a paragraph.
     * Fixed rendering of lists when `lang` is set to `fr`.
     * Links are now HTML-escaped, fixing errors in XHTML (for EPUB
       rendering) when links contained '&' character.
-    
+
 
 0.5.1 (2016-04-14)
 ------------------
@@ -717,7 +717,7 @@ Mostly rendering fixes:
       files will be placed in a `data` directory in the EPUB.
 * Rendering:
     * Templates can now use localized strings according to the `lang`
-      option 
+      option
     * Standalone HTML now includes locale files using base64.
     * Standalone HTML displays one chapter at a time, thouht it can be
       changed via a button in the menu.
@@ -768,7 +768,7 @@ displayed:
       different colors.
 * Bugfixes:
     * Crowbook no longer crashes when called with the `--to` argument
-      if it can't create a file. 
+      if it can't create a file.
 
 
 0.3.0 (2016-02-27)
@@ -787,7 +787,7 @@ displayed:
     * More modules and methods are now private.
     * Improved documentation.
     * Added more unit tests.
-* Bugfixes: 
+* Bugfixes:
     * Epub renderer now correctly renders unnumbered chapter without a
       number in its toc.ncx file
 
@@ -808,13 +808,13 @@ displayed:
     * Latex: makes what is possible to avoid orverflowing the page.
 * Minor changes:
     * Latex: improvement of the default way URLs are displayed.
-      
 
-0.2.0 (2016-02-25) 
+
+0.2.0 (2016-02-25)
 ------------------
 * Command line arguments:
     * New argument `--print-template` now allows to print a built-in
-      template to stdout. 
+      template to stdout.
     * New argument `--list-options` prints out all valid
       options in a config file (or in `set`), their type and default
       value.
@@ -825,14 +825,14 @@ displayed:
 * Configuration file:
     * Added support for multiline strings in `.book` files, with
       either '|' (preserving line returns) or '>' (transforming line
-      returns in spaces) 
+      returns in spaces)
     * New option `display_toc` allows to display the table of contents
       (whose name, at least for HTML, is specified by `toc_name`) in
       HTML and PDF documents.
     * Option `numbering` now takes an int instead of a boolean,
       allowing to specify the maximum level to number (e.g. `1`:
       chapters only, `2`: chapters and sectino, ..., `6`: everything).
-* Rendering: 
+* Rendering:
     * Added support for numbering all headers, not just level-1 (e.g.,
       having a subsection numbered `2.3.1`).
     * Tables and Footnotes are now implemented for HTML/Epub and LaTeX

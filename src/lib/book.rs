@@ -147,7 +147,7 @@ impl fmt::Display for HeaderData {
 ///
 /// ```
 /// use crowbook::{Book, Number};
-/// // Create a book with some options 
+/// // Create a book with some options
 /// let mut book = Book::new();
 /// book.set_options(&[("author", "Joan Doe"),
 ///                    ("title", "An untitled book"),
@@ -228,7 +228,7 @@ impl Book {
         self.bar_finish(Crowbar::Main, CrowbarState::Error, msg)
     }
 
-   
+
 
     /// Adds a progress bar where where info should be written.
     ///
@@ -266,7 +266,7 @@ impl Book {
         self.formats.insert(format, (description.into(), renderer));
         self
     }
-    
+
     /// Sets the options of a `Book`
     ///
     /// # Arguments
@@ -344,7 +344,7 @@ impl Book {
             }
         }
     }
-    
+
     /// Loads a single markdown file
     ///
     /// This is *not* used to add a chapter to an existing book, but to to load the
@@ -448,7 +448,7 @@ impl Book {
         }
         Ok(self)
     }
-        
+
     /// Reads a book configuration from a `Read`able source.
     ///
     /// # Book configuration
@@ -474,7 +474,7 @@ impl Book {
     ///
     /// ! intro.md
     /// + chapter_01.md";
-    /// 
+    ///
     /// let mut book = Book::new();
     /// book.read_config(content.as_bytes()); // no unwraping as `intro.md` and `chapter_01.md` don't exist
     /// ```
@@ -498,7 +498,7 @@ impl Book {
             .map_err(|err| Error::config_parser(Source::empty(),
                                                 lformat!("could not read source: {error}",
                                                          error = err)))?;
-        
+
         // Parse the YAML block, that is, until first chapter
         let mut yaml = String::new();
         let mut lines = s.lines().peekable();
@@ -675,7 +675,7 @@ impl Book {
         }
 
         self.bar_finish(Crowbar::Second, CrowbarState::Success, "");
-        
+
         self.source.unset_line();
         self.set_chapter_template()?;
         Ok(self)
@@ -923,7 +923,7 @@ impl Book {
     /// * `render_format_to`, which writes in any `Write`able object.
     /// * `render_format`, which won't do anything if `output.{format}` isn't specified
     ///   in the book configuration file.
-    
+
     pub fn render_format_to_file<P:Into<PathBuf>>(&mut self,
                                                   format: &str,
                                                   path: P) -> Result<()> {
@@ -938,8 +938,8 @@ impl Book {
         self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
         Ok(())
     }
-    
-    
+
+
 
     /// Adds a chapter to the book.
     ///
@@ -982,7 +982,7 @@ impl Book {
                                   file = misc::normalize(file)));
         }
 
-        
+
         // For offset: if nothing is specified, it is the filename's directory
         // If base_path.{images/links} is specified, override it for one of them.
         // If base_path is specified, override it for both.
@@ -1009,7 +1009,7 @@ impl Book {
         if let Ok(x) = self.options.get_bool("crowbook.files_mean_chapters") {
             add_title_if_empty = x;
         }
-        
+
         // Add a title if there is none in the chapter (unless this is subchapter)
         if add_title_if_empty {
             misc::insert_title(&mut tokens);
@@ -1091,10 +1091,10 @@ impl Book {
                 }
             }
         }
-        
+
         Ok(self)
     }
-    
+
 
     /// Adds a chapter, as a file name, to the book
     ///
@@ -1123,7 +1123,7 @@ impl Book {
                                       lformat!("book chapter"),
                                       format!("{}", path.display()))
             })?;
-     
+
         self.add_chapter_from_named_source(number, file, f, add_title_if_empty)
     }
 
@@ -1271,7 +1271,7 @@ impl Book {
             Header::Part => &self.part_template,
             Header::Chapter => &self.chapter_template,
         };
-        
+
         if let Some(ref template) = *opt_template {
             template.render_data(&mut res, &data)?;
         } else {
