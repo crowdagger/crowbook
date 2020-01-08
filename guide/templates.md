@@ -133,7 +133,7 @@ The main CSS file used by both the standalone HTML renderer and the multiple fil
 
 ### html.css.colors
 
-A CSS file containing only colour settings.
+A CSS file containing only color settings.
 Used by `html.css`.
 
 This is not currently an actual template, just a plain CSS file which cannot contain `mustache` tags.
@@ -287,5 +287,5 @@ Crowbook also exports some additional fields for some templates, see below.
 | `tex_size` | The font size to pass to the LaTeX class | `tex.template` |
 | `has_tex_size` | Set to true if `tex_size` is set | `tex.template` |
 | `margin_left`, `margin_right`, `margin_top`, `margin_bottom` | The margins of the document | `tex.template` |
-| `initials` | True if `rendering.initials` is true, not set else | `tex.template` | 
+| `initials` | True if `rendering.initials` is true, not set else | `tex.template` |
 | `additional_code` | Set to the content of `tex.template.add`, `html.css.add` or `epub.css.add` | `tex.template`, `html.css`, `epub.css` |

@@ -426,13 +426,13 @@ impl<'a> HtmlRenderer<'a> {
                                        escape::quotes(s.as_str()),
                                        content))
                         }
-                        Data::Repetition(ref colour) => {
+                        Data::Repetition(ref color) => {
                             if !this.as_ref().verbatim {
                                 Ok(format!("<span class = \"repetition\" \
                                             style = \"text-decoration-line: underline; \
                                             text-decoration-style: wavy; \
-                                            text-decoration-color: {colour}\">{content}</span>",
-                                           colour = colour,
+                                            text-decoration-color: {color}\">{content}</span>",
+                                           color = color,
                                            content = content))
                             } else {
                                 Ok(content)
