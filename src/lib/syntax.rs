@@ -41,7 +41,7 @@ impl Syntax {
         let theme = match theme_set.themes.remove(theme_name) {
             Some(theme) => theme,
             None => {
-                error!("{}", lformat!("could not set syntect theme to {theme}, defaulting to \"InspiredGithub\"",
+                error!("{}", lformat!("could not set syntect theme to {theme}, defaulting to \"InspiredGitHub\"",
                                            theme = theme_name));
                 info!("{}", lformat!("valid theme names are: {themes}",
                                           themes = theme_set.themes

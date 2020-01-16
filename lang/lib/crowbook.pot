@@ -1401,7 +1401,7 @@ msgid "TOTAL:"
 msgstr ""
 
 #: /home/lise/Progs/rust/crowbook/src/lib/syntax.rs:44
-msgid "could not set syntect theme to {theme}, defaulting to \"InspiredGithub\""
+msgid "could not set syntect theme to {theme}, defaulting to \"InspiredGitHub\""
 msgstr ""
 
 #: /home/lise/Progs/rust/crowbook/src/lib/syntax.rs:46

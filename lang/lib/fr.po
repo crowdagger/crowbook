@@ -1655,9 +1655,9 @@ msgstr "TOTAL :"
 
 #: /home/lise/Progs/rust/crowbook/src/lib/syntax.rs:44
 msgid ""
-"could not set syntect theme to {theme}, defaulting to \"InspiredGithub\""
+"could not set syntect theme to {theme}, defaulting to \"InspiredGitHub\""
 msgstr ""
-"impossible de placer le thème à {theme}, on se rabat sur \"InspiredGithub\""
+"impossible de placer le thème à {theme}, on se rabat sur \"InspiredGitHub\""
 
 #: /home/lise/Progs/rust/crowbook/src/lib/syntax.rs:46
 msgid "valid theme names are: {themes}"
