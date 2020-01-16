@@ -2,9 +2,9 @@
 author: "Élisabeth Henry"
 title: Crowbook User Guide
 description: >-
- Crowbook allows to render a book written in Markdown in various
- formats. This is some kind of manual for it, and a way to
- demonstrate and test it.
+  Crowbook allows to render a book written in Markdown in various
+  formats. This is some kind of manual for it, and a way to
+  demonstrate and test it.
 lang: en
 cover: cover.png
 version: 0.15.0
@@ -38,9 +38,9 @@ proofread.repetitions: true
 proofread.languagetool: true
 
 # Rendering options
-rendering.num_depth: 2
+rendering.num_depth: 4
 rendering.initials: false
-rendering.inline_toc: false
+rendering.inline_toc: true
 rendering.chapter.template: "{{{number}}}. {{{chapter_title}}}"
 rendering.chapter.roman_numerals: false
 rendering.part.reset_counter: true
@@ -70,13 +70,13 @@ epub.version: 3
 # Finally, our files.
 # Paths are relative to the directory where this file is
 + README.md
-+ guide/arguments.md
-+ guide/config.md
-+ guide/markdown.md
-+ guide/templates.md
-+ guide/proofreading.md
-+ guide/if.md
-+ guide/misc.md
-+ guide/contribute.md
++ guide/01_arguments.md
++ guide/02_config.md
++ guide/03_markdown.md
++ guide/04_templates.md
++ guide/05_proofreading.md
++ guide/06_interactive_fiction.md
++ guide/07_miscellaneous.md
++ guide/08_contributing.md
 - ChangeLog.md
 - LICENSE.md

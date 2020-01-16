@@ -1,10 +1,10 @@
 # Interactive fiction
 
-Version `0.12.0` added experimental support for writing interactive fiction. 
+Version [`v0.12.0`](https://github.com/lise-henry/crowbook/tree/v0.12.0) added experimental support for writing interactive fiction.
 
 > Since this support is experimental, it means it can change at
 > anytime, and there is no guarentee that the interactive fiction you
-> write for the current version of Crowbook will work with the next
+> write for the current version of `crowbook` will work with the next
 > release, even if it isn't a major release.
 
 ## Basics
@@ -16,13 +16,13 @@ If you want to have a non-linear story, you can simply use Markdown links just a
 * [It might be trapped, stay away from it](stay_away.md)
 ```
 
-All Crowbook renderers should render this correctly, allowing the reader to "choose her adventure".
-Note, however, that you still need to include all these Markdown files in you book configuration files. 
+All `crowbook` renderers should render this correctly, allowing the reader to "choose her adventure".
+Note, however, that you still need to include all these Markdown files in you book configuration files.
 
 ## The interactive fiction renderer
 
 While the above allows you to generate correct EPUB and PDF files, it will still display all the content if the reader chooses to read your book linearly.
-While this may not be a problem, you might want to only display the part of the book that the reader is actually exploring. 
+While this may not be a problem, you might want to only display the part of the book that the reader is actually exploring.
 
 In order to do so, you can use the interactive fiction html renderer:
 
@@ -35,7 +35,7 @@ This output is similar to the standalone HTML output, except the option to displ
 ## Using Javascript in your interactive fiction
 
 While the above allows the reader to choose his own path, its interactivity is quite limited.
-With the interactive fiction renderer, it is possible to include Javascript code in your Markdown files, using a code block element: 
+With the interactive fiction renderer, it is possible to include Javascript code in your Markdown files, using a code block element:
 
 ```markdown
 You open the chest, and you find a shiny sword. Yay!
@@ -58,7 +58,7 @@ You encounter a goblin, armed with a knife!
 > Note that *only* the interactive fiction renderer supports this way
 > of embedding Javascript code. If you try to render a document
 > containing such code blocks to EPUB, PDF, or the "normal" HTML
-> renderer, they will be displayed as regular code blocks. 
+> renderer, they will be displayed as regular code blocks.
 
 ## Embedding Makdown in your Javascript code embedded in your Markdown
 
@@ -93,8 +93,8 @@ you'll juste have to insert a named code block with the number:
     ```1
     @"Only displayed at first passage"@
     ```
-    
-	```2 
+
+	```2
     @"Only displayed at second passage"@
     ```
 
@@ -102,13 +102,14 @@ you'll juste have to insert a named code block with the number:
     @"Displayed at passage 3, 4 and so on.
     ```
 
-## Interactive fiction options 
+## Interactive fiction options
 
 As other renderers, there are options specific to the interactive fiction.
 
 **html.if.new_game** allows you to specify the path to a Javascript that will be run at the beginning of the game.
 Since this code is not embedded in a function and is at the root (and the beginning) of the document, it is a good place to declare all the functions and the global variables you might need for your interactive fiction mechanics.
-e.g.:
+
+E.g.:
 
 ```yaml
 html.if.new_game: some_file.js
