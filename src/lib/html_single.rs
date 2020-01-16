@@ -92,7 +92,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             self.html.handler.add_link(chapter.filename.as_str(),
                                        format!("#chapter-{}", i));
         }
-        
+
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             let n = chapter.number;
             let v = &chapter.content;
@@ -271,7 +271,7 @@ impl BookRenderer for HtmlSingle {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.html", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)?;
         let result = html.render_book()?;
@@ -288,7 +288,7 @@ impl BookRenderer for ProofHtmlSingle {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.proof.html", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut html = HtmlSingleRenderer::new(book)?
             .proofread();

@@ -178,7 +178,7 @@ impl<'a> HtmlDirRenderer<'a> {
     // Render each chapter and write them, and index.html too
     fn write_html(&mut self) -> Result<()> {
         let mut chapters = vec![];
-        
+
         let mut titles = vec![];
         let mut titles_raw = vec![];
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
@@ -310,7 +310,7 @@ impl<'a> HtmlDirRenderer<'a> {
             let mut f = |key| {
                 self.render_vec(&Parser::new().parse_inline(self.html.book.options.get_str(key)?)?)
             };
-    
+
             format!("<h2 class = 'author'>{author}</h2>
 <h1 class = 'title'>{title}</h1>
 <h2 class = 'subtitle'>{subtitle}</h2>
@@ -456,12 +456,12 @@ impl BookRenderer for HtmlDir {
     fn auto_path(&self, _: &str) -> Result<String> {
         Ok(String::from("output_html"))
     }
-    
+
     fn render(&self, _: &Book, _: &mut dyn io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("can only render HTML directory to a path, not to a stream")))
     }
-    
+
     fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
         HtmlDirRenderer::new(book)?
             .render_book(path)?;
@@ -473,12 +473,12 @@ impl BookRenderer for ProofHtmlDir {
     fn auto_path(&self, _: &str) -> Result<String> {
         Ok(String::from("output_html_proof"))
     }
-    
+
     fn render(&self, _: &Book, _: &mut dyn io::Write) -> Result<()> {
         Err(Error::render(Source::empty(),
                           lformat!("can only render HTML directory to a path, not to a stream")))
     }
-    
+
     fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
         HtmlDirRenderer::new(book)?
             .proofread()

@@ -18,7 +18,7 @@ lang:meta:en                        # {lang}
 subject:meta                        # {subject}
 description:meta                    # {description}
 cover:path                          # {cover}
-        
+
 # {metadata2}
 subtitle:meta                       # {subtitle}
 license:meta                        # {license}
@@ -224,7 +224,7 @@ crowbook.verbose:alias                              # {removed}
                                          prf_opt = lformat!("Output options (for proofreading)"),
                                          prf_opt2 = lformat!("Proofreading options (only for output.proofread.* targets)"),
                                          deprecated_opt = lformat!("Deprecated options"),
-                                         
+
                                          author = lformat!("Author of the book"),
                                          title = lformat!("Title of the book"),
                                          lang = lformat!("Language of the book"),
@@ -237,7 +237,7 @@ crowbook.verbose:alias                              # {removed}
                                          version = lformat!("Version of the book"),
                                          date = lformat!("Date the book was revised"),
                                          autograph = lformat!("An autograph"),
-                                         
+
                                          output_epub = lformat!("Output file name for EPUB rendering"),
                                          output_html = lformat!("Output file name for HTML rendering"),
                                          output_tex = lformat!("Output file name for LaTeX rendering"),
@@ -260,7 +260,7 @@ crowbook.verbose:alias                              # {removed}
                                          roman_numerals_parts = lformat!("If set to true, display part number with roman numerals"),
                                          roman_numerals_chapters = lformat!("If set to true, display chapter number with roman numerals"),
                                          reset_counter = lformat!("If set to true, reset chapter number at each part"),
-                                         
+
                                          import_config = lformat!("Import another book configuration file"),
 
                                          html_icon = lformat!("Path to an icon to be used for the HTML files(s)"),
@@ -275,7 +275,7 @@ crowbook.verbose:alias                              # {removed}
                                          highlight_css = lformat!("Set another highlight.js CSS theme than the default one"),
                                          side_notes = lformat!("Display footnotes as side notes in HTML/Epub (experimental)"),
                                          nb_spaces = lformat!("Replace unicode non breaking spaces with HTML entities and CSS"),
-                                         
+
                                          one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
                                          single_html = lformat!("Path of an HTML template for standalone HTML"),
                                          single_js = lformat!("Path of a javascript file"),
@@ -287,13 +287,13 @@ crowbook.verbose:alias                              # {removed}
                                          html_chapter_template = lformat!("Inline template for HTML chapter formatting"),
                                          html_part_template = lformat!("Inline template for HTML part formatting"),
                                          html_dir_template = lformat!("Path of a HTML template for multifile HTML"),
-                                         
+
                                          epub_ver = lformat!("EPUB version to generate (2 or 3)"),
                                          epub_css = lformat!("Path of a stylesheet for EPUB"),
                                          epub_css_add = lformat!("Inline CSS added to the EPUB stylesheet template"),
                                          chapter_xhtml = lformat!("Path of an xhtml template for each chapter"),
                                          epub_toc = lformat!("Add 'Title' and (if set) 'Cover' in the EPUB table of contents"),
-                                         
+
                                          tex_links = lformat!("Add foontotes to URL of links so they are readable when printed"),
                                          tex_command = lformat!("LaTeX command to use for generating PDF"),
                                          tex_tmpl = lformat!("Path of a LaTeX template file"),
@@ -308,7 +308,7 @@ crowbook.verbose:alias                              # {removed}
                                          tex_font_size = lformat!("Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"),
                                          tex_hyperref = lformat!("If disabled, don't try to find references inside the document"),
                                          tex_stdpage = lformat!("If set to true, use 'stdpage' package to format a manuscript according to standards"),
-                                         
+
                                          rs_files = lformat!("Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts"),
                                          rs_out = lformat!("Paths where additional resources should be copied in the EPUB file or HTML directory"),
                                          rs_base = lformat!("Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path."),
@@ -316,7 +316,7 @@ crowbook.verbose:alias                              # {removed}
                                          rs_img = lformat!("Set base path but only for images. Useless if resources.base_path is set"),
                                          rs_base_files = lformat!("Set base path but only for additional files. Useless if resources.base_path is set."),
                                          rs_tmpl = lformat!("Set base path but only for templates files. Useless if resources.base_path is set"),
-                                         
+
                                          autoclean = lformat!("Toggle typographic cleaning of input markdown according to lang"),
                                          smart_quotes = lformat!("If enabled, tries to replace vertical quotations marks to curly ones"),
                                          ligature_dashes = lformat!("If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"),
@@ -327,7 +327,7 @@ crowbook.verbose:alias                              # {removed}
                                          files_mean_chapters = lformat!("Consider that a new file is always a new chapter, even if it does not include heading (default: only for numbered chapters)"),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
-                                         
+
                                          prf_html = lformat!("Output file name for HTML rendering with proofread features"),
                                          prf_html_dir = lformat!("Output directory name for HTML rendering with proofread features"),
                                          prf_pdf = lformat!("Output file name for PDF rendering with proofread features"),
@@ -346,7 +346,7 @@ crowbook.verbose:alias                              # {removed}
                                          tex_theme = lformat!("If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"),
                                          html_theme = lformat!("If set, set theme for syntax highlighting for HTML output (syntect only)"),
                                          epub_theme = lformat!("If set, set theme for syntax highlighting for EPUB output (syntect only)"),
-                                         
+
                                          renamed = lformat!("Renamed"),
                                          removed = lformat!("Removed"),
     );
@@ -549,7 +549,7 @@ impl BookOptions {
                     let options = mem::replace(&mut book.options, BookOptions::new());
                     self.merge(options)?;
                     Ok(None)
-            } else { 
+            } else {
                     Ok(self.options.insert(key, BookOption::Path(value)))
                 }
             } else {

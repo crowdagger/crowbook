@@ -177,7 +177,7 @@ impl ResourceHandler {
             }
         }
     }
-    
+
     pub fn is_local(path: &str) -> bool {
         !path.contains("://") // todo: use better algorithm
     }

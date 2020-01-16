@@ -23,7 +23,7 @@ output.html: book.html
 output.html.dir: html
 output.pdf: book.pdf
 output.odt: book.odt
- 
+
 output.base_path: docs/book/
 output.proofread.html: book.proof.html
 output.proofread.html.dir: html_proof
@@ -80,6 +80,3 @@ epub.version: 3
 + guide/contribute.md
 - ChangeLog.md
 - LICENSE.md
-
-  
-  

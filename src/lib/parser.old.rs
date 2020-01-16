@@ -136,7 +136,7 @@ impl Parser {
         parser.superscript = book.options.get_bool("crowbook.markdown.superscript").unwrap();
         parser
     }
-    
+
     /// Enable/disable HTML as text
     pub fn html_as_text(&mut self, b: bool) {
         self.html_as_text = b;
@@ -189,7 +189,7 @@ impl Parser {
             self.parse_super_vec(&mut res);
             self.parse_sub_vec(&mut res);
         }
-        
+
         Ok(res)
     }
 
@@ -260,7 +260,7 @@ impl Parser {
         }
         Ok(())
     }
-    
+
     /// Looks for super script in a vector of tokens
     fn parse_super_vec(&mut self, v: &mut Vec<Token>) {
         for i in 0..v.len() {
@@ -273,7 +273,7 @@ impl Parser {
             } else {
                 if v[i].is_code() || !v[i].is_container() {
                     continue;
-                } 
+                }
                 if let Some(ref mut inner) = v[i].inner_mut() {
                     self.parse_super_vec(inner);
                 }
@@ -303,7 +303,7 @@ impl Parser {
             } else {
                 if v[i].is_code() || !v[i].is_container() {
                     continue;
-                } 
+                }
                 if let Some(ref mut inner) = v[i].inner_mut() {
                     self.parse_sub_vec(inner);
                 }
@@ -334,7 +334,7 @@ impl Parser {
                     } else {
                         debug!("{}", lformat!("ignoring HTML block '{}'", text));
                     }
-                }, 
+                },
 
                 Event::Text(text) => {
                     v.push(Token::Str(text.into_owned()));

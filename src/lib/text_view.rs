@@ -30,14 +30,14 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
         Token::Str(ref s) | Token::Code(ref s) | Token::CodeBlock(_, ref s) => f(s),
 
         Token::SoftBreak => f(" "),
-        
+
         Token::Rule |
         Token::HardBreak => f("\n"),
 
         Token::Image(..) |
         Token::StandaloneImage(..) |
         Token::FootnoteDefinition(..) |
-        Token::FootnoteReference(..) | 
+        Token::FootnoteReference(..) |
         Token::Table(..) |
         Token::TableHead(..) |
         Token::TableRow(..) |

@@ -107,7 +107,7 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
 
 /// Sets the book options according to command line arguments
 /// Also print these options to a string, so it can be used at
-/// the creation of a book to check that parameters are OK and 
+/// the creation of a book to check that parameters are OK and
 /// then print them to file
 pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     let mut output = String::new();

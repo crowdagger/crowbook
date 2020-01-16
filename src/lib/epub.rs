@@ -85,7 +85,7 @@ impl<'a> EpubRenderer<'a> {
         if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
             maker.epub_version(EpubVersion::V30);
         }
-        
+
         let lang = self.html.book.options.get_str("lang").unwrap();
         let toc_extras = self.html.book.options.get_bool("epub.toc.extras").unwrap();
         maker.metadata("lang", lang)?;
@@ -103,7 +103,7 @@ impl<'a> EpubRenderer<'a> {
         if let Ok(license) = self.html.book.options.get_str("license") {
             maker.metadata("license", license)?;
         }
-        
+
         // if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
         //     if self.html.book.options.get("cover").is_ok() {
         //         self.html.toc.add(1,
@@ -115,8 +115,8 @@ impl<'a> EpubRenderer<'a> {
         //                       lang::get_str(lang, "title"));
 
         // }
-        
-        
+
+
         // /* If toc will be rendered inline, add it... to the toc (yeah it's meta) */
         // if self.html.book.options.get_bool("rendering.inline_toc").unwrap() == true {
         //     self.html.toc.add(1,
@@ -125,7 +125,7 @@ impl<'a> EpubRenderer<'a> {
         //                                     "toc"));
         // }
 
-        
+
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html.handler.add_link(chapter.filename.as_str(), filenamer(i));
         }
@@ -156,7 +156,7 @@ impl<'a> EpubRenderer<'a> {
             maker.inline_toc();
         }
 
-        
+
         // Write chapters
         let template_chapter =
             compile_str(self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
@@ -246,7 +246,7 @@ impl<'a> EpubRenderer<'a> {
         }
 
         maker.generate(to)?;
-    
+
         Ok(String::new())
     }
 
@@ -540,7 +540,7 @@ impl BookRenderer for Epub {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.epub", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn Write) -> Result<()> {
         EpubRenderer::new(book)?
             .render_book(to)?;

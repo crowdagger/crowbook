@@ -38,7 +38,7 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
 
     let mut stdout = false;
     let mut file = None;
-    
+
     if let Some(f) = matches.value_of("output") {
         if f == "-" {
             stdout = true;
@@ -57,7 +57,7 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
         (None, _, true)
         => book.render_format_to(format, &mut io::stdout()),
     };
-    
+
     match result {
         Err(err) => print_error(&format!("{}", err), emoji),
         Ok(_) => {}
@@ -100,7 +100,7 @@ pub fn try_main() -> Result<()> {
         exit(0);
     }
 
-    if matches.is_present("no-fancy") || matches.is_present("stats") { 
+    if matches.is_present("no-fancy") || matches.is_present("stats") {
         fancy_ui = false;
         emoji = false;
     }
@@ -202,7 +202,7 @@ pub fn try_main() -> Result<()> {
             book.add_progress_bar(emoji);
         }
         book.set_options(&get_book_options(&matches));
-        
+
         {
             let res = if matches.is_present("single") {
                 if s != "-" {
@@ -215,7 +215,7 @@ pub fn try_main() -> Result<()> {
             } else {
                 book.read_config(io::stdin())
             }.map(|_| ());
-            
+
             match res {
                 Ok(..) => {},
                 Err(err) => {
@@ -226,13 +226,13 @@ pub fn try_main() -> Result<()> {
         }
 
         set_book_options(&mut book, &matches);
-        
+
         if matches.is_present("stats") {
             let stats = Stats::new(&book, matches.is_present("verbose"));
             println!("{}", stats);
             exit(0);
         }
-        
+
         if let Some(format) = matches.value_of("to") {
             render_format(&mut book, emoji,& matches, format);
         } else {
@@ -272,7 +272,7 @@ pub fn try_main() -> Result<()> {
         }
     }
 
-    
+
     Ok(())
 }
 

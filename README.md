@@ -5,7 +5,7 @@
 
 Crowbook's aim is to allow you to write a book in Markdown without worrying about formatting or typography, and let the program generate HTML, PDF and EPUB output for you.
 Its focus is novels and fiction, and the default settings should (hopefully) generate readable books with correct typography without requiring you to worry about it.
-    
+
 ## Example
 
 To see what Crowbook's output looks like, you can read the Crowbook guide rendered in
@@ -33,7 +33,7 @@ Just extract the archive and run `crowbook`
 You might also want to copy the binary somewhere in your `PATH` for later usage.
 
 If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can also download `.deb` packages on
-[the releases page](https://github.com/lise-henry/crowbook/releases). 
+[the releases page](https://github.com/lise-henry/crowbook/releases).
 
 ### Using Cargo
 
@@ -43,7 +43,7 @@ the package manager for
 [Rust](https://www.rust-lang.org/).
 You can
 [install it here](https://www.rust-lang.org/downloads.html).
-Once that is done: 
+Once that is done:
 
 ```bash
 $ cargo install crowbook
@@ -75,7 +75,7 @@ $ crowbook <BOOK>
 ```
 
 where `BOOK` is a configuration file.
-Crowbook will parse this file and generate HTML, EPUB, and/or PDF output formats, according to the settings in the configuration file. 
+Crowbook will parse this file and generate HTML, EPUB, and/or PDF output formats, according to the settings in the configuration file.
 
 To create a new book, assuming you have a list of Markdown files, you can generate a template configuration file with the `--create` argument:
 
@@ -84,7 +84,7 @@ $ crowbook my.book --create chapter_*.md
 ```
 
 This will generate a default `my.book` file, which you'll need to complete.
-This configuration file contains some metadata, options, and lists the Markdown files. 
+This configuration file contains some metadata, options, and lists the Markdown files.
 
 For short books containing only a single Markdown file, it is possible to embed some metadata at the beginning of the file and use the `--single` or `-s` option to run `crowbook` directly on this Markdown file and avoid creating a separate book configuration file:
 
@@ -133,7 +133,7 @@ e.g. if you have a link to a Markdown file that is part of your book, it will be
 
 ### Inline YAML blocks
 
-Crowbook supports inline YAML blocks: 
+Crowbook supports inline YAML blocks:
 
 ```yaml
 ---
@@ -148,7 +148,7 @@ This is mostly useful when Crowbook is run with the `--single` argument (receivi
 
 Crowbook can also generate "proofreading" copies in HTML or PDF, highlighting grammar errors and repetitions.
 For more information, see
-[the proofreading chapter of the guide](guide/proofreading.md). 
+[the proofreading chapter of the guide](guide/proofreading.md).
 
 ### Interactive fiction
 
@@ -240,15 +240,15 @@ Note that, in order to facilitate code reuse, some features have been split to s
 * [epub-builder](https://github.com/lise-henry/epub-builder)
   makes it easier to generate EPUB files.
 * [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/)
-  contains all the "typographic" functions (smart quotes, handling of non-breaking spaces in french, ...). 
+  contains all the "typographic" functions (smart quotes, handling of non-breaking spaces in french, ...).
 * [crowbook-intl](https://github.com/lise-henry/crowbook-intl/)
   is used for the internationalization (translation) process.
 
-## License 
+## License
 
 Crowbook is free software:
 you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL), version 2.1 or (at your option) any later version.
-See 
+See
 [LICENSE](LICENSE.md)
 for more information.
 

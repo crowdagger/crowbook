@@ -142,7 +142,7 @@ impl GrammarChecker {
                         }
                         Ok(())
                     },
-                
+
                     _ => Ok(()),
                 }
             })

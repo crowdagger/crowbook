@@ -65,14 +65,14 @@ impl<'a> HtmlIfRenderer<'a> {
         let mut contains_md = false;
         let mut i = 0;
         let mut variables = vec![];
-        
+
         while let Some(begin) = code[i..].find("@\"") {
             let begin = i + begin;
             if let Some(len) = code[begin..].find("\"@") {
                 contains_md = true;
                 let end = begin + len;
                 gen_code.push_str(&code[i..begin]);
-                
+
                 let mut md_part = &code[begin+2..end];
                 let rendered = self.render_vec(&Parser::new().parse(md_part)?)?;
                 while let Some(b) = md_part.find("{{") {
@@ -82,7 +82,7 @@ impl<'a> HtmlIfRenderer<'a> {
                     }
                 }
                 gen_code.push_str("crowbook_return_variable += \"");
-                    gen_code.push_str(&rendered 
+                    gen_code.push_str(&rendered
                                   .replace('"', "\\\"")
                                   .replace('\n', "\\\n"));
                 gen_code.push('"');
@@ -145,7 +145,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let content = html_if.parse_inner_code(code)?;
                 Ok(content)
-                
+
             },
             Token::CodeBlock(ref language, ref code) if language.starts_with(|c| c == '<' || c == '>') => {
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
@@ -229,7 +229,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             if !post_code.is_empty() {
                 chapter_content.push_str(&self.parse_inner_code(post_code)?);
             }
-            
+
             chapters.push(format!("<div id = \"chapter-{}\" class = \"chapter\">
   {}
 </div>",
@@ -242,7 +242,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                                            code = self.curr_init));
             self.curr_init = String::new();
         }
-        
+
         self.html.source = Source::empty();
 
         for chapter in &chapters {
@@ -333,7 +333,7 @@ impl BookRenderer for HtmlIf {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.html", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut html = HtmlIfRenderer::new(book)?;
         let result = html.render_book()?;

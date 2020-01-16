@@ -139,7 +139,7 @@ impl<'a> LatexRenderer<'a> {
         for (i, chapter) in self.book.chapters.iter().enumerate() {
             self.handler.add_link(chapter.filename.as_str(), format!("chapter-{}", i));
         }
-        
+
         for (i, chapter) in self.book.chapters.iter().enumerate() {
             let n = chapter.number;
             self.current_chapter = n;
@@ -560,7 +560,7 @@ impl BookRenderer for Latex {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.tex", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
@@ -577,7 +577,7 @@ impl BookRenderer for ProofLatex {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.proof.tex", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book).proofread();
         let result = latex.render_book()?;
@@ -594,7 +594,7 @@ impl BookRenderer for Pdf {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.pdf", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .render_pdf(to)?;
@@ -606,7 +606,7 @@ impl BookRenderer for ProofPdf {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.proof.pdf", book_name))
     }
-    
+
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         LatexRenderer::new(book)
             .proofread()

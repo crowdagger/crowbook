@@ -36,7 +36,7 @@ pub struct Bars {
     pub mainbar: Option<ProgressBar>,
     /// Secondary bar
     pub secondbar: Option<ProgressBar>,
-    /// Guard for thread 
+    /// Guard for thread
     pub guard: Option<thread::JoinHandle<()>>,
     /// Spinners for each renderier
     pub spinners: Vec<ProgressBar>,
@@ -123,7 +123,7 @@ impl Book {
             if let Some(ref mainbar) = self.bars.mainbar {
                 mainbar.set_message(&lformat!("Rendering..."));
             }
-            
+
             let bar = multibar.add(ProgressBar::new_spinner());
             bar.enable_steady_tick(200);
             bar.set_message(&lformat!("waiting..."));
@@ -153,14 +153,14 @@ impl Book {
             Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
             Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
             Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
-            
+
         };
         let emoji = self.bars.emoji;
         let mut style = match bar {
             Crowbar::Second => ProgressStyle::default_bar(),
             _ => ProgressStyle::default_spinner()
         };
-        
+
         let color = match state {
             CrowbarState::Running => "yellow",
             CrowbarState::Success => "cyan",
