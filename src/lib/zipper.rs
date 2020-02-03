@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016, 2020 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -174,14 +174,21 @@ This is forbidden because we are supposed \
                         pdf_file: &mut dyn Write)
                         -> Result<String> {
         // first pass
-        let _ = Command::new(command_name)
-            .current_dir(&self.path)
-            .arg(tex_file)
-            .output();
+        let mut command = Command::new(command_name);
+        command.current_dir(&self.path)
+            .arg(tex_file);
+        let _ = command.output();
 
         // second pass
-        let mut command = Command::new(command_name);
-        command.arg(tex_file);
+//        let _ = Command::new(command_name)
+  //          .current_dir(&self.path)
+    //        .arg(tex_file)
+        command.output();
+
+        // third pass
+        // let mut command = Command::new(command_name);
+        // command.current_dir(&self.path);
+        // command.arg(tex_file);
         self.run_command(command, command_name, "result.pdf", pdf_file)
     }
 }
