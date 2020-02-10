@@ -58,7 +58,7 @@ impl<'a> OdtRenderer<'a> {
     ///   used to create the ODT file.
     /// * An error if there was somel problem during either the rendering to
     ///   ODT format, or the generation of the ODT file itself.
-    pub fn render_book(&mut self, to: &mut Write) -> Result<String> {
+    pub fn render_book(&mut self, to: &mut dyn Write) -> Result<String> {
         let content = self.render_content()?;
 
         let mut zipper =
@@ -246,7 +246,7 @@ impl BookRenderer for Odt {
         Ok(format!("{}.odt", book_name))
     }
 
-    fn render(&self, book: &Book, to: &mut Write) -> Result<()> {
+    fn render(&self, book: &Book, to: &mut dyn Write) -> Result<()> {
         OdtRenderer::new(book)
             .render_book(to)?;
         Ok(())

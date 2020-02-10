@@ -180,10 +180,7 @@ This is forbidden because we are supposed \
         let _ = command.output();
 
         // second pass
-//        let _ = Command::new(command_name)
-  //          .current_dir(&self.path)
-    //        .arg(tex_file)
-        command.output();
+        let _ = command.output();
 
         // third pass
         // let mut command = Command::new(command_name);

@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017, 2018, 2019 Élisabeth HENRY.
+// Copyright (C) 2016, 2017, 2018, 2019, 2020 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -29,7 +29,7 @@ use std::io;
 use std::io::Read;
 use std::env;
 use std::fs::File;
-use simplelog::{Config, ConfigBuilder, TermLogger, Level, LevelFilter, SimpleLogger, WriteLogger};
+use simplelog::{ConfigBuilder, TermLogger, LevelFilter, SimpleLogger, WriteLogger};
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &str) {
