@@ -5,6 +5,9 @@ unreleased
 ------------
 * `html.css.colours` has been renamed `html.css.colors`
 * Fixed issue with table of contents page numbers in PDF output	
+* LaTeX outputs of french documents now use enspaces and narrow non-breaking spaces
+* New option: 
+     * `tex:escape_nb_spaces` defaults to `true` and will uses TeX codes to display non-breaking spaces.
 
 0.15.0 (2019-07-18)
 -----------------------

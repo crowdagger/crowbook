@@ -36,11 +36,10 @@ pub struct CleanerParams {
 pub trait Cleaner: Sync {
     /// Cleans a string. The default implementation is to remove multiple consecutive whitespaces
     ///
-    /// # Argumets
+    /// # Arguments
     ///
     /// * `str`: the string that must be cleaned
-    /// * `latex`: a bool specifying whether output is Latex code or not
-    fn clean<'a>(&self, str: Cow<'a, str>, _latex: bool) -> Cow<'a, str> {
+    fn clean<'a>(&self, str: Cow<'a, str>) -> Cow<'a, str> {
         str
     }
 }
@@ -67,7 +66,7 @@ impl Default {
 
 impl Cleaner for Default {
     /// Remove unnecessary whitespaces
-    fn clean<'a>(&self, input: Cow<'a, str>, _: bool) -> Cow<'a, str> {
+    fn clean<'a>(&self, input: Cow<'a, str>) -> Cow<'a, str> {
         let mut s = clean::whitespaces(input);
         if self.params.smart_quotes {
             s = clean::quotes(s);
@@ -108,11 +107,7 @@ impl French {
 
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`
-    fn clean<'a>(&self, s: Cow<'a, str>, latex: bool) -> Cow<'a, str> {
-        if latex {
-            self.formatter.format_tex(s)
-        } else {
-            self.formatter.format(s)
-        }
+    fn clean<'a>(&self, s: Cow<'a, str>) -> Cow<'a, str> {
+        self.formatter.format(s)
     }
 }

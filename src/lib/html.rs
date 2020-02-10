@@ -448,14 +448,14 @@ impl<'a> HtmlRenderer<'a> {
                 let mut content = if this.as_ref().verbatim {
                     Cow::Borrowed(text.as_ref())
                 } else {
-                    escape::html(this.as_ref().book.clean(text.as_str(), false))
+                    escape::html(this.as_ref().book.clean(text.as_str()))
                 };
                 if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
                 }
 
                 if this.as_ref().book.options.get_bool("html.escape_nb_spaces").unwrap() {
-                    content = escape::nnbsp(content);
+                    content = escape::nb_spaces_html(content);
                 }
                 Ok(content.into_owned())
             }

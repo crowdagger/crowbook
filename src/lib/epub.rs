@@ -443,7 +443,7 @@ impl<'a> EpubRenderer<'a> {
                 let content = if html.verbatim {
                     Cow::Borrowed(text.as_ref())
                 } else {
-                    escape::html(html.book.clean(text.as_str(), false))
+                    escape::html(html.book.clean(text.as_str()))
                 };
                 let mut content = if html.first_letter {
                     html.first_letter = false;
@@ -471,7 +471,7 @@ impl<'a> EpubRenderer<'a> {
                 };
 
                 if html.book.options.get_bool("epub.escape_nb_spaces").unwrap() {
-                    content = escape::nnbsp(content);
+                    content = escape::nb_spaces_html(content);
                 }
                 Ok(content.into_owned())
             },

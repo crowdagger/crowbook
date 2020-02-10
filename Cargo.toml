@@ -54,7 +54,7 @@ uuid = { version = "0.8", features = ["v4"] }
 walkdir = "2"
 rustc-serialize = "0.3"
 rayon = "1.0"
-crowbook-text-processing = "^0.2.6"
+crowbook-text-processing = "1"
 lazy_static = "1"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"

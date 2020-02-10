@@ -271,7 +271,12 @@ impl<'a> Renderer for LatexRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.escape {
-                    self.book.clean(escape::tex(text.as_str()), true)
+                    let escaped = escape::tex(self.book.clean(text.as_str()));
+                    if self.book.options.get_bool("tex.escape_nb_spaces").unwrap() {
+                        escape::nb_spaces_tex(escaped)
+                    } else {
+                        escaped
+                    }
                 } else {
                     Cow::Borrowed(text.as_str())
                 };

@@ -433,7 +433,7 @@ dependencies = [
  "console 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "crowbook-text-processing 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "crowbook-text-processing 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "epub-builder 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "hyphenation 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "indicatif 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -479,7 +479,7 @@ dependencies = [
 
 [[package]]
 name = "crowbook-text-processing"
-version = "0.2.8"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2527,7 +2527,7 @@ dependencies = [
 "checksum crossbeam-utils 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ce446db02cdc3165b94ae73111e570793400d0794e46125cc4056c81cbb039f4"
 "checksum crowbook-intl 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "04db38a154dbc8411c49a39b0c514fc29951deaf179bebee581ceb9f72a52c85"
 "checksum crowbook-intl-runtime 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "62cf6ec512b4d7fb7d8683efa703b17e5b8f5e24a9eb7ec9fb92237f039d941c"
-"checksum crowbook-text-processing 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "7d29033c9b49f0680207497792719ecd9766b30aa3c4e70fcec4f5f1d018a726"
+"checksum crowbook-text-processing 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "e0fe6b9d03ee72398cab2bd37c564bb898e351c4cff1f5f8a0db2bd9b909accc"
 "checksum digest 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f3d0c8c8752312f9713efd397ff63acb9f85585afbf179282e720e7704954dd5"
 "checksum dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)" = "3fd78930633bd1c6e35c4b42b1df7b0cbc6bc191146e512bb3bedf243fcc3901"
 "checksum dtoa 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "ea57b42383d091c85abcc2706240b94ab2a8fa1fc81c10ff23c4de06e2a90b5e"

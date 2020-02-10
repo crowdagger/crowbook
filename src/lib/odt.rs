@@ -153,7 +153,7 @@ impl<'a> OdtRenderer<'a> {
 
     fn parse_token(&mut self, token: &Token) -> String {
         match *token {
-            Token::Str(ref text) => escape::html(self.book.clean(text.as_str(), false)).into_owned(),
+            Token::Str(ref text) => escape::html(self.book.clean(text.as_str())).into_owned(),
             Token::Paragraph(ref vec) => {
                 format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n",
                         self.render_vec(vec))

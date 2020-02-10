@@ -104,6 +104,7 @@ epub.escape_nb_spaces:bool:true     # {nb_spaces}
 tex.highlight.theme:str             # {tex_theme}
 tex.links_as_footnotes:bool:true    # {tex_links}
 tex.command:str:xelatex             # {tex_command}
+tex.escape_nb_spaces:bool:true      # {nb_spaces_tex}
 tex.template:tpl                    # {tex_tmpl}
 tex.template.add:str                # {tex_tmpl_add}
 tex.class:str:book                  # {tex_class}
@@ -275,6 +276,7 @@ crowbook.verbose:alias                              # {removed}
                                          highlight_css = lformat!("Set another highlight.js CSS theme than the default one"),
                                          side_notes = lformat!("Display footnotes as side notes in HTML/Epub (experimental)"),
                                          nb_spaces = lformat!("Replace unicode non breaking spaces with HTML entities and CSS"),
+                                         nb_spaces_tex = lformat!("Replace unicode non breaking spaces with TeX code"),
 
                                          one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
                                          single_html = lformat!("Path of an HTML template for standalone HTML"),
