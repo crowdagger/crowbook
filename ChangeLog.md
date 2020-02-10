@@ -4,6 +4,7 @@ ChangeLog
 unreleased
 ------------
 * `html.css.colours` has been renamed `html.css.colors`
+* Fixed issue with table of contents page numbers in PDF output	
 
 0.15.0 (2019-07-18)
 -----------------------
