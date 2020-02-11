@@ -58,7 +58,8 @@ crowbook-text-processing = "1"
 lazy_static = "1"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"
-epub-builder = "0.4.4"
+# epub-builder = { path = "../epub-builder" }
+epub-builder = "0.4.5"
 log = "0.4"
 punkt = { version = "1.0", optional = true }
 hyphenation = { version = "0.7", optional = true, features = ["embed_all"] }
