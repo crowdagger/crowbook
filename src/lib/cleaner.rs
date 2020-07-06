@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2020 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //

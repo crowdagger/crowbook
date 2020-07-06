@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
+// Copyright (C) 2016-2020 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -238,8 +238,8 @@ impl<'a> LatexRenderer<'a> {
             book = true;
         }
         data = data
-            .insert_str("margin_left", self.book.options.get_str("tex.margin.left").unwrap_or(if book { "1.5cm" } else { "2cm" }))
-            .insert_str("margin_right", self.book.options.get_str("tex.margin.right").unwrap_or(if book { "2cm" } else { "2cm" }))
+            .insert_str("margin_left", self.book.options.get_str("tex.margin.left").unwrap_or(if book { "2.5cm" } else { "2cm" }))
+            .insert_str("margin_right", self.book.options.get_str("tex.margin.right").unwrap_or(if book { "1.5cm" } else { "2cm" }))
             .insert_str("margin_bottom", self.book.options.get_str("tex.margin.bottom").unwrap())
             .insert_str("margin_top", self.book.options.get_str("tex.margin.top").unwrap());
 
@@ -271,12 +271,11 @@ impl<'a> Renderer for LatexRenderer<'a> {
         match *token {
             Token::Str(ref text) => {
                 let content = if self.escape {
-                    let escaped = escape::tex(self.book.clean(text.as_str()));
+                    let mut escaped = escape::tex(self.book.clean(text.as_str()));
                     if self.book.options.get_bool("tex.escape_nb_spaces").unwrap() {
-                        escape::nb_spaces_tex(escaped)
-                    } else {
-                        escaped
+                        escaped  = escape::nb_spaces_tex(escaped)
                     }
+                    escaped
                 } else {
                     Cow::Borrowed(text.as_str())
                 };
