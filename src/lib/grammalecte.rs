@@ -22,6 +22,7 @@ use rayon::prelude::*;
 
 use std::io::Read;
 
+
 use crate::text_view::view_as_text;
 use crate::text_view::insert_annotation;
 use crate::token::Token;
@@ -59,7 +60,7 @@ struct GrammalecteCheck {
 /// Grammalecte Checker
 pub struct GrammalecteChecker {
     port: usize,
-    client: reqwest::Client,
+    client: reqwest::blocking::Client,
 }
 
 impl GrammalecteChecker {
@@ -71,7 +72,7 @@ impl GrammalecteChecker {
         }
         let checker = GrammalecteChecker {
             port: port,
-            client: reqwest::Client::new(),
+            client: reqwest::blocking::Client::new(),
         };
 
         let res = checker.client

@@ -54,7 +54,7 @@ struct GrammarCheck {
 pub struct GrammarChecker {
     lang: String,
     port: usize,
-    client: reqwest::Client,
+    client: reqwest::blocking::Client,
 }
 
 impl GrammarChecker {
@@ -63,7 +63,7 @@ impl GrammarChecker {
         let checker = GrammarChecker {
             lang: lang.into(),
             port: port,
-            client: reqwest::Client::new(),
+            client: reqwest::blocking::Client::new(),
         };
 
         let res = checker.client

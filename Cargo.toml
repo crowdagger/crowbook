@@ -58,7 +58,6 @@ crowbook-text-processing = "1"
 lazy_static = "1"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"
-# epub-builder = { path = "../epub-builder" }
 epub-builder = "0.4.5"
 log = "0.4"
 punkt = { version = "1.0", optional = true }
@@ -77,7 +76,8 @@ syntect = { version = "3", optional = true }
 tempdir = { version = "0.3", optional = true }
 
 [dependencies.reqwest]
-version = "0.9"
+version = "0.10"
 optional = true
+features = ["blocking"]
 
 
