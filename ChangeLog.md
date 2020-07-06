@@ -1,10 +1,12 @@
 ChangeLog
 =========
 
-unreleased
+0.15.1 (2020-07-07)
 ------------
 * `html.css.colours` has been renamed `html.css.colors`
-* Fixed issue with table of contents page numbers in PDF output	
+* Fixed issue with table of contents page numbers in PDF output
+* Fixed issue with invalid XHTML in EPUB when using description terms
+* Fixed left/right margins in LaTeX (which were reversed)
 * LaTeX outputs of french documents now use enspaces and narrow non-breaking spaces
 * New option: 
      * `tex:escape_nb_spaces` defaults to `true` and will uses TeX codes to display non-breaking spaces.
