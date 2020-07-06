@@ -886,15 +886,25 @@ impl Book {
         let bar = self.add_spinner_to_multibar(format);
         match self.formats.get(format) {
             Some(&(ref description, ref renderer)) => {
-                renderer.render(self, f)?;
-                self.bar_finish(Crowbar::Spinner(bar),
+                match renderer.render(self, f) {
+                    Ok(_) => {
+                        self.bar_finish(Crowbar::Spinner(bar),
                                 CrowbarState::Success,
                                 &lformat!("generated {format}",
                                           format = format));
-                self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
-                info!("{}", lformat!("Succesfully generated {format}",
-                                     format = description));
-                Ok(())
+                        self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
+                        info!("{}", lformat!("Succesfully generated {format}",
+                                            format = description));
+                        Ok(())
+                    },
+                    Err(e) => {
+                        self.bar_finish(Crowbar::Spinner(bar),
+                                CrowbarState::Error,
+                                &lformat!("{error}", error = e));
+                        self.bar_finish(Crowbar::Main, CrowbarState::Error, &lformat!("ERROR"));
+                        Err(e)
+                    }
+                }
             },
             None => {
                 self.bar_finish(Crowbar::Spinner(bar),
