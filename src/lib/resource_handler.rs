@@ -115,7 +115,7 @@ impl ResourceHandler {
                 return Ok(file);
             }
             let base64 = content.to_base64(base64::STANDARD);
-            match mime_guess::guess_mime_type_opt(file.as_ref()) {
+            match mime_guess::from_path(file.as_ref()).first() {
                 None => {
                     error!("{}", lformat!("Resources: could not guess mime type of file {file}",
                                           file = file));

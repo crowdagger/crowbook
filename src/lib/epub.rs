@@ -40,7 +40,7 @@ use std::fs::File;
 use std::path::Path;
 use std::borrow::Cow;
 use std::mem;
-use mime_guess::guess_mime_type_opt;
+use mime_guess;
 
 /// Renderer for Epub
 ///
@@ -414,7 +414,7 @@ impl<'a> EpubRenderer<'a> {
 
     // Get the format of a file, based on its extension
     fn get_format(&self, s: &str) -> String {
-        let opt = guess_mime_type_opt(s);
+        let opt = mime_guess::from_path(s).first();
         match opt {
             Some(s) => s.to_string(),
             None => {
