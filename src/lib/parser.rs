@@ -115,6 +115,7 @@ impl BitOr for Features {
 pub struct Parser {
     source: Source,
     features: Features,
+    ignore_paragraphs: bool,
 
     html_as_text: bool,
     superscript: bool,
@@ -126,6 +127,7 @@ impl Parser {
         Parser {
             source: Source::empty(),
             features: Features::new(),
+            ignore_paragraphs: false,
             html_as_text: true,
             superscript: false,
         }
@@ -231,9 +233,19 @@ impl Parser {
 
     fn parse_node<'a>(&mut self, node: &'a AstNode<'a>) -> Result<Vec<Token>> {
         let mut inner = vec![];
+        
+        // Some special cases where we need to modifiy a bit the state of the parser between parsing inner content
+        if let NodeValue::DescriptionTerm = node.data.borrow().value {
+            self.ignore_paragraphs = true;
+        }
         for c in node.children() {
             let mut v = self.parse_node(c)?;
             inner.append(&mut v);
+        }
+        // Reset state after special cases shenanigans 
+        if let NodeValue::DescriptionTerm = node.data.borrow().value {
+            // There should be no paragraphs inside description terms
+            self.ignore_paragraphs = false;
         }
 
         inner = match node.data.borrow().value {
@@ -286,7 +298,13 @@ impl Parser {
                     vec![]
                 }
             }
-            NodeValue::Paragraph => vec![Token::Paragraph(inner)],
+            NodeValue::Paragraph => {
+                if !self.ignore_paragraphs {
+                    vec![Token::Paragraph(inner)]
+                } else {
+                    inner
+                }
+            }
             NodeValue::Heading(ref heading) => vec![Token::Header(heading.level as i32, inner)],
             NodeValue::ThematicBreak => vec![Token::Rule],
             NodeValue::FootnoteDefinition(ref def) => {
