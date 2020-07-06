@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+0.15.2 (2020-07-07)
+-----------------------
+* Fixed endless progress bar on renderer failure
+
 0.15.1 (2020-07-07)
 ------------
 * `html.css.colours` has been renamed `html.css.colors`
