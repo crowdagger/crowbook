@@ -93,9 +93,9 @@ $ crowbook -s text.md
 ```
 
 For more information, see the chapters on
-[the arguments supported by `crowbook`](guide/arguments.md)
+[the arguments supported by `crowbook`](guide/01_arguments.md)
 and on
-[the configuration file](guide/config.md).
+[the configuration file](guide/02_config.md).
 
 ## Current features
 
