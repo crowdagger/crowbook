@@ -22,7 +22,7 @@ use std::io::Write;
 use std::fs::File;
 use std::path::Path;
 
-/// Thait that must be implemented by the various renderers to render a whole book.
+/// Trait that must be implemented by the various renderers to render a whole book.
 
 pub trait BookRenderer: Sync {
     /// Path destination when output is set to auto
