@@ -1,11 +1,11 @@
-use crate::token::Token;
-use crate::book::{Book, compile_str};
-use crate::number::Number;
-use crate::error::Result;
-use crate::templates::odt;
-use crate::zipper::Zipper;
-use crate::parser::Parser;
+use crate::book::{compile_str, Book};
 use crate::book_renderer::BookRenderer;
+use crate::error::Result;
+use crate::number::Number;
+use crate::parser::Parser;
+use crate::templates::odt;
+use crate::token::Token;
+use crate::zipper::Zipper;
 
 use crowbook_text_processing::escape;
 
@@ -30,7 +30,8 @@ impl<'a> OdtRenderer<'a> {
             current_chapter: 1,
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_hide: false,
-            automatic_styles: String::from("
+            automatic_styles: String::from(
+                "
 <style:style style:name=\"T1\" \
                                             style:family=\"text\">
   <style:text-properties \
@@ -45,7 +46,8 @@ impl<'a> OdtRenderer<'a> {
                                             fo:font-weight=\"bold\" \
                                             style:font-weight-asian=\"bold\" \
                                             style:font-weight-complex=\"bold\"/>
-</style:style>"),
+</style:style>",
+            ),
         }
     }
 
@@ -61,8 +63,7 @@ impl<'a> OdtRenderer<'a> {
     pub fn render_book(&mut self, to: &mut dyn Write) -> Result<String> {
         let content = self.render_content()?;
 
-        let mut zipper =
-            Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
+        let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
 
         // Write template.odt there
         zipper.write("template.odt", odt::ODT, false)?;
@@ -71,29 +72,46 @@ impl<'a> OdtRenderer<'a> {
         // Complete it with content.xml
         zipper.write("content.xml", content.as_bytes(), false)?;
         // Zip and copy
-        zipper.generate_odt(self.book.options.get_str("crowbook.zip.command").unwrap(),
-                            to)
+        zipper.generate_odt(
+            self.book.options.get_str("crowbook.zip.command").unwrap(),
+            to,
+        )
     }
 
     /// Render content.xml
     fn render_content(&mut self) -> Result<String> {
         // Print a warning for the features that aren't supported in ODT.
         let mut missing = vec![];
-        if self.book.features.image { missing.push(lformat!("images")); }
-        if self.book.features.blockquote { missing.push(lformat!("blockquotes")); }
-        if self.book.features.codeblock { missing.push(lformat!("codeblocks")); }
-        if self.book.features.ordered_list { missing.push(lformat!("ordered lists")); }
-        if self.book.features.footnote { missing.push(lformat!("footnotes")); }
-        if self.book.features.table { missing.push(lformat!("tables")); }
-        if self.book.features.superscript { missing.push(lformat!("superscript")); }
-        if self.book.features.subscript { missing.push(lformat!("subscript")); }
+        if self.book.features.image {
+            missing.push(lformat!("images"));
+        }
+        if self.book.features.blockquote {
+            missing.push(lformat!("blockquotes"));
+        }
+        if self.book.features.codeblock {
+            missing.push(lformat!("codeblocks"));
+        }
+        if self.book.features.ordered_list {
+            missing.push(lformat!("ordered lists"));
+        }
+        if self.book.features.footnote {
+            missing.push(lformat!("footnotes"));
+        }
+        if self.book.features.table {
+            missing.push(lformat!("tables"));
+        }
+        if self.book.features.superscript {
+            missing.push(lformat!("superscript"));
+        }
+        if self.book.features.subscript {
+            missing.push(lformat!("subscript"));
+        }
 
         if !missing.is_empty() {
             let missing = missing.join(", ");
             warn!("{}", lformat!("ODT: The document uses the following features, that are not implemented for ODT output: {features}. They will be ignored in the generated document.",
                                  features = missing));
         }
-
 
         let mut content = String::new();
 
@@ -115,7 +133,7 @@ impl<'a> OdtRenderer<'a> {
                     self.current_numbering = 0;
                     self.current_hide = true;
                 }
-           }
+            }
             if n.is_part() {
                 error!("{}", lformat!("Parts are not supported yet in ODT"));
             }
@@ -125,10 +143,14 @@ impl<'a> OdtRenderer<'a> {
             }
         }
 
-        let template = compile_str(odt::CONTENT,
-                                   &self.book.source,
-                                   "could not compile template for content.xml")?;
-        let data = self.book.get_metadata(|s| Ok(s.to_owned()))?
+        let template = compile_str(
+            odt::CONTENT,
+            &self.book.source,
+            "could not compile template for content.xml",
+        )?;
+        let data = self
+            .book
+            .get_metadata(|s| Ok(s.to_owned()))?
             .insert_str("content", content)
             .insert_str("automatic_styles", self.automatic_styles.clone())
             .build();
@@ -155,8 +177,10 @@ impl<'a> OdtRenderer<'a> {
         match *token {
             Token::Str(ref text) => escape::html(self.book.clean(text.as_str())).into_owned(),
             Token::Paragraph(ref vec) => {
-                format!("<text:p text:style-name=\"Text_20_body\">{}</text:p>\n",
-                        self.render_vec(vec))
+                format!(
+                    "<text:p text:style-name=\"Text_20_body\">{}</text:p>\n",
+                    self.render_vec(vec)
+                )
             }
             Token::Header(n, ref vec) => {
                 if n == 1 && self.current_hide {
@@ -165,79 +189,87 @@ impl<'a> OdtRenderer<'a> {
                 let s = if n == 1 && self.current_numbering >= 1 {
                     let chapter = self.current_chapter;
                     self.current_chapter += 1;
-                    let res = self.book.get_chapter_header(chapter, self.render_vec(vec), |s| {
-                        Ok(self.render_vec(&Parser::new().parse_inline(s)?))
-                    });
+                    let res = self
+                        .book
+                        .get_chapter_header(chapter, self.render_vec(vec), |s| {
+                            Ok(self.render_vec(&Parser::new().parse_inline(s)?))
+                        });
                     res.unwrap().text
                 } else {
                     self.render_vec(vec)
                 };
-                format!("<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
-                        n,
-                        s)
+                format!(
+                    "<text:h text:style-name=\"Heading_20_{}\">\n{}</text:h>\n",
+                    n, s
+                )
             }
             Token::Emphasis(ref vec) => {
-                format!("<text:span text:style-name=\"T1\">{}</text:span>",
-                       self.render_vec(vec))
+                format!(
+                    "<text:span text:style-name=\"T1\">{}</text:span>",
+                    self.render_vec(vec)
+                )
             }
             Token::Strong(ref vec) => {
-                format!("<text:span text:style-name=\"T2\">{}</text:span>",
-                        self.render_vec(vec))
+                format!(
+                    "<text:span text:style-name=\"T2\">{}</text:span>",
+                    self.render_vec(vec)
+                )
             }
             Token::List(ref vec) => format!("<text:list>\n{}</text:list>\n", self.render_vec(vec)),
             Token::OrderedList(_, ref vec) => {
                 format!("<text:list>\n{}</text:list>\n", self.render_vec(vec))
             }
             Token::Item(ref vec) => {
-                format!("<text:list-item>\n<text:p>{}</text:p></text:list-item>",
-                        self.render_vec(vec))
+                format!(
+                    "<text:list-item>\n<text:p>{}</text:p></text:list-item>",
+                    self.render_vec(vec)
+                )
             }
             Token::Link(ref url, _, ref vec) => {
-                format!("<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>",
-                        url,
-                        self.render_vec(vec))
+                format!(
+                    "<text:a xlink:type=\"simple\"  xlink:href=\"{}\">{}</text:a>",
+                    url,
+                    self.render_vec(vec)
+                )
             }
             Token::Code(ref s) => {
-                format!("<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>",
-                        s)
+                format!(
+                    "<text:span text:style-name=\"Preformatted_20_Text\">{}</text:span>",
+                    s
+                )
             }
             Token::Subscript(ref vec) | Token::Superscript(ref vec) => self.render_vec(vec),
-            Token::BlockQuote(ref vec) => format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
-                        self.render_vec(vec)),
+            Token::BlockQuote(ref vec) => format!(
+                "<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
+                self.render_vec(vec)
+            ),
             Token::CodeBlock(_, ref s) => {
-                format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n",
-                        s)
+                format!("<text:p text:style-name=\"Text_20_Body\">{}</text:p>\n", s)
             }
             Token::SoftBreak | Token::HardBreak => String::from(" "),
             Token::Rule => String::from("<text:p /><text:p>***</text:p><text:p />"),
-            Token::Image(_, _, _) |
-            Token::StandaloneImage(_, _, _) => {
+            Token::Image(_, _, _) | Token::StandaloneImage(_, _, _) => String::from(" "),
+            Token::Table(_, _) | Token::TableHead(_) | Token::TableRow(_) | Token::TableCell(_) => {
                 String::from(" ")
             }
-            Token::Table(_, _) |
-            Token::TableHead(_) |
-            Token::TableRow(_) |
-            Token::TableCell(_) => {
-                String::from(" ")
-            }
-            Token::FootnoteReference(..) | Token::FootnoteDefinition(..) => {
-                String::new()
-            }
+            Token::FootnoteReference(..) | Token::FootnoteDefinition(..) => String::new(),
             Token::Annotation(_, ref vec) => self.render_vec(vec),
             Token::__NonExhaustive => unreachable!(),
-            Token::DescriptionList(ref v) |
-            Token::DescriptionItem(ref v) |
-            Token::DescriptionTerm(ref v) |
-            Token::DescriptionDetails(ref v) |
-            Token::Strikethrough(ref v) |
-            Token::TaskItem(_, ref v) => {
-                warn!("{}", lformat!("ODT: Description list and strikethrough not handled in this output"));
+            Token::DescriptionList(ref v)
+            | Token::DescriptionItem(ref v)
+            | Token::DescriptionTerm(ref v)
+            | Token::DescriptionDetails(ref v)
+            | Token::Strikethrough(ref v)
+            | Token::TaskItem(_, ref v) => {
+                warn!(
+                    "{}",
+                    lformat!("ODT: Description list and strikethrough not handled in this output")
+                );
                 self.render_vec(v)
             }
         }
     }
 }
-
 
 pub struct Odt {}
 
@@ -247,8 +279,7 @@ impl BookRenderer for Odt {
     }
 
     fn render(&self, book: &Book, to: &mut dyn Write) -> Result<()> {
-        OdtRenderer::new(book)
-            .render_book(to)?;
+        OdtRenderer::new(book).render_book(to)?;
         Ok(())
     }
 }

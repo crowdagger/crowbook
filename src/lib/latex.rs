@@ -15,28 +15,27 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::book::{Book, compile_str};
-use crate::number::Number;
-use crate::error::{Error, Result, Source};
-use crate::token::Token;
-use crate::token::Data;
-use crate::zipper::Zipper;
-use crate::resource_handler::ResourceHandler;
-use crate::renderer::Renderer;
-use crate::parser::Parser;
+use crate::book::{compile_str, Book};
 use crate::book_renderer::BookRenderer;
+use crate::error::{Error, Result, Source};
+use crate::number::Number;
+use crate::parser::Parser;
+use crate::renderer::Renderer;
+use crate::resource_handler::ResourceHandler;
 use crate::syntax::Syntax;
+use crate::token::Data;
+use crate::token::Token;
+use crate::zipper::Zipper;
 
 use crowbook_text_processing::escape;
 
-use std::iter::Iterator;
+use std::borrow::Cow;
+use std::fmt::Write;
 use std::fs;
 use std::fs::File;
 use std::io;
 use std::io::Read;
-use std::fmt::Write;
-use std::borrow::Cow;
-
+use std::iter::Iterator;
 
 /// LaTeX renderer
 pub struct LatexRenderer<'a> {
@@ -60,10 +59,13 @@ impl<'a> LatexRenderer<'a> {
         let mut handler = ResourceHandler::new();
         handler.set_images_mapping(true);
         let syntax = if book.options.get_str("rendering.highlight").unwrap() == "syntect"
-            && book.features.codeblock {
-                Some(Syntax::new(book.options
-                                 .get_str("tex.highlight.theme")
-                                 .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap())))
+            && book.features.codeblock
+        {
+            Some(Syntax::new(
+                book.options
+                    .get_str("tex.highlight.theme")
+                    .unwrap_or_else(|_| book.options.get_str("rendering.highlight.theme").unwrap()),
+            ))
         } else {
             None
         };
@@ -94,8 +96,7 @@ impl<'a> LatexRenderer<'a> {
     pub fn render_pdf(&mut self, to: &mut dyn io::Write) -> Result<String> {
         let content = self.render_book()?;
         debug!("{}", lformat!("Attempting to run LaTeX on generated file"));
-        let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir")
-                                     .unwrap())?;
+        let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
         zipper.write("result.tex", content.as_bytes(), false)?;
 
         // write image files
@@ -104,20 +105,22 @@ impl<'a> LatexRenderer<'a> {
                 .and_then(|f| File::open(f))
                 .map_err(|_| {
                     Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
-                    })?;
-            let mut content = vec![];
-            f.read_to_end(&mut content)
-                .map_err(|e| {
-                    Error::render(&self.source,
-                                  lformat!("error while reading image file: {error}", error = e))
                 })?;
+            let mut content = vec![];
+            f.read_to_end(&mut content).map_err(|e| {
+                Error::render(
+                    &self.source,
+                    lformat!("error while reading image file: {error}", error = e),
+                )
+            })?;
             zipper.write(dest, &content, true)?;
         }
 
-
-        zipper.generate_pdf(self.book.options.get_str("tex.command").unwrap(),
-                            "result.tex",
-                            to)
+        zipper.generate_pdf(
+            self.book.options.get_str("tex.command").unwrap(),
+            "result.tex",
+            to,
+        )
     }
 
     /// Render latex in a string
@@ -126,18 +129,20 @@ impl<'a> LatexRenderer<'a> {
 
         // set tex numbering and toc display to book's parameters
         let numbering = self.book.options.get_i32("rendering.num_depth").unwrap() - 1;
-        write!(content,
-               "\\setcounter{{tocdepth}}{{{}}}
+        write!(
+            content,
+            "\\setcounter{{tocdepth}}{{{}}}
 \\setcounter{{secnumdepth}}{{{}}}\n",
-               numbering,
-               numbering)?;
+            numbering, numbering
+        )?;
 
         if self.book.options.get_bool("rendering.inline_toc").unwrap() {
             content.push_str("\\tableofcontents\n");
         }
 
         for (i, chapter) in self.book.chapters.iter().enumerate() {
-            self.handler.add_link(chapter.filename.as_str(), format!("chapter-{}", i));
+            self.handler
+                .add_link(chapter.filename.as_str(), format!("chapter-{}", i));
         }
 
         for (i, chapter) in self.book.chapters.iter().enumerate() {
@@ -150,13 +155,10 @@ impl<'a> LatexRenderer<'a> {
                 content.push_str(&self.render_token(&v[0])?);
                 offset = 1;
             }
-            write!(content,
-                   "\\label{{chapter-{}}}\n",
-                   i)?;
+            write!(content, "\\label{{chapter-{}}}\n", i)?;
             content.push_str(&self.render_vec(&v[offset..])?);
         }
         self.source = Source::empty();
-
 
         let tex_lang = String::from(match self.book.options.get_str("lang").unwrap() {
             "af" => "afrikaans",
@@ -199,22 +201,40 @@ impl<'a> LatexRenderer<'a> {
             "uk" => "ukrainian",
             "cy" => "welsh",
             _ => {
-                warn!("{}", lformat!("LaTeX: can't find a tex equivalent for lang '{lang}', \
+                warn!(
+                    "{}",
+                    lformat!(
+                        "LaTeX: can't find a tex equivalent for lang '{lang}', \
                                       fallbacking on english",
-                                     lang = self.book.options.get_str("lang").unwrap()));
+                        lang = self.book.options.get_str("lang").unwrap()
+                    )
+                );
                 "english"
             }
         });
 
-        let template = compile_str(self.book.get_template("tex.template")?.as_ref(),
-                                   &self.book.source,
-                                   "tex.template")?;
-        let mut data = self.book.get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
+        let template = compile_str(
+            self.book.get_template("tex.template")?.as_ref(),
+            &self.book.source,
+            "tex.template",
+        )?;
+        let mut data = self
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
             .insert_str("class", self.book.options.get_str("tex.class").unwrap())
-            .insert_bool("tex_title", self.book.options.get_bool("tex.title").unwrap())
-            .insert_str("papersize", self.book.options.get_str("tex.paper.size").unwrap())
-            .insert_bool("stdpage", self.book.options.get_bool("tex.stdpage").unwrap())
+            .insert_bool(
+                "tex_title",
+                self.book.options.get_bool("tex.title").unwrap(),
+            )
+            .insert_str(
+                "papersize",
+                self.book.options.get_str("tex.paper.size").unwrap(),
+            )
+            .insert_bool(
+                "stdpage",
+                self.book.options.get_bool("tex.stdpage").unwrap(),
+            )
             .insert_bool("use_url", self.book.features.url)
             .insert_bool("use_taskitem", self.book.features.taskitem)
             .insert_bool("use_tables", self.book.features.table)
@@ -238,10 +258,28 @@ impl<'a> LatexRenderer<'a> {
             book = true;
         }
         data = data
-            .insert_str("margin_left", self.book.options.get_str("tex.margin.left").unwrap_or(if book { "2.5cm" } else { "2cm" }))
-            .insert_str("margin_right", self.book.options.get_str("tex.margin.right").unwrap_or(if book { "1.5cm" } else { "2cm" }))
-            .insert_str("margin_bottom", self.book.options.get_str("tex.margin.bottom").unwrap())
-            .insert_str("margin_top", self.book.options.get_str("tex.margin.top").unwrap());
+            .insert_str(
+                "margin_left",
+                self.book
+                    .options
+                    .get_str("tex.margin.left")
+                    .unwrap_or(if book { "2.5cm" } else { "2cm" }),
+            )
+            .insert_str(
+                "margin_right",
+                self.book
+                    .options
+                    .get_str("tex.margin.right")
+                    .unwrap_or(if book { "1.5cm" } else { "2cm" }),
+            )
+            .insert_str(
+                "margin_bottom",
+                self.book.options.get_str("tex.margin.bottom").unwrap(),
+            )
+            .insert_str(
+                "margin_top",
+                self.book.options.get_str("tex.margin.top").unwrap(),
+            );
 
         if let Ok(chapter_name) = self.book.options.get_str("rendering.chapter") {
             data = data.insert_str("chapter_name", chapter_name);
@@ -273,7 +311,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 let content = if self.escape {
                     let mut escaped = escape::tex(self.book.clean(text.as_str()));
                     if self.book.options.get_bool("tex.escape_nb_spaces").unwrap() {
-                        escaped  = escape::nb_spaces_tex(escaped)
+                        escaped = escape::nb_spaces_tex(escaped)
                     }
                     escaped
                 } else {
@@ -283,10 +321,15 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     self.first_letter = false;
                     if self.book.options.get_bool("rendering.initials").unwrap() {
                         let mut chars = content.chars().peekable();
-                        let initial = chars.next()
-                            .ok_or_else(|| Error::parser(&self.book.source,
-                                                    lformat!("empty str token, could not find \
-                                                              initial")))?;
+                        let initial = chars.next().ok_or_else(|| {
+                            Error::parser(
+                                &self.book.source,
+                                lformat!(
+                                    "empty str token, could not find \
+                                                              initial"
+                                ),
+                            )
+                        })?;
                         let mut first_word = String::new();
                         loop {
                             let c = if let Some(next_char) = chars.peek() {
@@ -305,7 +348,10 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         let rest = chars.collect::<String>();
 
                         if initial.is_alphanumeric() {
-                            Ok(format!("\\lettrine{{{}}}{{{}}}{}", initial, first_word, rest))
+                            Ok(format!(
+                                "\\lettrine{{{}}}{{{}}}{}",
+                                initial, first_word, rest
+                            ))
                         } else {
                             Ok(format!("{}{}{}", initial, first_word, rest))
                         }
@@ -346,7 +392,12 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     1 => {
                         if !self.is_short {
                             if self.current_chapter.is_part() {
-                                if self.book.options.get_bool("rendering.part.reset_counter").unwrap() {
+                                if self
+                                    .book
+                                    .options
+                                    .get_bool("rendering.part.reset_counter")
+                                    .unwrap()
+                                {
                                     content.push_str(r"\setcounter{chapter}{0}");
                                 }
                                 content.push_str(r"\part");
@@ -371,53 +422,69 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 content.push_str("}\n");
                 Ok(content)
             }
-            Token::TaskItem(checked, ref vec) =>
-                Ok(format!("[{}] {}",
-                           if checked { r"$\boxtimes$" } else { r"$\square$" },
-                           self.render_vec(vec)?)),
+            Token::TaskItem(checked, ref vec) => Ok(format!(
+                "[{}] {}",
+                if checked {
+                    r"$\boxtimes$"
+                } else {
+                    r"$\square$"
+                },
+                self.render_vec(vec)?
+            )),
             Token::Emphasis(ref vec) => Ok(format!("\\emph{{{}}}", self.render_vec(vec)?)),
             Token::Strong(ref vec) => Ok(format!("\\mdstrong{{{}}}", self.render_vec(vec)?)),
             Token::Strikethrough(ref vec) => Ok(format!("\\sout{{{}}}", self.render_vec(vec)?)),
-            Token::Code(ref s) => Ok(format!("\\mdcode{{{}}}",
-                                               insert_breaks(&escape::tex(s)))),
-            Token::Superscript(ref vec) => Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?)),
-            Token::Subscript(ref vec) => Ok(format!("\\textsubscript{{{}}}", self.render_vec(vec)?)),
-            Token::BlockQuote(ref vec) => {
-                Ok(format!("\\begin{{mdblockquote}}\n{}\n\\end{{mdblockquote}}\n",
-                           self.render_vec(vec)?))
+            Token::Code(ref s) => Ok(format!("\\mdcode{{{}}}", insert_breaks(&escape::tex(s)))),
+            Token::Superscript(ref vec) => {
+                Ok(format!("\\textsuperscript{{{}}}", self.render_vec(vec)?))
             }
+            Token::Subscript(ref vec) => {
+                Ok(format!("\\textsubscript{{{}}}", self.render_vec(vec)?))
+            }
+            Token::BlockQuote(ref vec) => Ok(format!(
+                "\\begin{{mdblockquote}}\n{}\n\\end{{mdblockquote}}\n",
+                self.render_vec(vec)?
+            )),
             Token::CodeBlock(ref language, ref code) => {
-                let mut res:String;
+                let mut res: String;
                 res = if let Some(ref syntax) = self.syntax {
                     syntax.to_tex(code, language)?
                 } else {
-                    format!("\\begin{{spverbatim}}
+                    format!(
+                        "\\begin{{spverbatim}}
 {code}
 \\end{{spverbatim}}",
-                            code = code)
+                        code = code
+                    )
                 };
-                res = format!("\\begin{{mdcodeblock}}
+                res = format!(
+                    "\\begin{{mdcodeblock}}
 {}
-\\end{{mdcodeblock}}", res);
+\\end{{mdcodeblock}}",
+                    res
+                );
                 Ok(res)
             }
             Token::Rule => Ok(String::from("\\mdrule\n")),
             Token::SoftBreak => Ok(String::from(" ")),
             Token::HardBreak => Ok(String::from("\\mdhardbreak\n")),
-            Token::DescriptionList(ref v) => {
-                Ok(format!("\\begin{{description}}
+            Token::DescriptionList(ref v) => Ok(format!(
+                "\\begin{{description}}
 {}
 \\end{{description}}",
-                           self.render_vec(v)?))
-            },
+                self.render_vec(v)?
+            )),
             Token::DescriptionItem(ref v) => Ok(self.render_vec(v)?),
-            Token::DescriptionTerm(ref v) => Ok(format!("\\item[{}]\n", self.render_vec(v)?.replace('\n', " "))),
+            Token::DescriptionTerm(ref v) => Ok(format!(
+                "\\item[{}]\n",
+                self.render_vec(v)?.replace('\n', " ")
+            )),
             Token::DescriptionDetails(ref v) => Ok(self.render_vec(v)?),
-            Token::List(ref vec) => {
-                Ok(format!("\\begin{{itemize}}\n{}\\end{{itemize}}",
-                           self.render_vec(vec)?))
-            }
-            Token::OrderedList(n , ref vec) => {
+            Token::List(ref vec) => Ok(format!(
+                "\\begin{{itemize}}\n{}\\end{{itemize}}",
+                self.render_vec(vec)?
+            )),
+            Token::OrderedList(n, ref vec) => {
                 self.enum_level += 1;
                 let n = n as i32;
                 let set_counter = if n == 1 {
@@ -428,37 +495,56 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         2 => "enumii",
                         3 => "enumiii",
                         4 => "enumiv",
-                        _ => return Err(Error::render(&self.source,
-                                                      lformat!("found {n} indented ordered lists, LaTeX only allows for 4",
-                                                               n = self.enum_level))),
+                        _ => {
+                            return Err(Error::render(
+                                &self.source,
+                                lformat!(
+                                    "found {n} indented ordered lists, LaTeX only allows for 4",
+                                    n = self.enum_level
+                                ),
+                            ))
+                        }
                     };
-                    format!("\\setcounter{{{counter}}}{{{n}}}\n",
-                            counter = counter,
-                            n = n - 1)
+                    format!(
+                        "\\setcounter{{{counter}}}{{{n}}}\n",
+                        counter = counter,
+                        n = n - 1
+                    )
                 };
-                let result = format!("\\begin{{enumerate}}
+                let result = format!(
+                    "\\begin{{enumerate}}
 {number}{inner}
 \\end{{enumerate}}\n",
-                                     number = set_counter,
-                                     inner = self.render_vec(vec)?);
+                    number = set_counter,
+                    inner = self.render_vec(vec)?
+                );
                 self.enum_level -= 1;
                 Ok(result)
-            },
+            }
             Token::Item(ref vec) => Ok(format!("\\item {}\n", self.render_vec(vec)?)),
             Token::Link(ref url, _, ref vec) => {
                 let content = self.render_vec(vec)?;
 
                 if self.hyperref && self.handler.contains_link(url) {
-                    Ok(format!("\\hyperref[{}]{{{}}}", escape::tex(self.handler.get_link(url)), content))
+                    Ok(format!(
+                        "\\hyperref[{}]{{{}}}",
+                        escape::tex(self.handler.get_link(url)),
+                        content
+                    ))
                 } else {
                     let url = escape::tex(url.as_str());
                     if &content == &url {
                         Ok(format!("\\url{{{}}}", content))
-                    } else if self.book.options.get_bool("tex.links_as_footnotes").unwrap() {
-                        Ok(format!("\\href{{{}}}{{{}}}\\protect\\footnote{{\\url{{{}}}}}",
-                                   url,
-                                   content,
-                                   url))
+                    } else if self
+                        .book
+                        .options
+                        .get_bool("tex.links_as_footnotes")
+                        .unwrap()
+                    {
+                        Ok(format!(
+                            "\\href{{{}}}{{{}}}\\protect\\footnote{{\\url{{{}}}}}",
+                            url, content, url
+                        ))
                     } else {
                         Ok(format!("\\href{{{}}}{{{}}}", url, content))
                     }
@@ -467,54 +553,64 @@ impl<'a> Renderer for LatexRenderer<'a> {
             Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     let img = self.handler.map_image(&self.source, url.as_str())?;
-                    Ok(format!("\\mdstandaloneimage{{{}}}\n",
-                               img))
-
+                    Ok(format!("\\mdstandaloneimage{{{}}}\n", img))
                 } else {
-                    debug!("{}", lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                    debug!(
+                        "{}",
+                        lformat!(
+                            "LaTeX ({source}): image '{url}' doesn't seem to be \
                                            local; ignoring it.",
-                                          source = self.source,
-                                          url = url));
+                            source = self.source,
+                            url = url
+                        )
+                    );
                     Ok(String::new())
                 }
             }
             Token::Image(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
-                    Ok(format!("\\mdimage{{{}}}",
-                               self.handler.map_image(&self.source, url.as_str())?))
+                    Ok(format!(
+                        "\\mdimage{{{}}}",
+                        self.handler.map_image(&self.source, url.as_str())?
+                    ))
                 } else {
-                    debug!("{}", lformat!("LaTeX ({source}): image '{url}' doesn't seem to be \
+                    debug!(
+                        "{}",
+                        lformat!(
+                            "LaTeX ({source}): image '{url}' doesn't seem to be \
                                            local; ignoring it.",
-                                          source = self.source,
-                                          url = url));
+                            source = self.source,
+                            url = url
+                        )
+                    );
                     Ok(String::new())
                 }
             }
-            Token::FootnoteReference(ref reference) => {
-                Ok(format!("\\footnotemark[{}]", reference))
-            },
-            Token::FootnoteDefinition(ref reference, ref v) => {
-                Ok(format!("\\footnotetext[{}]{{{}}}",
-                           reference,
-                           self.render_vec(v)?))
-            }
+            Token::FootnoteReference(ref reference) => Ok(format!("\\footnotemark[{}]", reference)),
+            Token::FootnoteDefinition(ref reference, ref v) => Ok(format!(
+                "\\footnotetext[{}]{{{}}}",
+                reference,
+                self.render_vec(v)?
+            )),
             Token::Table(n, ref vec) => {
                 let mut cols = String::new();
                 for _ in 0..n {
                     cols.push_str("|X");
                 }
                 cols.push_str("|");
-                Ok(format!("\\begin{{mdtable}}{{{}}}
+                Ok(format!(
+                    "\\begin{{mdtable}}{{{}}}
 \\hline
 {}
 \\hline
 \\end{{mdtable}}\n\n",
-                           cols,
-                           self.render_vec(vec)?))
+                    cols,
+                    self.render_vec(vec)?
+                ))
             }
-            Token::TableRow(ref vec) |
-            Token::TableHead(ref vec) => {
-                let mut res: String = vec.iter()
+            Token::TableRow(ref vec) | Token::TableHead(ref vec) => {
+                let mut res: String = vec
+                    .iter()
                     .map(|v| self.render_token(v))
                     .collect::<Result<Vec<_>>>()?
                     .join(" & ");
@@ -529,15 +625,14 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 let content = self.render_vec(vec)?;
                 if self.proofread {
                     match *annotation {
-                        Data::GrammarError(ref s) => {
-                            Ok(format!("\\underline{{{}}}\\protect\\footnote{{{}}}",
-                                       content,
-                                       escape::tex(s.as_str())))
-                        },
+                        Data::GrammarError(ref s) => Ok(format!(
+                            "\\underline{{{}}}\\protect\\footnote{{{}}}",
+                            content,
+                            escape::tex(s.as_str())
+                        )),
                         Data::Repetition(ref colour) => {
                             if !self.escape && colour == "red" {
-                                Ok(format!("\\underline{{{}}}",
-                                           content))
+                                Ok(format!("\\underline{{{}}}", content))
                             } else {
                                 Ok(content)
                             }
@@ -559,7 +654,6 @@ pub struct ProofLatex;
 pub struct Pdf;
 pub struct ProofPdf;
 
-
 impl BookRenderer for Latex {
     fn auto_path(&self, book_name: &str) -> Result<String> {
         Ok(format!("{}.tex", book_name))
@@ -568,11 +662,12 @@ impl BookRenderer for Latex {
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
-        to.write_all(result.as_bytes())
-            .map_err(|e| {
-                Error::render(&book.source,
-                              lformat!("problem when writing LaTeX: {error}", error = e))
-            })?;
+        to.write_all(result.as_bytes()).map_err(|e| {
+            Error::render(
+                &book.source,
+                lformat!("problem when writing LaTeX: {error}", error = e),
+            )
+        })?;
         Ok(())
     }
 }
@@ -585,11 +680,12 @@ impl BookRenderer for ProofLatex {
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
         let mut latex = LatexRenderer::new(book).proofread();
         let result = latex.render_book()?;
-        to.write_all(result.as_bytes())
-            .map_err(|e| {
-                Error::render(&book.source,
-                              lformat!("problem when writing LaTeX: {error}", error = e))
-            })?;
+        to.write_all(result.as_bytes()).map_err(|e| {
+            Error::render(
+                &book.source,
+                lformat!("problem when writing LaTeX: {error}", error = e),
+            )
+        })?;
         Ok(())
     }
 }
@@ -600,8 +696,7 @@ impl BookRenderer for Pdf {
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
-        LatexRenderer::new(book)
-            .render_pdf(to)?;
+        LatexRenderer::new(book).render_pdf(to)?;
         Ok(())
     }
 }
@@ -612,9 +707,7 @@ impl BookRenderer for ProofPdf {
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
-        LatexRenderer::new(book)
-            .proofread()
-            .render_pdf(to)?;
+        LatexRenderer::new(book).proofread().render_pdf(to)?;
         Ok(())
     }
 }
@@ -625,10 +718,10 @@ pub fn insert_breaks(text: &str) -> String {
     let mut result = String::with_capacity(text.len());
     for c in text.chars() {
         match c {
-            '.' | '_' | ')' | '(' | '-' | '/' | ':'  => {
+            '.' | '_' | ')' | '(' | '-' | '/' | ':' => {
                 result.push(c);
                 result.push_str("\\allowbreak{}");
-            },
+            }
             _ => result.push(c),
         }
     }

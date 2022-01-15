@@ -1,15 +1,15 @@
-use crate::token::Token;
 use crate::error::{Error, Result, Source};
+use crate::token::Token;
 
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
 use std::borrow::Cow;
+use std::collections::HashMap;
 use std::fs;
 use std::io::Read;
+use std::path::{Path, PathBuf};
 
-use walkdir::WalkDir;
-use rustc_serialize::base64::{self, ToBase64};
 use mime_guess;
+use rustc_serialize::base64::{self, ToBase64};
+use walkdir::WalkDir;
 
 /// Resource Handler.
 ///
@@ -58,22 +58,32 @@ impl ResourceHandler {
 
     /// Add a local image file and get the resulting transformed
     /// file name
-    pub fn map_image<'a, S: Into<Cow<'a, str>>>(&'a mut self,
-                                                source: &Source,
-                                                file: S)
-                                                -> Result<Cow<'a, str>> {
+    pub fn map_image<'a, S: Into<Cow<'a, str>>>(
+        &'a mut self,
+        source: &Source,
+        file: S,
+    ) -> Result<Cow<'a, str>> {
         // If image is not local, do nothing much
         let file = file.into();
         if !Self::is_local(file.as_ref()) {
-            warn!("{}", lformat!("Resources: book includes non-local image {file}, which might \
+            warn!(
+                "{}",
+                lformat!(
+                    "Resources: book includes non-local image {file}, which might \
                                   cause problem for proper inclusion.",
-                                 file = file));
+                    file = file
+                )
+            );
             return Ok(file);
         }
 
         // Check exisence of the file
         if fs::metadata(file.as_ref()).is_err() {
-            return Err(Error::file_not_found(source, lformat!("image"), format!("{}", file)));
+            return Err(Error::file_not_found(
+                source,
+                lformat!("image"),
+                format!("{}", file),
+            ));
         }
 
         // if image mapping is not activated do nothing else
@@ -90,35 +100,51 @@ impl ResourceHandler {
         // (or a base64 version of the file)
         let dest_file = if !(self.base64) {
             if let Some(extension) = Path::new(file.as_ref()).extension() {
-                format!("images/image_{}.{}",
-                        self.images.len(),
-                        extension.to_string_lossy())
+                format!(
+                    "images/image_{}.{}",
+                    self.images.len(),
+                    extension.to_string_lossy()
+                )
             } else {
-                warn!("{}", lformat!("Resources: book includes image {file} which doesn't have \
+                warn!(
+                    "{}",
+                    lformat!(
+                        "Resources: book includes image {file} which doesn't have \
                                       an extension",
-                                     file = file));
+                        file = file
+                    )
+                );
                 format!("images/image_{}", self.images.len())
             }
         } else {
-            let mut f = match fs::canonicalize(file.as_ref())
-                .and_then(|f| fs::File::open(f)) {
+            let mut f = match fs::canonicalize(file.as_ref()).and_then(|f| fs::File::open(f)) {
                 Ok(f) => f,
                 Err(_) => {
-                    return Err(Error::file_not_found(source,
-                                                     lformat!("image"),
-                                                     format!("{}", file)));
+                    return Err(Error::file_not_found(
+                        source,
+                        lformat!("image"),
+                        format!("{}", file),
+                    ));
                 }
             };
             let mut content: Vec<u8> = vec![];
             if f.read_to_end(&mut content).is_err() {
-                error!("{}", lformat!("Resources: could not read file {file}", file = file));
+                error!(
+                    "{}",
+                    lformat!("Resources: could not read file {file}", file = file)
+                );
                 return Ok(file);
             }
             let base64 = content.to_base64(base64::STANDARD);
             match mime_guess::from_path(file.as_ref()).first() {
                 None => {
-                    error!("{}", lformat!("Resources: could not guess mime type of file {file}",
-                                          file = file));
+                    error!(
+                        "{}",
+                        lformat!(
+                            "Resources: could not guess mime type of file {file}",
+                            file = file
+                        )
+                    );
                     return Ok(file);
                 }
                 Some(s) => format!("data:{};base64,{}", s.to_string(), base64),
@@ -136,7 +162,7 @@ impl ResourceHandler {
     }
 
     /// Add a match between an original file and a dest file
-    pub fn add_link<S1: Into<String>, S2:Into<String>>(&mut self, from: S1, to: S2) {
+    pub fn add_link<S1: Into<String>, S2: Into<String>>(&mut self, from: S1, to: S2) {
         self.links.insert(from.into(), to.into());
     }
 
@@ -146,20 +172,22 @@ impl ResourceHandler {
             link
         } else {
             // Try to get a link by changing the extension
-            let new_from = format!("{}", Path::new(from)
-                .with_extension("md")
-                .display());
+            let new_from = format!("{}", Path::new(from).with_extension("md").display());
             if let Some(link) = self.links.get(&new_from) {
                 link
             } else {
-                warn!("{}", lformat!("Resources: could not find an in-book match for link \
+                warn!(
+                    "{}",
+                    lformat!(
+                        "Resources: could not find an in-book match for link \
                                       {file}",
-                                     file = from));
+                        file = from
+                    )
+                );
                 from
             }
         }
     }
-
 
     /// Tell whether a file name is a local resource or net
     pub fn contains_link(&self, from: &str) -> bool {
@@ -167,9 +195,7 @@ impl ResourceHandler {
             true
         } else {
             // Try to get a link by changing the extension
-            let new_from = format!("{}", Path::new(from)
-                .with_extension("md")
-                .display());
+            let new_from = format!("{}", Path::new(from).with_extension("md").display());
             if self.links.contains_key(&new_from) {
                 true
             } else {
@@ -197,8 +223,8 @@ impl ResourceHandler {
                     }
                     Self::add_offset(link_offset, image_offset, v);
                 }
-                Token::Image(ref mut url, _, ref mut v) |
-                Token::StandaloneImage(ref mut url, _, ref mut v) => {
+                Token::Image(ref mut url, _, ref mut v)
+                | Token::StandaloneImage(ref mut url, _, ref mut v) => {
                     if ResourceHandler::is_local(url) {
                         let new_url = format!("{}", image_offset.join(&url).display());
                         *url = new_url;
@@ -231,10 +257,14 @@ pub fn get_files(list: &[String], base: &str) -> Result<Vec<String>> {
         let res = fs::metadata(&abs_path);
         match res {
             Err(err) => {
-                return Err(Error::render(Source::empty(),
-                                         lformat!("error reading file {file}: {error}",
-                                                  file = abs_path.display(),
-                                                  error = err)))
+                return Err(Error::render(
+                    Source::empty(),
+                    lformat!(
+                        "error reading file {file}: {error}",
+                        file = abs_path.display(),
+                        error = err
+                    ),
+                ))
             }
             Ok(metadata) => {
                 if metadata.is_file() {
@@ -245,19 +275,19 @@ pub fn get_files(list: &[String], base: &str) -> Result<Vec<String>> {
                         .into_iter()
                         .filter_map(|e| e.ok())
                         .filter(|e| e.file_type().is_file())
-                        .map(|e| {
-                            PathBuf::from(e.path()
-                                .strip_prefix(base)
-                                .unwrap())
-                        });
+                        .map(|e| PathBuf::from(e.path().strip_prefix(base).unwrap()));
                     for file in files {
                         out.push(file.to_string_lossy().into_owned());
                     }
                 } else {
-                    return Err(Error::render(Source::empty(),
-                                             lformat!("error in epub rendering: {path} is \
+                    return Err(Error::render(
+                        Source::empty(),
+                        lformat!(
+                            "error in epub rendering: {path} is \
                                                        neither a file nor a directory",
-                                                      path = &path)));
+                            path = &path
+                        ),
+                    ));
                 }
             }
         }

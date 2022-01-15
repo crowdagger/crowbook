@@ -1,5 +1,5 @@
-use crate::book::Book;
 use super::test_eq;
+use crate::book::Book;
 
 #[test]
 fn load_config() {
@@ -15,7 +15,9 @@ epub.version: 3";
     book.read_config(config.as_bytes()).unwrap();
     test_eq(book.options.get_str("author").unwrap(), "Author");
     test_eq(book.options.get_str("title").unwrap(), "Some title");
-    test_eq(book.options.get_str("description").unwrap(),
-            "A long description");
+    test_eq(
+        book.options.get_str("description").unwrap(),
+        "A long description",
+    );
     assert_eq!(book.options.get_i32("epub.version").unwrap(), 3);
 }

@@ -31,14 +31,11 @@ pub enum Number {
     SpecifiedPart(i32),
 }
 
-
 impl Number {
     /// Returns true if self is a part
     pub fn is_part(&self) -> bool {
         match *self {
-            Number::UnnumberedPart |
-            Number::DefaultPart |
-            Number::SpecifiedPart(..) => true,
+            Number::UnnumberedPart | Number::DefaultPart | Number::SpecifiedPart(..) => true,
             _ => false,
         }
     }

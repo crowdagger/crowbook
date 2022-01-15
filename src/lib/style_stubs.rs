@@ -18,9 +18,21 @@
 //! Functions for not setting styles on text, not using console to make it look prettier.
 //! (stub implementation when optional dependency disabled)
 
-pub fn header(msg: &str) -> &str { msg }
-pub fn element(msg: &str) -> &str { msg }
-pub fn field(msg: &str) -> &str { msg }
-pub fn tipe(msg: &str) -> &str { msg }
-pub fn value(msg: &str) -> &str { msg }
-pub fn fill(msg: &str, indent: &str) -> String { format!("{}{}", indent, msg) }
+pub fn header(msg: &str) -> &str {
+    msg
+}
+pub fn element(msg: &str) -> &str {
+    msg
+}
+pub fn field(msg: &str) -> &str {
+    msg
+}
+pub fn tipe(msg: &str) -> &str {
+    msg
+}
+pub fn value(msg: &str) -> &str {
+    msg
+}
+pub fn fill(msg: &str, indent: &str) -> String {
+    format!("{}{}", indent, msg)
+}

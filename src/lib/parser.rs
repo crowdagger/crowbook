@@ -233,7 +233,7 @@ impl Parser {
 
     fn parse_node<'a>(&mut self, node: &'a AstNode<'a>) -> Result<Vec<Token>> {
         let mut inner = vec![];
-        
+
         // Some special cases where we need to modifiy a bit the state of the parser between parsing inner content
         if let NodeValue::DescriptionTerm = node.data.borrow().value {
             self.ignore_paragraphs = true;
@@ -242,7 +242,7 @@ impl Parser {
             let mut v = self.parse_node(c)?;
             inner.append(&mut v);
         }
-        // Reset state after special cases shenanigans 
+        // Reset state after special cases shenanigans
         if let NodeValue::DescriptionTerm = node.data.borrow().value {
             // There should be no paragraphs inside description terms
             self.ignore_paragraphs = false;
@@ -340,7 +340,7 @@ impl Parser {
             NodeValue::TaskItem(checked) => {
                 self.features.taskitem = true;
                 vec![Token::TaskItem(checked, inner)]
-            },
+            }
             NodeValue::Strong => vec![Token::Strong(inner)],
             NodeValue::Strikethrough => {
                 self.features.strikethrough = true;

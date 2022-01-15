@@ -17,13 +17,13 @@
 
 use crate::error::{Error, Result};
 
-use std::path::{Path, PathBuf};
+use std::fs::{self, DirBuilder, File};
 use std::io;
 use std::io::Write;
-use std::process::Command;
-use std::fs::{self, File, DirBuilder};
-use uuid;
 use std::ops::Drop;
+use std::path::{Path, PathBuf};
+use std::process::Command;
+use uuid;
 
 /// Struct used to create zip (using filesystem and zip command)
 pub struct Zipper {
@@ -45,8 +45,10 @@ impl Zipper {
             .recursive(true)
             .create(&zipper_path)
             .map_err(|_| {
-                Error::zipper(lformat!("could not create temporary directory in {path}",
-                                       path = path))
+                Error::zipper(lformat!(
+                    "could not create temporary directory in {path}",
+                    path = path
+                ))
             })?;
 
         Ok(Zipper {
@@ -56,15 +58,17 @@ impl Zipper {
     }
 
     /// writes a content to a temporary file
-    pub fn write<P:AsRef<Path>>(&mut self, path: P, content: &[u8], add_args: bool) -> Result<()> {
+    pub fn write<P: AsRef<Path>>(&mut self, path: P, content: &[u8], add_args: bool) -> Result<()> {
         let path = path.as_ref();
         let file = format!("{}", path.display());
         if path.starts_with("..") || path.is_absolute() {
-            return Err(Error::zipper(lformat!("file {file} refers to an absolute or a parent \
+            return Err(Error::zipper(lformat!(
+                "file {file} refers to an absolute or a parent \
                                                path.
 This is forbidden because we are supposed \
                                                to create a temporary file in a temporary dir.",
-                                              file = file)));
+                file = file
+            )));
         }
         let dest_file = self.path.join(path);
         let dest_dir = dest_file.parent().unwrap();
@@ -74,11 +78,12 @@ This is forbidden because we are supposed \
                 .recursive(true)
                 .create(&dest_dir)
                 .map_err(|_| {
-                    Error::zipper(lformat!("could not create temporary directory in {path}",
-                                           path = dest_dir.display()))
+                    Error::zipper(lformat!(
+                        "could not create temporary directory in {path}",
+                        path = dest_dir.display()
+                    ))
                 })?;
         }
-
 
         if let Ok(mut f) = File::create(&dest_file) {
             if f.write_all(content).is_ok() {
@@ -87,11 +92,16 @@ This is forbidden because we are supposed \
                 }
                 Ok(())
             } else {
-                Err(Error::zipper(lformat!("could not write to temporary file {file}",
-                                           file = file)))
+                Err(Error::zipper(lformat!(
+                    "could not write to temporary file {file}",
+                    file = file
+                )))
             }
         } else {
-            Err(Error::zipper(lformat!("could not create temporary file {file}", file = file)))
+            Err(Error::zipper(lformat!(
+                "could not create temporary file {file}",
+                file = file
+            )))
         }
     }
 
@@ -102,9 +112,11 @@ This is forbidden because we are supposed \
             .arg(file)
             .output()
             .map_err(|e| {
-                Error::zipper(lformat!("failed to execute unzip on {file}: {error}",
-                                       file = file,
-                                       error = e))
+                Error::zipper(lformat!(
+                    "failed to execute unzip on {file}: {error}",
+                    file = file,
+                    error = e
+                ))
             });
 
         output?;
@@ -114,46 +126,67 @@ This is forbidden because we are supposed \
     }
 
     /// run command and copy content of file output (supposed to result from the command) to current dir
-    pub fn run_command(&mut self,
-                       mut command: Command,
-                       command_name: &str,
-                       in_file: &str,
-                       out: &mut dyn Write)
-                       -> Result<String> {
-        let res_output = command.args(&self.args)
+    pub fn run_command(
+        &mut self,
+        mut command: Command,
+        command_name: &str,
+        in_file: &str,
+        out: &mut dyn Write,
+    ) -> Result<String> {
+        let res_output = command
+            .args(&self.args)
             .current_dir(&self.path)
             .output()
             .map_err(|e| {
-                debug!("{}", lformat!("output for command {name}:\n{error}",
-                                        name = command_name,
-                                        error = e));
-                Error::zipper(lformat!("failed to run command '{name}'",
-                                       name = command_name))
+                debug!(
+                    "{}",
+                    lformat!(
+                        "output for command {name}:\n{error}",
+                        name = command_name,
+                        error = e
+                    )
+                );
+                Error::zipper(lformat!(
+                    "failed to run command '{name}'",
+                    name = command_name
+                ))
             });
         let output = res_output?;
         if output.status.success() {
-            let mut file = File::open(self.path.join(in_file))
-                .map_err(|_| {
-                    debug!("{}", lformat!("could not open result of command '{command}'\n\
+            let mut file = File::open(self.path.join(in_file)).map_err(|_| {
+                debug!(
+                    "{}",
+                    lformat!(
+                        "could not open result of command '{command}'\n\
                                            Command output:\n\
                                            {output}'",
-                                          command = command_name,
-                                          output = String::from_utf8_lossy(&output.stdout)));
-                    Error::zipper(lformat!("could not open result of command '{command}'",
-                                           command = command_name))
-                })?;
-            io::copy(&mut file, out)
-                .map_err(|_| Error::zipper(lformat!("error copying file '{file}'",
-                                                    file = in_file)))?;
+                        command = command_name,
+                        output = String::from_utf8_lossy(&output.stdout)
+                    )
+                );
+                Error::zipper(lformat!(
+                    "could not open result of command '{command}'",
+                    command = command_name
+                ))
+            })?;
+            io::copy(&mut file, out).map_err(|_| {
+                Error::zipper(lformat!("error copying file '{file}'", file = in_file))
+            })?;
 
             Ok(String::from_utf8_lossy(&output.stdout).into_owned())
         } else {
-            debug!("{}",
-                   lformat!("{command} didn't return succesfully: {output}",
-                            command = command_name,
-                            output = String::from_utf8_lossy(&output.stdout)));
-            Err(Error::zipper(lformat!("{command} didn't return succesfully",
-                                       command = command_name)))
+            debug!(
+                "{}",
+                lformat!(
+                    "{command} didn't return succesfully: {output}",
+                    command = command_name,
+                    output = String::from_utf8_lossy(&output.stdout)
+                )
+            );
+            Err(Error::zipper(lformat!(
+                "{command} didn't return succesfully",
+                command = command_name
+            )))
         }
     }
 
@@ -166,17 +199,16 @@ This is forbidden because we are supposed \
         self.run_command(command, command_name, "result.odt", odt_file)
     }
 
-
     /// generate a pdf file into given file name
-    pub fn generate_pdf(&mut self,
-                        command_name: &str,
-                        tex_file: &str,
-                        pdf_file: &mut dyn Write)
-                        -> Result<String> {
+    pub fn generate_pdf(
+        &mut self,
+        command_name: &str,
+        tex_file: &str,
+        pdf_file: &mut dyn Write,
+    ) -> Result<String> {
         // first pass
         let mut command = Command::new(command_name);
-        command.current_dir(&self.path)
-            .arg(tex_file);
+        command.current_dir(&self.path).arg(tex_file);
         let _ = command.output();
 
         // second pass
@@ -193,9 +225,11 @@ This is forbidden because we are supposed \
 impl Drop for Zipper {
     fn drop(&mut self) {
         if let Err(err) = fs::remove_dir_all(&self.path) {
-            println!("Error in zipper: could not delete temporary directory {}, error: {}",
-                     self.path.to_string_lossy(),
-                     err);
+            println!(
+                "Error in zipper: could not delete temporary directory {}, error: {}",
+                self.path.to_string_lossy(),
+                err
+            );
         }
     }
 }

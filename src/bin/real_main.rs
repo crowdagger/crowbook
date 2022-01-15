@@ -17,19 +17,19 @@
 
 use crate::helpers::*;
 
-use yaml_rust::Yaml;
-use console;
-use crowbook::{Result, Book, BookOptions};
-use crowbook_intl_runtime::set_lang;
-use crowbook::Stats;
-use tempdir::TempDir;
 use clap::ArgMatches;
-use std::process::exit;
-use std::io;
-use std::io::Read;
+use console;
+use crowbook::Stats;
+use crowbook::{Book, BookOptions, Result};
+use crowbook_intl_runtime::set_lang;
+use simplelog::{ConfigBuilder, LevelFilter, SimpleLogger, TermLogger, WriteLogger};
 use std::env;
 use std::fs::File;
-use simplelog::{ConfigBuilder, TermLogger, LevelFilter, SimpleLogger, WriteLogger};
+use std::io;
+use std::io::Read;
+use std::process::exit;
+use tempdir::TempDir;
+use yaml_rust::Yaml;
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &str) {
@@ -49,13 +49,10 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
 
     let res = book.options.get_path(&key);
 
-    let result = match(file, res, stdout) {
-        (Some(file), _, _) |
-        (None, Ok(file), false) => book.render_format_to_file(format, file),
+    let result = match (file, res, stdout) {
+        (Some(file), _, _) | (None, Ok(file), false) => book.render_format_to_file(format, file),
 
-        (None, Err(_), _) |
-        (None, _, true)
-        => book.render_format_to(format, &mut io::stdout()),
+        (None, Err(_), _) | (None, _, true) => book.render_format_to(format, &mut io::stdout()),
     };
 
     match result {
@@ -65,15 +62,10 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
 }
 
 pub fn try_main() -> Result<()> {
-    let lang = get_lang()
-        .or_else(|| {
-            match env::var("LANG") {
-                Ok(val) => {
-                    Some(val)
-                },
-                Err(_) => None,
-            }
-        });
+    let lang = get_lang().or_else(|| match env::var("LANG") {
+        Ok(val) => Some(val),
+        Err(_) => None,
+    });
     if let Some(val) = lang {
         if val.starts_with("fr") {
             set_lang("fr");
@@ -120,9 +112,10 @@ pub fn try_main() -> Result<()> {
                 println!("{}", s);
                 exit(0);
             }
-            Err(_) => print_error_and_exit(&lformat!("{} is not a valid template name.",
-                                                     template),
-                                           emoji),
+            Err(_) => print_error_and_exit(
+                &lformat!("{} is not a valid template name.", template),
+                emoji,
+            ),
         }
     }
 
@@ -141,13 +134,15 @@ pub fn try_main() -> Result<()> {
     }
 
     if !matches.is_present("BOOK") {
-        print_error_and_exit(&lformat!("You must pass the file of a book configuration \
+        print_error_and_exit(
+            &lformat!(
+                "You must pass the file of a book configuration \
                                file.\n\n{}\n\nFor more information try --help.",
-                                       matches.usage()),
-                             emoji);
+                matches.usage()
+            ),
+            emoji,
+        );
     }
-
-
 
     // ok to unwrap since clap checks it's there
     let s = matches.value_of("BOOK").unwrap();
@@ -172,14 +167,19 @@ pub fn try_main() -> Result<()> {
     };
     let log_config = builder.build();
 
-
     let error_dir = TempDir::new("crowbook").unwrap();
     let error_path = "error.log";
     if fancy_ui {
         let errors = File::create(error_dir.path().join(error_path)).unwrap();
         let _ = WriteLogger::init(verbosity, log_config, errors);
     } else {
-        if TermLogger::init(verbosity, log_config.clone(), simplelog::TerminalMode::Stderr).is_err() {
+        if TermLogger::init(
+            verbosity,
+            log_config.clone(),
+            simplelog::TerminalMode::Stderr,
+        )
+        .is_err()
+        {
             // If it failed, not much we can do, we just won't display log
             let _ = SimpleLogger::init(verbosity, log_config);
         }
@@ -192,8 +192,13 @@ pub fn try_main() -> Result<()> {
             let mut autograph = String::new();
             match io::stdin().read_to_string(&mut autograph) {
                 Ok(_) => {
-                    book.options.set_yaml(Yaml::String("autograph".to_string()), Yaml::String(autograph)).unwrap();
-                },
+                    book.options
+                        .set_yaml(
+                            Yaml::String("autograph".to_string()),
+                            Yaml::String(autograph),
+                        )
+                        .unwrap();
+                }
                 Err(_) => print_error(&lformat!("could not read autograph from stdin"), emoji),
             }
         }
@@ -214,10 +219,11 @@ pub fn try_main() -> Result<()> {
                 book.load_file(s)
             } else {
                 book.read_config(io::stdin())
-            }.map(|_| ());
+            }
+            .map(|_| ());
 
             match res {
-                Ok(..) => {},
+                Ok(..) => {}
                 Err(err) => {
                     book.set_error(&format!("{}", err));
                     return Err(err);
@@ -234,7 +240,7 @@ pub fn try_main() -> Result<()> {
         }
 
         if let Some(format) = matches.value_of("to") {
-            render_format(&mut book, emoji,& matches, format);
+            render_format(&mut book, emoji, &matches, format);
         } else {
             book.render_all();
         }
@@ -244,10 +250,12 @@ pub fn try_main() -> Result<()> {
         let mut file = File::open(error_dir.path().join(error_path)).unwrap();
         file.read_to_string(&mut errors).unwrap();
         if !errors.is_empty() {
-            print_warning(&lformat!("Crowbook exited successfully, but the following errors occurred:"),
-                          emoji);
+            print_warning(
+                &lformat!("Crowbook exited successfully, but the following errors occurred:"),
+                emoji,
+            );
             // Non-efficient dedup algorithm but we need to keep the order
-            let mut lines: Vec<String> = vec!();
+            let mut lines: Vec<String> = vec![];
             for line in errors.lines().into_iter() {
                 let mut contains = false;
                 for l in &lines {
@@ -271,7 +279,6 @@ pub fn try_main() -> Result<()> {
             }
         }
     }
-
 
     Ok(())
 }

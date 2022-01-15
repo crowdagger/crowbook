@@ -177,4 +177,3 @@ fn table_simple() {
     let result = format!("{:?}", parse_from_str(doc));
     test_eq(&result, expected);
 }
-

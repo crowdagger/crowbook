@@ -51,7 +51,10 @@ impl BookOption {
     pub fn as_str(&self) -> Result<&str> {
         match *self {
             BookOption::String(ref s) => Ok(s),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a string", self))),
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not a string", self),
+            )),
         }
     }
 
@@ -59,7 +62,10 @@ impl BookOption {
     pub fn as_str_vec(&self) -> Result<&[String]> {
         match *self {
             BookOption::StringVec(ref v) => Ok(v),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a string vector", self))),
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not a string vector", self),
+            )),
         }
     }
 
@@ -67,7 +73,10 @@ impl BookOption {
     pub fn as_path(&self) -> Result<&str> {
         match *self {
             BookOption::Path(ref s) => Ok(s),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a path", self))),
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not a path", self),
+            )),
         }
     }
 
@@ -75,7 +84,10 @@ impl BookOption {
     pub fn as_bool(&self) -> Result<bool> {
         match *self {
             BookOption::Bool(b) => Ok(b),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a bool", self))),
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not a bool", self),
+            )),
         }
     }
 
@@ -83,7 +95,10 @@ impl BookOption {
     pub fn as_char(&self) -> Result<char> {
         match *self {
             BookOption::Char(c) => Ok(c),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a char", self))),
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not a char", self),
+            )),
         }
     }
 
@@ -91,8 +106,10 @@ impl BookOption {
     pub fn as_i32(&self) -> Result<i32> {
         match *self {
             BookOption::Int(i) => Ok(i),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not an i32", self))),
-
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not an i32", self),
+            )),
         }
     }
 
@@ -100,7 +117,10 @@ impl BookOption {
     pub fn as_f32(&self) -> Result<f32> {
         match *self {
             BookOption::Float(f) => Ok(f),
-            _ => Err(Error::book_option(Source::empty(), lformat!("{:?} is not a f32", self))),
+            _ => Err(Error::book_option(
+                Source::empty(),
+                lformat!("{:?} is not a f32", self),
+            )),
         }
     }
 }

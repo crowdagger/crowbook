@@ -17,10 +17,9 @@
 
 //! This module contains the `Cleaner` traits and various implementations of it.
 
-use std::borrow::Cow;
 use crowbook_text_processing::clean;
 use crowbook_text_processing::FrenchFormatter;
-
+use std::borrow::Cow;
 
 /// Contains cleaning parameters
 pub struct CleanerParams {
@@ -58,9 +57,7 @@ pub struct Default {
 impl Default {
     /// New Default cleaner
     pub fn new(params: CleanerParams) -> Default {
-        Default {
-            params: params,
-        }
+        Default { params: params }
     }
 }
 
@@ -99,11 +96,11 @@ impl French {
         };
         this.formatter.typographic_quotes(this.params.smart_quotes);
         this.formatter.ligature_dashes(this.params.ligature_dashes);
-        this.formatter.ligature_guillemets(this.params.ligature_guillemets);
+        this.formatter
+            .ligature_guillemets(this.params.ligature_guillemets);
         this
     }
 }
-
 
 impl Cleaner for French {
     /// Puts non breaking spaces before/after `:`, `;`, `?`, `!`, `«`, `»`, `—`

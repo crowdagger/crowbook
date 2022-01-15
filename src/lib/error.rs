@@ -15,13 +15,13 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use mustache;
 use epub_builder;
+use mustache;
 
-use std::error;
-use std::result;
-use std::fmt;
 use std::borrow::Cow;
+use std::error;
+use std::fmt;
+use std::result;
 use std::string::FromUtf8Error;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -145,11 +145,15 @@ impl Error {
     /// * source: the source of the error.
     /// * msg: description of why the file was needed.
     /// * file: file name that wasn't found.
-    pub fn file_not_found<S1: Into<Cow<'static, str>>, S2: Into<Cow<'static, str>>, O: Into<Source>>
-        (source: O,
-         msg: S1,
-         file: S2)
-         -> Error {
+    pub fn file_not_found<
+        S1: Into<Cow<'static, str>>,
+        S2: Into<Cow<'static, str>>,
+        O: Into<Source>,
+    >(
+        source: O,
+        msg: S1,
+        file: S2,
+    ) -> Error {
         Error {
             source: source.into(),
             inner: Inner::FileNotFound(msg.into(), file.into()),
@@ -280,15 +284,15 @@ impl Error {
 impl error::Error for Error {
     fn description(&self) -> &str {
         match self.inner {
-            Inner::Default(ref s) |
-            Inner::Parser(ref s) |
-            Inner::Zipper(ref s) |
-            Inner::BookOption(ref s) |
-            Inner::ConfigParser(ref s) |
-            Inner::InvalidOption(ref s) |
-            Inner::Render(ref s) |
-            Inner::Template(ref s) |
-            Inner::GrammarCheck(ref s) => s.as_ref(),
+            Inner::Default(ref s)
+            | Inner::Parser(ref s)
+            | Inner::Zipper(ref s)
+            | Inner::BookOption(ref s)
+            | Inner::ConfigParser(ref s)
+            | Inner::InvalidOption(ref s)
+            | Inner::Render(ref s)
+            | Inner::Template(ref s)
+            | Inner::GrammarCheck(ref s) => s.as_ref(),
 
             Inner::FileNotFound(..) => "File not found",
         }
@@ -309,31 +313,40 @@ impl fmt::Display for Error {
         match self.inner {
             Inner::Default(ref s) => write!(f, "{}", s),
             Inner::GrammarCheck(ref s) => {
-                write!(f,
-                       "{}",
-                       lformat!("Error while trying to check grammar: {error}",
-                                error = s))
+                write!(
+                    f,
+                    "{}",
+                    lformat!("Error while trying to check grammar: {error}", error = s)
+                )
             }
             Inner::Parser(ref s) => {
-                write!(f,
-                       "{}",
-                       lformat!("Error parsing markdown: {error}", error = s))
+                write!(
+                    f,
+                    "{}",
+                    lformat!("Error parsing markdown: {error}", error = s)
+                )
             }
             Inner::ConfigParser(ref s) => {
                 f.write_str(&lformat!("Error parsing configuration file: "))?;
                 f.write_str(s)
             }
             Inner::FileNotFound(ref description, ref file) => {
-                write!(f,
-                       "{}",
-                       lformat!("Could not find file '{file}' for {description}",
-                                file = file,
-                                description = description))
+                write!(
+                    f,
+                    "{}",
+                    lformat!(
+                        "Could not find file '{file}' for {description}",
+                        file = file,
+                        description = description
+                    )
+                )
             }
             Inner::Template(ref s) => {
-                write!(f,
-                       "{}",
-                       lformat!("Error compiling template: {template}", template = s))
+                write!(
+                    f,
+                    "{}",
+                    lformat!("Error compiling template: {template}", template = s)
+                )
             }
             Inner::Render(ref s) => {
                 f.write_str(&lformat!("Error during rendering: "))?;
@@ -359,37 +372,38 @@ impl fmt::Display for Error {
 /// Crowbook's Result type, used by many methods that can fail
 pub type Result<T> = result::Result<T, Error>;
 
-
 /// Implement our Error from mustache::Error
 impl From<mustache::Error> for Error {
     fn from(err: mustache::Error) -> Error {
-        Error::template(Source::empty(),
-                       format!("{}", err))
+        Error::template(Source::empty(), format!("{}", err))
     }
 }
 
 /// Implement our error from epub_maker::Error
 impl From<epub_builder::Error> for Error {
     fn from(err: epub_builder::Error) -> Error {
-        Error::render(Source::empty(),
-                      lformat!("error during EPUB generation: {error}",
-                               error = err))
+        Error::render(
+            Source::empty(),
+            lformat!("error during EPUB generation: {error}", error = err),
+        )
     }
 }
 
 impl From<FromUtf8Error> for Error {
     fn from(err: FromUtf8Error) -> Error {
-        Error::render(Source::empty(),
-                      lformat!("UTF-8 error: {error}",
-                               error = err))
+        Error::render(
+            Source::empty(),
+            lformat!("UTF-8 error: {error}", error = err),
+        )
     }
 }
 
 impl From<fmt::Error> for Error {
     fn from(err: fmt::Error) -> Error {
-        Error::default(Source::empty(),
-                       lformat!("format error: {error}",
-                                error = err))
+        Error::default(
+            Source::empty(),
+            lformat!("format error: {error}", error = err),
+        )
     }
 }
 

@@ -15,15 +15,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crowbook::Book;
-use clap::{App, Arg,  ArgMatches, AppSettings};
+use clap::{App, AppSettings, Arg, ArgMatches};
 use console::style;
+use crowbook::Book;
 
+use std::env;
+use std::fs;
 use std::io::{self, Write};
 use std::process::exit;
-use std::fs;
-use std::env;
-
 
 static BIRD: &str = "🐦 ";
 static ERROR: &str = "💣 ";
@@ -34,9 +33,7 @@ pub fn print_warning(msg: &str, emoji: bool) {
     if emoji {
         eprint!("{}", style(WARNING).yellow());
     }
-    eprintln!("{} {}",
-              style(lformat!("WARNING")).bold().yellow(),
-              msg);
+    eprintln!("{} {}", style(lformat!("WARNING")).bold().yellow(), msg);
 }
 
 /// Prints an error
@@ -44,9 +41,7 @@ pub fn print_error(s: &str, emoji: bool) {
     if emoji {
         eprint!("{}", style(ERROR).red());
     }
-    eprintln!("{} {}",
-              style(lformat!("ERROR")).bold().red(),
-              s);
+    eprintln!("{} {}", style(lformat!("ERROR")).bold().red(), s);
 }
 
 /// Prints an error on stderr and exit the program
@@ -54,7 +49,6 @@ pub fn print_error_and_exit(s: &str, emoji: bool) -> ! {
     print_error(s, emoji);
     exit(0);
 }
-
 
 /// Display version number
 pub fn display_header(emoji: bool) {
@@ -81,15 +75,19 @@ pub fn get_lang() -> Option<String> {
     None
 }
 
-
 /// Gets the book options in a (key, value) list, or print an error
 pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> {
     let mut output = vec![];
     if let Some(iter) = matches.values_of("set") {
         let v: Vec<_> = iter.collect();
         if v.len() % 2 != 0 {
-            print_error_and_exit(&lformat!("An odd number of arguments was passed to --set, but it takes \
-                                   a list of key value pairs."), false);
+            print_error_and_exit(
+                &lformat!(
+                    "An odd number of arguments was passed to --set, but it takes \
+                                   a list of key value pairs."
+                ),
+                false,
+            );
         }
 
         for i in 0..v.len() / 2 {
@@ -103,7 +101,6 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
     }
     output
 }
-
 
 /// Sets the book options according to command line arguments
 /// Also print these options to a string, so it can be used at
@@ -128,7 +125,10 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 pub fn create_book(matches: &ArgMatches) -> ! {
     let mut f: Box<dyn Write> = if let Some(book) = matches.value_of("BOOK") {
         if fs::metadata(book).is_ok() {
-            print_error_and_exit(&lformat!("Could not create file {}: it already exists!", book), false);
+            print_error_and_exit(
+                &lformat!("Could not create file {}: it already exists!", book),
+                false,
+            );
         }
         Box::new(fs::File::create(book).unwrap())
     } else {
@@ -141,7 +141,9 @@ pub fn create_book(matches: &ArgMatches) -> ! {
             let s = set_book_options(&mut book, matches);
             f.write_all(s.as_bytes()).unwrap();
         } else {
-            f.write_all(lformat!("author: Your name
+            f.write_all(
+                lformat!(
+                    "author: Your name
 title: Your title
 lang: en
 
@@ -156,16 +158,22 @@ lang: en
 # output: [pdf, epub, html]
 
 # Uncomment and fill to set cover image (for EPUB)
-# cover: some_cover.png\n").as_bytes())
-                .unwrap();
+# cover: some_cover.png\n"
+                )
+                .as_bytes(),
+            )
+            .unwrap();
         }
-        f.write_all(lformat!("\n## List of chapters\n").as_bytes()).unwrap();
+        f.write_all(lformat!("\n## List of chapters\n").as_bytes())
+            .unwrap();
         for file in values {
             f.write_all(format!("+ {}\n", file).as_bytes()).unwrap();
         }
         if let Some(s) = matches.value_of("BOOK") {
-            println!("{}",
-                     lformat!("Created {}, now you'll have to complete it!", s));
+            println!(
+                "{}",
+                lformat!("Created {}, now you'll have to complete it!", s)
+            );
         }
         exit(0);
     } else {
@@ -213,7 +221,6 @@ ARGS:
 ");
     }
 
-
     let app = App::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Élisabeth Henry <liz.henry@ouvaton.org>")
@@ -225,42 +232,51 @@ ARGS:
         .arg(Arg::from_usage("-n, --no-fancy").help(NO_FANCY.as_str()))
         .arg(Arg::from_usage("-v, --verbose").help(VERBOSE.as_str()))
         .arg(Arg::from_usage("-a, --autograph").help(AUTOGRAPH.as_str()))
-        .arg(Arg::from_usage("-q, --quiet")
-            .help(QUIET.as_str())
-            .conflicts_with("verbose"))
+        .arg(
+            Arg::from_usage("-q, --quiet")
+                .help(QUIET.as_str())
+                .conflicts_with("verbose"),
+        )
         .arg(Arg::from_usage("-h, --help").help(HELP.as_str()))
         .arg(Arg::from_usage("-V, --version").help(VERSION.as_str()))
         .arg(Arg::from_usage("-p, --proofread").help(PROOFREAD.as_str()))
         .arg(Arg::from_usage("-c, --create [FILES]...").help(CREATE.as_str()))
-        .arg(Arg::from_usage("-o, --output [FILE]")
-            .help(OUTPUT.as_str())
-            .requires("to"))
-        .arg(Arg::from_usage("-t, --to [FORMAT]")
-            .help(TO.as_str())
-            .possible_values(&["epub",
-                               "pdf",
-                               "html",
-                               "tex",
-                               "odt",
-                               "html.dir",
-                               "proofread.html",
-                               "proofread.html.dir",
-                               "proofread.pdf",
-                               "proofread.tex"]))
-        .arg(Arg::from_usage("--set [KEY_VALUES]")
-            .help(SET.as_str())
-            .min_values(2))
+        .arg(
+            Arg::from_usage("-o, --output [FILE]")
+                .help(OUTPUT.as_str())
+                .requires("to"),
+        )
+        .arg(
+            Arg::from_usage("-t, --to [FORMAT]")
+                .help(TO.as_str())
+                .possible_values(&[
+                    "epub",
+                    "pdf",
+                    "html",
+                    "tex",
+                    "odt",
+                    "html.dir",
+                    "proofread.html",
+                    "proofread.html.dir",
+                    "proofread.pdf",
+                    "proofread.tex",
+                ]),
+        )
+        .arg(
+            Arg::from_usage("--set [KEY_VALUES]")
+                .help(SET.as_str())
+                .min_values(2),
+        )
         .arg(Arg::from_usage("-l --list-options").help(LIST_OPTIONS.as_str()))
-        .arg(Arg::from_usage("--list-options-md")
-            .help(LIST_OPTIONS_MD.as_str())
-             .hidden(true))
-        .arg(Arg::from_usage("-L --lang [LANG]")
-             .help(LANG.as_str()))
+        .arg(
+            Arg::from_usage("--list-options-md")
+                .help(LIST_OPTIONS_MD.as_str())
+                .hidden(true),
+        )
+        .arg(Arg::from_usage("-L --lang [LANG]").help(LANG.as_str()))
         .arg(Arg::from_usage("--print-template [TEMPLATE]").help(PRINT_TEMPLATE.as_str()))
         .arg(Arg::from_usage("--stats -S").help(STATS.as_str()))
-        .arg(Arg::with_name("BOOK")
-            .index(1)
-            .help(BOOK.as_str()))
+        .arg(Arg::with_name("BOOK").index(1).help(BOOK.as_str()))
         .template(TEMPLATE.as_str());
 
     // Write help and version now since it `app` is moved when `get_matches` is run
@@ -277,11 +293,15 @@ ARGS:
     (matches, help, version)
 }
 
-
 /// Pre-check the matches to see if there isn't illegal options not detected by clap
 fn pre_check(matches: &ArgMatches) {
     if matches.is_present("files") && !matches.is_present("create") {
-        print_error_and_exit(&lformat!("A list of additional files is only valid with the --create \
-                               option."), false);
+        print_error_and_exit(
+            &lformat!(
+                "A list of additional files is only valid with the --create \
+                               option."
+            ),
+            false,
+        );
     }
 }

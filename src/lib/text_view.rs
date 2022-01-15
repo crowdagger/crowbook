@@ -15,33 +15,33 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use std::mem;
 use std::default::Default;
+use std::mem;
 
-use crate::token::Token;
 use crate::token::Data;
+use crate::token::Token;
 
 pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
-    where F1: Fn(&str) -> R,
-          R: Default,
-          F2: Fn(R, R) -> R
+where
+    F1: Fn(&str) -> R,
+    R: Default,
+    F2: Fn(R, R) -> R,
 {
     match *token {
         Token::Str(ref s) | Token::Code(ref s) | Token::CodeBlock(_, ref s) => f(s),
 
         Token::SoftBreak => f(" "),
 
-        Token::Rule |
-        Token::HardBreak => f("\n"),
+        Token::Rule | Token::HardBreak => f("\n"),
 
-        Token::Image(..) |
-        Token::StandaloneImage(..) |
-        Token::FootnoteDefinition(..) |
-        Token::FootnoteReference(..) |
-        Token::Table(..) |
-        Token::TableHead(..) |
-        Token::TableRow(..) |
-        Token::TableCell(..) => f(""),
+        Token::Image(..)
+        | Token::StandaloneImage(..)
+        | Token::FootnoteDefinition(..)
+        | Token::FootnoteReference(..)
+        | Token::Table(..)
+        | Token::TableHead(..)
+        | Token::TableRow(..)
+        | Token::TableCell(..) => f(""),
 
         _ => traverse_vec(token.inner().unwrap(), f, add),
     }
@@ -50,16 +50,16 @@ pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
 /// Traverse a vector of tokens
 #[doc(hidden)]
 pub fn traverse_vec<F1, F2, R>(tokens: &[Token], f: &F1, add: &F2) -> R
-    where F1: Fn(&str) -> R,
-          F2: Fn(R, R) -> R,
-          R: Default
+where
+    F1: Fn(&str) -> R,
+    F2: Fn(R, R) -> R,
+    R: Default,
 {
-    tokens.iter()
+    tokens
+        .iter()
         .map(|t| traverse_token(t, f, add))
         .fold(R::default(), add)
 }
-
-
 
 /// Returns the content of an AST as raw text, without any formatting
 /// Useful for tools like grammar checks
@@ -71,14 +71,14 @@ pub fn count_length(tokens: &[Token]) -> usize {
     traverse_vec(tokens, &|s| s.chars().count(), &|s1, s2| s1 + s2)
 }
 
-
 /// Insert an annotation at begin and end pos begin+len in the text_view
 #[doc(hidden)]
-pub fn insert_annotation(tokens: &mut Vec<Token>,
-                         annotation: &Data,
-                         pos: usize,
-                         length: usize)
-                         -> Option<usize> {
+pub fn insert_annotation(
+    tokens: &mut Vec<Token>,
+    annotation: &Data,
+    pos: usize,
+    length: usize,
+) -> Option<usize> {
     let mut pos = pos;
     let mut found_left = None;
     let mut found_right = None;
@@ -128,10 +128,15 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
                         if found_left.is_none() {
                             true
                         } else {
-                            warn!("{}", lformat!("ignored annotation {:?} as it \
+                            warn!(
+                                "{}",
+                                lformat!(
+                                    "ignored annotation {:?} as it \
                                                   wasn't compatible with the \
                                                   Markdown structure",
-                                                 annotation));
+                                    annotation
+                                )
+                            );
                             return None;
                         }
                     } else {
@@ -141,7 +146,6 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
                 } else {
                     false
                 }
-
             }
         };
 
@@ -186,9 +190,10 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
                             tokens.insert(i + 1, inline_token);
                         }
                     }
-                    let annot = Token::Annotation(annotation.clone(),
-                                                  vec![Token::Str(chars_right.into_iter()
-                                                           .collect())]);
+                    let annot = Token::Annotation(
+                        annotation.clone(),
+                        vec![Token::Str(chars_right.into_iter().collect())],
+                    );
                     if pos_left == 0 {
                         tokens.insert(i, annot)
                     } else if i == tokens.len() {
@@ -219,7 +224,6 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
         } else {
             i + 1
         };
-
 
         if !tokens[j].is_str() {
             // do nothing
@@ -256,19 +260,25 @@ pub fn insert_annotation(tokens: &mut Vec<Token>,
     } else if found_left.is_none() && found_right.is_none() {
         return Some(pos);
     } else {
-        warn!("{}", lformat!("ignored annotation {:?} as it wasn't compatible \
+        warn!(
+            "{}",
+            lformat!(
+                "ignored annotation {:?} as it wasn't compatible \
                                           with the Markdown structure",
-                                         annotation));
+                annotation
+            )
+        );
         return None;
     }
 }
 
-
 #[test]
 fn test_text_view() {
-    let ast = vec![Token::Str("123".to_owned()),
-                   Token::Emphasis(vec![Token::Str("456".to_owned())]),
-                   Token::Str("789".to_owned())];
+    let ast = vec![
+        Token::Str("123".to_owned()),
+        Token::Emphasis(vec![Token::Str("456".to_owned())]),
+        Token::Str("789".to_owned()),
+    ];
     assert_eq!(view_as_text(&ast), "123456789");
 }
 

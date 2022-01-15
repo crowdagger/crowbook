@@ -30,7 +30,6 @@ pub fn element(msg: &str) -> StyledObject<&str> {
     style(msg).yellow().bold()
 }
 
-
 pub fn field(msg: &str) -> StyledObject<&str> {
     style(msg).cyan().bold()
 }
@@ -44,8 +43,7 @@ pub fn value(msg: &str) -> StyledObject<&str> {
 }
 
 pub fn fill(msg: &str, indent: &str) -> String {
-    let (_, width) = Term::stdout()
-        .size();
+    let (_, width) = Term::stdout().size();
     let wrapper = Wrapper::new(width as usize)
         .initial_indent(indent)
         .subsequent_indent(indent);
