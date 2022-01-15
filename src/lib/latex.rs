@@ -298,7 +298,7 @@ impl<'a> LatexRenderer<'a> {
         let mut res: Vec<u8> = vec![];
         template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
-            Err(_) => panic!(lformat!("generated LaTeX was not valid utf-8")),
+            Err(_) => panic!("{}", lformat!("generated LaTeX was not valid utf-8")),
             Ok(res) => Ok(res),
         }
     }

@@ -342,13 +342,13 @@ impl<'a> EpubRenderer<'a> {
             let mut res: Vec<u8> = vec![];
             template.render_data(&mut res, &data)?;
             match String::from_utf8(res) {
-                Err(_) => panic!(lformat!(
+                Err(_) => panic!("{}", lformat!(
                     "generated HTML for cover.xhtml was not utf-8 valid"
                 )),
                 Ok(res) => Ok(res),
             }
         } else {
-            panic!(lformat!("Why is this method called if cover is None???"));
+            panic!("{}", lformat!("Why is this method called if cover is None???"));
         }
     }
 
@@ -407,7 +407,7 @@ impl<'a> EpubRenderer<'a> {
         let mut res: Vec<u8> = vec![];
         template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
-            Err(_) => panic!(lformat!("generated HTML was not utf-8 valid")),
+            Err(_) => panic!("{}", lformat!("generated HTML was not utf-8 valid")),
             Ok(res) => Ok((
                 res,
                 mem::replace(&mut self.chapter_title_raw, String::new()),

@@ -1,7 +1,7 @@
 [package]
 name = "crowbook"
-version = "0.15.2"
-edition = "2018"
+version = "0.16.0"
+edition = "2021"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Render a Markdown book in HTML, PDF or Epub"
 repository = "https://github.com/lise-henry/crowbook"
@@ -42,8 +42,11 @@ proofread = ["caribon", "reqwest", "url", "serde", "serde", "serde_json", "serde
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
 
-[build-dependencies]
-crowbook-intl = "0.2"
+#[build-dependencies]
+#crowbook-intl = "0.2.2"
+
+[build-dependencies.crowbook-intl]
+path = "../crowbook-intl"
 
 [dependencies]
 mime_guess = "2"

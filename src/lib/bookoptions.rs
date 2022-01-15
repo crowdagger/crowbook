@@ -450,7 +450,7 @@ impl BookOptions {
                     continue;
                 }
                 _ => {
-                    panic!(lformat!(
+                    panic!("{}", lformat!(
                         "Ill-formatted OPTIONS string: unrecognized type \
                                      '{option_type}'",
                         option_type = option_type.unwrap()

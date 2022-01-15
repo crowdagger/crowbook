@@ -19,7 +19,7 @@ pub fn get_hash(lang: &str) -> Hash {
     if let Yaml::Hash(hash) = elem {
         hash
     } else {
-        panic!(lformat!(
+        panic!("{}", lformat!(
             "Yaml file for language {lang} didn't contain a hash",
             lang = lang
         ));
@@ -37,7 +37,7 @@ pub fn get_str(lang: &str, s: &str) -> String {
     if let &Yaml::String(ref result) = yaml {
         result.clone()
     } else {
-        panic!(lformat!(
+        panic!("{}", lformat!(
             "Yaml for {key} in lang {lang} is not a String!",
             key = s,
             lang = lang
