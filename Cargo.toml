@@ -42,11 +42,8 @@ proofread = ["caribon", "reqwest", "url", "serde", "serde", "serde_json", "serde
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
 
-#[build-dependencies]
-#crowbook-intl = "0.2.2"
-
-[build-dependencies.crowbook-intl]
-path = "../crowbook-intl"
+[build-dependencies]
+crowbook-intl = "0.2"
 
 [dependencies]
 mime_guess = "2"
