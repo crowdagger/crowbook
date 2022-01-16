@@ -20,38 +20,30 @@
 use crate::book::{Book, Crowbar, CrowbarState};
 
 /// Dummy bars implementation
-pub struct Bars {
-}
+pub struct Bars {}
 
 impl Bars {
     pub fn new() -> Bars {
-        Bars {
-        }
+        Bars {}
     }
 }
 
-
 impl Book {
-    pub fn private_add_progress_bar(&mut self, _: bool) {
-    }
+    pub fn private_add_progress_bar(&mut self, _: bool) {}
 
     /// Sets a finished message to the progress bar, if it is set
-    pub fn bar_finish(&self, _: Crowbar, _: CrowbarState, _: &str) {
-    }
+    pub fn bar_finish(&self, _: Crowbar, _: CrowbarState, _: &str) {}
 
     /// Adds a secondary progress bar to display progress of book parsing
-    pub fn add_second_bar(&mut self, _: &str, _: u64)  {
-    }
+    pub fn add_second_bar(&mut self, _: &str, _: u64) {}
 
     /// Increment second bar
-    pub fn inc_second_bar(&self) {
-    }
+    pub fn inc_second_bar(&self) {}
 
     /// Adds a spinner labeled key to the multibar, and set mainbar to "rendering"
     pub fn add_spinner_to_multibar(&mut self, _: &str) -> usize {
         0
     }
 
-    pub fn bar_set_message(&self, _: Crowbar, _: &str) {
-    }
+    pub fn bar_set_message(&self, _: Crowbar, _: &str) {}
 }

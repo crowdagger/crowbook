@@ -20,16 +20,14 @@
 use crate::token::Token;
 
 use std;
-use std::path::{Path, PathBuf};
 use std::io::Result;
+use std::path::{Path, PathBuf};
 
 /// Try to canonicalize a path using std::fs::canonicalize, and returns the
 /// unmodified path if it fails (e.g. if the path doesn't exist (yet))
 pub fn normalize<P: AsRef<Path>>(path: P) -> String {
-    try_normalize(path.as_ref())
-        .unwrap_or_else(|_| format!("{}", path.as_ref().display()))
+    try_normalize(path.as_ref()).unwrap_or_else(|_| format!("{}", path.as_ref().display()))
 }
-
 
 fn try_normalize<P: AsRef<Path>>(path: P) -> Result<String> {
     let full_path = std::fs::canonicalize(path.as_ref())?;
@@ -61,5 +59,5 @@ pub fn insert_title(tokens: &mut Vec<Token>) {
             return;
         }
     }
-    tokens.insert(0, Token::Header(1, vec!()));
+    tokens.insert(0, Token::Header(1, vec![]));
 }

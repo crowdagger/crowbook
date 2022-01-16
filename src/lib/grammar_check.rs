@@ -15,18 +15,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use serde_json;
-use reqwest;
-use url::form_urlencoded;
 use rayon::prelude::*;
+use reqwest;
+use serde_json;
+use url::form_urlencoded;
 
 use std::io::Read;
 
-use crate::text_view::view_as_text;
-use crate::text_view::insert_annotation;
-use crate::token::Token;
-use crate::token::Data;
 use crate::error::{Error, Result, Source};
+use crate::text_view::insert_annotation;
+use crate::text_view::view_as_text;
+use crate::token::Data;
+use crate::token::Token;
 
 /// Represents a grammar error from language tool
 ///
@@ -66,18 +66,27 @@ impl GrammarChecker {
             client: reqwest::blocking::Client::new(),
         };
 
-        let res = checker.client
+        let res = checker
+            .client
             .get(&format!("http://localhost:{}/v2/languages", port))
             .send()
             .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not connect to language tool server: {error}",
-                                              error = e))
+                Error::grammar_check(
+                    Source::empty(),
+                    lformat!(
+                        "could not connect to language tool server: {error}",
+                        error = e
+                    ),
+                )
             })?;
         if !res.status().is_success() {
-            return Err(Error::grammar_check(Source::empty(),
-                                            lformat!("server didn't respond with a OK status \
-                                                      code")));
+            return Err(Error::grammar_check(
+                Source::empty(),
+                lformat!(
+                    "server didn't respond with a OK status \
+                                                      code"
+                ),
+            ));
         }
         Ok(checker)
     }
@@ -89,62 +98,71 @@ impl GrammarChecker {
             .append_pair("text", text)
             .finish();
 
-        let mut res = self.client.post(&format!("http://localhost:{}/v2/check", self.port))
+        let mut res = self
+            .client
+            .post(&format!("http://localhost:{}/v2/check", self.port))
             .body(query)
             .send()
             .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not send request to server: {error}",
-                                              error = e))
+                Error::grammar_check(
+                    Source::empty(),
+                    lformat!("could not send request to server: {error}", error = e),
+                )
             })?;
 
         if !res.status().is_success() {
-            return Err(Error::grammar_check(Source::empty(),
-                                            lformat!("server didn't respond with a OK status \
-                                                      code")));
+            return Err(Error::grammar_check(
+                Source::empty(),
+                lformat!(
+                    "server didn't respond with a OK status \
+                                                      code"
+                ),
+            ));
         }
 
         let mut s = String::new();
-        res.read_to_string(&mut s)
-            .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not read response: {error}", error = e))
-            })?;
-        let reponse: GrammarCheck = serde_json::from_str(&s)
-            .map_err(|e| {
-                Error::default(Source::empty(),
-                               lformat!("could not decode JSON: {error}", error = e))
-            })?;
+        res.read_to_string(&mut s).map_err(|e| {
+            Error::grammar_check(
+                Source::empty(),
+                lformat!("could not read response: {error}", error = e),
+            )
+        })?;
+        let reponse: GrammarCheck = serde_json::from_str(&s).map_err(|e| {
+            Error::default(
+                Source::empty(),
+                lformat!("could not decode JSON: {error}", error = e),
+            )
+        })?;
         Ok(reponse)
     }
 }
-
 
 impl GrammarChecker {
     /// Check the grammar in a vector of tokens.
     ///
     /// This modifies the AST
     pub fn check_chapter(&self, tokens: &mut Vec<Token>) -> Result<()> {
-        let res = tokens.par_iter_mut()
-            .map(|token| {
-                match *token {
-                    Token::Paragraph(ref mut v) |
-                    Token::Header(_, ref mut v) |
-                    Token::BlockQuote(ref mut v) |
-                    Token::List(ref mut v) |
-                    Token::OrderedList(_, ref mut v) => {
-                        let check = self.check(&view_as_text(v))?;
-                        for error in check.matches {
-                            insert_annotation(v,
-                                              &Data::GrammarError(error.message.clone()),
-                                              error.offset,
-                                              error.length);
-                        }
-                        Ok(())
-                    },
-
-                    _ => Ok(()),
+        let res = tokens
+            .par_iter_mut()
+            .map(|token| match *token {
+                Token::Paragraph(ref mut v)
+                | Token::Header(_, ref mut v)
+                | Token::BlockQuote(ref mut v)
+                | Token::List(ref mut v)
+                | Token::OrderedList(_, ref mut v) => {
+                    let check = self.check(&view_as_text(v))?;
+                    for error in check.matches {
+                        insert_annotation(
+                            v,
+                            &Data::GrammarError(error.message.clone()),
+                            error.offset,
+                            error.length,
+                        );
+                    }
+                    Ok(())
                 }
+
+                _ => Ok(()),
             })
             .find_any(|r| r.is_err());
         if let Some(err) = res {

@@ -15,8 +15,8 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::token::Token;
 use crate::error::Result;
+use crate::token::Token;
 
 /// Renderer trait, implemented by various renderer to render a list of `Token`s.
 pub trait Renderer {
@@ -25,7 +25,8 @@ pub trait Renderer {
 
     /// Renders a vector of tokens
     fn render_vec(&mut self, tokens: &[Token]) -> Result<String> {
-        tokens.iter()
+        tokens
+            .iter()
             .map(|token| self.render_token(token))
             .collect::<Result<Vec<_>>>()
             .map(|vec| vec.join(""))

@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::error::{Error, Result, Source};
 use crate::book::Book;
+use crate::error::{Error, Result, Source};
 
-use std::io::Write;
 use std::fs::File;
+use std::io::Write;
 use std::path::Path;
 
 /// Trait that must be implemented by the various renderers to render a whole book.
@@ -27,8 +27,10 @@ use std::path::Path;
 pub trait BookRenderer: Sync {
     /// Path destination when output is set to auto
     fn auto_path(&self, _book_file: &str) -> Result<String> {
-        Err(Error::default(Source::empty(),
-                           lformat!("This renderer does not support the auto output")))
+        Err(Error::default(
+            Source::empty(),
+            lformat!("This renderer does not support the auto output"),
+        ))
     }
 
     /// Render the book and write the result to the specified writer
@@ -42,16 +44,26 @@ pub trait BookRenderer: Sync {
         // Not optimal but avoid creating an empty file if it fails
         let mut content = vec![];
         self.render(book, &mut content)?;
-        let mut file = File::create(path)
-            .map_err(|err| Error::default(Source::empty(),
-                                    lformat!("could not create file '{file}': {err}",
-                                             file = path.display(),
-                                             err = err)))?;
-        file.write_all(&content)
-            .map_err(|err| Error::default(Source::empty(),
-                                          lformat!("could not write book content to file '{file}': {err}",
-                                                   file = path.display(),
-                                                   err = err)))?;
+        let mut file = File::create(path).map_err(|err| {
+            Error::default(
+                Source::empty(),
+                lformat!(
+                    "could not create file '{file}': {err}",
+                    file = path.display(),
+                    err = err
+                ),
+            )
+        })?;
+        file.write_all(&content).map_err(|err| {
+            Error::default(
+                Source::empty(),
+                lformat!(
+                    "could not write book content to file '{file}': {err}",
+                    file = path.display(),
+                    err = err
+                ),
+            )
+        })?;
         Ok(())
     }
 }

@@ -119,34 +119,39 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any)
     pub fn inner(&self) -> Option<&[Token]> {
         match *self {
-            Rule | SoftBreak | HardBreak | Str(_) |
-            CodeBlock(_, _) | Code(_) | FootnoteReference(_) => None,
+            Rule
+            | SoftBreak
+            | HardBreak
+            | Str(_)
+            | CodeBlock(_, _)
+            | Code(_)
+            | FootnoteReference(_) => None,
 
-            Paragraph(ref v) |
-            Header(_, ref v) |
-            Emphasis(ref v) |
-            Strong(ref v) |
-            BlockQuote(ref v) |
-            Subscript(ref v) |
-            Superscript(ref v) |
-            List(ref v) |
-            OrderedList(_, ref v) |
-            Item(ref v) |
-            DescriptionList(ref v) |
-            DescriptionItem(ref v) |
-            DescriptionTerm(ref v) |
-            DescriptionDetails(ref v) |
-            Table(_, ref v) |
-            TableHead(ref v) |
-            TableRow(ref v) |
-            TableCell(ref v) |
-            FootnoteDefinition(_, ref v) |
-            Link(_, _, ref v) |
-            Image(_, _, ref v) |
-            StandaloneImage(_, _, ref v) |
-            Strikethrough(ref v) |
-            TaskItem(_, ref v) |
-            Annotation(_, ref v) => Some(v),
+            Paragraph(ref v)
+            | Header(_, ref v)
+            | Emphasis(ref v)
+            | Strong(ref v)
+            | BlockQuote(ref v)
+            | Subscript(ref v)
+            | Superscript(ref v)
+            | List(ref v)
+            | OrderedList(_, ref v)
+            | Item(ref v)
+            | DescriptionList(ref v)
+            | DescriptionItem(ref v)
+            | DescriptionTerm(ref v)
+            | DescriptionDetails(ref v)
+            | Table(_, ref v)
+            | TableHead(ref v)
+            | TableRow(ref v)
+            | TableCell(ref v)
+            | FootnoteDefinition(_, ref v)
+            | Link(_, _, ref v)
+            | Image(_, _, ref v)
+            | StandaloneImage(_, _, ref v)
+            | Strikethrough(ref v)
+            | TaskItem(_, ref v)
+            | Annotation(_, ref v) => Some(v),
 
             __NonExhaustive => unreachable!(),
         }
@@ -155,34 +160,39 @@ impl Token {
     /// Returns the inner list of tokens contained in this token (if any) (mutable version)
     pub fn inner_mut(&mut self) -> Option<&mut Vec<Token>> {
         match *self {
-            Rule | SoftBreak | HardBreak | Str(_) |
-            CodeBlock(_, _) | Code(_) | FootnoteReference(_) => None,
+            Rule
+            | SoftBreak
+            | HardBreak
+            | Str(_)
+            | CodeBlock(_, _)
+            | Code(_)
+            | FootnoteReference(_) => None,
 
-            Paragraph(ref mut v) |
-            Annotation(_, ref mut v) |
-            Header(_, ref mut v) |
-            Emphasis(ref mut v) |
-            Strong(ref mut v) |
-            BlockQuote(ref mut v) |
-            Subscript(ref mut v) |
-            Superscript(ref mut v) |
-            List(ref mut v) |
-            OrderedList(_, ref mut v) |
-            Item(ref mut v) |
-            DescriptionList(ref mut v) |
-            DescriptionItem(ref mut v) |
-            DescriptionTerm(ref mut v) |
-            DescriptionDetails(ref mut v) |
-            Table(_, ref mut v) |
-            TableHead(ref mut v) |
-            TableRow(ref mut v) |
-            TableCell(ref mut v) |
-            FootnoteDefinition(_, ref mut v) |
-            Link(_, _, ref mut v) |
-            Image(_, _, ref mut v) |
-            Strikethrough(ref mut v) |
-            TaskItem(_, ref mut v) |
-            StandaloneImage(_, _, ref mut v) => Some(v),
+            Paragraph(ref mut v)
+            | Annotation(_, ref mut v)
+            | Header(_, ref mut v)
+            | Emphasis(ref mut v)
+            | Strong(ref mut v)
+            | BlockQuote(ref mut v)
+            | Subscript(ref mut v)
+            | Superscript(ref mut v)
+            | List(ref mut v)
+            | OrderedList(_, ref mut v)
+            | Item(ref mut v)
+            | DescriptionList(ref mut v)
+            | DescriptionItem(ref mut v)
+            | DescriptionTerm(ref mut v)
+            | DescriptionDetails(ref mut v)
+            | Table(_, ref mut v)
+            | TableHead(ref mut v)
+            | TableRow(ref mut v)
+            | TableCell(ref mut v)
+            | FootnoteDefinition(_, ref mut v)
+            | Link(_, _, ref mut v)
+            | Image(_, _, ref mut v)
+            | Strikethrough(ref mut v)
+            | TaskItem(_, ref mut v)
+            | StandaloneImage(_, _, ref mut v) => Some(v),
 
             __NonExhaustive => unreachable!(),
         }
@@ -224,19 +234,27 @@ impl Token {
     pub fn is_code(&self) -> bool {
         match *self {
             Token::CodeBlock(..) | Token::Code(..) => true,
-            _ => false
+            _ => false,
         }
     }
 
     /// Returns true if token is a container (paragraph, quote, emphasis, ..., but not links, images, and so on).
     pub fn is_container(&self) -> bool {
         match *self {
-             Token::Paragraph(..)
-                | Token::Header(..) | Token::Emphasis(..) | Token::Strong(..)
-                | Token::List(..) | Token::OrderedList(..) | Token::Table(..)
-                | Token::TableHead(..) | Token::TableRow(..) | Token::FootnoteDefinition(..)
-                | Token::TableCell(..) | Token::Annotation(..) | Token::Item(..)
-                | Token::BlockQuote(..) => true,
+            Token::Paragraph(..)
+            | Token::Header(..)
+            | Token::Emphasis(..)
+            | Token::Strong(..)
+            | Token::List(..)
+            | Token::OrderedList(..)
+            | Token::Table(..)
+            | Token::TableHead(..)
+            | Token::TableRow(..)
+            | Token::FootnoteDefinition(..)
+            | Token::TableCell(..)
+            | Token::Annotation(..)
+            | Token::Item(..)
+            | Token::BlockQuote(..) => true,
             _ => false,
         }
     }

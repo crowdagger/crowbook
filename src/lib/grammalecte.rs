@@ -15,19 +15,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use serde_json;
-use reqwest;
-use url::form_urlencoded;
 use rayon::prelude::*;
+use reqwest;
+use serde_json;
+use url::form_urlencoded;
 
 use std::io::Read;
 
-
-use crate::text_view::view_as_text;
-use crate::text_view::insert_annotation;
-use crate::token::Token;
-use crate::token::Data;
 use crate::error::{Error, Result, Source};
+use crate::text_view::insert_annotation;
+use crate::text_view::view_as_text;
+use crate::token::Data;
+use crate::token::Token;
 
 /// Represents a grammar error from Grammalecte
 ///
@@ -68,25 +67,37 @@ impl GrammalecteChecker {
     pub fn new<S: Into<String>>(port: usize, lang: S) -> Result<GrammalecteChecker> {
         let lang = lang.into();
         if !lang.starts_with("fr") {
-            return Err(Error::grammar_check(Source::empty(), lformat!("grammalecte only works with 'fr' lang")));
+            return Err(Error::grammar_check(
+                Source::empty(),
+                lformat!("grammalecte only works with 'fr' lang"),
+            ));
         }
         let checker = GrammalecteChecker {
             port: port,
             client: reqwest::blocking::Client::new(),
         };
 
-        let res = checker.client
+        let res = checker
+            .client
             .get(&format!("http://localhost:{}", port))
             .send()
             .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not connect to grammalecte server: {error}",
-                                              error = e))
+                Error::grammar_check(
+                    Source::empty(),
+                    lformat!(
+                        "could not connect to grammalecte server: {error}",
+                        error = e
+                    ),
+                )
             })?;
         if !res.status().is_success() {
-            return Err(Error::grammar_check(Source::empty(),
-                                            lformat!("server didn't respond with a OK status \
-                                                      code")));
+            return Err(Error::grammar_check(
+                Source::empty(),
+                lformat!(
+                    "server didn't respond with a OK status \
+                                                      code"
+                ),
+            ));
         }
         Ok(checker)
     }
@@ -95,39 +106,50 @@ impl GrammalecteChecker {
     fn check(&self, text: &str) -> Result<GrammalecteCheck> {
         let query: String = form_urlencoded::Serializer::new(String::new())
             .append_pair("text", text)
-            .append_pair("options", "{\"apos\": false, \"nbsp\": false, \"esp\": false}")
+            .append_pair(
+                "options",
+                "{\"apos\": false, \"nbsp\": false, \"esp\": false}",
+            )
             .finish();
 
-        let mut res = self.client.post(&format!("http://localhost:{}/gc_text/fr", self.port))
+        let mut res = self
+            .client
+            .post(&format!("http://localhost:{}/gc_text/fr", self.port))
             .body(query)
             .send()
             .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not send request to server: {error}",
-                                              error = e))
+                Error::grammar_check(
+                    Source::empty(),
+                    lformat!("could not send request to server: {error}", error = e),
+                )
             })?;
 
         if !res.status().is_success() {
-            return Err(Error::grammar_check(Source::empty(),
-                                            lformat!("server didn't respond with a OK status \
-                                                      code")));
+            return Err(Error::grammar_check(
+                Source::empty(),
+                lformat!(
+                    "server didn't respond with a OK status \
+                                                      code"
+                ),
+            ));
         }
 
         let mut s = String::new();
-        res.read_to_string(&mut s)
-            .map_err(|e| {
-                Error::grammar_check(Source::empty(),
-                                     lformat!("could not read response: {error}", error = e))
-            })?;
-        let reponse: GrammalecteCheck = serde_json::from_str(&s)
-            .map_err(|e| {
-                Error::default(Source::empty(),
-                               lformat!("could not decode JSON: {error}", error = e))
-            })?;
+        res.read_to_string(&mut s).map_err(|e| {
+            Error::grammar_check(
+                Source::empty(),
+                lformat!("could not read response: {error}", error = e),
+            )
+        })?;
+        let reponse: GrammalecteCheck = serde_json::from_str(&s).map_err(|e| {
+            Error::default(
+                Source::empty(),
+                lformat!("could not decode JSON: {error}", error = e),
+            )
+        })?;
         Ok(reponse)
     }
 }
-
 
 impl GrammalecteChecker {
     /// Check the grammar in a vector of tokens.

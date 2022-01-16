@@ -20,11 +20,11 @@
 
 use crate::book::{Book, Crowbar, CrowbarState};
 
-use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 
+use std::mem;
 use std::sync::Arc;
 use std::thread;
-use std::mem;
 
 /// Store the progress bars needed for the book
 pub struct Bars {
@@ -56,7 +56,6 @@ impl Bars {
     }
 }
 
-
 /// Return the style of a bar
 
 impl Book {
@@ -67,20 +66,25 @@ impl Book {
         self.bars.emoji = emoji;
         let multibar = Arc::new(MultiProgress::new());
         self.bars.multibar = Some(multibar.clone());
-        let b = self.bars.multibar
+        let b = self
+            .bars
+            .multibar
             .as_ref()
             .unwrap()
             .add(ProgressBar::new_spinner());
         b.enable_steady_tick(200);
         self.bars.mainbar = Some(b);
-//        let sty = ProgressStyle::default_spinner()
-//            .tick_chars("🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚V")
-//            .tick_chars("/|\\-V")
-//            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
+        //        let sty = ProgressStyle::default_spinner()
+        //            .tick_chars("🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚V")
+        //            .tick_chars("/|\\-V")
+        //            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
         self.bar_set_style(Crowbar::Main, CrowbarState::Running);
         self.bars.guard = Some(thread::spawn(move || {
             if let Err(_) = multibar.join() {
-                error!("{}", lformat!("could not display fancy UI, try running crowbook with --no-fancy"));
+                error!(
+                    "{}",
+                    lformat!("could not display fancy UI, try running crowbook with --no-fancy")
+                );
             }
         }));
     }
@@ -89,9 +93,27 @@ impl Book {
     pub fn bar_finish(&self, bar: Crowbar, state: CrowbarState, msg: &str) {
         self.bar_set_style(bar, state);
         let pb = match bar {
-            Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
-            Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
-            Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
+            Crowbar::Main => {
+                if let Some(ref bar) = self.bars.mainbar {
+                    bar
+                } else {
+                    return;
+                }
+            }
+            Crowbar::Second => {
+                if let Some(ref bar) = self.bars.secondbar {
+                    bar
+                } else {
+                    return;
+                }
+            }
+            Crowbar::Spinner(i) => {
+                if i < self.bars.spinners.len() {
+                    &self.bars.spinners[i]
+                } else {
+                    return;
+                }
+            }
         };
 
         match bar {
@@ -101,7 +123,7 @@ impl Book {
     }
 
     /// Adds a secondary progress bar to display progress of book parsing
-    pub fn add_second_bar(&mut self, msg: &str, len: u64)  {
+    pub fn add_second_bar(&mut self, msg: &str, len: u64) {
         if let Some(ref multibar) = self.bars.multibar {
             let bar = multibar.add(ProgressBar::new(len));
             self.bar_set_style(Crowbar::Second, CrowbarState::Running);
@@ -140,9 +162,27 @@ impl Book {
 
     pub fn bar_set_message(&self, bar: Crowbar, msg: &str) {
         let bar = match bar {
-            Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
-            Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
-            Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
+            Crowbar::Main => {
+                if let Some(ref bar) = self.bars.mainbar {
+                    bar
+                } else {
+                    return;
+                }
+            }
+            Crowbar::Second => {
+                if let Some(ref bar) = self.bars.secondbar {
+                    bar
+                } else {
+                    return;
+                }
+            }
+            Crowbar::Spinner(i) => {
+                if i < self.bars.spinners.len() {
+                    &self.bars.spinners[i]
+                } else {
+                    return;
+                }
+            }
         };
         bar.set_message(msg);
     }
@@ -150,15 +190,32 @@ impl Book {
     /// Sets the style of a  bar
     fn bar_set_style(&self, bar: Crowbar, state: CrowbarState) -> () {
         let pb = match bar {
-            Crowbar::Main => if let Some(ref bar) = self.bars.mainbar { bar } else { return; },
-            Crowbar::Second => if let Some(ref bar) = self.bars.secondbar { bar } else { return; },
-            Crowbar::Spinner(i) => if i < self.bars.spinners.len() { &self.bars.spinners[i] } else { return; },
-
+            Crowbar::Main => {
+                if let Some(ref bar) = self.bars.mainbar {
+                    bar
+                } else {
+                    return;
+                }
+            }
+            Crowbar::Second => {
+                if let Some(ref bar) = self.bars.secondbar {
+                    bar
+                } else {
+                    return;
+                }
+            }
+            Crowbar::Spinner(i) => {
+                if i < self.bars.spinners.len() {
+                    &self.bars.spinners[i]
+                } else {
+                    return;
+                }
+            }
         };
         let emoji = self.bars.emoji;
         let mut style = match bar {
             Crowbar::Second => ProgressStyle::default_bar(),
-            _ => ProgressStyle::default_spinner()
+            _ => ProgressStyle::default_spinner(),
         };
 
         let color = match state {
@@ -167,10 +224,10 @@ impl Book {
             CrowbarState::Error => "red",
         };
         let tick_chars = match (bar, emoji) {
-            (Crowbar::Main, false)  | (Crowbar::Spinner(_), false) => "-\\|/",
+            (Crowbar::Main, false) | (Crowbar::Spinner(_), false) => "-\\|/",
             (Crowbar::Main, true) => "🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚",
             (Crowbar::Spinner(_), true) => "◐◓◑◒",
-            (_, _) => ""
+            (_, _) => "",
         };
         let end_tick = match (state, emoji) {
             (CrowbarState::Running, _) => "V",
@@ -181,24 +238,27 @@ impl Book {
         };
         match bar {
             Crowbar::Second => {
-                style = style.template("{bar:40.cyan/blue} {percent:>7} {wide_msg}")
+                style = style
+                    .template("{bar:40.cyan/blue} {percent:>7} {wide_msg}")
                     .progress_chars("##-");
-            },
+            }
             bar => {
                 style = style.tick_chars(&format!("{}{}", tick_chars, end_tick));
                 match bar {
                     Crowbar::Spinner(_) => {
-                        style = style
-                            .template(&format!("{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}",
-                                               color = color));
-                    },
+                        style = style.template(&format!(
+                            "{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}",
+                            color = color
+                        ));
+                    }
                     _ => {
-                        style = style
-                            .template(&format!("{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}",
-                                               color = color));
-                    },
+                        style = style.template(&format!(
+                            "{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}",
+                            color = color
+                        ));
+                    }
                 };
-            },
+            }
         }
         pb.set_style(style);
     }
@@ -212,9 +272,7 @@ impl Drop for Book {
         if let Some(ref bar) = self.bars.mainbar {
             bar.finish();
             let guard = mem::replace(&mut self.bars.guard, None);
-            guard.unwrap()
-                .join()
-                .unwrap();
+            guard.unwrap().join().unwrap();
         }
     }
 }

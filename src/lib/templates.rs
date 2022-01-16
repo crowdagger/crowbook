@@ -21,12 +21,13 @@ pub mod highlight {
 }
 
 pub mod html {
-    pub static CSS: &str = concat!(include_str!("../../templates/epub/stylesheet.css"),
-                                           include_str!("../../templates/html/template.css"));
+    pub static CSS: &str = concat!(
+        include_str!("../../templates/epub/stylesheet.css"),
+        include_str!("../../templates/html/template.css")
+    );
     pub static CSS_COLORS: &str = include_str!("../../templates/html/colors.css");
     pub static PRINT_CSS: &str = include_str!("../../templates/html/print.css");
     pub static JS: &str = include_str!("../../templates/html/script.js");
-
 }
 
 pub mod img {

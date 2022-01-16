@@ -18,11 +18,11 @@
 use caribon::Parser;
 
 use crate::book::Book;
-use crate::text_view::view_as_text;
-use crate::text_view::insert_annotation;
-use crate::token::Token;
-use crate::token::Data;
 use crate::error::{Error, Result, Source};
+use crate::text_view::insert_annotation;
+use crate::text_view::view_as_text;
+use crate::token::Data;
+use crate::token::Token;
 
 /// Repetition detector
 pub struct RepetitionDetector {
@@ -39,11 +39,26 @@ impl RepetitionDetector {
     pub fn new(book: &Book) -> RepetitionDetector {
         RepetitionDetector {
             lang: book.options.get_str("lang").unwrap().to_string(),
-            fuzzy: book.options.get_bool("proofread.repetitions.fuzzy").unwrap(),
-            fuzzy_threshold: book.options.get_f32("proofread.repetitions.fuzzy.threshold").unwrap(),
-            ignore_proper: book.options.get_bool("proofread.repetitions.ignore_proper").unwrap(),
-            max_distance: book.options.get_i32("proofread.repetitions.max_distance").unwrap(),
-            threshold: book.options.get_f32("proofread.repetitions.threshold").unwrap(),
+            fuzzy: book
+                .options
+                .get_bool("proofread.repetitions.fuzzy")
+                .unwrap(),
+            fuzzy_threshold: book
+                .options
+                .get_f32("proofread.repetitions.fuzzy.threshold")
+                .unwrap(),
+            ignore_proper: book
+                .options
+                .get_bool("proofread.repetitions.ignore_proper")
+                .unwrap(),
+            max_distance: book
+                .options
+                .get_i32("proofread.repetitions.max_distance")
+                .unwrap(),
+            threshold: book
+                .options
+                .get_f32("proofread.repetitions.threshold")
+                .unwrap(),
         }
     }
 
@@ -57,33 +72,41 @@ impl RepetitionDetector {
             None
         };
         let mut parser = Parser::new(&self.lang)
-            .map_err(|err| Error::default(Source::empty(),
-                                          lformat!("could not create caribon parser: {error}", error = err)))?
+            .map_err(|err| {
+                Error::default(
+                    Source::empty(),
+                    lformat!("could not create caribon parser: {error}", error = err),
+                )
+            })?
             .with_fuzzy(fuzzy)
             .with_html(false)
             .with_ignore_proper(self.ignore_proper)
             .with_max_distance(self.max_distance as u32);
         for token in tokens.iter_mut() {
             match *token {
-                Token::Paragraph(ref mut v) |
-                Token::Header(_, ref mut v) |
-                Token::BlockQuote(ref mut v) |
-                Token::List(ref mut v) |
-                Token::OrderedList(_, ref mut v) => {
-                    let mut ast = parser.tokenize(&view_as_text(v))
-                        .map_err(|err| Error::default(Source::empty(),
-                                                      lformat!("error detecting repetitions: {err}",
-                                                       err = err)))?;
+                Token::Paragraph(ref mut v)
+                | Token::Header(_, ref mut v)
+                | Token::BlockQuote(ref mut v)
+                | Token::List(ref mut v)
+                | Token::OrderedList(_, ref mut v) => {
+                    let mut ast = parser.tokenize(&view_as_text(v)).map_err(|err| {
+                        Error::default(
+                            Source::empty(),
+                            lformat!("error detecting repetitions: {err}", err = err),
+                        )
+                    })?;
 
                     parser.detect_local(&mut ast, self.threshold);
                     let repetitions = parser.ast_to_repetitions(&ast);
                     for repetition in &repetitions {
-                        insert_annotation(v,
-                                          &Data::Repetition(repetition.colour.to_string()),
-                                          repetition.offset,
-                                          repetition.length);
+                        insert_annotation(
+                            v,
+                            &Data::Repetition(repetition.colour.to_string()),
+                            repetition.offset,
+                            repetition.length,
+                        );
                     }
-                },
+                }
 
                 _ => (),
             }
@@ -91,4 +114,3 @@ impl RepetitionDetector {
         Ok(())
     }
 }
-

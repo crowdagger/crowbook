@@ -113,46 +113,45 @@ extern crate lazy_static;
 #[macro_use]
 extern crate serde_derive;
 
-
-pub use parser::Parser;
 pub use book::Book;
+pub use book_renderer::BookRenderer;
 pub use bookoption::BookOption;
 pub use bookoptions::BookOptions;
-pub use error::{Result, Error, Source};
-pub use token::Token;
-pub use token::Data;
-pub use number::Number;
-pub use resource_handler::ResourceHandler;
-pub use renderer::Renderer;
-pub use book_renderer::BookRenderer;
 pub use chapter::Chapter;
+pub use error::{Error, Result, Source};
+pub use number::Number;
+pub use parser::Parser;
+pub use renderer::Renderer;
+pub use resource_handler::ResourceHandler;
 pub use stats::Stats;
+pub use token::Data;
+pub use token::Token;
 
 #[macro_use]
 #[doc(hidden)]
 mod localize_macros;
 #[macro_use]
 mod html;
-mod html_dir;
-mod error;
 mod book;
+mod book_renderer;
+mod bookoptions;
+mod chapter;
+mod cleaner;
 mod epub;
+mod error;
+mod html_dir;
+mod html_if;
+mod html_single;
+mod lang;
 mod latex;
+mod number;
 mod odt;
 mod parser;
-mod token;
-mod cleaner;
-mod chapter;
-mod number;
-mod resource_handler;
-mod bookoptions;
-mod lang;
 mod renderer;
-mod book_renderer;
-mod html_single;
-mod html_if;
-mod syntax;
+mod resource_handler;
 mod stats;
+mod syntax;
+mod token;
 
 #[cfg(feature = "binary")]
 mod style;
@@ -168,20 +167,18 @@ mod book_bars_stubs;
 #[cfg(not(feature = "indicatif"))]
 use book_bars_stubs as book_bars;
 
-
-mod zipper;
-mod templates;
 mod bookoption;
 mod misc;
+mod templates;
 mod text_view;
+mod zipper;
 
-#[cfg(feature = "proofread")]
-mod grammar_check;
 #[cfg(feature = "proofread")]
 mod grammalecte;
 #[cfg(feature = "proofread")]
+mod grammar_check;
+#[cfg(feature = "proofread")]
 mod repetition_check;
-
 
 #[cfg(test)]
 mod tests;
