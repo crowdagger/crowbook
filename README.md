@@ -148,18 +148,18 @@ This is mostly useful when Crowbook is run with the `--single` argument (receivi
 
 Crowbook can also generate "proofreading" copies in HTML or PDF, highlighting grammar errors and repetitions.
 For more information, see
-[the proofreading chapter of the guide](guide/proofreading.md).
+[the proofreading chapter of the guide](guide/05_proofreading.md).
 
 ### Interactive fiction
 
 Crowbook has experimental support for writing interactive fiction (only for HTML).
 For more information, read the
-[interactive fiction chapter](guide/if.md).
+[interactive fiction chapter](guide/06_interactive_fiction.md).
 
 ### Customization
 
 While the default settings will hopefully generate something that should look "good enough", it is possible to customize the output, essentially by providing different
-[templates](guide/templates.md).
+[templates](guide/04_templates.md).
 
 ### Bugs
 
@@ -224,7 +224,7 @@ See [ChangeLog](ChangeLog.md).
 
 ## Contributing
 
-See [how you can contribute to Crowbook](guide/contribute.md).
+See [how you can contribute to Crowbook](guide/08_contributing.md).
 
 If you find this project useful, you can also support its author by
 [making a Paypal donation](https://www.paypal.me/crowdagger).
