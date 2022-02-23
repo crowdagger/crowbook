@@ -290,8 +290,10 @@ impl<'a> LatexRenderer<'a> {
         if self.book.options.get_bool("rendering.initials") == Ok(true) {
             data = data.insert_bool("initials", true);
         }
-        // Insert xelatex if tex.command is set to xelatex
-        if self.book.options.get_str("tex.command") == Ok("xelatex") {
+        // Insert xelatex if tex.command is set to xelatex or tectonic
+        if (self.book.options.get_str("tex.command") == Ok("xelatex"))
+            | (self.book.options.get_str("tex.command") == Ok("tectonic"))
+        {
             data = data.insert_bool("xelatex", true);
         }
         let data = data.build();
