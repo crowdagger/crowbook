@@ -104,4 +104,4 @@ While this one ![Logo](../img/crowbook-small.png) is embedded in a paragraph and
 
 `crowbook` also adds some syntax for interactive fiction, to make embedding Javascript code easier.
 It is only enabled for the interactive fiction renderer.
-For more information, see the [chapter on this matter](if.md).
+For more information, see the [chapter on this matter](06_interactive_fiction.md).

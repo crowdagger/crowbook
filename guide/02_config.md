@@ -222,7 +222,7 @@ There are also additional metadata:
 You can define your own metadata by starting an option name with `metadata.foo`.
 
 All metadata are accessible from templates, see
-[Templates](templates.md).
+[Templates](04_templates.md).
 
 ### The `import` special option
 
@@ -300,9 +300,9 @@ Current output options are:
 * `output.pdf`: renders a PDF file (using `tex.command`).
 
 (There are other output options for generating proofreading files, see
-[Proofreading](proofreading.md),
+[Proofreading](05_proofreading.md),
 and interactive fiction, see
-[Interactive fiction](if.md).)
+[Interactive fiction](06_interactive_fiction.md).)
 
 #### The `output` option
 
@@ -429,7 +429,7 @@ These options allow you to customize the HTML rendering (used both by the defaul
   allow to set a custom (Markdown) string at the top and at the bottom of the HTML page.
   This is actually a template, so you can access metadata, such as `{{{author}}}`, `{{{title}}}`, or `{{{version}}}` in it.
   See the
-  [template](templates.md)
+  [template](04_templates.md)
   chapter for more information on the fields you can use.
 * `html.css`:
   allows to set up a custom CSS file.

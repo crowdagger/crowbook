@@ -122,7 +122,7 @@ crowbook <BOOK> --set [KEY] [VALUE]...
 
 This argument takes a list of  `KEY` `VALUE` pairs and allows setting or overriding a book configuration option.
 All valid options in the configuration files are valid as keys.
-For more information, see [the configuration file](config.md).
+For more information, see [the configuration file](02_config.md).
 
 ```bash
 $ crowbook foo.book --set tex.paper.size a4paper
@@ -197,7 +197,7 @@ crowbook -p <BOOK>
 ```
 
 Equivalent to `--set proofread true`, enables proofreading.
-See [Proofreading](proofreading.md).
+See [Proofreading](05_proofreading.md).
 
 ## `--autograph`
 
