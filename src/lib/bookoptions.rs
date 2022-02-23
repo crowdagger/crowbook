@@ -450,11 +450,14 @@ impl BookOptions {
                     continue;
                 }
                 _ => {
-                    panic!("{}", lformat!(
-                        "Ill-formatted OPTIONS string: unrecognized type \
+                    panic!(
+                        "{}",
+                        lformat!(
+                            "Ill-formatted OPTIONS string: unrecognized type \
                                      '{option_type}'",
-                        option_type = option_type.unwrap()
-                    ))
+                            option_type = option_type.unwrap()
+                        )
+                    )
                 }
             }
             if key == "crowbook.temp_dir" {
