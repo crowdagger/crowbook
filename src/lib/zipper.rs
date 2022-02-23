@@ -157,7 +157,7 @@ This is forbidden because we are supposed \
                                            Command output:\n\
                                            {output}'",
                         command = command_name,
-                        output = String::from_utf8_lossy(&output.stdout)
+                        output = String::from_utf8_lossy(&output.stderr)
                     )
                 );
                 Error::zipper(lformat!(
@@ -176,7 +176,7 @@ This is forbidden because we are supposed \
                 lformat!(
                     "{command} didn't return succesfully: {output}",
                     command = command_name,
-                    output = String::from_utf8_lossy(&output.stdout)
+                    output = String::from_utf8_lossy(&output.stderr)
                 )
             );
             Err(Error::zipper(lformat!(
