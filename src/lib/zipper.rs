@@ -134,7 +134,6 @@ This is forbidden because we are supposed \
         out: &mut dyn Write,
     ) -> Result<String> {
         let res_output = command
-            .args(&self.args)
             .current_dir(&self.path)
             .output()
             .map_err(|e| {
