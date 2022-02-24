@@ -133,24 +133,20 @@ This is forbidden because we are supposed \
         in_file: &str,
         out: &mut dyn Write,
     ) -> Result<String> {
-        let res_output = command
-            .args(&self.args)
-            .current_dir(&self.path)
-            .output()
-            .map_err(|e| {
-                debug!(
-                    "{}",
-                    lformat!(
-                        "output for command {name}:\n{error}",
-                        name = command_name,
-                        error = e
-                    )
-                );
-                Error::zipper(lformat!(
-                    "failed to run command '{name}'",
-                    name = command_name
-                ))
-            });
+        let res_output = command.output().map_err(|e| {
+            debug!(
+                "{}",
+                lformat!(
+                    "output for command {name}:\n{error}",
+                    name = command_name,
+                    error = e
+                )
+            );
+            Error::zipper(lformat!(
+                "failed to run command '{name}'",
+                name = command_name
+            ))
+        });
         let output = res_output?;
         if output.status.success() {
             let mut file = File::open(self.path.join(in_file)).map_err(|_| {
@@ -161,7 +157,7 @@ This is forbidden because we are supposed \
                                            Command output:\n\
                                            {output}'",
                         command = command_name,
-                        output = String::from_utf8_lossy(&output.stdout)
+                        output = String::from_utf8_lossy(&output.stderr)
                     )
                 );
                 Error::zipper(lformat!(
@@ -180,7 +176,7 @@ This is forbidden because we are supposed \
                 lformat!(
                     "{command} didn't return succesfully: {output}",
                     command = command_name,
-                    output = String::from_utf8_lossy(&output.stdout)
+                    output = String::from_utf8_lossy(&output.stderr)
                 )
             );
             Err(Error::zipper(lformat!(
@@ -193,6 +189,7 @@ This is forbidden because we are supposed \
     /// zip all files in zipper's tmp dir to a given file name and write to odt file
     pub fn generate_odt(&mut self, command_name: &str, odt_file: &mut dyn Write) -> Result<String> {
         let mut command = Command::new(command_name);
+        command.current_dir(&self.path);
         command.arg("-r");
         command.arg("result.odt");
         command.arg(".");
