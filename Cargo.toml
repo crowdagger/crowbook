@@ -41,6 +41,7 @@ default = ["binary", "proofread", "syntect"]
 proofread = ["caribon", "reqwest", "url", "serde", "serde", "serde_json", "serde_derive"]
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
+odt = []
 
 [build-dependencies]
 crowbook-intl = "0.2"
