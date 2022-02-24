@@ -145,6 +145,7 @@ mod html_single;
 mod lang;
 mod latex;
 mod number;
+#[cfg(feature = "odt")]
 mod odt;
 mod parser;
 mod renderer;

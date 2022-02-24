@@ -29,6 +29,7 @@ use crate::lang;
 use crate::latex::{Latex, Pdf, ProofLatex, ProofPdf};
 use crate::misc;
 use crate::number::Number;
+#[cfg(feature = "odt")]
 use crate::odt::Odt;
 use crate::parser::Features;
 use crate::parser::Parser;
@@ -239,12 +240,13 @@ impl Book {
             Box::new(ProofPdf {}),
         )
         .add_format("epub", lformat!("EPUB"), Box::new(Epub {}))
-        .add_format("odt", lformat!("ODT"), Box::new(Odt {}))
         .add_format(
             "html.if",
             lformat!("HTML (interactive fiction)"),
             Box::new(HtmlIf {}),
         );
+        #[cfg(feature = "odt")]
+        book.add_format("odt", lformat!("ODT"), Box::new(Odt {}));
         book
     }
 
