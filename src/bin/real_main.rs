@@ -272,8 +272,8 @@ pub fn try_main() -> Result<()> {
                 if line.starts_with("[ERROR]") {
                     let line = &line[8..];
                     print_error(line, emoji);
-                } else if line.starts_with("[ WARN]") {
-                    let line = &line[8..];
+                } else if line.starts_with("[WARN]") {
+                    let line = &line[7..];
                     print_warning(line, emoji);
                 }
             }
