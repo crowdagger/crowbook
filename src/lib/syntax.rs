@@ -132,12 +132,7 @@ impl Syntax {
 /// Strip language name of possible other infos, e.g. "rust,ignore" -> "rust"
 /// Currently only ',' is done
 fn strip_language(language: &str) -> &str {
-    let splits: Vec<_> = language
-        .split(|c: char| match c {
-            ',' => true,
-            _ => false,
-        })
-        .collect();
+    let splits: Vec<_> = language.split(|c: char| matches!(c, ',')).collect();
     splits[0].trim()
 }
 

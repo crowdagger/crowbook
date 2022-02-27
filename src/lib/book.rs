@@ -568,10 +568,10 @@ impl Book {
             yaml.push_str(line);
             yaml.push('\n');
 
-            if line.trim().ends_with(|c| match c {
-                '>' | '|' | ':' | '-' => true,
-                _ => false,
-            }) {
+            if line
+                .trim()
+                .ends_with(|c| matches!(c, '>' | '|' | ':' | '-'))
+            {
                 // line ends with the start of a block indicator
                 continue;
             }
