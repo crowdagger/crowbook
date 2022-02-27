@@ -106,7 +106,7 @@ This is forbidden because we are supposed \
     }
 
     /// Unzip a file and deletes it afterwards
-    #[cfg(features = "odt")]
+    #[cfg(feature = "odt")]
     pub fn unzip(&mut self, file: &str) -> Result<()> {
         let output = Command::new("unzip")
             .current_dir(&self.path)
@@ -188,7 +188,7 @@ This is forbidden because we are supposed \
     }
 
     /// zip all files in zipper's tmp dir to a given file name and write to odt file
-    #[cfg(features = "odt")]
+    #[cfg(feature = "odt")]
     pub fn generate_odt(&mut self, command_name: &str, odt_file: &mut dyn Write) -> Result<String> {
         let mut command = Command::new(command_name);
         command.current_dir(&self.path);
