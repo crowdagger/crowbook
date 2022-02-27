@@ -612,9 +612,7 @@ impl BookOptions {
                         ),
                     ));
                 }
-                Ok(self
-                    .options
-                    .insert(key.to_owned(), BookOption::Char(chars[0])))
+                Ok(self.options.insert(key, BookOption::Char(chars[0])))
             } else {
                 Err(Error::book_option(
                     &self.source,
@@ -1005,7 +1003,7 @@ impl BookOptions {
             }
             if key.is_none() {
                 if !previous_is_comment {
-                    out.push_str("\n");
+                    out.push('\n');
                     previous_is_comment = true;
                 }
                 let header = if md {

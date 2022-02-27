@@ -23,7 +23,6 @@ use std::io::Write;
 use std::ops::Drop;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use uuid;
 
 /// Struct used to create zip (using filesystem and zip command)
 pub struct Zipper {
@@ -72,7 +71,7 @@ This is forbidden because we are supposed \
         }
         let dest_file = self.path.join(path);
         let dest_dir = dest_file.parent().unwrap();
-        if !fs::metadata(dest_dir).is_ok() {
+        if fs::metadata(dest_dir).is_err() {
             // dir does not exist, create it
             DirBuilder::new()
                 .recursive(true)
@@ -88,7 +87,7 @@ This is forbidden because we are supposed \
         if let Ok(mut f) = File::create(&dest_file) {
             if f.write_all(content).is_ok() {
                 if add_args {
-                    self.args.push(String::from(file));
+                    self.args.push(file);
                 }
                 Ok(())
             } else {

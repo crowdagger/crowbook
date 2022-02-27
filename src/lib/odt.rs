@@ -26,7 +26,7 @@ impl<'a> OdtRenderer<'a> {
     /// Creates a new OdtRenderer
     pub fn new(book: &'a Book) -> OdtRenderer {
         OdtRenderer {
-            book: book,
+            book,
             current_chapter: 1,
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_hide: false,

@@ -15,9 +15,6 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use epub_builder;
-use mustache;
-
 use std::borrow::Cow;
 use std::error;
 use std::fmt;

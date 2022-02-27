@@ -99,7 +99,7 @@ impl Stats {
         } else {
             stats = Stats {
                 chapters: vec![],
-                advanced: advanced,
+                advanced,
             };
             if !advanced {
                 info!(
@@ -118,7 +118,7 @@ impl Stats {
             let cc = text.chars().count();
 
             let mut chapter_stats = ChapterStats {
-                name: name,
+                name,
                 word_count: wc,
                 char_count: cc,
                 advanced: None,
@@ -314,9 +314,9 @@ impl fmt::Display for Stats {
         }
         for c in &self.chapters {
             if let Some(ref adv) = c.advanced {
-                write!(
+                writeln!(
                     f,
-                    "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16.2} {:>8.1} => {:>17}\n",
+                    "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16.2} {:>8.1} => {:>17}",
                     style::element(&c.name),
                     c.char_count,
                     adv.syllable_count,
@@ -329,9 +329,9 @@ impl fmt::Display for Stats {
                     width = max_chapter_length
                 )?;
             } else {
-                write!(
+                writeln!(
                     f,
-                    "{:<width$} {:>8} {:>10} {:>11.2}\n",
+                    "{:<width$} {:>8} {:>10} {:>11.2}",
                     style::element(&c.name),
                     c.char_count,
                     c.word_count,

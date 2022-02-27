@@ -16,8 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use rayon::prelude::*;
-use reqwest;
-use serde_json;
+
 use url::form_urlencoded;
 
 use std::io::Read;
@@ -62,7 +61,7 @@ impl GrammarChecker {
     pub fn new<S: Into<String>>(port: usize, lang: S) -> Result<GrammarChecker> {
         let checker = GrammarChecker {
             lang: lang.into(),
-            port: port,
+            port,
             client: reqwest::blocking::Client::new(),
         };
 

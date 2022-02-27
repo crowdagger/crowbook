@@ -67,7 +67,7 @@ pub fn get_lang() -> Option<String> {
     let mut found = false;
     for arg in env::args() {
         if found {
-            return Some(arg.clone());
+            return Some(arg);
         } else if arg == "--lang" || arg == "-L" {
             found = true;
         }

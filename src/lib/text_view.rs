@@ -256,9 +256,9 @@ pub fn insert_annotation(
         } else {
             tokens.insert(i + 1, new_token);
         }
-        return None;
+        None
     } else if found_left.is_none() && found_right.is_none() {
-        return Some(pos);
+        Some(pos)
     } else {
         warn!(
             "{}",
@@ -268,7 +268,7 @@ pub fn insert_annotation(
                 annotation
             )
         );
-        return None;
+        None
     }
 }
 

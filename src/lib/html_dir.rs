@@ -55,7 +55,7 @@ impl<'a> HtmlDirRenderer<'a> {
         )?;
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
-        Ok(HtmlDirRenderer { html: html })
+        Ok(HtmlDirRenderer { html })
     }
 
     /// Set aproofreading to true
@@ -156,15 +156,13 @@ impl<'a> HtmlDirRenderer<'a> {
 
         // Write all images (including cover)
         for (source, dest) in self.html.handler.images_mapping() {
-            let mut f = fs::canonicalize(source)
-                .and_then(|f| File::open(f))
-                .map_err(|_| {
-                    Error::file_not_found(
-                        &self.html.book.source,
-                        lformat!("image or cover"),
-                        source.clone(),
-                    )
-                })?;
+            let mut f = fs::canonicalize(source).and_then(File::open).map_err(|_| {
+                Error::file_not_found(
+                    &self.html.book.source,
+                    lformat!("image or cover"),
+                    source.clone(),
+                )
+            })?;
             let mut content = vec![];
             f.read_to_end(&mut content).map_err(|e| {
                 Error::render(
@@ -198,7 +196,7 @@ impl<'a> HtmlDirRenderer<'a> {
             for path in list {
                 let abs_path = Path::new(&files_path).join(&path);
                 let mut f = fs::canonicalize(&abs_path)
-                    .and_then(|f| File::open(f))
+                    .and_then(File::open)
                     .map_err(|_| {
                         Error::file_not_found(
                             &self.html.book.source,
@@ -497,7 +495,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 dest_path = dest_path.display());
         let dest_file = dest_path.join(file);
         let dest_dir = dest_file.parent().unwrap();
-        if !fs::metadata(dest_dir).is_ok() {
+        if fs::metadata(dest_dir).is_err() {
             // dir does not exist, create it
             fs::DirBuilder::new()
                 .recursive(true)

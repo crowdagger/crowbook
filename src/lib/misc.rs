@@ -19,7 +19,6 @@
 
 use crate::token::Token;
 
-use std;
 use std::io::Result;
 use std::path::{Path, PathBuf};
 
@@ -42,12 +41,10 @@ fn try_normalize<P: AsRef<Path>>(path: P) -> Result<String> {
             }
             new_path.push(path);
             return Ok(format!("{}", new_path.display()));
+        } else if !cwd.pop() {
+            return Ok(format!("{}", full_path.display()));
         } else {
-            if !cwd.pop() {
-                return Ok(format!("{}", full_path.display()));
-            } else {
-                ups += 1;
-            }
+            ups += 1;
         }
     }
 }

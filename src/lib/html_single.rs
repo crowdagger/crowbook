@@ -49,7 +49,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         )?;
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
-        Ok(HtmlSingleRenderer { html: html })
+        Ok(HtmlSingleRenderer { html })
     }
 
     /// Set aproofreading to true

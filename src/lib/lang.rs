@@ -1,9 +1,9 @@
 use yaml_rust::yaml::Hash;
 use yaml_rust::{Yaml, YamlLoader};
 
-static EN: &'static str = include_str!("../../lang/document/en.yaml");
-static ES: &'static str = include_str!("../../lang/document/es.yaml");
-static FR: &'static str = include_str!("../../lang/document/fr.yaml");
+static EN: &str = include_str!("../../lang/document/en.yaml");
+static ES: &str = include_str!("../../lang/document/es.yaml");
+static FR: &str = include_str!("../../lang/document/fr.yaml");
 
 /// Get the hashmap for a given language
 pub fn get_hash(lang: &str) -> Hash {

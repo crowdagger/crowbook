@@ -28,7 +28,6 @@ use rustc_serialize::base64::{self, ToBase64};
 
 use std::convert::{AsMut, AsRef};
 use std::io;
-use std::mem;
 
 /// Interactive fiction HTML renderer
 ///
@@ -52,7 +51,7 @@ impl<'a> HtmlIfRenderer<'a> {
         html.handler.set_images_mapping(true);
         html.handler.set_base64(true);
         Ok(HtmlIfRenderer {
-            html: html,
+            html,
             n_fn: 0,
             curr_init: String::new(),
             fn_defs: String::new(),
@@ -144,7 +143,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             + Renderer,
     {
         match *token {
-            Token::CodeBlock(ref language, ref code) if language == "" => {
+            Token::CodeBlock(ref language, ref code) if language.is_empty() => {
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let content = html_if.parse_inner_code(code)?;
                 Ok(content)
@@ -300,7 +299,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             .book
             .get_metadata(|s| Ok(s.to_owned()))?
             .insert_bool("one_chapter", true)
-            .insert_str("js_prelude", mem::replace(&mut self.fn_defs, String::new()))
+            .insert_str("js_prelude", std::mem::take(&mut self.fn_defs))
             .insert_str(
                 "new_game",
                 self.html.book.get_template("html.if.new_game").unwrap(),

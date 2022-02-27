@@ -16,8 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use rayon::prelude::*;
-use reqwest;
-use serde_json;
+
 use url::form_urlencoded;
 
 use std::io::Read;
@@ -73,7 +72,7 @@ impl GrammalecteChecker {
             ));
         }
         let checker = GrammalecteChecker {
-            port: port,
+            port,
             client: reqwest::blocking::Client::new(),
         };
 
@@ -165,7 +164,7 @@ impl GrammalecteChecker {
                     Token::List(ref mut v) |
                     Token::OrderedList(_, ref mut v) => {
                         let check = self.check(&view_as_text(v))?;
-                        if check.data.len() >= 1 {
+                        if !check.data.is_empty() {
                             for error in &check.data[0].l_grammar_errors {
                                 insert_annotation(v,
                                                   &Data::GrammarError(error.s_message.clone()),

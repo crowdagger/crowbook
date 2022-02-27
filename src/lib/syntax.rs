@@ -20,7 +20,6 @@ use crate::error::Result;
 use crowbook_text_processing::escape;
 
 #[cfg(feature = "syntect")]
-use syntect;
 
 /// Wrapper around syntect, so it can be more easily optionally compiled.
 #[cfg(feature = "syntect")]
@@ -64,7 +63,7 @@ impl Syntax {
         };
         Syntax {
             syntax_set: syntect::parsing::SyntaxSet::load_defaults_nonewlines(),
-            theme: theme,
+            theme,
         }
     }
 

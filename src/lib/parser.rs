@@ -214,7 +214,7 @@ impl Parser {
         // Unfortunately, parser will put all this in a paragraph, so we might need to remove it.
         if tokens.len() == 1 {
             let res = match tokens[0] {
-                Token::Paragraph(ref mut v) => Some(mem::replace(v, vec![])),
+                Token::Paragraph(ref mut v) => Some(std::mem::take(v)),
                 _ => None,
             };
             match res {

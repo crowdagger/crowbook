@@ -38,9 +38,9 @@ impl Chapter {
     /// * `content`: a vector of `Token`, as returned by `Parser`.
     pub fn new<S: Into<String>>(number: Number, filename: S, content: Vec<Token>) -> Chapter {
         Chapter {
-            number: number,
+            number,
             filename: filename.into(),
-            content: content,
+            content,
         }
     }
 }
