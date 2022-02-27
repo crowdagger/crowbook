@@ -637,14 +637,11 @@ impl<'a> Renderer for LatexRenderer<'a> {
                                 Ok(content)
                             }
                         }
-                        _ => unreachable!(),
                     }
                 } else {
                     Ok(content)
                 }
             }
-
-            Token::__NonExhaustive => unreachable!(),
         }
     }
 }

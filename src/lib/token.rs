@@ -20,10 +20,10 @@
 ///
 /// This Enum might grow additional variants, so library users should
 /// **not** rely on exhaustive matching.
+#[non_exhaustive]
 pub enum Data {
     GrammarError(String),
     Repetition(String),
-    __NonExhaustive,
 }
 
 /// A single token representing a Markdown element.
@@ -33,6 +33,7 @@ pub enum Data {
 /// This Enum might grow additional variants, so library users should
 /// **not** rely on exhaustive matching.
 #[derive(Debug, PartialEq, Clone)]
+#[non_exhaustive]
 pub enum Token {
     /// The most simple element, containing a String
     Str(String),
@@ -107,10 +108,6 @@ pub enum Token {
 
     /// An annotation inserted by crowbook for e.g. grammar checking
     Annotation(Data, Vec<Token>),
-
-    /// Hint that destructuring should not be exhaustive
-    #[doc(hidden)]
-    __NonExhaustive,
 }
 
 use Token::*;
@@ -152,8 +149,6 @@ impl Token {
             | Strikethrough(ref v)
             | TaskItem(_, ref v)
             | Annotation(_, ref v) => Some(v),
-
-            __NonExhaustive => unreachable!(),
         }
     }
 
@@ -193,8 +188,6 @@ impl Token {
             | Strikethrough(ref mut v)
             | TaskItem(_, ref mut v)
             | StandaloneImage(_, _, ref mut v) => Some(v),
-
-            __NonExhaustive => unreachable!(),
         }
     }
 

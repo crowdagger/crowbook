@@ -457,7 +457,6 @@ impl<'a> HtmlRenderer<'a> {
                                 Ok(content)
                             }
                         }
-                        _ => unreachable!(),
                     }
                 } else {
                     Ok(content)
@@ -669,7 +668,6 @@ impl<'a> HtmlRenderer<'a> {
                 this.as_mut().footnotes.push((note_number, inner));
                 Ok(String::new())
             }
-            Token::__NonExhaustive => unreachable!(),
         }
     }
 

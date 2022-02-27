@@ -5,6 +5,7 @@ use crate::error::{Error, Result, Source};
 /// This Enum might grow additional variants, so library users should
 /// **not** count on exhaustive matching.
 #[derive(Debug, PartialEq, Clone)]
+#[non_exhaustive]
 pub enum BookOption {
     /// Stores a String
     String(String),
@@ -28,10 +29,6 @@ pub enum BookOption {
 
     /// Stores a list of strings
     StringVec(Vec<String>),
-
-    /// Hint that destructuring should not be exhaustive
-    #[doc(hidden)]
-    __NonExhaustive,
 }
 
 impl BookOption {

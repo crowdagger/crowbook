@@ -254,7 +254,6 @@ impl<'a> OdtRenderer<'a> {
             }
             Token::FootnoteReference(..) | Token::FootnoteDefinition(..) => String::new(),
             Token::Annotation(_, ref vec) => self.render_vec(vec),
-            Token::__NonExhaustive => unreachable!(),
             Token::DescriptionList(ref v)
             | Token::DescriptionItem(ref v)
             | Token::DescriptionTerm(ref v)
