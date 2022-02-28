@@ -1716,6 +1716,12 @@ impl Book {
     }
 }
 
+impl std::default::Default for Book {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Calls mustache::compile_str but catches panics and returns a result
 pub fn compile_str<O>(template: &str, source: O, template_name: &str) -> Result<mustache::Template>
 where

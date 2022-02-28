@@ -1088,3 +1088,9 @@ impl BookOptions {
         out
     }
 }
+
+impl Default for BookOptions {
+    fn default() -> Self {
+        Self::new()
+    }
+}

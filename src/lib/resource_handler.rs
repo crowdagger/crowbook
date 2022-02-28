@@ -236,6 +236,12 @@ impl ResourceHandler {
     }
 }
 
+impl Default for ResourceHandler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Get the list of all files, walking recursively in directories
 ///
 /// # Arguments

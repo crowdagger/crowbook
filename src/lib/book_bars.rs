@@ -56,6 +56,12 @@ impl Bars {
     }
 }
 
+impl Default for Bars {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Return the style of a bar
 
 impl Book {

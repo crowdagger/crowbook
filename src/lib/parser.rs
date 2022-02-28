@@ -67,6 +67,12 @@ impl Features {
     }
 }
 
+impl Default for Features {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BitOr for Features {
     type Output = Self;
 
@@ -392,6 +398,12 @@ impl Parser {
             }
         };
         Ok(inner)
+    }
+}
+
+impl Default for Parser {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
