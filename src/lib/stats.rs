@@ -112,8 +112,7 @@ impl Stats {
         for c in &book.chapters {
             let name = c.filename.clone();
             let text = view_as_text(&c.content);
-            let words: Vec<_> = text.split_whitespace().collect();
-            let wc = words.len();
+            let wc = text.split_whitespace().count();
             // Note: Don't count the bytes with `len()` count the actual (multibyte-)characters
             let cc = text.chars().count();
 

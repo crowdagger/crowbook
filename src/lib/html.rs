@@ -335,11 +335,11 @@ impl<'a> HtmlRenderer<'a> {
                 if i == self.current_chapter.len() - 1 {
                     break;
                 }
-                let bools: Vec<_> = self.current_chapter[i + 1..]
+                if !self.current_chapter[i + 1..]
                     .iter()
                     .map(|x| *x != 0)
-                    .collect();
-                if !bools.contains(&true) {
+                    .any(|x| x)
+                {
                     break;
                 }
             }
