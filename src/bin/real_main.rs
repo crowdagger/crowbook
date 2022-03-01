@@ -55,9 +55,8 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
         (None, Err(_), _) | (None, _, true) => book.render_format_to(format, &mut io::stdout()),
     };
 
-    match result {
-        Err(err) => print_error(&format!("{}", err), emoji),
-        Ok(_) => {}
+    if let Err(err) = result {
+        print_error(&format!("{}", err), emoji)
     }
 }
 
@@ -257,7 +256,7 @@ pub fn try_main() -> Result<()> {
             for line in errors.lines() {
                 let mut contains = false;
                 for l in &lines {
-                    if &*l == line {
+                    if l == line {
                         contains = true;
                         break;
                     }

@@ -1506,7 +1506,7 @@ impl Book {
         // Add metadata to mapbuilder
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
-                let key = key.replace(".", "_");
+                let key = key.replace('.', "_");
 
                 // Don't render lang as markdown
                 let content = match key.as_ref() {

@@ -446,8 +446,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 self.render_vec(vec)?
             )),
             Token::CodeBlock(ref language, ref code) => {
-                let mut res: String;
-                res = if let Some(ref syntax) = self.syntax {
+                let mut res: String = if let Some(ref syntax) = self.syntax {
                     syntax.to_tex(code, language)?
                 } else {
                     format!(
@@ -533,7 +532,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     ))
                 } else {
                     let url = escape::tex(url.as_str());
-                    if &content == &url {
+                    if content == url {
                         Ok(format!("\\url{{{}}}", content))
                     } else if self
                         .book
