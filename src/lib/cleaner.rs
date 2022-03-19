@@ -57,7 +57,7 @@ pub struct Default {
 impl Default {
     /// New Default cleaner
     pub fn new(params: CleanerParams) -> Default {
-        Default { params: params }
+        Default { params }
     }
 }
 
@@ -92,7 +92,7 @@ impl French {
     pub fn new(params: CleanerParams) -> French {
         let mut this = French {
             formatter: FrenchFormatter::new(),
-            params: params,
+            params,
         };
         this.formatter.typographic_quotes(this.params.smart_quotes);
         this.formatter.ligature_dashes(this.params.ligature_dashes);

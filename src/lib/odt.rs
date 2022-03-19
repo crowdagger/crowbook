@@ -26,7 +26,7 @@ impl<'a> OdtRenderer<'a> {
     /// Creates a new OdtRenderer
     pub fn new(book: &'a Book) -> OdtRenderer {
         OdtRenderer {
-            book: book,
+            book,
             current_chapter: 1,
             current_numbering: book.options.get_i32("rendering.num_depth").unwrap(),
             current_hide: false,
@@ -254,7 +254,6 @@ impl<'a> OdtRenderer<'a> {
             }
             Token::FootnoteReference(..) | Token::FootnoteDefinition(..) => String::new(),
             Token::Annotation(_, ref vec) => self.render_vec(vec),
-            Token::__NonExhaustive => unreachable!(),
             Token::DescriptionList(ref v)
             | Token::DescriptionItem(ref v)
             | Token::DescriptionTerm(ref v)

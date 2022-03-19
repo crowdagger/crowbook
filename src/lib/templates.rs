@@ -67,7 +67,7 @@ pub mod epub3 {
     pub static TITLE: &str = include_str!("../../templates/epub3/titlepage.xhtml");
 }
 
-#[cfg(features = "odt")]
+#[cfg(feature = "odt")]
 pub mod odt {
     pub static CONTENT: &str = include_str!("../../templates/odt/content.xml");
     pub static ODT: &[u8] = include_bytes!("../../templates/odt/template.odt");

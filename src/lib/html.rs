@@ -140,7 +140,7 @@ impl<'a> HtmlRenderer<'a> {
         let (highlight, syntax) = Self::get_highlight(book, theme);
 
         let mut html = HtmlRenderer {
-            book: book,
+            book,
             toc: Toc::new(),
             link_number: 0,
             current_chapter: [0, 0, 0, 0, 0, 0, 0],
@@ -158,8 +158,8 @@ impl<'a> HtmlRenderer<'a> {
             first_letter: false,
             first_paragraph: true,
             proofread: false,
-            syntax: syntax,
-            highlight: highlight,
+            syntax,
+            highlight,
             part_template_html: compile_str(
                 book.options.get_str("html.part.template").unwrap(),
                 Source::empty(),
@@ -242,7 +242,7 @@ impl<'a> HtmlRenderer<'a> {
                 Header::Chapter
             };
             self.book.get_header(header, number, c_title, |s| {
-                let mut parser = Parser::from(&self.book);
+                let mut parser = Parser::from(self.book);
                 self.render_vec(&parser.parse_inline(s)?)
             })
         } else if self.current_numbering >= n {
@@ -335,11 +335,11 @@ impl<'a> HtmlRenderer<'a> {
                 if i == self.current_chapter.len() - 1 {
                     break;
                 }
-                let bools: Vec<_> = self.current_chapter[i + 1..]
+                if !self.current_chapter[i + 1..]
                     .iter()
                     .map(|x| *x != 0)
-                    .collect();
-                if !bools.contains(&true) {
+                    .any(|x| x)
+                {
                     break;
                 }
             }
@@ -457,7 +457,6 @@ impl<'a> HtmlRenderer<'a> {
                                 Ok(content)
                             }
                         }
-                        _ => unreachable!(),
                     }
                 } else {
                     Ok(content)
@@ -669,7 +668,6 @@ impl<'a> HtmlRenderer<'a> {
                 this.as_mut().footnotes.push((note_number, inner));
                 Ok(String::new())
             }
-            Token::__NonExhaustive => unreachable!(),
         }
     }
 
@@ -752,7 +750,7 @@ impl<'a> HtmlRenderer<'a> {
         if content.is_empty() {
             Ok(content)
         } else {
-            let tokens = Parser::from(&this.as_ref().book).parse(&content)?;
+            let tokens = Parser::from(this.as_ref().book).parse(&content)?;
             let content = this.render_vec(&tokens)?;
             Ok(format!("<footer id = \"footer\">{}</footer>", content))
         }
@@ -767,7 +765,7 @@ impl<'a> HtmlRenderer<'a> {
         if let Ok(top) = this.as_ref().book.options.get_str("html.header") {
             match this.as_mut().templatize(top) {
                 Ok(content) => {
-                    let tokens = Parser::from(&this.as_ref().book).parse(&content)?;
+                    let tokens = Parser::from(this.as_ref().book).parse(&content)?;
                     Ok(format!(
                         "<div id = \"top\">{}</div>",
                         this.render_vec(&tokens)?

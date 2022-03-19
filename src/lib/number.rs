@@ -34,10 +34,10 @@ pub enum Number {
 impl Number {
     /// Returns true if self is a part
     pub fn is_part(&self) -> bool {
-        match *self {
-            Number::UnnumberedPart | Number::DefaultPart | Number::SpecifiedPart(..) => true,
-            _ => false,
-        }
+        matches!(
+            *self,
+            Number::UnnumberedPart | Number::DefaultPart | Number::SpecifiedPart(..)
+        )
     }
 
     /// Returns true if self is hidden
@@ -47,9 +47,9 @@ impl Number {
 
     /// Returns true if self is numbered
     pub fn is_numbered(&self) -> bool {
-        match *self {
-            Number::Hidden | Number::Unnumbered | Number::UnnumberedPart => false,
-            _ => true,
-        }
+        !matches!(
+            *self,
+            Number::Hidden | Number::Unnumbered | Number::UnnumberedPart
+        )
     }
 }

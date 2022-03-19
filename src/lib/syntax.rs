@@ -20,7 +20,6 @@ use crate::error::Result;
 use crowbook_text_processing::escape;
 
 #[cfg(feature = "syntect")]
-use syntect;
 
 /// Wrapper around syntect, so it can be more easily optionally compiled.
 #[cfg(feature = "syntect")]
@@ -64,7 +63,7 @@ impl Syntax {
         };
         Syntax {
             syntax_set: syntect::parsing::SyntaxSet::load_defaults_nonewlines(),
-            theme: theme,
+            theme,
         }
     }
 
@@ -133,12 +132,7 @@ impl Syntax {
 /// Strip language name of possible other infos, e.g. "rust,ignore" -> "rust"
 /// Currently only ',' is done
 fn strip_language(language: &str) -> &str {
-    let splits: Vec<_> = language
-        .split(|c: char| match c {
-            ',' => true,
-            _ => false,
-        })
-        .collect();
+    let splits: Vec<_> = language.split(|c: char| matches!(c, ',')).collect();
     splits[0].trim()
 }
 

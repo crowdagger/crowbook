@@ -18,7 +18,7 @@
 use crate::helpers::*;
 
 use clap::ArgMatches;
-use console;
+
 use crowbook::Stats;
 use crowbook::{Book, BookOptions, Result};
 use crowbook_intl_runtime::set_lang;
@@ -55,9 +55,8 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
         (None, Err(_), _) | (None, _, true) => book.render_format_to(format, &mut io::stdout()),
     };
 
-    match result {
-        Err(err) => print_error(&format!("{}", err), emoji),
-        Ok(_) => {}
+    if let Err(err) = result {
+        print_error(&format!("{}", err), emoji)
     }
 }
 
@@ -172,17 +171,15 @@ pub fn try_main() -> Result<()> {
     if fancy_ui {
         let errors = File::create(error_dir.path().join(error_path)).unwrap();
         let _ = WriteLogger::init(verbosity, log_config, errors);
-    } else {
-        if TermLogger::init(
-            verbosity,
-            log_config.clone(),
-            simplelog::TerminalMode::Stderr,
-        )
-        .is_err()
-        {
-            // If it failed, not much we can do, we just won't display log
-            let _ = SimpleLogger::init(verbosity, log_config);
-        }
+    } else if TermLogger::init(
+        verbosity,
+        log_config.clone(),
+        simplelog::TerminalMode::Stderr,
+    )
+    .is_err()
+    {
+        // If it failed, not much we can do, we just won't display log
+        let _ = SimpleLogger::init(verbosity, log_config);
     }
 
     {
@@ -256,10 +253,10 @@ pub fn try_main() -> Result<()> {
             );
             // Non-efficient dedup algorithm but we need to keep the order
             let mut lines: Vec<String> = vec![];
-            for line in errors.lines().into_iter() {
+            for line in errors.lines() {
                 let mut contains = false;
                 for l in &lines {
-                    if &*l == line {
+                    if l == line {
                         contains = true;
                         break;
                     }
@@ -272,8 +269,8 @@ pub fn try_main() -> Result<()> {
                 if line.starts_with("[ERROR]") {
                     let line = &line[8..];
                     print_error(line, emoji);
-                } else if line.starts_with("[ WARN]") {
-                    let line = &line[8..];
+                } else if line.starts_with("[WARN]") {
+                    let line = &line[7..];
                     print_warning(line, emoji);
                 }
             }

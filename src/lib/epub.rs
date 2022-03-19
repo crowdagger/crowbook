@@ -36,13 +36,12 @@ use epub_builder::{
 };
 use mustache::Template;
 
-use mime_guess;
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
 use std::fs;
 use std::fs::File;
 use std::io::Write;
-use std::mem;
+
 use std::path::Path;
 
 /// Renderer for Epub
@@ -67,7 +66,7 @@ impl<'a> EpubRenderer<'a> {
         html.handler.set_images_mapping(true);
         html.handler.set_base64(false);
         Ok(EpubRenderer {
-            html: html,
+            html,
             toc: vec![],
             chapter_title: String::new(),
             chapter_title_raw: String::new(),
@@ -237,15 +236,13 @@ impl<'a> EpubRenderer<'a> {
         // Write all images (including cover)
         let cover = self.html.book.options.get_path("cover");
         for (source, dest) in self.html.handler.images_mapping() {
-            let f = fs::canonicalize(source)
-                .and_then(|f| File::open(f))
-                .map_err(|_| {
-                    Error::file_not_found(
-                        &self.html.source,
-                        lformat!("image or cover"),
-                        source.to_owned(),
-                    )
-                })?;
+            let f = fs::canonicalize(source).and_then(File::open).map_err(|_| {
+                Error::file_not_found(
+                    &self.html.source,
+                    lformat!("image or cover"),
+                    source.to_owned(),
+                )
+            })?;
             if cover.as_ref() == Ok(source) {
                 // Treat cover specially so it is properly tagged
                 maker.add_cover_image(dest, &f, self.get_format(dest))?;
@@ -272,7 +269,7 @@ impl<'a> EpubRenderer<'a> {
             for path in list {
                 let abs_path = Path::new(&base_path_files).join(&path);
                 let f = fs::canonicalize(&abs_path)
-                    .and_then(|f| File::open(f))
+                    .and_then(File::open)
                     .map_err(|_| {
                         Error::file_not_found(
                             &self.html.book.source,
@@ -402,20 +399,14 @@ impl<'a> EpubRenderer<'a> {
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
             .insert_str("content", content)
             .insert_str("chapter_title_raw", self.chapter_title_raw.clone())
-            .insert_str(
-                "chapter_title",
-                mem::replace(&mut self.chapter_title, String::new()),
-            )
+            .insert_str("chapter_title", std::mem::take(&mut self.chapter_title))
             .build();
         self.chapter_title = String::new();
         let mut res: Vec<u8> = vec![];
         template.render_data(&mut res, &data)?;
         match String::from_utf8(res) {
             Err(_) => panic!("{}", lformat!("generated HTML was not utf-8 valid")),
-            Ok(res) => Ok((
-                res,
-                mem::replace(&mut self.chapter_title_raw, String::new()),
-            )),
+            Ok(res) => Ok((res, std::mem::take(&mut self.chapter_title_raw))),
         }
     }
 

@@ -20,10 +20,10 @@
 ///
 /// This Enum might grow additional variants, so library users should
 /// **not** rely on exhaustive matching.
+#[non_exhaustive]
 pub enum Data {
     GrammarError(String),
     Repetition(String),
-    __NonExhaustive,
 }
 
 /// A single token representing a Markdown element.
@@ -33,6 +33,7 @@ pub enum Data {
 /// This Enum might grow additional variants, so library users should
 /// **not** rely on exhaustive matching.
 #[derive(Debug, PartialEq, Clone)]
+#[non_exhaustive]
 pub enum Token {
     /// The most simple element, containing a String
     Str(String),
@@ -107,10 +108,6 @@ pub enum Token {
 
     /// An annotation inserted by crowbook for e.g. grammar checking
     Annotation(Data, Vec<Token>),
-
-    /// Hint that destructuring should not be exhaustive
-    #[doc(hidden)]
-    __NonExhaustive,
 }
 
 use Token::*;
@@ -152,8 +149,6 @@ impl Token {
             | Strikethrough(ref v)
             | TaskItem(_, ref v)
             | Annotation(_, ref v) => Some(v),
-
-            __NonExhaustive => unreachable!(),
         }
     }
 
@@ -193,18 +188,12 @@ impl Token {
             | Strikethrough(ref mut v)
             | TaskItem(_, ref mut v)
             | StandaloneImage(_, _, ref mut v) => Some(v),
-
-            __NonExhaustive => unreachable!(),
         }
     }
 
     /// Checks whether token is an str
     pub fn is_str(&self) -> bool {
-        if let Token::Str(_) = *self {
-            true
-        } else {
-            false
-        }
+        matches!(*self, Token::Str(_))
     }
 
     /// Checks whether token is an image
@@ -212,50 +201,39 @@ impl Token {
     /// **Returns** `true` if and only if token is Image variant
     /// (StandaloneImage returns *false*, like other variants)
     pub fn is_image(&self) -> bool {
-        if let Token::Image(_, _, _) = *self {
-            true
-        } else {
-            false
-        }
+        matches!(*self, Token::Image(_, _, _))
     }
 
     /// Checks whether token is a header.
     ///
     /// **Returns** `true` if and only if token is Header variant.
     pub fn is_header(&self) -> bool {
-        if let Token::Header(..) = *self {
-            true
-        } else {
-            false
-        }
+        matches!(*self, Token::Header(..))
     }
 
     /// Returns true if token is code or code block
     pub fn is_code(&self) -> bool {
-        match *self {
-            Token::CodeBlock(..) | Token::Code(..) => true,
-            _ => false,
-        }
+        matches!(*self, Token::CodeBlock(..) | Token::Code(..))
     }
 
     /// Returns true if token is a container (paragraph, quote, emphasis, ..., but not links, images, and so on).
     pub fn is_container(&self) -> bool {
-        match *self {
+        matches!(
+            *self,
             Token::Paragraph(..)
-            | Token::Header(..)
-            | Token::Emphasis(..)
-            | Token::Strong(..)
-            | Token::List(..)
-            | Token::OrderedList(..)
-            | Token::Table(..)
-            | Token::TableHead(..)
-            | Token::TableRow(..)
-            | Token::FootnoteDefinition(..)
-            | Token::TableCell(..)
-            | Token::Annotation(..)
-            | Token::Item(..)
-            | Token::BlockQuote(..) => true,
-            _ => false,
-        }
+                | Token::Header(..)
+                | Token::Emphasis(..)
+                | Token::Strong(..)
+                | Token::List(..)
+                | Token::OrderedList(..)
+                | Token::Table(..)
+                | Token::TableHead(..)
+                | Token::TableRow(..)
+                | Token::FootnoteDefinition(..)
+                | Token::TableCell(..)
+                | Token::Annotation(..)
+                | Token::Item(..)
+                | Token::BlockQuote(..)
+        )
     }
 }

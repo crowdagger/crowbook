@@ -70,16 +70,16 @@ impl<'a> LatexRenderer<'a> {
             None
         };
         LatexRenderer {
-            book: book,
+            book,
             current_chapter: Number::Default,
-            handler: handler,
+            handler,
             source: Source::empty(),
             escape: true,
             first_letter: false,
             first_paragraph: true,
             is_short: book.options.get_str("tex.class").unwrap() == "article",
             proofread: false,
-            syntax: syntax,
+            syntax,
             hyperref: book.options.get_bool("tex.hyperref").unwrap(),
             enum_level: 0,
         }
@@ -101,11 +101,9 @@ impl<'a> LatexRenderer<'a> {
 
         // write image files
         for (source, dest) in self.handler.images_mapping() {
-            let mut f = fs::canonicalize(source)
-                .and_then(|f| File::open(f))
-                .map_err(|_| {
-                    Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
-                })?;
+            let mut f = fs::canonicalize(source).and_then(File::open).map_err(|_| {
+                Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
+            })?;
             let mut content = vec![];
             f.read_to_end(&mut content).map_err(|e| {
                 Error::render(
@@ -155,7 +153,7 @@ impl<'a> LatexRenderer<'a> {
                 content.push_str(&self.render_token(&v[0])?);
                 offset = 1;
             }
-            write!(content, "\\label{{chapter-{}}}\n", i)?;
+            writeln!(content, "\\label{{chapter-{}}}", i)?;
             content.push_str(&self.render_vec(&v[offset..])?);
         }
         self.source = Source::empty();
@@ -417,9 +415,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     _ => content.push_str(r"\paragraph"),
                 }
                 if !self.current_chapter.is_numbered() {
-                    content.push_str("*");
+                    content.push('*');
                 }
-                content.push_str(r"{");
+                content.push('{');
                 content.push_str(&self.render_vec(vec)?);
                 content.push_str("}\n");
                 Ok(content)
@@ -448,8 +446,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 self.render_vec(vec)?
             )),
             Token::CodeBlock(ref language, ref code) => {
-                let mut res: String;
-                res = if let Some(ref syntax) = self.syntax {
+                let mut res: String = if let Some(ref syntax) = self.syntax {
                     syntax.to_tex(code, language)?
                 } else {
                     format!(
@@ -535,7 +532,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     ))
                 } else {
                     let url = escape::tex(url.as_str());
-                    if &content == &url {
+                    if content == url {
                         Ok(format!("\\url{{{}}}", content))
                     } else if self
                         .book
@@ -599,7 +596,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 for _ in 0..n {
                     cols.push_str("|X");
                 }
-                cols.push_str("|");
+                cols.push('|');
                 Ok(format!(
                     "\\begin{{mdtable}}{{{}}}
 \\hline
@@ -639,14 +636,11 @@ impl<'a> Renderer for LatexRenderer<'a> {
                                 Ok(content)
                             }
                         }
-                        _ => unreachable!(),
                     }
                 } else {
                     Ok(content)
                 }
             }
-
-            Token::__NonExhaustive => unreachable!(),
         }
     }
 }

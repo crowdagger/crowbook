@@ -56,6 +56,12 @@ impl Bars {
     }
 }
 
+impl Default for Bars {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Return the style of a bar
 
 impl Book {
@@ -188,7 +194,7 @@ impl Book {
     }
 
     /// Sets the style of a  bar
-    fn bar_set_style(&self, bar: Crowbar, state: CrowbarState) -> () {
+    fn bar_set_style(&self, bar: Crowbar, state: CrowbarState) {
         let pb = match bar {
             Crowbar::Main => {
                 if let Some(ref bar) = self.bars.mainbar {

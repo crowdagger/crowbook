@@ -7,7 +7,6 @@ use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
-use mime_guess;
 use rustc_serialize::base64::{self, ToBase64};
 use walkdir::WalkDir;
 
@@ -117,7 +116,7 @@ impl ResourceHandler {
                 format!("images/image_{}", self.images.len())
             }
         } else {
-            let mut f = match fs::canonicalize(file.as_ref()).and_then(|f| fs::File::open(f)) {
+            let mut f = match fs::canonicalize(file.as_ref()).and_then(fs::File::open) {
                 Ok(f) => f,
                 Err(_) => {
                     return Err(Error::file_not_found(
@@ -147,7 +146,7 @@ impl ResourceHandler {
                     );
                     return Ok(file);
                 }
-                Some(s) => format!("data:{};base64,{}", s.to_string(), base64),
+                Some(s) => format!("data:{};base64,{}", s, base64),
             }
         };
 
@@ -196,11 +195,7 @@ impl ResourceHandler {
         } else {
             // Try to get a link by changing the extension
             let new_from = format!("{}", Path::new(from).with_extension("md").display());
-            if self.links.contains_key(&new_from) {
-                true
-            } else {
-                false
-            }
+            self.links.contains_key(&new_from)
         }
     }
 
@@ -238,6 +233,12 @@ impl ResourceHandler {
                 }
             }
         }
+    }
+}
+
+impl Default for ResourceHandler {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

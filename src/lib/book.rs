@@ -81,7 +81,6 @@ use std::io::{Read, Write};
 use std::iter::IntoIterator;
 use std::path::{Path, PathBuf};
 
-use mustache;
 use mustache::{MapBuilder, Template};
 use numerals::roman::Roman;
 use rayon::prelude::*;
@@ -525,7 +524,7 @@ impl Book {
                                                           whitespace"
                     ),
                 ));
-            } else if words.len() < 1 {
+            } else if words.is_empty() {
                 return Err(Error::config_parser(
                     source,
                     lformat!("no chapter name specified"),
@@ -567,19 +566,19 @@ impl Book {
             line_number += 1;
             self.source.set_line(line_number);
             yaml.push_str(line);
-            yaml.push_str("\n");
+            yaml.push('\n');
 
-            if line.trim().ends_with(|c| match c {
-                '>' | '|' | ':' | '-' => true,
-                _ => false,
-            }) {
+            if line
+                .trim()
+                .ends_with(|c| matches!(c, '>' | '|' | ':' | '-'))
+            {
                 // line ends with the start of a block indicator
                 continue;
             }
 
             if let Some(next_line) = lines.peek() {
                 let doc = YamlLoader::load_from_str(next_line);
-                if !doc.is_ok() {
+                if doc.is_err() {
                     is_next_line_ok = false;
                 } else {
                     let doc = doc.unwrap();
@@ -687,7 +686,7 @@ impl Book {
                 let subline = &line[1..];
                 if subline.starts_with(|c: char| c.is_whitespace()) {
                     let subline = subline.trim();
-                    let ast = Parser::from(&self).parse_inline(subline)?;
+                    let ast = Parser::from(self).parse_inline(subline)?;
                     let ast = vec![Token::Header(1, ast)];
                     self.chapters
                         .push(Chapter::new(Number::DefaultPart, String::new(), ast));
@@ -805,7 +804,7 @@ impl Book {
     /// /* Will do nothing as book is empty and has no output format specified */
     /// book.render_format("pdf");
     /// ```
-    pub fn render_format(&self, format: &str) -> () {
+    pub fn render_format(&self, format: &str) {
         // TODO: check that it doesn't break everything, or use option?
         self.render_format_with_bar(format, 0)
     }
@@ -831,15 +830,13 @@ impl Book {
     ///       .unwrap()
     ///       .render_all(); // renders foo.tex in /tmp
     /// ```
-    pub fn render_all(&mut self) -> () {
+    pub fn render_all(&mut self) {
         let mut keys: Vec<_> = self
             .formats
             .keys()
             .filter(|fmt| {
-                if !self.is_proofread() {
-                    if fmt.contains("proofread") {
-                        return false;
-                    }
+                if !self.is_proofread() && fmt.contains("proofread") {
+                    return false;
                 }
                 self.options.get_path(&format!("output.{}", fmt)).is_ok()
             })
@@ -873,7 +870,7 @@ impl Book {
     }
 
     /// Renders the book to the given format and reports to progress bar if set
-    pub fn render_format_with_bar(&self, format: &str, bar: usize) -> () {
+    pub fn render_format_with_bar(&self, format: &str, bar: usize) {
         let mut key = String::from("output.");
         key.push_str(format);
         if let Ok(path) = self.options.get_path(&key) {
@@ -1117,7 +1114,7 @@ impl Book {
             }
         }
         // add offset
-        ResourceHandler::add_offset(link_offset.as_ref(), image_offset.as_ref(), &mut tokens);
+        ResourceHandler::add_offset(link_offset, image_offset, &mut tokens);
 
         // If files_mean_chapters is set, override the default setting
         if let Ok(x) = self.options.get_bool("crowbook.files_mean_chapters") {
@@ -1224,7 +1221,7 @@ impl Book {
                 match *token {
                     Token::Header(ref mut n, _) => {
                         let new = *n + level;
-                        if new > 6 || new < 0 {
+                        if !(0..=6).contains(&new) {
                             return Err(Error::parser(Source::new(file),
                                                      lformat!("this subchapter contains a heading that, when adjusted, is not in the right range ({} instead of [0-6])", new)));
                         }
@@ -1462,9 +1459,9 @@ impl Book {
             ),
             Ok(res) => Ok(HeaderData {
                 text: res,
-                number: number,
+                number,
                 header: header_name,
-                title: title,
+                title,
             }),
         }
     }
@@ -1509,14 +1506,14 @@ impl Book {
         // Add metadata to mapbuilder
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
-                let key = key.replace(".", "_");
+                let key = key.replace('.', "_");
 
                 // Don't render lang as markdown
                 let content = match key.as_ref() {
                     "lang" => Ok(s.to_string()),
                     _ => f(s),
                 };
-                let raw = view_as_text(&Parser::from(&self).parse(s)?);
+                let raw = view_as_text(&Parser::from(self).parse(s)?);
                 match content {
                     Ok(content) => {
                         if !content.is_empty() {
@@ -1581,7 +1578,7 @@ impl Book {
                     previous_empty = false;
                     let mut yaml_block = String::new();
                     let mut valid_block = false;
-                    while let Some(new_line) = lines.next() {
+                    for new_line in lines.by_ref() {
                         if new_line == "---" || new_line == "..." {
                             // Checks that this is valid YAML
                             match YamlLoader::load_from_str(&yaml_block) {
@@ -1669,21 +1666,21 @@ impl Book {
                             break;
                         } else {
                             yaml_block.push_str(new_line);
-                            yaml_block.push_str("\n");
+                            yaml_block.push('\n');
                         }
                     }
                     if !valid_block {
                         // Block was invalid, so add it to markdown content
                         new_content.push_str(&yaml_block);
-                        new_content.push_str("\n");
+                        new_content.push('\n');
                     }
                 } else if line.is_empty() {
                     previous_empty = true;
-                    new_content.push_str("\n");
+                    new_content.push('\n');
                 } else {
                     previous_empty = false;
                     new_content.push_str(line);
-                    new_content.push_str("\n");
+                    new_content.push('\n');
                 }
             }
         }
@@ -1716,6 +1713,12 @@ impl Book {
         } else {
             self.cleaner = Box::new(Off);
         }
+    }
+}
+
+impl std::default::Default for Book {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
