@@ -4,6 +4,8 @@ use yaml_rust::{Yaml, YamlLoader};
 static EN: &str = include_str!("../../lang/document/en.yaml");
 static ES: &str = include_str!("../../lang/document/es.yaml");
 static FR: &str = include_str!("../../lang/document/fr.yaml");
+static RU: &str = include_str!("../../lang/document/ru.yaml");
+static DE: &str = include_str!("../../lang/document/de.yaml");
 
 /// Get the hashmap for a given language
 pub fn get_hash(lang: &str) -> Hash {
@@ -12,6 +14,10 @@ pub fn get_hash(lang: &str) -> Hash {
         YamlLoader::load_from_str(FR).unwrap()
     } else if lang.starts_with("es") {
         YamlLoader::load_from_str(ES).unwrap()
+    } else if lang.starts_with("de") {
+        YamlLoader::load_from_str(DE).unwrap()
+    } else if lang.starts_with("ru") {
+        YamlLoader::load_from_str(RU).unwrap()
     } else {
         YamlLoader::load_from_str(EN).unwrap()
     };
