@@ -125,6 +125,7 @@ pub struct Parser {
 
     html_as_text: bool,
     superscript: bool,
+    parse_frontmatter: bool,
 }
 
 impl Parser {
@@ -136,6 +137,7 @@ impl Parser {
             ignore_paragraphs: false,
             html_as_text: true,
             superscript: false,
+            parse_frontmatter: false,
         }
     }
 
@@ -143,6 +145,7 @@ impl Parser {
     pub fn from(book: &Book) -> Parser {
         let mut parser = Parser::new();
         parser.html_as_text = book.options.get_bool("crowbook.html_as_text").unwrap();
+        parser.parse_frontmatter = book.options.get_bool("input.yaml_blocks").unwrap();
         parser.superscript = book
             .options
             .get_bool("crowbook.markdown.superscript")
@@ -161,7 +164,7 @@ impl Parser {
     }
 
     /// Parse a file and returns an AST or  an error
-    pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P) -> Result<Vec<Token>> {
+    pub fn parse_file<P: AsRef<Path>>(&mut self, filename: P, yaml_block: Option<&mut String>) -> Result<Vec<Token>> {
         let path: &Path = filename.as_ref();
         let mut f = File::open(path).map_err(|_| {
             Error::file_not_found(
@@ -181,11 +184,12 @@ impl Parser {
                 ),
             )
         })?;
-        self.parse(&s)
+        self.parse(&s, yaml_block)
     }
 
-    /// Parse a string and returns an AST  an Error.
-    pub fn parse(&mut self, s: &str) -> Result<Vec<Token>> {
+    /// Parse a string and returns an AST or an Error.
+    /// If yaml is set to some string, fill it with frontmatter if it is found
+    pub fn parse(&mut self, s: &str, mut yaml: Option<&mut String>) -> Result<Vec<Token>> {
         let arena = Arena::new();
 
         // Set options for comrak
@@ -199,10 +203,13 @@ impl Parser {
         options.extension.superscript = self.superscript;
         options.extension.footnotes = true;
         options.extension.description_lists = true;
+        if self.parse_frontmatter {
+            options.extension.front_matter_delimiter = Some("---".to_owned());
+        }
 
         let root = parse_document(&arena, s, &options);
 
-        let mut res = self.parse_node(root)?;
+        let mut res = self.parse_node(root, &mut yaml)?;
 
         collapse(&mut res);
 
@@ -216,7 +223,7 @@ impl Parser {
     /// This function removes the outermost `Paragraph` in most of the
     /// cases, as it is meant to be used for an inline string (e.g. metadata)
     pub fn parse_inline(&mut self, s: &str) -> Result<Vec<Token>> {
-        let mut tokens = self.parse(s)?;
+        let mut tokens = self.parse(s, None)?;
         // Unfortunately, parser will put all this in a paragraph, so we might need to remove it.
         if tokens.len() == 1 {
             let res = match tokens[0] {
@@ -237,7 +244,7 @@ impl Parser {
         self.features
     }
 
-    fn parse_node<'a>(&mut self, node: &'a AstNode<'a>) -> Result<Vec<Token>> {
+    fn parse_node<'a>(&mut self, node: &'a AstNode<'a>, yaml_block: &mut Option<&mut String>) -> Result<Vec<Token>> {
         let mut inner = vec![];
 
         // Some special cases where we need to modifiy a bit the state of the parser between parsing inner content
@@ -245,7 +252,7 @@ impl Parser {
             self.ignore_paragraphs = true;
         }
         for c in node.children() {
-            let mut v = self.parse_node(c)?;
+            let mut v = self.parse_node(c, yaml_block)?;
             inner.append(&mut v);
         }
         // Reset state after special cases shenanigans
@@ -261,7 +268,10 @@ impl Parser {
                 vec![Token::BlockQuote(inner)]
             }
             NodeValue::FrontMatter(ref v) => {
-                // TODO: do something with that
+                if let Some(yaml) = yaml_block {
+                    // We can add the frontmatter to the yaml block
+                    yaml.push_str(std::str::from_utf8(v)?);
+                }
                 vec![]
             },
             NodeValue::List(ref list) => {

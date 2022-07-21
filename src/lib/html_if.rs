@@ -73,7 +73,7 @@ impl<'a> HtmlIfRenderer<'a> {
                 gen_code.push_str(&code[i..begin]);
 
                 let mut md_part = &code[begin + 2..end];
-                let rendered = self.render_vec(&Parser::new().parse(md_part)?)?;
+                let rendered = self.render_vec(&Parser::new().parse(md_part, None)?)?;
                 while let Some(b) = md_part.find("{{") {
                     md_part = &md_part[b + 2..];
                     if let Some(l) = md_part.find("}}") {

@@ -1066,15 +1066,17 @@ impl Book {
             )
         })?;
 
-        // Ignore YAML blocks (or not)
-        self.parse_yaml(&mut content);
 
         // parse the file
         self.bar_set_message(Crowbar::Second, &lformat!("Parsing..."));
 
         let mut parser = Parser::from(self);
         parser.set_source_file(file);
-        let mut tokens = parser.parse(&content)?;
+        let mut yaml_block = String::from("");
+        let mut tokens = parser.parse(&content, Option::Some(&mut yaml_block))?;
+        
+        // Parse YAML block
+        self.parse_yaml(&yaml_block);
         self.features = self.features | parser.features();
 
         // transform the AST to make local links and images relative to `book` directory
@@ -1513,7 +1515,7 @@ impl Book {
                     "lang" => Ok(s.to_string()),
                     _ => f(s),
                 };
-                let raw = view_as_text(&Parser::from(self).parse(s)?);
+                let raw = view_as_text(&Parser::from(self).parse(s, None)?);
                 match content {
                     Ok(content) => {
                         if !content.is_empty() {
@@ -1560,133 +1562,92 @@ impl Book {
     /// ---
     /// or
     /// ...
-    fn parse_yaml(&mut self, content: &mut String) {
-        if !(content.starts_with("---\n")
-            || content.contains("\n---\n")
-            || content.starts_with("---\r\n")
-            || content.contains("\n---\r\n"))
-        {
-            // Content can't contain YAML, so aborting early
-            return;
-        }
-        let mut new_content = String::new();
-        let mut previous_empty = true;
-        {
-            let mut lines = content.lines();
-            while let Some(line) = lines.next() {
-                if line == "---" && previous_empty {
-                    previous_empty = false;
-                    let mut yaml_block = String::new();
-                    let mut valid_block = false;
-                    for new_line in lines.by_ref() {
-                        if new_line == "---" || new_line == "..." {
-                            // Checks that this is valid YAML
-                            match YamlLoader::load_from_str(&yaml_block) {
-                                Ok(docs) => {
-                                    // Use this yaml block to set options only if 1) it is valid
-                                    // 2) the option is activated
-                                    if docs.len() == 1
-                                        && docs[0].as_hash().is_some()
-                                        && self.options.get_bool("input.yaml_blocks") == Ok(true)
-                                    {
-                                        let hash = docs[0].as_hash().unwrap();
-                                        for (key, value) in hash {
-                                            match self
-                                                .options
-                                                //todo: remove clone
-                                                .set_yaml(key.clone(), value.clone())
-                                            {
-                                                Ok(opt) => {
-                                                    if let Some(old_value) = opt {
-                                                        debug!(
-                                                            "{}",
-                                                            lformat!(
-                                                                "Inline YAML block \
-                                                                               replaced {:?} \
-                                                                               previously set to \
-                                                                             {:?} to {:?}",
-                                                                key,
-                                                                old_value,
-                                                                value
-                                                            )
-                                                        );
-                                                    } else {
-                                                        debug!(
-                                                            "{}",
-                                                            lformat!(
-                                                                "Inline YAML block \
-                                                                               set {:?} to {:?}",
-                                                                key,
-                                                                value
-                                                            )
-                                                        );
-                                                    }
-                                                }
-                                                Err(e) => {
-                                                    error!("{}", lformat!("Inline YAML block could \
-                                                                           not set {:?} to {:?}: {}",
-                                                                          key,
-                                                                          value,
-                                                                          e))
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        debug!(
-                                            "{}",
-                                            lformat!(
-                                                "Ignoring YAML \
-                                                                    block:\n---\n{block}---",
-                                                block = &yaml_block
-                                            )
-                                        );
-                                    }
-                                    valid_block = true;
-                                }
-                                Err(err) => {
-                                    error!(
+    fn parse_yaml(&mut self, yaml_block: &String) {
+        // Checks that this is valid YAML
+        match YamlLoader::load_from_str(yaml_block) {
+            Ok(docs) => {
+                // Use this yaml block to set options only if 1) it is valid
+                // 2) the option is activated
+                if docs.len() >= 1
+                    && docs[0].as_hash().is_some()
+                {
+                    let hash = docs[0].as_hash().unwrap();
+                    for (key, value) in hash {
+                        match self
+                            .options
+                            //todo: remove clone
+                            .set_yaml(key.clone(), value.clone())
+                        {
+                            Ok(opt) => {
+                                if let Some(old_value) = opt {
+                                    debug!(
                                         "{}",
                                         lformat!(
-                                            "Found something that looked like a \
-                                                         YAML block:\n{block}",
-                                            block = &yaml_block
+                                            "Inline YAML block \
+                                            replaced {:?} \
+                                            previously set to \
+                                            {:?} to {:?}",
+                                            key,
+                                            old_value,
+                                            value
                                         )
                                     );
-                                    error!(
+                                } else {
+                                    debug!(
                                         "{}",
                                         lformat!(
-                                            "... but it didn't parse correctly as \
-                                                           YAML('{error}'), so treating it like \
-                                                           Markdown.",
-                                            error = err
+                                            "Inline YAML block \
+                                            set {:?} to {:?}",
+                                            key,
+                                            value
                                         )
                                     );
                                 }
+                            },
+                            Err(e) => {
+                                error!("{}", lformat!("Inline YAML block could \
+                                                        not set {:?} to {:?}: {}",
+                                                        key,
+                                                        value,
+                                                        e))
                             }
-                            break;
-                        } else {
-                            yaml_block.push_str(new_line);
-                            yaml_block.push('\n');
                         }
                     }
-                    if !valid_block {
-                        // Block was invalid, so add it to markdown content
-                        new_content.push_str(&yaml_block);
-                        new_content.push('\n');
-                    }
-                } else if line.is_empty() {
-                    previous_empty = true;
-                    new_content.push('\n');
+                
+                    self.update_cleaner();
+                    self.init_checker();
                 } else {
-                    previous_empty = false;
-                    new_content.push_str(line);
-                    new_content.push('\n');
+                    debug!(
+                        "{}",
+                        lformat!(
+                            "Ignoring YAML \
+                            block:
+                            \n{block}",
+                            block = &yaml_block
+                        )
+                    );
                 }
+            },
+            Err(err) => {
+                error!(
+                    "{}",
+                    lformat!(
+                        "Found something that looked like a \
+                            YAML block:\n{block}",
+                        block = &yaml_block
+                    )
+                );
+                error!(
+                    "{}",
+                    lformat!(
+                        "... but it didn't parse correctly as \
+                        YAML('{error}'), so treating it like \
+                        Markdown.",
+                        error = err
+                    )
+                );
             }
         }
-        *content = new_content;
-        self.update_cleaner();
-        self.init_checker();
     }
 
     // Update the cleaner according to autoclean and lang options

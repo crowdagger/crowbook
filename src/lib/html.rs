@@ -750,7 +750,7 @@ impl<'a> HtmlRenderer<'a> {
         if content.is_empty() {
             Ok(content)
         } else {
-            let tokens = Parser::from(this.as_ref().book).parse(&content)?;
+            let tokens = Parser::from(this.as_ref().book).parse(&content, None)?;
             let content = this.render_vec(&tokens)?;
             Ok(format!("<footer id = \"footer\">{}</footer>", content))
         }
@@ -765,7 +765,7 @@ impl<'a> HtmlRenderer<'a> {
         if let Ok(top) = this.as_ref().book.options.get_str("html.header") {
             match this.as_mut().templatize(top) {
                 Ok(content) => {
-                    let tokens = Parser::from(this.as_ref().book).parse(&content)?;
+                    let tokens = Parser::from(this.as_ref().book).parse(&content, None)?;
                     Ok(format!(
                         "<div id = \"top\">{}</div>",
                         this.render_vec(&tokens)?

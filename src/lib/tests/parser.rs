@@ -6,7 +6,7 @@ use crate::token::Token;
 fn parse_from_str(doc: &str) -> Vec<Token> {
     let book = Book::new();
     let mut parser = Parser::from(&book);
-    parser.parse(doc).unwrap()
+    parser.parse(doc, None).unwrap()
 }
 
 #[test]
@@ -18,7 +18,7 @@ Test
 some *emphasis* required
 ";
     let mut parser = Parser::new();
-    let res = parser.parse(doc).unwrap();
+    let res = parser.parse(doc, None).unwrap();
     let expected = vec![
         Token::Header(1, vec![Token::Str(String::from("Test"))]),
         Token::Paragraph(vec![
@@ -34,7 +34,7 @@ some *emphasis* required
 fn link_inline() {
     let doc = "[a link](http://foo.bar)";
     let mut parser = Parser::new();
-    let res = parser.parse(doc).unwrap();
+    let res = parser.parse(doc, None).unwrap();
 
     assert_eq!(
         res,
