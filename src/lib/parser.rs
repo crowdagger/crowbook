@@ -190,15 +190,15 @@ impl Parser {
 
         // Set options for comrak
         let mut options = ComrakOptions::default();
-        options.hardbreaks = false;
-        options.smart = false;
-        options.ext_strikethrough = true;
-        options.ext_table = true;
-        options.ext_autolink = true;
-        options.ext_tasklist = true;
-        options.ext_superscript = self.superscript;
-        options.ext_footnotes = true;
-        options.ext_description_lists = true;
+        options.render.hardbreaks = false;
+        options.parse.smart = false;
+        options.extension.strikethrough = true;
+        options.extension.table = true;
+        options.extension.autolink = true;
+        options.extension.tasklist = true;
+        options.extension.superscript = self.superscript;
+        options.extension.footnotes = true;
+        options.extension.description_lists = true;
 
         let root = parse_document(&arena, s, &options);
 
