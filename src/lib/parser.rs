@@ -260,6 +260,10 @@ impl Parser {
                 self.features.blockquote = true;
                 vec![Token::BlockQuote(inner)]
             }
+            NodeValue::FrontMatter(ref v) => {
+                // TODO: do something with that
+                vec![]
+            },
             NodeValue::List(ref list) => {
                 // Todo: use "tight" feature?
                 match list.list_type {
