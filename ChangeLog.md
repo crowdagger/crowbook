@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+current (???)
+-------------
+* Fix an issue where horizontal rules could be interpreted as additional front matter 
+
 0.15.2 (2020-07-07)
 -----------------------
 * Fixed endless progress bar on renderer failure

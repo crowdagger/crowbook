@@ -371,6 +371,15 @@ impl From<FromUtf8Error> for Error {
     }
 }
 
+impl From<std::str::Utf8Error> for Error {
+    fn from(err: std::str::Utf8Error) -> Error {
+        Error::render(
+            Source::empty(),
+            lformat!("UTF-8 error: {error}", error = err),
+        )
+    }
+}
+
 impl From<fmt::Error> for Error {
     fn from(err: fmt::Error) -> Error {
         Error::default(
