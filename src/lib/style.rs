@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Élisabeth HENRY.
+// Copyright (C) 2017-2022 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -18,7 +18,6 @@
 //! Functions for setting styles on text, using console to make it look prettier.
 
 use console::{style, StyledObject, Term};
-use textwrap::Wrapper;
 
 /// Displays a string as some header
 pub fn header(msg: &str) -> StyledObject<&str> {
@@ -44,8 +43,8 @@ pub fn value(msg: &str) -> StyledObject<&str> {
 
 pub fn fill(msg: &str, indent: &str) -> String {
     let (_, width) = Term::stdout().size();
-    let wrapper = Wrapper::new(width as usize)
+    let options = textwrap::Options::new(width.into())
         .initial_indent(indent)
         .subsequent_indent(indent);
-    wrapper.fill(msg)
+    textwrap::fill(msg, &options)
 }
