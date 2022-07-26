@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Élisabeth HENRY.
+// Copyright (C) 2017-2022 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -124,7 +124,7 @@ impl Book {
 
         match bar {
             Crowbar::Second => pb.finish_and_clear(),
-            _ => pb.finish_with_message(msg),
+            _ => pb.finish_with_message(msg.to_owned()),
         };
     }
 
@@ -133,7 +133,7 @@ impl Book {
         if let Some(ref multibar) = self.bars.multibar {
             let bar = multibar.add(ProgressBar::new(len));
             self.bar_set_style(Crowbar::Second, CrowbarState::Running);
-            bar.set_message(msg);
+            bar.set_message(msg.to_owned());
             self.bars.secondbar = Some(bar);
         }
     }
@@ -149,13 +149,13 @@ impl Book {
     pub fn add_spinner_to_multibar(&mut self, key: &str) -> usize {
         if let Some(ref multibar) = self.bars.multibar {
             if let Some(ref mainbar) = self.bars.mainbar {
-                mainbar.set_message(&lformat!("Rendering..."));
+                mainbar.set_message(lformat!("Rendering..."));
             }
 
             let bar = multibar.add(ProgressBar::new_spinner());
             bar.enable_steady_tick(200);
-            bar.set_message(&lformat!("waiting..."));
-            bar.set_prefix(&format!("{}:", key));
+            bar.set_message(lformat!("waiting..."));
+            bar.set_prefix(format!("{}:", key));
             let i = self.bars.spinners.len();
             self.bars.spinners.push(bar);
             self.bar_set_style(Crowbar::Spinner(i), CrowbarState::Running);
@@ -190,7 +190,7 @@ impl Book {
                 }
             }
         };
-        bar.set_message(msg);
+        bar.set_message(msg.to_owned());
     }
 
     /// Sets the style of a  bar
