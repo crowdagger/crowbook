@@ -4,6 +4,7 @@ ChangeLog
 current (???)
 -------------
 * Fix an issue where horizontal rules could be interpreted as additional front matter 
+* Generated PDF now include some metadata
 
 0.15.2 (2020-07-07)
 -----------------------
