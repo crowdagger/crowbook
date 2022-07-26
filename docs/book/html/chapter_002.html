@@ -80,407 +80,450 @@ function toggle() {
 </script>
   <nav id = "nav">
     <h2><a href = "index.html">Crowbook User Guide</a></h2>
-    <ul>
-<li><a href="chapter_000.html#link-1">1. Crowbook</a>
-<ul><li><a href="chapter_000.html#link-2">1.1. Example</a></li>
-<li><a href="chapter_000.html#link-3">1.2. Installing</a>
-<ul><li><a href="chapter_000.html#link-4">1.2.1. Binaries</a></li>
-<li><a href="chapter_000.html#link-5">1.2.2. Using Cargo</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_000.html#link-6">1.3. Dependencies</a></li>
-<li><a href="chapter_000.html#link-7">1.4. Quick tour</a></li>
-<li><a href="chapter_000.html#link-8">1.5. Current features</a>
-<ul><li><a href="chapter_000.html#link-9">1.5.1. Output formats</a></li>
-<li><a href="chapter_000.html#link-10">1.5.2. Input format</a></li>
-<li><a href="chapter_000.html#link-11">1.5.3. Typographic “cleaning”</a></li>
-<li><a href="chapter_000.html#link-12">1.5.4. Links handling</a></li>
-<li><a href="chapter_000.html#link-13">1.5.5. Inline YAML blocks</a></li>
-<li><a href="chapter_000.html#link-14">1.5.6. Proofreading</a></li>
-<li><a href="chapter_000.html#link-15">1.5.7. Interactive fiction</a></li>
-<li><a href="chapter_000.html#link-16">1.5.8. Customization</a></li>
-<li><a href="chapter_000.html#link-17">1.5.9. Bugs</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_000.html#link-18">1.6. Contributors</a></li>
-<li><a href="chapter_000.html#link-19">1.7. Acknowledgements</a></li>
-<li><a href="chapter_000.html#link-20">1.8. ChangeLog</a></li>
-<li><a href="chapter_000.html#link-21">1.9. Contributing</a></li>
-<li><a href="chapter_000.html#link-22">1.10. Library</a></li>
-<li><a href="chapter_000.html#link-23">1.11. License</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_001.html#link-24">2. Arguments</a>
-<ul><li><a href="chapter_001.html#link-25">2.1. <code>--create</code></a></li>
-<li><a href="chapter_001.html#link-26">2.2. <code>--single</code></a></li>
-<li><a href="chapter_001.html#link-27">2.3. <code>--set</code></a></li>
-<li><a href="chapter_001.html#link-28">2.4. <code>--list-options</code></a></li>
-<li><a href="chapter_001.html#link-29">2.5. <code>--print-template</code></a></li>
-<li><a href="chapter_001.html#link-30">2.6. <code>--stats</code></a></li>
-<li><a href="chapter_001.html#link-31">2.7. <code>--proofread</code></a></li>
-<li><a href="chapter_001.html#link-32">2.8. <code>--autograph</code></a>
-<ul><li><a href="chapter_001.html#link-33">2.8.1. Example</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_001.html#link-34">2.9. <code>--verbose</code></a></li>
-<li><a href="chapter_001.html#link-35">2.10. <code>--to</code></a>
-<ul><li><a href="chapter_001.html#link-36">2.10.1. Examples</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_001.html#link-37">2.11. <code>--output</code></a></li>
-<li><a href="chapter_001.html#link-38">2.12. <code>--lang</code></a>
-<ul><li><a href="chapter_001.html#link-39">2.12.1. Example</a></li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-40">3. The configuration file</a>
-<ul><li><a href="chapter_002.html#link-41">3.1. Configuration in an inline YAML block</a></li>
-<li><a href="chapter_002.html#link-42">3.2. The list of files</a>
-<ul><li><a href="chapter_002.html#link-43">3.2.1. Parts</a></li>
-<li><a href="chapter_002.html#link-44">3.2.2. Subchapters</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-45">3.3. Crowbook options</a>
-<ul><li><a href="chapter_002.html#link-46">3.3.1. Metadata</a></li>
-<li><a href="chapter_002.html#link-47">3.3.2. The <code>import</code> special option</a></li>
-<li><a href="chapter_002.html#link-48">3.3.3. Output options</a>
-<ul><li><a href="chapter_002.html#link-49">3.3.3.1. The <code>output</code> option</a></li>
-<li><a href="chapter_002.html#link-50">3.3.3.2. <code>output.base_path</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-51">3.3.4. Input options</a></li>
-<li><a href="chapter_002.html#link-52">3.3.5. Generic options for rendering</a></li>
-<li><a href="chapter_002.html#link-53">3.3.6. HTML Options</a>
-<ul><li><a href="chapter_002.html#link-54">3.3.6.1. Options for standalone HTML</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-55">3.3.7. Options for LaTeX/PDF rendering</a></li>
-<li><a href="chapter_002.html#link-56">3.3.8. Options for EPUB rendering</a></li>
-<li><a href="chapter_002.html#link-57">3.3.9. Resources options</a>
-<ul><li><a href="chapter_002.html#link-58">3.3.9.1. <code>resources.files</code></a></li>
-<li><a href="chapter_002.html#link-59">3.3.9.2. <code>resources.out_path</code></a></li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-60">3.4. Full list of options</a>
-<ul><li><a href="chapter_002.html#link-61">3.4.1. Metadata</a>
-<ul><li><a href="chapter_002.html#link-62">3.4.1.1. <code>author</code></a></li>
-<li><a href="chapter_002.html#link-63">3.4.1.2. <code>title</code></a></li>
-<li><a href="chapter_002.html#link-64">3.4.1.3. <code>lang</code></a></li>
-<li><a href="chapter_002.html#link-65">3.4.1.4. <code>subject</code></a></li>
-<li><a href="chapter_002.html#link-66">3.4.1.5. <code>description</code></a></li>
-<li><a href="chapter_002.html#link-67">3.4.1.6. <code>cover</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-68">3.4.2. Additional metadata</a>
-<ul><li><a href="chapter_002.html#link-69">3.4.2.1. <code>subtitle</code></a></li>
-<li><a href="chapter_002.html#link-70">3.4.2.2. <code>license</code></a></li>
-<li><a href="chapter_002.html#link-71">3.4.2.3. <code>version</code></a></li>
-<li><a href="chapter_002.html#link-72">3.4.2.4. <code>date</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-73">3.4.3. Output options</a>
-<ul><li><a href="chapter_002.html#link-74">3.4.3.1. <code>output</code></a></li>
-<li><a href="chapter_002.html#link-75">3.4.3.2. <code>output.epub</code></a></li>
-<li><a href="chapter_002.html#link-76">3.4.3.3. <code>output.html</code></a></li>
-<li><a href="chapter_002.html#link-77">3.4.3.4. <code>output.html.dir</code></a></li>
-<li><a href="chapter_002.html#link-78">3.4.3.5. <code>output.tex</code></a></li>
-<li><a href="chapter_002.html#link-79">3.4.3.6. <code>output.pdf</code></a></li>
-<li><a href="chapter_002.html#link-80">3.4.3.7. <code>output.odt</code></a></li>
-<li><a href="chapter_002.html#link-81">3.4.3.8. <code>output.html.if</code></a></li>
-<li><a href="chapter_002.html#link-82">3.4.3.9. <code>output.base_path</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-83">3.4.4. Rendering options</a>
-<ul><li><a href="chapter_002.html#link-84">3.4.4.1. <code>rendering.highlight</code></a></li>
-<li><a href="chapter_002.html#link-85">3.4.4.2. <code>rendering.highlight.theme</code></a></li>
-<li><a href="chapter_002.html#link-86">3.4.4.3. <code>rendering.initials</code></a></li>
-<li><a href="chapter_002.html#link-87">3.4.4.4. <code>rendering.inline_toc</code></a></li>
-<li><a href="chapter_002.html#link-88">3.4.4.5. <code>rendering.inline_toc.name</code></a></li>
-<li><a href="chapter_002.html#link-89">3.4.4.6. <code>rendering.num_depth</code></a></li>
-<li><a href="chapter_002.html#link-90">3.4.4.7. <code>rendering.chapter</code></a></li>
-<li><a href="chapter_002.html#link-91">3.4.4.8. <code>rendering.part</code></a></li>
-<li><a href="chapter_002.html#link-92">3.4.4.9. <code>rendering.chapter.roman_numerals</code></a></li>
-<li><a href="chapter_002.html#link-93">3.4.4.10. <code>rendering.part.roman_numerals</code></a></li>
-<li><a href="chapter_002.html#link-94">3.4.4.11. <code>rendering.part.reset_counter</code></a></li>
-<li><a href="chapter_002.html#link-95">3.4.4.12. <code>rendering.chapter.template</code></a></li>
-<li><a href="chapter_002.html#link-96">3.4.4.13. <code>rendering.part.template</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-97">3.4.5. Special option</a>
-<ul><li><a href="chapter_002.html#link-98">3.4.5.1. <code>import</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-99">3.4.6. HTML options</a>
-<ul><li><a href="chapter_002.html#link-100">3.4.6.1. <code>html.icon</code></a></li>
-<li><a href="chapter_002.html#link-101">3.4.6.2. <code>html.highlight.theme</code></a></li>
-<li><a href="chapter_002.html#link-102">3.4.6.3. <code>html.header</code></a></li>
-<li><a href="chapter_002.html#link-103">3.4.6.4. <code>html.footer</code></a></li>
-<li><a href="chapter_002.html#link-104">3.4.6.5. <code>html.css</code></a></li>
-<li><a href="chapter_002.html#link-105">3.4.6.6. <code>html.css.add</code></a></li>
-<li><a href="chapter_002.html#link-106">3.4.6.7. <code>html.css.colors</code></a></li>
-<li><a href="chapter_002.html#link-107">3.4.6.8. <code>html.js</code></a></li>
-<li><a href="chapter_002.html#link-108">3.4.6.9. <code>html.css.print</code></a></li>
-<li><a href="chapter_002.html#link-109">3.4.6.10. <code>html.highlight.js</code></a></li>
-<li><a href="chapter_002.html#link-110">3.4.6.11. <code>html.highlight.css</code></a></li>
-<li><a href="chapter_002.html#link-111">3.4.6.12. <code>html.side_notes</code></a></li>
-<li><a href="chapter_002.html#link-112">3.4.6.13. <code>html.escape_nb_spaces</code></a></li>
-<li><a href="chapter_002.html#link-113">3.4.6.14. <code>html.chapter.template</code></a></li>
-<li><a href="chapter_002.html#link-114">3.4.6.15. <code>html.part.template</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-115">3.4.7. Standalone HTML options</a>
-<ul><li><a href="chapter_002.html#link-116">3.4.7.1. <code>html.standalone.template</code></a></li>
-<li><a href="chapter_002.html#link-117">3.4.7.2. <code>html.standalone.one_chapter</code></a></li>
-<li><a href="chapter_002.html#link-118">3.4.7.3. <code>html.standalone.js</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-119">3.4.8. Multifile HTML options</a>
-<ul><li><a href="chapter_002.html#link-120">3.4.8.1. <code>html.dir.template</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-121">3.4.9. Interactive fiction HTML options</a>
-<ul><li><a href="chapter_002.html#link-122">3.4.9.1. <code>html.if.js</code></a></li>
-<li><a href="chapter_002.html#link-123">3.4.9.2. <code>html.if.new_turn</code></a></li>
-<li><a href="chapter_002.html#link-124">3.4.9.3. <code>html.if.end_turn</code></a></li>
-<li><a href="chapter_002.html#link-125">3.4.9.4. <code>html.if.new_game</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-126">3.4.10. EPUB options</a>
-<ul><li><a href="chapter_002.html#link-127">3.4.10.1. <code>epub.version</code></a></li>
-<li><a href="chapter_002.html#link-128">3.4.10.2. <code>epub.highlight.theme</code></a></li>
-<li><a href="chapter_002.html#link-129">3.4.10.3. <code>epub.css</code></a></li>
-<li><a href="chapter_002.html#link-130">3.4.10.4. <code>epub.css.add</code></a></li>
-<li><a href="chapter_002.html#link-131">3.4.10.5. <code>epub.chapter.xhtml</code></a></li>
-<li><a href="chapter_002.html#link-132">3.4.10.6. <code>epub.toc.extras</code></a></li>
-<li><a href="chapter_002.html#link-133">3.4.10.7. <code>epub.escape_nb_spaces</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-134">3.4.11. LaTeX options</a>
-<ul><li><a href="chapter_002.html#link-135">3.4.11.1. <code>tex.highlight.theme</code></a></li>
-<li><a href="chapter_002.html#link-136">3.4.11.2. <code>tex.links_as_footnotes</code></a></li>
-<li><a href="chapter_002.html#link-137">3.4.11.3. <code>tex.command</code></a></li>
-<li><a href="chapter_002.html#link-138">3.4.11.4. <code>tex.template</code></a></li>
-<li><a href="chapter_002.html#link-139">3.4.11.5. <code>tex.template.add</code></a></li>
-<li><a href="chapter_002.html#link-140">3.4.11.6. <code>tex.class</code></a></li>
-<li><a href="chapter_002.html#link-141">3.4.11.7. <code>tex.paper.size</code></a></li>
-<li><a href="chapter_002.html#link-142">3.4.11.8. <code>tex.margin.left</code></a></li>
-<li><a href="chapter_002.html#link-143">3.4.11.9. <code>tex.margin.right</code></a></li>
-<li><a href="chapter_002.html#link-144">3.4.11.10. <code>tex.margin.top</code></a></li>
-<li><a href="chapter_002.html#link-145">3.4.11.11. <code>tex.margin.bottom</code></a></li>
-<li><a href="chapter_002.html#link-146">3.4.11.12. <code>tex.title</code></a></li>
-<li><a href="chapter_002.html#link-147">3.4.11.13. <code>tex.font.size</code></a></li>
-<li><a href="chapter_002.html#link-148">3.4.11.14. <code>tex.hyperref</code></a></li>
-<li><a href="chapter_002.html#link-149">3.4.11.15. <code>tex.stdpage</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-150">3.4.12. Resources option</a>
-<ul><li><a href="chapter_002.html#link-151">3.4.12.1. <code>resources.files</code></a></li>
-<li><a href="chapter_002.html#link-152">3.4.12.2. <code>resources.out_path</code></a></li>
-<li><a href="chapter_002.html#link-153">3.4.12.3. <code>resources.base_path</code></a></li>
-<li><a href="chapter_002.html#link-154">3.4.12.4. <code>resources.base_path.links</code></a></li>
-<li><a href="chapter_002.html#link-155">3.4.12.5. <code>resources.base_path.images</code></a></li>
-<li><a href="chapter_002.html#link-156">3.4.12.6. <code>resources.base_path.files</code></a></li>
-<li><a href="chapter_002.html#link-157">3.4.12.7. <code>resources.base_path.templates</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-158">3.4.13. Input options</a>
-<ul><li><a href="chapter_002.html#link-159">3.4.13.1. <code>input.clean</code></a></li>
-<li><a href="chapter_002.html#link-160">3.4.13.2. <code>input.clean.smart_quotes</code></a></li>
-<li><a href="chapter_002.html#link-161">3.4.13.3. <code>input.clean.ligature.dashes</code></a></li>
-<li><a href="chapter_002.html#link-162">3.4.13.4. <code>input.clean.ligature.guillemets</code></a></li>
-<li><a href="chapter_002.html#link-163">3.4.13.5. <code>input.yaml_blocks</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-164">3.4.14. Crowbook options</a>
-<ul><li><a href="chapter_002.html#link-165">3.4.14.1. <code>crowbook.html_as_text</code></a></li>
-<li><a href="chapter_002.html#link-166">3.4.14.2. <code>crowbook.markdown.superscript</code></a></li>
-<li><a href="chapter_002.html#link-167">3.4.14.3. <code>crowbook.temp_dir</code></a></li>
-<li><a href="chapter_002.html#link-168">3.4.14.4. <code>crowbook.zip.command</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-169">3.4.15. Output options (for proofreading)</a>
-<ul><li><a href="chapter_002.html#link-170">3.4.15.1. <code>output.proofread.html</code></a></li>
-<li><a href="chapter_002.html#link-171">3.4.15.2. <code>output.proofread.html.dir</code></a></li>
-<li><a href="chapter_002.html#link-172">3.4.15.3. <code>output.proofread.pdf</code></a></li>
-
-</ul>
-</li>
-<li><a href="chapter_002.html#link-173">3.4.16. Proofreading options (only for <code>output.proofread.*</code> targets)</a>
-<ul><li><a href="chapter_002.html#link-174">3.4.16.1. <code>proofread</code></a></li>
-<li><a href="chapter_002.html#link-175">3.4.16.2. <code>proofread.languagetool</code></a></li>
-<li><a href="chapter_002.html#link-176">3.4.16.3. <code>proofread.languagetool.port</code></a></li>
-<li><a href="chapter_002.html#link-177">3.4.16.4. <code>proofread.grammalecte</code></a></li>
-<li><a href="chapter_002.html#link-178">3.4.16.5. <code>proofread.grammalecte.port</code></a></li>
-<li><a href="chapter_002.html#link-179">3.4.16.6. <code>proofread.repetitions</code></a></li>
-<li><a href="chapter_002.html#link-180">3.4.16.7. <code>proofread.repetitions.max_distance</code></a></li>
-<li><a href="chapter_002.html#link-181">3.4.16.8. <code>proofread.repetitions.fuzzy</code></a></li>
-<li><a href="chapter_002.html#link-182">3.4.16.9. <code>proofread.repetitions.fuzzy.threshold</code></a></li>
-<li><a href="chapter_002.html#link-183">3.4.16.10. <code>proofread.repetitions.ignore_proper</code></a></li>
-<li><a href="chapter_002.html#link-184">3.4.16.11. <code>proofread.repetitions.threshold</code></a></li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-<li><a href="chapter_003.html#link-185">4. Markdown format</a>
-<ul><li><a href="chapter_003.html#link-186">4.1. Tables</a></li>
-<li><a href="chapter_003.html#link-187">4.2. Footnotes</a></li>
-<li><a href="chapter_003.html#link-188">4.3. Superscript and subscript</a></li>
-<li><a href="chapter_003.html#link-189">4.4. “Standalone” images</a></li>
-<li><a href="chapter_003.html#link-190">4.5. Interactive fiction</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_004.html#link-191">5. Templates</a>
-<ul><li><a href="chapter_004.html#link-192">5.1. Create and edit template</a>
-<ul><li><a href="chapter_004.html#link-193">5.1.1. <code>--print-template</code></a></li>
-<li><a href="chapter_004.html#link-194">5.1.2. Mustache syntax</a>
-<ul><li><a href="chapter_004.html#link-195">5.1.2.1. Syntax in LaTeX</a></li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-<li><a href="chapter_004.html#link-196">5.2. List of templates</a>
-<ul><li><a href="chapter_004.html#link-197">5.2.1. html.js</a></li>
-<li><a href="chapter_004.html#link-198">5.2.2. html.css</a></li>
-<li><a href="chapter_004.html#link-199">5.2.3. html.css.colors</a></li>
-<li><a href="chapter_004.html#link-200">5.2.4. html.css.print</a></li>
-<li><a href="chapter_004.html#link-201">5.2.5. html.highlight.js</a></li>
-<li><a href="chapter_004.html#link-202">5.2.6. html.highlight.css</a></li>
-<li><a href="chapter_004.html#link-203">5.2.7. html.standalone.js</a></li>
-<li><a href="chapter_004.html#link-204">5.2.8. html.standalone.template</a></li>
-<li><a href="chapter_004.html#link-205">5.2.9. html.dir.template</a></li>
-<li><a href="chapter_004.html#link-206">5.2.10. tex.template</a></li>
-<li><a href="chapter_004.html#link-207">5.2.11. epub.chapter.xhtml</a></li>
-<li><a href="chapter_004.html#link-208">5.2.12. epub.css</a></li>
-<li><a href="chapter_004.html#link-209">5.2.13. Inline templates</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_004.html#link-210">5.3. List of accessible variables</a>
-<ul><li><a href="chapter_004.html#link-211">5.3.1. Metadata</a></li>
-<li><a href="chapter_004.html#link-212">5.3.2. Localisation strings</a></li>
-<li><a href="chapter_004.html#link-213">5.3.3. Template-dependent values</a></li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-<li><a href="chapter_005.html#link-214">6. Proofreading with Crowbook</a>
-<ul><li><a href="chapter_005.html#link-215">6.1. Enabling proofreading</a></li>
-<li><a href="chapter_005.html#link-216">6.2. Repetition detection</a></li>
-<li><a href="chapter_005.html#link-217">6.3. Grammar checking</a>
-<ul><li><a href="chapter_005.html#link-218">6.3.1. With Languagetool</a></li>
-<li><a href="chapter_005.html#link-219">6.3.2. With Grammalecte</a></li>
-
-</ul>
-</li>
-
-</ul>
-</li>
-<li><a href="chapter_006.html#link-220">7. Interactive fiction</a>
-<ul><li><a href="chapter_006.html#link-221">7.1. Basics</a></li>
-<li><a href="chapter_006.html#link-222">7.2. The interactive fiction renderer</a></li>
-<li><a href="chapter_006.html#link-223">7.3. Using Javascript in your interactive fiction</a></li>
-<li><a href="chapter_006.html#link-224">7.4. Embedding Makdown in your Javascript code embedded in your Markdown</a></li>
-<li><a href="chapter_006.html#link-225">7.5. Conditional blocks</a></li>
-<li><a href="chapter_006.html#link-226">7.6. Interactive fiction options</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_007.html#link-227">8. Tips and tricks</a>
-<ul><li><a href="chapter_007.html#link-228">8.1. Using Crowbook with Emacs’ markdown mode</a>
-<ul><li><a href="chapter_007.html#link-229">8.1.1. Some explanations if it looks a bit cryptic to you</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_007.html#link-230">8.2. Embedding fonts in an EPUB file</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_008.html#link-231">9. Contributing</a>
-<ul><li><a href="chapter_008.html#link-232">9.1. Internationalization</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_009.html#link-233">ChangeLog</a>
-<ul><li><a href="chapter_009.html#link-234">0.15.1 (2020-07-07)</a></li>
-<li><a href="chapter_009.html#link-235">0.15.0 (2019-07-18)</a></li>
-<li><a href="chapter_009.html#link-236">0.14.1 (2018-06-01)</a></li>
-<li><a href="chapter_009.html#link-237">0.14.0 (2017-11-26)</a></li>
-<li><a href="chapter_009.html#link-238">0.14.0-beta (2017-10-08)</a></li>
-<li><a href="chapter_009.html#link-239">0.13.0 (2017-07-14)</a></li>
-<li><a href="chapter_009.html#link-240">0.12.0 (2017-06-05)</a></li>
-<li><a href="chapter_009.html#link-241">0.11.4 (2017-03-21)</a></li>
-<li><a href="chapter_009.html#link-242">0.11.3 (2017-03-19)</a></li>
-<li><a href="chapter_009.html#link-243">0.11.2 (2017-03-05)</a></li>
-<li><a href="chapter_009.html#link-244">0.11.1 (2017-01-05)</a></li>
-<li><a href="chapter_009.html#link-245">0.11.0 (2016-12-31)</a></li>
-<li><a href="chapter_009.html#link-246">0.10.4 (2016-12-16)</a></li>
-<li><a href="chapter_009.html#link-247">0.10.3 (2016-11-19)</a></li>
-<li><a href="chapter_009.html#link-248">0.10.2 (2016-10-21)</a></li>
-<li><a href="chapter_009.html#link-249">0.10.1 (2016-10-18)</a></li>
-<li><a href="chapter_009.html#link-250">0.10.0 (2016-10-18)</a></li>
-<li><a href="chapter_009.html#link-251">0.9.1 (2016-09-29)</a></li>
-<li><a href="chapter_009.html#link-252">0.9.0 (2016-09-23)</a></li>
-<li><a href="chapter_009.html#link-253">0.8.0 (2016-09-19)</a></li>
-<li><a href="chapter_009.html#link-254">0.7.0 (2016-09-11)</a></li>
-<li><a href="chapter_009.html#link-255">0.6.0 (2016-09-09)</a></li>
-<li><a href="chapter_009.html#link-256">0.5.1 (2016-04-14)</a></li>
-<li><a href="chapter_009.html#link-257">0.5.0 (2016-04-02)</a></li>
-<li><a href="chapter_009.html#link-258">0.4.0 (2016-03-01)</a></li>
-<li><a href="chapter_009.html#link-259">0.3.0 (2016-02-27)</a></li>
-<li><a href="chapter_009.html#link-260">0.2.2 (2016-02-25)</a></li>
-<li><a href="chapter_009.html#link-261">0.2.1 (2016-02-25)</a></li>
-<li><a href="chapter_009.html#link-262">0.2.0 (2016-02-25)</a></li>
-<li><a href="chapter_009.html#link-263">0.1.0 (2016-02-21)</a></li>
-
-</ul>
-</li>
-<li><a href="chapter_010.html#link-264">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
-
-</ul>
-
+        <ul>
+      <li>
+        <a href="chapter_000.html#link-1">1. Crowbook</a>
+        <ul>
+          <li><a href="chapter_000.html#link-2">1.1. Example</a></li>
+          <li>
+            <a href="chapter_000.html#link-3">1.2. Installing</a>
+            <ul>
+              <li><a href="chapter_000.html#link-4">1.2.1. Binaries</a></li>
+              <li><a href="chapter_000.html#link-5">1.2.2. Using Cargo</a></li>
+            </ul>
+          </li>
+          <li><a href="chapter_000.html#link-6">1.3. Dependencies</a></li>
+          <li><a href="chapter_000.html#link-7">1.4. Quick tour</a></li>
+          <li>
+            <a href="chapter_000.html#link-8">1.5. Current features</a>
+            <ul>
+              <li><a href="chapter_000.html#link-9">1.5.1. Output formats</a></li>
+              <li><a href="chapter_000.html#link-10">1.5.2. Input format</a></li>
+              <li><a href="chapter_000.html#link-11">1.5.3. Typographic “cleaning”</a></li>
+              <li><a href="chapter_000.html#link-12">1.5.4. Links handling</a></li>
+              <li><a href="chapter_000.html#link-13">1.5.5. Inline YAML blocks</a></li>
+              <li><a href="chapter_000.html#link-14">1.5.6. Proofreading</a></li>
+              <li><a href="chapter_000.html#link-15">1.5.7. Interactive fiction</a></li>
+              <li><a href="chapter_000.html#link-16">1.5.8. Customization</a></li>
+              <li><a href="chapter_000.html#link-17">1.5.9. Bugs</a></li>
+            </ul>
+          </li>
+          <li><a href="chapter_000.html#link-18">1.6. Contributors</a></li>
+          <li><a href="chapter_000.html#link-19">1.7. Acknowledgements</a></li>
+          <li><a href="chapter_000.html#link-20">1.8. ChangeLog</a></li>
+          <li><a href="chapter_000.html#link-21">1.9. Contributing</a></li>
+          <li><a href="chapter_000.html#link-22">1.10. Library</a></li>
+          <li><a href="chapter_000.html#link-23">1.11. License</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_001.html#link-24">2. Arguments</a>
+        <ul>
+          <li><a href="chapter_001.html#link-25">2.1. <code>--create</code></a></li>
+          <li><a href="chapter_001.html#link-26">2.2. <code>--single</code></a></li>
+          <li><a href="chapter_001.html#link-27">2.3. <code>--set</code></a></li>
+          <li><a href="chapter_001.html#link-28">2.4. <code>--list-options</code></a></li>
+          <li><a href="chapter_001.html#link-29">2.5. <code>--print-template</code></a></li>
+          <li><a href="chapter_001.html#link-30">2.6. <code>--stats</code></a></li>
+          <li><a href="chapter_001.html#link-31">2.7. <code>--proofread</code></a></li>
+          <li>
+            <a href="chapter_001.html#link-32">2.8. <code>--autograph</code></a>
+            <ul>
+              <li><a href="chapter_001.html#link-33">2.8.1. Example</a></li>
+            </ul>
+          </li>
+          <li><a href="chapter_001.html#link-34">2.9. <code>--verbose</code></a></li>
+          <li>
+            <a href="chapter_001.html#link-35">2.10. <code>--to</code></a>
+            <ul>
+              <li><a href="chapter_001.html#link-36">2.10.1. Examples</a></li>
+            </ul>
+          </li>
+          <li><a href="chapter_001.html#link-37">2.11. <code>--output</code></a></li>
+          <li>
+            <a href="chapter_001.html#link-38">2.12. <code>--lang</code></a>
+            <ul>
+              <li><a href="chapter_001.html#link-39">2.12.1. Example</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_002.html#link-40">3. The configuration file</a>
+        <ul>
+          <li><a href="chapter_002.html#link-41">3.1. Configuration in an inline YAML block</a></li>
+          <li>
+            <a href="chapter_002.html#link-42">3.2. The list of files</a>
+            <ul>
+              <li><a href="chapter_002.html#link-43">3.2.1. Parts</a></li>
+              <li><a href="chapter_002.html#link-44">3.2.2. Subchapters</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="chapter_002.html#link-45">3.3. Crowbook options</a>
+            <ul>
+              <li><a href="chapter_002.html#link-46">3.3.1. Metadata</a></li>
+              <li><a href="chapter_002.html#link-47">3.3.2. The <code>import</code> special option</a></li>
+              <li>
+                <a href="chapter_002.html#link-48">3.3.3. Output options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-49">3.3.3.1. The <code>output</code> option</a></li>
+                  <li><a href="chapter_002.html#link-50">3.3.3.2. <code>output.base_path</code></a></li>
+                </ul>
+              </li>
+              <li><a href="chapter_002.html#link-51">3.3.4. Input options</a></li>
+              <li><a href="chapter_002.html#link-52">3.3.5. Generic options for rendering</a></li>
+              <li>
+                <a href="chapter_002.html#link-53">3.3.6. HTML Options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-54">3.3.6.1. Options for standalone HTML</a></li>
+                </ul>
+              </li>
+              <li><a href="chapter_002.html#link-55">3.3.7. Options for LaTeX/PDF rendering</a></li>
+              <li><a href="chapter_002.html#link-56">3.3.8. Options for EPUB rendering</a></li>
+              <li>
+                <a href="chapter_002.html#link-57">3.3.9. Resources options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-58">3.3.9.1. <code>resources.files</code></a></li>
+                  <li><a href="chapter_002.html#link-59">3.3.9.2. <code>resources.out_path</code></a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="chapter_002.html#link-60">3.4. Full list of options</a>
+            <ul>
+              <li>
+                <a href="chapter_002.html#link-61">3.4.1. Metadata</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-62">3.4.1.1. <code>author</code></a></li>
+                  <li><a href="chapter_002.html#link-63">3.4.1.2. <code>title</code></a></li>
+                  <li><a href="chapter_002.html#link-64">3.4.1.3. <code>lang</code></a></li>
+                  <li><a href="chapter_002.html#link-65">3.4.1.4. <code>subject</code></a></li>
+                  <li><a href="chapter_002.html#link-66">3.4.1.5. <code>description</code></a></li>
+                  <li><a href="chapter_002.html#link-67">3.4.1.6. <code>cover</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-68">3.4.2. Additional metadata</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-69">3.4.2.1. <code>subtitle</code></a></li>
+                  <li><a href="chapter_002.html#link-70">3.4.2.2. <code>license</code></a></li>
+                  <li><a href="chapter_002.html#link-71">3.4.2.3. <code>version</code></a></li>
+                  <li><a href="chapter_002.html#link-72">3.4.2.4. <code>date</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-73">3.4.3. Output options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-74">3.4.3.1. <code>output</code></a></li>
+                  <li><a href="chapter_002.html#link-75">3.4.3.2. <code>output.epub</code></a></li>
+                  <li><a href="chapter_002.html#link-76">3.4.3.3. <code>output.html</code></a></li>
+                  <li><a href="chapter_002.html#link-77">3.4.3.4. <code>output.html.dir</code></a></li>
+                  <li><a href="chapter_002.html#link-78">3.4.3.5. <code>output.tex</code></a></li>
+                  <li><a href="chapter_002.html#link-79">3.4.3.6. <code>output.pdf</code></a></li>
+                  <li><a href="chapter_002.html#link-80">3.4.3.7. <code>output.odt</code></a></li>
+                  <li><a href="chapter_002.html#link-81">3.4.3.8. <code>output.html.if</code></a></li>
+                  <li><a href="chapter_002.html#link-82">3.4.3.9. <code>output.base_path</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-83">3.4.4. Rendering options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-84">3.4.4.1. <code>rendering.highlight</code></a></li>
+                  <li><a href="chapter_002.html#link-85">3.4.4.2. <code>rendering.highlight.theme</code></a></li>
+                  <li><a href="chapter_002.html#link-86">3.4.4.3. <code>rendering.initials</code></a></li>
+                  <li><a href="chapter_002.html#link-87">3.4.4.4. <code>rendering.inline_toc</code></a></li>
+                  <li><a href="chapter_002.html#link-88">3.4.4.5. <code>rendering.inline_toc.name</code></a></li>
+                  <li><a href="chapter_002.html#link-89">3.4.4.6. <code>rendering.num_depth</code></a></li>
+                  <li><a href="chapter_002.html#link-90">3.4.4.7. <code>rendering.chapter</code></a></li>
+                  <li><a href="chapter_002.html#link-91">3.4.4.8. <code>rendering.part</code></a></li>
+                  <li><a href="chapter_002.html#link-92">3.4.4.9. <code>rendering.chapter.roman_numerals</code></a></li>
+                  <li><a href="chapter_002.html#link-93">3.4.4.10. <code>rendering.part.roman_numerals</code></a></li>
+                  <li><a href="chapter_002.html#link-94">3.4.4.11. <code>rendering.part.reset_counter</code></a></li>
+                  <li><a href="chapter_002.html#link-95">3.4.4.12. <code>rendering.chapter.template</code></a></li>
+                  <li><a href="chapter_002.html#link-96">3.4.4.13. <code>rendering.part.template</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-97">3.4.5. Special option</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-98">3.4.5.1. <code>import</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-99">3.4.6. HTML options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-100">3.4.6.1. <code>html.icon</code></a></li>
+                  <li><a href="chapter_002.html#link-101">3.4.6.2. <code>html.highlight.theme</code></a></li>
+                  <li><a href="chapter_002.html#link-102">3.4.6.3. <code>html.header</code></a></li>
+                  <li><a href="chapter_002.html#link-103">3.4.6.4. <code>html.footer</code></a></li>
+                  <li><a href="chapter_002.html#link-104">3.4.6.5. <code>html.css</code></a></li>
+                  <li><a href="chapter_002.html#link-105">3.4.6.6. <code>html.css.add</code></a></li>
+                  <li><a href="chapter_002.html#link-106">3.4.6.7. <code>html.css.colors</code></a></li>
+                  <li><a href="chapter_002.html#link-107">3.4.6.8. <code>html.js</code></a></li>
+                  <li><a href="chapter_002.html#link-108">3.4.6.9. <code>html.css.print</code></a></li>
+                  <li><a href="chapter_002.html#link-109">3.4.6.10. <code>html.highlight.js</code></a></li>
+                  <li><a href="chapter_002.html#link-110">3.4.6.11. <code>html.highlight.css</code></a></li>
+                  <li><a href="chapter_002.html#link-111">3.4.6.12. <code>html.side_notes</code></a></li>
+                  <li><a href="chapter_002.html#link-112">3.4.6.13. <code>html.escape_nb_spaces</code></a></li>
+                  <li><a href="chapter_002.html#link-113">3.4.6.14. <code>html.chapter.template</code></a></li>
+                  <li><a href="chapter_002.html#link-114">3.4.6.15. <code>html.part.template</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-115">3.4.7. Standalone HTML options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-116">3.4.7.1. <code>html.standalone.template</code></a></li>
+                  <li><a href="chapter_002.html#link-117">3.4.7.2. <code>html.standalone.one_chapter</code></a></li>
+                  <li><a href="chapter_002.html#link-118">3.4.7.3. <code>html.standalone.js</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-119">3.4.8. Multifile HTML options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-120">3.4.8.1. <code>html.dir.template</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-121">3.4.9. Interactive fiction HTML options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-122">3.4.9.1. <code>html.if.js</code></a></li>
+                  <li><a href="chapter_002.html#link-123">3.4.9.2. <code>html.if.new_turn</code></a></li>
+                  <li><a href="chapter_002.html#link-124">3.4.9.3. <code>html.if.end_turn</code></a></li>
+                  <li><a href="chapter_002.html#link-125">3.4.9.4. <code>html.if.new_game</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-126">3.4.10. EPUB options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-127">3.4.10.1. <code>epub.version</code></a></li>
+                  <li><a href="chapter_002.html#link-128">3.4.10.2. <code>epub.highlight.theme</code></a></li>
+                  <li><a href="chapter_002.html#link-129">3.4.10.3. <code>epub.css</code></a></li>
+                  <li><a href="chapter_002.html#link-130">3.4.10.4. <code>epub.css.add</code></a></li>
+                  <li><a href="chapter_002.html#link-131">3.4.10.5. <code>epub.chapter.xhtml</code></a></li>
+                  <li><a href="chapter_002.html#link-132">3.4.10.6. <code>epub.toc.extras</code></a></li>
+                  <li><a href="chapter_002.html#link-133">3.4.10.7. <code>epub.escape_nb_spaces</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-134">3.4.11. LaTeX options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-135">3.4.11.1. <code>tex.highlight.theme</code></a></li>
+                  <li><a href="chapter_002.html#link-136">3.4.11.2. <code>tex.links_as_footnotes</code></a></li>
+                  <li><a href="chapter_002.html#link-137">3.4.11.3. <code>tex.command</code></a></li>
+                  <li><a href="chapter_002.html#link-138">3.4.11.4. <code>tex.template</code></a></li>
+                  <li><a href="chapter_002.html#link-139">3.4.11.5. <code>tex.template.add</code></a></li>
+                  <li><a href="chapter_002.html#link-140">3.4.11.6. <code>tex.class</code></a></li>
+                  <li><a href="chapter_002.html#link-141">3.4.11.7. <code>tex.paper.size</code></a></li>
+                  <li><a href="chapter_002.html#link-142">3.4.11.8. <code>tex.margin.left</code></a></li>
+                  <li><a href="chapter_002.html#link-143">3.4.11.9. <code>tex.margin.right</code></a></li>
+                  <li><a href="chapter_002.html#link-144">3.4.11.10. <code>tex.margin.top</code></a></li>
+                  <li><a href="chapter_002.html#link-145">3.4.11.11. <code>tex.margin.bottom</code></a></li>
+                  <li><a href="chapter_002.html#link-146">3.4.11.12. <code>tex.title</code></a></li>
+                  <li><a href="chapter_002.html#link-147">3.4.11.13. <code>tex.font.size</code></a></li>
+                  <li><a href="chapter_002.html#link-148">3.4.11.14. <code>tex.hyperref</code></a></li>
+                  <li><a href="chapter_002.html#link-149">3.4.11.15. <code>tex.stdpage</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-150">3.4.12. Resources option</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-151">3.4.12.1. <code>resources.files</code></a></li>
+                  <li><a href="chapter_002.html#link-152">3.4.12.2. <code>resources.out_path</code></a></li>
+                  <li><a href="chapter_002.html#link-153">3.4.12.3. <code>resources.base_path</code></a></li>
+                  <li><a href="chapter_002.html#link-154">3.4.12.4. <code>resources.base_path.links</code></a></li>
+                  <li><a href="chapter_002.html#link-155">3.4.12.5. <code>resources.base_path.images</code></a></li>
+                  <li><a href="chapter_002.html#link-156">3.4.12.6. <code>resources.base_path.files</code></a></li>
+                  <li><a href="chapter_002.html#link-157">3.4.12.7. <code>resources.base_path.templates</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-158">3.4.13. Input options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-159">3.4.13.1. <code>input.clean</code></a></li>
+                  <li><a href="chapter_002.html#link-160">3.4.13.2. <code>input.clean.smart_quotes</code></a></li>
+                  <li><a href="chapter_002.html#link-161">3.4.13.3. <code>input.clean.ligature.dashes</code></a></li>
+                  <li><a href="chapter_002.html#link-162">3.4.13.4. <code>input.clean.ligature.guillemets</code></a></li>
+                  <li><a href="chapter_002.html#link-163">3.4.13.5. <code>input.yaml_blocks</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-164">3.4.14. Crowbook options</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-165">3.4.14.1. <code>crowbook.html_as_text</code></a></li>
+                  <li><a href="chapter_002.html#link-166">3.4.14.2. <code>crowbook.markdown.superscript</code></a></li>
+                  <li><a href="chapter_002.html#link-167">3.4.14.3. <code>crowbook.temp_dir</code></a></li>
+                  <li><a href="chapter_002.html#link-168">3.4.14.4. <code>crowbook.zip.command</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-169">3.4.15. Output options (for proofreading)</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-170">3.4.15.1. <code>output.proofread.html</code></a></li>
+                  <li><a href="chapter_002.html#link-171">3.4.15.2. <code>output.proofread.html.dir</code></a></li>
+                  <li><a href="chapter_002.html#link-172">3.4.15.3. <code>output.proofread.pdf</code></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="chapter_002.html#link-173">3.4.16. Proofreading options (only for <code>output.proofread.*</code> targets)</a>
+                <ul>
+                  <li><a href="chapter_002.html#link-174">3.4.16.1. <code>proofread</code></a></li>
+                  <li><a href="chapter_002.html#link-175">3.4.16.2. <code>proofread.languagetool</code></a></li>
+                  <li><a href="chapter_002.html#link-176">3.4.16.3. <code>proofread.languagetool.port</code></a></li>
+                  <li><a href="chapter_002.html#link-177">3.4.16.4. <code>proofread.grammalecte</code></a></li>
+                  <li><a href="chapter_002.html#link-178">3.4.16.5. <code>proofread.grammalecte.port</code></a></li>
+                  <li><a href="chapter_002.html#link-179">3.4.16.6. <code>proofread.repetitions</code></a></li>
+                  <li><a href="chapter_002.html#link-180">3.4.16.7. <code>proofread.repetitions.max_distance</code></a></li>
+                  <li><a href="chapter_002.html#link-181">3.4.16.8. <code>proofread.repetitions.fuzzy</code></a></li>
+                  <li><a href="chapter_002.html#link-182">3.4.16.9. <code>proofread.repetitions.fuzzy.threshold</code></a></li>
+                  <li><a href="chapter_002.html#link-183">3.4.16.10. <code>proofread.repetitions.ignore_proper</code></a></li>
+                  <li><a href="chapter_002.html#link-184">3.4.16.11. <code>proofread.repetitions.threshold</code></a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_003.html#link-185">4. Markdown format</a>
+        <ul>
+          <li><a href="chapter_003.html#link-186">4.1. Tables</a></li>
+          <li><a href="chapter_003.html#link-187">4.2. Footnotes</a></li>
+          <li><a href="chapter_003.html#link-188">4.3. Superscript and subscript</a></li>
+          <li><a href="chapter_003.html#link-189">4.4. “Standalone” images</a></li>
+          <li><a href="chapter_003.html#link-190">4.5. Interactive fiction</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_004.html#link-191">5. Templates</a>
+        <ul>
+          <li>
+            <a href="chapter_004.html#link-192">5.1. Create and edit template</a>
+            <ul>
+              <li><a href="chapter_004.html#link-193">5.1.1. <code>--print-template</code></a></li>
+              <li>
+                <a href="chapter_004.html#link-194">5.1.2. Mustache syntax</a>
+                <ul>
+                  <li><a href="chapter_004.html#link-195">5.1.2.1. Syntax in LaTeX</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="chapter_004.html#link-196">5.2. List of templates</a>
+            <ul>
+              <li><a href="chapter_004.html#link-197">5.2.1. html.js</a></li>
+              <li><a href="chapter_004.html#link-198">5.2.2. html.css</a></li>
+              <li><a href="chapter_004.html#link-199">5.2.3. html.css.colors</a></li>
+              <li><a href="chapter_004.html#link-200">5.2.4. html.css.print</a></li>
+              <li><a href="chapter_004.html#link-201">5.2.5. html.highlight.js</a></li>
+              <li><a href="chapter_004.html#link-202">5.2.6. html.highlight.css</a></li>
+              <li><a href="chapter_004.html#link-203">5.2.7. html.standalone.js</a></li>
+              <li><a href="chapter_004.html#link-204">5.2.8. html.standalone.template</a></li>
+              <li><a href="chapter_004.html#link-205">5.2.9. html.dir.template</a></li>
+              <li><a href="chapter_004.html#link-206">5.2.10. tex.template</a></li>
+              <li><a href="chapter_004.html#link-207">5.2.11. epub.chapter.xhtml</a></li>
+              <li><a href="chapter_004.html#link-208">5.2.12. epub.css</a></li>
+              <li><a href="chapter_004.html#link-209">5.2.13. Inline templates</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="chapter_004.html#link-210">5.3. List of accessible variables</a>
+            <ul>
+              <li><a href="chapter_004.html#link-211">5.3.1. Metadata</a></li>
+              <li><a href="chapter_004.html#link-212">5.3.2. Localisation strings</a></li>
+              <li><a href="chapter_004.html#link-213">5.3.3. Template-dependent values</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_005.html#link-214">6. Proofreading with Crowbook</a>
+        <ul>
+          <li><a href="chapter_005.html#link-215">6.1. Enabling proofreading</a></li>
+          <li><a href="chapter_005.html#link-216">6.2. Repetition detection</a></li>
+          <li>
+            <a href="chapter_005.html#link-217">6.3. Grammar checking</a>
+            <ul>
+              <li><a href="chapter_005.html#link-218">6.3.1. With Languagetool</a></li>
+              <li><a href="chapter_005.html#link-219">6.3.2. With Grammalecte</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_006.html#link-220">7. Interactive fiction</a>
+        <ul>
+          <li><a href="chapter_006.html#link-221">7.1. Basics</a></li>
+          <li><a href="chapter_006.html#link-222">7.2. The interactive fiction renderer</a></li>
+          <li><a href="chapter_006.html#link-223">7.3. Using Javascript in your interactive fiction</a></li>
+          <li><a href="chapter_006.html#link-224">7.4. Embedding Makdown in your Javascript code embedded in your Markdown</a></li>
+          <li><a href="chapter_006.html#link-225">7.5. Conditional blocks</a></li>
+          <li><a href="chapter_006.html#link-226">7.6. Interactive fiction options</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_007.html#link-227">8. Tips and tricks</a>
+        <ul>
+          <li>
+            <a href="chapter_007.html#link-228">8.1. Using Crowbook with Emacs’ markdown mode</a>
+            <ul>
+              <li><a href="chapter_007.html#link-229">8.1.1. Some explanations if it looks a bit cryptic to you</a></li>
+            </ul>
+          </li>
+          <li><a href="chapter_007.html#link-230">8.2. Embedding fonts in an EPUB file</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_008.html#link-231">9. Contributing</a>
+        <ul>
+          <li><a href="chapter_008.html#link-232">9.1. Internationalization</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="chapter_009.html#link-233">ChangeLog</a>
+        <ul>
+          <li><a href="chapter_009.html#link-234">current (???)</a></li>
+          <li><a href="chapter_009.html#link-235">0.15.2 (2020-07-07)</a></li>
+          <li><a href="chapter_009.html#link-236">0.15.1 (2020-07-07)</a></li>
+          <li><a href="chapter_009.html#link-237">0.15.0 (2019-07-18)</a></li>
+          <li><a href="chapter_009.html#link-238">0.14.1 (2018-06-01)</a></li>
+          <li><a href="chapter_009.html#link-239">0.14.0 (2017-11-26)</a></li>
+          <li><a href="chapter_009.html#link-240">0.14.0-beta (2017-10-08)</a></li>
+          <li><a href="chapter_009.html#link-241">0.13.0 (2017-07-14)</a></li>
+          <li><a href="chapter_009.html#link-242">0.12.0 (2017-06-05)</a></li>
+          <li><a href="chapter_009.html#link-243">0.11.4 (2017-03-21)</a></li>
+          <li><a href="chapter_009.html#link-244">0.11.3 (2017-03-19)</a></li>
+          <li><a href="chapter_009.html#link-245">0.11.2 (2017-03-05)</a></li>
+          <li><a href="chapter_009.html#link-246">0.11.1 (2017-01-05)</a></li>
+          <li><a href="chapter_009.html#link-247">0.11.0 (2016-12-31)</a></li>
+          <li><a href="chapter_009.html#link-248">0.10.4 (2016-12-16)</a></li>
+          <li><a href="chapter_009.html#link-249">0.10.3 (2016-11-19)</a></li>
+          <li><a href="chapter_009.html#link-250">0.10.2 (2016-10-21)</a></li>
+          <li><a href="chapter_009.html#link-251">0.10.1 (2016-10-18)</a></li>
+          <li><a href="chapter_009.html#link-252">0.10.0 (2016-10-18)</a></li>
+          <li><a href="chapter_009.html#link-253">0.9.1 (2016-09-29)</a></li>
+          <li><a href="chapter_009.html#link-254">0.9.0 (2016-09-23)</a></li>
+          <li><a href="chapter_009.html#link-255">0.8.0 (2016-09-19)</a></li>
+          <li><a href="chapter_009.html#link-256">0.7.0 (2016-09-11)</a></li>
+          <li><a href="chapter_009.html#link-257">0.6.0 (2016-09-09)</a></li>
+          <li><a href="chapter_009.html#link-258">0.5.1 (2016-04-14)</a></li>
+          <li><a href="chapter_009.html#link-259">0.5.0 (2016-04-02)</a></li>
+          <li><a href="chapter_009.html#link-260">0.4.0 (2016-03-01)</a></li>
+          <li><a href="chapter_009.html#link-261">0.3.0 (2016-02-27)</a></li>
+          <li><a href="chapter_009.html#link-262">0.2.2 (2016-02-25)</a></li>
+          <li><a href="chapter_009.html#link-263">0.2.1 (2016-02-25)</a></li>
+          <li><a href="chapter_009.html#link-264">0.2.0 (2016-02-25)</a></li>
+          <li><a href="chapter_009.html#link-265">0.1.0 (2016-02-21)</a></li>
+        </ul>
+      </li>
+      <li><a href="chapter_010.html#link-266">GNU LESSER GENERAL PUBLIC LICENSE</a></li>
+    </ul>
   </nav>
 
   <div id = "content">
-    <div id = "top"><p id = "para-1186">Crowbook User Guide 0.15.0</p>
+    <div id = "top"><p id = "para-1188">Crowbook User Guide 0.15.0</p>
 </div>
     <div id = "page">
       <header>
@@ -496,21 +539,7 @@ function toggle() {
 </p>
       <h1 id = 'link-40'><span class = 'chapter-header'>Chapter 3</span><br />The configuration file</h1><p id = "para-101">If you want to use Crowbook for your book, this configuration file is all you’ll have to add, beside the Markdown files containing the text of your book.</p>
 <p id = "para-102">The format is not very complicated. This is an example of it:</p>
-<pre><span style="color:#586e75;"># metadata
-</span><span style="color:#268bd2;">author</span><span style="color:#839496;">: </span><span style="color:#268bd2;">Joan Doe
-title</span><span style="color:#839496;">: </span><span style="color:#268bd2;">Some book
-lang</span><span style="color:#839496;">: </span><span style="color:#268bd2;">en
-
-output</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">html</span><span style="color:#839496;">, </span><span style="color:#2aa198;">pdf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">epub</span><span style="color:#839496;">]
-
-</span><span style="color:#586e75;"># list of chapters
-</span><span style="color:#839496;">- </span><span style="color:#2aa198;">preface.md
-+ chapter_1.md
-+ chapter_2.md
-+ chapter_3.md
-+ chapter_4.md
-</span><span style="color:#839496;">- </span><span style="color:#2aa198;">epilogue.md
-</span></pre><p id = "para-103">Basically, it is divided in two parts:</p>
+<pre><span style="color:#586e75;"># metadata</span><span style="color:#268bd2;">author</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Joan Doe</span><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Some book</span><span style="color:#268bd2;">lang</span><span style="color:#839496;">: </span><span style="color:#2aa198;">en</span><span style="color:#268bd2;">output</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">html</span><span style="color:#839496;">, </span><span style="color:#2aa198;">pdf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">epub</span><span style="color:#839496;">]</span><span style="color:#586e75;"># list of chapters</span><span style="color:#839496;">- </span><span style="color:#2aa198;">preface.md</span><span style="color:#2aa198;">+ chapter_1.md</span><span style="color:#2aa198;">+ chapter_2.md</span><span style="color:#2aa198;">+ chapter_3.md</span><span style="color:#2aa198;">+ chapter_4.md</span><span style="color:#839496;">- </span><span style="color:#2aa198;">epilogue.md</span></pre><p id = "para-103">Basically, it is divided in two parts:</p>
 <ul>
 <li><p id = "para-104">a list of options, under the form <code>key: value</code>, following YAML syntax.</p>
 </li>
@@ -520,21 +549,9 @@ output</span><span style="color:#839496;">: [</span><span style="color:#2aa198;"
 <p id = "para-106">Lines starting with the <code>#</code> characters are comments and are discarded.</p>
 <h2 id = "link-41">3.1. Configuration in an inline YAML block</h2>
 <p id = "para-107">Sometimes, you only have one Markdown file and might not want to have a separate configuration file. In this case, you can specify options at the beginning of your Markdown file, using an inline YAML block, separated by two lines containing only <code>---</code>:</p>
-<pre><span style="color:#839496;">---
-author: Joan Doe
-title: Some (short) book
-lang: en
-
-output: [html, pdf, epub]
-</span><span style="color:#b58900;">---
-
-# </span><span style="color:#cb4b16;">Some (short) book
-
-</span><span style="color:#839496;">The book content, formatted in Markdown.
-</span></pre><p id = "para-108">This method only allows to set up options: you can’t include a list of chapters in this way, since the only “chapter” that will be included is this Markdown file itself.</p>
+<pre><span style="color:#839496;">---</span><span style="color:#839496;">author: Joan Doe</span><span style="color:#839496;">title: Some (short) book</span><span style="color:#839496;">lang: en</span><span style="color:#839496;">output: [html, pdf, epub]</span><span style="color:#b58900;">---</span><span style="color:#b58900;"># </span><span style="color:#cb4b16;">Some (short) book</span><span style="color:#839496;">The book content, formatted in Markdown.</span></pre><p id = "para-108">This method only allows to set up options: you can’t include a list of chapters in this way, since the only “chapter” that will be included is this Markdown file itself.</p>
 <p id = "para-109">You can then use</p>
-<pre><span style="color:#b58900;">crowbook</span><span style="color:#268bd2;"> -s</span><span style="color:#839496;"> some_book.md
-</span></pre><p id = "para-110">to generate output formats from this Markdown file.</p>
+<pre><span style="color:#b58900;">crowbook</span><span style="color:#268bd2;"> -s</span><span style="color:#839496;"> some_book.md</span></pre><p id = "para-110">to generate output formats from this Markdown file.</p>
 <blockquote><p id = "para-111">By default (unless <code>input.yaml_blocks</code> is set to true), Crowboook will only read those inline blocks when it is runned with <code>crowbook --single</code> (or <code>crowbook -s</code>).</p>
 </blockquote>
 <h2 id = "link-42">3.2. The list of files</h2>
@@ -552,14 +569,7 @@ output: [html, pdf, epub]
 </li>
 </ul>
 <p id = "para-118">So a typical usage might look like this:</p>
-<pre><span style="color:#268bd2;">! </span><span style="color:#2aa198;">copyright.md
-</span><span style="color:#839496;">- </span><span style="color:#2aa198;">preface.md
-0. chapter_0.md </span><span style="color:#586e75;"># We want to start at chapter 0 instead of 1
-# Next chapters can be numbered automatically
-</span><span style="color:#2aa198;">+ chapter_1.md
-+ chapter_2.md
-</span><span style="color:#839496;">...
-</span></pre><p id = "para-119">There are two important things to note:</p>
+<pre><span style="color:#268bd2;">! </span><span style="color:#2aa198;">copyright.md</span><span style="color:#839496;">- </span><span style="color:#2aa198;">preface.md</span><span style="color:#2aa198;">0. chapter_0.md </span><span style="color:#586e75;"># We want to start at chapter 0 instead of 1</span><span style="color:#586e75;"># Next chapters can be numbered automatically</span><span style="color:#2aa198;">+ chapter_1.md</span><span style="color:#2aa198;">+ chapter_2.md</span><span style="color:#839496;">...</span></pre><p id = "para-119">There are two important things to note:</p>
 <ol>
 <li><p id = "para-120">you must <em>not</em> use quotes around the file names.</p>
 </li>
@@ -567,53 +577,24 @@ output: [html, pdf, epub]
 </li>
 </ol>
 <p id = "para-122">Also note that you don’t have to specify a title. This is because the title of the chapter is inferred from the Markdown document. To go back to our previous example:</p>
-<pre><span style="color:#839496;">+ chapter_1.md
-</span></pre><p id = "para-123">does not specify a chapter title, because it will read it directly in <code>chapter_1.md</code>, e.g.:</p>
-<pre><span style="color:#b58900;"># </span><span style="color:#cb4b16;">The day I was born </span><span style="color:#b58900;">#
-</span><span style="color:#839496;">...
-</span></pre><p id = "para-124">Ideally, you should have one and only one level-one header (i.e. chapter title) in each Markdown file. If you have more than one, it might mess with the table of contents in some cases (e.g. for EPUB).</p>
+<pre><span style="color:#839496;">+ chapter_1.md</span></pre><p id = "para-123">does not specify a chapter title, because it will read it directly in <code>chapter_1.md</code>, e.g.:</p>
+<pre><span style="color:#b58900;"># </span><span style="color:#cb4b16;">The day I was born </span><span style="color:#b58900;">#</span><span style="color:#839496;">...</span></pre><p id = "para-124">Ideally, you should have one and only one level-one header (i.e. chapter title) in each Markdown file. If you have more than one, it might mess with the table of contents in some cases (e.g. for EPUB).</p>
 <h3 id = "link-43">3.2.1. Parts</h3>
 <p id = "para-125">Parts are included using the <code>@</code> character, followed by the same characters than for chapters:</p>
-<pre><span style="color:#839496;">@+ numbered_part.md
-+ chapter_01.md
-+ chapter_02.md
-@- unnumbered_part.md
-+ chapter_03.md
-+ chapter_04.md
-@42. part_with_number_42.md
-+ chapter_05.md
-</span></pre><p id = "para-126">However, you usually don’t really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straighforward way to use parts, using only the <code>@</code> character followed by the (markdown-formatted) title of this part:</p>
-<pre><span style="color:#839496;">@ Beginning
-+ chapter_01.md
-+ chapter_02.md
-@ Middle
-+ chapter_03.md
-+ chapter_04.md
-@ Appendix
-- notes.md
-</span></pre><p id = "para-127">With this shortcut, parts are always numbered.</p>
+<pre><span style="color:#839496;">@+ numbered_part.md</span><span style="color:#839496;">+ chapter_01.md</span><span style="color:#839496;">+ chapter_02.md</span><span style="color:#839496;">@- unnumbered_part.md</span><span style="color:#839496;">+ chapter_03.md</span><span style="color:#839496;">+ chapter_04.md</span><span style="color:#839496;">@42. part_with_number_42.md</span><span style="color:#839496;">+ chapter_05.md</span></pre><p id = "para-126">However, you usually don’t really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straighforward way to use parts, using only the <code>@</code> character followed by the (markdown-formatted) title of this part:</p>
+<pre><span style="color:#839496;">@ Beginning</span><span style="color:#839496;">+ chapter_01.md</span><span style="color:#839496;">+ chapter_02.md</span><span style="color:#839496;">@ Middle</span><span style="color:#839496;">+ chapter_03.md</span><span style="color:#839496;">+ chapter_04.md</span><span style="color:#839496;">@ Appendix</span><span style="color:#839496;">- notes.md</span></pre><p id = "para-127">With this shortcut, parts are always numbered.</p>
 <h3 id = "link-44">3.2.2. Subchapters</h3>
 <p id = "para-128">If you write your book to be rendered by <code>crowbook</code>, it is better to have one Markdown file per chapter. It is, however, possible to work with divisions at lower levels. In order to properly include these files, you can use the following syntax:</p>
-<pre><span style="color:#839496;">-- section.md
---- subsection.md
----- subsubsection.md
-</span></pre><blockquote><p id = "para-129">Note that there isn’t different syntax for numbered or unnumbered sections/subsections: you can only change the numbering scheme at the chapter level.</p>
+<pre><span style="color:#839496;">-- section.md</span><span style="color:#839496;">--- subsection.md</span><span style="color:#839496;">---- subsubsection.md</span></pre><blockquote><p id = "para-129">Note that there isn’t different syntax for numbered or unnumbered sections/subsections: you can only change the numbering scheme at the chapter level.</p>
 </blockquote>
 <p id = "para-130">When including those files, Crowbook will include them in the table of content as part of the previous chapter (or section for subsections, and so on). It will also adjust the header levels of the Markdown files, so, in the previous example, a level-1 header in <code>section.md</code> will be displayed as a level-2 header in the book, and a level-1 header in <code>subsection.md</code> as a level-3 header.</p>
 <blockquote><p id = "para-131">This can cause issues as only six levels of headers are supported; hence, if you include a level-5 header in <code>subsubsection.md</code>, it will cause an error.</p>
 </blockquote>
 <h2 id = "link-45">3.3. Crowbook options</h2>
 <p id = "para-132">The first part of the configuration file is dedicated to pass options to Crowbook. This is <a href = "https://en.wikipedia.org/wiki/YAML">YAML syntax</a>, so each line should be of the form <code>key: value</code>. Note that in most cases you don’t have to put string in quotes, e.g.:</p>
-<pre><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#2aa198;">My title
-</span></pre><p id = "para-133">It is however possible (and sometimes necessary) to escape some characters using quotes around strings:</p>
-<pre><span style="color:#268bd2;">title</span><span style="color:#839496;">: &quot;</span><span style="color:#2aa198;">My: title!</span><span style="color:#839496;">&quot;
-</span></pre><p id = "para-134">It is possible to use multiline strings with <code>&gt;-</code> and then indenting the lines that are part of the string:</p>
-<pre><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#859900;">&gt;</span><span style="color:#93a1a1;">-
-</span><span style="color:#2aa198;"> A
- long
- title
-</span><span style="color:#268bd2;">author</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Joan Doe
-</span></pre><p id = "para-135">will set <code>title</code> to <code>"A long title"</code>. See <a href = "https://en.wikipedia.org/wiki/YAML#Block_literals">block literals in YAML</a> for more information on the various way to insert multiline strings (which mostly change the way newlines will or won’t be inserted).</p>
+<pre><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#2aa198;">My title</span></pre><p id = "para-133">It is however possible (and sometimes necessary) to escape some characters using quotes around strings:</p>
+<pre><span style="color:#268bd2;">title</span><span style="color:#839496;">: &quot;</span><span style="color:#2aa198;">My: title!</span><span style="color:#839496;">&quot;</span></pre><p id = "para-134">It is possible to use multiline strings with <code>&gt;-</code> and then indenting the lines that are part of the string:</p>
+<pre><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#859900;">&gt;</span><span style="color:#93a1a1;">-</span><span style="color:#2aa198;"> A</span><span style="color:#2aa198;"> long</span><span style="color:#2aa198;"> title</span><span style="color:#268bd2;">author</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Joan Doe</span></pre><p id = "para-135">will set <code>title</code> to <code>"A long title"</code>. See <a href = "https://en.wikipedia.org/wiki/YAML#Block_literals">block literals in YAML</a> for more information on the various way to insert multiline strings (which mostly change the way newlines will or won’t be inserted).</p>
 <p id = "para-136">A final note on the syntax: all options must be set <em>before</em> the first chapter inclusion (that is, a line beginning with <code>+</code>, <code>-</code>, <code>x.</code> (where <code>x</code> is a number) or <code>!</code>).</p>
 <h3 id = "link-46">3.3.1. Metadata</h3>
 <p id = "para-137">Metadata are data about the book. Except for <code>cover</code>, which points to an image file, all its fields are strings. The main metadata are:</p>
@@ -643,37 +624,18 @@ output: [html, pdf, epub]
 </li>
 </ul>
 <p id = "para-149">You can define your own metadata by starting an option name with <code>metadata.foo</code>.</p>
-<p id = "para-150">All metadata are accessible from templates, see <a href = "guide/templates.md">Templates</a>.</p>
+<p id = "para-150">All metadata are accessible from templates, see <a href = "chapter_004.html">Templates</a>.</p>
 <h3 id = "link-47">3.3.2. The <code>import</code> special option</h3>
 <p id = "para-151">The special <code>import</code> option allows you to include the options of another book configuration file. E.g., assuming that you want some common options to be applied to both <code>foo.book</code> and <code>bar.book</code>, you can create a <code>common.book</code> file:</p>
-<pre><span style="color:#268bd2;">author</span><span style="color:#839496;">: </span><span style="color:#268bd2;">Joan Doe
-lang</span><span style="color:#839496;">: </span><span style="color:#268bd2;">en
-license</span><span style="color:#839496;">: &quot;</span><span style="color:#2aa198;">Copyright (C) Joan Doe. All rights reserved.</span><span style="color:#839496;">&quot;
-
-</span><span style="color:#268bd2;">html.header</span><span style="color:#839496;">: &quot;</span><span style="color:#2aa198;">[Joan Doe&#39;s website](http://joan-doe.com)</span><span style="color:#839496;">&quot;
-</span><span style="color:#268bd2;">tex.template</span><span style="color:#839496;">: </span><span style="color:#2aa198;">my_template.tex
-</span></pre><p id = "para-152">You can then include this file in <code>foo.book</code>:</p>
-<pre><span style="color:#268bd2;">import</span><span style="color:#839496;">: </span><span style="color:#268bd2;">common.book
-title</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Foo
-
-+ foo_01.md
-+ foo_02.md
-</span></pre><p id = "para-153">Or include it in <code>bar.book</code>, but override some of its features:</p>
-<pre><span style="color:#268bd2;">import</span><span style="color:#839496;">: </span><span style="color:#268bd2;">common.book
-title</span><span style="color:#839496;">: </span><span style="color:#268bd2;">Bar
-license</span><span style="color:#839496;">: </span><span style="color:#2aa198;">CC-BY-SA  </span><span style="color:#586e75;"># Override the license from common.book
-
-</span><span style="color:#2aa198;">+ bar_01.md
-</span></pre><h3 id = "link-48">3.3.3. Output options</h3>
+<pre><span style="color:#268bd2;">author</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Joan Doe</span><span style="color:#268bd2;">lang</span><span style="color:#839496;">: </span><span style="color:#2aa198;">en</span><span style="color:#268bd2;">license</span><span style="color:#839496;">: &quot;</span><span style="color:#2aa198;">Copyright (C) Joan Doe. All rights reserved.</span><span style="color:#839496;">&quot;</span><span style="color:#268bd2;">html.header</span><span style="color:#839496;">: &quot;</span><span style="color:#2aa198;">[Joan Doe&#39;s website](http://joan-doe.com)</span><span style="color:#839496;">&quot;</span><span style="color:#268bd2;">tex.template</span><span style="color:#839496;">: </span><span style="color:#2aa198;">my_template.tex</span></pre><p id = "para-152">You can then include this file in <code>foo.book</code>:</p>
+<pre><span style="color:#268bd2;">import</span><span style="color:#839496;">: </span><span style="color:#2aa198;">common.book</span><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Foo</span><span style="color:#2aa198;">+ foo_01.md</span><span style="color:#2aa198;">+ foo_02.md</span></pre><p id = "para-153">Or include it in <code>bar.book</code>, but override some of its features:</p>
+<pre><span style="color:#268bd2;">import</span><span style="color:#839496;">: </span><span style="color:#2aa198;">common.book</span><span style="color:#268bd2;">title</span><span style="color:#839496;">: </span><span style="color:#2aa198;">Bar</span><span style="color:#268bd2;">license</span><span style="color:#839496;">: </span><span style="color:#2aa198;">CC-BY-SA  </span><span style="color:#586e75;"># Override the license from common.book</span><span style="color:#2aa198;">+ bar_01.md</span></pre><h3 id = "link-48">3.3.3. Output options</h3>
 <p id = "para-154">These options specify which files to generate.</p>
 <p id = "para-155">Note that all file paths are relative to the directory where the configuration file is, not to the one where you run <code>crowbook</code>. So if you set:</p>
-<pre><span style="color:#268bd2;">output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa198;">foo.epub
-</span></pre><p id = "para-156">and run</p>
-<pre><span style="color:#b58900;">$</span><span style="color:#839496;"> crowbook some/dir/config.book
-</span></pre><p id = "para-157"><code>foo.epub</code> will be generated in <code>some/dir</code>, not in your current directory.</p>
+<pre><span style="color:#268bd2;">output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa198;">foo.epub</span></pre><p id = "para-156">and run</p>
+<pre><span style="color:#b58900;">$</span><span style="color:#839496;"> crowbook some/dir/config.book</span></pre><p id = "para-157"><code>foo.epub</code> will be generated in <code>some/dir</code>, not in your current directory.</p>
 <p id = "para-158">Crowbook will try to generate each of the <code>output.xxx</code> files that are specified. That means that you’ll have to set at least one of those if you want a call to</p>
-<pre><span style="color:#b58900;">$</span><span style="color:#839496;"> crowbook my.book
-</span></pre><p id = "para-159">to generate anything. (It’s still possible to generate a specific format, and only this one, by using the <code>--to</code> and <code>--output</code> argument on the command line).</p>
+<pre><span style="color:#b58900;">$</span><span style="color:#839496;"> crowbook my.book</span></pre><p id = "para-159">to generate anything. (It’s still possible to generate a specific format, and only this one, by using the <code>--to</code> and <code>--output</code> argument on the command line).</p>
 <p id = "para-160">Note that some formats depend on some commands being installed on your system. Most notably, Crowbook depends on LaTeX (<code>xelatex</code> by default, though you can specify another command to use with <code>tex.command</code>) to generate a PDF file, so PDF rendering won’t work if it is not installed on your system. Crowbook also uses the <code>zip</code> command to generate the EPUB and ODT files.</p>
 <p id = "para-161">Current output options are:</p>
 <ul>
@@ -688,26 +650,16 @@ license</span><span style="color:#839496;">: </span><span style="color:#2aa198;"
 <li><p id = "para-166"><code>output.pdf</code>: renders a PDF file (using <code>tex.command</code>).</p>
 </li>
 </ul>
-<p id = "para-167">(There are other output options for generating proofreading files, see <a href = "guide/proofreading.md">Proofreading</a>, and interactive fiction, see <a href = "guide/if.md">Interactive fiction</a>.)</p>
+<p id = "para-167">(There are other output options for generating proofreading files, see <a href = "chapter_005.html">Proofreading</a>, and interactive fiction, see <a href = "chapter_006.html">Interactive fiction</a>.)</p>
 <h4 id = "link-49">3.3.3.1. The <code>output</code> option</h4>
 <p id = "para-168">Setting output file names manually can be a bit tedious, and is not always necessary. You can also specify a list of output formats with the <code>output</code> option:</p>
-<pre><span style="color:#268bd2;">output</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">pdf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">epub</span><span style="color:#839496;">, </span><span style="color:#2aa198;">html</span><span style="color:#839496;">]
-</span></pre><p id = "para-169">This is similar to the alternative syntax for YAML list:</p>
-<pre><span style="color:#268bd2;">output</span><span style="color:#839496;">:
-  - </span><span style="color:#2aa198;">pdf
-  </span><span style="color:#839496;">- </span><span style="color:#2aa198;">epub
-  </span><span style="color:#839496;">- </span><span style="color:#2aa198;">html
-</span></pre><p id = "para-170">This option will set default output path for PDF, EPUB and HTML according to the book configuration file name. So, if your book is <code>my_book.book</code> (or <code>my_book.md</code>), it will generate <code>my_book.pdf</code>, <code>my_book.html</code> and <code>my_book.epub</code>.</p>
+<pre><span style="color:#268bd2;">output</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">pdf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">epub</span><span style="color:#839496;">, </span><span style="color:#2aa198;">html</span><span style="color:#839496;">]</span></pre><p id = "para-169">This is similar to the alternative syntax for YAML list:</p>
+<pre><span style="color:#268bd2;">output</span><span style="color:#839496;">:</span><span style="color:#839496;">  - </span><span style="color:#2aa198;">pdf</span><span style="color:#839496;">  - </span><span style="color:#2aa198;">epub</span><span style="color:#839496;">  - </span><span style="color:#2aa198;">html</span></pre><p id = "para-170">This option will set default output path for PDF, EPUB and HTML according to the book configuration file name. So, if your book is <code>my_book.book</code> (or <code>my_book.md</code>), it will generate <code>my_book.pdf</code>, <code>my_book.html</code> and <code>my_book.epub</code>.</p>
 <blockquote><p id = "para-171">You can also infer the output file name by specifying “auto” to e.g. <code>output.html</code>. The previous example is thus equivalent to</p>
-<pre><span style="color:#268bd2;">output.pdf</span><span style="color:#839496;">: </span><span style="color:#268bd2;">auto
-output.epub</span><span style="color:#839496;">: </span><span style="color:#268bd2;">auto
-output.html</span><span style="color:#839496;">: </span><span style="color:#2aa198;">auto
-</span></pre></blockquote>
+<pre><span style="color:#268bd2;">output.pdf</span><span style="color:#839496;">: </span><span style="color:#2aa198;">auto</span><span style="color:#268bd2;">output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa198;">auto</span><span style="color:#268bd2;">output.html</span><span style="color:#839496;">: </span><span style="color:#2aa198;">auto</span></pre></blockquote>
 <h4 id = "link-50">3.3.3.2. <code>output.base_path</code></h4>
 <p id = "para-172">Additionally, the <code>output.base_path</code> option allows you to set where the output files will be written (relatively to the book configuration file). E.g.,</p>
-<pre><span style="color:#268bd2;">output.base_path</span><span style="color:#839496;">: </span><span style="color:#268bd2;">docs/book
-output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa198;">book.epub
-</span></pre><p id = "para-173">will render the EPUB file in <code>docs/book/book.epub</code>.</p>
+<pre><span style="color:#268bd2;">output.base_path</span><span style="color:#839496;">: </span><span style="color:#2aa198;">docs/book</span><span style="color:#268bd2;">output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa198;">book.epub</span></pre><p id = "para-173">will render the EPUB file in <code>docs/book/book.epub</code>.</p>
 <h3 id = "link-51">3.3.4. Input options</h3>
 <p id = "para-174">Crowbook does its best to improve the typography of your text. Default settings should be good enough for most usages, but you can enable/disable specific options:</p>
 <ul>
@@ -774,7 +726,7 @@ output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa1
 <ul>
 <li><p id = "para-201"><code>html.icon</code>: allows to set a <code>favicon</code> for the page.</p>
 </li>
-<li><p id = "para-202"><code>html.header</code> and <code>html.footer</code>: allow to set a custom (Markdown) string at the top and at the bottom of the HTML page. This is actually a template, so you can access metadata, such as <code>{{{author}}}</code>, <code>{{{title}}}</code>, or <code>{{{version}}}</code> in it. See the <a href = "guide/templates.md">template</a> chapter for more information on the fields you can use.</p>
+<li><p id = "para-202"><code>html.header</code> and <code>html.footer</code>: allow to set a custom (Markdown) string at the top and at the bottom of the HTML page. This is actually a template, so you can access metadata, such as <code>{{{author}}}</code>, <code>{{{title}}}</code>, or <code>{{{version}}}</code> in it. See the <a href = "chapter_004.html">template</a> chapter for more information on the fields you can use.</p>
 </li>
 <li><p id = "para-203"><code>html.css</code>: allows to set up a custom CSS file. You can also redefine the colors in a file and set it using <code>html.css.colors</code>.</p>
 </li>
@@ -821,21 +773,15 @@ output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa1
 <p id = "para-220">These options allow to embed additional files for some formats (currently, only EPUB). This can be useful for embedding fonts.</p>
 <h4 id = "link-58">3.3.9.1. <code>resources.files</code></h4>
 <p id = "para-221">A list of files or directories that should be added.</p>
-<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">font1.otf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">font2.otf</span><span style="color:#839496;">]
-</span></pre><p id = "para-222">It is also possible to specify a directory (or multiple directories). So if you have a <code>fonts</code> directories containing <code>font1.otf</code> and <code>font2.otf</code>,</p>
-<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts</span><span style="color:#839496;">]
-</span></pre><p id = "para-223">will be equivalent to:</p>
-<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts/font1.otf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">fonts/font2.otf</span><span style="color:#839496;">]
-</span></pre><p id = "para-224"><b>default</b>: not set</p>
+<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">font1.otf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">font2.otf</span><span style="color:#839496;">]</span></pre><p id = "para-222">It is also possible to specify a directory (or multiple directories). So if you have a <code>fonts</code> directories containing <code>font1.otf</code> and <code>font2.otf</code>,</p>
+<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts</span><span style="color:#839496;">]</span></pre><p id = "para-223">will be equivalent to:</p>
+<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts/font1.otf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">fonts/font2.otf</span><span style="color:#839496;">]</span></pre><p id = "para-224"><b>default</b>: not set</p>
 <h4 id = "link-59">3.3.9.2. <code>resources.out_path</code></h4>
 <p id = "para-225">This option determine where (in which directory), <em>in the resulting document</em>, those files will be copied. The default is <code>data</code>, so by default the <code>resources.files</code> in the first example above will search <code>font1.otf</code> and <code>font2.otf</code> <em>in the same directory than the <code>.book</code> file</em>, and will copy them to <code>data/font1.otf</code> and <code>data/font2.otf</code> <em>in the EPUB file</em>. This is therefore this last path that you should use if you want to access those files e.g. in a custom CSS stylesheet.</p>
 <p id = "para-226">Note that if you pass directories to <code>resources.files</code>, the whole directory would be copied. So assuming <code>fonts/</code> contains <code>font1.otf</code> and <code>font2.otf</code></p>
-<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts</span><span style="color:#839496;">]
-</span><span style="color:#268bd2;">resources.path</span><span style="color:#839496;">: </span><span style="color:#2aa198;">data
-</span></pre><p id = "para-227">will copy these two files to <code>data/fonts/font1.otf</code> and <code>data/fonts/font2.otf</code> (and not <code>data/font1.otf</code> and <code>data/font2.otf</code>).</p>
+<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts</span><span style="color:#839496;">]</span><span style="color:#268bd2;">resources.path</span><span style="color:#839496;">: </span><span style="color:#2aa198;">data</span></pre><p id = "para-227">will copy these two files to <code>data/fonts/font1.otf</code> and <code>data/fonts/font2.otf</code> (and not <code>data/font1.otf</code> and <code>data/font2.otf</code>).</p>
 <p id = "para-228">Similarly, the whole path of <code>resources.files</code> is copied, so</p>
-<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts/font1.otf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">fonts/font2.otf</span><span style="color:#839496;">]
-</span></pre><p id = "para-229">will yield the same result.</p>
+<pre><span style="color:#268bd2;">resources.files</span><span style="color:#839496;">: [</span><span style="color:#2aa198;">fonts/font1.otf</span><span style="color:#839496;">, </span><span style="color:#2aa198;">fonts/font2.otf</span><span style="color:#839496;">]</span></pre><p id = "para-229">will yield the same result.</p>
 <p id = "para-230"><b>default</b>: <code>data</code></p>
 <h2 id = "link-60">3.4. Full list of options</h2>
 <p id = "para-231">Here is the complete list of options. You can always look at it by running <code>crowbook --list-options</code> or <code>crowbook -l</code>.</p>
@@ -1835,7 +1781,7 @@ output.epub</span><span style="color:#839496;">: </span><span style="color:#2aa1
   </a>
 </p>
     </div>
-    <footer id = "footer"><p id = "para-1185">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.15.1</p>
+    <footer id = "footer"><p id = "para-1187">Generated by <a href = "https://github.com/lise-henry/crowbook">Crowbook</a> 0.16.0</p>
 </footer>
   </div>
   </body>
