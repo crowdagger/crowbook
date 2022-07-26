@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017 Élisabeth HENRY.
+// Copyright (C) 2016-2022Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use clap::{App, AppSettings, Arg, ArgMatches};
+use clap::{Command, AppSettings, Arg, ArgMatches};
 use console::style;
 use crowbook::Book;
 
@@ -181,7 +181,7 @@ lang: en
     }
 }
 
-pub fn create_matches<'a>() -> (ArgMatches<'a>, String, String) {
+pub fn create_matches() -> (ArgMatches, String, String) {
     lazy_static! {
         static ref HELP: String = lformat!("Print help information");
         static ref VERSION: String = lformat!("Print version information");
@@ -221,7 +221,7 @@ ARGS:
 ");
     }
 
-    let app = App::new("crowbook")
+    let mut app = Command::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Élisabeth Henry <liz.henry@ouvaton.org>")
         .setting(AppSettings::UnifiedHelpMessage)

@@ -136,8 +136,7 @@ pub fn try_main() -> Result<()> {
         print_error_and_exit(
             &lformat!(
                 "You must pass the file of a book configuration \
-                               file.\n\n{}\n\nFor more information try --help.",
-                matches.usage()
+                               file.\nnFor more information try --help."
             ),
             emoji,
         );
