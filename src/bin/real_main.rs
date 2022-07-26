@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017, 2018, 2019, 2020 Élisabeth HENRY.
+// Copyright (C) 2016-2022 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -175,6 +175,7 @@ pub fn try_main() -> Result<()> {
         verbosity,
         log_config.clone(),
         simplelog::TerminalMode::Stderr,
+        simplelog::ColorChoice::Auto,
     )
     .is_err()
     {

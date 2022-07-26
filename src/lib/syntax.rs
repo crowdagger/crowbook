@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Élisabeth HENRY.
+// Copyright (C) 2017-2022 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -75,11 +75,16 @@ impl Syntax {
             .find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
-        let regions = h.highlight(code, &self.syntax_set);
-        let bg = syntect::html::IncludeBackground::No;
+        let mut formatted_code = String::new();
+        for line in code.split('\n') {
+            let regions = h.highlight_line(line, &self.syntax_set)?;
+            let bg = syntect::html::IncludeBackground::No;
+            let res: String = syntect::html::styled_line_to_highlighted_html(&regions[..], bg)?;
+            formatted_code.push_str(&res);
+        }
         Ok(format!(
             "<pre>{}</pre>",
-            syntect::html::styled_line_to_highlighted_html(&regions[..], bg)
+            formatted_code
         ))
     }
 
@@ -92,40 +97,42 @@ impl Syntax {
             .find_syntax_by_token(language)
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
         let mut h = syntect::easy::HighlightLines::new(syntax, &self.theme);
-        let regions = h.highlight(code, &self.syntax_set);
 
-        let mut result = String::with_capacity(code.len());
-        for (style, text) in regions {
-            let mut content = escape::tex(text).into_owned();
-            content = insert_breaks(&content);
-            content = content
-                .replace('\n', "\\\\{}\n")
-                .replace(' ', "\\hphantom{ }\\allowbreak{}");
-            content = format!("\\texttt{{{}}}", content);
-            if style.foreground != Color::BLACK {
-                let r = style.foreground.r as f32 / 255.0;
-                let g = style.foreground.g as f32 / 255.0;
-                let b = style.foreground.b as f32 / 255.0;
-                content = format!(
-                    "\\textcolor[rgb]{{{r}, {g}, {b}}}{{{text}}}",
-                    r = r,
-                    g = g,
-                    b = b,
-                    text = content
-                );
+        let mut formatted_code = String::new();
+        for line in code.split('\n') {
+            let regions = h.highlight_line(line, &self.syntax_set)?;
+            for (style, text) in regions {
+                let mut content = escape::tex(text).into_owned();
+                content = insert_breaks(&content);
+                content = content
+                    .replace('\n', "\\\\{}\n")
+                    .replace(' ', "\\hphantom{ }\\allowbreak{}");
+                content = format!("\\texttt{{{}}}", content);
+                if style.foreground != Color::BLACK {
+                    let r = style.foreground.r as f32 / 255.0;
+                    let g = style.foreground.g as f32 / 255.0;
+                    let b = style.foreground.b as f32 / 255.0;
+                    content = format!(
+                        "\\textcolor[rgb]{{{r}, {g}, {b}}}{{{text}}}",
+                        r = r,
+                        g = g,
+                        b = b,
+                        text = content
+                    );
+                }
+                if style.font_style.contains(FontStyle::BOLD) {
+                    content = format!("\\textbf{{{}}}", content);
+                }
+                if style.font_style.contains(FontStyle::ITALIC) {
+                    content = format!("\\emph{{{}}}", content);
+                }
+                if style.font_style.contains(FontStyle::UNDERLINE) {
+                    content = format!("\\underline{{{}}}", content);
+                }
+                formatted_code.push_str(&content);
             }
-            if style.font_style.contains(FontStyle::BOLD) {
-                content = format!("\\textbf{{{}}}", content);
-            }
-            if style.font_style.contains(FontStyle::ITALIC) {
-                content = format!("\\emph{{{}}}", content);
-            }
-            if style.font_style.contains(FontStyle::UNDERLINE) {
-                content = format!("\\underline{{{}}}", content);
-            }
-            result.push_str(&content);
         }
-        Ok(format!("{{\\sloppy {}}}", result))
+        Ok(format!("{{\\sloppy {}}}", formatted_code))
     }
 }
 

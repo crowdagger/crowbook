@@ -1,4 +1,5 @@
-// Copyright (C) 2016-2019 Élisabeth HENRY.
+
+// Copyright (C) 2016-2022 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -345,8 +346,8 @@ impl Parser {
                 })?;
                 vec![Token::Str(text)]
             }
-            NodeValue::Code(ref text) => {
-                let text = String::from_utf8(text.clone()).map_err(|_| {
+            NodeValue::Code(ref code) => {
+                let text = String::from_utf8(code.literal.clone()).map_err(|_| {
                     Error::parser(
                         &self.source,
                         lformat!("Markdown file contains invalid UTF-8"),

@@ -48,10 +48,10 @@ crowbook-intl = "0.2"
 
 [dependencies]
 mime_guess = "2"
-comrak = "0.10"
+comrak = "0.14"
 yaml-rust = "0.4"
 mustache = "0.9"
-uuid = { version = "0.8", features = ["v4"] }
+uuid = { version = "1", features = ["v4"] }
 walkdir = "2"
 rustc-serialize = "0.3"
 rayon = "1.0"
@@ -71,13 +71,13 @@ indicatif = { version = "0.15", optional = true }
 console = { version = "0.11", optional = true }
 caribon = { version = "0.8", optional = true }
 clap = { version = "2.19", optional = true }
-simplelog = { version = "0.8", optional = true }
+simplelog = { version = "0.12", optional = true }
 url =  { version = "2", optional = true }
-syntect = { version = "4", optional = true }
+syntect = { version = "5", optional = true }
 tempdir = { version = "0.3", optional = true }
 
 [dependencies.reqwest]
-version = "0.10"
+version = "0.11"
 optional = true
 features = ["blocking"]
 

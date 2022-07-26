@@ -126,6 +126,16 @@ impl Error {
         }
     }
 
+    /// Creates a new syntect error.
+    ///
+    /// Error when parsing (and higlighting) syntax code
+    pub fn syntect<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
+        Error {
+            source: source.into(),
+            inner: Inner::Syntect(msg.into()),
+        }
+    }
+
     /// Creates a new config parser error.
     ///
     /// Error when parsing the book configuration file.
@@ -258,14 +268,15 @@ impl error::Error for Error {
     fn description(&self) -> &str {
         match self.inner {
             Inner::Default(ref s)
-            | Inner::Parser(ref s)
-            | Inner::Zipper(ref s)
-            | Inner::BookOption(ref s)
-            | Inner::ConfigParser(ref s)
-            | Inner::InvalidOption(ref s)
-            | Inner::Render(ref s)
-            | Inner::Template(ref s)
-            | Inner::GrammarCheck(ref s) => s.as_ref(),
+                | Inner::Parser(ref s)
+                | Inner::Zipper(ref s)
+                | Inner::BookOption(ref s)
+                | Inner::ConfigParser(ref s)
+                | Inner::InvalidOption(ref s)
+                | Inner::Render(ref s)
+                | Inner::Template(ref s)
+                | Inner::Syntect(ref s)
+                | Inner::GrammarCheck(ref s) => s.as_ref(),
 
             Inner::FileNotFound(..) => "File not found",
         }
@@ -337,6 +348,10 @@ impl fmt::Display for Error {
                 f.write_str(&lformat!("Error accessing book option: "))?;
                 f.write_str(s)
             }
+            Inner::Syntect(ref s) => {
+                f.write_str(&lformat!("Error higligting syntax: "))?;
+                f.write_str(s)
+            }
         }?;
         Ok(())
     }
@@ -389,6 +404,15 @@ impl From<fmt::Error> for Error {
     }
 }
 
+impl From<syntect::Error> for Error {
+    fn from(err: syntect::Error) -> Error {
+        Error::syntect(
+            Source::empty(),
+            lformat!("syntect error: {error}", error = err)
+        )
+    }
+}
+
 #[derive(Debug, PartialEq)]
 enum Inner {
     /// Default variant
@@ -411,4 +435,6 @@ enum Inner {
     Template(Cow<'static, str>),
     /// Error when connecting to LanguageTool
     GrammarCheck(Cow<'static, str>),
+    /// Error when parsing code syntax
+    Syntect(Cow<'static, str>),
 }
