@@ -36,13 +36,16 @@
 <<#use_taskitem>>
 \usepackage{amssymb}
 <</use_taskitem>>
-<<#use_url>>
-% Only included if URLs are used in the document
+% Set hyperlinks and metadata 
 \usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
+\hypersetup{pdfauthor={<<&author>>},
+  pdftitle={<<&title>>},
+  pdfsubject={<<&description>>}
+}
 <<^xelatex>>
 \usepackage[anythingbreaks]{breakurl}
 <</xelatex>>
-<</use_url>>
+
 
 <<#initials>>
 % Only included if use_initials is set to true
