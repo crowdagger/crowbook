@@ -312,7 +312,7 @@ impl Book {
         I: IntoIterator<Item = &'a (&'a str, &'a str)>,
     {
         // set options
-        for &(key, value) in options {
+        for (key, value) in options {
             if let Err(err) = self.options.set(key, value) {
                 error!(
                     "{}",
@@ -1066,7 +1066,6 @@ impl Book {
             )
         })?;
 
-
         // parse the file
         self.bar_set_message(Crowbar::Second, &lformat!("Parsing..."));
 
@@ -1074,7 +1073,7 @@ impl Book {
         parser.set_source_file(file);
         let mut yaml_block = String::from("");
         let mut tokens = parser.parse(&content, Option::Some(&mut yaml_block))?;
-        
+
         // Parse YAML block
         self.parse_yaml(&yaml_block);
         self.features = self.features | parser.features();
@@ -1568,9 +1567,7 @@ impl Book {
             Ok(docs) => {
                 // Use this yaml block to set options only if 1) it is valid
                 // 2) the option is activated
-                if docs.len() >= 1
-                    && docs[0].as_hash().is_some()
-                {
+                if docs.len() >= 1 && docs[0].as_hash().is_some() {
                     let hash = docs[0].as_hash().unwrap();
                     for (key, value) in hash {
                         match self
@@ -1603,17 +1600,22 @@ impl Book {
                                         )
                                     );
                                 }
-                            },
+                            }
                             Err(e) => {
-                                error!("{}", lformat!("Inline YAML block could \
+                                error!(
+                                    "{}",
+                                    lformat!(
+                                        "Inline YAML block could \
                                                         not set {:?} to {:?}: {}",
-                                                        key,
-                                                        value,
-                                                        e))
+                                        key,
+                                        value,
+                                        e
+                                    )
+                                )
                             }
                         }
                     }
-                
+
                     self.update_cleaner();
                     self.init_checker();
                 } else {
@@ -1627,7 +1629,7 @@ impl Book {
                         )
                     );
                 }
-            },
+            }
             Err(err) => {
                 error!(
                     "{}",

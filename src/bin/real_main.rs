@@ -39,8 +39,8 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
     let mut stdout = false;
     let mut file = None;
 
-    if let Some(f) = matches.value_of("output") {
-        if f == "-" {
+    if let Some(f) = matches.get_one::<String>("output") {
+        if f.as_str() == "-" {
             stdout = true;
         } else {
             file = Some(String::from(f));
@@ -76,33 +76,32 @@ pub fn try_main() -> Result<()> {
     let mut fancy_ui = true;
     let mut emoji = console::Term::stderr().features().wants_emoji();
 
-    let (matches, help, version) = create_matches();
+    let matches = create_matches();
 
-    if matches.is_present("force-emoji") {
+    if matches.get_flag("force-emoji") {
         emoji = true;
     }
 
-    if !matches.is_present("quiet") {
+    if !matches.get_flag("quiet") {
         display_header(emoji);
     }
 
-    if matches.is_present("list-options") {
+    if matches.get_flag("list-options") {
         println!("{}", BookOptions::description(false));
         exit(0);
     }
 
-    if matches.is_present("no-fancy") || matches.is_present("stats") {
+    if matches.get_flag("no-fancy") || matches.get_flag("stats") {
         fancy_ui = false;
         emoji = false;
     }
 
-    if matches.is_present("list-options-md") {
+    if matches.get_flag("list-options-md") {
         println!("{}", BookOptions::description(true));
         exit(0);
     }
 
-    if matches.is_present("print-template") {
-        let template = matches.value_of("print-template").unwrap();
+    if let Some(template) = matches.get_one::<String>("print-template") {
         let mut book = Book::new();
         set_book_options(&mut book, &matches);
         let result = book.get_template(template.as_ref());
@@ -118,44 +117,34 @@ pub fn try_main() -> Result<()> {
         }
     }
 
-    if matches.is_present("help") {
-        println!("{}", help);
-        exit(0);
-    }
-
-    if matches.is_present("version") {
-        println!("{}", version);
-        exit(0);
-    }
-
-    if matches.is_present("create") {
+    if matches.get_many::<String>("files").is_some() {
         create_book(&matches);
     }
-
-    if !matches.is_present("BOOK") {
+    let book = matches.get_one::<String>("BOOK");
+    if book.is_none() {
         print_error_and_exit(
             &lformat!(
                 "You must pass the file of a book configuration \
-                               file.\nnFor more information try --help."
+                               file.\nFor more information try --help."
             ),
             emoji,
         );
     }
 
     // ok to unwrap since clap checks it's there
-    let s = matches.value_of("BOOK").unwrap();
+    let &s = book.as_ref().unwrap();
 
     // Initalize logger
     let mut builder = ConfigBuilder::new();
     builder.set_target_level(LevelFilter::Off);
     builder.set_location_level(LevelFilter::Off);
     builder.set_time_level(LevelFilter::Off);
-    let verbosity = if matches.is_present("verbose") && !matches.is_present("stats") {
+    let verbosity = if matches.get_flag("verbose") && !matches.get_flag("stats") {
         builder.set_time_level(LevelFilter::Error);
         builder.set_target_level(LevelFilter::Error);
         fancy_ui = false;
         LevelFilter::Debug
-    } else if matches.is_present("quiet") {
+    } else if matches.get_flag("quiet") {
         fancy_ui = false;
         LevelFilter::Error
     } else if fancy_ui {
@@ -184,7 +173,7 @@ pub fn try_main() -> Result<()> {
 
     {
         let mut book = Book::new();
-        if matches.is_present("autograph") {
+        if matches.get_flag("autograph") {
             println!("{}", &lformat!("Enter autograph: "));
             let mut autograph = String::new();
             match io::stdin().read_to_string(&mut autograph) {
@@ -206,7 +195,7 @@ pub fn try_main() -> Result<()> {
         book.set_options(&get_book_options(&matches));
 
         {
-            let res = if matches.is_present("single") {
+            let res = if matches.get_flag("single") {
                 if s != "-" {
                     book.load_markdown_file(s)
                 } else {
@@ -230,13 +219,13 @@ pub fn try_main() -> Result<()> {
 
         set_book_options(&mut book, &matches);
 
-        if matches.is_present("stats") {
-            let stats = Stats::new(&book, matches.is_present("verbose"));
+        if matches.get_flag("stats") {
+            let stats = Stats::new(&book, matches.get_flag("verbose"));
             println!("{}", stats);
             exit(0);
         }
 
-        if let Some(format) = matches.value_of("to") {
+        if let Some(format) = matches.get_one::<String>("to") {
             render_format(&mut book, emoji, &matches, format);
         } else {
             book.render_all();

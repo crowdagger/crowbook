@@ -22,9 +22,8 @@ use crate::book::{Book, Crowbar, CrowbarState};
 
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 
-use std::mem;
 use std::sync::Arc;
-use std::thread;
+use std::time::Duration;
 
 /// Store the progress bars needed for the book
 pub struct Bars {
@@ -36,8 +35,8 @@ pub struct Bars {
     pub mainbar: Option<ProgressBar>,
     /// Secondary bar
     pub secondbar: Option<ProgressBar>,
-    /// Guard for thread
-    pub guard: Option<thread::JoinHandle<()>>,
+    // /// Guard for thread
+    // pub guard: Option<thread::JoinHandle<()>>,
     /// Spinners for each renderier
     pub spinners: Vec<ProgressBar>,
 }
@@ -50,7 +49,7 @@ impl Bars {
             multibar: None,
             mainbar: None,
             secondbar: None,
-            guard: None,
+            // guard: None,
             spinners: vec![],
         }
     }
@@ -78,21 +77,21 @@ impl Book {
             .as_ref()
             .unwrap()
             .add(ProgressBar::new_spinner());
-        b.enable_steady_tick(200);
+        b.enable_steady_tick(Duration::from_millis(200));
         self.bars.mainbar = Some(b);
         //        let sty = ProgressStyle::default_spinner()
         //            .tick_chars("🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚V")
         //            .tick_chars("/|\\-V")
         //            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
         self.bar_set_style(Crowbar::Main, CrowbarState::Running);
-        self.bars.guard = Some(thread::spawn(move || {
-            if let Err(_) = multibar.join() {
-                error!(
-                    "{}",
-                    lformat!("could not display fancy UI, try running crowbook with --no-fancy")
-                );
-            }
-        }));
+        // self.bars.guard = Some(thread::spawn(move || {
+        //     if let Err(_) = multibar.join() {
+        //         error!(
+        //             "{}",
+        //             lformat!("could not display fancy UI, try running crowbook with --no-fancy")
+        //         );
+        //     }
+        // }));
     }
 
     /// Sets a finished message to the progress bar, if it is set
@@ -153,7 +152,7 @@ impl Book {
             }
 
             let bar = multibar.add(ProgressBar::new_spinner());
-            bar.enable_steady_tick(200);
+            bar.enable_steady_tick(Duration::from_millis(200));
             bar.set_message(lformat!("waiting..."));
             bar.set_prefix(format!("{}:", key));
             let i = self.bars.spinners.len();
@@ -246,22 +245,27 @@ impl Book {
             Crowbar::Second => {
                 style = style
                     .template("{bar:40.cyan/blue} {percent:>7} {wide_msg}")
+                    .expect("Error in second progress bar style")
                     .progress_chars("##-");
             }
             bar => {
                 style = style.tick_chars(&format!("{}{}", tick_chars, end_tick));
                 match bar {
                     Crowbar::Spinner(_) => {
-                        style = style.template(&format!(
-                            "{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}",
-                            color = color
-                        ));
+                        style = style
+                            .template(&format!(
+                                "{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}",
+                                color = color
+                            ))
+                            .expect("Error in spinner progress bar style");
                     }
                     _ => {
-                        style = style.template(&format!(
-                            "{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}",
-                            color = color
-                        ));
+                        style = style
+                            .template(&format!(
+                                "{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}",
+                                color = color
+                            ))
+                            .expect("Error in progress bar style");
                     }
                 };
             }
@@ -277,8 +281,8 @@ impl Drop for Book {
         }
         if let Some(ref bar) = self.bars.mainbar {
             bar.finish();
-            let guard = mem::replace(&mut self.bars.guard, None);
-            guard.unwrap().join().unwrap();
+            // let guard = mem::replace(&mut self.bars.guard, None);
+            // guard.unwrap().join().unwrap();
         }
     }
 }

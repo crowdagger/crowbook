@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use clap::{Command, AppSettings, Arg, ArgMatches};
+use clap::{Arg, ArgAction, ArgMatches, Command};
 use console::style;
 use crowbook::Book;
 
@@ -78,7 +78,7 @@ pub fn get_lang() -> Option<String> {
 /// Gets the book options in a (key, value) list, or print an error
 pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> {
     let mut output = vec![];
-    if let Some(iter) = matches.values_of("set") {
+    if let Some(iter) = matches.get_many::<String>("set") {
         let v: Vec<_> = iter.collect();
         if v.len() % 2 != 0 {
             print_error_and_exit(
@@ -93,10 +93,10 @@ pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> 
         for i in 0..v.len() / 2 {
             let key = v[i * 2];
             let value = v[i * 2 + 1];
-            output.push((key, value));
+            output.push((key.as_str(), value.as_str()));
         }
     }
-    if matches.is_present("proofread") {
+    if matches.get_flag("proofread") {
         output.push(("proofread", "true"));
     }
     output
@@ -111,7 +111,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     let options = get_book_options(matches);
 
     for (key, value) in options {
-        let res = book.options.set(key, value);
+        let res = book.options.set(&key, &value);
         if let Err(err) = res {
             print_error_and_exit(&lformat!("Error in setting key {}: {}", key, err), false);
         }
@@ -123,7 +123,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
 /// create a book file with the command line arguments
 /// and exit the process at the end
 pub fn create_book(matches: &ArgMatches) -> ! {
-    let mut f: Box<dyn Write> = if let Some(book) = matches.value_of("BOOK") {
+    let mut f: Box<dyn Write> = if let Some(book) = matches.get_one::<String>("BOOK") {
         if fs::metadata(book).is_ok() {
             print_error_and_exit(
                 &lformat!("Could not create file {}: it already exists!", book),
@@ -135,8 +135,8 @@ pub fn create_book(matches: &ArgMatches) -> ! {
         Box::new(io::stdout())
     };
 
-    if let Some(values) = matches.values_of("create") {
-        if matches.is_present("set") {
+    if let Some(values) = matches.get_many::<String>("files") {
+        if matches.get_many::<String>("set").is_some() {
             let mut book = Book::new();
             let s = set_book_options(&mut book, matches);
             f.write_all(s.as_bytes()).unwrap();
@@ -169,7 +169,7 @@ lang: en
         for file in values {
             f.write_all(format!("+ {}\n", file).as_bytes()).unwrap();
         }
-        if let Some(s) = matches.value_of("BOOK") {
+        if let Some(s) = matches.get_one::<String>("BOOK") {
             println!(
                 "{}",
                 lformat!("Created {}, now you'll have to complete it!", s)
@@ -181,10 +181,13 @@ lang: en
     }
 }
 
-pub fn create_matches() -> (ArgMatches, String, String) {
+pub fn create_matches() -> ArgMatches {
+    app().get_matches()
+}
+
+// in its own function for testing purpose
+fn app() -> clap::Command {
     lazy_static! {
-        static ref HELP: String = lformat!("Print help information");
-        static ref VERSION: String = lformat!("Print version information");
         static ref ABOUT: String = lformat!("Render a Markdown book in EPUB, PDF or HTML.");
         static ref SINGLE: String = lformat!("Use a single Markdown file instead of a book configuration file");
         static ref EMOJI: String = lformat!("Force emoji usage even if it might not work on your system");
@@ -210,9 +213,6 @@ pub fn create_matches() -> (ArgMatches, String, String) {
 USAGE:
     {{usage}}
 
-FLAGS:
-{{flags}}
-
 OPTIONS:
 {{options}}
 
@@ -221,35 +221,84 @@ ARGS:
 ");
     }
 
-    let mut app = Command::new("crowbook")
+    let app = Command::new("crowbook")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Élisabeth Henry <liz.henry@ouvaton.org>")
-        .setting(AppSettings::UnifiedHelpMessage)
-        .setting(AppSettings::HidePossibleValuesInHelp)
+        .hide_possible_values(true)
         .about(ABOUT.as_str())
-        .arg(Arg::from_usage("-☺️, --force-emoji").help(EMOJI.as_str()))
-        .arg(Arg::from_usage("-s, --single").help(SINGLE.as_str()))
-        .arg(Arg::from_usage("-n, --no-fancy").help(NO_FANCY.as_str()))
-        .arg(Arg::from_usage("-v, --verbose").help(VERBOSE.as_str()))
-        .arg(Arg::from_usage("-a, --autograph").help(AUTOGRAPH.as_str()))
         .arg(
-            Arg::from_usage("-q, --quiet")
+            Arg::new("force-emoji")
+                .short('f')
+                .long("force-emoji")
+                .action(ArgAction::SetTrue)
+                .help(EMOJI.as_str()),
+        )
+        .arg(
+            Arg::new("single")
+                .short('s')
+                .long("single")
+                .action(ArgAction::SetTrue)
+                .help(SINGLE.as_str()),
+        )
+        .arg(
+            Arg::new("no-fancy")
+                .short('n')
+                .long("no-fancy")
+                .action(ArgAction::SetTrue)
+                .help(NO_FANCY.as_str()),
+        )
+        .arg(
+            Arg::new("verbose")
+                .short('v')
+                .long("verbose")
+                .action(ArgAction::SetTrue)
+                .help(VERBOSE.as_str()),
+        )
+        .arg(
+            Arg::new("autograph")
+                .short('a')
+                .long("autograph")
+                .action(ArgAction::SetTrue)
+                .help(AUTOGRAPH.as_str()),
+        )
+        .arg(
+            Arg::new("quiet")
+                .short('q')
+                .long("quiet")
+                .action(ArgAction::SetTrue)
                 .help(QUIET.as_str())
                 .conflicts_with("verbose"),
         )
-        .arg(Arg::from_usage("-h, --help").help(HELP.as_str()))
-        .arg(Arg::from_usage("-V, --version").help(VERSION.as_str()))
-        .arg(Arg::from_usage("-p, --proofread").help(PROOFREAD.as_str()))
-        .arg(Arg::from_usage("-c, --create [FILES]...").help(CREATE.as_str()))
         .arg(
-            Arg::from_usage("-o, --output [FILE]")
+            Arg::new("proofread")
+                .short('p')
+                .long("poofread")
+                .action(ArgAction::SetTrue)
+                .help(PROOFREAD.as_str()),
+        )
+        .arg(
+            Arg::new("files")
+                .short('c')
+                .long("create")
+                .action(ArgAction::Set)
+                .num_args(1..)
+                .help(CREATE.as_str()),
+        )
+        .arg(
+            Arg::new("output")
+                .short('o')
+                .long("output")
+                .action(ArgAction::Set)
+                .num_args(1)
                 .help(OUTPUT.as_str())
                 .requires("to"),
         )
         .arg(
-            Arg::from_usage("-t, --to [FORMAT]")
-                .help(TO.as_str())
-                .possible_values(&[
+            Arg::new("to")
+                .short('t')
+                .long("to")
+                .action(ArgAction::Set)
+                .value_parser([
                     "epub",
                     "pdf",
                     "html",
@@ -260,48 +309,69 @@ ARGS:
                     "proofread.html.dir",
                     "proofread.pdf",
                     "proofread.tex",
-                ]),
+                ])
+                .help(TO.as_str()),
         )
         .arg(
-            Arg::from_usage("--set [KEY_VALUES]")
-                .help(SET.as_str())
-                .min_values(2),
+            Arg::new("set")
+                .long("set")
+                .action(ArgAction::Set)
+                .num_args(2..)
+                .help(SET.as_str()),
         )
-        .arg(Arg::from_usage("-l --list-options").help(LIST_OPTIONS.as_str()))
         .arg(
-            Arg::from_usage("--list-options-md")
+            Arg::new("list-options")
+                .short('l')
+                .long("list-options")
+                .action(ArgAction::SetTrue)
+                .help(LIST_OPTIONS.as_str()),
+        )
+        .arg(
+            Arg::new("list-options-md")
+                .long("list-options-md")
+                .action(ArgAction::SetTrue)
                 .help(LIST_OPTIONS_MD.as_str())
-                .hidden(true),
+                .hide(true),
         )
-        .arg(Arg::from_usage("-L --lang [LANG]").help(LANG.as_str()))
-        .arg(Arg::from_usage("--print-template [TEMPLATE]").help(PRINT_TEMPLATE.as_str()))
-        .arg(Arg::from_usage("--stats -S").help(STATS.as_str()))
-        .arg(Arg::with_name("BOOK").index(1).help(BOOK.as_str()))
-        .template(TEMPLATE.as_str());
+        .arg(
+            Arg::new("lang")
+                .short('L')
+                .long("lang")
+                .action(ArgAction::Set)
+                .num_args(1)
+                .help(LANG.as_str()),
+        )
+        .arg(
+            Arg::new("print-template")
+                .long("print-template")
+                .action(ArgAction::Set)
+                .num_args(1)
+                .help(PRINT_TEMPLATE.as_str()),
+        )
+        .arg(
+            Arg::new("stats")
+                .short('S')
+                .long("stats")
+                .action(ArgAction::SetTrue)
+                .help(STATS.as_str()),
+        )
+        .arg(
+            Arg::new("BOOK")
+                .index(1)
+                .action(ArgAction::Set)
+                .help(BOOK.as_str()),
+        )
+        .help_template(TEMPLATE.as_str());
 
-    // Write help and version now since it `app` is moved when `get_matches` is run
-    let mut help = vec![];
-    app.write_help(&mut help).unwrap();
-    let help = String::from_utf8(help).unwrap();
-    let mut version = vec![];
-    app.write_version(&mut version).unwrap();
-    let version = String::from_utf8(version).unwrap();
-
-    let matches = app.get_matches();
-
-    pre_check(&matches);
-    (matches, help, version)
+    app
 }
 
-/// Pre-check the matches to see if there isn't illegal options not detected by clap
-fn pre_check(matches: &ArgMatches) {
-    if matches.is_present("files") && !matches.is_present("create") {
-        print_error_and_exit(
-            &lformat!(
-                "A list of additional files is only valid with the --create \
-                               option."
-            ),
-            false,
-        );
+#[cfg(test)]
+mod tests {
+    use super::app;
+
+    #[test]
+    fn verify_app() {
+        app().debug_assert();
     }
 }
