@@ -32,7 +32,7 @@ html.css.add: "h1 { background-color: red; }"
 epub.css.add: "h1 { background-color: gray; }"
 
 # LaTeX code added to default LaTeX template (but doesn't override it)
-template.tex.add: "\usepackage{libertineotf}"
+tex.template.add: "\\usepackage{libertineotf}"
 ```
 
 most templates must be in a separate file:
