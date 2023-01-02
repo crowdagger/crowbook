@@ -81,7 +81,7 @@ impl ResourceHandler {
             return Err(Error::file_not_found(
                 source,
                 lformat!("image"),
-                format!("{}", file),
+                format!("{file}"),
             ));
         }
 
@@ -122,7 +122,7 @@ impl ResourceHandler {
                     return Err(Error::file_not_found(
                         source,
                         lformat!("image"),
-                        format!("{}", file),
+                        format!("{file}"),
                     ));
                 }
             };
@@ -146,7 +146,7 @@ impl ResourceHandler {
                     );
                     return Ok(file);
                 }
-                Some(s) => format!("data:{};base64,{}", s, base64),
+                Some(s) => format!("data:{s};base64,{base64}"),
             }
         };
 
@@ -254,7 +254,7 @@ pub fn get_files(list: &[String], base: &str) -> Result<Vec<String>> {
     let mut out: Vec<String> = vec![];
     let base = Path::new(base);
     for path in list {
-        let abs_path = base.join(&path);
+        let abs_path = base.join(path);
         let res = fs::metadata(&abs_path);
         match res {
             Err(err) => {

@@ -82,10 +82,7 @@ impl Syntax {
             let res: String = syntect::html::styled_line_to_highlighted_html(&regions[..], bg)?;
             formatted_code.push_str(&res);
         }
-        Ok(format!(
-            "<pre>{}</pre>",
-            formatted_code
-        ))
+        Ok(format!("<pre>{formatted_code}</pre>"))
     }
 
     pub fn to_tex(&self, code: &str, language: &str) -> Result<String> {
@@ -107,32 +104,26 @@ impl Syntax {
                 content = content
                     .replace('\n', "\\\\{}\n")
                     .replace(' ', "\\hphantom{ }\\allowbreak{}");
-                content = format!("\\texttt{{{}}}", content);
+                content = format!("\\texttt{{{content}}}");
                 if style.foreground != Color::BLACK {
                     let r = style.foreground.r as f32 / 255.0;
                     let g = style.foreground.g as f32 / 255.0;
                     let b = style.foreground.b as f32 / 255.0;
-                    content = format!(
-                        "\\textcolor[rgb]{{{r}, {g}, {b}}}{{{text}}}",
-                        r = r,
-                        g = g,
-                        b = b,
-                        text = content
-                    );
+                    content = format!("\\textcolor[rgb]{{{r}, {g}, {b}}}{{{content}}}");
                 }
                 if style.font_style.contains(FontStyle::BOLD) {
-                    content = format!("\\textbf{{{}}}", content);
+                    content = format!("\\textbf{{{content}}}");
                 }
                 if style.font_style.contains(FontStyle::ITALIC) {
-                    content = format!("\\emph{{{}}}", content);
+                    content = format!("\\emph{{{content}}}");
                 }
                 if style.font_style.contains(FontStyle::UNDERLINE) {
-                    content = format!("\\underline{{{}}}", content);
+                    content = format!("\\underline{{{content}}}");
                 }
                 formatted_code.push_str(&content);
             }
         }
-        Ok(format!("{{\\sloppy {}}}", formatted_code))
+        Ok(format!("{{\\sloppy {formatted_code}}}"))
     }
 }
 

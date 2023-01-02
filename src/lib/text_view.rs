@@ -82,8 +82,8 @@ pub fn insert_annotation(
     let mut pos = pos;
     let mut found_left = None;
     let mut found_right = None;
-    for i in 0..tokens.len() {
-        let recurse = match tokens[i] {
+    for (i, item) in tokens.iter_mut().enumerate() {
+        let recurse = match item {
             Token::Str(ref s) => {
                 let len = s.chars().count();
                 if pos < len || (pos == len && found_left.is_some()) {
@@ -121,7 +121,7 @@ pub fn insert_annotation(
             }
 
             _ => {
-                if let Some(inner) = tokens[i].inner() {
+                if let Some(inner) = item.inner() {
                     let len = count_length(inner);
                     // Only recurse if the two is in this subtree
                     if pos < len {
@@ -151,7 +151,7 @@ pub fn insert_annotation(
 
         // Moved out of the match 'thanks' to borrowcheck
         if recurse {
-            if let Some(ref mut inner) = tokens[i].inner_mut() {
+            if let Some(ref mut inner) = item.inner_mut() {
                 if let Some(new_pos) = insert_annotation(inner, annotation, pos, length) {
                     pos = new_pos;
                 } else {

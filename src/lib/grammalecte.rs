@@ -78,7 +78,7 @@ impl GrammalecteChecker {
 
         let res = checker
             .client
-            .get(&format!("http://localhost:{}", port))
+            .get(format!("http://localhost:{port}"))
             .send()
             .map_err(|e| {
                 Error::grammar_check(
@@ -113,7 +113,7 @@ impl GrammalecteChecker {
 
         let mut res = self
             .client
-            .post(&format!("http://localhost:{}/gc_text/fr", self.port))
+            .post(format!("http://localhost:{}/gc_text/fr", self.port))
             .body(query)
             .send()
             .map_err(|e| {

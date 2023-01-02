@@ -312,7 +312,7 @@ impl Book {
         I: IntoIterator<Item = &'a (&'a str, &'a str)>,
     {
         // set options
-        for &(key, value) in options {
+        for (key, value) in options {
             if let Err(err) = self.options.set(key, value) {
                 error!(
                     "{}",
@@ -515,7 +515,7 @@ impl Book {
     /// ```
     pub fn read_config<R: Read>(&mut self, mut source: R) -> Result<&mut Book> {
         fn get_filename<'a>(source: &Source, s: &'a str) -> Result<&'a str> {
-            let words: Vec<&str> = (&s[1..]).split_whitespace().collect();
+            let words: Vec<&str> = (s[1..]).split_whitespace().collect();
             if words.len() > 1 {
                 return Err(Error::config_parser(
                     source,
@@ -551,17 +551,14 @@ impl Book {
         let mut line_number = 0;
         let mut is_next_line_ok: bool;
 
-        loop {
-            if let Some(next_line) = lines.peek() {
-                if next_line.starts_with(|c| match c {
-                    '-' | '+' | '!' | '@' => true,
-                    _ => c.is_digit(10),
-                }) {
-                    break;
-                }
-            } else {
+        while let Some(next_line) = lines.peek() {
+            if next_line.starts_with(|c| match c {
+                '-' | '+' | '!' | '@' => true,
+                _ => c.is_ascii_digit(),
+            }) {
                 break;
             }
+
             line = lines.next().unwrap();
             line_number += 1;
             self.source.set_line(line_number);
@@ -578,15 +575,14 @@ impl Book {
 
             if let Some(next_line) = lines.peek() {
                 let doc = YamlLoader::load_from_str(next_line);
-                if doc.is_err() {
-                    is_next_line_ok = false;
-                } else {
-                    let doc = doc.unwrap();
+                if let Ok(doc) = doc {
                     if !doc.is_empty() && doc[0].as_hash().is_some() {
                         is_next_line_ok = true;
                     } else {
                         is_next_line_ok = false;
                     }
+                } else {
+                    is_next_line_ok = false;
                 }
             } else {
                 break;
@@ -659,7 +655,7 @@ impl Book {
                 // hidden chapter
                 let file = get_filename(&self.source, line)?;
                 self.add_chapter(Number::Hidden, file, false)?;
-            } else if line.starts_with(|c: char| c.is_digit(10)) {
+            } else if line.starts_with(|c: char| c.is_ascii_digit()) {
                 // chapter with specific number
                 let parts: Vec<_> = line
                     .splitn(2, |c: char| c == '.' || c == ':' || c == '+')
@@ -681,9 +677,8 @@ impl Book {
                     )
                 })?;
                 self.add_chapter(Number::Specified(number), file, true)?;
-            } else if line.starts_with('@') {
+            } else if let Some(subline) = line.strip_prefix('@') {
                 /* Part */
-                let subline = &line[1..];
                 if subline.starts_with(|c: char| c.is_whitespace()) {
                     let subline = subline.trim();
                     let ast = Parser::from(self).parse_inline(subline)?;
@@ -698,7 +693,7 @@ impl Book {
                     /* Numbered part */
                     let file = get_filename(&self.source, subline)?;
                     self.add_chapter(Number::DefaultPart, file, true)?;
-                } else if subline.starts_with(|c: char| c.is_digit(10)) {
+                } else if subline.starts_with(|c: char| c.is_ascii_digit()) {
                     /* Specified  part*/
                     let parts: Vec<_> = subline
                         .splitn(2, |c: char| c == '.' || c == ':' || c == '+')
@@ -838,7 +833,7 @@ impl Book {
                 if !self.is_proofread() && fmt.contains("proofread") {
                     return false;
                 }
-                self.options.get_path(&format!("output.{}", fmt)).is_ok()
+                self.options.get_path(&format!("output.{fmt}")).is_ok()
             })
             .map(|s| s.to_string())
             .collect();
@@ -880,7 +875,7 @@ impl Book {
                 self.bar_finish(
                     Crowbar::Spinner(bar),
                     CrowbarState::Error,
-                    &format!("{}", err),
+                    &format!("{err}"),
                 );
                 error!(
                     "{}",
@@ -906,7 +901,7 @@ impl Book {
         );
         let path = path.into();
         match self.formats.get(format) {
-            Some(&(ref description, ref renderer)) => {
+            Some((description, renderer)) => {
                 let path = if path.ends_with("auto") {
                     let file = if let Some(s) = self
                         .source
@@ -972,7 +967,7 @@ impl Book {
         );
         let bar = self.add_spinner_to_multibar(format);
         match self.formats.get(format) {
-            Some(&(ref description, ref renderer)) => match renderer.render(self, f) {
+            Some((description, renderer)) => match renderer.render(self, f) {
                 Ok(_) => {
                     self.bar_finish(
                         Crowbar::Spinner(bar),
@@ -1066,7 +1061,6 @@ impl Book {
             )
         })?;
 
-
         // parse the file
         self.bar_set_message(Crowbar::Second, &lformat!("Parsing..."));
 
@@ -1074,7 +1068,7 @@ impl Book {
         parser.set_source_file(file);
         let mut yaml_block = String::from("");
         let mut tokens = parser.parse(&content, Option::Some(&mut yaml_block))?;
-        
+
         // Parse YAML block
         self.parse_yaml(&yaml_block);
         self.features = self.features | parser.features();
@@ -1220,16 +1214,13 @@ impl Book {
         {
             let last = self.chapters.last_mut().unwrap();
             for token in &mut last.content {
-                match *token {
-                    Token::Header(ref mut n, _) => {
-                        let new = *n + level;
-                        if !(0..=6).contains(&new) {
-                            return Err(Error::parser(Source::new(file),
+                if let Token::Header(ref mut n, _) = *token {
+                    let new = *n + level;
+                    if !(0..=6).contains(&new) {
+                        return Err(Error::parser(Source::new(file),
                                                      lformat!("this subchapter contains a heading that, when adjusted, is not in the right range ({} instead of [0-6])", new)));
-                        }
-                        *n = new;
                     }
-                    _ => {}
+                    *n = new;
                 }
             }
         }
@@ -1336,17 +1327,13 @@ impl Book {
             _ => {
                 return Err(Error::config_parser(
                     &self.source,
-                    lformat!("invalid template '{template}'", template = template),
+                    lformat!("invalid template '{template}'"),
                 ))
             }
         };
         if let Ok(ref s) = option {
             let mut f = File::open(s).map_err(|_| {
-                Error::file_not_found(
-                    &self.source,
-                    format!("template '{template}'", template = template),
-                    s.to_owned(),
-                )
+                Error::file_not_found(&self.source, format!("template '{template}'"), s.to_owned())
             })?;
             let mut res = String::new();
             f.read_to_string(&mut res).map_err(|_| {
@@ -1397,7 +1384,7 @@ impl Book {
             }
             format!("{:X}", Roman::from(n as i16))
         } else {
-            format!("{}", n)
+            format!("{n}")
         };
         Ok(number)
     }
@@ -1420,17 +1407,17 @@ impl Book {
         };
         let mut data = self.get_metadata(&mut f)?;
         if !title.is_empty() {
-            data = data.insert_bool(format!("has_{}_title", header_type), true);
+            data = data.insert_bool(format!("has_{header_type}_title"), true);
         }
         let number = self.get_header_number(header, n)?;
         let header_name = self
             .options
-            .get_str(&format!("rendering.{}", header_type))
+            .get_str(&format!("rendering.{header_type}"))
             .map(|s| s.to_owned())
             .unwrap_or_else(|_| lang::get_str(self.options.get_str("lang").unwrap(), header_type));
 
         data = data
-            .insert_str(format!("{}_title", header_type), title.clone())
+            .insert_str(format!("{header_type}_title"), title.clone())
             .insert_str(header_type, header_name.clone())
             .insert_str("number", number.clone());
         let data = data.build();
@@ -1446,10 +1433,10 @@ impl Book {
         } else {
             let template = compile_str(
                 self.options
-                    .get_str(&format!("rendering.{}.template", header_type))
+                    .get_str(&format!("rendering.{header_type}.template"))
                     .unwrap(),
                 &self.source,
-                &format!("rendering.{}.template", header_type),
+                &format!("rendering.{header_type}.template"),
             )?;
             template.render_data(&mut res, &data)?;
         }
@@ -1519,12 +1506,12 @@ impl Book {
                 match content {
                     Ok(content) => {
                         if !content.is_empty() {
-                            mapbuilder = mapbuilder.insert_str(format!("{}_raw", key), raw);
+                            mapbuilder = mapbuilder.insert_str(format!("{key}_raw"), raw);
                             mapbuilder = mapbuilder.insert_str(key.clone(), content);
 
-                            mapbuilder = mapbuilder.insert_bool(format!("has_{}", key), true);
+                            mapbuilder = mapbuilder.insert_bool(format!("has_{key}"), true);
                         } else {
-                            mapbuilder = mapbuilder.insert_bool(format!("has_{}", key), false);
+                            mapbuilder = mapbuilder.insert_bool(format!("has_{key}"), false);
                         }
                     }
                     Err(err) => {
@@ -1540,7 +1527,7 @@ impl Book {
                     }
                 }
             } else {
-                mapbuilder = mapbuilder.insert_bool(format!("has_{}", key), false);
+                mapbuilder = mapbuilder.insert_bool(format!("has_{key}"), false);
             }
         }
 
@@ -1568,9 +1555,7 @@ impl Book {
             Ok(docs) => {
                 // Use this yaml block to set options only if 1) it is valid
                 // 2) the option is activated
-                if docs.len() >= 1
-                    && docs[0].as_hash().is_some()
-                {
+                if !docs.is_empty() && docs[0].as_hash().is_some() {
                     let hash = docs[0].as_hash().unwrap();
                     for (key, value) in hash {
                         match self
@@ -1603,17 +1588,22 @@ impl Book {
                                         )
                                     );
                                 }
-                            },
+                            }
                             Err(e) => {
-                                error!("{}", lformat!("Inline YAML block could \
+                                error!(
+                                    "{}",
+                                    lformat!(
+                                        "Inline YAML block could \
                                                         not set {:?} to {:?}: {}",
-                                                        key,
-                                                        value,
-                                                        e))
+                                        key,
+                                        value,
+                                        e
+                                    )
+                                )
                             }
                         }
                     }
-                
+
                     self.update_cleaner();
                     self.init_checker();
                 } else {
@@ -1627,7 +1617,7 @@ impl Book {
                         )
                     );
                 }
-            },
+            }
             Err(err) => {
                 error!(
                     "{}",

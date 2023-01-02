@@ -79,13 +79,13 @@ impl<'a> HtmlSingleRenderer<'a> {
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
         let menu_svg = img::MENU_SVG.to_base64(base64::STANDARD);
-        let menu_svg = format!("data:image/svg+xml;base64,{}", menu_svg);
+        let menu_svg = format!("data:image/svg+xml;base64,{menu_svg}");
 
         let book_svg = img::BOOK_SVG.to_base64(base64::STANDARD);
-        let book_svg = format!("data:image/svg+xml;base64,{}", book_svg);
+        let book_svg = format!("data:image/svg+xml;base64,{book_svg}");
 
         let pages_svg = img::PAGES_SVG.to_base64(base64::STANDARD);
-        let pages_svg = format!("data:image/svg+xml;base64,{}", pages_svg);
+        let pages_svg = format!("data:image/svg+xml;base64,{pages_svg}");
 
         let mut content = String::new();
 
@@ -101,7 +101,7 @@ impl<'a> HtmlSingleRenderer<'a> {
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html
                 .handler
-                .add_link(chapter.filename.as_str(), format!("#chapter-{}", i));
+                .add_link(chapter.filename.as_str(), format!("#chapter-{i}"));
         }
 
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
@@ -297,7 +297,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .map_image(&self.html.book.source, favicon)?;
             mapbuilder = mapbuilder.insert_str(
                 "favicon",
-                format!("<link rel = \"icon\" href = \"{}\">", favicon),
+                format!("<link rel = \"icon\" href = \"{favicon}\">"),
             );
         }
         if !self.html.toc.is_empty() {
@@ -311,7 +311,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                 .get_template("html.highlight.js")?
                 .as_bytes()
                 .to_base64(base64::STANDARD);
-            let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
+            let highlight_js = format!("data:text/javascript;base64,{highlight_js}");
             mapbuilder = mapbuilder
                 .insert_bool("highlight_code", true)
                 .insert_str(
@@ -342,7 +342,7 @@ pub struct ProofHtmlSingle {}
 
 impl BookRenderer for HtmlSingle {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.html", book_name))
+        Ok(format!("{book_name}.html"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
@@ -360,7 +360,7 @@ impl BookRenderer for HtmlSingle {
 
 impl BookRenderer for ProofHtmlSingle {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.proof.html", book_name))
+        Ok(format!("{book_name}.proof.html"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {

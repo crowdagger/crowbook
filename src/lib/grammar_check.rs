@@ -67,7 +67,7 @@ impl GrammarChecker {
 
         let res = checker
             .client
-            .get(&format!("http://localhost:{}/v2/languages", port))
+            .get(format!("http://localhost:{port}/v2/languages"))
             .send()
             .map_err(|e| {
                 Error::grammar_check(
@@ -99,7 +99,7 @@ impl GrammarChecker {
 
         let mut res = self
             .client
-            .post(&format!("http://localhost:{}/v2/check", self.port))
+            .post(format!("http://localhost:{}/v2/check", self.port))
             .body(query)
             .send()
             .map_err(|e| {

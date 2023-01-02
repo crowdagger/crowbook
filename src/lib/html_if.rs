@@ -84,7 +84,7 @@ impl<'a> HtmlIfRenderer<'a> {
                 gen_code.push_str(&rendered.replace('"', "\\\"").replace('\n', "\\\n"));
                 gen_code.push('"');
                 for var in &variables {
-                    gen_code.push_str(&format!(".replace(/{{{{{var}}}}}/, {var})", var = var));
+                    gen_code.push_str(&format!(".replace(/{{{{{var}}}}}/, {var})"));
                 }
                 gen_code.push(';');
                 i = end + 2;
@@ -97,31 +97,26 @@ impl<'a> HtmlIfRenderer<'a> {
         if contains_md {
             gen_code = format!(
                 "var crowbook_return_variable = \"\";
-{}
+{gen_code}
 return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
-                gen_code
             );
         }
         let container = if !contains_md { "p" } else { "div" };
         let id = self.n_fn;
         self.fn_defs.push_str(&format!(
             "function fn_{id}() {{
-    {code}
+    {gen_code}
 }}\n",
-            id = id,
-            code = gen_code
         ));
         self.curr_init.push_str(&format!(
             "    result = fn_{id}();
     if (result != undefined) {{
         document.getElementById(\"result_{id}\").innerHTML = result;
     }}\n",
-            id = id
         ));
         let content = format!(
             "<{container} id = \"result_{id}\"></{container}>\n",
             id = (self.n_fn),
-            container = container
         );
         self.n_fn += 1;
         Ok(content)
@@ -153,11 +148,9 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             {
                 let html_if: &mut HtmlIfRenderer = this.as_mut();
                 let code = format!(
-                    "if (passageCount(state.current_id) {expr}) {{
+                    "if (passageCount(state.current_id) {language}) {{
     {code};
 }}\n",
-                    code = code,
-                    expr = language
                 );
                 let content = html_if.parse_inner_code(&code)?;
                 Ok(content)
@@ -189,7 +182,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html
                 .handler
-                .add_link(chapter.filename.as_str(), format!("#chapter-{}", i));
+                .add_link(chapter.filename.as_str(), format!("#chapter-{i}"));
         }
 
         let pre_code = self
@@ -247,10 +240,9 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             }
 
             chapters.push(format!(
-                "<div id = \"chapter-{}\" class = \"chapter\">
-  {}
+                "<div id = \"chapter-{i}\" class = \"chapter\">
+  {chapter_content}
 </div>",
-                i, chapter_content
             ));
             self.fn_defs.push_str(&format!(
                 "initFns.push(function () {{
@@ -337,7 +329,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                 .map_image(&self.html.book.source, favicon)?;
             mapbuilder = mapbuilder.insert_str(
                 "favicon",
-                format!("<link rel = \"icon\" href = \"{}\">", favicon),
+                format!("<link rel = \"icon\" href = \"{favicon}\">"),
             );
         }
         if self.html.highlight == Highlight::Js {
@@ -347,7 +339,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                 .get_template("html.highlight.js")?
                 .as_bytes()
                 .to_base64(base64::STANDARD);
-            let highlight_js = format!("data:text/javascript;base64,{}", highlight_js);
+            let highlight_js = format!("data:text/javascript;base64,{highlight_js}");
             mapbuilder = mapbuilder
                 .insert_bool("highlight_code", true)
                 .insert_str(
@@ -377,7 +369,7 @@ pub struct HtmlIf {}
 
 impl BookRenderer for HtmlIf {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.html", book_name))
+        Ok(format!("{book_name}.html"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {

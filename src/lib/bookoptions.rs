@@ -521,7 +521,7 @@ impl BookOptions {
                 if &key == "output" {
                     for format in &inner {
                         self.set_yaml(
-                            Yaml::String(format!("output.{}", format)),
+                            Yaml::String(format!("output.{format}")),
                             Yaml::String(String::from("auto")),
                         )
                         .map_err(|_| {
@@ -998,7 +998,7 @@ impl BookOptions {
         let mut previous_is_comment = true;
         for (comment, key, o_type, default) in Self::options_to_vec() {
             // Don't display deprecated options if md is not set
-            if !md && comment.trim() == &lformat!("Deprecated options") {
+            if !md && comment.trim() == lformat!("Deprecated options") {
                 return out;
             }
             if key.is_none() {
@@ -1060,6 +1060,7 @@ impl BookOptions {
     }
 
     /// OPTIONS to a vec of tuples (comment, key, type, default value)
+    #[allow(clippy::type_complexity)]
     fn options_to_vec() -> Vec<(
         &'static str,
         Option<&'static str>,
@@ -1072,8 +1073,8 @@ impl BookOptions {
             if line.is_empty() {
                 continue;
             }
-            if line.starts_with('#') {
-                out.push((&line[1..], None, None, None));
+            if let Some(stripped) = line.strip_prefix('#') {
+                out.push((stripped, None, None, None));
                 continue;
             }
             let v: Vec<_> = line.split(" #").collect();

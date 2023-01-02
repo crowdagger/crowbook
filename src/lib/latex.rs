@@ -129,9 +129,8 @@ impl<'a> LatexRenderer<'a> {
         let numbering = self.book.options.get_i32("rendering.num_depth").unwrap() - 1;
         write!(
             content,
-            "\\setcounter{{tocdepth}}{{{}}}
-\\setcounter{{secnumdepth}}{{{}}}\n",
-            numbering, numbering
+            "\\setcounter{{tocdepth}}{{{numbering}}}
+\\setcounter{{secnumdepth}}{{{numbering}}}\n",
         )?;
 
         if self.book.options.get_bool("rendering.inline_toc").unwrap() {
@@ -140,7 +139,7 @@ impl<'a> LatexRenderer<'a> {
 
         for (i, chapter) in self.book.chapters.iter().enumerate() {
             self.handler
-                .add_link(chapter.filename.as_str(), format!("chapter-{}", i));
+                .add_link(chapter.filename.as_str(), format!("chapter-{i}"));
         }
 
         for (i, chapter) in self.book.chapters.iter().enumerate() {
@@ -153,7 +152,7 @@ impl<'a> LatexRenderer<'a> {
                 content.push_str(&self.render_token(&v[0])?);
                 offset = 1;
             }
-            writeln!(content, "\\label{{chapter-{}}}", i)?;
+            writeln!(content, "\\label{{chapter-{i}}}")?;
             content.push_str(&self.render_vec(&v[offset..])?);
         }
         self.source = Source::empty();
@@ -246,7 +245,7 @@ impl<'a> LatexRenderer<'a> {
         if let Ok(tex_font_size) = self.book.options.get_i32("tex.font.size") {
             data = data
                 .insert_bool("has_tex_size", true)
-                .insert_str("tex_size", format!("{}", tex_font_size));
+                .insert_str("tex_size", format!("{tex_font_size}"));
         }
 
         // If class isn't book, set open_any to true, so margins are symetric.
@@ -331,12 +330,8 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             )
                         })?;
                         let mut first_word = String::new();
-                        loop {
-                            let c = if let Some(next_char) = chars.peek() {
-                                *next_char
-                            } else {
-                                break;
-                            };
+                        while let Some(next_char) = chars.peek() {
+                            let c = *next_char;
                             if !c.is_whitespace() {
                                 first_word.push(c);
                                 chars.next();
@@ -348,12 +343,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         let rest = chars.collect::<String>();
 
                         if initial.is_alphanumeric() {
-                            Ok(format!(
-                                "\\lettrine{{{}}}{{{}}}{}",
-                                initial, first_word, rest
-                            ))
+                            Ok(format!("\\lettrine{{{initial}}}{{{first_word}}}{rest}"))
                         } else {
-                            Ok(format!("{}{}{}", initial, first_word, rest))
+                            Ok(format!("{initial}{first_word}{rest}"))
                         }
                     } else {
                         Ok(content.into_owned())
@@ -452,15 +444,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     format!(
                         "\\begin{{spverbatim}}
 {code}
-\\end{{spverbatim}}",
-                        code = code
+\\end{{spverbatim}}"
                     )
                 };
                 res = format!(
                     "\\begin{{mdcodeblock}}
-{}
-\\end{{mdcodeblock}}",
-                    res
+{res}
+\\end{{mdcodeblock}}"
                 );
                 Ok(res)
             }
@@ -504,11 +494,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                             ))
                         }
                     };
-                    format!(
-                        "\\setcounter{{{counter}}}{{{n}}}\n",
-                        counter = counter,
-                        n = n - 1
-                    )
+                    format!("\\setcounter{{{counter}}}{{{n}}}\n", n = n - 1)
                 };
                 let result = format!(
                     "\\begin{{enumerate}}
@@ -526,14 +512,13 @@ impl<'a> Renderer for LatexRenderer<'a> {
 
                 if self.hyperref && self.handler.contains_link(url) {
                     Ok(format!(
-                        "\\hyperref[{}]{{{}}}",
+                        "\\hyperref[{}]{{{content}}}",
                         escape::tex(self.handler.get_link(url)),
-                        content
                     ))
                 } else {
                     let url = escape::tex(url.as_str());
                     if content == url {
-                        Ok(format!("\\url{{{}}}", content))
+                        Ok(format!("\\url{{{content}}}"))
                     } else if self
                         .book
                         .options
@@ -541,18 +526,17 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         .unwrap()
                     {
                         Ok(format!(
-                            "\\href{{{}}}{{{}}}\\protect\\footnote{{\\url{{{}}}}}",
-                            url, content, url
+                            "\\href{{{url}}}{{{content}}}\\protect\\footnote{{\\url{{{url}}}}}"
                         ))
                     } else {
-                        Ok(format!("\\href{{{}}}{{{}}}", url, content))
+                        Ok(format!("\\href{{{url}}}{{{content}}}"))
                     }
                 }
             }
             Token::StandaloneImage(ref url, _, _) => {
                 if ResourceHandler::is_local(url) {
                     let img = self.handler.map_image(&self.source, url.as_str())?;
-                    Ok(format!("\\mdstandaloneimage{{{}}}\n", img))
+                    Ok(format!("\\mdstandaloneimage{{{img}}}\n"))
                 } else {
                     debug!(
                         "{}",
@@ -585,7 +569,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                     Ok(String::new())
                 }
             }
-            Token::FootnoteReference(ref reference) => Ok(format!("\\footnotemark[{}]", reference)),
+            Token::FootnoteReference(ref reference) => Ok(format!("\\footnotemark[{reference}]")),
             Token::FootnoteDefinition(ref reference, ref v) => Ok(format!(
                 "\\footnotetext[{}]{{{}}}",
                 reference,
@@ -625,13 +609,12 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 if self.proofread {
                     match *annotation {
                         Data::GrammarError(ref s) => Ok(format!(
-                            "\\underline{{{}}}\\protect\\footnote{{{}}}",
-                            content,
+                            "\\underline{{{content}}}\\protect\\footnote{{{}}}",
                             escape::tex(s.as_str())
                         )),
                         Data::Repetition(ref colour) => {
                             if !self.escape && colour == "red" {
-                                Ok(format!("\\underline{{{}}}", content))
+                                Ok(format!("\\underline{{{content}}}"))
                             } else {
                                 Ok(content)
                             }
@@ -652,7 +635,7 @@ pub struct ProofPdf;
 
 impl BookRenderer for Latex {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.tex", book_name))
+        Ok(format!("{book_name}.tex"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
@@ -670,7 +653,7 @@ impl BookRenderer for Latex {
 
 impl BookRenderer for ProofLatex {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.proof.tex", book_name))
+        Ok(format!("{book_name}.proof.tex"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
@@ -688,7 +671,7 @@ impl BookRenderer for ProofLatex {
 
 impl BookRenderer for Pdf {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.pdf", book_name))
+        Ok(format!("{book_name}.pdf"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
@@ -699,7 +682,7 @@ impl BookRenderer for Pdf {
 
 impl BookRenderer for ProofPdf {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.proof.pdf", book_name))
+        Ok(format!("{book_name}.proof.pdf"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {

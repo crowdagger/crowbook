@@ -73,7 +73,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .add_link(chapter.filename.as_str(), filenamer(i));
         }
 
-        if let Ok(metadata) = fs::metadata(&dest_path) {
+        if let Ok(metadata) = fs::metadata(dest_path) {
             if metadata.is_file() {
                 return Err(Error::render(
                     &self.html.book.source,
@@ -91,7 +91,7 @@ impl<'a> HtmlDirRenderer<'a> {
                         path = dest_path.display()
                     )
                 );
-                fs::remove_dir_all(&dest_path).map_err(|e| {
+                fs::remove_dir_all(dest_path).map_err(|e| {
                     Error::render(
                         &self.html.book.source,
                         lformat!(
@@ -106,7 +106,7 @@ impl<'a> HtmlDirRenderer<'a> {
 
         fs::DirBuilder::new()
             .recursive(true)
-            .create(&dest_path)
+            .create(dest_path)
             .map_err(|e| {
                 Error::render(
                     &self.html.book.source,
@@ -331,7 +331,7 @@ impl<'a> HtmlDirRenderer<'a> {
                     .map_image(&self.html.book.source, favicon)?;
                 mapbuilder = mapbuilder.insert_str(
                     "favicon",
-                    format!("<link rel = \"icon\" href = \"{}\">", favicon),
+                    format!("<link rel = \"icon\" href = \"{favicon}\">"),
                 );
             }
             if self.html.highlight == Highlight::Js {
@@ -437,7 +437,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .map_image(&self.html.book.source, favicon)?;
             mapbuilder = mapbuilder.insert_str(
                 "favicon",
-                format!("<link rel = \"icon\" href = \"{}\">", favicon),
+                format!("<link rel = \"icon\" href = \"{favicon}\">"),
             );
         }
         if self.html.highlight == Highlight::Js {
@@ -499,7 +499,7 @@ impl<'a> HtmlDirRenderer<'a> {
             // dir does not exist, create it
             fs::DirBuilder::new()
                 .recursive(true)
-                .create(&dest_dir)
+                .create(dest_dir)
                 .map_err(|e| {
                     Error::render(
                         &self.html.book.source,
@@ -536,7 +536,7 @@ impl<'a> HtmlDirRenderer<'a> {
 
 /// Generate a file name given an int
 fn filenamer(i: usize) -> String {
-    format!("chapter_{:03}.html", i)
+    format!("chapter_{i:03}.html")
 }
 
 derive_html! {HtmlDirRenderer<'a>, HtmlRenderer::static_render_token}

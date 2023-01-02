@@ -248,7 +248,7 @@ impl<'a> HtmlRenderer<'a> {
         } else if self.current_numbering >= n {
             let numbers = self.get_numbers();
             Ok(HeaderData {
-                text: format!("{} {}", numbers, c_title),
+                text: format!("{numbers} {c_title}"),
                 number: numbers,
                 header: String::new(),
                 title: c_title,
@@ -373,8 +373,7 @@ impl<'a> HtmlRenderer<'a> {
             for (note_number, footnote) in self.footnotes.drain(..) {
                 write!(
                     res,
-                    "<div class = \"sidenote\">\n{} {}\n</div>\n",
-                    note_number, footnote
+                    "<div class = \"sidenote\">\n{note_number} {footnote}\n</div>\n",
                 )
                 .unwrap();
             }
@@ -407,13 +406,12 @@ impl<'a> HtmlRenderer<'a> {
                     res,
                     "<tr class = \"notes\">
  <td class = \"note-number\">
-  {}
+  {note_number}
  </td>
  <td class = \"note\">
-  {}
+  {footnote}
   </td>
-</tr>\n",
-                    note_number, footnote
+</tr>\n"
                 )
                 .unwrap();
             }
@@ -449,9 +447,7 @@ impl<'a> HtmlRenderer<'a> {
                                     "<span class = \"repetition\" \
                                             style = \"text-decoration-line: underline; \
                                             text-decoration-style: wavy; \
-                                            text-decoration-color: {colour}\">{content}</span>",
-                                    colour = colour,
-                                    content = content
+                                            text-decoration-color: {colour}\">{content}</span>"
                                 ))
                             } else {
                                 Ok(content)
@@ -506,10 +502,7 @@ impl<'a> HtmlRenderer<'a> {
                 let content = this.render_vec(vec)?;
                 this.as_mut().current_par += 1;
                 let par = this.as_ref().current_par;
-                Ok(format!(
-                    "<p id = \"para-{}\"{}>{}</p>\n",
-                    par, class, content
-                ))
+                Ok(format!("<p id = \"para-{par}\"{class}>{content}</p>\n"))
             }
             Token::Header(n, ref vec) => {
                 let data = this.as_mut().render_title(n, vec)?;
@@ -556,11 +549,10 @@ impl<'a> HtmlRenderer<'a> {
                 let output = if let Some(ref syntax) = this.as_ref().syntax {
                     syntax.to_html(s, language)?
                 } else if language.is_empty() {
-                    format!("<pre><code>{}</code></pre>\n", s)
+                    format!("<pre><code>{s}</code></pre>\n")
                 } else {
                     format!(
-                        "<pre><code class = \"language-{}\">{}</code></pre>\n",
-                        language,
+                        "<pre><code class = \"language-{language}\">{}</code></pre>\n",
                         escape::html(s)
                     )
                 };
@@ -575,7 +567,7 @@ impl<'a> HtmlRenderer<'a> {
                 if n == 1 {
                     String::new()
                 } else {
-                    format!(" start = \"{}\"", n)
+                    format!(" start = \"{n}\"")
                 },
                 this.render_vec(vec)?
             )),
@@ -598,12 +590,11 @@ impl<'a> HtmlRenderer<'a> {
                 };
 
                 Ok(format!(
-                    "<a href = \"{}\"{}>{}</a>",
-                    url,
+                    "<a href = \"{url}\"{}>{}</a>",
                     if title.is_empty() {
                         String::new()
                     } else {
-                        format!(" title = \"{}\"", title)
+                        format!(" title = \"{title}\"")
                     },
                     this.render_vec(vec)?
                 ))
@@ -616,16 +607,14 @@ impl<'a> HtmlRenderer<'a> {
 
                 if token.is_image() {
                     Ok(format!(
-                        "<img src = \"{}\" title = \"{}\" alt = \"{}\" />",
-                        url, title, content
+                        "<img src = \"{url}\" title = \"{title}\" alt = \"{content}\" />",
                     ))
                 } else {
                     Ok(format!(
                         "<div class = \"image\">
-  <img src = \"{}\" title = \"{}\" alt = \
-                                \"{}\" />
+  <img src = \"{url}\" title = \"{title}\" alt = \
+                                \"{content}\" />
 </div>",
-                        url, title, content
                     ))
                 }
             }
@@ -639,25 +628,23 @@ impl<'a> HtmlRenderer<'a> {
             Token::TableRow(ref vec) => Ok(format!("<tr>\n{}</tr>\n", this.render_vec(vec)?)),
             Token::TableCell(ref vec) => {
                 let tag = if this.as_ref().table_head { "th" } else { "td" };
-                Ok(format!("<{}>{}</{}>", tag, this.render_vec(vec)?, tag))
+                Ok(format!("<{tag}>{}</{tag}>", this.render_vec(vec)?))
             }
             Token::TableHead(ref vec) => {
                 this.as_mut().table_head = true;
                 let s = this.render_vec(vec)?;
                 this.as_mut().table_head = false;
-                Ok(format!("<tr>\n{}</tr>\n", s))
+                Ok(format!("<tr>\n{s}</tr>\n"))
             }
             Token::FootnoteReference(ref reference) => Ok(format!(
-                "<a href = \"#note-dest-{}\"><sup id = \
-                            \"note-source-{}\">[{}]</sup></a>",
-                reference, reference, reference
+                "<a href = \"#note-dest-{reference}\"><sup id = \
+                            \"note-source-{reference}\">[{reference}]</sup></a>",
             )),
             Token::FootnoteDefinition(ref reference, ref vec) => {
                 let note_number = format!(
                     "<p class = \"note-number\">
-  <a href = \"#note-source-{}\">[{}]</a>
+  <a href = \"#note-source-{reference}\">[{reference}]</a>
 </p>\n",
-                    reference, reference
                 );
 
                 let inner = format!(
@@ -752,7 +739,7 @@ impl<'a> HtmlRenderer<'a> {
         } else {
             let tokens = Parser::from(this.as_ref().book).parse(&content, None)?;
             let content = this.render_vec(&tokens)?;
-            Ok(format!("<footer id = \"footer\">{}</footer>", content))
+            Ok(format!("<footer id = \"footer\">{content}</footer>"))
         }
     }
 
