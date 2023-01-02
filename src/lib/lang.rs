@@ -43,7 +43,7 @@ pub fn get_str(lang: &str, s: &str) -> String {
         key = s,
         lang = lang
     ));
-    if let &Yaml::String(ref result) = yaml {
+    if let Yaml::String(result) = yaml {
         result.clone()
     } else {
         panic!(

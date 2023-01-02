@@ -65,7 +65,7 @@ impl RepetitionDetector {
     /// Check repetitions in a vector of tokens.
     ///
     /// This modifies the AST
-    pub fn check_chapter(&self, tokens: &mut Vec<Token>) -> Result<()> {
+    pub fn check_chapter(&self, tokens: &mut [Token]) -> Result<()> {
         let fuzzy = if self.fuzzy {
             Some(self.fuzzy_threshold)
         } else {

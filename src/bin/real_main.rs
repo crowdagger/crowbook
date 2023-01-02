@@ -56,7 +56,7 @@ fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &st
     };
 
     if let Err(err) = result {
-        print_error(&format!("{}", err), emoji)
+        print_error(&format!("{err}"), emoji)
     }
 }
 
@@ -107,7 +107,7 @@ pub fn try_main() -> Result<()> {
         let result = book.get_template(template.as_ref());
         match result {
             Ok(s) => {
-                println!("{}", s);
+                println!("{s}");
                 exit(0);
             }
             Err(_) => print_error_and_exit(
@@ -211,7 +211,7 @@ pub fn try_main() -> Result<()> {
             match res {
                 Ok(..) => {}
                 Err(err) => {
-                    book.set_error(&format!("{}", err));
+                    book.set_error(&format!("{err}"));
                     return Err(err);
                 }
             }
@@ -221,7 +221,7 @@ pub fn try_main() -> Result<()> {
 
         if matches.get_flag("stats") {
             let stats = Stats::new(&book, matches.get_flag("verbose"));
-            println!("{}", stats);
+            println!("{stats}");
             exit(0);
         }
 
@@ -271,6 +271,6 @@ pub fn try_main() -> Result<()> {
 
 pub fn real_main() {
     if let Err(err) = try_main() {
-        print_error_and_exit(&format!("{}", err), false);
+        print_error_and_exit(&format!("{err}"), false);
     }
 }

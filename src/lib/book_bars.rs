@@ -70,7 +70,7 @@ impl Book {
     pub fn private_add_progress_bar(&mut self, emoji: bool) {
         self.bars.emoji = emoji;
         let multibar = Arc::new(MultiProgress::new());
-        self.bars.multibar = Some(multibar.clone());
+        self.bars.multibar = Some(multibar);
         let b = self
             .bars
             .multibar
@@ -154,7 +154,7 @@ impl Book {
             let bar = multibar.add(ProgressBar::new_spinner());
             bar.enable_steady_tick(Duration::from_millis(200));
             bar.set_message(lformat!("waiting..."));
-            bar.set_prefix(format!("{}:", key));
+            bar.set_prefix(format!("{key}:"));
             let i = self.bars.spinners.len();
             self.bars.spinners.push(bar);
             self.bar_set_style(Crowbar::Spinner(i), CrowbarState::Running);
@@ -249,22 +249,18 @@ impl Book {
                     .progress_chars("##-");
             }
             bar => {
-                style = style.tick_chars(&format!("{}{}", tick_chars, end_tick));
+                style = style.tick_chars(&format!("{tick_chars}{end_tick}"));
                 match bar {
                     Crowbar::Spinner(_) => {
                         style = style
                             .template(&format!(
-                                "{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}",
-                                color = color
+                                "{{spinner:.bold.{color}}} {{prefix}} {{wide_msg}}"
                             ))
                             .expect("Error in spinner progress bar style");
                     }
                     _ => {
                         style = style
-                            .template(&format!(
-                                "{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}",
-                                color = color
-                            ))
+                            .template(&format!("{{spinner:.bold.{color}}} {{prefix}}{{wide_msg}}"))
                             .expect("Error in progress bar style");
                     }
                 };

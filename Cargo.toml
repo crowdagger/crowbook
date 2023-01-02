@@ -13,6 +13,7 @@ license = "LGPL-2.1+"
 publish = true
 build = "build.rs"
 autobins = false
+rust-version = "1.58" 
 
 exclude = [
     "docs/*",

@@ -70,9 +70,9 @@ impl Source {
 impl fmt::Display for Source {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let Some(ref file) = self.file {
-            write!(f, "{}", file)?;
+            write!(f, "{file}")?;
             if let Some(line) = self.line {
-                write!(f, ":{}", line)?;
+                write!(f, ":{line}")?;
             }
         } else {
             write!(f, "<UNKNOWN FILE>")?;
@@ -268,15 +268,15 @@ impl error::Error for Error {
     fn description(&self) -> &str {
         match self.inner {
             Inner::Default(ref s)
-                | Inner::Parser(ref s)
-                | Inner::Zipper(ref s)
-                | Inner::BookOption(ref s)
-                | Inner::ConfigParser(ref s)
-                | Inner::InvalidOption(ref s)
-                | Inner::Render(ref s)
-                | Inner::Template(ref s)
-                | Inner::Syntect(ref s)
-                | Inner::GrammarCheck(ref s) => s.as_ref(),
+            | Inner::Parser(ref s)
+            | Inner::Zipper(ref s)
+            | Inner::BookOption(ref s)
+            | Inner::ConfigParser(ref s)
+            | Inner::InvalidOption(ref s)
+            | Inner::Render(ref s)
+            | Inner::Template(ref s)
+            | Inner::Syntect(ref s)
+            | Inner::GrammarCheck(ref s) => s.as_ref(),
 
             Inner::FileNotFound(..) => "File not found",
         }
@@ -287,15 +287,15 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let source = &self.source;
         if let Some(ref file) = source.file {
-            write!(f, "{}", file)?;
+            write!(f, "{file}")?;
             if let Some(line) = source.line {
-                write!(f, ":{}", line)?;
+                write!(f, ":{line}")?;
             }
             write!(f, ": ")?;
         }
 
         match self.inner {
-            Inner::Default(ref s) => write!(f, "{}", s),
+            Inner::Default(ref s) => write!(f, "{s}"),
             Inner::GrammarCheck(ref s) => {
                 write!(
                     f,
@@ -363,7 +363,7 @@ pub type Result<T> = result::Result<T, Error>;
 /// Implement our Error from mustache::Error
 impl From<mustache::Error> for Error {
     fn from(err: mustache::Error) -> Error {
-        Error::template(Source::empty(), format!("{}", err))
+        Error::template(Source::empty(), format!("{err}"))
     }
 }
 
@@ -408,7 +408,7 @@ impl From<syntect::Error> for Error {
     fn from(err: syntect::Error) -> Error {
         Error::syntect(
             Source::empty(),
-            lformat!("syntect error: {error}", error = err)
+            lformat!("syntect error: {error}", error = err),
         )
     }
 }

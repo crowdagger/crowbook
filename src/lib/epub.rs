@@ -533,9 +533,9 @@ impl<'a> EpubRenderer<'a> {
                             )
                         })?;
                         let mut new_content = if initial.is_alphanumeric() {
-                            format!("<span class = \"initial\">{}</span>", initial)
+                            format!("<span class = \"initial\">{initial}</span>")
                         } else {
-                            format!("{}", initial)
+                            format!("{initial}")
                         };
                         for c in chars {
                             new_content.push(c);
@@ -569,12 +569,9 @@ impl<'a> EpubRenderer<'a> {
                     == 3;
 
                 Ok(format!(
-                    "<a {} href = \"#note-dest-{}\"><sup id = \
-                            \"note-source-{}\">[{}]</sup></a>",
+                    "<a {} href = \"#note-dest-{reference}\"><sup id = \
+                            \"note-source-{reference}\">[{reference}]</sup></a>",
                     if epub3 { "epub:type = \"noteref\"" } else { "" },
-                    reference,
-                    reference,
-                    reference
                 ))
             }
             Token::FootnoteDefinition(ref reference, ref vec) => {
@@ -588,17 +585,15 @@ impl<'a> EpubRenderer<'a> {
                 let html: &mut HtmlRenderer = this.as_mut();
                 let note_number = format!(
                     "<p class = \"note-number\">
-  <a href = \"#note-source-{}\">[{}]</a>
+  <a href = \"#note-source-{reference}\">[{reference}]</a>
 </p>\n",
-                    reference, reference
                 );
                 let inner = if epub3 {
                     format!(
-                        "<aside epub:type = \"footnote\" id = \"note-dest-{}\">{}</aside>",
-                        reference, inner_content
+                        "<aside epub:type = \"footnote\" id = \"note-dest-{reference}\">{inner_content}</aside>"
                     )
                 } else {
-                    format!("<a id = \"note-dest-{}\" />{}", reference, inner_content)
+                    format!("<a id = \"note-dest-{reference}\" />{inner_content}")
                 };
                 html.add_footnote(note_number, inner);
 
@@ -611,7 +606,7 @@ impl<'a> EpubRenderer<'a> {
 
 /// Generate a file name given an int
 fn filenamer(i: usize) -> String {
-    format!("chapter_{:03}.xhtml", i)
+    format!("chapter_{i:03}.xhtml")
 }
 
 derive_html! {EpubRenderer<'a>, EpubRenderer::static_render_token}
@@ -620,7 +615,7 @@ pub struct Epub {}
 
 impl BookRenderer for Epub {
     fn auto_path(&self, book_name: &str) -> Result<String> {
-        Ok(format!("{}.epub", book_name))
+        Ok(format!("{book_name}.epub"))
     }
 
     fn render(&self, book: &Book, to: &mut dyn Write) -> Result<()> {

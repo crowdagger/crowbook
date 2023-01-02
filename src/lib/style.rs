@@ -46,5 +46,5 @@ pub fn fill(msg: &str, indent: &str) -> String {
     let options = textwrap::Options::new(width.into())
         .initial_indent(indent)
         .subsequent_indent(indent);
-    textwrap::fill(msg, &options)
+    textwrap::fill(msg, options)
 }

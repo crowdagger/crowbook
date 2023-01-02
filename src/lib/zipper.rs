@@ -75,7 +75,7 @@ This is forbidden because we are supposed \
             // dir does not exist, create it
             DirBuilder::new()
                 .recursive(true)
-                .create(&dest_dir)
+                .create(dest_dir)
                 .map_err(|_| {
                     Error::zipper(lformat!(
                         "could not create temporary directory in {path}",

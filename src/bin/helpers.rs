@@ -76,7 +76,7 @@ pub fn get_lang() -> Option<String> {
 }
 
 /// Gets the book options in a (key, value) list, or print an error
-pub fn get_book_options<'a>(matches: &'a ArgMatches) -> Vec<(&'a str, &'a str)> {
+pub fn get_book_options(matches: &ArgMatches) -> Vec<(&str, &str)> {
     let mut output = vec![];
     if let Some(iter) = matches.get_many::<String>("set") {
         let v: Vec<_> = iter.collect();
@@ -111,11 +111,11 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     let options = get_book_options(matches);
 
     for (key, value) in options {
-        let res = book.options.set(&key, &value);
+        let res = book.options.set(key, value);
         if let Err(err) = res {
             print_error_and_exit(&lformat!("Error in setting key {}: {}", key, err), false);
         }
-        output.push_str(&format!("{}: {}\n", key, value));
+        output.push_str(&format!("{key}: {value}\n"));
     }
     output
 }
@@ -167,7 +167,7 @@ lang: en
         f.write_all(lformat!("\n## List of chapters\n").as_bytes())
             .unwrap();
         for file in values {
-            f.write_all(format!("+ {}\n", file).as_bytes()).unwrap();
+            f.write_all(format!("+ {file}\n").as_bytes()).unwrap();
         }
         if let Some(s) = matches.get_one::<String>("BOOK") {
             println!(
