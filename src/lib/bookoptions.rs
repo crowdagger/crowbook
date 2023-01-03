@@ -97,6 +97,7 @@ epub.highlight.theme:str            # {epub_theme}
 epub.css:tpl                        # {epub_css}
 epub.css.add:str                    # {epub_css_add}
 epub.chapter.xhtml:tpl              # {chapter_xhtml}
+epub.titlepage.xhtml:tpl            # {titlepage_xhtml}
 epub.toc.extras:bool:true           # {epub_toc}
 epub.escape_nb_spaces:bool:true     # {nb_spaces}
 
@@ -294,6 +295,7 @@ crowbook.verbose:alias                              # {removed}
                                          epub_css = lformat!("Path of a stylesheet for EPUB"),
                                          epub_css_add = lformat!("Inline CSS added to the EPUB stylesheet template"),
                                          chapter_xhtml = lformat!("Path of an xhtml template for each chapter"),
+                                         titlepage_xhtml = lformat!("Path of an xhtml template for the title page"),
                                          epub_toc = lformat!("Add 'Title' and (if set) 'Cover' in the EPUB table of contents"),
 
                                          tex_links = lformat!("Add foontotes to URL of links so they are readable when printed"),

@@ -1303,10 +1303,18 @@ impl Book {
     #[doc(hidden)]
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
         let option = self.options.get_path(template);
+        let epub3 = template.starts_with("epub") && self.options.get_i32("epub.version")? == 3;
         let fallback = match template {
             "epub.css" => epub::CSS,
+            "epub.titlepage.xhtml" => {
+                if epub3 {
+                    epub3::TITLE
+                } else {
+                    epub::TITLE
+                }
+            }
             "epub.chapter.xhtml" => {
-                if self.options.get_i32("epub.version")? == 3 {
+                if epub3 {
                     epub3::TEMPLATE
                 } else {
                     epub::TEMPLATE
