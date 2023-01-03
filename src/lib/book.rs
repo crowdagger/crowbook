@@ -1024,14 +1024,7 @@ impl Book {
 
     pub fn render_format_to_file<P: Into<PathBuf>>(&mut self, format: &str, path: P) -> Result<()> {
         let bar = self.add_spinner_to_multibar(format);
-        let path = path.into();
-        let normalized = misc::normalize(&path);
         self.render_format_to_file_with_bar(format, path, bar)?;
-        self.bar_finish(
-            Crowbar::Spinner(bar),
-            CrowbarState::Success,
-            &lformat!("generated {path}", path = normalized),
-        );
         self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
         Ok(())
     }
