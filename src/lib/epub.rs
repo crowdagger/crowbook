@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2019 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -76,7 +76,8 @@ impl<'a> EpubRenderer<'a> {
     /// Render a book
     pub fn render_book(&mut self, to: &mut dyn Write) -> Result<String> {
         // Initialize the EPUB builder
-        let mut zip = ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)?;
+        let mut zip = ZipCommand::new_in(self.html.book.options.get_path("crowbook.temp_dir")?)
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         zip.command(
             self.html
                 .book
@@ -91,34 +92,44 @@ impl<'a> EpubRenderer<'a> {
                 "{}",
                 lformat!("Could not run zip command, falling back to zip library")
             );
-            ZipCommandOrLibrary::Library(ZipLibrary::new()?)
+            ZipCommandOrLibrary::Library(ZipLibrary::new()
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?)
         };
-        let mut maker = EpubBuilder::new(wrapper)?;
+        let mut maker = EpubBuilder::new(wrapper)
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
             maker.epub_version(EpubVersion::V30);
         }
 
         let lang = self.html.book.options.get_str("lang").unwrap();
         let toc_extras = self.html.book.options.get_bool("epub.toc.extras").unwrap();
-        maker.metadata("lang", lang)?;
+        maker.metadata("lang", lang)
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         maker.metadata(
             "author",
             escape::html(self.html.book.options.get_str("author").unwrap()),
-        )?;
+        )
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         maker.metadata(
             "title",
             escape::html(self.html.book.options.get_str("title").unwrap()),
-        )?;
-        maker.metadata("generator", "crowbook")?;
-        maker.metadata("toc_name", lang::get_str(lang, "toc"))?;
+        )
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
+        maker.metadata("generator", "crowbook")
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
+        maker.metadata("toc_name", lang::get_str(lang, "toc"))
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         if let Ok(subject) = self.html.book.options.get_str("subject") {
-            maker.metadata("subject", subject)?;
+            maker.metadata("subject", subject)
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         }
         if let Ok(description) = self.html.book.options.get_str("description") {
-            maker.metadata("description", description)?;
+            maker.metadata("description", description)
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         }
         if let Ok(license) = self.html.book.options.get_str("license") {
-            maker.metadata("license", license)?;
+            maker.metadata("license", license)
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         }
 
         // if self.html.book.options.get_bool("epub.toc.extras").unwrap() == true {
@@ -155,7 +166,8 @@ impl<'a> EpubRenderer<'a> {
             if toc_extras {
                 content = content.title(lang::get_str(lang, "cover"));
             }
-            maker.add_content(content)?;
+            maker.add_content(content)
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         }
 
         // Write titlepage
@@ -166,7 +178,8 @@ impl<'a> EpubRenderer<'a> {
             if toc_extras {
                 content = content.title(lang::get_str(lang, "title"));
             }
-            maker.add_content(content)?;
+            maker.add_content(content)
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         }
 
         if self
@@ -209,7 +222,8 @@ impl<'a> EpubRenderer<'a> {
                     break;
                 }
             }
-            maker.add_content(content)?;
+            maker.add_content(content)
+                .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         }
         self.html.source = Source::empty();
 
@@ -231,7 +245,8 @@ impl<'a> EpubRenderer<'a> {
         let mut res: Vec<u8> = vec![];
         template_css.render_data(&mut res, &data)?;
         let css = String::from_utf8_lossy(&res);
-        maker.stylesheet(css.as_bytes())?;
+        maker.stylesheet(css.as_bytes())
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
 
         // Write all images (including cover)
         let cover = self.html.book.options.get_path("cover");
@@ -245,9 +260,11 @@ impl<'a> EpubRenderer<'a> {
             })?;
             if cover.as_ref() == Ok(source) {
                 // Treat cover specially so it is properly tagged
-                maker.add_cover_image(dest, &f, self.get_format(dest))?;
+                maker.add_cover_image(dest, &f, self.get_format(dest))
+                    .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
             } else {
-                maker.add_resource(dest, &f, self.get_format(dest))?;
+                maker.add_resource(dest, &f, self.get_format(dest))
+                    .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
             }
         }
 
@@ -277,11 +294,13 @@ impl<'a> EpubRenderer<'a> {
                             abs_path.to_string_lossy().into_owned(),
                         )
                     })?;
-                maker.add_resource(data_path.join(&path), &f, self.get_format(path.as_ref()))?;
+                maker.add_resource(data_path.join(&path), &f, self.get_format(path.as_ref()))
+                    .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
             }
         }
 
-        maker.generate(to)?;
+        maker.generate(to)
+            .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
 
         Ok(String::new())
     }
