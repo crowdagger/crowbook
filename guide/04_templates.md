@@ -183,6 +183,10 @@ The main (and currently only) template used by the LaTeX renderer.
 This template is the main template used by the Epub renderer.
 It contains the XHTML template that will be used for each chapter.
 
+### epub.titlepage.xhtml
+
+This template is the template used by the Epub renderer for the title page.
+
 ### epub.css
 
 This template is used by the Epub renderer and contains the style sheet.
