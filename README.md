@@ -14,9 +14,6 @@ To see what Crowbook's output looks like, you can read the Crowbook guide render
 or
 [EPUB](http://lise-henry.github.io/crowbook/book/book.epub).
 
-You can also play with the
-[online demo version](http://vps.crowdagger.fr/crowbook/).
-
 ## Installing
 
 There are two ways to install Crowbook:
