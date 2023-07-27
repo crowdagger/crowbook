@@ -1024,14 +1024,7 @@ impl Book {
 
     pub fn render_format_to_file<P: Into<PathBuf>>(&mut self, format: &str, path: P) -> Result<()> {
         let bar = self.add_spinner_to_multibar(format);
-        let path = path.into();
-        let normalized = misc::normalize(&path);
         self.render_format_to_file_with_bar(format, path, bar)?;
-        self.bar_finish(
-            Crowbar::Spinner(bar),
-            CrowbarState::Success,
-            &lformat!("generated {path}", path = normalized),
-        );
         self.bar_finish(Crowbar::Main, CrowbarState::Success, &lformat!("Finished"));
         Ok(())
     }
@@ -1303,10 +1296,18 @@ impl Book {
     #[doc(hidden)]
     pub fn get_template(&self, template: &str) -> Result<Cow<'static, str>> {
         let option = self.options.get_path(template);
+        let epub3 = template.starts_with("epub") && self.options.get_i32("epub.version")? == 3;
         let fallback = match template {
             "epub.css" => epub::CSS,
+            "epub.titlepage.xhtml" => {
+                if epub3 {
+                    epub3::TITLE
+                } else {
+                    epub::TITLE
+                }
+            }
             "epub.chapter.xhtml" => {
-                if self.options.get_i32("epub.version")? == 3 {
+                if epub3 {
                     epub3::TEMPLATE
                 } else {
                     epub::TEMPLATE

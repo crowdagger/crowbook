@@ -307,11 +307,13 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render the titlepgae
     fn render_titlepage(&mut self) -> Result<String> {
-        let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
         let template = compile_str(
-            if epub3 { epub3::TITLE } else { TITLE },
+            self.html
+                .book
+                .get_template("epub.titlepage.xhtml")?
+                .as_ref(),
             &self.html.book.source,
-            "title page",
+            "epub.titlepage.xhtml",
         )?;
         let data = self
             .html
