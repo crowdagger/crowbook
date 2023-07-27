@@ -171,7 +171,7 @@ impl ResourceHandler {
             link
         } else {
             // Try to get a link by changing the extension
-            let new_from = format!("{}", Path::new(from).with_extension("md").display());
+            let new_from = format!("{}", Path::new(from).with_extension("md").display()).replace("\\", "/");
             if let Some(link) = self.links.get(&new_from) {
                 link
             } else {
@@ -179,8 +179,9 @@ impl ResourceHandler {
                     "{}",
                     lformat!(
                         "Resources: could not find an in-book match for link \
-                                      {file}",
-                        file = from
+                                      {file} or {new_from}",
+                        file = from,
+                        new_from = new_from
                     )
                 );
                 from
@@ -193,8 +194,8 @@ impl ResourceHandler {
         if self.links.contains_key(from) {
             true
         } else {
-            // Try to get a link by changing the extension
-            let new_from = format!("{}", Path::new(from).with_extension("md").display());
+            // Try to get a link by changing the extension and rewriting backlashes
+            let new_from = format!("{}", Path::new(from).with_extension("md").display()).replace("\\", "/");
             self.links.contains_key(&new_from)
         }
     }
