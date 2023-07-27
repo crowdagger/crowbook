@@ -1,11 +1,12 @@
 ChangeLog
 =========
 
-current (???)
+0.16.0 (27/07/2023)
 -------------
 * `epub.titlepage.xhtml` can now be overriden (geobert)
 * Fix an issue where horizontal rules could be interpreted as additional front matter 
 * Generated PDF now include some metadata
+* Fix internal links under Windows
 
 0.15.2 (2020-07-07)
 -----------------------
