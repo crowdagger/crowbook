@@ -3,6 +3,7 @@ ChangeLog
 
 current (???)
 -------------
+* `epub.titlepage.xhtml` can now be overriden (geobert)
 * Fix an issue where horizontal rules could be interpreted as additional front matter 
 * Generated PDF now include some metadata
 
