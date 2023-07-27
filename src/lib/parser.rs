@@ -1,5 +1,5 @@
 
-// Copyright (C) 2016-2022 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -271,7 +271,7 @@ impl Parser {
             NodeValue::FrontMatter(ref v) => {
                 if let Some(yaml) = yaml_block {
                     // We can add the frontmatter to the yaml block
-                    yaml.push_str(std::str::from_utf8(v)?);
+                    yaml.push_str(v);
                 }
                 vec![]
             },
@@ -288,19 +288,13 @@ impl Parser {
             NodeValue::DescriptionTerm => vec![Token::DescriptionTerm(inner)],
             NodeValue::DescriptionDetails => vec![Token::DescriptionDetails(inner)],
             NodeValue::CodeBlock(ref block) => {
-                let info = String::from_utf8(block.info.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8"))
-                })?;
-                let code = String::from_utf8(block.literal.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("Codeblock contains invalid UTF-8"))
-                })?;
+                let info = block.info.clone();
+                let code = block.literal.clone();
                 self.features.codeblock = true;
                 vec![Token::CodeBlock(info, code)]
             }
             NodeValue::HtmlBlock(ref block) => {
-                let text = String::from_utf8(block.literal.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8"))
-                })?;
+                let text = block.literal.clone();
                 if self.html_as_text {
                     vec![Token::Str(text)]
                 } else {
@@ -309,9 +303,7 @@ impl Parser {
                 }
             }
             NodeValue::HtmlInline(ref html) => {
-                let text = String::from_utf8(html.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("HTML block contains invalid UTF-8"))
-                })?;
+                let text = html.clone();
                 if self.html_as_text {
                     vec![Token::Str(text)]
                 } else {
@@ -329,37 +321,23 @@ impl Parser {
             NodeValue::Heading(ref heading) => vec![Token::Header(heading.level as i32, inner)],
             NodeValue::ThematicBreak => vec![Token::Rule],
             NodeValue::FootnoteDefinition(ref def) => {
-                let reference = String::from_utf8(def.clone()).map_err(|_| {
-                    Error::parser(
-                        &self.source,
-                        lformat!("Footnote definition contains invalid UTF-8"),
-                    )
-                })?;
+                let reference = def.clone();
                 vec![Token::FootnoteDefinition(reference, inner)]
             }
             NodeValue::Text(ref text) => {
-                let text = String::from_utf8(text.clone()).map_err(|_| {
-                    Error::parser(
-                        &self.source,
-                        lformat!("Markdown file contains invalid UTF-8"),
-                    )
-                })?;
+                let text = text.clone();
                 vec![Token::Str(text)]
             }
             NodeValue::Code(ref code) => {
-                let text = String::from_utf8(code.literal.clone()).map_err(|_| {
-                    Error::parser(
-                        &self.source,
-                        lformat!("Markdown file contains invalid UTF-8"),
-                    )
-                })?;
+                let text = code.literal.clone();
                 vec![Token::Code(text)]
             }
             NodeValue::SoftBreak => vec![Token::SoftBreak],
             NodeValue::LineBreak => vec![Token::HardBreak],
             NodeValue::Emph => vec![Token::Emphasis(inner)],
-            NodeValue::TaskItem(checked) => {
+            NodeValue::TaskItem(c) => {
                 self.features.taskitem = true;
+                let checked = if c.is_some() { true } else { false };
                 vec![Token::TaskItem(checked, inner)]
             }
             NodeValue::Strong => vec![Token::Strong(inner)],
@@ -370,31 +348,18 @@ impl Parser {
             NodeValue::Superscript => vec![Token::Superscript(inner)],
             NodeValue::Link(ref link) => {
                 self.features.url = true;
-                let url = String::from_utf8(link.url.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("Link URL contains invalid UTF-8"))
-                })?;
-                let title = String::from_utf8(link.title.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("Link title contains invalid UTF-8"))
-                })?;
+                let url = link.url.clone();
+                let title = link.title.clone();
                 vec![Token::Link(url, title, inner)]
             }
             NodeValue::Image(ref link) => {
                 self.features.image = true;
-                let url = String::from_utf8(link.url.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("Image URL contains invalid UTF-8"))
-                })?;
-                let title = String::from_utf8(link.title.clone()).map_err(|_| {
-                    Error::parser(&self.source, lformat!("Image title contains invalid UTF-8"))
-                })?;
+                let url = link.url.clone();
+                let title = link.title.clone();
                 vec![Token::Image(url, title, inner)]
             }
             NodeValue::FootnoteReference(ref name) => {
-                let name = String::from_utf8(name.clone()).map_err(|_| {
-                    Error::parser(
-                        &self.source,
-                        lformat!("Footnote reference contains invalid UTF-8"),
-                    )
-                })?;
+                let name = name.clone();
 
                 vec![Token::FootnoteReference(name)]
             }

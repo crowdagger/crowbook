@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -367,15 +367,6 @@ impl From<mustache::Error> for Error {
     }
 }
 
-/// Implement our error from epub_maker::Error
-impl From<epub_builder::Error> for Error {
-    fn from(err: epub_builder::Error) -> Error {
-        Error::render(
-            Source::empty(),
-            lformat!("error during EPUB generation: {error}", error = err),
-        )
-    }
-}
 
 impl From<FromUtf8Error> for Error {
     fn from(err: FromUtf8Error) -> Error {
