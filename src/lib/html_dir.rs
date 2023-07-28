@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017 Élisabeth HENRY.
+// Copyright (C) 2016, 2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -270,7 +270,7 @@ impl<'a> HtmlDirRenderer<'a> {
             chapters.push(chapter);
         }
         self.html.source = Source::empty();
-        let toc = self.html.toc.render(false);
+        let toc = self.html.toc.render(false, false);
 
         // render all chapters
         let template = compile_str(

@@ -60,7 +60,7 @@ crowbook-text-processing = "1"
 lazy_static = "1"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"
-epub-builder = "0.6"
+epub-builder = "0.7"
 log = "0.4"
 punkt = { version = "1.0", optional = true }
 hyphenation = { version = "0.8", optional = true, features = ["embed_all"] }

@@ -97,6 +97,7 @@ impl<'a> EpubRenderer<'a> {
         };
         let mut maker = EpubBuilder::new(wrapper)
             .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
+        maker.escape_html(false);
         if self.html.book.options.get_i32("epub.version").unwrap() == 3 {
             maker.epub_version(EpubVersion::V30);
         }
