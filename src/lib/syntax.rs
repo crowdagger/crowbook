@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Élisabeth HENRY.
+// Copyright (C) 2017-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -81,6 +81,7 @@ impl Syntax {
             let bg = syntect::html::IncludeBackground::No;
             let res: String = syntect::html::styled_line_to_highlighted_html(&regions[..], bg)?;
             formatted_code.push_str(&res);
+            formatted_code.push_str("\n");
         }
         Ok(format!("<pre>{formatted_code}</pre>"))
     }
