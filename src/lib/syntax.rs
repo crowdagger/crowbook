@@ -122,6 +122,7 @@ impl Syntax {
                     content = format!("\\underline{{{content}}}");
                 }
                 formatted_code.push_str(&content);
+                formatted_code.push_str("\n");
             }
         }
         Ok(format!("{{\\sloppy {formatted_code}}}"))
