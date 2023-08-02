@@ -1,7 +1,11 @@
 ChangeLog
 =========
 
-0.16.0 (27/07/2023)
+0.16.1 (???)
+-----------------------
+* Allow HTML in titles's toc where it's legal to do so in EPUB.
+
+0.16.0 (2023-07-27)
 -------------
 * `epub.titlepage.xhtml` can now be overriden (geobert)
 * Fix an issue where horizontal rules could be interpreted as additional front matter 

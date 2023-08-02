@@ -1,6 +1,6 @@
 [package]
 name = "crowbook"
-version = "0.16.0"
+version = "0.16.1"
 edition = "2021"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Render a Markdown book in HTML, PDF or Epub"
@@ -60,7 +60,7 @@ crowbook-text-processing = "1"
 lazy_static = "1"
 crowbook-intl-runtime = "0.1"
 numerals = "0.1"
-epub-builder = "0.7"
+epub-builder = "^0.7.1"
 log = "0.4"
 punkt = { version = "1.0", optional = true }
 hyphenation = { version = "0.8", optional = true, features = ["embed_all"] }

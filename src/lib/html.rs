@@ -27,6 +27,7 @@ use crate::resource_handler::ResourceHandler;
 use crate::syntax::Syntax;
 use crate::token::Data;
 use crate::token::Token;
+use crate::text_view;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
@@ -521,11 +522,20 @@ impl<'a> HtmlRenderer<'a> {
                     if !this.as_ref().current_part {
                         this.as_mut()
                             .toc
-                            .add(TocElement::new(url, data.text.clone()).level(n));
+                            .add(TocElement::new(url, data.text.clone())
+                                 .level(n)
+                                 .raw_title(text_view::view_as_text(vec))
+                                            // TODO: should use proper text renderer
+                            );
                     } else {
                         this.as_mut()
                             .toc
-                            .add(TocElement::new(url, data.text.clone()).level(n - 1));
+                            .add(TocElement::new(url, data.text.clone())
+                                 .level(n - 1)
+                                 .raw_title(text_view::view_as_text(vec))
+                                            // TODO: same
+                            );
+                    
                     }
                 }
                 Ok(this.as_mut().render_title_full(n, data)?)

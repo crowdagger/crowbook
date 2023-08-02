@@ -384,7 +384,7 @@ dependencies = [
 
 [[package]]
 name = "crowbook"
-version = "0.16.0"
+version = "0.16.1"
 dependencies = [
  "caribon",
  "clap",
@@ -483,7 +483,9 @@ checksum = "b5320ae4c3782150d900b79807611a59a99fc9a1d61d686faafc24b93fc8d7ca"
 
 [[package]]
 name = "epub-builder"
-version = "0.6.0"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a72a19c37335c0e1d78857d4c1cf64c2fdd927896e7427685c19e67072d25907"
 dependencies = [
  "chrono",
  "eyre",
