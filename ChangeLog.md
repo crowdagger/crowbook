@@ -4,6 +4,7 @@ ChangeLog
 0.16.1 (???)
 -----------------------
 * Allow HTML in titles's toc where it's legal to do so in EPUB.
+* Remove some invalid characters in EPUB's XML 1.0
 
 0.16.0 (2023-07-27)
 -------------
