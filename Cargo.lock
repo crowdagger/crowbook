@@ -394,6 +394,7 @@ dependencies = [
  "crowbook-intl-runtime",
  "crowbook-text-processing",
  "epub-builder",
+ "html-escape",
  "hyphenation",
  "indicatif",
  "lazy_static 1.4.0",
@@ -440,9 +441,9 @@ dependencies = [
 
 [[package]]
 name = "crowbook-text-processing"
-version = "1.0.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0fe6b9d03ee72398cab2bd37c564bb898e351c4cff1f5f8a0db2bd9b909accc"
+checksum = "a749441fe0b30ba727c31367438f7e2f001e6ec23d3c5f417834f2fa17098a27"
 dependencies = [
  "lazy_static 1.4.0",
  "regex 1.9.1",

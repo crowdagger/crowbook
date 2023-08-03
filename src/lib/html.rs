@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -28,6 +28,7 @@ use crate::syntax::Syntax;
 use crate::token::Data;
 use crate::token::Token;
 use crate::text_view;
+use crate::misc;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
@@ -439,7 +440,7 @@ impl<'a> HtmlRenderer<'a> {
                     match *annotation {
                         Data::GrammarError(ref s) => Ok(format!(
                             "<span title = \"{}\" class = \"grammar-error\">{}</span>",
-                            escape::quotes(s.as_str()),
+                            html_escape::encode_double_quoted_attribute(s.as_str()),
                             content
                         )),
                         Data::Repetition(ref colour) => {
@@ -463,7 +464,9 @@ impl<'a> HtmlRenderer<'a> {
                 let mut content = if this.as_ref().verbatim {
                     Cow::Borrowed(text.as_ref())
                 } else {
-                    escape::html(this.as_ref().book.clean(text.as_str()))
+                    escape::html(this.as_ref()
+                                      .book.clean(text.as_str())
+                    )
                 };
                 if this.as_ref().first_letter {
                     this.as_mut().first_letter = false;
@@ -524,7 +527,7 @@ impl<'a> HtmlRenderer<'a> {
                             .toc
                             .add(TocElement::new(url, data.text.clone())
                                  .level(n)
-                                 .raw_title(text_view::view_as_text(vec))
+                                 .raw_title(escape::html(text_view::view_as_text(vec)))
                                             // TODO: should use proper text renderer
                             );
                     } else {
@@ -532,7 +535,7 @@ impl<'a> HtmlRenderer<'a> {
                             .toc
                             .add(TocElement::new(url, data.text.clone())
                                  .level(n - 1)
-                                 .raw_title(text_view::view_as_text(vec))
+                                 .raw_title(escape::html(text_view::view_as_text(vec)))
                                             // TODO: same
                             );
                     
@@ -592,7 +595,7 @@ impl<'a> HtmlRenderer<'a> {
             Token::DescriptionTerm(ref v) => Ok(format!("<dt>{}</dt>\n", this.render_vec(v)?)),
             Token::DescriptionDetails(ref v) => Ok(format!("<dd>{}</dd>\n", this.render_vec(v)?)),
             Token::Link(ref url, ref title, ref vec) => {
-                let url = escape::html(url.as_str());
+                let url = html_escape::encode_double_quoted_attribute(url.as_str());
                 let url = if ResourceHandler::is_local(&url) {
                     Cow::Owned(this.as_ref().handler.get_link(&url).to_owned())
                 } else {

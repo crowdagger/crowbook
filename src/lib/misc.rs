@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -58,3 +58,4 @@ pub fn insert_title(tokens: &mut Vec<Token>) {
     }
     tokens.insert(0, Token::Header(1, vec![]));
 }
+

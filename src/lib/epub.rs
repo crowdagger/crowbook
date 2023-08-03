@@ -28,6 +28,7 @@ use crate::templates::epub::*;
 use crate::templates::epub3;
 use crate::text_view::view_as_text;
 use crate::token::Token;
+use crate::misc;
 
 use crowbook_text_processing::escape;
 use epub_builder::{
@@ -108,7 +109,7 @@ impl<'a> EpubRenderer<'a> {
             .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         maker.metadata(
             "author",
-            escape::html(self.html.book.options.get_str("author").unwrap()),
+            self.html.book.options.get_str("author").unwrap(),
         )
             .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
         maker.metadata(
@@ -218,7 +219,7 @@ impl<'a> EpubRenderer<'a> {
             // todo: find cleaner way
             for element in &self.html.toc.elements {
                 if element.url.contains(&filenamer(i)) {
-                    content = content.title(escape::html(raw_title));
+                    content = content.title(escape::html(&raw_title));
                     content.toc.children = element.children.clone();
                     break;
                 }
