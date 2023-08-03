@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017 Élisabeth HENRY.
+// Copyright (C) 2016, 2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -259,7 +259,7 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         for chapter in &chapters {
             content.push_str(chapter);
         }
-        self.html.render_end_notes(&mut content);
+        self.html.render_end_notes(&mut content, "section", "");
 
         // Render the CSS
         let template_css = compile_str(

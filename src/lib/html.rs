@@ -223,7 +223,7 @@ impl<'a> HtmlRenderer<'a> {
             this.as_mut().render_side_notes(&mut res);
         }
         if render_end_notes {
-            this.as_mut().render_end_notes(&mut res);
+            this.as_mut().render_end_notes(&mut res, "section", "");
         }
         Ok(res)
     }
@@ -383,21 +383,16 @@ impl<'a> HtmlRenderer<'a> {
     }
 
     /// Display end notes, if side_notes option is set to false
+    ///
+    /// * res: string to write to
+    /// * section_tag: should be section for HTML5, id for XHTML
+    /// * option: can be "", useful for EPUB3
     #[doc(hidden)]
-    pub fn render_end_notes(&mut self, res: &mut String) {
+    pub fn render_end_notes(&mut self, res: &mut String, section_tag: &str, option: &str) {
         if !self.footnotes.is_empty() {
-            //             for (note_number, footnote) in self.footnotes.drain(..) {
-            //                 res.push_str(&format!("<div class = \"note\">
-            //  <p>{}</p>
-            // {}
-            // </div>\n",
-            //                                       note_number,
-            //                                       footnote));
-            //             }
-
             write!(
                 res,
-                "<div class = \"notes\">
+                "<{section_tag} class = \"notes\" {option}>
  <h2 class = \"notes\">{}</h2>\n",
                 lang::get_str(self.book.options.get_str("lang").unwrap(), "notes")
             )
@@ -418,7 +413,7 @@ impl<'a> HtmlRenderer<'a> {
                 .unwrap();
             }
             res.push_str("</table>\n");
-            res.push_str("</div>\n");
+            res.push_str(&format!("</{section_tag}>\n"));
         }
     }
 

@@ -192,7 +192,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                 )?;
             }
         }
-        self.html.render_end_notes(&mut content);
+        self.html.render_end_notes(&mut content, "section", "");
 
         let toc = self.html.toc.render(false, false);
         // If display_toc, display the toc inline

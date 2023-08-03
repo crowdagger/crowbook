@@ -28,7 +28,6 @@ use crate::templates::epub::*;
 use crate::templates::epub3;
 use crate::text_view::view_as_text;
 use crate::token::Token;
-use crate::misc;
 
 use crowbook_text_processing::escape;
 use epub_builder::{
@@ -386,7 +385,13 @@ impl<'a> EpubRenderer<'a> {
             content.push_str(&self.render_token(token)?);
             self.html.render_side_notes(&mut content);
         }
-        self.html.render_end_notes(&mut content);
+
+        let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
+        if epub3 {
+            self.html.render_end_notes(&mut content, "section", "epub:type=\"footnotes\"");
+        } else {
+            self.html.render_end_notes(&mut content, "div", "");
+        }
 
         if self.chapter_title.is_empty() && self.html.current_numbering >= 1 {
             let number;
