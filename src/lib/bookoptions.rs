@@ -144,26 +144,6 @@ crowbook.markdown.superscript:bool:false  # {superscript}
 crowbook.temp_dir:path:             # {tmp_dir}
 crowbook.zip.command:str:zip        # {zip}
 
-# {prf_opt}
-output.proofread.html:path          # {prf_html}
-output.proofread.html.dir:path      # {prf_html_dir}
-output.proofread.pdf:path           # {prf_pdf}
-
-# {prf_opt2}
-proofread:bool:false                              # {prf}
-proofread.languagetool:bool:false                 # {prf_lng}
-proofread.languagetool.port:int:8081              # {prf_lng_port}
-proofread.grammalecte:bool:false                  # {prf_grammalecte}
-proofread.grammalecte.port:int:8080               # {prf_grammalecte_port}
-proofread.repetitions:bool:false                  # {prf_repet}
-proofread.repetitions.max_distance:int:25         # {prf_max_dist}
-proofread.repetitions.fuzzy:bool:true             # {prf_fuzzy}
-proofread.repetitions.fuzzy.threshold:float:0.2   # {prf_fuzzy_t}
-proofread.repetitions.ignore_proper:bool:true     # {prf_ignore}
-proofread.repetitions.threshold:float:2.0         # {prf_threshold}
-
-
-
 # {deprecated_opt}
 html.css.colours:alias:html.css.colors              # {renamed}
 input.smart_quotes:alias:input.clean.smart_quotes   # {renamed}
@@ -207,6 +187,20 @@ nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
 html.crowbook_link:alias                            # {removed}
 crowbook.verbose:alias                              # {removed}
+output.proofread.html:path                          # {removed}
+output.proofread.html.dir:path                      # {removed}
+output.proofread.pdf:path                           # {removed}
+proofread:bool:false                                # {removed}
+proofread.languagetool:bool:false                   # {removed}
+proofread.languagetool.port:int:8081                # {removed}
+proofread.grammalecte:bool:false                    # {removed}
+proofread.grammalecte.port:int:8080                 # {removed}
+proofread.repetitions:bool:false                    # {removed}
+proofread.repetitions.max_distance:int:25           # {removed}
+proofread.repetitions.fuzzy:bool:true               # {removed}
+proofread.repetitions.fuzzy.threshold:float:0.2     # {removed}
+proofread.repetitions.ignore_proper:bool:true       # {removed}
+proofread.repetitions.threshold:float:2.0           # {removed}
 ",
                                          metadata = lformat!("Metadata"),
                                          metadata2 = lformat!("Additional metadata"),
@@ -223,8 +217,6 @@ crowbook.verbose:alias                              # {removed}
                                          rs_opt = lformat!("Resources option"),
                                          input_opt = lformat!("Input options"),
                                          crowbook_opt = lformat!("Crowbook options"),
-                                         prf_opt = lformat!("Output options (for proofreading)"),
-                                         prf_opt2 = lformat!("Proofreading options (only for output.proofread.* targets)"),
                                          deprecated_opt = lformat!("Deprecated options"),
 
                                          author = lformat!("Author of the book"),
@@ -331,21 +323,6 @@ crowbook.verbose:alias                              # {removed}
                                          files_mean_chapters = lformat!("Consider that a new file is always a new chapter, even if it does not include heading (default: only for numbered chapters)"),
                                          tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
                                          zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
-
-                                         prf_html = lformat!("Output file name for HTML rendering with proofread features"),
-                                         prf_html_dir = lformat!("Output directory name for HTML rendering with proofread features"),
-                                         prf_pdf = lformat!("Output file name for PDF rendering with proofread features"),
-                                         prf = lformat!("If set to false, will disactivate proofreading even if one of output.proofread.x is present"),
-                                         prf_lng = lformat!("If true, try to use language tool server to grammar check the book"),
-                                         prf_lng_port = lformat!("Port to connect to languagetool-server"),
-                                         prf_grammalecte = lformat!("If true, try to use grammalecte server to grammar check the book"),
-                                         prf_grammalecte_port = lformat!("Port to connect to grammalecte server"),
-                                         prf_repet = lformat!("If set to true, use Caribon to detect repetitions"),
-                                         prf_max_dist = lformat!("Max distance between two occurences so it is considered a repetition"),
-                                         prf_fuzzy = lformat!("Enable fuzzy string matching"),
-                                         prf_fuzzy_t = lformat!("Max threshold of differences to consider two strings a repetition"),
-                                         prf_ignore = lformat!("Ignore proper nouns for repetitions"),
-                                         prf_threshold = lformat!("Threshold to detect a repetition"),
 
                                          tex_theme = lformat!("If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"),
                                          html_theme = lformat!("If set, set theme for syntax highlighting for HTML output (syntect only)"),
