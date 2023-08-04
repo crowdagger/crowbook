@@ -21,6 +21,8 @@ use crate::token::Token;
 
 use std::io::Result;
 use std::path::{Path, PathBuf};
+use base64::Engine;
+
 
 /// Try to canonicalize a path using std::fs::canonicalize, and returns the
 /// unmodified path if it fails (e.g. if the path doesn't exist (yet))
@@ -59,3 +61,7 @@ pub fn insert_title(tokens: &mut Vec<Token>) {
     tokens.insert(0, Token::Header(1, vec![]));
 }
 
+/// Convert to base 64
+pub fn u8_to_base64(s: &[u8]) -> String {
+    base64::engine::general_purpose::STANDARD_NO_PAD.encode(s)
+}

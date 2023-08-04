@@ -24,8 +24,7 @@ use crate::parser::Parser;
 use crate::renderer::Renderer;
 use crate::templates::img;
 use crate::token::Token;
-
-use rustc_serialize::base64::{self, ToBase64};
+use crate::misc;
 
 use std::convert::{AsMut, AsRef};
 use std::fmt::Write;
@@ -78,13 +77,13 @@ impl<'a> HtmlSingleRenderer<'a> {
 
     /// Render books as a standalone HTML file
     pub fn render_book(&mut self) -> Result<String> {
-        let menu_svg = img::MENU_SVG.to_base64(base64::STANDARD);
+        let menu_svg = misc::u8_to_base64(&img::MENU_SVG);
         let menu_svg = format!("data:image/svg+xml;base64,{menu_svg}");
 
-        let book_svg = img::BOOK_SVG.to_base64(base64::STANDARD);
+        let book_svg = misc::u8_to_base64(&img::BOOK_SVG);
         let book_svg = format!("data:image/svg+xml;base64,{book_svg}");
 
-        let pages_svg = img::PAGES_SVG.to_base64(base64::STANDARD);
+        let pages_svg = misc::u8_to_base64(&img::PAGES_SVG);
         let pages_svg = format!("data:image/svg+xml;base64,{pages_svg}");
 
         let mut content = String::new();
@@ -305,12 +304,11 @@ impl<'a> HtmlSingleRenderer<'a> {
             mapbuilder = mapbuilder.insert_str("toc", toc)
         }
         if self.html.highlight == Highlight::Js {
-            let highlight_js = self
+            let highlight_js = misc::u8_to_base64(&self
                 .html
                 .book
                 .get_template("html.highlight.js")?
-                .as_bytes()
-                .to_base64(base64::STANDARD);
+                .as_bytes());
             let highlight_js = format!("data:text/javascript;base64,{highlight_js}");
             mapbuilder = mapbuilder
                 .insert_bool("highlight_code", true)

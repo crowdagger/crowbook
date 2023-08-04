@@ -1,5 +1,6 @@
 use crate::error::{Error, Result, Source};
 use crate::token::Token;
+use crate::misc;
 
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -7,7 +8,6 @@ use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
-use rustc_serialize::base64::{self, ToBase64};
 use walkdir::WalkDir;
 
 /// Resource Handler.
@@ -134,7 +134,7 @@ impl ResourceHandler {
                 );
                 return Ok(file);
             }
-            let base64 = content.to_base64(base64::STANDARD);
+            let base64 = misc::u8_to_base64(&content);
             match mime_guess::from_path(file.as_ref()).first() {
                 None => {
                     error!(

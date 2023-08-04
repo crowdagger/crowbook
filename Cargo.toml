@@ -54,7 +54,7 @@ yaml-rust = "0.4"
 mustache = "0.9"
 uuid = { version = "1", features = ["v4"] }
 walkdir = "2"
-rustc-serialize = "0.3"
+base64 = "0.21"
 rayon = "1.6"
 crowbook-text-processing = "^1.1.1"
 lazy_static = "1"

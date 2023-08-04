@@ -23,8 +23,7 @@ use crate::html::HtmlRenderer;
 use crate::parser::Parser;
 use crate::renderer::Renderer;
 use crate::token::Token;
-
-use rustc_serialize::base64::{self, ToBase64};
+use crate::misc;
 
 use std::convert::{AsMut, AsRef};
 use std::io;
@@ -333,12 +332,11 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
             );
         }
         if self.html.highlight == Highlight::Js {
-            let highlight_js = self
+            let highlight_js = misc::u8_to_base64(&self
                 .html
                 .book
                 .get_template("html.highlight.js")?
-                .as_bytes()
-                .to_base64(base64::STANDARD);
+                .as_bytes());
             let highlight_js = format!("data:text/javascript;base64,{highlight_js}");
             mapbuilder = mapbuilder
                 .insert_bool("highlight_code", true)
