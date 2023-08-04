@@ -2,15 +2,6 @@ extern crate crowbook;
 extern crate crowbook_intl_runtime;
 extern crate yaml_rust;
 
-#[cfg(feature = "binary")]
-extern crate clap;
-#[cfg(feature = "binary")]
-extern crate console;
-#[cfg(feature = "binary")]
-extern crate simplelog;
-#[cfg(feature = "binary")]
-extern crate tempdir;
-
 #[macro_use]
 mod localize_macros;
 #[cfg(feature = "binary")]

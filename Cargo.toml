@@ -39,7 +39,7 @@ doc = false
 
 [features]
 default = ["binary", "syntect"]
-binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
+binary = ["clap", "simplelog", "tempfile", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
 odt = []
 
@@ -70,7 +70,7 @@ console = { version = "0.15", optional = true }
 clap = { version = "4", optional = true }
 simplelog = { version = "0.12", optional = true }
 syntect = { version = "5", optional = true }
-tempdir = { version = "0.3", optional = true }
+tempfile = { version = "3", optional = true }
 
 
 

@@ -28,7 +28,6 @@ use std::fs::File;
 use std::io;
 use std::io::Read;
 use std::process::exit;
-use tempdir::TempDir;
 use yaml_rust::Yaml;
 
 /// Render a book to specific format
@@ -154,7 +153,7 @@ pub fn try_main() -> Result<()> {
     };
     let log_config = builder.build();
 
-    let error_dir = TempDir::new("crowbook").unwrap();
+    let error_dir = tempfile::tempdir().expect("Could not create temporary directory");
     let error_path = "error.log";
     if fancy_ui {
         let errors = File::create(error_dir.path().join(error_path)).unwrap();
