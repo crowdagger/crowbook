@@ -174,12 +174,5 @@ mod templates;
 mod text_view;
 mod zipper;
 
-#[cfg(feature = "proofread")]
-mod grammalecte;
-#[cfg(feature = "proofread")]
-mod grammar_check;
-#[cfg(feature = "proofread")]
-mod repetition_check;
-
 #[cfg(test)]
 mod tests;

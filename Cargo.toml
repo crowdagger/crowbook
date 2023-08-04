@@ -1,6 +1,6 @@
 [package]
 name = "crowbook"
-version = "0.16.1"
+version = "0.17.0"
 edition = "2021"
 authors = ["Elisabeth Henry <liz.henry@ouvaton.org>"]
 description = "Render a Markdown book in HTML, PDF or Epub"
@@ -38,8 +38,7 @@ path = "src/bin/main.rs"
 doc = false
 
 [features]
-default = ["binary", "proofread", "syntect"]
-proofread = ["caribon", "reqwest", "url", "serde", "serde", "serde_json", "serde_derive"]
+default = ["binary", "syntect"]
 binary = ["clap", "simplelog", "tempdir", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
 odt = []
@@ -66,21 +65,12 @@ log = "0.4"
 punkt = { version = "1.0", optional = true }
 hyphenation = { version = "0.8", optional = true, features = ["embed_all"] }
 textwrap = { version = "0.16", optional = true }
-serde = { version = "1", optional = true }
-serde_json = { version = "1", optional = true }
-serde_derive = { version = "1", optional = true }
 indicatif = { version = "0.17", optional = true }
 console = { version = "0.15", optional = true }
-caribon = { version = "0.8", optional = true }
 clap = { version = "4", optional = true }
 simplelog = { version = "0.12", optional = true }
-url =  { version = "2", optional = true }
 syntect = { version = "5", optional = true }
 tempdir = { version = "0.3", optional = true }
 
-[dependencies.reqwest]
-version = "0.11"
-optional = true
-features = ["blocking"]
 
 
