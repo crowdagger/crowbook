@@ -16,9 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::default::Default;
-use std::mem;
 
-use crate::token::Data;
 use crate::token::Token;
 
 pub fn traverse_token<F1, F2, R>(token: &Token, f: &F1, add: &F2) -> R
@@ -67,210 +65,212 @@ pub fn view_as_text(tokens: &[Token]) -> String {
     traverse_vec(tokens, &|s| s.to_owned(), &|s1, s2| s1 + &s2)
 }
 
-pub fn count_length(tokens: &[Token]) -> usize {
-    traverse_vec(tokens, &|s| s.chars().count(), &|s1, s2| s1 + s2)
-}
+// Should it be removed?
+// pub fn count_length(tokens: &[Token]) -> usize {
+//     traverse_vec(tokens, &|s| s.chars().count(), &|s1, s2| s1 + s2)
+// }
 
 /// Insert an annotation at begin and end pos begin+len in the text_view
-#[doc(hidden)]
-pub fn insert_annotation(
-    tokens: &mut Vec<Token>,
-    annotation: &Data,
-    pos: usize,
-    length: usize,
-) -> Option<usize> {
-    let mut pos = pos;
-    let mut found_left = None;
-    let mut found_right = None;
-    for (i, item) in tokens.iter_mut().enumerate() {
-        let recurse = match item {
-            Token::Str(ref s) => {
-                let len = s.chars().count();
-                if pos < len || (pos == len && found_left.is_some()) {
-                    // We found the first element already, so now it's the right
-                    if found_left.is_some() {
-                        found_right = Some((i, pos));
-                        break;
-                    }
-                    found_left = Some((i, pos));
-                    pos += length;
-                    if pos <= len {
-                        found_right = Some((i, pos));
-                        break;
-                    }
-                }
-                pos -= len;
-                false
-            }
+// Should it be removed ?
+// #[doc(hidden)]
+// pub fn insert_annotation(
+//     tokens: &mut Vec<Token>,
+//     annotation: &Data,
+//     pos: usize,
+//     length: usize,
+// ) -> Option<usize> {
+//     let mut pos = pos;
+//     let mut found_left = None;
+//     let mut found_right = None;
+//     for (i, item) in tokens.iter_mut().enumerate() {
+//         let recurse = match item {
+//             Token::Str(ref s) => {
+//                 let len = s.chars().count();
+//                 if pos < len || (pos == len && found_left.is_some()) {
+//                     // We found the first element already, so now it's the right
+//                     if found_left.is_some() {
+//                         found_right = Some((i, pos));
+//                         break;
+//                     }
+//                     found_left = Some((i, pos));
+//                     pos += length;
+//                     if pos <= len {
+//                         found_right = Some((i, pos));
+//                         break;
+//                     }
+//                 }
+//                 pos -= len;
+//                 false
+//             }
 
-            Token::Rule | Token::SoftBreak | Token::HardBreak => {
-                if pos < 1 {
-                    if found_left.is_some() {
-                        found_right = Some((i, pos));
-                        break;
-                    }
-                    found_left = Some((i, pos));
-                    pos += length;
-                    if pos <= 1 {
-                        found_right = Some((i, pos));
-                        break;
-                    }
-                }
-                pos -= 1;
-                false
-            }
+//             Token::Rule | Token::SoftBreak | Token::HardBreak => {
+//                 if pos < 1 {
+//                     if found_left.is_some() {
+//                         found_right = Some((i, pos));
+//                         break;
+//                     }
+//                     found_left = Some((i, pos));
+//                     pos += length;
+//                     if pos <= 1 {
+//                         found_right = Some((i, pos));
+//                         break;
+//                     }
+//                 }
+//                 pos -= 1;
+//                 false
+//             }
 
-            _ => {
-                if let Some(inner) = item.inner() {
-                    let len = count_length(inner);
-                    // Only recurse if the two is in this subtree
-                    if pos < len {
-                        if found_left.is_none() {
-                            true
-                        } else {
-                            warn!(
-                                "{}",
-                                lformat!(
-                                    "ignored annotation {:?} as it \
-                                                  wasn't compatible with the \
-                                                  Markdown structure",
-                                    annotation
-                                )
-                            );
-                            return None;
-                        }
-                    } else {
-                        pos -= len;
-                        false
-                    }
-                } else {
-                    false
-                }
-            }
-        };
+//             _ => {
+//                 if let Some(inner) = item.inner() {
+//                     let len = count_length(inner);
+//                     // Only recurse if the two is in this subtree
+//                     if pos < len {
+//                         if found_left.is_none() {
+//                             true
+//                         } else {
+//                             warn!(
+//                                 "{}",
+//                                 lformat!(
+//                                     "ignored annotation {:?} as it \
+//                                                   wasn't compatible with the \
+//                                                   Markdown structure",
+//                                     annotation
+//                                 )
+//                             );
+//                             return None;
+//                         }
+//                     } else {
+//                         pos -= len;
+//                         false
+//                     }
+//                 } else {
+//                     false
+//                 }
+//             }
+//         };
 
-        // Moved out of the match 'thanks' to borrowcheck
-        if recurse {
-            if let Some(ref mut inner) = item.inner_mut() {
-                if let Some(new_pos) = insert_annotation(inner, annotation, pos, length) {
-                    pos = new_pos;
-                } else {
-                    return None;
-                }
-            }
-        }
-    }
+//         // Moved out of the match 'thanks' to borrowcheck
+//         if recurse {
+//             if let Some(ref mut inner) = item.inner_mut() {
+//                 if let Some(new_pos) = insert_annotation(inner, annotation, pos, length) {
+//                     pos = new_pos;
+//                 } else {
+//                     return None;
+//                 }
+//             }
+//         }
+//     }
 
-    if let (Some((i, pos_left)), Some((j, pos_right))) = (found_left, found_right) {
-        let pos_right = pos_right;
-        let mut vec = vec![];
+//     if let (Some((i, pos_left)), Some((j, pos_right))) = (found_left, found_right) {
+//         let pos_right = pos_right;
+//         let mut vec = vec![];
 
-        // Beginning token: keep the left part in the str, put the right one in our vec
-        if !tokens[i].is_str() || pos_left == 0 {
-            // do nothing
-        } else {
-            let old_token = mem::replace(&mut tokens[i], Token::Str(String::new()));
-            if let Token::Str(old_str) = old_token {
-                let mut chars_left: Vec<char> = old_str.chars().collect();
-                let mut chars_right = chars_left.split_off(pos_left);
+//         // Beginning token: keep the left part in the str, put the right one in our vec
+//         if !tokens[i].is_str() || pos_left == 0 {
+//             // do nothing
+//         } else {
+//             let old_token = mem::replace(&mut tokens[i], Token::Str(String::new()));
+//             if let Token::Str(old_str) = old_token {
+//                 let mut chars_left: Vec<char> = old_str.chars().collect();
+//                 let mut chars_right = chars_left.split_off(pos_left);
 
-                let str_left: String = chars_left.into_iter().collect();
-                tokens[i] = Token::Str(str_left);
+//                 let str_left: String = chars_left.into_iter().collect();
+//                 tokens[i] = Token::Str(str_left);
 
-                if i == j {
-                    // i and j are in same str, so split again
-                    if length != chars_right.len() {
-                        let inline_token = chars_right.split_off(length);
-                        let inline_token = Token::Str(inline_token.into_iter().collect());
-                        if pos_left == 0 {
-                            tokens.insert(i, inline_token)
-                        } else if i == tokens.len() {
-                            tokens.push(inline_token);
-                        } else {
-                            tokens.insert(i + 1, inline_token);
-                        }
-                    }
-                    let annot = Token::Annotation(
-                        annotation.clone(),
-                        vec![Token::Str(chars_right.into_iter().collect())],
-                    );
-                    if pos_left == 0 {
-                        tokens.insert(i, annot)
-                    } else if i == tokens.len() {
-                        tokens.push(annot);
-                    } else {
-                        tokens.insert(i + 1, annot);
-                    }
-                    return None;
-                }
+//                 if i == j {
+//                     // i and j are in same str, so split again
+//                     if length != chars_right.len() {
+//                         let inline_token = chars_right.split_off(length);
+//                         let inline_token = Token::Str(inline_token.into_iter().collect());
+//                         if pos_left == 0 {
+//                             tokens.insert(i, inline_token)
+//                         } else if i == tokens.len() {
+//                             tokens.push(inline_token);
+//                         } else {
+//                             tokens.insert(i + 1, inline_token);
+//                         }
+//                     }
+//                     let annot = Token::Annotation(
+//                         annotation.clone(),
+//                         vec![Token::Str(chars_right.into_iter().collect())],
+//                     );
+//                     if pos_left == 0 {
+//                         tokens.insert(i, annot)
+//                     } else if i == tokens.len() {
+//                         tokens.push(annot);
+//                     } else {
+//                         tokens.insert(i + 1, annot);
+//                     }
+//                     return None;
+//                 }
 
-                let str_right: String = chars_right.into_iter().collect();
-                vec.push(Token::Str(str_right));
-            } else {
-                unreachable!();
-            }
-        }
+//                 let str_right: String = chars_right.into_iter().collect();
+//                 vec.push(Token::Str(str_right));
+//             } else {
+//                 unreachable!();
+//             }
+//         }
 
-        // Middle tokens: remove them entirely and put them in our vec
-        for _ in i + 1..j {
-            vec.push(tokens.remove(i + 1));
-        }
+//         // Middle tokens: remove them entirely and put them in our vec
+//         for _ in i + 1..j {
+//             vec.push(tokens.remove(i + 1));
+//         }
 
-        // End token: keep the right part in the str, put the left one in our vec
-        // j is now i + 1 because all tokens in between have been removed
-        // unless j was equal to i to begin with
-        let j = if i == j || i >= tokens.len() - 1 {
-            i
-        } else {
-            i + 1
-        };
+//         // End token: keep the right part in the str, put the left one in our vec
+//         // j is now i + 1 because all tokens in between have been removed
+//         // unless j was equal to i to begin with
+//         let j = if i == j || i >= tokens.len() - 1 {
+//             i
+//         } else {
+//             i + 1
+//         };
 
-        if !tokens[j].is_str() {
-            // do nothing
-        } else {
-            let count = if let Token::Str(ref s) = tokens[j] {
-                s.chars().count()
-            } else {
-                unreachable!()
-            };
-            if count != pos_right {
-                let old_token = mem::replace(&mut tokens[j], Token::Rule);
-                if let Token::Str(old_str) = old_token {
-                    let mut chars_left: Vec<char> = old_str.chars().collect();
-                    let chars_right = chars_left.split_off(pos_right);
-                    let str_left: String = chars_left.into_iter().collect();
-                    let str_right: String = chars_right.into_iter().collect();
-                    tokens[j] = Token::Str(str_right);
-                    // todo: if only one token, maybe concat the strings
-                    vec.push(Token::Str(str_left));
-                } else {
-                    unreachable!();
-                }
-            }
-        }
-        let new_token = Token::Annotation(annotation.clone(), vec);
-        if pos_left == 0 {
-            tokens.insert(i, new_token);
-        } else if i >= tokens.len() - 1 {
-            tokens.push(new_token);
-        } else {
-            tokens.insert(i + 1, new_token);
-        }
-        None
-    } else if found_left.is_none() && found_right.is_none() {
-        Some(pos)
-    } else {
-        warn!(
-            "{}",
-            lformat!(
-                "ignored annotation {:?} as it wasn't compatible \
-                                          with the Markdown structure",
-                annotation
-            )
-        );
-        None
-    }
-}
+//         if !tokens[j].is_str() {
+//             // do nothing
+//         } else {
+//             let count = if let Token::Str(ref s) = tokens[j] {
+//                 s.chars().count()
+//             } else {
+//                 unreachable!()
+//             };
+//             if count != pos_right {
+//                 let old_token = mem::replace(&mut tokens[j], Token::Rule);
+//                 if let Token::Str(old_str) = old_token {
+//                     let mut chars_left: Vec<char> = old_str.chars().collect();
+//                     let chars_right = chars_left.split_off(pos_right);
+//                     let str_left: String = chars_left.into_iter().collect();
+//                     let str_right: String = chars_right.into_iter().collect();
+//                     tokens[j] = Token::Str(str_right);
+//                     // todo: if only one token, maybe concat the strings
+//                     vec.push(Token::Str(str_left));
+//                 } else {
+//                     unreachable!();
+//                 }
+//             }
+//         }
+//         let new_token = Token::Annotation(annotation.clone(), vec);
+//         if pos_left == 0 {
+//             tokens.insert(i, new_token);
+//         } else if i >= tokens.len() - 1 {
+//             tokens.push(new_token);
+//         } else {
+//             tokens.insert(i + 1, new_token);
+//         }
+//         None
+//     } else if found_left.is_none() && found_right.is_none() {
+//         Some(pos)
+//     } else {
+//         warn!(
+//             "{}",
+//             lformat!(
+//                 "ignored annotation {:?} as it wasn't compatible \
+//                                           with the Markdown structure",
+//                 annotation
+//             )
+//         );
+//         None
+//     }
+// }
 
 #[test]
 fn test_text_view() {

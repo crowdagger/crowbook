@@ -28,7 +28,6 @@ use crate::syntax::Syntax;
 use crate::token::Data;
 use crate::token::Token;
 use crate::text_view;
-use crate::misc;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};

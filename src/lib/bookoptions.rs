@@ -33,7 +33,6 @@ output.html:path                    # {output_html}
 output.html.dir:path                # {output_html_dir}
 output.tex:path                     # {output_tex}
 output.pdf:path                     # {output_pdf}
-output.odt:path                     # {output_odt}
 output.html.if:path                 # {output_if}
 output.base_path:path:\"\"            # {output_base_path}
 
@@ -201,6 +200,8 @@ proofread.repetitions.fuzzy:bool:true               # {removed}
 proofread.repetitions.fuzzy.threshold:float:0.2     # {removed}
 proofread.repetitions.ignore_proper:bool:true       # {removed}
 proofread.repetitions.threshold:float:2.0           # {removed}
+output.odt:path                                     # {removed}
+
 ",
                                          metadata = lformat!("Metadata"),
                                          metadata2 = lformat!("Additional metadata"),
@@ -236,7 +237,6 @@ proofread.repetitions.threshold:float:2.0           # {removed}
                                          output_html = lformat!("Output file name for HTML rendering"),
                                          output_tex = lformat!("Output file name for LaTeX rendering"),
                                          output_pdf = lformat!("Output file name for PDF rendering"),
-                                         output_odt = lformat!("Output file name for ODT rendering"),
                                          output_if = lformat!("Output file name for HTML (interactive fiction) rendering"),
                                          output_html_dir = lformat!("Output directory name for HTML rendering"),
                                          output_base_path = lformat!("Directory where those output files will we written"),
@@ -835,7 +835,6 @@ impl BookOptions {
             | "output.html.dir"
             | "output.pdf"
             | "output.tex"
-            | "output.odt"
             | "output.proofread.html"
             | "output.proofread.html.dir"
             | "output.proofread.pdf"
