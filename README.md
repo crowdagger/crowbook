@@ -1,8 +1,5 @@
 # Crowbook
 
-[![Travis status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
-[![Appveyor status](https://ci.appveyor.com/api/projects/status/bnj1rg76khth0aia?svg=true)](https://ci.appveyor.com/project/lise-henry/crowbook)
-
 Crowbook's aim is to allow you to write a book in Markdown without worrying about formatting or typography, and let the program generate HTML, PDF and EPUB output for you.
 Its focus is novels and fiction, and the default settings should (hopefully) generate readable books with correct typography without requiring you to worry about it.
 
@@ -23,14 +20,11 @@ either using precompiled binaries, or compiling it using `cargo`.
 
 See
 [the releases page](https://github.com/lise-henry/crowbook/releases)
-to download a precompiled binary for your architecture
-(currently: Linux, Windows and MacOSX).
+to download a precompiled binary for your architecture.
 Just extract the archive and run `crowbook`
 (or `crowbook.exe` on Windows).
 You might also want to copy the binary somewhere in your `PATH` for later usage.
 
-If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can also download `.deb` packages on
-[the releases page](https://github.com/lise-henry/crowbook/releases).
 
 ### Using Cargo
 
@@ -52,16 +46,11 @@ compile it, and install it on your system.
 
 > Some dependencies also require building C libraries;
 > you might thus also need to install a C compiler and `make`/`cmake` build tools.
-> You can also try to build a version of Crowbook without optional features:
-> `cargo install crowbook --no-default-features --features "clap"`
-> will disable syntactic highlighting and proofreading, requiring less dependencies.
 
 ## Dependencies
 
-While there should be, strictly speaking, no real dependencies to be able to run Crowbook (it is published as a statically compiled binary), some features require additional commands to work correctly:
-
-* EPUB rendering requires the `zip` command to be present on your system;
-* PDF rendering requires a working installation of LaTeX (preferably `xelatex`).
+While there should be, strictly speaking, no real dependencies to be able to run Crowbook (it is published as a statically compiled binary), 
+PDF rendering requires a working installation of LaTeX (preferably `xelatex`).
 
 ## Quick tour
 
@@ -140,12 +129,6 @@ title: My title
 ```
 
 This is mostly useful when Crowbook is run with the `--single` argument (receiving a single Markdown file instead of a book configuration file), for short texts that only contain one "chapter".
-
-### Proofreading
-
-Crowbook can also generate "proofreading" copies in HTML or PDF, highlighting grammar errors and repetitions.
-For more information, see
-[the proofreading chapter of the guide](guide/05_proofreading.md).
 
 ### Interactive fiction
 
