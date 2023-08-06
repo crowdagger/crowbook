@@ -74,7 +74,6 @@ epub.version: 3
 + guide/02_config.md
 + guide/03_markdown.md
 + guide/04_templates.md
-+ guide/05_proofreading.md
 + guide/06_interactive_fiction.md
 + guide/07_miscellaneous.md
 + guide/08_contributing.md

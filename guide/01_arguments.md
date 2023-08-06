@@ -182,23 +182,6 @@ crowbook -S <BOOK>
 
 Display some statistics (word and character counts) about the book.
 
-## `--proofread`
-
-**Usage**:
-
-```bash
-crowbook --proofread <BOOK>
-```
-
-or:
-
-```bash
-crowbook -p <BOOK>
-```
-
-Equivalent to `--set proofread true`, enables proofreading.
-See [Proofreading](05_proofreading.md).
-
 ## `--autograph`
 
 **Usage**:
