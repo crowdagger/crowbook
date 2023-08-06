@@ -148,8 +148,8 @@ See the
 
 ## Contributors
 
-* [Stéphane Mourey](http://stephanemourey.fr/) `<s+crowbook AT stephanemourey DOT fr>`
-* [Falco Hirschenberger](https://github.com/hirschenberger)
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->
 
 ## Acknowledgements
 
