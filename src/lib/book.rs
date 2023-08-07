@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -29,48 +29,12 @@ use crate::lang;
 use crate::latex::{Latex, Pdf, ProofLatex, ProofPdf};
 use crate::misc;
 use crate::number::Number;
-#[cfg(feature = "odt")]
-use crate::odt::Odt;
 use crate::parser::Features;
 use crate::parser::Parser;
 use crate::resource_handler::ResourceHandler;
 use crate::templates::{epub, epub3, highlight, html, html_dir, html_if, html_single, latex};
 use crate::text_view::view_as_text;
 use crate::token::Token;
-
-#[cfg(feature = "proofread")]
-use crate::grammalecte::GrammalecteChecker;
-#[cfg(feature = "proofread")]
-use crate::grammar_check::GrammarChecker;
-#[cfg(feature = "proofread")]
-use crate::repetition_check::RepetitionDetector;
-// Dummy grammarchecker thas does nothing to let the compiler compile
-#[cfg(not(feature = "proofread"))]
-struct GrammarChecker {}
-#[cfg(not(feature = "proofread"))]
-impl GrammarChecker {
-    fn check_chapter(&self, _: &[Token]) -> Result<()> {
-        Ok(())
-    }
-}
-// Dummy grammalectechecker thas does nothing to let the compiler compile
-#[cfg(not(feature = "proofread"))]
-struct GrammalecteChecker {}
-#[cfg(not(feature = "proofread"))]
-impl GrammalecteChecker {
-    fn check_chapter(&self, _: &[Token]) -> Result<()> {
-        Ok(())
-    }
-}
-// Dummy RepetitionDetector thas does nothing to let the compiler compile
-#[cfg(not(feature = "proofread"))]
-struct RepetitionDetector {}
-#[cfg(not(feature = "proofread"))]
-impl RepetitionDetector {
-    fn check_chapter(&self, _: &[Token]) -> Result<()> {
-        Ok(())
-    }
-}
 
 use std::borrow::Cow;
 use std::cmp::Ordering;
@@ -179,9 +143,6 @@ pub struct Book {
     cleaner: Box<dyn Cleaner>,
     chapter_template: Option<Template>,
     part_template: Option<Template>,
-    checker: Option<GrammarChecker>,
-    grammalecte: Option<GrammalecteChecker>,
-    detector: Option<RepetitionDetector>,
     formats: HashMap<&'static str, (String, Box<dyn BookRenderer>)>,
 
     #[doc(hidden)]
@@ -199,9 +160,6 @@ impl Book {
             options: BookOptions::new(),
             chapter_template: None,
             part_template: None,
-            checker: None,
-            grammalecte: None,
-            detector: None,
             formats: HashMap::new(),
             features: Features::new(),
             bars: Bars::new(),
@@ -613,9 +571,6 @@ impl Book {
         // Update cleaner according to options (autoclean/lang)
         self.update_cleaner();
 
-        // Update grammar checker according to options (proofread.*)
-        self.init_checker();
-
         self.bar_set_message(Crowbar::Main, &lformat!("Parsing chapters"));
 
         // Parse chapters
@@ -745,63 +700,6 @@ impl Book {
             && (self.options.get("output.proofread.html").is_ok()
                 || self.options.get("output.proofread.html.dir").is_ok()
                 || self.options.get("output.proofread.pdf").is_ok())
-    }
-
-    /// Initialize the grammar checker and repetetion detector if they needs to be
-    #[cfg(feature = "proofread")]
-    fn init_checker(&mut self) {
-        if self.is_proofread() {
-            if self.options.get_bool("proofread.languagetool").unwrap() {
-                let port = self.options.get_i32("proofread.languagetool.port").unwrap() as usize;
-                let lang = self.options.get_str("lang").unwrap();
-                let checker = GrammarChecker::new(port, lang);
-                match checker {
-                    Ok(checker) => self.checker = Some(checker),
-                    Err(e) => {
-                        error!(
-                            "{}",
-                            lformat!("{error}. Proceeding without using languagetool.", error = e)
-                        )
-                    }
-                }
-            }
-            if self.options.get_bool("proofread.grammalecte").unwrap() {
-                let port = self.options.get_i32("proofread.grammalecte.port").unwrap() as usize;
-                let lang = self.options.get_str("lang").unwrap();
-                let checker = GrammalecteChecker::new(port, lang);
-                match checker {
-                    Ok(checker) => self.grammalecte = Some(checker),
-                    Err(e) => {
-                        error!(
-                            "{}",
-                            lformat!("{error}. Proceeding without using grammalecte.", error = e)
-                        )
-                    }
-                }
-            }
-            if self.options.get_bool("proofread.repetitions").unwrap() {
-                self.detector = Some(RepetitionDetector::new(self));
-            }
-        }
-    }
-
-    #[cfg(not(feature = "proofread"))]
-    fn init_checker(&mut self) {}
-
-    /// Renders the book to the given format if output.{format} is set;
-    /// do nothing otherwise.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use crowbook::Book;
-    /// let mut book = Book::new();
-    /// /* Will do nothing as book is empty and has no output format specified */
-    /// book.render_format("pdf");
-    /// ```
-    pub fn render_format(&self, format: &str) {
-        // TODO: check that it doesn't break everything, or use option?
-        self.render_format_with_bar(format, 0)
     }
 
     /// Generates output files acccording to book options.
@@ -1115,76 +1013,6 @@ impl Book {
             misc::insert_title(&mut tokens);
         }
 
-        // If one of the renderers requires it, perform grammarcheck
-        if cfg!(feature = "proofread") && self.is_proofread() {
-            let normalized = misc::normalize(file);
-            if let Some(ref checker) = self.checker {
-                self.bar_set_message(Crowbar::Second, &lformat!("Running languagetool"));
-
-                info!(
-                    "{}",
-                    lformat!(
-                        "Trying to run languagetool on {file}, this might take a \
-                                    while...",
-                        file = &normalized
-                    )
-                );
-                if let Err(err) = checker.check_chapter(&mut tokens) {
-                    error!(
-                        "{}",
-                        lformat!(
-                            "Error running languagetool on {file}: {error}",
-                            file = &normalized,
-                            error = err
-                        )
-                    );
-                }
-            }
-            if let Some(ref checker) = self.grammalecte {
-                self.bar_set_message(Crowbar::Second, &lformat!("Running grammalecte"));
-
-                info!(
-                    "{}",
-                    lformat!(
-                        "Trying to run grammalecte on {file}, this might take a \
-                                    while...",
-                        file = &normalized
-                    )
-                );
-                if let Err(err) = checker.check_chapter(&mut tokens) {
-                    error!(
-                        "{}",
-                        lformat!(
-                            "Error running grammalecte on {file}: {error}",
-                            file = &normalized,
-                            error = err
-                        )
-                    );
-                }
-            }
-            if let Some(ref detector) = self.detector {
-                self.bar_set_message(Crowbar::Second, &lformat!("Detecting repetitions"));
-
-                info!(
-                    "{}",
-                    lformat!(
-                        "Trying to run repetition detector on {file}, this might take a \
-                                      while...",
-                        file = &normalized
-                    )
-                );
-                if let Err(err) = detector.check_chapter(&mut tokens) {
-                    error!(
-                        "{}",
-                        lformat!(
-                            "Error running repetition detector on {file}: {error}",
-                            file = &normalized,
-                            error = err
-                        )
-                    );
-                }
-            }
-        }
         self.bar_set_message(Crowbar::Second, "");
 
         self.chapters.push(Chapter::new(number, file, tokens));
@@ -1606,7 +1434,6 @@ impl Book {
                     }
 
                     self.update_cleaner();
-                    self.init_checker();
                 } else {
                     debug!(
                         "{}",
