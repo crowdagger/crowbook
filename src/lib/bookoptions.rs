@@ -559,8 +559,7 @@ impl BookOptions {
                     })?;
                     let mut book = Book::new();
                     book.load_file(file)?;
-                    let options = mem::replace(&mut book.options, BookOptions::new());
-                    self.merge(options)?;
+                    self.merge(&book.options)?;
                     Ok(None)
                 } else {
                     Ok(self.options.insert(key, BookOption::Path(value)))
@@ -910,7 +909,7 @@ impl BookOptions {
     /// If option is already set in self, don't add it, unless it was the default.
     /// Option is not inserted either if new value is equal to default.
     #[doc(hidden)]
-    pub fn merge(&mut self, other: BookOptions) -> Result<()> {
+    pub fn merge(&mut self, other: &BookOptions) -> Result<()> {
         for (key, value) in &other.options {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(key) {

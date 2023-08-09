@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Élisabeth HENRY.
+// Copyright (C) 2017-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -63,7 +63,7 @@ impl Default for Bars {
 
 /// Return the style of a bar
 
-impl Book {
+impl Book<'_> {
     /// Adds a progress bar where where info should be written.
     ///
     /// See [indicatif doc](https://docs.rs/indicatif) for more information.
@@ -270,7 +270,7 @@ impl Book {
     }
 }
 
-impl Drop for Book {
+impl Drop for Book<'_> {
     fn drop(&mut self) {
         if let Some(ref bar) = self.bars.secondbar {
             bar.finish_and_clear();

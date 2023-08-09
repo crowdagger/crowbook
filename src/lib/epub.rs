@@ -16,7 +16,7 @@
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use crate::book::Header;
-use crate::book::{compile_str, Book};
+use crate::book::Book;
 use crate::book_renderer::BookRenderer;
 use crate::error::{Error, Result, Source};
 use crate::html::HtmlRenderer;
@@ -34,7 +34,7 @@ use epub_builder::{
     EpubBuilder, EpubContent, EpubVersion, ReferenceType, ZipCommand, ZipCommandOrLibrary,
     ZipLibrary,
 };
-use mustache::Template;
+use upon::Template;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
@@ -194,8 +194,9 @@ impl<'a> EpubRenderer<'a> {
         }
 
         // Write chapters
-        let template_chapter = compile_str(
-            self.html.book.get_template("epub.chapter.xhtml")?.as_ref(),
+        let template_chapter_src = self.html.book.get_template("epub.chapter.xhtml")?;
+        let template_chapter = self.html.book.compile_str(
+            template_chapter_src.as_ref(),
             &self.html.book.source,
             "epub.chapter.xhtml",
         )?;
@@ -229,23 +230,21 @@ impl<'a> EpubRenderer<'a> {
         self.html.source = Source::empty();
 
         // Render the CSS file and write it
-        let template_css = compile_str(
-            self.html.book.get_template("epub.css").unwrap().as_ref(),
+        let template_css_src = self.html.book.get_template("epub.css").unwrap();
+        let template_css = self.html.book.compile_str(
+            template_css_src.as_ref(),
             &self.html.book.source,
             "epub.css",
         )?;
         let mut data = self
             .html
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
         if let Ok(epub_css_add) = self.html.book.options.get_str("epub.css.add") {
-            data = data.insert_str("additional_code", epub_css_add);
+            data.insert("additional_code".into(), epub_css_add.into());
         }
-        let data = data.build();
-        let mut res: Vec<u8> = vec![];
-        template_css.render_data(&mut res, &data)?;
-        let css = String::from_utf8_lossy(&res);
+        let css = template_css.render(&data).to_string()?;
         maker.stylesheet(css.as_bytes())
             .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;
 
@@ -308,25 +307,17 @@ impl<'a> EpubRenderer<'a> {
 
     /// Render the titlepgae
     fn render_titlepage(&mut self) -> Result<String> {
-        let template = compile_str(
-            self.html
-                .book
-                .get_template("epub.titlepage.xhtml")?
-                .as_ref(),
+        let template_src = self.html.book.get_template("epub.titlepage.xhtml")?;
+        let template = self.html.book.compile_str(
+            template_src.as_ref(),
             &self.html.book.source,
             "epub.titlepage.xhtml",
         )?;
         let data = self
             .html
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .build();
-        let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data)?;
-        match String::from_utf8(res) {
-            Err(_) => panic!("generated HTML in titlepage was not utf-8 valid"),
-            Ok(res) => Ok(res),
-        }
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        Ok(template.render(&data).to_string()?)
     }
 
     /// Render cover.xhtml
@@ -341,32 +332,22 @@ impl<'a> EpubRenderer<'a> {
                 ));
             }
             let epub3 = self.html.book.options.get_i32("epub.version").unwrap() == 3;
-            let template = compile_str(
+            let template = self.html.book.compile_str(
                 if epub3 { epub3::COVER } else { COVER },
                 &self.html.book.source,
                 "cover.xhtml",
             )?;
-            let data = self
+            let mut data = self
                 .html
                 .book
-                .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-                .insert_str(
-                    "cover",
+                .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+            data.insert(
+                    "cover".into(),
                     self.html
                         .handler
                         .map_image(&self.html.source, Cow::Owned(cover))?
-                        .into_owned(),
-                )
-                .build();
-            let mut res: Vec<u8> = vec![];
-            template.render_data(&mut res, &data)?;
-            match String::from_utf8(res) {
-                Err(_) => panic!(
-                    "{}",
-                    lformat!("generated HTML for cover.xhtml was not utf-8 valid")
-                ),
-                Ok(res) => Ok(res),
-            }
+                        .into());
+            Ok(template.render(&data).to_string()?)
         } else {
             panic!(
                 "{}",
@@ -421,21 +402,15 @@ impl<'a> EpubRenderer<'a> {
         }
         self.toc.push(self.chapter_title.clone());
 
-        let data = self
+        let mut data = self
             .html
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("content", content)
-            .insert_str("chapter_title_raw", self.chapter_title_raw.clone())
-            .insert_str("chapter_title", std::mem::take(&mut self.chapter_title))
-            .build();
-        self.chapter_title = String::new();
-        let mut res: Vec<u8> = vec![];
-        template.render_data(&mut res, &data)?;
-        match String::from_utf8(res) {
-            Err(_) => panic!("{}", lformat!("generated HTML was not utf-8 valid")),
-            Ok(res) => Ok((res, std::mem::take(&mut self.chapter_title_raw))),
-        }
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        data.insert("content".into(), content.into());
+        data.insert("chapter_title_raw".into(), self.chapter_title_raw.clone(). into());
+        data.insert("chapter_title".into(), std::mem::take(&mut self.chapter_title).into());
+        Ok((template.render(&data).to_string()?,
+            std::mem::take(&mut self.chapter_title_raw)))
     }
 
     /// Renders the header section of the book, finding the title of the chapter

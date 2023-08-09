@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::book::{compile_str, Book};
+use crate::book::Book;
 use crate::book_renderer::BookRenderer;
 use crate::error::{Error, Result, Source};
 use crate::html::Highlight;
@@ -273,8 +273,9 @@ impl<'a> HtmlDirRenderer<'a> {
         let toc = self.html.toc.render(false, false);
 
         // render all chapters
-        let template = compile_str(
-            self.html.book.get_template("html.dir.template")?.as_ref(),
+        let template_src = self.html.book.get_template("html.dir.template")?;
+        let template = self.html.book.compile_str(
+            template_src.as_ref(),
             &self.html.book.source,
             "html.dir.template",
         )?;
@@ -308,39 +309,37 @@ impl<'a> HtmlDirRenderer<'a> {
             };
 
             // Render each HTML document
-            let mut mapbuilder = self
+            let mut data = self
                 .html
                 .book
-                .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-                .insert_str("content", content?)
-                .insert_str("chapter_title", titles[i].clone())
-                .insert_str("json_data", self.html.get_json_ld()?)
-                .insert_str("chapter_title_raw", titles_raw[i].clone())
-                .insert_str("toc", toc.clone())
-                .insert_str("prev_chapter", prev_chapter)
-                .insert_str("next_chapter", next_chapter)
-                .insert_str("footer", HtmlRenderer::get_footer(self)?)
-                .insert_str("header", HtmlRenderer::get_header(self)?)
-                .insert_str("script", self.html.book.get_template("html.js").unwrap())
-                .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
+                .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+            data.insert("content".into(), content?.into());
+            data.insert("chapter_title".into(), titles[i].clone().into());
+            data.insert("json_data".into(), self.html.get_json_ld()?.into());
+            data.insert("chapter_title_raw".into(), titles_raw[i].clone().into());
+            data.insert("toc".into(), toc.clone().into());
+            data.insert("prev_chapter".into(), prev_chapter.into());
+            data.insert("next_chapter".into(), next_chapter.into());
+            data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
+            data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
+            data.insert("script".into(), self.html.book.get_template("html.js").unwrap().into());
+            data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
 
             if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
                 let favicon = self
                     .html
                     .handler
                     .map_image(&self.html.book.source, favicon)?;
-                mapbuilder = mapbuilder.insert_str(
-                    "favicon",
-                    format!("<link rel = \"icon\" href = \"{favicon}\">"),
+                data.insert(
+                    "favicon".into(),
+                    format!("<link rel = \"icon\" href = \"{favicon}\">").into(),
                 );
             }
             if self.html.highlight == Highlight::Js {
-                mapbuilder = mapbuilder.insert_bool("highlight_code", true);
+                data.insert("highlight_code".into(), true.into());
             }
-            let data = mapbuilder.build();
-            let mut res = vec![];
-            template.render_data(&mut res, &data)?;
-            self.write_file(&filenamer(i), &res)?;
+            let res = template.render(&data).to_string()?;
+            self.write_file(&filenamer(i), res.as_bytes())?;
         }
 
         let mut content = if let Ok(cover) = self.html.book.options.get_path("cover") {
@@ -420,38 +419,37 @@ impl<'a> HtmlDirRenderer<'a> {
             )?;
         }
         // Render index.html and write it too
-        let mut mapbuilder = self
+        let mut data = self
             .html
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("content", content)
-            .insert_str("header", HtmlRenderer::get_header(self)?)
-            .insert_str("footer", HtmlRenderer::get_footer(self)?)
-            .insert_str("toc", toc.clone())
-            .insert_str("script", self.html.book.get_template("html.js").unwrap())
-            .insert_bool(self.html.book.options.get_str("lang").unwrap(), true);
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        data.insert("content".into(), content.into());
+        data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
+        data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
+        data.insert("toc".into(), toc.into());
+        data.insert("script".into(), self.html.book.get_template("html.js").unwrap().into());
+        data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
             let favicon = self
                 .html
                 .handler
                 .map_image(&self.html.book.source, favicon)?;
-            mapbuilder = mapbuilder.insert_str(
-                "favicon",
-                format!("<link rel = \"icon\" href = \"{favicon}\">"),
+            data.insert(
+                "favicon".into(),
+                format!("<link rel = \"icon\" href = \"{favicon}\">").into(),
             );
         }
         if self.html.highlight == Highlight::Js {
-            mapbuilder = mapbuilder.insert_bool("highlight_code", true);
+            data.insert("highlight_code".into(), true.into());
         }
-        let data = mapbuilder.build();
-        let template = compile_str(
-            self.html.book.get_template("html.dir.template")?.as_ref(),
+        let template_src = self.html.book.get_template("html.dir.template")?;
+        let template = self.html.book.compile_str(
+            template_src.as_ref(),
             &self.html.book.source,
             "html.dir.template",
         )?;
-        let mut res = vec![];
-        template.render_data(&mut res, &data)?;
-        self.write_file("index.html", &res)?;
+        let res = template.render(&data).to_string()?;
+        self.write_file("index.html", res.as_bytes())?;
 
         Ok(())
     }
@@ -459,20 +457,19 @@ impl<'a> HtmlDirRenderer<'a> {
     // Render the CSS file and write it
     fn write_css(&self) -> Result<()> {
         // Render the CSS
-        let template_css = compile_str(
-            self.html.book.get_template("html.css")?.as_ref(),
+        let template_css_src = self.html.book.get_template("html.css")?;
+        let template_css = self.html.book.compile_str(
+            template_css_src.as_ref(),
             &self.html.book.source,
             "html.css",
         )?;
         let mut data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?;
-        data = data.insert_str("colors", self.html.book.get_template("html.css.colors")?);
+        data.insert("colors".into(), self.html.book.get_template("html.css.colors")?.into());
         if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
-            data = data.insert_str("additional_code", html_css_add);
+            data.insert("additional_code".into(), html_css_add.into());
         }
-        let data = data.build();
-        let mut res: Vec<u8> = vec![];
-        template_css.render_data(&mut res, &data)?;
-        let css = String::from_utf8_lossy(&res);
+        
+        let css = template_css.render(&data).to_string()?;
 
         // Write it
         self.write_file("stylesheet.css", css.as_bytes())

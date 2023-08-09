@@ -361,8 +361,8 @@ impl fmt::Display for Error {
 pub type Result<T> = result::Result<T, Error>;
 
 /// Implement our Error from mustache::Error
-impl From<mustache::Error> for Error {
-    fn from(err: mustache::Error) -> Error {
+impl From<upon::Error> for Error {
+    fn from(err: upon::Error) -> Error {
         Error::template(Source::empty(), format!("{err}"))
     }
 }
