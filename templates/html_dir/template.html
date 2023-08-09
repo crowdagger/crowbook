@@ -6,7 +6,7 @@
     <meta name="author" content="{{author_raw}}">
     <meta name="viewport" content="width=device-width">
     {{favicon}}
-    <title>{{title_raw}} - {{chapter_title_raw}}</title>
+    <title>{{title_raw}}{% if is_chapter %} - {{chapter_title_raw}}{% endif %}</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
@@ -41,9 +41,9 @@
                src="menu.svg" alt = "{{loc_toc}}" title = "{{loc_toc}}" />
         </div>
       </header>
-      {{prev_chapter}}
+      {% if is_chapter %}{{prev_chapter}}{% endif %}
       {{content}}
-      {{next_chapter}}
+      {% if is_chapter %}{{next_chapter}}{% endif %}
     </div>
     {{footer}}
   </div>

@@ -58,12 +58,6 @@ impl<'a> HtmlDirRenderer<'a> {
         Ok(HtmlDirRenderer { html })
     }
 
-    /// Set aproofreading to true
-    pub fn proofread(mut self) -> HtmlDirRenderer<'a> {
-        self.html.proofread = true;
-        self
-    }
-
     /// Render a book
     pub fn render_book(&mut self, dest_path: &Path) -> Result<()> {
         // Add internal files to resource handler
@@ -318,7 +312,7 @@ impl<'a> HtmlDirRenderer<'a> {
             data.insert("toc".into(), toc.clone().into());
             data.insert("prev_chapter".into(), prev_chapter.into());
             data.insert("next_chapter".into(), next_chapter.into());
-            
+            data.insert("is_chapter".into(), true.into());
             
             if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
                 let favicon = self
@@ -332,6 +326,7 @@ impl<'a> HtmlDirRenderer<'a> {
             } else {
                 data.insert("favicon".into(), "".into());
             }
+
 
             let res = template.render(&data).to_string()?;
             self.write_file(&filenamer(i), res.as_bytes())?;
@@ -419,6 +414,7 @@ impl<'a> HtmlDirRenderer<'a> {
             .get_metadata()?;
         data.insert("content".into(), content.into());
         data.insert("toc".into(), toc.into());
+        data.insert("is_chapter".into(), false.into());
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
             let favicon = self
                 .html
@@ -525,7 +521,6 @@ fn filenamer(i: usize) -> String {
 derive_html! {HtmlDirRenderer<'a>, HtmlRenderer::static_render_token}
 
 pub struct HtmlDir {}
-pub struct ProofHtmlDir {}
 
 impl BookRenderer for HtmlDir {
     fn auto_path(&self, _: &str) -> Result<String> {
@@ -541,24 +536,6 @@ impl BookRenderer for HtmlDir {
 
     fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
         HtmlDirRenderer::new(book)?.render_book(path)?;
-        Ok(())
-    }
-}
-
-impl BookRenderer for ProofHtmlDir {
-    fn auto_path(&self, _: &str) -> Result<String> {
-        Ok(String::from("output_html_proof"))
-    }
-
-    fn render(&self, _: &Book, _: &mut dyn io::Write) -> Result<()> {
-        Err(Error::render(
-            Source::empty(),
-            lformat!("can only render HTML directory to a path, not to a stream"),
-        ))
-    }
-
-    fn render_to_file(&self, book: &Book, path: &Path) -> Result<()> {
-        HtmlDirRenderer::new(book)?.proofread().render_book(path)?;
         Ok(())
     }
 }
