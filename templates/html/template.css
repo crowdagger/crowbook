@@ -1,6 +1,6 @@
 /* Default  HTML CSS file includes default EPUB CSS file */
 
-{{{colors}}}
+{{colors}}
 
 p.first-para:first-letter {
     font-size: 300%;
@@ -199,4 +199,4 @@ footer p, #top p {
     max-width: 33em;
 }
 
-{{{additional_code}}}
+{{additional_code}}

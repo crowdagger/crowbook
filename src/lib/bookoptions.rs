@@ -41,16 +41,16 @@ rendering.highlight:str:syntect                                      # {renderin
 rendering.highlight.theme:str:InspiredGitHub                         # {rendering_highlight_theme}
 rendering.initials:bool:false                                        # {rendering_initials}
 rendering.inline_toc:bool:false                                      # {inline_toc}
-rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
+rendering.inline_toc.name:str:\"{{{{loc_toc}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
 rendering.chapter:str                                                # {chapter}
 rendering.part:str                                                   # {part}
 rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
 rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
 rendering.part.reset_counter:bool:true                                      # {reset_counter}
-rendering.chapter.template:str:\"{{{{{{number}}}}}}. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+rendering.chapter.template:str:\"{{{{number}}}}. {{{{chapter_title}}}}\" # {chapter_template}
 
-rendering.part.template:str:\"{{{{{{number}}}}}}. {{{{{{part_title}}}}}}\" # {part_template}
+rendering.part.template:str:\"{{{{number}}}}. {{{{part_title}}}}\" # {part_template}
 
 
 
@@ -72,8 +72,8 @@ html.highlight.js:tpl               # {highlight_js}
 html.highlight.css:tpl              # {highlight_css}
 html.side_notes:bool:false          # {side_notes}
 html.escape_nb_spaces:bool:true     # {nb_spaces}
-html.chapter.template:str:\"<h1 id = 'link-{{{{{{link}}}}}}'>{{{{#has_number}}}}<span class = 'chapter-header'>{{{{{{header}}}}}} {{{{{{number}}}}}}</span>{{{{#has_title}}}}<br />{{{{/has_title}}}}{{{{/has_number}}}}{{{{{{title}}}}}}</h1>\" # {html_chapter_template}
-html.part.template:str:\"<h2 class = 'part'>{{{{{{header}}}}}} {{{{{{number}}}}}}</h2> <h1 id = 'link-{{{{{{link}}}}}}' class = 'part'>{{{{{{title}}}}}}</h1>\" # {html_part_template}
+html.chapter.template:str:\"<h1 id = 'link-{{{{link}}}}'>{{% if has_number %}}<span class = 'chapter-header'>{{{{header}}}} {{{{number}}}}</span>{{% if has_title %}}<br />{{% endif %}}{{% endif %}}{{{{title}}}}</h1>\" # {html_chapter_template}
+html.part.template:str:\"<h2 class = 'part'>{{{{header}}}} {{{{number}}}}</h2> <h1 id = 'link-{{{{link}}}}' class = 'part'>{{{{title}}}}</h1>\" # {html_part_template}
 
 # {html_single_opt}
 html.standalone.template:tpl                # {single_html}
