@@ -45,7 +45,6 @@ use std::io::{Read, Write};
 use std::iter::IntoIterator;
 use std::path::{Path, PathBuf};
 
-use mustache::{Template};
 use numerals::roman::Roman;
 use rayon::prelude::*;
 use yaml_rust::{Yaml, YamlLoader};
@@ -141,8 +140,6 @@ pub struct Book<'a> {
     pub features: Features,
 
     cleaner: Box<dyn Cleaner>,
-    chapter_template: Option<Template>,
-    part_template: Option<Template>,
     formats: HashMap<&'static str, (String, Box<dyn BookRenderer>)>,
 
     #[doc(hidden)]
@@ -161,13 +158,16 @@ impl<'a> Book<'a> {
             cleaner: Box::new(Off),
             root: PathBuf::new(),
             options: BookOptions::new(),
-            chapter_template: None,
-            part_template: None,
             formats: HashMap::new(),
             features: Features::new(),
             bars: Bars::new(),
             registry: upon::Engine::new(),
         };
+
+        // Add some filters to registry that are useful for some templates
+        book.registry.add_filter("eq", str::eq);
+        book.registry.add_filter("starts", |a: &str, b: &str| a.starts_with(b));
+
         book.add_format(
             "html",
             lformat!("HTML (standalone page)"),
@@ -1234,12 +1234,8 @@ impl<'a> Book<'a> {
         data.insert(header_type.into(), header_name.clone().into());
         data.insert("number".into(), number.clone().into());
 
-        let opt_template = match header {
-            Header::Part => &self.part_template,
-            Header::Chapter => &self.chapter_template,
-        };
         let res = self.registry.get_template(&format!("rendering.{header_type}.template"))
-            .unwrap()
+            .expect("Error accessing template rendering.{header_type}.template")
             .render(&data)
             .to_string()?;
         Ok(HeaderData {
@@ -1346,9 +1342,8 @@ impl<'a> Book<'a> {
             Err(err) => Err(Error::template(
                 source,
                 lformat!(
-                    "could not compile '{template}': {error}",
-                    template = template_name,
-                    error = err
+                    "could not compile '{template_name}': {:#}",
+                    err
                 ),
             )),
         }

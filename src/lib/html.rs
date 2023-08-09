@@ -663,6 +663,9 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Consider the html as a template
     fn templatize(&mut self, s: &str) -> Result<String> {
+        if s.is_empty() {
+            return Ok(String::new());
+        }
         let data = self.book.get_metadata(|s| Ok(s.to_owned()))?;
         let template = self.book.compile_str(s, &self.book.source, "")?;
         Ok(template.render(&data).to_string()?)
@@ -690,18 +693,14 @@ impl<'a> HtmlRenderer<'a> {
 {
     "@context": "http://schema.org/",
     "@type": "Book",
-    "author": "{{{author}}}",
-    "name": "{{{title}}}",
-    {{#has_version}}"version": "{{{version}}}",{{/has_version}}
-    {{#has_subtitle}}"alternateName": "{{{subtitle}}}",{{/has_subtitle}}
-    {{#has_subject}}"keywords": "{{{subject}}}",{{/has_subject}}
-    {{#has_license}}"license": "{{{license}}}",{{/has_license}}
-    {{#has_description}}"about": "{{{description}}}",{{/has_description}}
-    "inLanguage": "{{{lang}}}"
-
-
-
-
+    "author": "{{author}}",
+    "name": "{{title}}",
+    {% if has_version %}"version": "{{version}}",{% endif %}
+    {% if has_subtitle %}"alternateName": "{{subtitle}}",{% endif %}
+    {% if has_subject %}"keywords": "{{subject}}",{% endif %}
+    {% if has_license %}"license": "{{license}}",{% endif %}
+    {% if has_description %}"about": "{{description}}",{% endif %}
+    "inLanguage": "{{lang}}"
 }
 </script>"#;
         self.templatize(json)

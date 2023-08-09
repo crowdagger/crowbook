@@ -241,9 +241,9 @@ impl<'a> EpubRenderer<'a> {
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
         data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
-        if let Ok(epub_css_add) = self.html.book.options.get_str("epub.css.add") {
-            data.insert("additional_code".into(), epub_css_add.into());
-        }
+        let epub_css_add = self.html.book.options.get_str("epub.css.add").unwrap_or("".into()); 
+        data.insert("additional_code".into(), epub_css_add.into());
+        
         let css = template_css.render(&data).to_string()?;
         maker.stylesheet(css.as_bytes())
             .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?;

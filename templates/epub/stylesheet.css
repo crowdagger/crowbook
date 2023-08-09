@@ -188,7 +188,7 @@ table.notes tr td p {
     font-variant: small-caps;
 }
 
-{% if lang_fr %}
+{% if lang | eq: "fr" %}
 /* Make list displays '–' instead of bullets */
 ul li {
     list-style-type: '–';

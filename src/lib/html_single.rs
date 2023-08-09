@@ -228,8 +228,11 @@ impl<'a> HtmlSingleRenderer<'a> {
         data.insert("colors".into(), self.html.book.get_template("html.css.colors")?.into());
         if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
             data.insert("additional_code".into(), html_css_add.into());
+        } else {
+            data.insert("additional_code".into(), "".into());
         }
         let css = template_css.render(&data).to_string()?;
+
 
         // Render the JS
         let template_js_src = self.html.book.get_template("html.standalone.js")?;
@@ -300,6 +303,8 @@ impl<'a> HtmlSingleRenderer<'a> {
         if !self.html.toc.is_empty() {
             data.insert("has_toc".into(), true.into());
             data.insert("toc".into(), toc.into());
+        } else {
+            data.insert("has_toc".into(), false.into());
         }
         if self.html.highlight == Highlight::Js {
             let highlight_js = misc::u8_to_base64(&self
@@ -314,6 +319,8 @@ impl<'a> HtmlSingleRenderer<'a> {
                     self.html.book.get_template("html.highlight.css")?.into(),
             );
             data.insert("highlight_js".into(), highlight_js.into());
+        } else {
+            data.insert("highlight_code".into(), false.into());
         }
         let template_src = self.html.book.get_template("html.standalone.template")?;
         let template = self.html.book.compile_str(
