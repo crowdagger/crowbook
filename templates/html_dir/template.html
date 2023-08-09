@@ -11,14 +11,14 @@
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
           media = "print" />
-    {{#highlight_code}}
+    {% if highlight_code %}
     <link rel = "stylesheet" href = "highlight.css" type = "text/css"
           />
     <script src = "highlight.js"></script>
     <script>
       hljs.initHighlightingOnLoad();
     </script>
-    {{/highlight_code}}
+    {% endif %}
    <script>
 {{script}}
    </script>
