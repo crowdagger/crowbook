@@ -311,20 +311,15 @@ impl<'a> HtmlDirRenderer<'a> {
             // Render each HTML document
             let mut data = self
                 .html
-                .book
-                .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+                .get_metadata()?;
             data.insert("content".into(), content?.into());
             data.insert("chapter_title".into(), titles[i].clone().into());
-            data.insert("json_data".into(), self.html.get_json_ld()?.into());
             data.insert("chapter_title_raw".into(), titles_raw[i].clone().into());
             data.insert("toc".into(), toc.clone().into());
             data.insert("prev_chapter".into(), prev_chapter.into());
             data.insert("next_chapter".into(), next_chapter.into());
-            data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
-            data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
-            data.insert("script".into(), self.html.book.get_template("html.js").unwrap().into());
-            data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
-
+            
+            
             if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
                 let favicon = self
                     .html
@@ -334,10 +329,10 @@ impl<'a> HtmlDirRenderer<'a> {
                     "favicon".into(),
                     format!("<link rel = \"icon\" href = \"{favicon}\">").into(),
                 );
+            } else {
+                data.insert("favicon".into(), "".into());
             }
-            if self.html.highlight == Highlight::Js {
-                data.insert("highlight_code".into(), true.into());
-            }
+
             let res = template.render(&data).to_string()?;
             self.write_file(&filenamer(i), res.as_bytes())?;
         }
@@ -421,14 +416,9 @@ impl<'a> HtmlDirRenderer<'a> {
         // Render index.html and write it too
         let mut data = self
             .html
-            .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+            .get_metadata()?;
         data.insert("content".into(), content.into());
-        data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
-        data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
         data.insert("toc".into(), toc.into());
-        data.insert("script".into(), self.html.book.get_template("html.js").unwrap().into());
-        data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
             let favicon = self
                 .html
@@ -438,9 +428,6 @@ impl<'a> HtmlDirRenderer<'a> {
                 "favicon".into(),
                 format!("<link rel = \"icon\" href = \"{favicon}\">").into(),
             );
-        }
-        if self.html.highlight == Highlight::Js {
-            data.insert("highlight_code".into(), true.into());
         }
         let template_src = self.html.book.get_template("html.dir.template")?;
         let template = self.html.book.compile_str(
@@ -465,9 +452,8 @@ impl<'a> HtmlDirRenderer<'a> {
         )?;
         let mut data = self.html.book.get_metadata(|s| Ok(s.to_owned()))?;
         data.insert("colors".into(), self.html.book.get_template("html.css.colors")?.into());
-        if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
-            data.insert("additional_code".into(), html_css_add.into());
-        }
+        let html_css_add = self.html.book.options.get_str("html.css.add").unwrap_or("".into());
+        data.insert("additional_code".into(), html_css_add.into());
         
         let css = template_css.render(&data).to_string()?;
 

@@ -265,11 +265,8 @@ impl<'a> HtmlSingleRenderer<'a> {
         // Render the HTML document
         let mut data = self
             .html
-            .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+            .get_metadata()?;
         data.insert("content".into(), content.into());
-        data.insert("script".into(), js.into());
-        data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
         data.insert(
                 "one_chapter".into(),
                 self.html
@@ -287,9 +284,6 @@ impl<'a> HtmlSingleRenderer<'a> {
         data.insert("menu_svg".into(), menu_svg.clone().into());
         data.insert("book_svg".into(), book_svg.clone().into());
         data.insert("pages_svg".into(), pages_svg.clone().into());
-        data.insert("json_data".into(), self.html.get_json_ld()?.into());
-        data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
-        data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
             let favicon = self
                 .html
@@ -299,6 +293,8 @@ impl<'a> HtmlSingleRenderer<'a> {
                 "favicon".into(),
                 format!("<link rel = \"icon\" href = \"{favicon}\">").into(),
             );
+        } else {
+            data.insert("favicon".into(), "".into()); 
         }
         if !self.html.toc.is_empty() {
             data.insert("has_toc".into(), true.into());
@@ -319,9 +315,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                     self.html.book.get_template("html.highlight.css")?.into(),
             );
             data.insert("highlight_js".into(), highlight_js.into());
-        } else {
-            data.insert("highlight_code".into(), false.into());
-        }
+        } 
         let template_src = self.html.book.get_template("html.standalone.template")?;
         let template = self.html.book.compile_str(
             template_src.as_ref(),
