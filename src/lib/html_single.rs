@@ -277,6 +277,7 @@ impl<'a> HtmlSingleRenderer<'a> {
                     .into(),
         );
         data.insert("style".into(), css.into());
+        data.insert("script".into(), js.into()); // Need to override this for html_single
         data.insert(
                 "print_style".into(),
                 self.html.book.get_template("html.css.print").unwrap().into(),
