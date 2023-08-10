@@ -1,7 +1,6 @@
-{{=<< >>=}} % Use <<foo>> to include (non HTML-escape) variable foo instead of {{{foo}}}
 \documentclass<# if has_tex_size #>[<<tex_size>>pt]<# endif #>{<<class>>}
 
-%% Pacake inclusion
+%% Package inclusion
 <# if xelatex #>
 % Unicode support if xelatex is used
 \usepackage{fontspec}
@@ -117,8 +116,8 @@
   \null\vfill
   \noindent
   \begin{center}
-    {\emph{\@title}<#if has_version>>{, <<version>>}<# endif #><# if has_author #>, © \@author<# endif #>.\\[5mm]}
-    <# if has_license>>{<<license>>\\[5mm]}<# endif #>
+    {\emph{\@title}<#if has_version #>{, <<version>>}<# endif #><# if has_author #>, © \@author<# endif #>.\\[5mm]}
+    <# if has_license #>{<<license>>\\[5mm]}<# endif #>
   \end{center}
   \pagebreak
   \newpage

@@ -1281,7 +1281,7 @@ impl<'a> Book<'a> {
         m.insert("crowbook_version".into(), env!("CARGO_PKG_VERSION").into());
         m.insert(format!("lang_{}", self.options.get_str("lang").unwrap()), true.into());
 
-        // Add metadata to mapbuilder
+        // Add metadata to map
         for key in self.options.get_metadata() {
             if let Ok(s) = self.options.get_str(key) {
                 let key = key.replace('.', "_");
@@ -1300,6 +1300,7 @@ impl<'a> Book<'a> {
 
                             m.insert(format!("has_{key}"), true.into());
                         } else {
+                            m.insert(key.clone(), "".into());
                             m.insert(format!("has_{key}"), false.into());
                         }
                     }
@@ -1316,6 +1317,7 @@ impl<'a> Book<'a> {
                     }
                 }
             } else {
+                m.insert(key.clone(), "".into());
                 m.insert(format!("has_{key}"), false.into());
             }
         }

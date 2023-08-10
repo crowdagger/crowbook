@@ -211,11 +211,16 @@ impl<'a> LatexRenderer<'a> {
         });
 
         let template_src = self.book.get_template("tex.template")?;
-        let template = self.book.compile_str(
-            template_src.as_ref(),
-            &self.book.source,
-            "tex.template",
-        )?; 
+
+        // We have to use a different template engine because we need different syntax
+        let syntax = upon::Syntax::builder()
+            .expr("<<", ">>")
+            .block("<#", "#>")
+            .comment("<%", "%>")
+            .build(); 
+        let mut engine = upon::Engine::with_syntax(syntax);
+        engine.add_template("tex.template", template_src)?;
+        let template = engine.get_template("tex.template").unwrap();
         let mut data = self
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
@@ -231,20 +236,22 @@ impl<'a> LatexRenderer<'a> {
         data.insert("use_images".into(), self.book.features.image.into());
         data.insert("use_strikethrough".into(), self.book.features.strikethrough.into());
         data.insert("tex_lang".into(), tex_lang.into());
-        if let Ok(tex_tmpl_add) = self.book.options.get_str("tex.template.add") {
-            data.insert("additional_code".into(), tex_tmpl_add.into());
-        }
+        let tex_tmpl_add = self.book.options.get_str("tex.template.add").unwrap_or("".into());
+        data.insert("additional_code".into(), tex_tmpl_add.into());
+
         if let Ok(tex_font_size) = self.book.options.get_i32("tex.font.size") {
             data.insert("has_tex_size".into(), true.into());
             data.insert("tex_size".into(), format!("{tex_font_size}").into());
+        } else {
+            data.insert("has_tex_size".into(), false.into());
         }
 
         // If class isn't book, set open_any to true, so margins are symetric.
         let mut book = false;
         if self.book.options.get_str("tex.class").unwrap() == "book" {
-            data.insert("book".into(), true.into());
             book = true;
         }
+        data.insert("book".into(), book.into());
         data.insert(
                 "margin_left".into(),
                 self.book
@@ -268,20 +275,20 @@ impl<'a> LatexRenderer<'a> {
                 self.book.options.get_str("tex.margin.top").unwrap().into(),
         );
 
-        if let Ok(chapter_name) = self.book.options.get_str("rendering.chapter") {
-            data.insert("chapter_name".into(), chapter_name.into());
-        }
-        if let Ok(part_name) = self.book.options.get_str("rendering.part") {
-            data.insert("part_name".into(), part_name.into());
-        }
-        if self.book.options.get_bool("rendering.initials") == Ok(true) {
-            data.insert("initials".into(), true.into());
-        }
+        let chapter_name = self.book.options.get_str("rendering.chapter").unwrap_or("".into());
+        data.insert("chapter_name".into(), chapter_name.into());
+        
+        let part_name = self.book.options.get_str("rendering.part").unwrap_or("".into());
+        data.insert("part_name".into(), part_name.into());
+        data.insert("initials".into(), self.book.options.get_bool("rendering.initials").unwrap().into());
         // Insert xelatex if tex.command is set to xelatex or tectonic
         if (self.book.options.get_str("tex.command") == Ok("xelatex"))
             | (self.book.options.get_str("tex.command") == Ok("tectonic"))
         {
             data.insert("xelatex".into(), true.into());
+        } else 
+        { 
+            data.insert("xelatex".into(), false.into());
         }
         Ok(template.render(&data).to_string()?)
     }
