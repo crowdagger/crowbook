@@ -1337,7 +1337,6 @@ impl<'a> Book<'a> {
     where
         O: Into<Source>,
     {
-        let input: String = template.to_owned();
         let result = self.registry.compile(template);
         match result {
             Ok(result) => Ok(result),

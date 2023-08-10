@@ -5,7 +5,6 @@ use crate::style;
 
 use std::collections::HashMap;
 use std::env;
-use std::mem;
 use std::path::{Path, PathBuf};
 use yaml_rust::{Yaml, YamlLoader};
 
