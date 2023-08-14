@@ -1,8 +1,5 @@
 # Crowbook
 
-[![Travis status](https://travis-ci.org/lise-henry/crowbook.svg?branch=master)](https://travis-ci.org/lise-henry/crowbook)
-[![Appveyor status](https://ci.appveyor.com/api/projects/status/bnj1rg76khth0aia?svg=true)](https://ci.appveyor.com/project/lise-henry/crowbook)
-
 Crowbook's aim is to allow you to write a book in Markdown without worrying about formatting or typography, and let the program generate HTML, PDF and EPUB output for you.
 Its focus is novels and fiction, and the default settings should (hopefully) generate readable books with correct typography without requiring you to worry about it.
 

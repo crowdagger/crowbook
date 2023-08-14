@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+0.17.0 (???)
+---------------
+* Try to get rid of technical debt, including removing features that were half baked and not really useful.
+  * Remove proofread options.
+  * Remove ODT renderer.
+
+
 0.16.1 (2023-08-04)
 -----------------------
 * Allow HTML in titles's toc where it's legal to do so in EPUB.
