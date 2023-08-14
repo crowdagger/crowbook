@@ -5,7 +5,6 @@ use crate::style;
 
 use std::collections::HashMap;
 use std::env;
-use std::mem;
 use std::path::{Path, PathBuf};
 use yaml_rust::{Yaml, YamlLoader};
 
@@ -41,16 +40,16 @@ rendering.highlight:str:syntect                                      # {renderin
 rendering.highlight.theme:str:InspiredGitHub                         # {rendering_highlight_theme}
 rendering.initials:bool:false                                        # {rendering_initials}
 rendering.inline_toc:bool:false                                      # {inline_toc}
-rendering.inline_toc.name:str:\"{{{{{{loc_toc}}}}}}\"                        # {toc_name}
+rendering.inline_toc.name:str:\"{{{{loc_toc}}}}\"                        # {toc_name}
 rendering.num_depth:int:1                                            # {num_depth}
 rendering.chapter:str                                                # {chapter}
 rendering.part:str                                                   # {part}
 rendering.chapter.roman_numerals:bool:false                                  # {roman_numerals_chapters}
 rendering.part.roman_numerals:bool:true                                      # {roman_numerals_parts}
 rendering.part.reset_counter:bool:true                                      # {reset_counter}
-rendering.chapter.template:str:\"{{{{{{number}}}}}}. {{{{{{chapter_title}}}}}}\" # {chapter_template}
+rendering.chapter.template:str:\"{{{{number}}}}. {{{{chapter_title}}}}\" # {chapter_template}
 
-rendering.part.template:str:\"{{{{{{number}}}}}}. {{{{{{part_title}}}}}}\" # {part_template}
+rendering.part.template:str:\"{{{{number}}}}. {{{{part_title}}}}\" # {part_template}
 
 
 
@@ -72,8 +71,8 @@ html.highlight.js:tpl               # {highlight_js}
 html.highlight.css:tpl              # {highlight_css}
 html.side_notes:bool:false          # {side_notes}
 html.escape_nb_spaces:bool:true     # {nb_spaces}
-html.chapter.template:str:\"<h1 id = 'link-{{{{{{link}}}}}}'>{{{{#has_number}}}}<span class = 'chapter-header'>{{{{{{header}}}}}} {{{{{{number}}}}}}</span>{{{{#has_title}}}}<br />{{{{/has_title}}}}{{{{/has_number}}}}{{{{{{title}}}}}}</h1>\" # {html_chapter_template}
-html.part.template:str:\"<h2 class = 'part'>{{{{{{header}}}}}} {{{{{{number}}}}}}</h2> <h1 id = 'link-{{{{{{link}}}}}}' class = 'part'>{{{{{{title}}}}}}</h1>\" # {html_part_template}
+html.chapter.template:str:\"<h1 id = 'link-{{{{link}}}}'>{{% if has_number %}}<span class = 'chapter-header'>{{{{header}}}} {{{{number}}}}</span>{{% if has_title %}}<br />{{% endif %}}{{% endif %}}{{{{title}}}}</h1>\" # {html_chapter_template}
+html.part.template:str:\"<h2 class = 'part'>{{{{header}}}} {{{{number}}}}</h2> <h1 id = 'link-{{{{link}}}}' class = 'part'>{{{{title}}}}</h1>\" # {html_part_template}
 
 # {html_single_opt}
 html.standalone.template:tpl                # {single_html}
@@ -559,8 +558,7 @@ impl BookOptions {
                     })?;
                     let mut book = Book::new();
                     book.load_file(file)?;
-                    let options = mem::replace(&mut book.options, BookOptions::new());
-                    self.merge(options)?;
+                    self.merge(&book.options)?;
                     Ok(None)
                 } else {
                     Ok(self.options.insert(key, BookOption::Path(value)))
@@ -910,7 +908,7 @@ impl BookOptions {
     /// If option is already set in self, don't add it, unless it was the default.
     /// Option is not inserted either if new value is equal to default.
     #[doc(hidden)]
-    pub fn merge(&mut self, other: BookOptions) -> Result<()> {
+    pub fn merge(&mut self, other: &BookOptions) -> Result<()> {
         for (key, value) in &other.options {
             // Check if option was already set, and if it was to default or to something else
             if self.defaults.contains_key(key) {

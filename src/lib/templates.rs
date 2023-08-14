@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -7,7 +7,7 @@
 // by the Free Software Foundation, either version 2.1 of the License, or
 // (at your option) any later version.
 //
-// Caribon is distributed in the hope that it will be useful,
+// Crowbook is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Élisabeth HENRY.
+// Copyright (C) 2017-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -28,7 +28,7 @@ impl Bars {
     }
 }
 
-impl Book {
+impl Book<'_> {
     pub fn private_add_progress_bar(&mut self, _: bool) {}
 
     /// Sets a finished message to the progress bar, if it is set

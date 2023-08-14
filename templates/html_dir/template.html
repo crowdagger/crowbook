@@ -1,51 +1,51 @@
 <!DOCTYPE html>
-<html lang="{{{lang}}}">
+<html lang="{{lang}}">
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="crowbook">
-    <meta name="author" content="{{{author_raw}}}">
+    <meta name="author" content="{{author_raw}}">
     <meta name="viewport" content="width=device-width">
-    {{{favicon}}}
-    <title>{{title_raw}} - {{chapter_title_raw}}</title>
+    {{favicon}}
+    <title>{{title_raw}}{% if is_chapter %} - {{chapter_title_raw}}{% endif %}</title>
     <link rel = "stylesheet" href = "stylesheet.css" type = "text/css"
           />
     <link rel = "stylesheet" href = "print.css" type = "text/css"
           media = "print" />
-    {{#highlight_code}}
+    {% if highlight_code %}
     <link rel = "stylesheet" href = "highlight.css" type = "text/css"
           />
     <script src = "highlight.js"></script>
     <script>
       hljs.initHighlightingOnLoad();
     </script>
-    {{/highlight_code}}
+    {% endif %}
    <script>
-{{{script}}}
+{{script}}
    </script>
 
 
   </head>  
   <body>
-  {{{json_data}}}
+  {{json_data}}
   <nav id = "nav">
-    <h2><a href = "index.html">{{{title}}}</a></h2>
-    {{{toc}}}
+    <h2><a href = "index.html">{{title}}</a></h2>
+    {{toc}}
   </nav>
 
   <div id = "content">
-    {{{header}}}
+    {{header}}
     <div id = "page">
       <header>
         <div id = "menu">
 	  <img id = "menu-button" onclick="toggle();"
-               src="menu.svg" alt = "{{{loc_toc}}}" title = "{{{loc_toc}}}" />
+               src="menu.svg" alt = "{{loc_toc}}" title = "{{loc_toc}}" />
         </div>
       </header>
-      {{{prev_chapter}}}
-      {{{content}}}
-      {{{next_chapter}}}
+      {% if is_chapter %}{{prev_chapter}}{% endif %}
+      {{content}}
+      {% if is_chapter %}{{next_chapter}}{% endif %}
     </div>
-    {{{footer}}}
+    {{footer}}
   </div>
   </body>
 </html>

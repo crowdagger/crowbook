@@ -41,7 +41,6 @@ doc = false
 default = ["binary", "syntect"]
 binary = ["clap", "simplelog", "tempfile", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
-odt = []
 
 [build-dependencies]
 crowbook-intl = "0.2"
@@ -51,7 +50,7 @@ html-escape = "0.2"
 mime_guess = "2"
 comrak = "0.18"
 yaml-rust = "0.4"
-mustache = "0.9"
+upon = "0.7"
 uuid = { version = "1", features = ["v4"] }
 walkdir = "2"
 base64 = "0.21"
@@ -71,6 +70,3 @@ clap = { version = "4", optional = true }
 simplelog = { version = "0.12", optional = true }
 syntect = { version = "5", optional = true }
 tempfile = { version = "3", optional = true }
-
-
-

@@ -17,7 +17,7 @@
 
 use crate::book::Header;
 use crate::book::HeaderData;
-use crate::book::{compile_str, Book};
+use crate::book::Book;
 use crate::error::{Error, Result, Source};
 use crate::lang;
 use crate::number::Number;
@@ -32,12 +32,11 @@ use crate::text_view;
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
 use std::fmt::Write;
+use std::collections::BTreeMap;
 
 use crowbook_text_processing::escape;
 use epub_builder::Toc;
 use epub_builder::TocElement;
-use mustache::MapBuilder;
-use mustache::Template;
 use numerals::roman::Roman;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -63,7 +62,7 @@ pub struct HtmlRenderer<'a> {
     filename: String,
 
     /// Book that must be rendered
-    pub book: &'a Book,
+    pub book: &'a Book<'a>,
 
     /// Proofread or not
     pub proofread: bool,
@@ -109,8 +108,8 @@ pub struct HtmlRenderer<'a> {
 
     syntax: Option<Syntax>,
 
-    part_template_html: Template,
-    chapter_template_html: Template,
+    part_template_html: upon::Template<'a, 'a>,
+    chapter_template_html: upon::Template<'a, 'a>,
 }
 
 impl<'a> HtmlRenderer<'a> {
@@ -161,12 +160,12 @@ impl<'a> HtmlRenderer<'a> {
             proofread: false,
             syntax,
             highlight,
-            part_template_html: compile_str(
+            part_template_html: book.compile_str(
                 book.options.get_str("html.part.template").unwrap(),
                 Source::empty(),
                 "html.part.template",
             )?,
-            chapter_template_html: compile_str(
+            chapter_template_html: book.compile_str(
                 book.options.get_str("html.chapter.template").unwrap(),
                 Source::empty(),
                 "html.chapter.template",
@@ -278,17 +277,15 @@ impl<'a> HtmlRenderer<'a> {
                 };
                 let has_number = !data.header.is_empty();
                 let has_title = !data.title.is_empty();
-                let data = MapBuilder::new()
-                    .insert_bool("has_number", has_number)
-                    .insert_bool("has_title", has_title)
-                    .insert_str("header", data.header)
-                    .insert_str("number", data.number)
-                    .insert_str("link", format!("{}", self.link_number))
-                    .insert_str("title", data.title)
-                    .build();
-                let mut res = vec![];
-                template.render_data(&mut res, &data)?;
-                Ok(String::from_utf8(res)?)
+                let data = upon::value!{
+                    has_number: has_number,
+                    has_title: has_title,
+                    header: data.header,
+                    number: data.number,
+                    title: data.title,
+                    link: format!("{}", self.link_number)
+                };
+                Ok(template.render(&data).to_string()?)
             }
         } else {
             Ok(format!(
@@ -667,12 +664,12 @@ impl<'a> HtmlRenderer<'a> {
 
     /// Consider the html as a template
     fn templatize(&mut self, s: &str) -> Result<String> {
-        let mapbuilder = self.book.get_metadata(|s| Ok(s.to_owned()))?;
-        let data = mapbuilder.build();
-        let template = compile_str(s, &self.book.source, "")?;
-        let mut res = vec![];
-        template.render_data(&mut res, &data)?;
-        Ok(String::from_utf8_lossy(&res).into_owned())
+        if s.is_empty() {
+            return Ok(String::new());
+        }
+        let data = self.book.get_metadata(|s| Ok(s.to_owned()))?;
+        let template = self.book.compile_str(s, &self.book.source, "")?;
+        Ok(template.render(&data).to_string()?)
     }
 
     /// Renders the toc name
@@ -680,17 +677,14 @@ impl<'a> HtmlRenderer<'a> {
     pub fn get_toc_name(&mut self) -> Result<String> {
         let data = self
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .build();
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
         let template = self
             .book
             .options
             .get_str("rendering.inline_toc.name")
             .unwrap();
-        let template = compile_str(template, &self.book.source, "rendering.inline_toc.name")?;
-        let mut res = vec![];
-        template.render_data(&mut res, &data)?;
-        Ok(String::from_utf8_lossy(&res).into_owned())
+        let template = self.book.compile_str(template, &self.book.source, "rendering.inline_toc.name")?;
+        Ok(template.render(&data).to_string()?)
     }
 
     /// Render a section containing schema.org JSON-LD code
@@ -700,21 +694,35 @@ impl<'a> HtmlRenderer<'a> {
 {
     "@context": "http://schema.org/",
     "@type": "Book",
-    "author": "{{{author}}}",
-    "name": "{{{title}}}",
-    {{#has_version}}"version": "{{{version}}}",{{/has_version}}
-    {{#has_subtitle}}"alternateName": "{{{subtitle}}}",{{/has_subtitle}}
-    {{#has_subject}}"keywords": "{{{subject}}}",{{/has_subject}}
-    {{#has_license}}"license": "{{{license}}}",{{/has_license}}
-    {{#has_description}}"about": "{{{description}}}",{{/has_description}}
-    "inLanguage": "{{{lang}}}"
-
-
-
-
+    "author": "{{author}}",
+    "name": "{{title}}",
+    {% if has_version %}"version": "{{version}}",{% endif %}
+    {% if has_subtitle %}"alternateName": "{{subtitle}}",{% endif %}
+    {% if has_subject %}"keywords": "{{subject}}",{% endif %}
+    {% if has_license %}"license": "{{license}}",{% endif %}
+    {% if has_description %}"about": "{{description}}",{% endif %}
+    "inLanguage": "{{lang}}"
 }
 </script>"#;
         self.templatize(json)
+    }
+
+    /// Get metadata useful for many HTML templates.
+    /// This could be cached yes.
+    pub fn get_metadata(&mut self) -> Result<BTreeMap<String, upon::Value>> {
+        // Get base metadata 
+        let mut data = self
+            .book
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+
+        // Add stuff used for HTML templates
+        data.insert("json_data".into(), self.get_json_ld()?.into());
+        data.insert("script".into(), self.book.get_template("html.js").unwrap().into());
+        data.insert("highlight_code".into(), (self.highlight == Highlight::Js).into());
+        data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
+        data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
+
+        Ok(data)
     }
 
     /// Renders a footer, which can include a "Generated by Crowboook" link

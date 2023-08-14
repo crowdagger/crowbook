@@ -1,13 +1,11 @@
-{{=<< >>=}} % Use <<&foo>> to include (non HTML-escape) variable foo instead of {{{foo}}}
-\documentclass<<#has_tex_size>>[<<&tex_size>>pt]<</has_tex_size>>{<<&class>>}
+\documentclass<# if has_tex_size #>[<<tex_size>>pt]<# endif #>{<<class>>}
 
-%% Pacake inclusion
-<<#xelatex>>
+%% Package inclusion
+<# if xelatex #>
 % Unicode support if xelatex is used
 \usepackage{fontspec}
 \usepackage{xunicode}
-<</xelatex>>
-<<^xelatex>>
+<# else #>
 % Unicode support if xelatex is not used
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -21,54 +19,54 @@
 % (e.g. filenames, urls, ...). The result is not necesarily very
 % beautiful, though, but at least it's readable.
 \setlength\emergencystretch{.5\textwidth}
-<</xelatex>>
+<# endif #>
 
-\usepackage[<<&tex_lang>>]{babel} % Language support
+\usepackage[<<tex_lang>>]{babel} % Language support
 \usepackage{fancyhdr} % Headers
 
 % Allows hyphenatations in \texttt
 \usepackage[htt]{hyphenat}
 
-<<#use_strikethrough>>
+<# if use_strikethrough #>
 % Only included if strikethrough is used in the document
 \usepackage[normalem]{ulem}
-<</use_strikethrough>>
-<<#use_taskitem>>
+<# endif #>
+<# if use_taskitem #>
 \usepackage{amssymb}
-<</use_taskitem>>
+<# endif #>
 % Set hyperlinks and metadata 
 \usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
-\hypersetup{pdfauthor={<<&author>>},
-  pdftitle={<<&title>>},
-  pdfsubject={<<&description>>}
+\hypersetup{pdfauthor={<<author>>},
+  pdftitle={<<title>>},
+  pdfsubject={<<description>>}
 }
-<<^xelatex>>
+<# if xelatex #>
+<# else #>
 \usepackage[anythingbreaks]{breakurl}
-<</xelatex>>
+<# endif #>
 
 
-<<#initials>>
+<# if initials #>
 % Only included if use_initials is set to true
 \usepackage{lettrine}
-<</initials>>
+<# endif #>
 
-<<#stdpage>>
+<# if stdpage #>
 % Only included if the stdpage option is set to true
-\usepackage[<<&papersize>>]{geometry}
+\usepackage[<<papersize>>]{geometry}
 \usepackage[hyphen=false, parskip]{stdpage}
-<</stdpage>>
-<<^stdpage>>
+<# else #>
 % Included if the stdpage option if set to false
-\usepackage[<<&papersize>>, top=<<&margin_top>>, bottom=<<&margin_bottom>>,
-  left=<<&margin_left>>,right=<<&margin_right>>]{geometry} % Set dimensions/margins of the parge
-<</stdpage>>
+\usepackage[<<papersize>>, top=<<margin_top>>, bottom=<<margin_bottom>>,
+  left=<<margin_left>>,right=<<margin_right>>]{geometry} % Set dimensions/margins of the parge
+<# endif #>
 
 
 \makeatletter
-\date{<<&date>>}
+\date{<<date>>}
 
-<<^stdpage>>
-<<#book>>
+<# if not stdpage #>
+  <# if book #>
 % Redefine the \maketitle command, only for book class (not used if stdpage option is set to true)
 \renewcommand{\maketitle}{
   % First page with only the title
@@ -93,7 +91,7 @@
     \rule{\textwidth}{0.4pt}\\[\baselineskip]
     
     {\Huge\scshape \@title   \\[5mm]}
-    {\Large <<&subtitle>>}
+    {\Large <<subtitle>>}
     
     \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
     \rule{\textwidth}{1.6pt}\\[\baselineskip]
@@ -101,14 +99,14 @@
     \vspace*{4\baselineskip}
 
     {\Large \@author}
-    <<#has_autograph>>
+      <# if has_autograph #>
     
     \vspace*{10\baselineskip}
     
-    <<&autograph>>
-    <</has_autograph>>
+    <<autograph>>
+      <# endif #>
     \vfill
-    <<#has_date>>\@date<</has_date>>
+      <# if has_date #>\@date<# endif #>
   \end{center}
   
   \pagebreak
@@ -118,13 +116,13 @@
   \null\vfill
   \noindent
   \begin{center}
-    {\emph{\@title}<<#has_version>>{, <<&version>>}<</has_version>><<#has_author>>, © \@author<</has_author>>.\\[5mm]}
-    <<#has_license>>{<<&license>>\\[5mm]}<</has_license>>
+    {\emph{\@title}<#if has_version #>{, <<version>>}<# endif #><# if has_author #>, © \@author<# endif #>.\\[5mm]}
+    <# if has_license #>{<<license>>\\[5mm]}<# endif #>
   \end{center}
   \pagebreak
   \newpage
 }
-<</book>>
+  <# endif #>
 
 
 % Redefine headers
@@ -134,7 +132,7 @@
 \fancyfoot{}
 
 
-<</stdpage>>
+<# endif #>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Command and environment definitions
@@ -189,7 +187,7 @@
 %
 % Only used if syntect is used for syntax highlighting is used, else
 % the spverbatim environment is preferred.
-<<#use_codeblocks>> % This part is only included if document contains code blocks
+<# if use_codeblocks #> % This part is only included if document contains code blocks
 \usepackage{spverbatim}
 \usepackage{color}
 \usepackage[
@@ -202,9 +200,9 @@
 }{%
   \end{mdframed}
 } 
-<</use_codeblocks>>
+<# endif #>
 
-<<#use_images>>
+<# if use_images #>
 % Only included if document contains images
 \usepackage{graphicx}
 
@@ -219,9 +217,9 @@
 % Image
 % (an image embedded in a pagraph or other element)
 \newcommand\mdimage[1]{\includegraphics{#1}}
-<</use_images>>
+<# endif #>
 
-<<#use_tables>>
+<# if use_tables #>
 % Only included if document contains tables
 \usepackage{tabularx}
 
@@ -237,34 +235,34 @@
   \endtabularx
   \endcenter
 }
-<</use_tables>>
+<# endif #>
 
-<<&additional_code>>
+<<additional_code>>
 
 \makeatother
 
-\title{<<&title>>}
-\author{<<&author>>}
+\title{<<title>>}
+\author{<<author>>}
 
 \begin{document}
 
 % Redefine chapter and part names if they needs to be
 % Needs to be after \begin{document} because babel
-<<#chapter_name>>
+<# if chapter_name #>
 \makeatletter
-\renewcommand{\@chapapp}{<<&chapter_name>>}
+\renewcommand{\@chapapp}{<<chapter_name>>}
 \makeatother
-<</chapter_name>>
+<# endif #>
 
-<<#part_name>>
-\renewcommand{\partname}{<<&part_name>>}
-<</part_name>>
+<# if part_name #>
+\renewcommand{\partname}{<<part_name>>}
+<# endif #>
 
 
-<<#tex_title>>
+<# if tex_title #>
 \maketitle
-<</tex_title>>
+<# endif #>
 
-<<&content>>
+<<content>>
 
 \end{document}

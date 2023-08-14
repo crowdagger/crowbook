@@ -20,14 +20,11 @@ either using precompiled binaries, or compiling it using `cargo`.
 
 See
 [the releases page](https://github.com/lise-henry/crowbook/releases)
-to download a precompiled binary for your architecture
-(currently: Linux, Windows and MacOSX).
+to download a precompiled binary for your architecture.
 Just extract the archive and run `crowbook`
 (or `crowbook.exe` on Windows).
 You might also want to copy the binary somewhere in your `PATH` for later usage.
 
-If you are on Debian GNU/Linux or Ubuntu (on a PC architecture), you can also download `.deb` packages on
-[the releases page](https://github.com/lise-henry/crowbook/releases).
 
 ### Using Cargo
 
@@ -49,16 +46,11 @@ compile it, and install it on your system.
 
 > Some dependencies also require building C libraries;
 > you might thus also need to install a C compiler and `make`/`cmake` build tools.
-> You can also try to build a version of Crowbook without optional features:
-> `cargo install crowbook --no-default-features --features "clap"`
-> will disable syntactic highlighting and proofreading, requiring less dependencies.
 
 ## Dependencies
 
-While there should be, strictly speaking, no real dependencies to be able to run Crowbook (it is published as a statically compiled binary), some features require additional commands to work correctly:
-
-* EPUB rendering requires the `zip` command to be present on your system;
-* PDF rendering requires a working installation of LaTeX (preferably `xelatex`).
+While there should be, strictly speaking, no real dependencies to be able to run Crowbook (it is published as a statically compiled binary), 
+PDF rendering requires a working installation of LaTeX (preferably `xelatex`).
 
 ## Quick tour
 
@@ -138,12 +130,6 @@ title: My title
 
 This is mostly useful when Crowbook is run with the `--single` argument (receiving a single Markdown file instead of a book configuration file), for short texts that only contain one "chapter".
 
-### Proofreading
-
-Crowbook can also generate "proofreading" copies in HTML or PDF, highlighting grammar errors and repetitions.
-For more information, see
-[the proofreading chapter of the guide](guide/05_proofreading.md).
-
 ### Interactive fiction
 
 Crowbook has experimental support for writing interactive fiction (only for HTML).
@@ -162,8 +148,132 @@ See the
 
 ## Contributors
 
-* [Stéphane Mourey](http://stephanemourey.fr/) `<s+crowbook AT stephanemourey DOT fr>`
-* [Falco Hirschenberger](https://github.com/hirschenberger)
+<!-- readme: contributors -start -->
+<table>
+<tr>
+    <td align="center">
+        <a href="https://github.com/lise-henry">
+            <img src="https://avatars.githubusercontent.com/u/1961791?v=4" width="100;" alt="lise-henry"/>
+            <br />
+            <sub><b>Élisabeth Henry</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Crowdagger">
+            <img src="https://avatars.githubusercontent.com/u/1954779?v=4" width="100;" alt="Crowdagger"/>
+            <br />
+            <sub><b>Lizzie Crowdagger</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/stefan0xC">
+            <img src="https://avatars.githubusercontent.com/u/509385?v=4" width="100;" alt="stefan0xC"/>
+            <br />
+            <sub><b>Stefan Melmuk</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/hirschenberger">
+            <img src="https://avatars.githubusercontent.com/u/1053180?v=4" width="100;" alt="hirschenberger"/>
+            <br />
+            <sub><b>Falco Hirschenberger</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Geobert">
+            <img src="https://avatars.githubusercontent.com/u/72570?v=4" width="100;" alt="Geobert"/>
+            <br />
+            <sub><b>Geobert Quach</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/jrappen">
+            <img src="https://avatars.githubusercontent.com/u/8577450?v=4" width="100;" alt="jrappen"/>
+            <br />
+            <sub><b>Johannes Rappen</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/taophp">
+            <img src="https://avatars.githubusercontent.com/u/5610065?v=4" width="100;" alt="taophp"/>
+            <br />
+            <sub><b>Stéphane Mourey</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/dkotrada">
+            <img src="https://avatars.githubusercontent.com/u/698296?v=4" width="100;" alt="dkotrada"/>
+            <br />
+            <sub><b>Alfa</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/hfiguiere">
+            <img src="https://avatars.githubusercontent.com/u/114441?v=4" width="100;" alt="hfiguiere"/>
+            <br />
+            <sub><b>Hubert Figuière</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/dvalter">
+            <img src="https://avatars.githubusercontent.com/u/38795282?v=4" width="100;" alt="dvalter"/>
+            <br />
+            <sub><b>Dmitry Valter</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Dylan-DPC">
+            <img src="https://avatars.githubusercontent.com/u/99973273?v=4" width="100;" alt="Dylan-DPC"/>
+            <br />
+            <sub><b>Dylan DPC</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/steffahn">
+            <img src="https://avatars.githubusercontent.com/u/3986214?v=4" width="100;" alt="steffahn"/>
+            <br />
+            <sub><b>Frank Steffahn</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/cuviper">
+            <img src="https://avatars.githubusercontent.com/u/36186?v=4" width="100;" alt="cuviper"/>
+            <br />
+            <sub><b>Josh Stone</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/mgeisler">
+            <img src="https://avatars.githubusercontent.com/u/89623?v=4" width="100;" alt="mgeisler"/>
+            <br />
+            <sub><b>Martin Geisler</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/sigurdsvela">
+            <img src="https://avatars.githubusercontent.com/u/5571884?v=4" width="100;" alt="sigurdsvela"/>
+            <br />
+            <sub><b>Sigurd Svela</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/twirrim">
+            <img src="https://avatars.githubusercontent.com/u/59949?v=4" width="100;" alt="twirrim"/>
+            <br />
+            <sub><b>Twirrim</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ar1ocker">
+            <img src="https://avatars.githubusercontent.com/u/109543340?v=4" width="100;" alt="ar1ocker"/>
+            <br />
+            <sub><b>Ar1oc</b></sub>
+        </a>
+    </td></tr>
+</table>
+<!-- readme: contributors -end -->
 
 ## Acknowledgements
 

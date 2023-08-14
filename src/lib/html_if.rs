@@ -15,7 +15,7 @@
 // You should have received ba copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::book::{compile_str, Book};
+use crate::book::Book;
 use crate::book_renderer::BookRenderer;
 use crate::error::{Error, Result, Source};
 use crate::html::Highlight;
@@ -261,74 +261,71 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
         self.html.render_end_notes(&mut content, "section", "");
 
         // Render the CSS
-        let template_css = compile_str(
-            self.html.book.get_template("html.css")?.as_ref(),
+        let template_css_src = self.html.book.get_template("html.css")?;
+        let template_css = self.html.book.compile_str(
+            template_css_src.as_ref(),
             &self.html.book.source,
             "html.css",
         )?;
         let mut data = self
             .html
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("colors", self.html.book.get_template("html.css.colors")?);
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        data.insert("colors".into(), self.html.book.get_template("html.css.colors")?.into());
         if let Ok(html_css_add) = self.html.book.options.get_str("html.css.add") {
-            data = data.insert_str("additional_code", html_css_add);
+            data.insert("additional_code".into(), html_css_add.into());
         }
-        let data = data.build();
-        let mut res: Vec<u8> = vec![];
-        template_css.render_data(&mut res, &data)?;
-        let css = String::from_utf8_lossy(&res);
+        let css:String = template_css.render(&data).to_string()?;
 
         // Render the JS
-        let template_js = compile_str(
-            self.html.book.get_template("html.if.js")?.as_ref(),
+        let template_js_src = self.html.book.get_template("html.if.js")?;
+        let template_js = self.html.book.compile_str(
+            template_js_src.as_ref(),
             &self.html.book.source,
             "html.standalone.js",
         )?;
-        let data = self
+        let mut data = self
             .html
             .book
-            .get_metadata(|s| Ok(s.to_owned()))?
-            .insert_bool("one_chapter", true)
-            .insert_str("js_prelude", std::mem::take(&mut self.fn_defs))
-            .insert_str(
-                "new_game",
-                self.html.book.get_template("html.if.new_game").unwrap(),
-            )
-            .insert_str(
-                "common_script",
-                self.html.book.get_template("html.js").unwrap().as_ref(),
-            )
-            .build();
-        let mut res: Vec<u8> = vec![];
-        template_js.render_data(&mut res, &data)?;
-        let js = String::from_utf8_lossy(&res);
+            .get_metadata(|s| Ok(s.to_owned()))?;
+        data.insert("one_chapter".into(), true.into());
+        data.insert("js_prelude".into(), self.fn_defs.clone().into());
+        data.insert(
+                "new_game".into(),
+                self.html.book.get_template("html.if.new_game").unwrap().into(),
+        );
+        data.insert(
+                "common_script".into(),
+                self.html.book.get_template("html.js").unwrap().into(),
+        );
+        let js = template_js.render(&data).to_string()?;
+
 
         // Render the HTML document
-        let mut mapbuilder = self
+        let mut data = self
             .html
             .book
-            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?
-            .insert_str("content", content)
-            .insert_str("script", js)
-            .insert_bool(self.html.book.options.get_str("lang").unwrap(), true)
-            .insert_bool("one_chapter", true)
-            .insert_str("style", css.as_ref())
-            .insert_str(
-                "print_style",
-                self.html.book.get_template("html.css.print").unwrap(),
-            )
-            .insert_str("footer", HtmlRenderer::get_footer(self)?)
-            .insert_str("header", HtmlRenderer::get_header(self)?)
-            .insert_bool("has_toc", false);
+            .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        data.insert("content".into(), content.into());
+        data.insert("script".into(), js.into());
+        data.insert(self.html.book.options.get_str("lang").unwrap().into(), true.into());
+        data.insert("one_chapter".into(), true.into());
+        data.insert("style".into(), css.into());
+        data.insert(
+                "print_style".into(),
+                self.html.book.get_template("html.css.print").unwrap().into(),
+        );
+        data.insert("footer".into(), HtmlRenderer::get_footer(self)?.into());
+        data.insert("header".into(), HtmlRenderer::get_header(self)?.into());
+        data.insert("has_toc".into(), false.into());
         if let Ok(favicon) = self.html.book.options.get_path("html.icon") {
             let favicon = self
                 .html
                 .handler
                 .map_image(&self.html.book.source, favicon)?;
-            mapbuilder = mapbuilder.insert_str(
-                "favicon",
-                format!("<link rel = \"icon\" href = \"{favicon}\">"),
+            data.insert(
+                "favicon".into(),
+                format!("<link rel = \"icon\" href = \"{favicon}\">").into(),
             );
         }
         if self.html.highlight == Highlight::Js {
@@ -338,26 +335,20 @@ return crowbook_return_variable.replace(/<\\/ul><ul>/g, '');\n",
                 .get_template("html.highlight.js")?
                 .as_bytes());
             let highlight_js = format!("data:text/javascript;base64,{highlight_js}");
-            mapbuilder = mapbuilder
-                .insert_bool("highlight_code", true)
-                .insert_str(
-                    "highlight_css",
-                    self.html.book.get_template("html.highlight.css")?,
-                )
-                .insert_str("highlight_js", highlight_js);
+            data.insert("highlight_code".into(), true.into());
+            data.insert(
+                    "highlight_css".into(),
+                    self.html.book.get_template("html.highlight.css")?.into(),
+            );
+            data.insert("highlight_js".into(), highlight_js.into());
         }
-        let data = mapbuilder.build();
-        let template = compile_str(
-            self.html
-                .book
-                .get_template("html.standalone.template")?
-                .as_ref(),
+        let template_src = self.html.book.get_template("html.standalone.template")?;
+        let template = self.html.book.compile_str(
+            template_src.as_ref(),
             &self.html.book.source,
             "html.standalone.template",
         )?;
-        let mut res = vec![];
-        template.render_data(&mut res, &data)?;
-        Ok(String::from_utf8_lossy(&res).into_owned())
+        Ok(template.render(&data).to_string()?)
     }
 }
 

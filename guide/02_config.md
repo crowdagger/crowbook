@@ -299,11 +299,6 @@ Current output options are:
 * `output.tex`: renders a LaTeX file.
 * `output.pdf`: renders a PDF file (using `tex.command`).
 
-(There are other output options for generating proofreading files, see
-[Proofreading](05_proofreading.md),
-and interactive fiction, see
-[Interactive fiction](06_interactive_fiction.md).)
-
 #### The `output` option
 
 Setting output file names manually can be a bit tedious, and is not always necessary.
@@ -642,12 +637,6 @@ The `path` type might puzzle you a bit, but it's equivalent to a string, except 
 - **type**: path
 - **default value**: `not set`
 -  Output file name for PDF rendering
-
-#### `output.odt`
-
-- **type**: path
-- **default value**: `not set`
--  Output file name for ODT rendering
 
 #### `output.html.if`
 

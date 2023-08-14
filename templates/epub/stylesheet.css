@@ -188,13 +188,13 @@ table.notes tr td p {
     font-variant: small-caps;
 }
 
-{{#lang_fr}}
+{% if lang | eq: "fr" %}
 /* Make list displays '–' instead of bullets */
 ul li {
     list-style-type: '–';
     padding-left: .5em;
 }
-{{/lang_fr}}
+{% endif %}
 
 span.initial { 
     float: left;
@@ -217,4 +217,4 @@ p.first-para {
     padding: 0;
 }
 
-{{{additional_code}}}
+{{additional_code}}

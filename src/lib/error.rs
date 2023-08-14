@@ -179,7 +179,7 @@ impl Error {
 
     /// Creates a new template error.
     ///
-    /// Error when compiling a mustache template.
+    /// Error when compiling a template.
     pub fn template<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -360,10 +360,10 @@ impl fmt::Display for Error {
 /// Crowbook's Result type, used by many methods that can fail
 pub type Result<T> = result::Result<T, Error>;
 
-/// Implement our Error from mustache::Error
-impl From<mustache::Error> for Error {
-    fn from(err: mustache::Error) -> Error {
-        Error::template(Source::empty(), format!("{err}"))
+/// Implement our Error from upon::error
+impl From<upon::Error> for Error {
+    fn from(err: upon::Error) -> Error {
+        Error::template(Source::empty(), format!("{:#}", err))
     }
 }
 

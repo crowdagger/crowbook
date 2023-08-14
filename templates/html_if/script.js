@@ -23,13 +23,13 @@ function passageCount(n) {
     return count;
 }
 
-{{{common_script}}}
+{{common_script}}
 
 var initFns = [];
 
-{{{new_game}}}
+{{new_game}}
 
-{{{js_prelude}}}
+{{js_prelude}}
 
 function showChapter(chap, noreset){
     state.current_id = chap;

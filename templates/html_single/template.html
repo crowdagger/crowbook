@@ -1,80 +1,80 @@
 <!DOCTYPE html>
-<html lang="{{{lang}}}">
+<html lang="{{lang}}">
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="crowbook">
     <meta name="viewport" content="width=device-width">
-    <meta name="author" content="{{{author_raw}}}">
-    {{{favicon}}}
+    <meta name="author" content="{{author_raw}}">
+    {{favicon}}
     <title>{{title_raw}}</title>
     <style type = "text/css">
-      {{{style}}}
+      {{style}}
     </style>
     <style type = "text/css" media = "print">
-      {{{print_style}}}
+      {{print_style}}
     </style>
-    {{#highlight_code}}
+    {% if highlight_code %}
     <style>
-      {{{highlight_css}}}
+      {{highlight_css}}
     </style>
-    <script src = "{{{highlight_js}}}"></script>
+    <script src = "{{highlight_js}}"></script>
     <script>
       hljs.initHighlightingOnLoad();
     </script>
-    {{/highlight_code}}
+    {% endif %}
    <script>
-{{{script}}}
+    {{script}}
    </script>
 
 
   </head>
   <body>
-    {{{json_data}}}
-    {{#has_toc}}
+    {{json_data}}
+    {% if has_toc %}
     <nav id = "nav">
-      {{#one_chapter}}
+      {% if one_chapter %}
       <div id = "nav-container">
         <div id="toolbar">
           <img id="book-button" alt="Display mode"
-               title = "{{{loc_display_all}}}"
-               src="{{{book_svg}}}"
+               title = "{{loc_display_all}}"
+               src="{{book_svg}}"
                onclick="javascript:switchAll()">
         </div>
       </div>
-      {{/one_chapter}}
+      {% endif %}
       <div id = "nav-title">
-        <h2><a href = "#link-0">{{{title}}}</a></h2>
+        <h2><a href = "#link-0">{{title}}</a></h2>
       </div>
-      {{{toc}}}
+      {{toc}}
     </nav>
-    {{/has_toc}}
+    {% endif %}
 
     <div id = "content">
-      {{{header}}}
+      {{header}}
       <div id = "page">
         <header>
 
           <div id = "menu">
-	    {{#has_toc}}
+	        {% if has_toc %}
             <img id = "menu-button" onclick="toggle();"
-                 src="{{{menu_svg}}}"
-                 alt = "{{{loc_toc}}}" title = "{{{loc_toc}}}" />
-            {{/has_toc}}
+                 src="{{menu_svg}}"
+                 alt = "{{loc_toc}}" title = "{{loc_toc}}" />
+          {% endif %}
           </div>
-	  <h2 class="author">{{{author}}}</h2>
-          <h1 id = "link-0" class="title" >{{{title}}}</h1>
-	  {{#has_subtitle}}<h2 class = "subtitle">{{{subtitle}}}</h2>{{/has_subtitle}}
-	  {{#has_autograph}}
+	  <h2 class="author">{{author}}</h2>
+          <h1 id = "link-0" class="title" >{{title}}</h1>
+	  {% if has_subtitle %}<h2 class = "subtitle">{{subtitle}}</h2>{% endif %}
+	  {% if has_autograph %}
 	  <div id = "autograph">
-	    {{{autograph}}}
+	    {{autograph}}
 	  </div>
-	  {{/has_autograph}}
+	  {% endif %}
         </header>
 
-        {{{content}}}
+        {{content}}
 
       </div>
-      {{{footer}}}
+      {{footer}}
     </div>
   </body>
 </html>

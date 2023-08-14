@@ -1,6 +1,6 @@
-{{{common_script}}}
+{{common_script}}
 
-{{#one_chapter}}
+{% if one_chapter %}
 function showChapter(chap, noreset){
     if (!displayAll) {
         var chapters = document.getElementsByClassName("chapter");
@@ -62,16 +62,16 @@ function switchAll() {
 	    toc.style.display = "block";
 	}
         displayAllSwitcher = document.getElementById("book-button");
-        displayAllSwitcher.src="{{{pages_svg}}}";
-        displayAllSwitcher.alt="{{{loc_display_one}}}";
-        displayAllSwitcher.title="{{{loc_display_one}}}";
+        displayAllSwitcher.src="{{pages_svg}}";
+        displayAllSwitcher.alt="{{loc_display_one}}";
+        displayAllSwitcher.title="{{loc_display_one}}";
     } else {
         displayAll = false;
         showChapter(0);
         displayAllSwitcher = document.getElementById("book-button");
-        displayAllSwitcher.src="{{{book_svg}}}";
-        displayAllSwitcher.alt="{{{loc_display_all}}}";
-        displayAllSwitcher.title="{{{loc_display_all}}}";
+        displayAllSwitcher.src="{{book_svg}}";
+        displayAllSwitcher.alt="{{loc_display_all}}";
+        displayAllSwitcher.title="{{loc_display_all}}";
     }
 }
 
@@ -99,4 +99,4 @@ window.onload = function(){
 
 };
 
-{{/one_chapter}}
+{% endif %}
