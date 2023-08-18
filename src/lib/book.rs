@@ -1158,15 +1158,22 @@ impl<'a> Book<'a> {
         }
     }
 
-    /// Sets the chapter_template once and for all
+    /// Sets the chapter_template once and for all (also sets part template)
     fn set_chapter_template(&mut self) -> Result<()> {
-        self.registry.add_template("rendering.chapter.template", 
-            self.options.get_str("rendering.chapter.template").unwrap().to_owned())
+        self.register_template("rendering.chapter.template")?;
+        self.register_template("rendering.part.template")?;
+        Ok(())
+    }
+
+    
+    fn register_template(&mut self, tpl: &'static str) -> Result<()> {
+        self.registry.add_template(tpl,
+            self.options.get_str(tpl).unwrap().to_owned())
             .map_err(|e| Error::template(
                 &self.source,
                 lformat!(
                     "could not compile '{template}': {error}",
-                    template = "rendering.chapter.template",
+                    template = "tpl",
                     error = e
                 ))
             )?;
@@ -1235,7 +1242,7 @@ impl<'a> Book<'a> {
         data.insert("number".into(), number.clone().into());
 
         let res = self.registry.get_template(&format!("rendering.{header_type}.template"))
-            .expect("Error accessing template rendering.{header_type}.template")
+            .expect(&format!("Error accessing template rendering.{header_type}.template"))
             .render(&data)
             .to_string()?;
         Ok(HeaderData {
