@@ -1,5 +1,6 @@
 use yaml_rust::yaml::Hash;
 use yaml_rust::{Yaml, YamlLoader};
+use rust_i18n::t;
 
 static EN: &str = include_str!("../../lang/document/en.yaml");
 static ES: &str = include_str!("../../lang/document/es.yaml");
@@ -27,9 +28,8 @@ pub fn get_hash(lang: &str) -> Hash {
     } else {
         panic!(
             "{}",
-            lformat!(
-                "Yaml file for language {lang} didn't contain a hash",
-                lang = lang
+            t!("error.yaml_lang",
+               lang = lang
             )
         );
     }
@@ -38,8 +38,8 @@ pub fn get_hash(lang: &str) -> Hash {
 /// Get a string for a given language
 pub fn get_str(lang: &str, s: &str) -> String {
     let hash = get_hash(lang);
-    let yaml = hash.get(&Yaml::String(s.to_owned())).expect(&lformat!(
-        "Could not find translation for {key} in language {lang}",
+    let yaml = hash.get(&Yaml::String(s.to_owned())).expect(&t!(
+        "error.yaml_translation",
         key = s,
         lang = lang
     ));
@@ -48,8 +48,7 @@ pub fn get_str(lang: &str, s: &str) -> String {
     } else {
         panic!(
             "{}",
-            lformat!(
-                "Yaml for {key} in lang {lang} is not a String!",
+            t!("error.yaml_translation_string",
                 key = s,
                 lang = lang
             )

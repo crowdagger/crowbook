@@ -58,6 +58,9 @@ error:
   roman_numerals: "can not use roman numerals with zero or negative chapter numbers (%{n})"
   render_key: "could not render `%{key}` for metadata:\n%{error}"
   yaml_set: "Inline YAML block could not set %{key} to %{value}: %{err}"
+  yaml_lang: "Yaml file for language %{lang} didn't contain a hash"
+  yaml_translation: "Could not find translation for %{key} in language %{lang}"
+  yaml_translation_sring: "Yaml for %{key} in lang %{lang} is not a string"
   renderer:
     no_output: This renderer does not support the auto output
     file_creation: "could not create file '%{file}': '%{err}"
@@ -65,6 +68,8 @@ error:
 warn:
   above: "Warning: book contains chapter '%{file}' in a directory above the book file, this might cause problems"
 format:
+  image: image
+  markdown: markdown file
   book: book
   book_chapter: book chapter
   html_single: HTML (standalone page)
@@ -107,4 +112,12 @@ html:
   highlight: "rendering.highlight set to '%{value}', not a valid value"
   footer_template_error: "rendering 'html.footer' template:\n%{error}"
   header_template_error: "rendering 'html.header' template:\n%{error}"
-
+latex:
+  attempting: "Attempting to run LaTeX on generated file"
+  image_error: "error while reading image file: %{error}"
+  lang_error: "LaTeX: can't find a tex equivalent for lang '%{lang}', fallbacking on english"
+  lists: "found %{n} indented ordered lists, LaTeX only allows for 4"
+  remote_image: "LaTeX (%{source}): image '%{url}' doesn't seem to be local; ignoring it."
+  write_error: "problem when writing LaTeX: %{error}"
+parser:
+  ignore_html: "ignoring HTML block '%{block}'"

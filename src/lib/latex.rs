@@ -36,6 +36,7 @@ use std::fs::File;
 use std::io;
 use std::io::Read;
 use std::iter::Iterator;
+use rust_i18n::t;
 
 /// LaTeX renderer
 pub struct LatexRenderer<'a> {
@@ -95,20 +96,20 @@ impl<'a> LatexRenderer<'a> {
     /// Render pdf to a file
     pub fn render_pdf(&mut self, to: &mut dyn io::Write) -> Result<String> {
         let content = self.render_book()?;
-        debug!("{}", lformat!("Attempting to run LaTeX on generated file"));
+        debug!("{}", t!("latex.attempting"));
         let mut zipper = Zipper::new(&self.book.options.get_path("crowbook.temp_dir").unwrap())?;
         zipper.write("result.tex", content.as_bytes(), false)?;
 
         // write image files
         for (source, dest) in self.handler.images_mapping() {
             let mut f = fs::canonicalize(source).and_then(File::open).map_err(|_| {
-                Error::file_not_found(&self.source, lformat!("image"), source.to_owned())
+                Error::file_not_found(&self.source, t!("format.image"), source.to_owned())
             })?;
             let mut content = vec![];
             f.read_to_end(&mut content).map_err(|e| {
                 Error::render(
                     &self.source,
-                    lformat!("error while reading image file: {error}", error = e),
+                    t!("latex.image_error", error = e),
                 )
             })?;
             zipper.write(dest, &content, true)?;
@@ -200,10 +201,8 @@ impl<'a> LatexRenderer<'a> {
             _ => {
                 warn!(
                     "{}",
-                    lformat!(
-                        "LaTeX: can't find a tex equivalent for lang '{lang}', \
-                                      fallbacking on english",
-                        lang = self.book.options.get_str("lang").unwrap()
+                    t!("latex.lang_error",
+                       lang = self.book.options.get_str("lang").unwrap()
                     )
                 );
                 "english"
@@ -314,10 +313,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         let initial = chars.next().ok_or_else(|| {
                             Error::parser(
                                 &self.book.source,
-                                lformat!(
-                                    "empty str token, could not find \
-                                                              initial"
-                                ),
+                                t!("error.initial"),
                             )
                         })?;
                         let mut first_word = String::new();
@@ -478,8 +474,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         _ => {
                             return Err(Error::render(
                                 &self.source,
-                                lformat!(
-                                    "found {n} indented ordered lists, LaTeX only allows for 4",
+                                t!("latex.lists",
                                     n = self.enum_level
                                 ),
                             ))
@@ -531,9 +526,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 } else {
                     debug!(
                         "{}",
-                        lformat!(
-                            "LaTeX ({source}): image '{url}' doesn't seem to be \
-                                           local; ignoring it.",
+                        t!("latex.remote_image",
                             source = self.source,
                             url = url
                         )
@@ -550,9 +543,7 @@ impl<'a> Renderer for LatexRenderer<'a> {
                 } else {
                     debug!(
                         "{}",
-                        lformat!(
-                            "LaTeX ({source}): image '{url}' doesn't seem to be \
-                                           local; ignoring it.",
+                        t!("latex.remote_image",
                             source = self.source,
                             url = url
                         )
@@ -635,7 +626,7 @@ impl BookRenderer for Latex {
         to.write_all(result.as_bytes()).map_err(|e| {
             Error::render(
                 &book.source,
-                lformat!("problem when writing LaTeX: {error}", error = e),
+                t!("latex.write_error", error = e),
             )
         })?;
         Ok(())
@@ -653,7 +644,7 @@ impl BookRenderer for ProofLatex {
         to.write_all(result.as_bytes()).map_err(|e| {
             Error::render(
                 &book.source,
-                lformat!("problem when writing LaTeX: {error}", error = e),
+                t!("latex.write_error", error = e),
             )
         })?;
         Ok(())

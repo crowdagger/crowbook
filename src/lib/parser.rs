@@ -29,6 +29,7 @@ use std::path::Path;
 
 use comrak::nodes::{AstNode, ListType, NodeValue};
 use comrak::{parse_document, Arena, ComrakOptions};
+use rust_i18n::t;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 /// The list of features used in a document.
@@ -170,7 +171,7 @@ impl Parser {
         let mut f = File::open(path).map_err(|_| {
             Error::file_not_found(
                 &self.source,
-                lformat!("markdown file"),
+                t!("format.markdown"),
                 format!("{}", path.display()),
             )
         })?;
@@ -179,9 +180,8 @@ impl Parser {
         f.read_to_string(&mut s).map_err(|_| {
             Error::parser(
                 &self.source,
-                lformat!(
-                    "file {file} contains invalid UTF-8, could not parse it",
-                    file = path.display()
+                t!("error.utf8",
+                   file = path.display()
                 ),
             )
         })?;
@@ -298,7 +298,7 @@ impl Parser {
                 if self.html_as_text {
                     vec![Token::Str(text)]
                 } else {
-                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
+                    debug!("{}", t!("parser.ignore_html", block = text));
                     vec![]
                 }
             }
@@ -307,7 +307,7 @@ impl Parser {
                 if self.html_as_text {
                     vec![Token::Str(text)]
                 } else {
-                    debug!("{}", lformat!("ignoring HTML block '{}'", text));
+                    debug!("{}", t!("parser.ignore_html", block = text));
                     vec![]
                 }
             }
