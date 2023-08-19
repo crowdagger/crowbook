@@ -21,6 +21,8 @@ use std::fmt;
 use std::result;
 use std::string::FromUtf8Error;
 
+use rust_i18n::t;
+
 #[derive(Debug, PartialEq, Clone)]
 /// Source of an error.
 ///
@@ -107,15 +109,6 @@ impl Error {
         }
     }
 
-    /// Creates a new grammar check error.
-    ///
-    /// Used when there is a problem connecting to languagetool
-    pub fn grammar_check<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
-        Error {
-            source: source.into(),
-            inner: Inner::GrammarCheck(msg.into()),
-        }
-    }
     /// Creates a new parser error.
     ///
     /// Error when parsing markdown file.
@@ -275,9 +268,7 @@ impl error::Error for Error {
             | Inner::InvalidOption(ref s)
             | Inner::Render(ref s)
             | Inner::Template(ref s)
-            | Inner::Syntect(ref s)
-            | Inner::GrammarCheck(ref s) => s.as_ref(),
-
+            | Inner::Syntect(ref s) => s.as_ref(),
             Inner::FileNotFound(..) => "File not found",
         }
     }
@@ -296,13 +287,6 @@ impl fmt::Display for Error {
 
         match self.inner {
             Inner::Default(ref s) => write!(f, "{s}"),
-            Inner::GrammarCheck(ref s) => {
-                write!(
-                    f,
-                    "{}",
-                    lformat!("Error while trying to check grammar: {error}", error = s)
-                )
-            }
             Inner::Parser(ref s) => {
                 write!(
                     f,
@@ -424,8 +408,6 @@ enum Inner {
     InvalidOption(Cow<'static, str>),
     /// Error when compiling template
     Template(Cow<'static, str>),
-    /// Error when connecting to LanguageTool
-    GrammarCheck(Cow<'static, str>),
     /// Error when parsing code syntax
     Syntect(Cow<'static, str>),
 }
