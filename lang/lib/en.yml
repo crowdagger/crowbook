@@ -12,6 +12,7 @@ ui:
   generated: "generated %{path}"
   error: ERROR
 error:
+  initial: empty str token, could not find initial
   no_string: "%{s} is not a string"
   no_string_vector: "%{s} is not a string vector"
   no_path: "%{s} is not a path"
@@ -68,6 +69,15 @@ debug:
   yaml_ignore: "Ignoring YAML block:\n%{block}"
   found_yaml_block: "Found something that looked like a YAML block:\n%{block}"
   found_yaml_block2: "... but it didn't parse correctly as YAML('%{error}'), so treating it like Markdown."
+epub:
+  zip_command: "Could not run zip command, falling back to zip library"
+  cover: cover
+  image_or_cover: image or cover
+  resources: additional resource from resources.files
+  ambiguous: "EPUB (%{source}): detected two chapters inside the same markdown file."
+  ambiguous_invisible: "EPUB (%{source}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered."
+  title_conflict: "EPUB ({source}): conflict between: %{title1} and %{title2}"
+  guess: "EPUB: could not guess the format of %{file} based on extension. Assuming png."
 msg:
   attempting: "Attempting to generate %{format}..."
   generated: "Succesfully generated %{format}: %{path}"

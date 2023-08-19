@@ -35,6 +35,7 @@ use epub_builder::{
     ZipLibrary,
 };
 use upon::Template;
+use rust_i18n::t;
 
 use std::borrow::Cow;
 use std::convert::{AsMut, AsRef};
@@ -90,7 +91,7 @@ impl<'a> EpubRenderer<'a> {
         } else {
             warn!(
                 "{}",
-                lformat!("Could not run zip command, falling back to zip library")
+                t!("epub.zip_command")
             );
             ZipCommandOrLibrary::Library(ZipLibrary::new()
                 .map_err(|err| Error::render(Source::empty(), format!("{}", err)))?)
@@ -254,7 +255,7 @@ impl<'a> EpubRenderer<'a> {
             let f = fs::canonicalize(source).and_then(File::open).map_err(|_| {
                 Error::file_not_found(
                     &self.html.source,
-                    lformat!("image or cover"),
+                    t!("epub.image_or_cover"),
                     source.to_owned(),
                 )
             })?;
@@ -290,7 +291,7 @@ impl<'a> EpubRenderer<'a> {
                     .map_err(|_| {
                         Error::file_not_found(
                             &self.html.book.source,
-                            lformat!("additional resource from resources.files"),
+                            t!("epub.resources"),
                             abs_path.to_string_lossy().into_owned(),
                         )
                     })?;
@@ -327,7 +328,7 @@ impl<'a> EpubRenderer<'a> {
             if fs::metadata(&cover).is_err() {
                 return Err(Error::file_not_found(
                     &self.html.book.source,
-                    lformat!("cover"),
+                    t!("epub.cover"),
                     cover,
                 ));
             }
@@ -349,10 +350,7 @@ impl<'a> EpubRenderer<'a> {
                         .into());
             Ok(template.render(&data).to_string()?)
         } else {
-            panic!(
-                "{}",
-                lformat!("Why is this method called if cover is None???")
-            );
+            unreachable!();
         }
     }
 
@@ -422,10 +420,8 @@ impl<'a> EpubRenderer<'a> {
             } else {
                 warn!(
                     "{}",
-                    lformat!(
-                        "EPUB ({source}): detected two chapter titles inside the \
-                                      same markdown file, in a file where chapter titles are \
-                                      not even rendered.",
+                    t!(
+                        "epub.ambiguous_invisible",
                         source = self.html.source
                     )
                 );
@@ -459,16 +455,15 @@ impl<'a> EpubRenderer<'a> {
             } else {
                 warn!(
                     "{}",
-                    lformat!(
-                        "EPUB ({source}): detected two chapters inside the same \
-                                      markdown file.",
+                    t!(
+                        "epub.ambiguous",
                         source = self.html.source
                     )
                 );
                 warn!(
                     "{}",
-                    lformat!(
-                        "EPUB ({source}): conflict between: {title1} and {title2}",
+                    t!(
+                        "epub.title_conflict",
                         source = self.html.source,
                         title1 = self.chapter_title,
                         title2 = s
@@ -487,9 +482,8 @@ impl<'a> EpubRenderer<'a> {
             None => {
                 error!(
                     "{}",
-                    lformat!(
-                        "EPUB: could not guess the format of {file} based on \
-                                       extension. Assuming png.",
+                    t!(
+                        "epub.guess",
                         file = s
                     )
                 );
@@ -529,10 +523,7 @@ impl<'a> EpubRenderer<'a> {
                         let initial = chars.next().ok_or_else(|| {
                             Error::parser(
                                 &html.book.source,
-                                lformat!(
-                                    "empty str token, could not find \
-                                                                   initial"
-                                ),
+                                t!("error.initial"),
                             )
                         })?;
                         let mut new_content = if initial.is_alphanumeric() {
