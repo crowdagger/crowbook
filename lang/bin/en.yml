@@ -1,0 +1,68 @@
+msg:
+  autograph: "Enter autograph:"
+  default_book: |
+    "author: Your name"
+    "title: Your title"
+    "lang: en"
+
+    "## Output formats"
+
+    "# Uncomment and fill to generate files"
+    "# output.html: some_file.html"
+    "# output.epub: some_file.epub"
+    "# output.pdf: some_file.pdf"
+
+    "# Or uncomment the following to generate PDF, HTML and EPUB files based on this file's name"
+    "# output: [pdf, epub, html]"
+
+    "# Uncomment and fill to set cover image (for EPUB)"
+    "# cover: some_cover.png"
+  chapter_list: "\n## List of chapters\n"
+  created: "Created %{file}, now you'll have to complete it!"
+cmd:
+  about: Render a Markdown book in EPUB, PDF or HTML.
+  single: Use a single Markdown file instead of a book configuration file
+  emoji: Force emoji usage even if it might not work on your system
+  verbose: Print warnings in parsing/rendering
+  quiet: Don't print info/error messages
+  create: Create a new book with existing Markdown files
+  autograph: Prompts for an autograph for this book
+  output: Specify output file
+  lang: Set the runtime language used by Crowbook
+  to: Generate specific format
+  set: Set a list of book options
+  no_fancy: Disably fancy UI
+  list_options: List all possible options
+  list_options_md: List all possible options, formatted in Markdown
+  template: Prints the default content of a template
+  book: File containing the book configuration file, or a Markdown file when called with --single
+  stats: Print some project statistics
+clap:
+  template: |
+    
+    {bin} {version} by {author}
+    {about}
+      
+    USAGE:
+        {usage}
+
+    OPTIONS:
+    {options}
+
+    ARGS:
+    {positionals}
+    
+error:
+  invalid_template: "%{template} is not a valid template name"
+  no_file: |
+    You must pass the name of a book configuration file.
+    For more information try --help.
+  autograph: could not read autograph from stdin
+  occurred: "Crowbook exited successfully, but the following errors occurred:"
+  warning: WARNING
+  error: ERROR
+  odd_number: |
+    An odd number of arguments was passed to --set, but it takes
+    a list of key value pairs.
+  set_key: "Error in setting key %{key}: %{error}"
+  create: "Could not create file %{file}: it already exists!"

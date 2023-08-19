@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2022Élisabeth HENRY.
+// Copyright (C) 2016-2023Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -18,6 +18,7 @@
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use console::style;
 use crowbook::Book;
+use rust_i18n::t;
 
 use std::env;
 use std::fs;
@@ -33,7 +34,7 @@ pub fn print_warning(msg: &str, emoji: bool) {
     if emoji {
         eprint!("{}", style(WARNING).yellow());
     }
-    eprintln!("{} {}", style(lformat!("WARNING")).bold().yellow(), msg);
+    eprintln!("{} {}", style(t!("error.warning")).bold().yellow(), msg);
 }
 
 /// Prints an error
@@ -41,7 +42,7 @@ pub fn print_error(s: &str, emoji: bool) {
     if emoji {
         eprint!("{}", style(ERROR).red());
     }
-    eprintln!("{} {}", style(lformat!("ERROR")).bold().red(), s);
+    eprintln!("{} {}", style(t!("error.error")).bold().red(), s);
 }
 
 /// Prints an error on stderr and exit the program
@@ -82,10 +83,7 @@ pub fn get_book_options(matches: &ArgMatches) -> Vec<(&str, &str)> {
         let v: Vec<_> = iter.collect();
         if v.len() % 2 != 0 {
             print_error_and_exit(
-                &lformat!(
-                    "An odd number of arguments was passed to --set, but it takes \
-                                   a list of key value pairs."
-                ),
+                &t!("error.odd_number"),
                 false,
             );
         }
@@ -95,9 +93,6 @@ pub fn get_book_options(matches: &ArgMatches) -> Vec<(&str, &str)> {
             let value = v[i * 2 + 1];
             output.push((key.as_str(), value.as_str()));
         }
-    }
-    if matches.get_flag("proofread") {
-        output.push(("proofread", "true"));
     }
     output
 }
@@ -113,7 +108,7 @@ pub fn set_book_options(book: &mut Book, matches: &ArgMatches) -> String {
     for (key, value) in options {
         let res = book.options.set(key, value);
         if let Err(err) = res {
-            print_error_and_exit(&lformat!("Error in setting key {}: {}", key, err), false);
+            print_error_and_exit(&t!("error.set_key", key = key, error = err), false);
         }
         output.push_str(&format!("{key}: {value}\n"));
     }
@@ -126,7 +121,7 @@ pub fn create_book(matches: &ArgMatches) -> ! {
     let mut f: Box<dyn Write> = if let Some(book) = matches.get_one::<String>("BOOK") {
         if fs::metadata(book).is_ok() {
             print_error_and_exit(
-                &lformat!("Could not create file {}: it already exists!", book),
+                &t!("error.create", file = book),
                 false,
             );
         }
@@ -142,29 +137,12 @@ pub fn create_book(matches: &ArgMatches) -> ! {
             f.write_all(s.as_bytes()).unwrap();
         } else {
             f.write_all(
-                lformat!(
-                    "author: Your name
-title: Your title
-lang: en
-
-## Output formats
-
-# Uncomment and fill to generate files
-# output.html: some_file.html
-# output.epub: some_file.epub
-# output.pdf: some_file.pdf
-
-# Or uncomment the following to generate PDF, HTML and EPUB files based on this file's name
-# output: [pdf, epub, html]
-
-# Uncomment and fill to set cover image (for EPUB)
-# cover: some_cover.png\n"
-                )
+                t!("msg.default_book")
                 .as_bytes(),
             )
             .unwrap();
         }
-        f.write_all(lformat!("\n## List of chapters\n").as_bytes())
+        f.write_all(t!("msg.chapter_list").as_bytes())
             .unwrap();
         for file in values {
             f.write_all(format!("+ {file}\n").as_bytes()).unwrap();
@@ -172,7 +150,7 @@ lang: en
         if let Some(s) = matches.get_one::<String>("BOOK") {
             println!(
                 "{}",
-                lformat!("Created {}, now you'll have to complete it!", s)
+                t!("msg.created", file = s)
             );
         }
         exit(0);
@@ -188,37 +166,24 @@ pub fn create_matches() -> ArgMatches {
 // in its own function for testing purpose
 fn app() -> clap::Command {
     lazy_static! {
-        static ref ABOUT: String = lformat!("Render a Markdown book in EPUB, PDF or HTML.");
-        static ref SINGLE: String = lformat!("Use a single Markdown file instead of a book configuration file");
-        static ref EMOJI: String = lformat!("Force emoji usage even if it might not work on your system");
-        static ref VERBOSE: String = lformat!("Print warnings in parsing/rendering");
-        static ref QUIET: String = lformat!("Don't print info/error messages");
-        static ref PROOFREAD: String = lformat!("Enable proofreading");
-        static ref CREATE: String = lformat!("Create a new book with existing Markdown files");
-        static ref AUTOGRAPH: String = lformat!("Prompts for an autograph for this book");
-        static ref OUTPUT: String = lformat!("Specify output file");
-        static ref LANG: String = lformat!("Set the runtime language used by Crowbook");
-        static ref TO: String = lformat!("Generate specific format");
-        static ref SET: String = lformat!("Set a list of book options");
-        static ref NO_FANCY: String = lformat!("Disably fancy UI");
-        static ref LIST_OPTIONS: String = lformat!("List all possible options");
-        static ref LIST_OPTIONS_MD: String = lformat!("List all possible options, formatted in Markdown");
-        static ref PRINT_TEMPLATE: String = lformat!("Prints the default content of a template");
-        static ref BOOK: String = lformat!("File containing the book configuration file, or a Markdown file when called with --single");
-        static ref STATS: String = lformat!("Print some project statistics");
-        static ref TEMPLATE: String = lformat!("\
-{{bin}} {{version}} by {{author}}
-{{about}}
-
-USAGE:
-    {{usage}}
-
-OPTIONS:
-{{options}}
-
-ARGS:
-{{positionals}}
-");
+        static ref ABOUT: String = t!("cmd.about");
+        static ref SINGLE: String = t!("cmd.single");
+        static ref EMOJI: String = t!("cmd.emoji");
+        static ref VERBOSE: String = t!("cmd.verbose");
+        static ref QUIET: String = t!("cmd.quiet");
+        static ref CREATE: String = t!("cmd.create");
+        static ref AUTOGRAPH: String = t!("cmd.autograph");
+        static ref OUTPUT: String = t!("cmd.output");
+        static ref LANG: String = t!("cmd.lang");
+        static ref TO: String = t!("cmd.to");
+        static ref SET: String = t!("cmd.set");
+        static ref NO_FANCY: String = t!("cmd.no_fancy");
+        static ref LIST_OPTIONS: String = t!("cmd.list_options");
+        static ref LIST_OPTIONS_MD: String = t!("cmd.list_options_md");
+        static ref PRINT_TEMPLATE: String = t!("cmd.template");
+        static ref BOOK: String = t!("cmd.book");
+        static ref STATS: String = t!("cmd.stats");
+        static ref TEMPLATE: String = t!("clap.template");
     }
 
     let app = Command::new("crowbook")
@@ -270,13 +235,6 @@ ARGS:
                 .conflicts_with("verbose"),
         )
         .arg(
-            Arg::new("proofread")
-                .short('p')
-                .long("poofread")
-                .action(ArgAction::SetTrue)
-                .help(PROOFREAD.as_str()),
-        )
-        .arg(
             Arg::new("files")
                 .short('c')
                 .long("create")
@@ -305,10 +263,6 @@ ARGS:
                     "tex",
                     "odt",
                     "html.dir",
-                    "proofread.html",
-                    "proofread.html.dir",
-                    "proofread.pdf",
-                    "proofread.tex",
                 ])
                 .help(TO.as_str()),
         )

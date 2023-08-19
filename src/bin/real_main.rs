@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2022 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -17,11 +17,10 @@
 
 use crate::helpers::*;
 
-use clap::ArgMatches;
-
 use crowbook::Stats;
 use crowbook::{Book, BookOptions, Result};
-use crowbook_intl_runtime::set_lang;
+
+use clap::ArgMatches;
 use simplelog::{ConfigBuilder, LevelFilter, SimpleLogger, TermLogger, WriteLogger};
 use std::env;
 use std::fs::File;
@@ -29,6 +28,8 @@ use std::io;
 use std::io::Read;
 use std::process::exit;
 use yaml_rust::Yaml;
+use rust_i18n::t;
+
 
 /// Render a book to specific format
 fn render_format(book: &mut Book, emoji: bool, matches: &ArgMatches, format: &str) {
@@ -66,9 +67,9 @@ pub fn try_main() -> Result<()> {
     });
     if let Some(val) = lang {
         if val.starts_with("fr") {
-            set_lang("fr");
+            rust_i18n::set_locale("fr");
         } else {
-            set_lang("en");
+            rust_i18n::set_locale("en");
         }
     }
 
@@ -110,7 +111,7 @@ pub fn try_main() -> Result<()> {
                 exit(0);
             }
             Err(_) => print_error_and_exit(
-                &lformat!("{} is not a valid template name.", template),
+                &t!("error.invalid_template", template = template),
                 emoji,
             ),
         }
@@ -122,10 +123,7 @@ pub fn try_main() -> Result<()> {
     let book = matches.get_one::<String>("BOOK");
     if book.is_none() {
         print_error_and_exit(
-            &lformat!(
-                "You must pass the file of a book configuration \
-                               file.\nFor more information try --help."
-            ),
+            &t!("error.no_file"),
             emoji,
         );
     }
@@ -173,7 +171,7 @@ pub fn try_main() -> Result<()> {
     {
         let mut book = Book::new();
         if matches.get_flag("autograph") {
-            println!("{}", &lformat!("Enter autograph: "));
+            println!("{}", &t!("msg.autograph"));
             let mut autograph = String::new();
             match io::stdin().read_to_string(&mut autograph) {
                 Ok(_) => {
@@ -184,7 +182,7 @@ pub fn try_main() -> Result<()> {
                         )
                         .unwrap();
                 }
-                Err(_) => print_error(&lformat!("could not read autograph from stdin"), emoji),
+                Err(_) => print_error(&t!("error.autograph") , emoji),
             }
         }
 
@@ -236,7 +234,7 @@ pub fn try_main() -> Result<()> {
         file.read_to_string(&mut errors).unwrap();
         if !errors.is_empty() {
             print_warning(
-                &lformat!("Crowbook exited successfully, but the following errors occurred:"),
+                &t!("error.occurred"),
                 emoji,
             );
             // Non-efficient dedup algorithm but we need to keep the order
