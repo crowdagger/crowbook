@@ -121,3 +121,40 @@ latex:
   write_error: "problem when writing LaTeX: %{error}"
 parser:
   ignore_html: "ignoring HTML block '%{block}'"
+resouces:
+  non_local: "Resources: book includes non-local image %{file}, which might cause problem for proper inclusion."
+  no_ext: "Resources: book includes image %{file} which doesn't have an extension"
+  read_error: "Resources: could not read file %{file}"
+  guess: "Resources: could not guess mime type of file %{file}"
+  no_match: "Resources: could not find an in-book match for link %{file} or %{new_from}"
+  read_file: "error reading file %{file}: %{error}"
+  no_path: "error: %{path} is neither a file nor a directory"
+stats:
+  no_advanced: "This version of crowboook has been compiled without support for advanced statistics"
+  advanced: "For more advanced statistics, use the --verbose or -v option"
+  chapter: Chapter
+  chars: Chars
+  syllables: Syllables
+  words: Words
+  sentences: Sentences
+  chars_word: Chars/Word
+  words_sentence: Words/Sentence
+  flesch: Flesch reading index
+  total: "TOTAL:"
+syntax:
+  default_theme: "could not set syntect theme to %{theme}, defaulting to \"InspiredGitHub\""
+  valid_themes: "valid theme names are: %{themes}"
+  no_support: "crowbook was compiled without syntect support, syntax highlighting will be disabled"
+zipper:
+  tmp_dir: "could not create temporary directory in %{path}"
+  verboten: |
+    "file %{file} refers to an absolute or a parent path."
+    "This is forbidden because we are supposed to create a temporary file in a temporary dir."
+  write_error: "could not write to temporary file %{file}"
+  create_error: "could not create temporary file %{file}"
+  command_output: "output for command %{name}:\n%{error}"
+  command_error: "failed to run command '%{name}'"
+  command_result_error: "could not open result of command %'{command}'\nCommand output:\n%{output}'"
+  command_result_err: "could not open result of command '%{command}'"
+  copy_error: "error copying file '%{file}'"
+  command_no_success: "%{command} didn't return succesfully"

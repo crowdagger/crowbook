@@ -29,6 +29,7 @@ use punkt::params::Standard;
 use punkt::{SentenceTokenizer, TrainingData};
 use std::f64;
 use std::fmt;
+use rust_i18n::t;
 
 /* Only collected on nightly */
 struct AdvancedStats {
@@ -90,7 +91,7 @@ impl Stats {
 
         if cfg!(not(feature = "nightly")) {
             if advanced {
-                warn!("{}", lformat!("This version of crowboook has been compiled without support for advanced statistics"));
+                warn!("{}", t!("stats.no_advanced"));
             }
             stats = Stats {
                 chapters: vec![],
@@ -104,7 +105,7 @@ impl Stats {
             if !advanced {
                 info!(
                     "{}",
-                    lformat!("For more advanced statistics, use the --verbose or -v option")
+                    t!("stats.avanced")
                 );
             }
         }
@@ -290,24 +291,24 @@ impl fmt::Display for Stats {
             write!(
                 f,
                 "{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11} {:>16} {:>29}\n---------\n",
-                style::header(&lformat!("Chapter")),
-                style::header(&lformat!("Chars")),
-                style::header(&lformat!("Syllables")),
-                style::header(&lformat!("Words")),
-                style::header(&lformat!("Sentences")),
-                style::header(&lformat!("Chars/Word")),
-                style::header(&lformat!("Words/Sentence")),
-                style::header(&lformat!("Flesch reading ease index")),
+                style::header(&t!("stats.chapter")),
+                style::header(&t!("stats.chars")),
+                style::header(&t!("stats.syllables")),
+                style::header(&t!("stats.words")),
+                style::header(&t!("stats.sentences")),
+                style::header(&t!("stats.chars_word")),
+                style::header(&t!("stats.words_sentence")),
+                style::header(&t!("stats.flesch")),
                 width = max_chapter_length
             )?;
         } else {
             write!(
                 f,
                 "{:<width$} {:>8} {:>10} {:>11}\n---------\n",
-                style::header(&lformat!("Chapter")),
-                style::header(&lformat!("Chars")),
-                style::header(&lformat!("Words")),
-                style::header(&lformat!("Chars/Word")),
+                style::header(&t!("stats.chapter")),
+                style::header(&t!("stats.chars")),
+                style::header(&t!("stats.words")),
+                style::header(&t!("stats.chars_word")),
                 width = max_chapter_length
             )?;
         }
@@ -365,7 +366,7 @@ impl fmt::Display for Stats {
             write!(
                 f,
                 "---------\n{:<width$} {:>8} {:>10} {:>7} {:>11} {:>11.2} {:>16.2} {:>8.1} => {:>17}\n",
-                style::element(&lformat!("TOTAL:")),
+                style::element(&t!("stats.total")),
                 total.0,
                 total.1,
                 total.2,
@@ -380,7 +381,7 @@ impl fmt::Display for Stats {
             write!(
                 f,
                 "---------\n{:<width$} {:>8} {:>10} {:>11.2}\n",
-                style::element(&lformat!("TOTAL:")),
+                style::element(&t!("stats.total")),
                 total.0,
                 total.2,
                 total.0 as f64 / total.2 as f64,

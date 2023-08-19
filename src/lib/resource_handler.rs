@@ -9,6 +9,7 @@ use std::io::Read;
 use std::path::{Path, PathBuf};
 
 use walkdir::WalkDir;
+use rust_i18n::t;
 
 /// Resource Handler.
 ///
@@ -67,10 +68,8 @@ impl ResourceHandler {
         if !Self::is_local(file.as_ref()) {
             warn!(
                 "{}",
-                lformat!(
-                    "Resources: book includes non-local image {file}, which might \
-                                  cause problem for proper inclusion.",
-                    file = file
+                t!("resources.non_local",
+                   file = file
                 )
             );
             return Ok(file);
@@ -80,7 +79,7 @@ impl ResourceHandler {
         if fs::metadata(file.as_ref()).is_err() {
             return Err(Error::file_not_found(
                 source,
-                lformat!("image"),
+                t!("format.image"),
                 format!("{file}"),
             ));
         }
@@ -107,9 +106,7 @@ impl ResourceHandler {
             } else {
                 warn!(
                     "{}",
-                    lformat!(
-                        "Resources: book includes image {file} which doesn't have \
-                                      an extension",
+                    t!("resources.no_ext",
                         file = file
                     )
                 );
@@ -121,7 +118,7 @@ impl ResourceHandler {
                 Err(_) => {
                     return Err(Error::file_not_found(
                         source,
-                        lformat!("image"),
+                        t!("format.image"),
                         format!("{file}"),
                     ));
                 }
@@ -130,7 +127,7 @@ impl ResourceHandler {
             if f.read_to_end(&mut content).is_err() {
                 error!(
                     "{}",
-                    lformat!("Resources: could not read file {file}", file = file)
+                    t!("resources.read_error", file = file)
                 );
                 return Ok(file);
             }
@@ -139,8 +136,7 @@ impl ResourceHandler {
                 None => {
                     error!(
                         "{}",
-                        lformat!(
-                            "Resources: could not guess mime type of file {file}",
+                        t!("resources.guess",
                             file = file
                         )
                     );
@@ -177,9 +173,7 @@ impl ResourceHandler {
             } else {
                 warn!(
                     "{}",
-                    lformat!(
-                        "Resources: could not find an in-book match for link \
-                                      {file} or {new_from}",
+                    t!("resources.no_match",
                         file = from,
                         new_from = new_from
                     )
@@ -261,8 +255,7 @@ pub fn get_files(list: &[String], base: &str) -> Result<Vec<String>> {
             Err(err) => {
                 return Err(Error::render(
                     Source::empty(),
-                    lformat!(
-                        "error reading file {file}: {error}",
+                    t!("resources.read_file",
                         file = abs_path.display(),
                         error = err
                     ),
@@ -284,9 +277,7 @@ pub fn get_files(list: &[String], base: &str) -> Result<Vec<String>> {
                 } else {
                     return Err(Error::render(
                         Source::empty(),
-                        lformat!(
-                            "error in epub rendering: {path} is \
-                                                       neither a file nor a directory",
+                        t!("resources.no_path",
                             path = &path
                         ),
                     ));

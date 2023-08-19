@@ -18,6 +18,7 @@
 use crate::error::Result;
 
 use crowbook_text_processing::escape;
+use rust_i18n::t;
 
 #[cfg(feature = "syntect")]
 
@@ -41,15 +42,13 @@ impl Syntax {
             None => {
                 error!(
                     "{}",
-                    lformat!(
-                        "could not set syntect theme to {theme}, defaulting to \"InspiredGitHub\"",
+                    t!("syntax.default_theme",
                         theme = theme_name
                     )
                 );
                 info!(
                     "{}",
-                    lformat!(
-                        "valid theme names are: {themes}",
+                    t!("syntax valid_themes",
                         themes = theme_set
                             .themes
                             .keys()
@@ -139,7 +138,7 @@ fn strip_language(language: &str) -> &str {
 #[cfg(not(feature = "syntect"))]
 impl Syntax {
     pub fn new(_: &str) -> Syntax {
-        error!("{}", lformat!("crowbook was compiled without syntect support, syntax highlighting will be disabled"));
+        error!("{}", t!("syntax.no_support"));
         Syntax {}
     }
 
