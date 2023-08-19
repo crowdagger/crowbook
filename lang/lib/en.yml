@@ -9,3 +9,7 @@ error:
   no_char: "%{s} is not a char"
   no_i32: "%{s} is not an i32"
   no_f32: "%{s} is not a f32"
+  renderer:
+    no_output: This renderer does not support the auto output
+    file_creation: "could not create file '%{file}': '%{err}"
+    write: "could not write book content to file '{file}': {err}"

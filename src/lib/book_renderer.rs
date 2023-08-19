@@ -21,6 +21,7 @@ use crate::error::{Error, Result, Source};
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+use rust_i18n::t;
 
 /// Trait that must be implemented by the various renderers to render a whole book.
 
@@ -29,7 +30,7 @@ pub trait BookRenderer: Sync {
     fn auto_path(&self, _book_file: &str) -> Result<String> {
         Err(Error::default(
             Source::empty(),
-            lformat!("This renderer does not support the auto output"),
+            t!("error.renderer.no_output"),
         ))
     }
 
@@ -47,8 +48,8 @@ pub trait BookRenderer: Sync {
         let mut file = File::create(path).map_err(|err| {
             Error::default(
                 Source::empty(),
-                lformat!(
-                    "could not create file '{file}': {err}",
+                t!(
+                    "error.renderer.file_creation",
                     file = path.display(),
                     err = err
                 ),
@@ -57,8 +58,8 @@ pub trait BookRenderer: Sync {
         file.write_all(&content).map_err(|err| {
             Error::default(
                 Source::empty(),
-                lformat!(
-                    "could not write book content to file '{file}': {err}",
+                t!(
+                    "error.renderer.write",
                     file = path.display(),
                     err = err
                 ),
