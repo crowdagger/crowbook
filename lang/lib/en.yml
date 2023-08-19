@@ -1,6 +1,16 @@
 ui:
+  parsing: Parsing...
+  parsing_file: "Parsing %{file}"
   rendering: Rendering...
+  rendering_format: rendering...
   waiting: waiting...
+  options: setting options
+  chapters: Parsing chapters
+  processing: Processing...
+  processing_file: "Processing %{file}..."
+  finished: Finished
+  generated: "generated %{path}"
+  error: ERROR
 error:
   no_string: "%{s} is not a string"
   no_string_vector: "%{s} is not a string vector"
@@ -9,7 +19,57 @@ error:
   no_char: "%{s} is not a char"
   no_i32: "%{s} is not an i32"
   no_f32: "%{s} is not a f32"
+  book_init: "Error initializing book: could not set %{key} to %{value}: %{error}"
+  parse_book: |
+    "could not parse %{file} as a book file."
+    Maybe you meant to run crowbook with the --single argument?
+  yaml_block: "YAML block was not valid YAML: %{error}"
+  yaml_hash: YAML part of the book is not a valid hashmap
+  chapter_whitspace: chapter filenames must not contain whitespace
+  no_chapter_name: "no chapter name specified"
+  source: "could not read source: %{error}"
+  format_line: ill-formatted line specifying chapter number
+  chapter_number: "error parsing chapter number: %{error}"
+  part_number_line: ill-formatted line specifying part number
+  part_number: "error parsing part number: %{error}"
+  part_definition: found invalid part definition in the chapter list
+  chapter_definition: found invalid chapter definition in the chapter list
+  rendering: "Error rendering %{name}: %{error}"
+  infer: "output to %{format} set to auto but can't find book file name to infer it"
+  support: "the %{format} renderer does not support auto for output path"
+  unknown: "unknown format %{format}"
+  unknown_short: "unknown format"
+  utf8: "file %{file} contains invalid UTF-8"
+  heading: "this subchapter contains a heading that, when adjusted, is not in the right range (%{n} instead of [0-6])"
+  invalid_template: "invalid template '%{template}'"
+  read_file: "file '%{file}' could not be read"
+  compile_template: "could not compile '%{template}': %{error}"
+  roman_numerals: "can not use roman numerals with zero or negative chapter numbers (%{n})"
+  render_key: "could not render `%{key}` for metadata:\n%{error}"
+  yaml_set: "Inline YAML block could not set %{key} to %{value}: %{err}"
   renderer:
     no_output: This renderer does not support the auto output
     file_creation: "could not create file '%{file}': '%{err}"
-    write: "could not write book content to file '{file}': {err}"
+    write: "could not write book content to file '%{file}': %{err}"
+warn:
+  above: "Warning: book contains chapter '%{file}' in a directory above the book file, this might cause problems"
+format:
+  book: book
+  book_chapter: book chapter
+  html_single: HTML (standalone page)
+  html_dir: HTML (multiple pages)
+  tex: LaTeX
+  pdf: PDF
+  epub: EPUB
+  html_if: HTML (interactive fiction)
+debug:
+  yaml_replace: "Inline YAML block replaced %{key} previously set to %{old_val} to %{new_val}"
+  yaml_set: "Inline YAML block set %{key} to %{value}"
+  yaml_ignore: "Ignoring YAML block:\n%{block}"
+  found_yaml_block: "Found something that looked like a YAML block:\n%{block}"
+  found_yaml_block2: "... but it didn't parse correctly as YAML('%{error}'), so treating it like Markdown."
+msg:
+  attempting: "Attempting to generate %{format}..."
+  generated: "Succesfully generated %{format}: %{path}"
+  generated_short: "Succesfully generated %{format}"
+
