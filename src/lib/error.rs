@@ -291,19 +291,19 @@ impl fmt::Display for Error {
                 write!(
                     f,
                     "{}",
-                    lformat!("Error parsing markdown: {error}", error = s)
+                    t!("error.markdown", error = s)
                 )
             }
             Inner::ConfigParser(ref s) => {
-                f.write_str(&lformat!("Error parsing configuration file: "))?;
+                f.write_str(&t!("error.config"))?;
                 f.write_str(s)
             }
             Inner::FileNotFound(ref description, ref file) => {
                 write!(
                     f,
                     "{}",
-                    lformat!(
-                        "Could not find file '{file}' for {description}",
+                    t!(
+                        "error.file_not_found",
                         file = file,
                         description = description
                     )
@@ -313,27 +313,27 @@ impl fmt::Display for Error {
                 write!(
                     f,
                     "{}",
-                    lformat!("Error compiling template: {template}", template = s)
+                    t!("error.template", template = s)
                 )
             }
             Inner::Render(ref s) => {
-                f.write_str(&lformat!("Error during rendering: "))?;
+                f.write_str(&t!("error.render_error"))?;
                 f.write_str(s)
             }
             Inner::Zipper(ref s) => {
-                f.write_str(&lformat!("Error during temporary files editing: "))?;
+                f.write_str(&t!("error.zipper"))?;
                 f.write_str(s)
             }
             Inner::BookOption(ref s) => {
-                f.write_str(&lformat!("Error converting BookOption: "))?;
+                f.write_str(&t!("error.bookoption"))?;
                 f.write_str(s)
             }
             Inner::InvalidOption(ref s) => {
-                f.write_str(&lformat!("Error accessing book option: "))?;
+                f.write_str(&t!("error.invalid_option"))?;
                 f.write_str(s)
             }
             Inner::Syntect(ref s) => {
-                f.write_str(&lformat!("Error higligting syntax: "))?;
+                f.write_str(&t!("error.syntect"))?;
                 f.write_str(s)
             }
         }?;
@@ -356,7 +356,7 @@ impl From<FromUtf8Error> for Error {
     fn from(err: FromUtf8Error) -> Error {
         Error::render(
             Source::empty(),
-            lformat!("UTF-8 error: {error}", error = err),
+            t!("error.utf8_error", error = err),
         )
     }
 }
@@ -365,7 +365,7 @@ impl From<std::str::Utf8Error> for Error {
     fn from(err: std::str::Utf8Error) -> Error {
         Error::render(
             Source::empty(),
-            lformat!("UTF-8 error: {error}", error = err),
+            t!("error.utf8_error", error = err),
         )
     }
 }

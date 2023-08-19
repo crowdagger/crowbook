@@ -12,6 +12,16 @@ ui:
   generated: "generated %{path}"
   error: ERROR
 error:
+  markdown: "Error parsing markdown: %{error}"
+  config: "Error parsing configuration file: "
+  template: "Error compiling template: %{template}"
+  render_error: "Error during rendering: "
+  zipper: "Error during temporary files editing: "
+  bookoption: "Error converting BookOption: "
+  invalid_option: "Error accessing book option: "
+  syntect: "Error higligting syntax: "
+  file_not_found: "Could not find file '%{file}' for %{description}"
+  utf8_error: "UTF-8 error: %{error}"
   initial: empty str token, could not find initial
   no_string: "%{s} is not a string"
   no_string_vector: "%{s} is not a string vector"
