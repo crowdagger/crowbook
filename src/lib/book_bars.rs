@@ -21,6 +21,7 @@
 use crate::book::{Book, Crowbar, CrowbarState};
 
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
+use rust_i18n::t;
 
 use std::sync::Arc;
 use std::time::Duration;
@@ -79,19 +80,7 @@ impl Book<'_> {
             .add(ProgressBar::new_spinner());
         b.enable_steady_tick(Duration::from_millis(200));
         self.bars.mainbar = Some(b);
-        //        let sty = ProgressStyle::default_spinner()
-        //            .tick_chars("🕛🕐🕑🕒🕓🕔🕔🕕🕖🕗🕘🕘🕙🕚V")
-        //            .tick_chars("/|\\-V")
-        //            .template("{spinner:.dim.bold.yellow} {prefix} {wide_msg}");
         self.bar_set_style(Crowbar::Main, CrowbarState::Running);
-        // self.bars.guard = Some(thread::spawn(move || {
-        //     if let Err(_) = multibar.join() {
-        //         error!(
-        //             "{}",
-        //             lformat!("could not display fancy UI, try running crowbook with --no-fancy")
-        //         );
-        //     }
-        // }));
     }
 
     /// Sets a finished message to the progress bar, if it is set
@@ -148,12 +137,12 @@ impl Book<'_> {
     pub fn add_spinner_to_multibar(&mut self, key: &str) -> usize {
         if let Some(ref multibar) = self.bars.multibar {
             if let Some(ref mainbar) = self.bars.mainbar {
-                mainbar.set_message(lformat!("Rendering..."));
+                mainbar.set_message(t!("ui.rendering"));
             }
 
             let bar = multibar.add(ProgressBar::new_spinner());
             bar.enable_steady_tick(Duration::from_millis(200));
-            bar.set_message(lformat!("waiting..."));
+            bar.set_message(t!("ui.waiting"));
             bar.set_prefix(format!("{key}:"));
             let i = self.bars.spinners.len();
             self.bars.spinners.push(bar);

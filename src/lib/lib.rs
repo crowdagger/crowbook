@@ -1,4 +1,4 @@
-// Copyright (C) 2016, 2017, 2018 Élisabeth HENRY.
+// Copyright (C) 2016-2023 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -109,10 +109,6 @@ extern crate log;
 #[macro_use]
 extern crate lazy_static;
 
-#[cfg(feature = "proofread")]
-#[macro_use]
-extern crate serde_derive;
-
 pub use book::Book;
 pub use book_renderer::BookRenderer;
 pub use bookoption::BookOption;
@@ -126,6 +122,8 @@ pub use resource_handler::ResourceHandler;
 pub use stats::Stats;
 pub use token::Data;
 pub use token::Token;
+
+rust_i18n::i18n!("lang/lib", fallback="en");
 
 #[macro_use]
 #[doc(hidden)]

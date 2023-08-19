@@ -1,3 +1,5 @@
+use rust_i18n::t;
+
 use crate::error::{Error, Result, Source};
 
 /// Structure for storing a book option
@@ -50,7 +52,7 @@ impl BookOption {
             BookOption::String(ref s) => Ok(s),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not a string", self),
+                t!("error.no_string", s = format!("{:?}", self)),
             )),
         }
     }
@@ -61,7 +63,7 @@ impl BookOption {
             BookOption::StringVec(ref v) => Ok(v),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not a string vector", self),
+                t!("error.no_string_vector", s = format!("{:?}", self)),
             )),
         }
     }
@@ -72,7 +74,7 @@ impl BookOption {
             BookOption::Path(ref s) => Ok(s),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not a path", self),
+                t!("error.no_path", s = format!("{:?}", self)),
             )),
         }
     }
@@ -83,7 +85,7 @@ impl BookOption {
             BookOption::Bool(b) => Ok(b),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not a bool", self),
+                t!("error.no_bool", s = format!("{:?}", self)),
             )),
         }
     }
@@ -94,7 +96,7 @@ impl BookOption {
             BookOption::Char(c) => Ok(c),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not a char", self),
+                t!("error.no_char", s = format!("{:?}", self)),
             )),
         }
     }
@@ -105,7 +107,7 @@ impl BookOption {
             BookOption::Int(i) => Ok(i),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not an i32", self),
+                t!("error.no_i32", s = format!("{:?}", self)),
             )),
         }
     }
@@ -116,7 +118,7 @@ impl BookOption {
             BookOption::Float(f) => Ok(f),
             _ => Err(Error::book_option(
                 Source::empty(),
-                lformat!("{:?} is not a f32", self),
+                t!("error.no_f32", s = format!("{:?}", self)),
             )),
         }
     }

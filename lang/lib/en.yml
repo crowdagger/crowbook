@@ -1,0 +1,11 @@
+ui:
+  rendering: Rendering...
+  waiting: waiting...
+error:
+  no_string: "%{s} is not a string"
+  no_string_vector: "%{s} is not a string vector"
+  no_path: "%{s} is not a path"
+  no_bool: "%{s} is not a boolean"
+  no_char: "%{s} is not a char"
+  no_i32: "%{s} is not an i32"
+  no_f32: "%{s} is not a f32"
