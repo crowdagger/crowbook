@@ -27,6 +27,7 @@ use crate::misc;
 
 use std::convert::{AsMut, AsRef};
 use std::io;
+use rust_i18n::t;
 
 /// Interactive fiction HTML renderer
 ///
@@ -367,9 +368,8 @@ impl BookRenderer for HtmlIf {
         to.write_all(result.as_bytes()).map_err(|e| {
             Error::render(
                 &book.source,
-                lformat!(
-                    "problem when writing interactive fiction: {error}",
-                    error = e
+                t!("html.if_error",
+                   error = e
                 ),
             )
         })?;

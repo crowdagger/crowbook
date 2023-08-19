@@ -79,6 +79,10 @@ debug:
   yaml_ignore: "Ignoring YAML block:\n%{block}"
   found_yaml_block: "Found something that looked like a YAML block:\n%{block}"
   found_yaml_block2: "... but it didn't parse correctly as YAML('%{error}'), so treating it like Markdown."
+msg:
+  attempting: "Attempting to generate %{format}..."
+  generated: "Succesfully generated %{format}: %{path}"
+  generated_short: "Succesfully generated %{format}"
 epub:
   zip_command: "Could not run zip command, falling back to zip library"
   cover: cover
@@ -88,8 +92,19 @@ epub:
   ambiguous_invisible: "EPUB (%{source}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered."
   title_conflict: "EPUB ({source}): conflict between: %{title1} and %{title2}"
   guess: "EPUB: could not guess the format of %{file} based on extension. Assuming png."
-msg:
-  attempting: "Attempting to generate %{format}..."
-  generated: "Succesfully generated %{format}: %{path}"
-  generated_short: "Succesfully generated %{format}"
+html:
+  exist_not_dir: "%{path} already exists and is not a directory"
+  delete_dir: "%{path} already exists, deleting it"
+  delete_dir_error: "error deleting directory %{path}: %{error}"
+  create_dir_error: "could not create HTML directory %{path}: %{error}"
+  reading_image_error: "error while reading image file %{file}: %{error}"
+  resource_error: "error while reading resource file: %{error}"
+  create_file_error: "could not create file %{file}: %{error}"
+  write_file_error: "could not write to file %{file}: %{error}"
+  write_error: "problem when writing HTML: %{error}"
+  dir_to_stream_error: "can only render HTML directory to a path, not to a stream"
+  if_error: "problem when writing interactive fiction: %{error}"
+  highlight: "rendering.highlight set to '%{value}', not a valid value"
+  footer_template_error: "rendering 'html.footer' template:\n%{error}"
+  header_template_error: "rendering 'html.header' template:\n%{error}"
 

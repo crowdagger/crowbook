@@ -38,6 +38,7 @@ use crowbook_text_processing::escape;
 use epub_builder::Toc;
 use epub_builder::TocElement;
 use numerals::roman::Roman;
+use rust_i18n::t;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 /// If/how to highlight code
@@ -128,7 +129,7 @@ impl<'a> HtmlRenderer<'a> {
             value => {
                 error!(
                     "{}",
-                    lformat!("rendering.highlight set to '{}', not a valid value", value)
+                    t!("html.highlight", value = value)
                 );
                 (Highlight::None, None)
             }
@@ -354,9 +355,8 @@ impl<'a> HtmlRenderer<'a> {
             } else {
                 error!(
                     "{}",
-                    lformat!(
-                        "can not use roman numerals with zero or negative chapter numbers ({n})",
-                        n = self.current_chapter[i]
+                    t!("error.roman_numerals",
+                       n = self.current_chapter[i]
                     )
                 );
             }
@@ -738,10 +738,8 @@ impl<'a> HtmlRenderer<'a> {
                 Err(err) => {
                     return Err(Error::render(
                         &this.as_ref().book.source,
-                        lformat!(
-                            "rendering 'html.footer' \
-                                                       template:\n{error}",
-                            error = err
+                        t!("html.footer_template_error",
+                           error = err
                         ),
                     ))
                 }
@@ -775,7 +773,7 @@ impl<'a> HtmlRenderer<'a> {
                 }
                 Err(err) => Err(Error::render(
                     &this.as_ref().book.source,
-                    lformat!("rendering 'html.header' template:\n{error}", error = err),
+                    t!("html.header_template_error", error = err),
                 )),
             }
         } else {

@@ -36,6 +36,7 @@ use std::io;
 use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
+use rust_i18n::t;
 
 /// Multiple files HTML renderer
 ///
@@ -71,25 +72,21 @@ impl<'a> HtmlDirRenderer<'a> {
             if metadata.is_file() {
                 return Err(Error::render(
                     &self.html.book.source,
-                    lformat!(
-                        "{path} already exists and is not a \
-                                                   directory",
+                    t!("html.exist_not_dir",
                         path = dest_path.display()
                     ),
                 ));
             } else if metadata.is_dir() {
                 debug!(
                     "{}",
-                    lformat!(
-                        "{path} already exists, deleting it",
+                    t!("html.delete_dir",
                         path = dest_path.display()
                     )
                 );
                 fs::remove_dir_all(dest_path).map_err(|e| {
                     Error::render(
                         &self.html.book.source,
-                        lformat!(
-                            "error deleting directory {path}: {error}",
+                        t!("html.delete_dir_error",
                             path = dest_path.display(),
                             error = e
                         ),
@@ -104,10 +101,9 @@ impl<'a> HtmlDirRenderer<'a> {
             .map_err(|e| {
                 Error::render(
                     &self.html.book.source,
-                    lformat!(
-                        "could not create HTML directory {path}: {error}",
-                        path = dest_path.display(),
-                        error = e
+                    t!("html.create_dir_error",
+                       path = dest_path.display(),
+                       error = e
                     ),
                 )
             })?;
@@ -153,7 +149,7 @@ impl<'a> HtmlDirRenderer<'a> {
             let mut f = fs::canonicalize(source).and_then(File::open).map_err(|_| {
                 Error::file_not_found(
                     &self.html.book.source,
-                    lformat!("image or cover"),
+                    t!("epub.image_or_cover"),
                     source.clone(),
                 )
             })?;
@@ -161,8 +157,7 @@ impl<'a> HtmlDirRenderer<'a> {
             f.read_to_end(&mut content).map_err(|e| {
                 Error::render(
                     &self.html.book.source,
-                    lformat!(
-                        "error while reading image file {file}: {error}",
+                    t!("html.reading_image_error",
                         file = source,
                         error = e
                     ),
@@ -194,7 +189,7 @@ impl<'a> HtmlDirRenderer<'a> {
                     .map_err(|_| {
                         Error::file_not_found(
                             &self.html.book.source,
-                            lformat!("additional resource from resources.files"),
+                            t!("epub.resources"),
                             abs_path.to_string_lossy().into_owned(),
                         )
                     })?;
@@ -202,7 +197,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 f.read_to_end(&mut content).map_err(|e| {
                     Error::render(
                         &self.html.book.source,
-                        lformat!("error while reading resource file: {error}", error = e),
+                        t!("html.resource_error", error = e),
                     )
                 })?;
                 self.write_file(data_path.join(&path).to_str().unwrap(), &content)?;
@@ -337,7 +332,7 @@ impl<'a> HtmlDirRenderer<'a> {
             if fs::metadata(&cover).is_err() {
                 return Err(Error::file_not_found(
                     &self.html.book.source,
-                    lformat!("cover"),
+                    t!("epub.cover"),
                     cover,
                 ));
             }
@@ -482,8 +477,7 @@ impl<'a> HtmlDirRenderer<'a> {
                 .map_err(|e| {
                     Error::render(
                         &self.html.book.source,
-                        lformat!(
-                            "could not create directory in {path}: {error}",
+                        t!("html.create_dir_error",
                             path = dest_dir.display(),
                             error = e
                         ),
@@ -493,20 +487,18 @@ impl<'a> HtmlDirRenderer<'a> {
         let mut f = File::create(&dest_file).map_err(|e| {
             Error::render(
                 &self.html.book.source,
-                lformat!(
-                    "could not create file {file}: {error}",
-                    file = dest_file.display(),
-                    error = e
+                t!("html.create_file_error",
+                   file = dest_file.display(),
+                   error = e
                 ),
             )
         })?;
         io::Write::write_all(&mut f, content).map_err(|e| {
             Error::render(
                 &self.html.book.source,
-                lformat!(
-                    "could not write to file {file}: {error}",
-                    file = dest_file.display(),
-                    error = e
+                t!("html.write_file_error",
+                   file = dest_file.display(),
+                   error = e
                 ),
             )
         })
@@ -530,7 +522,7 @@ impl BookRenderer for HtmlDir {
     fn render(&self, _: &Book, _: &mut dyn io::Write) -> Result<()> {
         Err(Error::render(
             Source::empty(),
-            lformat!("can only render HTML directory to a path, not to a stream"),
+            t!("html.dir_to_stream_error"),
         ))
     }
 

@@ -29,6 +29,7 @@ use crate::misc;
 use std::convert::{AsMut, AsRef};
 use std::fmt::Write;
 use std::io;
+use rust_i18n::t;
 
 /// Single file HTML renderer
 ///
@@ -343,7 +344,7 @@ impl BookRenderer for HtmlSingle {
         to.write_all(result.as_bytes()).map_err(|e| {
             Error::render(
                 &book.source,
-                lformat!("problem when writing HTML: {error}", error = e),
+                t!("html.write_error", error = e),
             )
         })?;
         Ok(())
@@ -361,7 +362,7 @@ impl BookRenderer for ProofHtmlSingle {
         to.write_all(result.as_bytes()).map_err(|e| {
             Error::render(
                 &book.source,
-                lformat!("problem when writing HTML: {error}", error = e),
+                t!("html.write_error", error = e),
             )
         })?;
         Ok(())
