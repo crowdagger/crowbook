@@ -1,5 +1,4 @@
 #[macro_use]
-mod localize_macros;
 #[cfg(feature = "binary")]
 mod helpers;
 #[cfg(feature = "binary")]

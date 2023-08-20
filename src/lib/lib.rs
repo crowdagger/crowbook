@@ -126,9 +126,6 @@ pub use token::Token;
 rust_i18n::i18n!("lang/lib", fallback="en");
 
 #[macro_use]
-#[doc(hidden)]
-mod localize_macros;
-#[macro_use]
 mod html;
 mod book;
 mod book_renderer;

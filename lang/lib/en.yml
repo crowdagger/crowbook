@@ -158,3 +158,155 @@ zipper:
   command_result_err: "could not open result of command '%{command}'"
   copy_error: "error copying file '%{file}'"
   command_no_success: "%{command} didn't return succesfully"
+opt:
+  metadata: Metadata
+  add_metadata: Additional metadata
+  output_opt: Output options
+  output: Specify a list of output formats to render
+  render: Rendering options
+  special: Special options
+  html: HTML options
+  html_single: Standalone HTML options
+  html_dir: Multifile HTML options
+  html_if: Interactive fiction HTML options
+  epub: EPUB options
+  tex: LaTeX options
+  resources: Resources options
+  input: Input options
+  crowbook: Crowbook options
+  deprecated: Deprecated options
+  author: Author of the book
+  title: Title of the book
+  lang: Language of the book
+  subject: Subject of the book (used for EPUB metadata)
+  description: Description of the book (used for EPUB metadata)
+  cover: Path to the cover of the book
+  subtitle: Subtitle of the book
+  license: License of the book
+  version: Version of the book
+  date: Date the book was revised
+  autograph: An autograph
+  output_epub: Output file name for EPUB rendering
+  output_html: Output file name for HTML rendering
+  output_tex: Output file name for LaTeX rendering
+  output_pdf: Output file name for PDF rendering
+  output_if: Output file name for HTML interactive fiction rendering
+  output_html_dir: Output directory name for HTML rendering
+  output_base_path: Directory where those output files will we written
+  rendering_highlight: "If/how highligh code blocks. Possible values: \"syntect\" (default, performed at runtime), \"highlight.js\" (HTML-only, uses Javascript), \"none\""
+  rendering_highlight_theme: "Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"
+  rendering_initials: "Use initials ('lettrines') for first letter of a chapter"
+  inline_toc: Display a table of content in the document
+  toc_name: Name of the table of contents if it is displayed in document
+  num_depth: "The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"
+  part: "How to call parts (or 'books', 'episodes', ...)"
+  chapter: How to call chapters
+  chapter_template: Naming scheme of chapters, for TOC
+  part_template: Naming scheme of parts, for TOC
+  roman_numeral_parts: If set to true, display part number with roman numerals
+  roman_numeral_chapters: If set to true, display chapter number with roman numerals
+  reset_counter: If set to true, reset chapter number at each part
+  import: Import another book configuration file
+  html_icon: Path to an icon to be used for the HTML files(s)
+  html_header: Custom header to display at the beginning of html file(s)
+  html_footer: Custom footer to display at the end of HTML file(s)
+  html_css: Path of a stylesheet for HTML rendering
+  html_css_add: Some inline CSS added to the stylesheet template
+  css_colors: Path of a stylesheet for the colors for HTML
+  html_js: Path of a javascript file
+  css_print: Path of a media print stylesheet for HTML rendering
+  highlight_js: Set another highlight.js version than the bundled one
+  highlight_css: Set another highlight.js CSS theme than the default one
+  side_notes: Display footnotes as side notes in HTML/Epub (experimental)
+  nb_spaces: Replace unicode non breaking spaces with HTML entities and CSS
+  nb_spaces_tex: Replace unicode non breaking spaces with TeX code
+  one_chapter: Display only one chapter at a time (with a button to display all)
+  single_html: Path of an HTML template for standalone HTML
+  single_js: Path of a javascript file
+  if_js: Path of a javascript file
+  if_new_turn: Javascript code that will be run at the beginning of each segment
+  if_end_turn: Javascript code that will be run at the end of each segment
+  if_new_game: "Javascript code that will be run at the beginning of a 'game'"
+  html_chapter_template: Inline template for HTML chapter formatting
+  html_part_template: Inline template for HTML part formatting
+  html_dir_template: Path of a HTML template for multifile HTML
+  epub_ver: EPUB version to generate (2 or 3)
+  epub_css: Path of a stylesheet for EPUB
+  epub_css_add: Inline CSS added to the EPUB stylesheet template
+  chapter_xhtml: Path of an xhtml template for each chapter
+  titlepage_xhtml: Path of an xhtml template for the title page
+  epub_toc: "Add 'Title' and (if set) 'Cover' in the EPUB table of contents"
+  tex_links: Add foontotes to URL of links so they are readable when printed
+  tex_command: LaTeX command to use for generating PDF
+  tex_tmpl: Path of a LaTeX template file
+  tex_tmpl_add: Inline code added in the LaTeX template
+  tex_class: LaTeX class to use
+  tex_title: If true, generate a title with \\maketitle
+  tex_paper_size: Specifies the size of the page
+  tex_margin_left: "Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)"
+  tex_margin_right: "Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)"
+  tex_margin_top: Specifies top margin
+  tex_margin_bottom: Specifies bottom margin
+  tex_font_size: Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)
+  tex_hyperref: If disabled, don't try to find references inside the document
+  tex_stdpage: "If set to true, use 'stdpage' package to format a manuscript according to standards"
+  rs_files: Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+  rs_out: Paths where additional resources should be copied in the EPUB file or HTML directory
+  rs_base: Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
+  rs_links: Set base path but only for links. Useless if resources.base_path is set
+  rs_img: Set base path but only for images. Useless if resources.base_path is set
+  rs_base_files: Set base path but only for additional files. Useless if resources.base_path is set.
+  rs_tmpl: Set base path but only for templates files. Useless if resources.base_path is set
+  autoclean: Toggle typographic cleaning of input markdown according to lang
+  smart: If enabled, tries to replace vertical quotations marks to curly ones
+  dashes: "If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"
+  guillemets: "If enabled, replaces '<<' and '>>' to french \"guillemets\" ('«' and '»')"
+  superscript: "If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax."
+  yaml: Enable/disable inline YAML blocks to override options set in config file
+  html_as_text: Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored.
+  files_mean_chapters: "Consider that a new file is always a new chapter, even if it does not include heading (default: only for numbered chapters)"
+  tmp_dir: "Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"
+  zip: "Command to use to zip files (for EPUB/ODT)"
+  tex_theme: "If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"
+  html_theme: If set, set theme for syntax highlighting for HTML output (syntect only)
+  epub_theme: If set, set theme for syntax highlighting for EPUB output (syntect only)
+  renamed: Renamed
+  removed: Removed
+  ill_formatted: "Ill-formatted OPTIONS string: unrecognized type %{opption_type}'"
+  expected_string: "Expected a String as a key, found %{key}"
+  expected_strings: "Expected only strings in the list for key %{key}, found %{value}"
+  expected_string_value: "Expected a string as value for key %{key}, found %{value}"
+  format_not_recognized: "The output format %{format} for key %{key} is not recognized"
+  expected_list: "Expected a list as value for key %{key}, found %{value}"
+  invalid_utf8: "'%{value}''s path contains invalid UTF-8 code"
+  expected_char: "could not parse '%{value}' as a char: does not contain exactly one char"
+  expected_char_value: "expected a string as value containing a char for key '%{key}', found %{value}"
+  expected_bool: "expected a boolean as value for key '%{key}', found %{value}"
+  expected_int: "expected an integer as value for key '%{key}', found %{value}"
+  expected_float: "could not parse '%{value}' as a float for key '%{key}'"
+  warn_deprecated: "'%{old_key}' has been deprecated, you should now use '%{new_key}'"
+  err_deprecated: "key '%{key}' has been deprecated."
+  unrecognized: "unrecognized key '%{key}'"
+  one_yaml: "value '%{value}' for key '%{key}' does not contain one and only one YAML value"
+  yaml_value: "could not parse '%{value}' as a valid YAML value"
+  miss_key: "option '%{key}' is not present"
+  curr_dir: could not get current directory
+  not_set: not set
+  option_description_md: |
+    "- **`%{key}`**"
+    "- **type**: %{option_type}"
+    "- **default value**: `%{default}`"
+    "- %{comment}\n""
+ty:
+  type: "type:"
+  default: "default:"
+  bool: boolean
+  float: float
+  int: integer
+  char: char
+  str: string
+  path: path
+  tpl: template path
+  meta: metadata
+  strvec: list of strings
+  alias: DEPRECATED

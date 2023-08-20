@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::env;
 use std::path::{Path, PathBuf};
 use yaml_rust::{Yaml, YamlLoader};
+use rust_i18n::t;
 
 lazy_static! {
     static ref OPTIONS: String = format!("\
@@ -202,133 +203,133 @@ proofread.repetitions.threshold:float:2.0           # {removed}
 output.odt:path                                     # {removed}
 
 ",
-                                         metadata = lformat!("Metadata"),
-                                         metadata2 = lformat!("Additional metadata"),
-                                         output_opt = lformat!("Output options"),
-                                         output = lformat!("Specify a list of output formats to render"),
-                                         render_opt = lformat!("Rendering options"),
-                                         special_ops = lformat!("Special option"),
-                                         html_opt = lformat!("HTML options"),
-                                         html_single_opt = lformat!("Standalone HTML options"),
-                                         html_dir_opt = lformat!("Multifile HTML options"),
-                                         html_if_opt = lformat!("Interactive fiction HTML options"),
-                                         epub_opt = lformat!("EPUB options"),
-                                         tex_opt = lformat!("LaTeX options"),
-                                         rs_opt = lformat!("Resources option"),
-                                         input_opt = lformat!("Input options"),
-                                         crowbook_opt = lformat!("Crowbook options"),
-                                         deprecated_opt = lformat!("Deprecated options"),
+                                         metadata = t!("opt.metadata"),
+                                         metadata2 = t!("opt.add_metadata"),
+                                         output_opt = t!("opt.output_opt"),
+                                         output = t!("opt.output"),
+                                         render_opt = t!("opt.render"),
+                                         special_ops = t!("opt.special"),
+                                         html_opt = t!("opt.html"),
+                                         html_single_opt = t!("opt.html_single"),
+                                         html_dir_opt = t!("opt.html_dir"),
+                                         html_if_opt = t!("opt.html_if"),
+                                         epub_opt = t!("opt.epub"),
+                                         tex_opt = t!("opt.tex"),
+                                         rs_opt = t!("opt.resources"),
+                                         input_opt = t!("opt.input"),
+                                         crowbook_opt = t!("opt.crowbook"),
+                                         deprecated_opt = t!("opt.deprecated"),
 
-                                         author = lformat!("Author of the book"),
-                                         title = lformat!("Title of the book"),
-                                         lang = lformat!("Language of the book"),
-                                         subject = lformat!("Subject of the book (used for EPUB metadata)"),
-                                         description = lformat!("Description of the book (used for EPUB metadata)"),
-                                         cover = lformat!("Path to the cover of the book"),
+                                         author = t!("opt.author"),
+                                         title = t!("opt.title"),
+                                         lang = t!("opt.lang"),
+                                         subject = t!("opt.subject"),
+                                         description = t!("opt.description"),
+                                         cover = t!("opt.cover"),
 
-                                         subtitle = lformat!("Subtitle of the book"),
-                                         license = lformat!("License of the book. This information will be displayed on PDF documents"),
-                                         version = lformat!("Version of the book"),
-                                         date = lformat!("Date the book was revised"),
-                                         autograph = lformat!("An autograph"),
+                                         subtitle = t!("opt.subtitle"),
+                                         license = t!("opt.license"),
+                                         version = t!("opt.version"),
+                                         date = t!("opt.date"),
+                                         autograph = t!("opt.autograph"),
 
-                                         output_epub = lformat!("Output file name for EPUB rendering"),
-                                         output_html = lformat!("Output file name for HTML rendering"),
-                                         output_tex = lformat!("Output file name for LaTeX rendering"),
-                                         output_pdf = lformat!("Output file name for PDF rendering"),
-                                         output_if = lformat!("Output file name for HTML (interactive fiction) rendering"),
-                                         output_html_dir = lformat!("Output directory name for HTML rendering"),
-                                         output_base_path = lformat!("Directory where those output files will we written"),
+                                         output_epub = t!("opt.output_epub"),
+                                         output_html = t!("opt.output_html"),
+                                         output_tex = t!("opt.output_tex"),
+                                         output_pdf = t!("opt.output_pdf"),
+                                         output_if = t!("opt.output_if"),
+                                         output_html_dir = t!("opt.output_html_dir"),
+                                         output_base_path = t!("opt.output_base_path"),
 
-                                         rendering_highlight = lformat!("If/how highligh code blocks. Possible values: \"syntect\" (default, performed at runtime), \"highlight.js\" (HTML-only, uses Javascript), \"none\""),
-                                         rendering_highlight_theme = lformat!("Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"),
-                                         rendering_initials = lformat!("Use initials ('lettrines') for first letter of a chapter"),
-                                         inline_toc = lformat!("Display a table of content in the document"),
-                                         toc_name = lformat!("Name of the table of contents if it is displayed in document"),
-                                         num_depth = lformat!("The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"),
-                                         part = lformat!("How to call parts (or 'books', 'episodes', ...)"),
-                                         chapter = lformat!("How to call chapters"),
-                                         chapter_template = lformat!("Naming scheme of chapters, for TOC"),
-                                         part_template = lformat!("Naming scheme of parts, for TOC"),
-                                         roman_numerals_parts = lformat!("If set to true, display part number with roman numerals"),
-                                         roman_numerals_chapters = lformat!("If set to true, display chapter number with roman numerals"),
-                                         reset_counter = lformat!("If set to true, reset chapter number at each part"),
+                                         rendering_highlight = t!("opt.rendering_highlight"),
+                                         rendering_highlight_theme = t!("opt.rendering_highlight_theme"),
+                                         rendering_initials = t!("opt.rendering_initials"),
+                                         inline_toc = t!("opt.inline_toc"),
+                                         toc_name = t!("opt.toc_name"),
+                                         num_depth = t!("opt.num_depth"),
+                                         part = t!("opt.part"),
+                                         chapter = t!("opt.chapter"),
+                                         chapter_template = t!("opt.chapter_template"),
+                                         part_template = t!("opt.part_template"),
+                                         roman_numerals_parts = t!("opt.roman_numeral_parts"),
+                                         roman_numerals_chapters = t!("opt.roman_numerals_chapters"),
+                                         reset_counter = t!("opt.reset_counter"),
 
-                                         import_config = lformat!("Import another book configuration file"),
+                                         import_config = t!("opt.import"),
 
-                                         html_icon = lformat!("Path to an icon to be used for the HTML files(s)"),
-                                         html_header = lformat!("Custom header to display at the beginning of html file(s)"),
-                                         html_footer = lformat!("Custom footer to display at the end of HTML file(s)"),
-                                         html_css = lformat!("Path of a stylesheet for HTML rendering"),
-                                         html_css_add = lformat!("Some inline CSS added to the stylesheet template"),
-                                         css_colors = lformat!("Path of a stylesheet for the colors for HTML"),
-                                         html_js = lformat!("Path of a javascript file"),
-                                         css_print = lformat!("Path of a media print stylesheet for HTML rendering"),
-                                         highlight_js = lformat!("Set another highlight.js version than the bundled one"),
-                                         highlight_css = lformat!("Set another highlight.js CSS theme than the default one"),
-                                         side_notes = lformat!("Display footnotes as side notes in HTML/Epub (experimental)"),
-                                         nb_spaces = lformat!("Replace unicode non breaking spaces with HTML entities and CSS"),
-                                         nb_spaces_tex = lformat!("Replace unicode non breaking spaces with TeX code"),
+                                         html_icon = t!("opt.html_icon"),
+                                         html_header = t!("opt.html_header"),
+                                         html_footer = t!("opt.html_footer"),
+                                         html_css = t!("opt.html_css"),
+                                         html_css_add = t!("opt.html_css_add"),
+                                         css_colors = t!("opt.css_colors"),
+                                         html_js = t!("opt.html_js"),
+                                         css_print = t!("opt.css_print"),
+                                         highlight_js = t!("opt.highlight_js"),
+                                         highlight_css = t!("opt.highlight_css"),
+                                         side_notes = t!("opt.side_notes"),
+                                         nb_spaces = t!("opt.nb_spaces"),
+                                         nb_spaces_tex = t!("opt.nb_spaces_tex"),
 
-                                         one_chapter = lformat!("Display only one chapter at a time (with a button to display all)"),
-                                         single_html = lformat!("Path of an HTML template for standalone HTML"),
-                                         single_js = lformat!("Path of a javascript file"),
-                                         if_js = lformat!("Path of a javascript file"),
-                                         if_new_turn = lformat!("Javascript code that will be run at the beginning of each segment"),
-                                         if_end_turn = lformat!("Javascript code that will be run at the end of each segment"),
-                                         if_new_game = lformat!("Javascript code that will be run at the beginning of a 'game'"),
+                                         one_chapter = t!("opt.one_chapter"),
+                                         single_html = t!("opt.single_html"),
+                                         single_js = t!("opt.single_js"),
+                                         if_js = t!("opt.if_js"),
+                                         if_new_turn = t!("opt.if_new_turn"),
+                                         if_end_turn = t!("opt.if_end_turn"),
+                                         if_new_game = t!("opt.if_new_game"),
 
-                                         html_chapter_template = lformat!("Inline template for HTML chapter formatting"),
-                                         html_part_template = lformat!("Inline template for HTML part formatting"),
-                                         html_dir_template = lformat!("Path of a HTML template for multifile HTML"),
+                                         html_chapter_template = t!("opt.html_chapter_template"),
+                                         html_part_template = t!("opt.html_part_template"),
+                                         html_dir_template = t!("opt.html_dir_template"),
 
-                                         epub_ver = lformat!("EPUB version to generate (2 or 3)"),
-                                         epub_css = lformat!("Path of a stylesheet for EPUB"),
-                                         epub_css_add = lformat!("Inline CSS added to the EPUB stylesheet template"),
-                                         chapter_xhtml = lformat!("Path of an xhtml template for each chapter"),
-                                         titlepage_xhtml = lformat!("Path of an xhtml template for the title page"),
-                                         epub_toc = lformat!("Add 'Title' and (if set) 'Cover' in the EPUB table of contents"),
+                                         epub_ver = t!("opt.epub_ver"),
+                                         epub_css = t!("opt.epub_css"),
+                                         epub_css_add = t!("opt.epub_css_add"),
+                                         chapter_xhtml = t!("opt.chapter_xhtml"),
+                                         titlepage_xhtml = t!("opt.titlepage_xhtml"),
+                                         epub_toc = t!("opt.epub_toc"),
 
-                                         tex_links = lformat!("Add foontotes to URL of links so they are readable when printed"),
-                                         tex_command = lformat!("LaTeX command to use for generating PDF"),
-                                         tex_tmpl = lformat!("Path of a LaTeX template file"),
-                                         tex_tmpl_add = lformat!("Inline code added in the LaTeX template"),
-                                         tex_class = lformat!("LaTeX class to use"),
-                                         tex_title = lformat!("If true, generate a title with \\maketitle"),
-                                         tex_paper_size = lformat!("Specifies the size of the page."),
-                                         tex_margin_left = lformat!("Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)"),
-                                         tex_margin_right = lformat!("Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)"),
-                                         tex_margin_top = lformat!("Specifies top margin"),
-                                         tex_margin_bottom = lformat!("Specifies left margin"),
-                                         tex_font_size = lformat!("Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)"),
-                                         tex_hyperref = lformat!("If disabled, don't try to find references inside the document"),
-                                         tex_stdpage = lformat!("If set to true, use 'stdpage' package to format a manuscript according to standards"),
+                                         tex_links = t!("opt.tex_links"),
+                                         tex_command = t!("opt.tex_command"),
+                                         tex_tmpl = t!("opt.tex_tmpl"),
+                                         tex_tmpl_add = t!("opt.tex_tmpl_add"),
+                                         tex_class = t!("opt.tex_class"),
+                                         tex_title = t!("opt.tex_title"),
+                                         tex_paper_size = t!("opt.tex_paper_size"),
+                                         tex_margin_left = t!("opt.tex_margin_left"),
+                                         tex_margin_right = t!("opt.tex_margin_right"),
+                                         tex_margin_top = t!("opt.tex_margin_top"),
+                                         tex_margin_bottom = t!("opt.tex_margin_bottom"),
+                                         tex_font_size = t!("opt.tex_font_size"),
+                                         tex_hyperref = t!("opt.tex_hyperref"),
+                                         tex_stdpage = t!("opt.tex_stdpage"),
 
-                                         rs_files = lformat!("Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts"),
-                                         rs_out = lformat!("Paths where additional resources should be copied in the EPUB file or HTML directory"),
-                                         rs_base = lformat!("Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path."),
-                                         rs_links = lformat!("Set base path but only for links. Useless if resources.base_path is set"),
-                                         rs_img = lformat!("Set base path but only for images. Useless if resources.base_path is set"),
-                                         rs_base_files = lformat!("Set base path but only for additional files. Useless if resources.base_path is set."),
-                                         rs_tmpl = lformat!("Set base path but only for templates files. Useless if resources.base_path is set"),
+                                         rs_files = t!("opt.rs_files"),
+                                         rs_out = t!("opt.rs_out"),
+                                         rs_base = t!("opt.rs_base"),
+                                         rs_links = t!("opt.rs_links"),
+                                         rs_img = t!("opt.rs_img"),
+                                         rs_base_files = t!("opt.rs_base_files"),
+                                         rs_tmpl = t!("opt.rs_tmpl"),
 
-                                         autoclean = lformat!("Toggle typographic cleaning of input markdown according to lang"),
-                                         smart_quotes = lformat!("If enabled, tries to replace vertical quotations marks to curly ones"),
-                                         ligature_dashes = lformat!("If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"),
-                                         ligature_guillemets = lformat!("If enabled, replaces '<<' and '>>' to french \"guillemets\" ('«' and '»')"),
-                                         superscript = lformat!("If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax."),
-                                         yaml = lformat!("Enable inline YAML blocks to override options set in config file"),
-                                         html_as_text = lformat!("Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored."),
-                                         files_mean_chapters = lformat!("Consider that a new file is always a new chapter, even if it does not include heading (default: only for numbered chapters)"),
-                                         tmp_dir = lformat!("Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"),
-                                         zip = lformat!("Command to use to zip files (for EPUB/ODT)"),
+                                         autoclean = t!("opt.autoclean"),
+                                         smart_quotes = t!("opt.smart"),
+                                         ligature_dashes = t!("opt.dashes"),
+                                         ligature_guillemets = t!("opt.guillemets"),
+                                         superscript = t!("opt.superscript"),
+                                         yaml = t!("opt.yaml"),
+                                         html_as_text = t!("opt.html_as_text"),
+                                         files_mean_chapters = t!("opt.files_mean_chapters"),
+                                         tmp_dir = t!("opt.tmp_dir"),
+                                         zip = t!("opt.zip"),
 
-                                         tex_theme = lformat!("If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"),
-                                         html_theme = lformat!("If set, set theme for syntax highlighting for HTML output (syntect only)"),
-                                         epub_theme = lformat!("If set, set theme for syntax highlighting for EPUB output (syntect only)"),
+                                         tex_theme = t!("opt.tex_theme"),
+                                         html_theme = t!("opt.html_theme"),
+                                         epub_theme = t!("opt.epub_theme"),
 
-                                         renamed = lformat!("Renamed"),
-                                         removed = lformat!("Removed"),
+                                         renamed = t!("opt.renamed"),
+                                         removed = t!("opt.removed"),
     );
 }
 
@@ -430,9 +431,8 @@ impl BookOptions {
                 _ => {
                     panic!(
                         "{}",
-                        lformat!(
-                            "Ill-formatted OPTIONS string: unrecognized type \
-                                     '{option_type}'",
+                        t!(
+                            "opt.ill_forrmatted",
                             option_type = option_type.unwrap()
                         )
                     )
@@ -473,7 +473,7 @@ impl BookOptions {
         } else {
             return Err(Error::book_option(
                 &self.source,
-                lformat!("Expected a String as a key, found {:?}", key),
+                t!("opt.expected_string", key = format!("{:?}", key)),
             ));
         };
 
@@ -487,10 +487,10 @@ impl BookOptions {
                     } else {
                         return Err(Error::book_option(
                             &self.source,
-                            lformat!(
-                                "Expected only string in the list for key {}, found {:?}",
-                                &key,
-                                &value
+                            t!(
+                                "opt.expected_strings",
+                                key = &key,
+                                value = format!("{:?}", &value)
                             ),
                         ));
                     }
@@ -505,8 +505,8 @@ impl BookOptions {
                         .map_err(|_| {
                             Error::book_option(
                                 &self.source,
-                                lformat!(
-                                    "The output format {format} for key {key} is not recognized",
+                                t!(
+                                    "opt.format_not_recognized",
                                     key = key,
                                     format = format
                                 ),
@@ -518,10 +518,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "Expected a list as value for key {}, found {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_list",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -532,11 +532,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "Expected a string as value for key {}, found \
-                                                 {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_string_value",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -549,9 +548,8 @@ impl BookOptions {
                     let file = tmp.to_str().ok_or_else(|| {
                         Error::book_option(
                             &self.source,
-                            lformat!(
-                                "'{value}''s path contains invalid \
-                                                                    UTF-8 code",
+                            t!(
+                                "opt.invalid_utf8",
                                 value = &value
                             ),
                         )
@@ -566,11 +564,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "expected a string as value for key '{}', found \
-                                                 {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_string_value",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -581,10 +578,8 @@ impl BookOptions {
                 if chars.len() != 1 {
                     return Err(Error::book_option(
                         &self.source,
-                        lformat!(
-                            "could not parse '{value}' as a \
-                                                            char: does not contain exactly one \
-                                                            char",
+                        t!(
+                            "opt.expected_char",
                             value = &value
                         ),
                     ));
@@ -593,11 +588,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "expected a string as value containing a char \
-                                                 for key '{}', found {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_char_value",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -608,11 +602,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "expected a boolean as value for key '{}', \
-                                                 found {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_bool",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -623,11 +616,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "expected an integer as value for key '{}', \
-                                                 found {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_int",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -638,9 +630,8 @@ impl BookOptions {
                     Ok(value) => Ok(self.options.insert(key, BookOption::Float(value))),
                     Err(_) => Err(Error::book_option(
                         &self.source,
-                        lformat!(
-                            "could not parse '{value}' as a float \
-                                                         for key '{key}'",
+                        t!(
+                            "opt.expected_float",
                             value = &value,
                             key = &key
                         ),
@@ -649,11 +640,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "expected a float as value for key '{}', found \
-                                                 {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_float",
+                        key = &key,
+                        value = format!("{:?}", &value)
                     ),
                 ))
             }
@@ -662,9 +652,8 @@ impl BookOptions {
             if let Some(new_key) = opt {
                 warn!(
                     "{}",
-                    lformat!(
-                        "'{old_key}' has been deprecated, you should \
-                                                  now use '{new_key}'",
+                    t!(
+                        "opt.warn_deprecated",
                         old_key = &key,
                         new_key = &new_key
                     )
@@ -673,7 +662,7 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     self.source.clone(),
-                    lformat!("key '{key}' has been deprecated.", key = &key),
+                    t!("opt.err_deprecated", key = &key),
                 ))
             }
         } else if key.starts_with("metadata.") {
@@ -685,11 +674,10 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "expected a string as value for key '{}', found \
-                                                 {:?}",
-                        &key,
-                        &value
+                    t!(
+                        "opt.expected_string_value",
+                        key = &key,
+                        value = format!("{:?}", &&value)
                     ),
                 ))
             }
@@ -697,7 +685,7 @@ impl BookOptions {
             // key not recognized
             Err(Error::book_option(
                 self.source.clone(),
-                lformat!("unrecognized key '{key}'", key = &key),
+                t!("opt.unrecognized", key = &key),
             ))
         }
     }
@@ -738,9 +726,8 @@ impl BookOptions {
             } else {
                 Err(Error::book_option(
                     &self.source,
-                    lformat!(
-                        "value '{value}' for key '{key}' does not \
-                                                 contain one and only one YAML value",
+                    t!(
+                        "opt.one_yaml",
                         value = value,
                         key = key
                     ),
@@ -749,8 +736,8 @@ impl BookOptions {
         } else {
             Err(Error::book_option(
                 &self.source,
-                lformat!(
-                    "could not parse '{value}' as a valid YAML value",
+                t!(
+                    "opt.yaml_value",
                     value = value
                 ),
             ))
@@ -769,7 +756,7 @@ impl BookOptions {
         self.options.get(key).ok_or_else(|| {
             Error::invalid_option(
                 &self.source,
-                lformat!("option '{key}' is not present", key = key),
+                t!("opt.miss_key", key = key),
             )
         })
     }
@@ -855,7 +842,7 @@ impl BookOptions {
         } else {
             Err(Error::book_option(
                 &self.source,
-                lformat!("'{key}''s path contains invalid UTF-8 code", key = key),
+                t!("opt.invalid_utf8", value = key),
             ))
         }
     }
@@ -935,7 +922,7 @@ impl BookOptions {
                     .map_err(|_| {
                         Error::default(
                             Source::empty(),
-                            lformat!("could not get current directory!"),
+                            t!("opt.curr_dir"),
                         )
                     })?
                     .join(&path);
@@ -944,10 +931,9 @@ impl BookOptions {
                 } else {
                     return Err(Error::book_option(
                         Source::new(other.root.to_str().unwrap()),
-                        lformat!(
-                            "'{key}''s path contains invalid \
-                                                            UTF-8 code",
-                            key = key
+                        t!(
+                            "opt.invalid_utf8",
+                            value = key
                         ),
                     ));
                 };
@@ -974,7 +960,7 @@ impl BookOptions {
         let mut previous_is_comment = true;
         for (comment, key, o_type, default) in Self::options_to_vec() {
             // Don't display deprecated options if md is not set
-            if !md && comment.trim() == lformat!("Deprecated options") {
+            if !md && comment.trim() == t!("opt.deprecated") {
                 return out;
             }
             if key.is_none() {
@@ -992,29 +978,26 @@ impl BookOptions {
             }
             previous_is_comment = false;
             let o_type = match o_type.unwrap() {
-                "bool" => lformat!("boolean"),
-                "float" => lformat!("float"),
-                "int" => lformat!("integer"),
-                "char" => lformat!("char"),
-                "str" => lformat!("string"),
-                "path" => lformat!("path"),
-                "tpl" => lformat!("template path"),
-                "meta" => lformat!("metadata"),
-                "strvec" => lformat!("list of strings"),
-                "alias" => lformat!("DEPRECATED"),
+                "bool" => t!("ty.bool"),
+                "float" => t!("ty.float"),
+                "int" => t!("ty.int"),
+                "char" => t!("ty.char"),
+                "str" => t!("ty.str"),
+                "path" => t!("ty.path"),
+                "tpl" => t!("ty.tpl"),
+                "meta" => t!("ty.meta"),
+                "strvec" => t!("ty.strvec"),
+                "alias" => t!("ty.alias"),
                 _ => unreachable!(),
             };
             let def = if let Some(value) = default {
                 value.to_owned()
             } else {
-                lformat!("not set")
+                t!("opt.not_set")
             };
             if md {
-                out.push_str(&lformat!(
-                    "- **`{key}`**
-    - **type**: {option_type}
-    - **default value**: `{default}`
-    - {comment}\n",
+                out.push_str(&t!(
+                    "opt.option_description_md",
                     key = key.unwrap(),
                     option_type = o_type,
                     default = def,
@@ -1024,10 +1007,10 @@ impl BookOptions {
                 out.push_str(&format!("{key}
   {type} {option_type} ({msg} {default})
 {comment}\n",
-                                      type = style::field(&lformat!("type:")),
+                                      type = style::field(&t!("ty.type")),
                                       key = style::element(key.unwrap()),
                                       option_type = style::tipe(&o_type),
-                                      msg = lformat!("default:"),
+                                      msg = t!("ty.default"),
                                       default = style::value(&def),
                                       comment = style::fill(comment.trim(), "  ")));
             }

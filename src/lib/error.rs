@@ -374,7 +374,7 @@ impl From<fmt::Error> for Error {
     fn from(err: fmt::Error) -> Error {
         Error::default(
             Source::empty(),
-            lformat!("format error: {error}", error = err),
+            t!("error.format", error = err),
         )
     }
 }
@@ -383,7 +383,9 @@ impl From<syntect::Error> for Error {
     fn from(err: syntect::Error) -> Error {
         Error::syntect(
             Source::empty(),
-            lformat!("syntect error: {error}", error = err),
+            format!("{msg}: {error}",
+                    msg = t!("error.syntect"),
+                    error = err),
         )
     }
 }
