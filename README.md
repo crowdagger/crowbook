@@ -159,13 +159,6 @@ See the
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/Crowdagger">
-            <img src="https://avatars.githubusercontent.com/u/1954779?v=4" width="100;" alt="Crowdagger"/>
-            <br />
-            <sub><b>Lizzie Crowdagger</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/stefan0xC">
             <img src="https://avatars.githubusercontent.com/u/509385?v=4" width="100;" alt="stefan0xC"/>
             <br />
@@ -192,15 +185,15 @@ See the
             <br />
             <sub><b>Johannes Rappen</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/taophp">
             <img src="https://avatars.githubusercontent.com/u/5610065?v=4" width="100;" alt="taophp"/>
             <br />
             <sub><b>Stéphane Mourey</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/dkotrada">
             <img src="https://avatars.githubusercontent.com/u/698296?v=4" width="100;" alt="dkotrada"/>
@@ -235,15 +228,15 @@ See the
             <br />
             <sub><b>Frank Steffahn</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/cuviper">
             <img src="https://avatars.githubusercontent.com/u/36186?v=4" width="100;" alt="cuviper"/>
             <br />
             <sub><b>Josh Stone</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/mgeisler">
             <img src="https://avatars.githubusercontent.com/u/89623?v=4" width="100;" alt="mgeisler"/>
