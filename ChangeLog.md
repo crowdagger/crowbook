@@ -6,6 +6,8 @@ ChangeLog
 * Try to get rid of technical debt, including removing features that were half baked and not really useful.
   * Remove proofread options.
   * Remove ODT renderer.
+  * Replace mustache for templates by [upon](https://crates.io/crates/upon)
+  * Use rust-i18n for internationalization instead of hackish (and unmaintained) crowbook-intl
 
 
 0.16.1 (2023-08-04)
