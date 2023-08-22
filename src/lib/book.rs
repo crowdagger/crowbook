@@ -1273,6 +1273,7 @@ impl<'a> Book<'a> {
 
                             m.insert(format!("has_{key}"), true.into());
                         } else {
+                            m.insert(format!("{key}_raw"), "".into());
                             m.insert(key.clone(), "".into());
                             m.insert(format!("has_{key}"), false.into());
                         }
