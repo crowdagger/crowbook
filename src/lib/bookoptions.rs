@@ -128,7 +128,8 @@ resources.base_path.images:path:.    # {rs_img}
 resources.base_path.files:path:.     # {rs_base_files}
 resources.base_path.templates:path:. # {rs_tmpl}
 
-# {input_opt}
+# {input_opt}    #[serde(flatten)]
+
 input.clean:bool:true               # {autoclean}
 input.clean.smart_quotes:bool:true  # {smart_quotes}
 input.clean.ligature.dashes:bool:false # {ligature_dashes}
@@ -177,10 +178,10 @@ html_single.js:alias:html.standalone.js             # {renamed}
 output.html_dir:alias:output.html.dir               # {renamed}
 html_dir.index.html:alias:html.dir.template         # {renamed}
 html_dir.chapter.html:alias:html.dir.template       # {renamed}
-output.proofread.html_dir:alias:output.proofread.html.dir # {renamed}
 tex.paper_size:alias:tex.paper.size                 # {renamed}
 tex.font_size:alias:tex.font.size                   # {renamed}
 html.highlight_code:alias:rendering.highlight       # {renamed}
+output.proofread.html_dir:alias:output.proofread.html.dir # {removed}
 proofread.nb_spaces:alias                           # {removed}
 nb_char:alias                                       # {removed}
 tex.short:alias                                     # {removed}
@@ -820,9 +821,6 @@ impl BookOptions {
             | "output.html.dir"
             | "output.pdf"
             | "output.tex"
-            | "output.proofread.html"
-            | "output.proofread.html.dir"
-            | "output.proofread.pdf"
             | "output.html.if" => {
                 // Translate according to output.base_path
                 let base = self.get_path("output.base_path").unwrap();
