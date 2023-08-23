@@ -1,0 +1,312 @@
+ui:
+  parsing: "Analyse en cours..."
+  parsing_file: "Analyse de %{file} en cours"
+  rendering: "Rendu en cours..."
+  rendering_format: "rendu en cours..."
+  waiting: "en attente..."
+  options: "mise en place des options"
+  chapters: "Analyse des chapitres"
+  processing: Analyse...
+  processing_file: "Analyse de %{file} en cours..."
+  finished: "Terminé"
+  generated: "généré %{path}"
+  error: ERREUR
+error:
+  markdown: "Erreur dans l'analyse du Markdown : %{error}"
+  config: "Erreur dans l'analyse du fichier de configuration : "
+  template: "Erreur dans la compilation du template : %{template}"
+  render_error: "Erreur dans le rendu : "
+  zipper: "Erreur durant l'édition de fichiers temporaires :"
+  bookoption: "Erreur en convertissant l'option de livre :"
+  invalid_option: "Erreur en accèdant à l'option de livrre : "
+  syntect: "Erreur de coloration syntaxique : "
+  file_not_found: "Impossible de trouver le fichier '%{file}' pour %{description}"
+  utf8_error: "Erreur UTF-8 : %{error}"
+  initial: "jeton str vide, impossible de trouver la lettrine"
+  no_string: "%{s} n'est pas une chaine de caractères"
+  no_string_vector: "%{s} n'est pas une liste de chaines de caractères"
+  no_path: "%{s} n'est pas un chemin"
+  no_bool: "%{s} n'est pas un booléen"
+  no_char: "%{s} n'est pas un caractère"
+  no_i32: "%{s} n'est past un entier"
+  no_f32: "%{s} n'est pas un flottant"
+  book_init: "Erreur à l'initialisation du livre : impossible de positionner %{key} à %{value}: %{error}"
+  parse_book: |
+    "impossible d'analyser %{file} comme un fichier de livre."
+    Vous voulez peut-être lancer crowbook avec l'argument --single ?
+  yaml_block: "Le bloc YAML n'était pas valide : %{error}"
+  yaml_hash: "La partie YAML du livre n'est pas une hashmap valide"
+  chapter_whitspace: "les noms de fichier des chapitres ne doivent pas contenir d'espace"
+  no_chapter_name: "pas de nom de chapitre spécifié"
+  source: "impossible de lire la source : %{error}"
+  format_line: "ligne spécifiant un numéro de chapitre mal formattée"
+  chapter_number: "erreur dans l'analyse du numéro de chapitre: %{error}"
+  part_number_line: "ligne spécifiant un numéro de partie mal formattée"
+  part_number: "erreur dans l'analyse du numéro de partie : %{error}"
+  part_definition: "définition de partie invalide trouvée dans la liste des chapitres"
+  chapter_definition: "définition de chapitre invalide trouvée dans la liste des chapitres"
+  rendering: "Erreur dans le rendu de %{name}: %{error}"
+  infer: "sortie de %{format} mise à auto mais impossible de trouver le nom de fichier du livre pour l'inférer"
+  support: "le moteur de rendu pour %{format} ne supporte pas auto comme chemin de sortie"
+  unknown: "format inconnu %{format}"
+  unknown_short: "format inconnu"
+  utf8: "le fichier %{file} contient de l'UTF-8 invalide"
+  heading: "ce sous-chapitre contient un titre qui, après ajustement, n'est pas à un niveau valide (%{n} au lieu de [0-6])"
+  invalid_template: "modèle invalide '%{template}'"
+  read_file: "impossible de lire le fichier '%{file}'"
+  compile_template: "impossible de compiler le modèle '%{template}' : %{error}"
+  roman_numerals: "impossible d'utiliser des chiffres romain avec des nombres négatifs ou nuls (%{n})"
+  render_key: "impossible de faire le rendu de `%{key}` comme metadonnée :\n%{error}"
+  yaml_set: "Le bloc en ligne n'a pas pu positionner la clé %{key} à %{value}: %{err}"
+  yaml_lang: "Le fichier YAML pour le langage %{lang} no contient pas de hashmap"
+  yaml_translation: "Impossible de trouver une traduction pour %{key} dans la langue %{lang}"
+  yaml_translation_sring: "Yaml for %{key} in lang %{lang} is not a string"
+  renderer:
+    no_output: This renderer does not support the auto output
+    file_creation: "could not create file '%{file}': '%{err}"
+    write: "could not write book content to file '%{file}': %{err}"
+warn:
+  above: "Warning: book contains chapter '%{file}' in a directory above the book file, this might cause problems"
+format:
+  image: image
+  markdown: markdown file
+  book: book
+  book_chapter: book chapter
+  html_single: HTML (standalone page)
+  html_dir: HTML (multiple pages)
+  tex: LaTeX
+  pdf: PDF
+  epub: EPUB
+  html_if: HTML (interactive fiction)
+debug:
+  yaml_replace: "Inline YAML block replaced %{key} previously set to %{old_val} to %{new_val}"
+  yaml_set: "Inline YAML block set %{key} to %{value}"
+  yaml_ignore: "Ignoring YAML block:\n%{block}"
+  found_yaml_block: "Found something that looked like a YAML block:\n%{block}"
+  found_yaml_block2: "... but it didn't parse correctly as YAML('%{error}'), so treating it like Markdown."
+msg:
+  attempting: "Attempting to generate %{format}..."
+  generated: "Succesfully generated %{format}: %{path}"
+  generated_short: "Succesfully generated %{format}"
+epub:
+  zip_command: "Could not run zip command, falling back to zip library"
+  cover: cover
+  image_or_cover: image or cover
+  resources: additional resource from resources.files
+  ambiguous: "EPUB (%{source}): detected two chapters inside the same markdown file."
+  ambiguous_invisible: "EPUB (%{source}): detected two chapter titles inside the same markdown file, in a file where chapter titles are not even rendered."
+  title_conflict: "EPUB ({source}): conflict between: %{title1} and %{title2}"
+  guess: "EPUB: could not guess the format of %{file} based on extension. Assuming png."
+html:
+  exist_not_dir: "%{path} already exists and is not a directory"
+  delete_dir: "%{path} already exists, deleting it"
+  delete_dir_error: "error deleting directory %{path}: %{error}"
+  create_dir_error: "could not create HTML directory %{path}: %{error}"
+  reading_image_error: "error while reading image file %{file}: %{error}"
+  resource_error: "error while reading resource file: %{error}"
+  create_file_error: "could not create file %{file}: %{error}"
+  write_file_error: "could not write to file %{file}: %{error}"
+  write_error: "problem when writing HTML: %{error}"
+  dir_to_stream_error: "can only render HTML directory to a path, not to a stream"
+  if_error: "problem when writing interactive fiction: %{error}"
+  highlight: "rendering.highlight set to '%{value}', not a valid value"
+  footer_template_error: "rendering 'html.footer' template:\n%{error}"
+  header_template_error: "rendering 'html.header' template:\n%{error}"
+latex:
+  attempting: "Attempting to run LaTeX on generated file"
+  image_error: "error while reading image file: %{error}"
+  lang_error: "LaTeX: can't find a tex equivalent for lang '%{lang}', fallbacking on english"
+  lists: "found %{n} indented ordered lists, LaTeX only allows for 4"
+  remote_image: "LaTeX (%{source}): image '%{url}' doesn't seem to be local; ignoring it."
+  write_error: "problem when writing LaTeX: %{error}"
+parser:
+  ignore_html: "ignoring HTML block '%{block}'"
+resouces:
+  non_local: "Resources: book includes non-local image %{file}, which might cause problem for proper inclusion."
+  no_ext: "Resources: book includes image %{file} which doesn't have an extension"
+  read_error: "Resources: could not read file %{file}"
+  guess: "Resources: could not guess mime type of file %{file}"
+  no_match: "Resources: could not find an in-book match for link %{file} or %{new_from}"
+  read_file: "error reading file %{file}: %{error}"
+  no_path: "error: %{path} is neither a file nor a directory"
+stats:
+  no_advanced: "This version of crowboook has been compiled without support for advanced statistics"
+  advanced: "For more advanced statistics, use the --verbose or -v option"
+  chapter: Chapter
+  chars: Chars
+  syllables: Syllables
+  words: Words
+  sentences: Sentences
+  chars_word: Chars/Word
+  words_sentence: Words/Sentence
+  flesch: Flesch reading index
+  total: "TOTAL:"
+syntax:
+  default_theme: "could not set syntect theme to %{theme}, defaulting to \"InspiredGitHub\""
+  valid_themes: "valid theme names are: %{themes}"
+  no_support: "crowbook was compiled without syntect support, syntax highlighting will be disabled"
+zipper:
+  tmp_dir: "could not create temporary directory in %{path}"
+  verboten: |
+    "file %{file} refers to an absolute or a parent path."
+    "This is forbidden because we are supposed to create a temporary file in a temporary dir."
+  write_error: "could not write to temporary file %{file}"
+  create_error: "could not create temporary file %{file}"
+  command_output: "output for command %{name}:\n%{error}"
+  command_error: "failed to run command '%{name}'"
+  command_result_error: "could not open result of command %'{command}'\nCommand output:\n%{output}'"
+  command_result_err: "could not open result of command '%{command}'"
+  copy_error: "error copying file '%{file}'"
+  command_no_success: "%{command} didn't return succesfully"
+opt:
+  metadata: Metadata
+  add_metadata: Additional metadata
+  output_opt: Output options
+  output: Specify a list of output formats to render
+  render: Rendering options
+  special: Special options
+  html: HTML options
+  html_single: Standalone HTML options
+  html_dir: Multifile HTML options
+  html_if: Interactive fiction HTML options
+  epub: EPUB options
+  tex: LaTeX options
+  resources: Resources options
+  input: Input options
+  crowbook: Crowbook options
+  deprecated: Deprecated options
+  author: Author of the book
+  title: Title of the book
+  lang: Language of the book
+  subject: Subject of the book (used for EPUB metadata)
+  description: Description of the book (used for EPUB metadata)
+  cover: Path to the cover of the book
+  subtitle: Subtitle of the book
+  license: License of the book
+  version: Version of the book
+  date: Date the book was revised
+  autograph: An autograph
+  output_epub: Output file name for EPUB rendering
+  output_html: Output file name for HTML rendering
+  output_tex: Output file name for LaTeX rendering
+  output_pdf: Output file name for PDF rendering
+  output_if: Output file name for HTML interactive fiction rendering
+  output_html_dir: Output directory name for HTML rendering
+  output_base_path: Directory where those output files will we written
+  rendering_highlight: "If/how highligh code blocks. Possible values: \"syntect\" (default, performed at runtime), \"highlight.js\" (HTML-only, uses Javascript), \"none\""
+  rendering_highlight_theme: "Theme for syntax highlighting (if rendering.highlight is set to 'syntect')"
+  rendering_initials: "Use initials ('lettrines') for first letter of a chapter"
+  inline_toc: Display a table of content in the document
+  toc_name: Name of the table of contents if it is displayed in document
+  num_depth: "The  maximum heading levels that should be numbered (0: no numbering, 1: only chapters, ..., 6: all)"
+  part: "How to call parts (or 'books', 'episodes', ...)"
+  chapter: How to call chapters
+  chapter_template: Naming scheme of chapters, for TOC
+  part_template: Naming scheme of parts, for TOC
+  roman_numeral_parts: If set to true, display part number with roman numerals
+  roman_numeral_chapters: If set to true, display chapter number with roman numerals
+  reset_counter: If set to true, reset chapter number at each part
+  import: Import another book configuration file
+  html_icon: Path to an icon to be used for the HTML files(s)
+  html_header: Custom header to display at the beginning of html file(s)
+  html_footer: Custom footer to display at the end of HTML file(s)
+  html_css: Path of a stylesheet for HTML rendering
+  html_css_add: Some inline CSS added to the stylesheet template
+  css_colors: Path of a stylesheet for the colors for HTML
+  html_js: Path of a javascript file
+  css_print: Path of a media print stylesheet for HTML rendering
+  highlight_js: Set another highlight.js version than the bundled one
+  highlight_css: Set another highlight.js CSS theme than the default one
+  side_notes: Display footnotes as side notes in HTML/Epub (experimental)
+  nb_spaces: Replace unicode non breaking spaces with HTML entities and CSS
+  nb_spaces_tex: Replace unicode non breaking spaces with TeX code
+  one_chapter: Display only one chapter at a time (with a button to display all)
+  single_html: Path of an HTML template for standalone HTML
+  single_js: Path of a javascript file
+  if_js: Path of a javascript file
+  if_new_turn: Javascript code that will be run at the beginning of each segment
+  if_end_turn: Javascript code that will be run at the end of each segment
+  if_new_game: "Javascript code that will be run at the beginning of a 'game'"
+  html_chapter_template: Inline template for HTML chapter formatting
+  html_part_template: Inline template for HTML part formatting
+  html_dir_template: Path of a HTML template for multifile HTML
+  epub_ver: EPUB version to generate (2 or 3)
+  epub_css: Path of a stylesheet for EPUB
+  epub_css_add: Inline CSS added to the EPUB stylesheet template
+  chapter_xhtml: Path of an xhtml template for each chapter
+  titlepage_xhtml: Path of an xhtml template for the title page
+  epub_toc: "Add 'Title' and (if set) 'Cover' in the EPUB table of contents"
+  tex_links: Add foontotes to URL of links so they are readable when printed
+  tex_command: LaTeX command to use for generating PDF
+  tex_tmpl: Path of a LaTeX template file
+  tex_tmpl_add: Inline code added in the LaTeX template
+  tex_class: LaTeX class to use
+  tex_title: If true, generate a title with \\maketitle
+  tex_paper_size: Specifies the size of the page
+  tex_margin_left: "Specifies left margin (note that with book class left and right margins are reversed for odd pages, thus the default value is 1.5cm for book class and 2cm else)"
+  tex_margin_right: "Specifies right margin(note that with book class left and right margins are reversed for odd pages, thus the default value is 2.5cm for book class and 2cm else)"
+  tex_margin_top: Specifies top margin
+  tex_margin_bottom: Specifies bottom margin
+  tex_font_size: Specify latex font size (in pt, 10 (default), 11, or 12 are accepted)
+  tex_hyperref: If disabled, don't try to find references inside the document
+  tex_stdpage: "If set to true, use 'stdpage' package to format a manuscript according to standards"
+  rs_files: Whitespace-separated list of files to embed in e.g. EPUB file; useful for including e.g. fonts
+  rs_out: Paths where additional resources should be copied in the EPUB file or HTML directory
+  rs_base: Path where to find resources (in the source tree). By default, links and images are relative to the Markdown file. If this is set, it will be to this path.
+  rs_links: Set base path but only for links. Useless if resources.base_path is set
+  rs_img: Set base path but only for images. Useless if resources.base_path is set
+  rs_base_files: Set base path but only for additional files. Useless if resources.base_path is set.
+  rs_tmpl: Set base path but only for templates files. Useless if resources.base_path is set
+  autoclean: Toggle typographic cleaning of input markdown according to lang
+  smart: If enabled, tries to replace vertical quotations marks to curly ones
+  dashes: "If enabled, replaces '--' to en dash ('–') and '---' to em dash ('—')"
+  guillemets: "If enabled, replaces '<<' and '>>' to french \"guillemets\" ('«' and '»')"
+  superscript: "If enabled, allow support for superscript and subscript using respectively foo^up^  and bar~down~ syntax."
+  yaml: Enable/disable inline YAML blocks to override options set in config file
+  html_as_text: Consider HTML blocks as text. This avoids having <foo> being considered as HTML and thus ignored.
+  files_mean_chapters: "Consider that a new file is always a new chapter, even if it does not include heading (default: only for numbered chapters)"
+  tmp_dir: "Path where to create a temporary directory (default: uses result from Rust's std::env::temp_dir())"
+  zip: "Command to use to zip files (for EPUB/ODT)"
+  tex_theme: "If set, set theme for syntax highlighting for LaTeX/PDF output (syntect only)"
+  html_theme: If set, set theme for syntax highlighting for HTML output (syntect only)
+  epub_theme: If set, set theme for syntax highlighting for EPUB output (syntect only)
+  renamed: Renamed
+  removed: Removed
+  ill_formatted: "Ill-formatted OPTIONS string: unrecognized type %{opption_type}'"
+  expected_string: "Expected a String as a key, found %{key}"
+  expected_strings: "Expected only strings in the list for key %{key}, found %{value}"
+  expected_string_value: "Expected a string as value for key %{key}, found %{value}"
+  format_not_recognized: "The output format %{format} for key %{key} is not recognized"
+  expected_list: "Expected a list as value for key %{key}, found %{value}"
+  invalid_utf8: "'%{value}''s path contains invalid UTF-8 code"
+  expected_char: "could not parse '%{value}' as a char: does not contain exactly one char"
+  expected_char_value: "expected a string as value containing a char for key '%{key}', found %{value}"
+  expected_bool: "expected a boolean as value for key '%{key}', found %{value}"
+  expected_int: "expected an integer as value for key '%{key}', found %{value}"
+  expected_float: "could not parse '%{value}' as a float for key '%{key}'"
+  warn_deprecated: "'%{old_key}' has been deprecated, you should now use '%{new_key}'"
+  err_deprecated: "key '%{key}' has been deprecated."
+  unrecognized: "unrecognized key '%{key}'"
+  one_yaml: "value '%{value}' for key '%{key}' does not contain one and only one YAML value"
+  yaml_value: "could not parse '%{value}' as a valid YAML value"
+  miss_key: "option '%{key}' is not present"
+  curr_dir: could not get current directory
+  not_set: not set
+  option_description_md: |
+    "- **`%{key}`**"
+    "- **type**: %{option_type}"
+    "- **default value**: `%{default}`"
+    "- %{comment}\n""
+ty:
+  type: "type:"
+  default: "default:"
+  bool: boolean
+  float: float
+  int: integer
+  char: char
+  str: string
+  path: path
+  tpl: template path
+  meta: metadata
+  strvec: list of strings
+  alias: DEPRECATED
