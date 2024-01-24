@@ -187,10 +187,10 @@ See the
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/taophp">
-            <img src="https://avatars.githubusercontent.com/u/5610065?v=4" width="100;" alt="taophp"/>
+        <a href="https://github.com/hfiguiere">
+            <img src="https://avatars.githubusercontent.com/u/114441?v=4" width="100;" alt="hfiguiere"/>
             <br />
-            <sub><b>Stéphane Mourey</b></sub>
+            <sub><b>Hubert Figuière</b></sub>
         </a>
     </td></tr>
 <tr>
@@ -199,13 +199,6 @@ See the
             <img src="https://avatars.githubusercontent.com/u/698296?v=4" width="100;" alt="dkotrada"/>
             <br />
             <sub><b>Alfa</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/hfiguiere">
-            <img src="https://avatars.githubusercontent.com/u/114441?v=4" width="100;" alt="hfiguiere"/>
-            <br />
-            <sub><b>Hubert Figuière</b></sub>
         </a>
     </td>
     <td align="center">
@@ -235,15 +228,15 @@ See the
             <br />
             <sub><b>Josh Stone</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/mgeisler">
             <img src="https://avatars.githubusercontent.com/u/89623?v=4" width="100;" alt="mgeisler"/>
             <br />
             <sub><b>Martin Geisler</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/sigurdsvela">
             <img src="https://avatars.githubusercontent.com/u/5571884?v=4" width="100;" alt="sigurdsvela"/>
