@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2023 Élisabeth HENRY.
+// Copyright (C) 2017-2024 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -102,7 +102,6 @@ impl Syntax {
                 let mut content = escape::tex(text).into_owned();
                 content = insert_breaks(&content);
                 content = content
-                    .replace('\n', "\\\\{}\n")
                     .replace(' ', "\\hphantom{ }\\allowbreak{}");
                 content = format!("\\texttt{{{content}}}");
                 if style.foreground != Color::BLACK {
@@ -121,8 +120,8 @@ impl Syntax {
                     content = format!("\\underline{{{content}}}");
                 }
                 formatted_code.push_str(&content);
-                formatted_code.push_str("\n");
             }
+	    formatted_code.push_str("\\\\{}\n");
         }
         Ok(format!("{{\\sloppy {formatted_code}}}"))
     }
