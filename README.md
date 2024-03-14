@@ -152,10 +152,10 @@ See the
 <table>
 <tr>
     <td align="center">
-        <a href="https://github.com/lise-henry">
-            <img src="https://avatars.githubusercontent.com/u/1961791?v=4" width="100;" alt="lise-henry"/>
+        <a href="https://github.com/crowdagger">
+            <img src="https://avatars.githubusercontent.com/u/1961791?v=4" width="100;" alt="crowdagger"/>
             <br />
-            <sub><b>Élisabeth Henry</b></sub>
+            <sub><b>Lizzie Crowdagger</b></sub>
         </a>
     </td>
     <td align="center">
@@ -173,17 +173,17 @@ See the
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/Geobert">
-            <img src="https://avatars.githubusercontent.com/u/72570?v=4" width="100;" alt="Geobert"/>
-            <br />
-            <sub><b>Geobert Quach</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/jrappen">
             <img src="https://avatars.githubusercontent.com/u/8577450?v=4" width="100;" alt="jrappen"/>
             <br />
             <sub><b>Johannes Rappen</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/dkotrada">
+            <img src="https://avatars.githubusercontent.com/u/698296?v=4" width="100;" alt="dkotrada"/>
+            <br />
+            <sub><b>Alfa</b></sub>
         </a>
     </td>
     <td align="center">
@@ -195,53 +195,10 @@ See the
     </td></tr>
 <tr>
     <td align="center">
-        <a href="https://github.com/dkotrada">
-            <img src="https://avatars.githubusercontent.com/u/698296?v=4" width="100;" alt="dkotrada"/>
+        <a href="https://github.com/ar1ocker">
+            <img src="https://avatars.githubusercontent.com/u/109543340?v=4" width="100;" alt="ar1ocker"/>
             <br />
-            <sub><b>Alfa</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/dvalter">
-            <img src="https://avatars.githubusercontent.com/u/38795282?v=4" width="100;" alt="dvalter"/>
-            <br />
-            <sub><b>Dmitry Valter</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Dylan-DPC">
-            <img src="https://avatars.githubusercontent.com/u/99973273?v=4" width="100;" alt="Dylan-DPC"/>
-            <br />
-            <sub><b>Dylan DPC</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/steffahn">
-            <img src="https://avatars.githubusercontent.com/u/3986214?v=4" width="100;" alt="steffahn"/>
-            <br />
-            <sub><b>Frank Steffahn</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/cuviper">
-            <img src="https://avatars.githubusercontent.com/u/36186?v=4" width="100;" alt="cuviper"/>
-            <br />
-            <sub><b>Josh Stone</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/mgeisler">
-            <img src="https://avatars.githubusercontent.com/u/89623?v=4" width="100;" alt="mgeisler"/>
-            <br />
-            <sub><b>Martin Geisler</b></sub>
-        </a>
-    </td></tr>
-<tr>
-    <td align="center">
-        <a href="https://github.com/sigurdsvela">
-            <img src="https://avatars.githubusercontent.com/u/5571884?v=4" width="100;" alt="sigurdsvela"/>
-            <br />
-            <sub><b>Sigurd Svela</b></sub>
+            <sub><b>Ar1oc</b></sub>
         </a>
     </td>
     <td align="center">
@@ -252,10 +209,53 @@ See the
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/ar1ocker">
-            <img src="https://avatars.githubusercontent.com/u/109543340?v=4" width="100;" alt="ar1ocker"/>
+        <a href="https://github.com/sigurdsvela">
+            <img src="https://avatars.githubusercontent.com/u/5571884?v=4" width="100;" alt="sigurdsvela"/>
             <br />
-            <sub><b>Ar1oc</b></sub>
+            <sub><b>Sigurd Svela</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/mgeisler">
+            <img src="https://avatars.githubusercontent.com/u/89623?v=4" width="100;" alt="mgeisler"/>
+            <br />
+            <sub><b>Martin Geisler</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/cuviper">
+            <img src="https://avatars.githubusercontent.com/u/36186?v=4" width="100;" alt="cuviper"/>
+            <br />
+            <sub><b>Josh Stone</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Geobert">
+            <img src="https://avatars.githubusercontent.com/u/72570?v=4" width="100;" alt="Geobert"/>
+            <br />
+            <sub><b>Geobert Quach</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/steffahn">
+            <img src="https://avatars.githubusercontent.com/u/3986214?v=4" width="100;" alt="steffahn"/>
+            <br />
+            <sub><b>Frank Steffahn</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Dylan-DPC">
+            <img src="https://avatars.githubusercontent.com/u/99973273?v=4" width="100;" alt="Dylan-DPC"/>
+            <br />
+            <sub><b>Dylan DPC</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/dvalter">
+            <img src="https://avatars.githubusercontent.com/u/38795282?v=4" width="100;" alt="dvalter"/>
+            <br />
+            <sub><b>Dmitry Valter</b></sub>
         </a>
     </td></tr>
 </table>
