@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2023 Élisabeth HENRY.
+// Copyright (C) 2016-2024 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -60,6 +60,12 @@ pub struct HtmlRenderer<'a> {
     pub first_letter: bool,
     first_paragraph: bool,
     footnotes: Vec<(String, String)>,
+
+    /// Current footnote number, used to desambiguate footnotes references when using a single file output
+    #[doc(hidden)]
+    pub footnote_prefix: u32,
+
+    
     filename: String,
 
     /// Book that must be rendered
@@ -87,10 +93,6 @@ pub struct HtmlRenderer<'a> {
     /// Resource handler
     #[doc(hidden)]
     pub handler: ResourceHandler,
-
-    /// Current footnote number
-    #[doc(hidden)]
-    pub footnote_number: u32,
 
     /// Source for error messages
     #[doc(hidden)]
@@ -150,8 +152,8 @@ impl<'a> HtmlRenderer<'a> {
             current_par: 0,
             current_hide: false,
             table_head: false,
-            footnote_number: 0,
             footnotes: vec![],
+            footnote_prefix: 0,
             verbatim: false,
             filename: String::new(),
             handler: ResourceHandler::new(),
@@ -177,7 +179,7 @@ impl<'a> HtmlRenderer<'a> {
         Ok(html)
     }
 
-    /// Add a footnote which will be renderer later on
+     /// Add a footnote which will be renderer later on
     #[doc(hidden)]
     pub fn add_footnote(&mut self, number: String, content: String) {
         self.footnotes.push((number, content));
@@ -205,7 +207,7 @@ impl<'a> HtmlRenderer<'a> {
                 self.current_numbering = 0;
                 self.current_hide = true;
             }
-        } //          _ => panic!("Parts are not supported yet"),
+        } 
         self.current_part = n.is_part();
 
         self.filename = filename;
@@ -640,20 +642,25 @@ impl<'a> HtmlRenderer<'a> {
                 this.as_mut().table_head = false;
                 Ok(format!("<tr>\n{s}</tr>\n"))
             }
-            Token::FootnoteReference(ref reference) => Ok(format!(
-                "<a href = \"#note-dest-{reference}\"><sup id = \
-                            \"note-source-{reference}\">[{reference}]</sup></a>",
-            )),
+            Token::FootnoteReference(ref reference) => {
+                // Ensure links are not ambiguous when the same reference is used multiple times
+                // and only one file is generated 
+                let hash = this.as_ref().footnote_prefix;
+                Ok(format!(
+                    "<a href = \"#note-dest-{hash}-{reference}\"><sup id = \
+                     \"note-source-{hash}-{reference}\">[{reference}]</sup></a>",
+                ))
+            },
             Token::FootnoteDefinition(ref reference, ref vec) => {
+                let hash = this.as_ref().footnote_prefix;
                 let note_number = format!(
                     "<p class = \"note-number\">
-  <a href = \"#note-source-{reference}\">[{reference}]</a>
+  <a href = \"#note-source-{hash}-{reference}\">[{reference}]</a>
 </p>\n",
                 );
 
                 let inner = format!(
-                    "<aside id = \"note-dest-{}\">{}</aside>",
-                    reference,
+                    "<aside id = \"note-dest-{hash}-{reference}\">{}</aside>",
                     this.render_vec(vec)?
                 );
                 this.as_mut().footnotes.push((note_number, inner));

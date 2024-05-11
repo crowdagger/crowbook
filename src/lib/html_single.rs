@@ -109,6 +109,7 @@ impl<'a> HtmlSingleRenderer<'a> {
             let n = chapter.number;
             let v = &chapter.content;
             self.html.chapter_config(i, n, String::new());
+            self.html.footnote_prefix += 1;
 
             let mut title = String::new();
             for token in v {
