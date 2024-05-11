@@ -91,12 +91,13 @@ impl<'a> HtmlSingleRenderer<'a> {
 
         let mut titles = vec![];
         let mut chapters = vec![];
-        let render_notes_chapter = self
-            .html
-            .book
-            .options
-            .get_bool("html.standalone.one_chapter")
-            .unwrap();
+        let render_notes_chapter = true;
+        // self
+        //     .html
+        //     .book
+        //     .options
+        //     .get_bool("html.standalone.one_chapter")
+        //     .unwrap();
 
         for (i, chapter) in self.html.book.chapters.iter().enumerate() {
             self.html
