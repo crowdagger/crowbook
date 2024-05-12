@@ -56,7 +56,7 @@ function show_footnote(event) {
     var target_id = id.replace("source", "dest");
     var content = document.getElementById(target_id).innerHTML;
     var top = Math.round(event.target.getBoundingClientRect().top + event.target.getBoundingClientRect().height);
-    document.getElementById(id).insertAdjacentHTML('afterend', '<aside class = "popup_footnote" style = "position: fixed; top: '+ top + 'px; ">' + content + '</aside>')
+    event.target.insertAdjacentHTML('afterend', '<aside class = "popup_footnote" style = "position: fixed; top: '+ top + 'px; ">' + content + '</aside>')
 }
 
 
