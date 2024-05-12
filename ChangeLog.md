@@ -8,7 +8,8 @@ ChangeLog
   * Remove ODT renderer.
   * Replace mustache for templates by [upon](https://crates.io/crates/upon)
   * Use rust-i18n for internationalization instead of hackish (and unmaintained) crowbook-intl
-
+* HTML:
+  * When hovering a mouse hover a footnote, display its content to the side of the page.
 
 0.16.1 (2023-08-04)
 -----------------------
