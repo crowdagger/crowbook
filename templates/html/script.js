@@ -56,7 +56,7 @@ function show_footnote(event) {
     var target_id = id.replace("source", "dest");
     var content = document.getElementById(target_id).innerHTML;
     var top = Math.round(event.target.getBoundingClientRect().top + event.target.getBoundingClientRect().height);
-    document.getElementById(id).insertAdjacentHTML('afterend', '<aside class = "popup_footnote" style = "position: fixed; top: '+ top + 'px; ">' + content + '</div>')
+    document.getElementById(id).insertAdjacentHTML('afterend', '<aside class = "popup_footnote" style = "position: fixed; top: '+ top + 'px; ">' + content + '</aside>')
 }
 
 
@@ -65,10 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     for (var i = 0; i < anchors.length; i++) {
         var anchor = anchors[i];
-        var id = anchor.getAttribute("href").substring(1);
-        var source_id = id.replace("dest", "source");
-        var orig = anchor.innerHTML;
-        var content = document.getElementById(id).innerHTML;
         anchor.addEventListener(
             "mouseenter",
             (event) => {
