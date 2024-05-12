@@ -21,6 +21,7 @@ code {
 }
 pre {
     font-family: "Linux Libertine Mono", monospace;
+    text-align: left;
     margin: 1em;
     padding-top: 0;
     background-color: #F0F0F0;
