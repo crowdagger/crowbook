@@ -647,20 +647,20 @@ impl<'a> HtmlRenderer<'a> {
                 // and only one file is generated 
                 let hash = this.as_ref().footnote_prefix;
                 Ok(format!(
-                    "<a href = \"#note-dest-{hash}-{reference}\"><sup id = \
-                     \"note-source-{hash}-{reference}\">[{reference}]</sup></a>",
+                    "<a class = \"footnote_reference\" href = \"#note-dest-{hash}-{reference}\" id = \
+                     \"note-source-{hash}-{reference}\"><sup>[{reference}]</sup></a>",
                 ))
             },
             Token::FootnoteDefinition(ref reference, ref vec) => {
                 let hash = this.as_ref().footnote_prefix;
                 let note_number = format!(
                     "<p class = \"note-number\">
-  <a href = \"#note-source-{hash}-{reference}\">[{reference}]</a>
+  <a rel = \"footnote\" href = \"#note-source-{hash}-{reference}\">[{reference}]</a>
 </p>\n",
                 );
 
                 let inner = format!(
-                    "<aside id = \"note-dest-{hash}-{reference}\">{}</aside>",
+                    "<aside class = \"footnote\" id = \"note-dest-{hash}-{reference}\">{}</aside>",
                     this.render_vec(vec)?
                 );
                 this.as_mut().footnotes.push((note_number, inner));

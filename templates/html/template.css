@@ -199,4 +199,12 @@ footer p, #top p {
     max-width: 33em;
 }
 
+.popup_footnote {
+    margin: 2em;
+    padding : 1em;
+    right: 2em;
+    max-width: 20em;
+}
+
+
 {{additional_code}}

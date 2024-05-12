@@ -1,6 +1,6 @@
 /* Colors for the navigation menu (toc) */
 nav {
-    background: #CBBFCC;
+    background: #dfcae6;
     color: black;
     border-right-color: black;
 }
@@ -39,4 +39,8 @@ footer a:hover, #top a:hover {
     text-decoration-line: underline;
     text-decoration-style: double;
 /*    background: #d966ff;*/
+}
+
+.popup_footnote {
+    background-color: #e8e897
 }
