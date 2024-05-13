@@ -69,6 +69,16 @@
   <# if book #>
 % Redefine the \maketitle command, only for book class (not used if stdpage option is set to true)
 \renewcommand{\maketitle}{
+  <# if use_cover #>
+  % cover
+  \includepdf{<<cover_path>>}
+  \newpage
+  % Empty left page
+  \thispagestyle{empty}
+  \cleardoublepage
+
+  <# endif #>
+  
   % First page with only the title
   \thispagestyle{empty}
   \vspace*{\stretch{1}}
@@ -201,6 +211,11 @@
   \end{mdframed}
 } 
 <# endif #>
+
+<# if use_cover #>
+% Only included if tex.cover is set to true
+\usepackage{pdfpages}
+<# endif #> 
 
 <# if use_images #>
 % Only included if document contains images

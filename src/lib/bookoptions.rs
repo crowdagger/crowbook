@@ -101,6 +101,7 @@ epub.toc.extras:bool:true           # {epub_toc}
 epub.escape_nb_spaces:bool:true     # {nb_spaces}
 
 # {tex_opt}
+tex.cover:bool:false                # {tex_cover}
 tex.highlight.theme:str             # {tex_theme}
 tex.links_as_footnotes:bool:true    # {tex_links}
 tex.command:str:xelatex             # {tex_command}
@@ -291,6 +292,7 @@ output.odt:path                                     # {removed}
                                          titlepage_xhtml = t!("opt.titlepage_xhtml"),
                                          epub_toc = t!("opt.epub_toc"),
 
+                                         tex_cover = t!("opt.tex_cover"),
                                          tex_links = t!("opt.tex_links"),
                                          tex_command = t!("opt.tex_command"),
                                          tex_tmpl = t!("opt.tex_tmpl"),

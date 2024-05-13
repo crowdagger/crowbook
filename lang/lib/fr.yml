@@ -6,11 +6,11 @@ ui:
   waiting: "en attente..."
   options: "mise en place des options"
   chapters: "Analyse des chapitres"
-  processing: Analyse...
+  processing: "Analyse..."
   processing_file: "Analyse de %{file} en cours..."
   finished: "Terminé"
   generated: "généré %{path}"
-  error: ERREUR
+  error: "ERREUR"
 error:
   markdown: "Erreur dans l'analyse du Markdown : %{error}"
   config: "Erreur dans l'analyse du fichier de configuration : "
@@ -81,7 +81,7 @@ format:
 debug:
   yaml_replace: "Inline YAML block replaced %{key} previously set to %{old_val} to %{new_val}"
   yaml_set: "Inline YAML block set %{key} to %{value}"
-  yaml_ignore: "Ignoring YAML block:\n%{block}"
+  yaml_ignore: "Bloc YAML ignoré:\n%{block}"
   found_yaml_block: "Found something that looked like a YAML block:\n%{block}"
   found_yaml_block2: "... but it didn't parse correctly as YAML('%{error}'), so treating it like Markdown."
 msg:

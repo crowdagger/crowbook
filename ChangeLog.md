@@ -10,6 +10,8 @@ ChangeLog
   * Use rust-i18n for internationalization instead of hackish (and unmaintained) crowbook-intl
 * HTML:
   * When hovering a mouse hover a footnote, display its content to the side of the page.
+* LaTeX:
+   * Add `tex.cover` option to embed the cover image in the PDF file
 
 0.16.1 (2023-08-04)
 -----------------------

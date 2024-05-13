@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2020 Élisabeth HENRY.
+// Copyright (C) 2016-2024 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -228,6 +228,7 @@ impl<'a> LatexRenderer<'a> {
         data.insert("tex_title".into(), self.book.options.get_bool("tex.title").unwrap().into());
         data.insert("papersize".into(), self.book.options.get_str("tex.paper.size").unwrap().into());
         data.insert("stdpage".into(), self.book.options.get_bool("tex.stdpage").unwrap().into());
+
         data.insert("use_url".into(), self.book.features.url.into());
         data.insert("use_taskitem".into(), self.book.features.taskitem.into());
         data.insert("use_tables".into(), self.book.features.table.into());
@@ -237,6 +238,17 @@ impl<'a> LatexRenderer<'a> {
         data.insert("tex_lang".into(), tex_lang.into());
         let tex_tmpl_add = self.book.options.get_str("tex.template.add").unwrap_or("".into());
         data.insert("additional_code".into(), tex_tmpl_add.into());
+        let mut use_cover = false;
+        if self.book.options.get_bool("tex.cover").unwrap() {
+            if let Ok(cover_path) = self.book.options.get_path("cover") {
+                if !cover_path.is_empty() {
+                    use_cover = true;
+                    data.insert("cover_path".into(), cover_path.into());
+                }
+            }
+        }
+        data.insert("use_cover".into(), use_cover.into());
+
 
         if let Ok(tex_font_size) = self.book.options.get_i32("tex.font.size") {
             data.insert("has_tex_size".into(), true.into());

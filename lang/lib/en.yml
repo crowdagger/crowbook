@@ -240,6 +240,7 @@ opt:
   tex_command: LaTeX command to use for generating PDF
   tex_tmpl: Path of a LaTeX template file
   tex_tmpl_add: Inline code added in the LaTeX template
+  tex_cover: "Add cover to the LaTeX/PDF file"
   tex_class: LaTeX class to use
   tex_title: If true, generate a title with \\maketitle
   tex_paper_size: Specifies the size of the page
