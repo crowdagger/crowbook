@@ -61,6 +61,11 @@
   left=<<margin_left>>,right=<<margin_right>>]{geometry} % Set dimensions/margins of the parge
 <# endif #>
 
+<# if use_cover #>
+% Only included if tex.cover is set to true
+\usepackage{pdfpages}
+<# endif #> 
+
 
 \makeatletter
 \date{<<date>>}
@@ -212,10 +217,6 @@
 } 
 <# endif #>
 
-<# if use_cover #>
-% Only included if tex.cover is set to true
-\usepackage{pdfpages}
-<# endif #> 
 
 <# if use_images #>
 % Only included if document contains images

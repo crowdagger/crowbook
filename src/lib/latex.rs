@@ -243,7 +243,8 @@ impl<'a> LatexRenderer<'a> {
             if let Ok(cover_path) = self.book.options.get_path("cover") {
                 if !cover_path.is_empty() {
                     use_cover = true;
-                    data.insert("cover_path".into(), cover_path.into());
+                    let img = self.handler.map_image(&self.source, cover_path.as_str())?;
+                    data.insert("cover_path".into(), img.into());
                 }
             }
         }
