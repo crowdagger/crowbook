@@ -1,5 +1,5 @@
-toc: Tabla de contenido
-cover: Cobertura
+toc: Índice
+cover: Portada
 title: Título
 chapter: Capítulo
 part: Parte
@@ -7,4 +7,4 @@ part: Parte
 notes: Notas
 
 display_all: Mostrar todos los capítulos
-display_one: Mostrar solo un capítulo
+display_one: Mostrar un solo capítulo
