@@ -195,6 +195,13 @@ See the
     </td></tr>
 <tr>
     <td align="center">
+        <a href="https://github.com/d0whc3r">
+            <img src="https://avatars.githubusercontent.com/u/1378986?v=4" width="100;" alt="d0whc3r"/>
+            <br />
+            <sub><b>D0wHc3r</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/ar1ocker">
             <img src="https://avatars.githubusercontent.com/u/109543340?v=4" width="100;" alt="ar1ocker"/>
             <br />
@@ -228,15 +235,15 @@ See the
             <br />
             <sub><b>Josh Stone</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/Geobert">
             <img src="https://avatars.githubusercontent.com/u/72570?v=4" width="100;" alt="Geobert"/>
             <br />
             <sub><b>Geobert Quach</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/steffahn">
             <img src="https://avatars.githubusercontent.com/u/3986214?v=4" width="100;" alt="steffahn"/>
