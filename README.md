@@ -130,12 +130,6 @@ title: My title
 
 This is mostly useful when Crowbook is run with the `--single` argument (receiving a single Markdown file instead of a book configuration file), for short texts that only contain one "chapter".
 
-### Interactive fiction
-
-Crowbook has experimental support for writing interactive fiction (only for HTML).
-For more information, read the
-[interactive fiction chapter](guide/06_interactive_fiction.md).
-
 ### Customization
 
 While the default settings will hopefully generate something that should look "good enough", it is possible to customize the output, essentially by providing different
@@ -338,8 +332,6 @@ Note that, in order to facilitate code reuse, some features have been split to s
   makes it easier to generate EPUB files.
 * [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/)
   contains all the "typographic" functions (smart quotes, handling of non-breaking spaces in french, ...).
-* [crowbook-intl](https://github.com/lise-henry/crowbook-intl/)
-  is used for the internationalization (translation) process.
 
 ## License
 
