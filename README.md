@@ -173,6 +173,13 @@ See the
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/d0whc3r">
+            <img src="https://avatars.githubusercontent.com/u/1378986?v=4" width="100;" alt="d0whc3r"/>
+            <br />
+            <sub><b>D0wHc3r</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/jrappen">
             <img src="https://avatars.githubusercontent.com/u/8577450?v=4" width="100;" alt="jrappen"/>
             <br />
@@ -185,20 +192,13 @@ See the
             <br />
             <sub><b>Alfa</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/hfiguiere">
             <img src="https://avatars.githubusercontent.com/u/114441?v=4" width="100;" alt="hfiguiere"/>
             <br />
             <sub><b>Hubert Figuière</b></sub>
-        </a>
-    </td></tr>
-<tr>
-    <td align="center">
-        <a href="https://github.com/d0whc3r">
-            <img src="https://avatars.githubusercontent.com/u/1378986?v=4" width="100;" alt="d0whc3r"/>
-            <br />
-            <sub><b>D0wHc3r</b></sub>
         </a>
     </td>
     <td align="center">
