@@ -121,7 +121,7 @@ latex:
   write_error: "problem when writing LaTeX: %{error}"
 parser:
   ignore_html: "ignoring HTML block '%{block}'"
-resouces:
+resources:
   non_local: "Resources: book includes non-local image %{file}, which might cause problem for proper inclusion."
   no_ext: "Resources: book includes image %{file} which doesn't have an extension"
   read_error: "Resources: could not read file %{file}"
