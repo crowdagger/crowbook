@@ -128,7 +128,7 @@ td.note-number {
     vertical-align: top;
 }
 
-/* When footnotes (try to) be diplayed as margin notes */
+/* When footnotes (try to) be displayed as margin notes */
 .sidenote {
     display: block;
     float: right;

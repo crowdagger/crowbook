@@ -16,7 +16,7 @@
 \newunicodechar{ }{ } % thin non breaking space
 \newunicodechar{°}{$^{\circ}$}
 % Force LaTeX not to overflow page e.g. when there is long words
-% (e.g. filenames, urls, ...). The result is not necesarily very
+% (e.g. filenames, urls, ...). The result is not necessarily very
 % beautiful, though, but at least it's readable.
 \setlength\emergencystretch{.5\textwidth}
 <# endif #>
@@ -34,7 +34,7 @@
 <# if use_taskitem #>
 \usepackage{amssymb}
 <# endif #>
-% Set hyperlinks and metadata 
+% Set hyperlinks and metadata
 \usepackage[colorlinks=true,breaklinks=true,hypertexnames=false]{hyperref}
 \hypersetup{pdfauthor={<<author>>},
   pdftitle={<<title>>},
@@ -58,13 +58,13 @@
 <# else #>
 % Included if the stdpage option if set to false
 \usepackage[<<papersize>>, top=<<margin_top>>, bottom=<<margin_bottom>>,
-  left=<<margin_left>>,right=<<margin_right>>]{geometry} % Set dimensions/margins of the parge
+  left=<<margin_left>>,right=<<margin_right>>]{geometry} % Set dimensions/margins of the page
 <# endif #>
 
 <# if use_cover #>
 % Only included if tex.cover is set to true
 \usepackage{pdfpages}
-<# endif #> 
+<# endif #>
 
 
 \makeatletter
@@ -83,31 +83,31 @@
   \cleardoublepage
 
   <# endif #>
-  
+
   % First page with only the title
   \thispagestyle{empty}
   \vspace*{\stretch{1}}
-  
+
   \begin{center}
     {\Huge \@title   \\[5mm]}
   \end{center}
   \vspace*{\stretch{2}}
-  
+
   \newpage
   % Empty left page
   \thispagestyle{empty}
   \cleardoublepage
 
   % Main title page, with author, title, subtitle, date
-  \begin{center}  
+  \begin{center}
     \thispagestyle{empty}
     \vspace*{\baselineskip}
     \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
     \rule{\textwidth}{0.4pt}\\[\baselineskip]
-    
+
     {\Huge\scshape \@title   \\[5mm]}
     {\Large <<subtitle>>}
-    
+
     \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
     \rule{\textwidth}{1.6pt}\\[\baselineskip]
 
@@ -115,15 +115,15 @@
 
     {\Large \@author}
       <# if has_autograph #>
-    
+
     \vspace*{10\baselineskip}
-    
+
     <<autograph>>
       <# endif #>
     \vfill
       <# if has_date #>\@date<# endif #>
   \end{center}
-  
+
   \pagebreak
   \newpage
   % Copyright page with author, version, and license
@@ -214,7 +214,7 @@
   \begin{mdframed}
 }{%
   \end{mdframed}
-} 
+}
 <# endif #>
 
 

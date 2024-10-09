@@ -102,7 +102,7 @@ Content of the story in Markdown.
 If this YAML block is not at the beginning of a file, it must also be preceded by a blank line.
 
 This allows to not have to write a `.book` configuration file for a short story or an article.
-`crowbook -s foo.md` is rougly equivalent to having a book configuration file containing:
+`crowbook -s foo.md` is roughly equivalent to having a book configuration file containing:
 
 ```yaml
 ! foo.md

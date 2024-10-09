@@ -540,7 +540,7 @@ function toggle() {
   </a>
 </p>
       <h1 id = 'link-191'><span class = 'chapter-header'>Chapter 5</span><br />Templates</h1><p id = "para-578">Crowbook allows the user to specify a number of templates.<a href = "#note-dest-1"><sup id = "note-source-1">[1]</sup></a></p>
-<p id = "para-579">Each of this template can be overriden by a custom one, by setting e.g.:</p>
+<p id = "para-579">Each of this template can be overridden by a custom one, by setting e.g.:</p>
 <pre><span style="color:#268bd2;">html.css</span><span style="color:#839496;">: </span><span style="color:#2aa198;">my_template.css</span>
 
 </pre><p id = "para-580">in the book configuration file. The templates that you are most susceptible to modify are the following:</p>
@@ -600,7 +600,7 @@ function toggle() {
 </pre><p id = "para-592">In this case, Crowbook sets a variable whose name is equal to <code>lang_foo</code> to <code>true</code>, allowing to have different styles for some elements according to the language.</p>
 <p id = "para-593">For more information about Mustache syntax, see the <a href = "http://mustache.github.io/mustache.5.html">Mustache manual</a>.</p>
 <h4 id = "link-195">5.1.2.1. Syntax in LaTeX</h4>
-<p id = "para-594">Since LaTeX already uses a lot of curly brackets, the default template sets an altenative syntax to access variables, with <code>&lt;&lt;&amp;foo&gt;&gt;</code><a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a>:</p>
+<p id = "para-594">Since LaTeX already uses a lot of curly brackets, the default template sets an alternative syntax to access variables, with <code>&lt;&lt;&amp;foo&gt;&gt;</code><a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a>:</p>
 <pre><span style="color:#859900;">\title</span><span style="color:#839496;">{&lt;&lt;</span><span style="color:#cb4b16;">&amp;</span><span style="color:#839496;">title&gt;&gt;}</span>
 <span style="color:#859900;">\author</span><span style="color:#839496;">{&lt;&lt;</span><span style="color:#cb4b16;">&amp;</span><span style="color:#839496;">author&gt;&gt;}</span>
 <span style="color:#839496;">&lt;&lt;#has_date&gt;&gt;</span><span style="color:#859900;">\date</span><span style="color:#839496;">{&lt;&lt;</span><span style="color:#cb4b16;">&amp;</span><span style="color:#839496;">date&gt;&gt;}&lt;&lt;/has_date&gt;</span>
@@ -646,7 +646,7 @@ function toggle() {
 <h3 id = "link-210">5.2.14. Inline templates</h3>
 <p id = "para-615">Crowbook also has some inline templates, that are set in the book configuration file:</p>
 <ul>
-<li><p id = "para-616"><code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code> allow to specify some LaTeX or CSS code directly in the book configuration file. This code will be added respectively to <code>tex.template</code>, <code>html.css</code> or <code>epub.css</code> template. For CSS templates, this code is inserted at the end of the template (allowing to redefine rules that are set by the template); for the LaTeX template, the code is inserted at the end of the preambule, just before the <code>\begin{document}</code> tag, allowing to redefine commands.</p>
+<li><p id = "para-616"><code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code> allow to specify some LaTeX or CSS code directly in the book configuration file. This code will be added respectively to <code>tex.template</code>, <code>html.css</code> or <code>epub.css</code> template. For CSS templates, this code is inserted at the end of the template (allowing to redefine rules that are set by the template); for the LaTeX template, the code is inserted at the end of the preamble, just before the <code>\begin{document}</code> tag, allowing to redefine commands.</p>
 </li>
 <li><p id = "para-617"><code>rendering.inline_toc.name</code> sets the name of the inline table of content, if it is displayed. By default, is is set to <code>{{{loc_toc}}}</code>, that is, a localised version of “Table of Contents”.</p>
 </li>
@@ -744,7 +744,7 @@ function toggle() {
 <tr>
 <td><code>highlight_css</code></td><td>The content of <code>html.highlight.css</code></td><td><code>html.standalone.template</code></td></tr>
 <tr>
-<td><code>highlight_js</code></td><td>The base64-encoded content of <code>html.highlight.js</code></td><td><code>html.standalone.tempate</code></td></tr>
+<td><code>highlight_js</code></td><td>The base64-encoded content of <code>html.highlight.js</code></td><td><code>html.standalone.template</code></td></tr>
 <tr>
 <td><code>common_script</code></td><td>The content of <code>html.js</code></td><td><code>html.single.js</code></td></tr>
 <tr>

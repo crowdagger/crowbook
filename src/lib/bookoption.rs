@@ -79,7 +79,7 @@ impl BookOption {
         }
     }
 
-    /// Retuns the BookOption as a bool, or an error if it isn't a `Bool` variant.
+    /// Returns the BookOption as a bool, or an error if it isn't a `Bool` variant.
     pub fn as_bool(&self) -> Result<bool> {
         match *self {
             BookOption::Bool(b) => Ok(b),
@@ -101,7 +101,7 @@ impl BookOption {
         }
     }
 
-    /// Retuns the BookOption as an i32, or an error if it isn't an `Int` variant.
+    /// Returns the BookOption as an i32, or an error if it isn't an `Int` variant.
     pub fn as_i32(&self) -> Result<i32> {
         match *self {
             BookOption::Int(i) => Ok(i),
