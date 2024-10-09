@@ -137,7 +137,7 @@ td.note-number {
     vertical-align: top;
 }
 
-/* When footnotes (try to) be diplayed as margin notes */
+/* When footnotes (try to) be displayed as margin notes */
 .sidenote {
     display: block;
     float: right;
@@ -1648,7 +1648,7 @@ function toggle() {
 <span style="color:#2aa198;">Content of the story in Markdown.</span>
 
 </pre><p id = "para-61">If this YAML block is not at the beginning of a file, it must also be preceded by a blank line.</p>
-<p id = "para-62">This allows to not have to write a <code>.book</code> configuration file for a short story or an article. <code>crowbook -s foo.md</code> is rougly equivalent to having a book configuration file containing:</p>
+<p id = "para-62">This allows to not have to write a <code>.book</code> configuration file for a short story or an article. <code>crowbook -s foo.md</code> is roughly equivalent to having a book configuration file containing:</p>
 <pre><span style="color:#268bd2;">! </span><span style="color:#2aa198;">foo.md</span>
 
 </pre><p id = "para-63">That is, the chapter heading (if any) won’t be displayed in the output documents (though they still appear in the TOC).</p>
@@ -1804,7 +1804,7 @@ function toggle() {
 <pre><span style="color:#b58900;">crowbook</span><span style="color:#268bd2;"> -s</span><span style="color:#839496;"> some_book.md</span>
 
 </pre><p id = "para-109">to generate output formats from this Markdown file.</p>
-<blockquote><p id = "para-110">By default (unless <code>input.yaml_blocks</code> is set to true), Crowboook will only read those inline blocks when it is runned with <code>crowbook --single</code> (or <code>crowbook -s</code>).</p>
+<blockquote><p id = "para-110">By default (unless <code>input.yaml_blocks</code> is set to true), Crowboook will only read those inline blocks when it is ran with <code>crowbook --single</code> (or <code>crowbook -s</code>).</p>
 </blockquote>
 <h2 id = "link-42">3.2. The list of files</h2>
 <p id = "para-111">There are various options to include a Markdown file.</p>
@@ -1855,7 +1855,7 @@ function toggle() {
 <span style="color:#839496;">@42. part_with_number_42.md</span>
 <span style="color:#839496;">+ chapter_05.md</span>
 
-</pre><p id = "para-125">However, you usually don’t really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straighforward way to use parts, using only the <code>@</code> character followed by the (markdown-formatted) title of this part:</p>
+</pre><p id = "para-125">However, you usually don’t really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straightforward way to use parts, using only the <code>@</code> character followed by the (markdown-formatted) title of this part:</p>
 <pre><span style="color:#839496;">@ Beginning</span>
 <span style="color:#839496;">+ chapter_01.md</span>
 <span style="color:#839496;">+ chapter_02.md</span>
@@ -2314,7 +2314,7 @@ function toggle() {
 </li>
 <li><p id = "para-290"><b>default value</b>: <code>syntect</code></p>
 </li>
-<li><p id = "para-291">If/how highligh code blocks. Possible values: “syntect” (default, performed at runtime), “highlight.js” (HTML-only, uses Javascript), “none”</p>
+<li><p id = "para-291">If/how highlight code blocks. Possible values: “syntect” (default, performed at runtime), “highlight.js” (HTML-only, uses Javascript), “none”</p>
 </li>
 </ul>
 <h4 id = "link-85">3.4.4.2. <code>rendering.highlight.theme</code></h4>
@@ -3082,7 +3082,7 @@ function toggle() {
 </li>
 <li><p id = "para-542"><b>default value</b>: <code>25</code></p>
 </li>
-<li><p id = "para-543">Max distance between two occurences so it is considered a repetition</p>
+<li><p id = "para-543">Max distance between two occurrences so it is considered a repetition</p>
 </li>
 </ul>
 <h4 id = "link-181">3.4.16.8. <code>proofread.repetitions.fuzzy</code></h4>
@@ -3196,7 +3196,7 @@ function toggle() {
 
 </div><div id = "chapter-4" class = "chapter">
   <h1 id = 'link-191'><span class = 'chapter-header'>Chapter 5</span><br />Templates</h1><p id = "para-578">Crowbook allows the user to specify a number of templates.<a href = "#note-dest-1"><sup id = "note-source-1">[1]</sup></a></p>
-<p id = "para-579">Each of this template can be overriden by a custom one, by setting e.g.:</p>
+<p id = "para-579">Each of this template can be overridden by a custom one, by setting e.g.:</p>
 <pre><span style="color:#268bd2;">html.css</span><span style="color:#839496;">: </span><span style="color:#2aa198;">my_template.css</span>
 
 </pre><p id = "para-580">in the book configuration file. The templates that you are most susceptible to modify are the following:</p>
@@ -3256,7 +3256,7 @@ function toggle() {
 </pre><p id = "para-592">In this case, Crowbook sets a variable whose name is equal to <code>lang_foo</code> to <code>true</code>, allowing to have different styles for some elements according to the language.</p>
 <p id = "para-593">For more information about Mustache syntax, see the <a href = "http://mustache.github.io/mustache.5.html">Mustache manual</a>.</p>
 <h4 id = "link-195">5.1.2.1. Syntax in LaTeX</h4>
-<p id = "para-594">Since LaTeX already uses a lot of curly brackets, the default template sets an altenative syntax to access variables, with <code>&lt;&lt;&amp;foo&gt;&gt;</code><a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a>:</p>
+<p id = "para-594">Since LaTeX already uses a lot of curly brackets, the default template sets an alternative syntax to access variables, with <code>&lt;&lt;&amp;foo&gt;&gt;</code><a href = "#note-dest-3"><sup id = "note-source-3">[3]</sup></a>:</p>
 <pre><span style="color:#859900;">\title</span><span style="color:#839496;">{&lt;&lt;</span><span style="color:#cb4b16;">&amp;</span><span style="color:#839496;">title&gt;&gt;}</span>
 <span style="color:#859900;">\author</span><span style="color:#839496;">{&lt;&lt;</span><span style="color:#cb4b16;">&amp;</span><span style="color:#839496;">author&gt;&gt;}</span>
 <span style="color:#839496;">&lt;&lt;#has_date&gt;&gt;</span><span style="color:#859900;">\date</span><span style="color:#839496;">{&lt;&lt;</span><span style="color:#cb4b16;">&amp;</span><span style="color:#839496;">date&gt;&gt;}&lt;&lt;/has_date&gt;</span>
@@ -3302,7 +3302,7 @@ function toggle() {
 <h3 id = "link-210">5.2.14. Inline templates</h3>
 <p id = "para-615">Crowbook also has some inline templates, that are set in the book configuration file:</p>
 <ul>
-<li><p id = "para-616"><code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code> allow to specify some LaTeX or CSS code directly in the book configuration file. This code will be added respectively to <code>tex.template</code>, <code>html.css</code> or <code>epub.css</code> template. For CSS templates, this code is inserted at the end of the template (allowing to redefine rules that are set by the template); for the LaTeX template, the code is inserted at the end of the preambule, just before the <code>\begin{document}</code> tag, allowing to redefine commands.</p>
+<li><p id = "para-616"><code>tex.template.add</code>, <code>html.css.add</code> and <code>epub.css.add</code> allow to specify some LaTeX or CSS code directly in the book configuration file. This code will be added respectively to <code>tex.template</code>, <code>html.css</code> or <code>epub.css</code> template. For CSS templates, this code is inserted at the end of the template (allowing to redefine rules that are set by the template); for the LaTeX template, the code is inserted at the end of the preamble, just before the <code>\begin{document}</code> tag, allowing to redefine commands.</p>
 </li>
 <li><p id = "para-617"><code>rendering.inline_toc.name</code> sets the name of the inline table of content, if it is displayed. By default, is is set to <code>{{{loc_toc}}}</code>, that is, a localised version of “Table of Contents”.</p>
 </li>
@@ -3400,7 +3400,7 @@ function toggle() {
 <tr>
 <td><code>highlight_css</code></td><td>The content of <code>html.highlight.css</code></td><td><code>html.standalone.template</code></td></tr>
 <tr>
-<td><code>highlight_js</code></td><td>The base64-encoded content of <code>html.highlight.js</code></td><td><code>html.standalone.tempate</code></td></tr>
+<td><code>highlight_js</code></td><td>The base64-encoded content of <code>html.highlight.js</code></td><td><code>html.standalone.template</code></td></tr>
 <tr>
 <td><code>common_script</code></td><td>The content of <code>html.js</code></td><td><code>html.single.js</code></td></tr>
 <tr>
@@ -3464,7 +3464,7 @@ function toggle() {
 </pre><p id = "para-647">or:</p>
 <pre><span style="color:#b58900;">$</span><span style="color:#839496;"> crowbook</span><span style="color:#268bd2;"> -p</span><span style="color:#839496;"> my.book</span>
 
-</pre><p id = "para-648">to generate proofreading copies. Alternatively, if you want it to be activated each time you run <code>crowbook</code> on this book (which is <em>not</em> recommanded for long books, particularly if you want to perform a grammar check), you can set:</p>
+</pre><p id = "para-648">to generate proofreading copies. Alternatively, if you want it to be activated each time you run <code>crowbook</code> on this book (which is <em>not</em> recommended for long books, particularly if you want to perform a grammar check), you can set:</p>
 <pre><span style="color:#268bd2;">proofread</span><span style="color:#839496;">: </span><span style="color:#b58900;">true</span>
 
 </pre><p id = "para-649">in the book configuration file.</p>
@@ -3476,7 +3476,7 @@ function toggle() {
 <pre><span style="color:#586e75;"># The maximum distance between two identical words to</span>
 <span style="color:#586e75;"># consider them a repetition</span>
 <span style="color:#268bd2;">proofread.repetitions.max_distance</span><span style="color:#839496;">: </span><span style="color:#6c71c4;">25</span>
-<span style="color:#586e75;"># The minimal number of occurences to consider it a repetition</span>
+<span style="color:#586e75;"># The minimal number of occurrences to consider it a repetition</span>
 <span style="color:#268bd2;">proofread.repetitions.threshold</span><span style="color:#839496;">: </span><span style="color:#6c71c4;">2.0</span>
 <span style="color:#586e75;"># Ignore proper nouns (words starting by a capital,</span>
 <span style="color:#586e75;"># not at a beginning of a sentence)</span>
@@ -3523,7 +3523,7 @@ function toggle() {
 
 </div><div id = "chapter-6" class = "chapter">
   <h1 id = 'link-221'><span class = 'chapter-header'>Chapter 7</span><br />Interactive fiction</h1><p id = "para-663">Version <a href = "https://github.com/lise-henry/crowbook/tree/v0.12.0"><code>v0.12.0</code></a> added experimental support for writing interactive fiction.</p>
-<blockquote><p id = "para-664">Since this support is experimental, it means it can change at anytime, and there is no guarentee that the interactive fiction you write for the current version of <code>crowbook</code> will work with the next release, even if it isn’t a major release.</p>
+<blockquote><p id = "para-664">Since this support is experimental, it means it can change at anytime, and there is no guarantee that the interactive fiction you write for the current version of <code>crowbook</code> will work with the next release, even if it isn’t a major release.</p>
 </blockquote>
 <h2 id = "link-222">7.1. Basics</h2>
 <p id = "para-665">If you want to have a non-linear story, you can simply use Markdown links just as you would for any other link:</p>
@@ -3658,7 +3658,7 @@ function toggle() {
 </ul>
 <h2 id = "link-236">0.16.0 (2023-07-27)</h2>
 <ul>
-<li><p id = "para-701"><code>epub.titlepage.xhtml</code> can now be overriden (geobert)</p>
+<li><p id = "para-701"><code>epub.titlepage.xhtml</code> can now be overridden (geobert)</p>
 </li>
 <li><p id = "para-702">Fix an issue where horizontal rules could be interpreted as additional front matter</p>
 </li>
@@ -3719,7 +3719,7 @@ function toggle() {
 </li>
 <li><p id = "para-723">Dependencies update.</p>
 </li>
-<li><p id = "para-724">Fix type deduction issues for new rustc compliler</p>
+<li><p id = "para-724">Fix type deduction issues for new rustc compiler</p>
 </li>
 </ul>
 <h2 id = "link-240">0.14.1 (2018-06-01)</h2>
@@ -3797,7 +3797,7 @@ function toggle() {
 <ul>
 <li><p id = "para-750">The <code>template.tex</code> template was quite modified. Crowbook now uses custom command for most markdown elements, defined in the template. This allow an user to redefine the way the book is rendered without having to modify Crowbook itself. Unfortunately, as tex templates for previous Crowbook versions won’t work anymore.</p>
 </li>
-<li><p id = "para-751">the <code>resources.files</code> option is now a YAML list of strings, instead of a comma-seprated string.</p>
+<li><p id = "para-751">the <code>resources.files</code> option is now a YAML list of strings, instead of a comma-separated string.</p>
 </li>
 </ul>
 </li>
@@ -3817,7 +3817,7 @@ function toggle() {
 </li>
 <li><p id = "para-758"><code>output</code> is a new option that can specify a series of format to render, with default output file name.</p>
 </li>
-<li><p id = "para-759"><code>proofread.grammalecte</code> and <code>proofread.grammalecte.port</code> allow respectively to enable grammar checking with Grammalecte and (optionnally) to specify the port to connect.</p>
+<li><p id = "para-759"><code>proofread.grammalecte</code> and <code>proofread.grammalecte.port</code> allow respectively to enable grammar checking with Grammalecte and (optionally) to specify the port to connect.</p>
 </li>
 <li><p id = "para-760"><code>tex.margin.left</code>, <code>tex.margin.right</code>, <code>tex.margin.bottom</code> and <code>tex.margin.top</code> are new options that allow to specify margins for LaTeX/PDF outputs.</p>
 </li>
@@ -3847,7 +3847,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-244">0.12.0 (2017-06-05)</h2>
-<p id = "para-769">This release includes a few new features, such as the possiblity to include Markdown files as section/subsections and not only as chapter, experimental support for superscript and subscript, and yet more experimental support for writing interactive fiction.</p>
+<p id = "para-769">This release includes a few new features, such as the possibility to include Markdown files as section/subsections and not only as chapter, experimental support for superscript and subscript, and yet more experimental support for writing interactive fiction.</p>
 <ul>
 <li><p id = "para-770">Book configuration file:</p>
 <ul>
@@ -4277,7 +4277,7 @@ function toggle() {
 <h2 id = "link-253">0.10.1 (2016-10-18)</h2>
 <p id = "para-925">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
 <h2 id = "link-254">0.10.0 (2016-10-18)</h2>
-<p id = "para-926">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
+<p id = "para-926">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It also features some internationalization support, and the program should now be translated if your <code>LANG</code> environment variable is set to french.</p>
 <ul>
 <li><p id = "para-927"><b>Breaking changes</b>:</p>
 <ul>
@@ -4335,7 +4335,7 @@ function toggle() {
 <ul>
 <li><p id = "para-945">New options:</p>
 <ul>
-<li><p id = "para-946"><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entites and CSS so it can display correctly even if reader’s don’t have a browser/font supporting these unicode symbols.</p>
+<li><p id = "para-946"><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entities and CSS so it can display correctly even if reader’s don’t have a browser/font supporting these unicode symbols.</p>
 </li>
 <li><p id = "para-947">Output files for proofread documents: <code>output.proofread.html</code>, <code>output.proofread.html_dir</code> and <code>output.proofread.pdf</code>.</p>
 </li>
@@ -4487,7 +4487,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-257">0.8.0 (2016-09-19)</h2>
-<p id = "para-1006">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
+<p id = "para-1006">This release adds support for syntax highlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
 <ul>
 <li><p id = "para-1007">New options:</p>
 <ul>
@@ -4497,7 +4497,7 @@ function toggle() {
 </li>
 <li><p id = "para-1010"><code>html.highlight_code</code> (set to true by default) allows syntax highlighting for code blocks, using highlight.js.</p>
 </li>
-<li><p id = "para-1011"><code>html.higlight.css</code> and <code>html.highlight.js</code> can be used to provide other themes (default is default.css) and an highlight.js build that support other languages.</p>
+<li><p id = "para-1011"><code>html.highlight.css</code> and <code>html.highlight.js</code> can be used to provide other themes (default is default.css) and an highlight.js build that support other languages.</p>
 </li>
 <li><p id = "para-1012"><code>html.footer</code> allows to specify custom footer. If not set, <code>html.crowbook_link</code> allows to disable “Generated by Crowbook” message.</p>
 </li>
@@ -4517,7 +4517,7 @@ function toggle() {
 </li>
 <li><p id = "para-1018">Better error messages. Crowbook now tries to give more information when displaying an error, with the file name where a problem was found, and, in some cases, the line. It also tries to detect errors (such as files not found) sooner.</p>
 </li>
-<li><p id = "para-1019">Some “warning” messages have also been “moved” to error messages, to make sure they are displayed even when crowbook isn’t runned with <code>--verbose</code>.</p>
+<li><p id = "para-1019">Some “warning” messages have also been “moved” to error messages, to make sure they are displayed even when crowbook isn’t ran with <code>--verbose</code>.</p>
 </li>
 </ul>
 </li>

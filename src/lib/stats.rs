@@ -51,7 +51,7 @@ impl ChapterStats {
         let words: Vec<_> = text.split_whitespace().collect();
         let lang = Stats::language_from_str(lang);
         let corp = hyphenation::Standard::from_embedded(lang).unwrap();
-        // Count the number of syllables for earch word.
+        // Count the number of syllables for each word.
         let syl = words
             .iter()
             .fold(0, |acc, w| acc + corp.opportunities(w).len() + 1);
@@ -105,7 +105,7 @@ impl Stats {
             if !advanced {
                 info!(
                     "{}",
-                    t!("stats.avanced")
+                    t!("stats.advanced")
                 );
             }
         }
@@ -264,7 +264,7 @@ impl Stats {
 
     fn flesch_text(score: f64) -> String {
         String::from(match score {
-            s if s.is_nan() => "Not availabe",
+            s if s.is_nan() => "Not available",
             s if s < 30.0 => "Very difficult",
             s if s < 50.0 => "Difficult",
             s if s < 60.0 => "Fairly difficult",

@@ -548,7 +548,7 @@ function toggle() {
 </ul>
 <h2 id = "link-236">0.16.0 (2023-07-27)</h2>
 <ul>
-<li><p id = "para-701"><code>epub.titlepage.xhtml</code> can now be overriden (geobert)</p>
+<li><p id = "para-701"><code>epub.titlepage.xhtml</code> can now be overridden (geobert)</p>
 </li>
 <li><p id = "para-702">Fix an issue where horizontal rules could be interpreted as additional front matter</p>
 </li>
@@ -609,7 +609,7 @@ function toggle() {
 </li>
 <li><p id = "para-723">Dependencies update.</p>
 </li>
-<li><p id = "para-724">Fix type deduction issues for new rustc compliler</p>
+<li><p id = "para-724">Fix type deduction issues for new rustc compiler</p>
 </li>
 </ul>
 <h2 id = "link-240">0.14.1 (2018-06-01)</h2>
@@ -687,7 +687,7 @@ function toggle() {
 <ul>
 <li><p id = "para-750">The <code>template.tex</code> template was quite modified. Crowbook now uses custom command for most markdown elements, defined in the template. This allow an user to redefine the way the book is rendered without having to modify Crowbook itself. Unfortunately, as tex templates for previous Crowbook versions won’t work anymore.</p>
 </li>
-<li><p id = "para-751">the <code>resources.files</code> option is now a YAML list of strings, instead of a comma-seprated string.</p>
+<li><p id = "para-751">the <code>resources.files</code> option is now a YAML list of strings, instead of a comma-separated string.</p>
 </li>
 </ul>
 </li>
@@ -707,7 +707,7 @@ function toggle() {
 </li>
 <li><p id = "para-758"><code>output</code> is a new option that can specify a series of format to render, with default output file name.</p>
 </li>
-<li><p id = "para-759"><code>proofread.grammalecte</code> and <code>proofread.grammalecte.port</code> allow respectively to enable grammar checking with Grammalecte and (optionnally) to specify the port to connect.</p>
+<li><p id = "para-759"><code>proofread.grammalecte</code> and <code>proofread.grammalecte.port</code> allow respectively to enable grammar checking with Grammalecte and (optionally) to specify the port to connect.</p>
 </li>
 <li><p id = "para-760"><code>tex.margin.left</code>, <code>tex.margin.right</code>, <code>tex.margin.bottom</code> and <code>tex.margin.top</code> are new options that allow to specify margins for LaTeX/PDF outputs.</p>
 </li>
@@ -737,7 +737,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-244">0.12.0 (2017-06-05)</h2>
-<p id = "para-769">This release includes a few new features, such as the possiblity to include Markdown files as section/subsections and not only as chapter, experimental support for superscript and subscript, and yet more experimental support for writing interactive fiction.</p>
+<p id = "para-769">This release includes a few new features, such as the possibility to include Markdown files as section/subsections and not only as chapter, experimental support for superscript and subscript, and yet more experimental support for writing interactive fiction.</p>
 <ul>
 <li><p id = "para-770">Book configuration file:</p>
 <ul>
@@ -1167,7 +1167,7 @@ function toggle() {
 <h2 id = "link-253">0.10.1 (2016-10-18)</h2>
 <p id = "para-925">Fixed a bug in <code>fr.po</code> translation that prevented building from fresh install.</p>
 <h2 id = "link-254">0.10.0 (2016-10-18)</h2>
-<p id = "para-926">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and the program should now be tranlated if your <code>LANG</code> environment variable is set to french.</p>
+<p id = "para-926">This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It also features some internationalization support, and the program should now be translated if your <code>LANG</code> environment variable is set to french.</p>
 <ul>
 <li><p id = "para-927"><b>Breaking changes</b>:</p>
 <ul>
@@ -1225,7 +1225,7 @@ function toggle() {
 <ul>
 <li><p id = "para-945">New options:</p>
 <ul>
-<li><p id = "para-946"><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entites and CSS so it can display correctly even if reader’s don’t have a browser/font supporting these unicode symbols.</p>
+<li><p id = "para-946"><code>html.escape_nb_spaces</code>, if set to true (by default), will replace unicode non breaking spaces with HTML entities and CSS so it can display correctly even if reader’s don’t have a browser/font supporting these unicode symbols.</p>
 </li>
 <li><p id = "para-947">Output files for proofread documents: <code>output.proofread.html</code>, <code>output.proofread.html_dir</code> and <code>output.proofread.pdf</code>.</p>
 </li>
@@ -1377,7 +1377,7 @@ function toggle() {
 </li>
 </ul>
 <h2 id = "link-257">0.8.0 (2016-09-19)</h2>
-<p id = "para-1006">This release adds support for syntax higlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
+<p id = "para-1006">This release adds support for syntax highlighting in code blocks, customized top and footer blocks for HTML rendering, and the special <code>import_config</code> option that allows to import options from another book file. It also provides (hopefully) better error messages.</p>
 <ul>
 <li><p id = "para-1007">New options:</p>
 <ul>
@@ -1387,7 +1387,7 @@ function toggle() {
 </li>
 <li><p id = "para-1010"><code>html.highlight_code</code> (set to true by default) allows syntax highlighting for code blocks, using highlight.js.</p>
 </li>
-<li><p id = "para-1011"><code>html.higlight.css</code> and <code>html.highlight.js</code> can be used to provide other themes (default is default.css) and an highlight.js build that support other languages.</p>
+<li><p id = "para-1011"><code>html.highlight.css</code> and <code>html.highlight.js</code> can be used to provide other themes (default is default.css) and an highlight.js build that support other languages.</p>
 </li>
 <li><p id = "para-1012"><code>html.footer</code> allows to specify custom footer. If not set, <code>html.crowbook_link</code> allows to disable “Generated by Crowbook” message.</p>
 </li>
@@ -1407,7 +1407,7 @@ function toggle() {
 </li>
 <li><p id = "para-1018">Better error messages. Crowbook now tries to give more information when displaying an error, with the file name where a problem was found, and, in some cases, the line. It also tries to detect errors (such as files not found) sooner.</p>
 </li>
-<li><p id = "para-1019">Some “warning” messages have also been “moved” to error messages, to make sure they are displayed even when crowbook isn’t runned with <code>--verbose</code>.</p>
+<li><p id = "para-1019">Some “warning” messages have also been “moved” to error messages, to make sure they are displayed even when crowbook isn’t ran with <code>--verbose</code>.</p>
 </li>
 </ul>
 </li>

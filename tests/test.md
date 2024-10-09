@@ -105,7 +105,7 @@ code block
 
 ## Blockquote ##
 
-> A blockquote wih *emphasis*, `some code`, and
+> A blockquote with *emphasis*, `some code`, and
 > on multiple lines
 
 ## horizontal rule ##
@@ -136,7 +136,7 @@ Again a reference to first footnote[^foo]
 Should autoclean here ! `But maybe not here ?` *Here, definitely !*
 
 ```
-definetly *not* here !
+definitely *not* here !
 ```
 
 

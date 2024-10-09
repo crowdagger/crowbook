@@ -13,7 +13,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
-// You should have received ba copy of the GNU Lesser General Public License
+// You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use crate::book::Book;
@@ -97,7 +97,7 @@ impl BitOr for Features {
 
 /// A parser that reads markdown and convert it to AST (a vector of `Token`s)
 ///
-/// This AST can then be used by various renderes.
+/// This AST can then be used by various renderers.
 ///
 /// As this Parser uses Pulldown-cmark's one, it should be able to parse most
 /// *valid* CommonMark variant of Markdown.
@@ -248,7 +248,7 @@ impl Parser {
     fn parse_node<'a>(&mut self, node: &'a AstNode<'a>, yaml_block: &mut Option<&mut String>) -> Result<Vec<Token>> {
         let mut inner = vec![];
 
-        // Some special cases where we need to modifiy a bit the state of the parser between parsing inner content
+        // Some special cases where we need to modify a bit the state of the parser between parsing inner content
         if let NodeValue::DescriptionTerm = node.data.borrow().value {
             self.ignore_paragraphs = true;
         }
@@ -373,7 +373,7 @@ impl Parser {
             }
             NodeValue::Table(ref aligns) => {
                 self.features.table = true;
-                // TODO: actually use alignements)
+                // TODO: actually use alignments)
                 vec![Token::Table(aligns.len() as i32, inner)]
             }
         };
