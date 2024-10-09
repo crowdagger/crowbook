@@ -99,9 +99,3 @@ This image is on its own paragraph, and thus considered "standalone" and resized
 ![Logo](../img/crowbook-small.png)
 
 While this one ![Logo](../img/crowbook-small.png) is embedded in a paragraph and its size is unchanged.
-
-## Interactive fiction
-
-`crowbook` also adds some syntax for interactive fiction, to make embedding Javascript code easier.
-It is only enabled for the interactive fiction renderer.
-For more information, see the [chapter on this matter](06_interactive_fiction.md).

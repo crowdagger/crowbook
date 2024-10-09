@@ -20,7 +20,7 @@ ChangeLog
 
 0.16.0 (2023-07-27)
 -------------
-* `epub.titlepage.xhtml` can now be overriden (geobert)
+* `epub.titlepage.xhtml` can now be overridden (geobert)
 * Fix an issue where horizontal rules could be interpreted as additional front matter 
 * Generated PDF now include some metadata
 * Fix internal links under Windows
@@ -56,7 +56,7 @@ ChangeLog
 * Now uses `reqwest` instead of `hyper` to connect to languagetool/grammalecte.
 * `hyphenation` dependency is now optional.
 * Dependencies update.
-* Fix type deduction issues for new rustc compliler
+* Fix type deduction issues for new rustc compiler
 
 
 0.14.1 (2018-06-01)
@@ -117,7 +117,7 @@ ChangeLog
      render, with default output file name.
    * `proofread.grammalecte` and `proofread.grammalecte.port` allow
      respectively to enable grammar checking with Grammalecte and
-     (optionnally) to specify the port to connect.
+     (optionally) to specify the port to connect.
    * `tex.margin.left`, `tex.margin.right`, `tex.margin.bottom` and
      `tex.margin.top` are new options that allow to specify margins
      for LaTeX/PDF outputs.
@@ -134,7 +134,7 @@ ChangeLog
 
 0.12.0 (2017-06-05)
 -----------------------
-This release includes a few new features, such as the possiblity to
+This release includes a few new features, such as the possibility to
 include Markdown files as section/subsections and not only as chapter,
 experimental support for superscript and subscript, and yet more
 experimental support for writing interactive fiction.
@@ -415,8 +415,8 @@ Fixed a bug in `fr.po` translation that prevented building from fresh install.
 
 0.10.0 (2016-10-18)
 -----------------------
-This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It alse features some internationalization support, and
-the program should now be tranlated if your `LANG` environment
+This release contains some breaking changes (mostly for the API, which has been split in separate libraries). It also features some internationalization support, and
+the program should now be translated if your `LANG` environment
 variable is set to french.
 * **Breaking changes**:
   * Templates:
@@ -456,7 +456,7 @@ check grammar and detect repetitions. These features are currently
 experimental.
 * New options:
   * `html.escape_nb_spaces`, if set to true (by default), will replace
-    unicode non breaking spaces with HTML entites and CSS so it can
+    unicode non breaking spaces with HTML entities and CSS so it can
     display correctly even if reader's don't have a browser/font
     supporting these unicode symbols.
   * Output files for proofread documents: `output.proofread.html`,
@@ -578,7 +578,7 @@ More detailed changes for this release:
 
 0.8.0 (2016-09-19)
 ------------------
-This release adds support for syntax higlighting in code blocks,
+This release adds support for syntax highlighting in code blocks,
 customized top and footer blocks for HTML rendering, and the special
 `import_config` option that allows to import options from another book
 file. It also provides (hopefully) better error messages.
@@ -592,7 +592,7 @@ file. It also provides (hopefully) better error messages.
     experimental.
   * `html.highlight_code` (set to true by default) allows syntax
     highlighting for code blocks, using highlight.js.
-  * `html.higlight.css` and `html.highlight.js` can be used to provide
+  * `html.highlight.css` and `html.highlight.js` can be used to provide
     other themes (default is default.css) and an highlight.js build
     that support other languages.
    * `html.footer` allows to specify custom footer. If not set,
@@ -609,7 +609,7 @@ file. It also provides (hopefully) better error messages.
   found, and, in some cases, the line. It also tries to detect errors
   (such as files not found) sooner.
   * Some "warning" messages have also been "moved" to error messages, to
-  make sure they are displayed even when crowbook isn't runned with
+  make sure they are displayed even when crowbook isn't run with
   `--verbose`.
 * Rendering:
   * Hidden chapter now produce empty `\chapter*{}` and `<h1>` in LaTeX

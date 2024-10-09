@@ -2,7 +2,7 @@
 
 Crowbook allows the user to specify a number of templates.[^1]
 
-Each of this template can be overriden by a custom one, by setting e.g.:
+Each of this template can be overridden by a custom one, by setting e.g.:
 
 ```yaml
 html.css: my_template.css
@@ -101,7 +101,7 @@ For more information about Mustache syntax, see the
 
 #### Syntax in LaTeX ####
 
-Since LaTeX already uses a lot of curly brackets, the default template sets an altenative syntax to access variables, with `<<&foo>>`[^3]:
+Since LaTeX already uses a lot of curly brackets, the default template sets an alternative syntax to access variables, with `<<&foo>>`[^3]:
 
 ```latex
 \title{<<&title>>}
@@ -198,7 +198,7 @@ Crowbook also has some inline templates, that are set in the book configuration 
 * `tex.template.add`, `html.css.add` and `epub.css.add` allow to specify some LaTeX or CSS code directly in the book configuration file.
   This code will be added respectively to `tex.template`, `html.css` or `epub.css` template.
   For CSS templates, this code is inserted at the end of the template (allowing to redefine rules that are set by the template);
-  for the LaTeX template, the code is inserted at the end of the preambule, just before the `\begin{document}` tag, allowing to redefine commands.
+  for the LaTeX template, the code is inserted at the end of the preamble, just before the `\begin{document}` tag, allowing to redefine commands.
 * `rendering.inline_toc.name` sets the name of the inline table of content, if it is displayed.
   By default, is is set to `{{{loc_toc}}}`, that is, a localised version of "Table of Contents".
 * `rendering.chapter.template` sets the naming scheme for chapters, while `rendering.part.template` does the same for part.
@@ -275,7 +275,7 @@ Crowbook also exports some additional fields for some templates, see below.
 | `json_data`  | Contains structured data with book's metadata in JSON-LD format | `html.standalone.template`, `html.dir.template` |
 | `highlight_code` | True if `html.highlight_code` is true | `html.standalone.template`, `html.dir.template` |
 | `highlight_css` | The content of `html.highlight.css` | `html.standalone.template` |
-| `highlight_js` | The base64-encoded content of `html.highlight.js` | `html.standalone.tempate` |
+| `highlight_js` | The base64-encoded content of `html.highlight.js` | `html.standalone.template` |
 | `common_script` | The content of `html.js` | `html.single.js` |
 | `one_chapter`   | True if `html.standalone.one_chapter` is true, else not present | `html.standalone.template`, `html.standalone.js` |
 | `book.svg` | The base64-encoded image of the button to display all chapters | `html.standalone.js`, `html.standalone.template` |

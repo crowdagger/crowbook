@@ -121,7 +121,7 @@ impl fmt::Display for HeaderData {
 /// book.render_format_to("html", &mut std::io::stdout()).unwrap();
 /// ```
 pub struct Book<'a> {
-    /// Internal structure. You should not accesss this directly except if
+    /// Internal structure. You should not access this directly except if
     /// you are writing a new renderer.
     pub chapters: Vec<Chapter>,
 
@@ -330,7 +330,7 @@ impl<'a> Book<'a> {
     /// ```
     /// use crowbook::Book;
     /// let mut book = Book::new();
-    /// book.load_markdown_file("foo.md"); // not unwraping since foo.md doesn't exist
+    /// book.load_markdown_file("foo.md"); // not unwrapping since foo.md doesn't exist
     /// ```
     pub fn load_markdown_file<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
         let filename = format!("{}", path.as_ref().display());
@@ -445,7 +445,7 @@ impl<'a> Book<'a> {
     /// + chapter_01.md";
     ///
     /// let mut book = Book::new();
-    /// book.read_config(content.as_bytes()); // no unwraping as `intro.md` and `chapter_01.md` don't exist
+    /// book.read_config(content.as_bytes()); // no unwrapping as `intro.md` and `chapter_01.md` don't exist
     /// ```
     pub fn read_config<R: Read>(&mut self, mut source: R) -> Result<()> {
         fn get_filename<'b>(source: &Source, s: &'b str) -> Result<&'b str> {
@@ -659,7 +659,7 @@ impl<'a> Book<'a> {
     }
 
 
-    /// Generates output files acccording to book options.
+    /// Generates output files according to book options.
     ///
     /// # Example
     ///
@@ -1046,7 +1046,7 @@ impl<'a> Book<'a> {
     ///   must be hidden. See `Number`.
     /// * `content`: the content of the chapter.
     ///
-    /// **Returns** an error if there was some errror parsing `content`.
+    /// **Returns** an error if there was some error parsing `content`.
     pub fn add_chapter_from_source<R: Read>(
         &mut self,
         number: Number,
@@ -1241,7 +1241,7 @@ impl<'a> Book<'a> {
     /// by renderers. It fills it with the metadata options.
     ///
     /// It also uses the lang/xx.yaml file corresponding to the language and fills
-    /// `loc_xxx` fiels with it that corresponds to translated versions.
+    /// `loc_xxx` fields with it that corresponds to translated versions.
     ///
     /// This method treats the metadata as Markdown and thus calls `f` to render it.
     /// This is why we can’t really cache this as it will depend on the renderer. 

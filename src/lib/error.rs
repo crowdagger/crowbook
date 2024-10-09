@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
-// You should have received ba copy of the GNU Lesser General Public License
+// You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::borrow::Cow;
@@ -121,7 +121,7 @@ impl Error {
 
     /// Creates a new syntect error.
     ///
-    /// Error when parsing (and higlighting) syntax code
+    /// Error when parsing (and highlighting) syntax code
     pub fn syntect<S: Into<Cow<'static, str>>, O: Into<Source>>(source: O, msg: S) -> Error {
         Error {
             source: source.into(),
@@ -192,7 +192,7 @@ impl Error {
 
     /// Creates a new zipper error.
     ///
-    /// Error when moving/copying files to temporary dir, e.g. using `zip` commmand.
+    /// Error when moving/copying files to temporary dir, e.g. using `zip` command.
     pub fn zipper<S: Into<Cow<'static, str>>>(msg: S) -> Error {
         Error {
             source: Source::empty(),
@@ -402,9 +402,9 @@ enum Inner {
     FileNotFound(Cow<'static, str>, Cow<'static, str>), // description, file
     /// An error in a renderer
     Render(Cow<'static, str>),
-    /// An error during "zipping" processus
+    /// An error during "zipping" processes
     Zipper(Cow<'static, str>),
-    /// An error relative to BookOption convertion (usually a type error)
+    /// An error relative to BookOption conversion (usually a type error)
     BookOption(Cow<'static, str>),
     /// An invalid option
     InvalidOption(Cow<'static, str>),

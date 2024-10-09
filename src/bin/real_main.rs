@@ -131,7 +131,7 @@ pub fn try_main() -> Result<()> {
     // ok to unwrap since clap checks it's there
     let &s = book.as_ref().unwrap();
 
-    // Initalize logger
+    // Initialize logger
     let mut builder = ConfigBuilder::new();
     builder.set_target_level(LevelFilter::Off);
     builder.set_location_level(LevelFilter::Off);

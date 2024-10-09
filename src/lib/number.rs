@@ -1,7 +1,7 @@
 /// Numbering for a given chapter or part
 ///
 /// This Enum is only public so it can be passed to `Book` methods, but
-/// library users should **not** do exhaustive matchs on the variants,
+/// library users should **not** do exhaustive matches on the variants,
 /// since it is possible new variants will be added without being
 /// considered a breaking change
 #[derive(Debug, PartialEq, Clone, Copy)]
