@@ -86,11 +86,29 @@ impl<'a> LatexRenderer<'a> {
         }
     }
 
-    /// Set proofreading to true
-    #[doc(hidden)]
-    pub fn proofread(mut self) -> Self {
-        self.proofread = true;
-        self
+    /// Get latex equivalent for HN:
+    ///
+    /// * 1 -> chapter
+    /// * 2 -> section
+    /// ...
+    fn get_header(&self, n: i32) -> &'static str {
+        match n {
+            1 => {
+                if !self.is_short {
+                    if self.current_chapter.is_part() {
+                        "part"
+                    } else {
+                        "chapter"
+                    }
+                } else {
+                    "section"
+                }
+            },
+            2 => "section",
+            3 => "subsection",
+            4 => "subsubsection",
+            _ => "paragraoh"
+        }
     }
 
     /// Render pdf to a file
@@ -366,6 +384,9 @@ impl<'a> Renderer for LatexRenderer<'a> {
             }
             Token::Header(n, ref vec) => {
                 let mut content = String::new();
+                let tex_header = self.get_header(n);
+                let title = self.render_vec(vec)?;
+                // Handle special cases
                 if n == 1 {
                     self.first_paragraph = true;
                     if self.current_chapter == Number::Hidden {
@@ -379,39 +400,30 @@ impl<'a> Renderer for LatexRenderer<'a> {
                         write!(content, "{}", n - 1)?;
                         content.push_str("}\n");
                     }
-                }
-                match n {
-                    1 => {
-                        if !self.is_short {
-                            if self.current_chapter.is_part() {
-                                if self
-                                    .book
-                                    .options
-                                    .get_bool("rendering.part.reset_counter")
-                                    .unwrap()
-                                {
-                                    content.push_str(r"\setcounter{chapter}{0}");
-                                }
-                                content.push_str(r"\part");
-                            } else {
-                                content.push_str(r"\chapter");
-                            }
-                        } else {
-                            // Chapters or parts aren't handlled for class article
-                            content.push_str(r"\section");
+                    if self.current_chapter.is_part() {
+                        if self
+                            .book
+                            .options
+                            .get_bool("rendering.part.reset_counter")
+                            .unwrap()
+                        {
+                            content.push_str(r"\setcounter{chapter}{0}");
                         }
                     }
-                    2 => content.push_str(r"\section"),
-                    3 => content.push_str(r"\subsection"),
-                    4 => content.push_str(r"\subsubsection"),
-                    _ => content.push_str(r"\paragraph"),
                 }
+                // Add header command
+                content.push_str(&format!("\\{tex_header}"));
                 if !self.current_chapter.is_numbered() {
                     content.push('*');
                 }
                 content.push('{');
-                content.push_str(&self.render_vec(vec)?);
+                content.push_str(&title);
                 content.push_str("}\n");
+                // Mhen using eg \chapter*, latex doesn't add it to the toc,
+                // but we want it so be add it back manually
+                if !self.current_chapter.is_numbered() && !self.current_chapter.is_hidden() {
+                    content.push_str(&format!("\\addcontentsline{{toc}}{{{tex_header}}}{{{title}}}\n"))
+                }
                 Ok(content)
             }
             Token::TaskItem(checked, ref vec) => Ok(format!(
@@ -652,7 +664,7 @@ impl BookRenderer for ProofLatex {
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
-        let mut latex = LatexRenderer::new(book).proofread();
+        let mut latex = LatexRenderer::new(book);
         let result = latex.render_book()?;
         to.write_all(result.as_bytes()).map_err(|e| {
             Error::render(
@@ -681,7 +693,7 @@ impl BookRenderer for ProofPdf {
     }
 
     fn render(&self, book: &Book, to: &mut dyn io::Write) -> Result<()> {
-        LatexRenderer::new(book).proofread().render_pdf(to)?;
+        LatexRenderer::new(book).render_pdf(to)?;
         Ok(())
     }
 }
