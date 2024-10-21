@@ -21,6 +21,7 @@ code {
 }
 pre {
     font-family: "Linux Libertine Mono", monospace;
+    text-align: left;
     margin: 1em;
     padding-top: 0;
     background-color: #F0F0F0;
@@ -127,7 +128,7 @@ td.note-number {
     vertical-align: top;
 }
 
-/* When footnotes (try to) be diplayed as margin notes */
+/* When footnotes (try to) be displayed as margin notes */
 .sidenote {
     display: block;
     float: right;
@@ -189,6 +190,7 @@ table.notes tr td p {
 }
 
 
+
 span.initial { 
     float: left;
     font-size: 285%;
@@ -209,6 +211,7 @@ p.first-para {
     margin: 0;
     padding: 0;
 }
+
 
 /* Default  HTML CSS file includes default EPUB CSS file */
 
@@ -479,5 +482,13 @@ footer p, #top p {
     margin-top: 0.5em;
     max-width: 33em;
 }
+
+.popup_footnote {
+    margin: 2em;
+    padding : 1em;
+    right: 2em;
+    max-width: 20em;
+}
+
 
 

@@ -56,7 +56,7 @@ html.side_notes: false
 html.standalone.one_chapter: false
 
 # Custom colors
-html.css.colours: guide/colors.css
+html.css.colors: guide/colors.css
 html.highlight.css: guide/tomorrow-night.css
 
 # Latex options
@@ -74,7 +74,6 @@ epub.version: 3
 + guide/02_config.md
 + guide/03_markdown.md
 + guide/04_templates.md
-+ guide/06_interactive_fiction.md
 + guide/07_miscellaneous.md
 + guide/08_contributing.md
 - ChangeLog.md

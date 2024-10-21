@@ -60,7 +60,7 @@ crowbook -s some_book.md
 to generate output formats from this Markdown file.
 
 > By default (unless `input.yaml_blocks` is set to true), Crowboook will only
-> read those inline blocks when it is runned with `crowbook --single`
+> read those inline blocks when it is run with `crowbook --single`
 > (or `crowbook -s`).
 
 
@@ -126,7 +126,7 @@ Parts are included using the `@` character, followed by the same characters than
 + chapter_05.md
 ```
 
-However, you usually don't really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straighforward way to use parts, using only the `@` character followed by the (markdown-formatted) title of this part:
+However, you usually don't really want to have a content directly below the part, only chapters (though it can be useful to add an introduction before the first chapter of this part), so there is also a more straightforward way to use parts, using only the `@` character followed by the (markdown-formatted) title of this part:
 
 ```text
 @ Beginning
@@ -656,7 +656,7 @@ The `path` type might puzzle you a bit, but it's equivalent to a string, except 
 
 - **type**: string
 - **default value**: `syntect`
--  If/how highligh code blocks. Possible values: "syntect" (default, performed at runtime), "highlight.js" (HTML-only, uses Javascript), "none"
+-  If/how highlight code blocks. Possible values: "syntect" (default, performed at runtime), "highlight.js" (HTML-only, uses Javascript), "none"
 
 #### `rendering.highlight.theme`
 
@@ -1184,7 +1184,7 @@ The `path` type might puzzle you a bit, but it's equivalent to a string, except 
 
 - **type**: integer
 - **default value**: `25`
--  Max distance between two occurences so it is considered a repetition
+-  Max distance between two occurrences so it is considered a repetition
 
 #### `proofread.repetitions.fuzzy`
 

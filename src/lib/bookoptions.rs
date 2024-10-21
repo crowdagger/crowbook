@@ -160,7 +160,7 @@ use_initials:alias:rendering.initials               # {renamed}
 toc_name:alias:rendering.inline_toc.name            # {renamed}
 display_toc:alias:rendering.inline_toc              # {renamed}
 numbering:alias:rendering.num_depth                 # {renamed}
-numbering_template:alias:rendering.chapter_tempalte # {renamed}
+numbering_template:alias:rendering.chapter_template # {renamed}
 html.display_chapter:alias:html_single.one_chapter  # {renamed}
 temp_dir:alias:crowbook.temp_dir                    # {renamed}
 zip.command:alias:crowbook.zip.command              # {renamed}
@@ -715,7 +715,7 @@ impl BookOptions {
     /// book.options.set("rendering.num_depth", "2").unwrap();
     /// // Try to set invalid key "autor"
     /// let result = book.options.set("autor", "John Smith");
-    /// assert!(result.is_err()); // error: "author" was mispelled "autor"
+    /// assert!(result.is_err()); // error: "author" was misspelled "autor"
     ///
     /// let result = book.options.set("rendering.num_depth", "foo");
     /// assert!(result.is_err()); // error: numbering must be an int
@@ -803,7 +803,7 @@ impl BookOptions {
             "resources.base_path.links"
             | "resources.base_path.images"
             | "resources.base_path.files"
-            | "resources.pase_path.templates" => {
+            | "resources.base_path.templates" => {
                 // If resources.base_path is set, return it, else return itself
                 let base_path = self.get_path("resources.base_path");
                 if base_path.is_ok() {

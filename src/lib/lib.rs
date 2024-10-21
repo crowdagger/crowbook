@@ -39,7 +39,7 @@
 //! * read the chapters (written in Markdown) listed in this
 //!   configuration file and pass them to to `Parser`, get back an AST and store it in memory
 //! * call the various renderers according to the book's parameters
-//! and generate the appopriate files.
+//! and generate the appropriate files.
 //!
 //! ## Example
 //!
@@ -58,7 +58,7 @@
 //!
 //! The `Book` structure, however, exposes its `chapter` fields, which contains
 //! a vector with an element by chapter. With it, you can access the Markdown
-//! for all chapters represented as an Abstact Syntax Tree (i.e., a vector of `Token`s).
+//! for all chapters represented as an Abstract Syntax Tree (i.e., a vector of `Token`s).
 //! It is thus possible to create a new renderer (or manipulate this AST in other ways).
 //!
 //! # Parser

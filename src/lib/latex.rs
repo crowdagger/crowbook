@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 //
-// You should have received ba copy of the GNU Lesser General Public License
+// You should have received a copy of the GNU Lesser General Public License
 // along with Crowbook.  If not, see <http://www.gnu.org/licenses/>.
 
 use crate::book::Book;
@@ -276,7 +276,7 @@ impl<'a> LatexRenderer<'a> {
             data.insert("has_tex_size".into(), false.into());
         }
 
-        // If class isn't book, set open_any to true, so margins are symetric.
+        // If class isn't book, set open_any to true, so margins are symmetric.
         let mut book = false;
         if self.book.options.get_str("tex.class").unwrap() == "book" {
             book = true;
