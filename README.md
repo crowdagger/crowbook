@@ -224,13 +224,20 @@ See the
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/kianmeng">
+            <img src="https://avatars.githubusercontent.com/u/134518?v=4" width="100;" alt="kianmeng"/>
+            <br />
+            <sub><b>Kian-Meng Ang</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/cuviper">
             <img src="https://avatars.githubusercontent.com/u/36186?v=4" width="100;" alt="cuviper"/>
             <br />
             <sub><b>Josh Stone</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Geobert">
             <img src="https://avatars.githubusercontent.com/u/72570?v=4" width="100;" alt="Geobert"/>
