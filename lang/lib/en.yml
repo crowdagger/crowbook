@@ -204,7 +204,7 @@ opt:
   chapter_template: Naming scheme of chapters, for TOC
   part_template: Naming scheme of parts, for TOC
   roman_numeral_parts: If set to true, display part number with roman numerals
-  roman_numeral_chapters: If set to true, display chapter number with roman numerals
+  roman_numerals_chapters: If set to true, display chapter number with roman numerals
   reset_counter: If set to true, reset chapter number at each part
   import: Import another book configuration file
   html_icon: Path to an icon to be used for the HTML files(s)
