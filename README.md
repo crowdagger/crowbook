@@ -6,10 +6,10 @@ Its focus is novels and fiction, and the default settings should (hopefully) gen
 ## Example
 
 To see what Crowbook's output looks like, you can read the Crowbook guide rendered in
-[HTML](http://lise-henry.github.io/crowbook/book/book.html),
-[PDF](http://lise-henry.github.io/crowbook/book/book.pdf)
+[HTML](http://crowdagger.github.io/crowbook/book/book.html),
+[PDF](http://crowdagger.github.io/crowbook/book/book.pdf)
 or
-[EPUB](http://lise-henry.github.io/crowbook/book/book.epub).
+[EPUB](http://crowdagger.github.io/crowbook/book/book.epub).
 
 ## Installing
 
@@ -19,7 +19,7 @@ either using precompiled binaries, or compiling it using `cargo`.
 ### Binaries
 
 See
-[the releases page](https://github.com/lise-henry/crowbook/releases)
+[the releases page](https://github.com/crowdagger/crowbook/releases)
 to download a precompiled binary for your architecture.
 Just extract the archive and run `crowbook`
 (or `crowbook.exe` on Windows).
@@ -89,10 +89,10 @@ and on
 
 Crowbook supports HTML, PDF and EPUB (either version 2 or 3) as output formats.
 See the Crowbook User Guide  rendered in
-[HTML](http://lise-henry.github.io/crowbook/book/book.html),
-[EPUB](http://lise-henry.github.io/crowbook/book/book.epub)
+[HTML](http://crowdagger.github.io/crowbook/book/book.html),
+[EPUB](http://crowdagger.github.io/crowbook/book/book.epub)
 and
-[PDF](http://lise-henry.github.io/crowbook/book.pdf).
+[PDF](http://crowdagger.github.io/crowbook/book.pdf).
 
 ### Input format
 
@@ -109,7 +109,7 @@ By default, it removes superfluous spaces and tries to use curly quotes.
 If the  book's language is set to french, it also tries to respect french typography by replacing spaces with non-breaking ones when it is appropriate (e.g. before '?', '!', ';' or ':').
 
 > Please
-> [open an issue](https://github.com/lise-henry/crowbook/issues/new)
+> [open an issue](https://github.com/crowdagger/crowbook/issues/new)
 > describing typographic rules if you want them to be implemented for other languages.
 
 ### Links handling
@@ -138,7 +138,7 @@ While the default settings will hopefully generate something that should look "g
 ### Bugs
 
 See the
-[issue tracker on GitHub](https://github.com/lise-henry/crowbook/issues).
+[issue tracker on GitHub](https://github.com/crowdagger/crowbook/issues).
 
 ## Contributors
 
@@ -335,9 +335,9 @@ You can look at the generated documentation on
 
 Note that, in order to facilitate code reuse, some features have been split to separate libraries:
 
-* [epub-builder](https://github.com/lise-henry/epub-builder)
+* [epub-builder](https://github.com/crowdagger/epub-builder)
   makes it easier to generate EPUB files.
-* [crowbook-text-processing](https://github.com/lise-henry/crowbook-text-processing/)
+* [crowbook-text-processing](https://github.com/crowdagger/crowbook-text-processing/)
   contains all the "typographic" functions (smart quotes, handling of non-breaking spaces in french, ...).
 
 ## License
@@ -357,4 +357,4 @@ by Mozilla Corporation.
 Crowbook includes binary (minified) CSS and Javascript files from
 [Highlight.js](https://highlightjs.org/),
 written by Ivan Sagalaev, see
-[license](https://raw.githubusercontent.com/lise-henry/crowbook/master/templates/highlight/LICENSE)
+[license](https://raw.githubusercontent.com/crowdagger/crowbook/master/templates/highlight/LICENSE)
