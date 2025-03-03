@@ -37,7 +37,7 @@ use std::collections::BTreeMap;
 use crowbook_text_processing::escape;
 use epub_builder::Toc;
 use epub_builder::TocElement;
-use numerals::roman::Roman;
+use roman_numerals_rs::RomanNumeral;
 use rust_i18n::t;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -353,7 +353,8 @@ impl<'a> HtmlRenderer<'a> {
             {
                 write!(output, "{}.", self.current_chapter[i]).unwrap(); //todo
             } else if self.current_chapter[i] >= 1 {
-                write!(output, "{:X}.", Roman::from(self.current_chapter[i] as i16)).unwrap();
+                let roman = RomanNumeral::try_from(self.current_chapter[i]).unwrap();
+                write!(output, "{:X}.", roman).unwrap();
             } else {
                 error!(
                     "{}",
