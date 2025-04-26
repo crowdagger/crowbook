@@ -45,7 +45,7 @@ use std::io::{Read, Write};
 use std::iter::IntoIterator;
 use std::path::{Path, PathBuf};
 
-use numerals::roman::Roman;
+use roman_numerals_rs::RomanNumeral;
 use rayon::prelude::*;
 use yaml_rust::{Yaml, YamlLoader};
 use rust_i18n::t;
@@ -1169,7 +1169,7 @@ impl<'a> Book<'a> {
                     ),
                 ));
             }
-            format!("{:X}", Roman::from(n as i16))
+            format!("{:X}", RomanNumeral::try_from(n).unwrap())
         } else {
             format!("{n}")
         };
