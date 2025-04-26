@@ -174,20 +174,27 @@ See the
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/seeseekey">
+            <img src="https://avatars.githubusercontent.com/u/1023818?v=4" width="100;" alt="seeseekey"/>
+            <br />
+            <sub><b>Seeseekey</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/jrappen">
             <img src="https://avatars.githubusercontent.com/u/8577450?v=4" width="100;" alt="jrappen"/>
             <br />
             <sub><b>Johannes Rappen</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/dkotrada">
             <img src="https://avatars.githubusercontent.com/u/698296?v=4" width="100;" alt="dkotrada"/>
             <br />
             <sub><b>Alfa</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/hfiguiere">
             <img src="https://avatars.githubusercontent.com/u/114441?v=4" width="100;" alt="hfiguiere"/>
@@ -222,15 +229,15 @@ See the
             <br />
             <sub><b>Martin Geisler</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/kianmeng">
             <img src="https://avatars.githubusercontent.com/u/134518?v=4" width="100;" alt="kianmeng"/>
             <br />
             <sub><b>Kian-Meng Ang</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/cuviper">
             <img src="https://avatars.githubusercontent.com/u/36186?v=4" width="100;" alt="cuviper"/>
@@ -264,6 +271,21 @@ See the
             <img src="https://avatars.githubusercontent.com/u/38795282?v=4" width="100;" alt="dvalter"/>
             <br />
             <sub><b>Dmitry Valter</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/habi">
+            <img src="https://avatars.githubusercontent.com/u/1651235?v=4" width="100;" alt="habi"/>
+            <br />
+            <sub><b>David Haberthür</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/AA-Turner">
+            <img src="https://avatars.githubusercontent.com/u/9087854?v=4" width="100;" alt="AA-Turner"/>
+            <br />
+            <sub><b>Adam Turner</b></sub>
         </a>
     </td></tr>
 </table>
