@@ -33,7 +33,6 @@ output.html:path                    # {output_html}
 output.html.dir:path                # {output_html_dir}
 output.tex:path                     # {output_tex}
 output.pdf:path                     # {output_pdf}
-output.html.if:path                 # {output_if}
 output.base_path:path:\"\"            # {output_base_path}
 
 # {render_opt}
@@ -83,12 +82,6 @@ html.standalone.js:tpl                  # {single_js}
 
 # {html_dir_opt}
 html.dir.template:tpl               # {html_dir_template}
-
-# {html_if_opt}
-html.if.js:tpl                      # {if_js}
-html.if.new_turn:str               # {if_new_turn}
-html.if.end_turn:str                # {if_end_turn}
-html.if.new_game:tpl                # {if_new_game}
 
 # {epub_opt}
 epub.version:int:2                  # {epub_ver}
@@ -214,7 +207,6 @@ output.odt:path                                     # {removed}
                                          html_opt = t!("opt.html"),
                                          html_single_opt = t!("opt.html_single"),
                                          html_dir_opt = t!("opt.html_dir"),
-                                         html_if_opt = t!("opt.html_if"),
                                          epub_opt = t!("opt.epub"),
                                          tex_opt = t!("opt.tex"),
                                          rs_opt = t!("opt.resources"),
@@ -239,7 +231,6 @@ output.odt:path                                     # {removed}
                                          output_html = t!("opt.output_html"),
                                          output_tex = t!("opt.output_tex"),
                                          output_pdf = t!("opt.output_pdf"),
-                                         output_if = t!("opt.output_if"),
                                          output_html_dir = t!("opt.output_html_dir"),
                                          output_base_path = t!("opt.output_base_path"),
 
@@ -276,10 +267,6 @@ output.odt:path                                     # {removed}
                                          one_chapter = t!("opt.one_chapter"),
                                          single_html = t!("opt.single_html"),
                                          single_js = t!("opt.single_js"),
-                                         if_js = t!("opt.if_js"),
-                                         if_new_turn = t!("opt.if_new_turn"),
-                                         if_end_turn = t!("opt.if_end_turn"),
-                                         if_new_game = t!("opt.if_new_game"),
 
                                          html_chapter_template = t!("opt.html_chapter_template"),
                                          html_part_template = t!("opt.html_part_template"),
