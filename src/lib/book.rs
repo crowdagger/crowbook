@@ -23,7 +23,6 @@ use crate::cleaner::{Cleaner, CleanerParams, Default, French, Off};
 use crate::epub::Epub;
 use crate::error::{Error, Result, Source};
 use crate::html_dir::HtmlDir;
-use crate::html_if::HtmlIf;
 use crate::html_single::HtmlSingle;
 use crate::lang;
 use crate::latex::{Latex, Pdf};
