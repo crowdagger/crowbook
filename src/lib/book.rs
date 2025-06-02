@@ -181,12 +181,7 @@ impl<'a> Book<'a> {
         )
         .add_format("tex", t!("format.tex"), Box::new(Latex {}))
         .add_format("pdf", t!("format.pdf"), Box::new(Pdf {}))
-        .add_format("epub", t!("format.epub"), Box::new(Epub {}))
-        .add_format(
-            "html.if",
-            t!("html_if"),
-            Box::new(HtmlIf {}),
-        );
+        .add_format("epub", t!("format.epub"), Box::new(Epub {}));
         book
     }
 
