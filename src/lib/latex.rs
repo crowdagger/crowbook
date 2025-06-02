@@ -146,15 +146,6 @@ impl<'a> LatexRenderer<'a> {
 
         // set tex numbering and toc display to book's parameters
         let numbering = self.book.options.get_i32("rendering.num_depth").unwrap() - 1;
-        write!(
-            content,
-            "\\setcounter{{tocdepth}}{{{numbering}}}
-\\setcounter{{secnumdepth}}{{{numbering}}}\n",
-        )?;
-
-        if self.book.options.get_bool("rendering.inline_toc").unwrap() {
-            content.push_str("\\tableofcontents\n");
-        }
 
         for (i, chapter) in self.book.chapters.iter().enumerate() {
             self.handler
@@ -241,6 +232,13 @@ impl<'a> LatexRenderer<'a> {
         let mut data = self
             .book
             .get_metadata(|s| self.render_vec(&Parser::new().parse_inline(s)?))?;
+        data.insert("numbering".into(), numbering.into());
+        data.insert("inline_toc".into(),
+                    self.book
+                    .options
+                    .get_bool("rendering.inline_toc")
+                    .unwrap()
+                    .into());
         data.insert("content".into(), content.into());
         data.insert("class".into(), self.book.options.get_str("tex.class").unwrap().into());
         data.insert("tex_title".into(), self.book.options.get_bool("tex.title").unwrap().into());
