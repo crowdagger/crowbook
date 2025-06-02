@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.17.0 (???)
+0.17.0 (2025-06-03)
 ---------------
 * Try to get rid of technical debt, including removing features that were half baked and not really useful.
   * Remove proofread options.

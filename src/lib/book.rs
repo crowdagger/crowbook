@@ -1297,7 +1297,7 @@ impl<'a> Book<'a> {
         Ok(m)
     }
 
-    /// Calls upon::engine::compile, does NOT registre the complete 
+    /// Calls upon::engine::compile, does NOT register the compiled template 
     pub fn compile_str<'s, O>(&self, template: &'s str, source: O, template_name: &str) -> Result<upon::Template<'_, 's>>
     where
         O: Into<Source>,
