@@ -50,7 +50,7 @@ yaml-rust = "0.4"
 upon = "0.7"
 uuid = { version = "1", features = ["v4"] }
 walkdir = "2"
-base64 = "0.21"
+base64 = "0.22"
 rayon = "1.6"
 crowbook-text-processing = "^1.1.1"
 lazy_static = "1"
