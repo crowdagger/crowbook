@@ -55,7 +55,7 @@ rayon = "1.6"
 crowbook-text-processing = "^1.1.1"
 lazy_static = "1"
 roman-numerals-rs = "3.1.0"
-epub-builder = "^0.7.1"
+epub-builder = "0.8"
 log = "0.4"
 punkt = { version = "1.0", optional = true }
 hyphenation = { version = "0.8", optional = true, features = ["embed_all"] }
