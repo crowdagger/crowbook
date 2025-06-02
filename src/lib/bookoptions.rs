@@ -3,6 +3,7 @@ use crate::bookoption::BookOption;
 use crate::error::{Error, Result, Source};
 use crate::style;
 
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::env;
 use std::path::{Path, PathBuf};
@@ -809,8 +810,7 @@ impl BookOptions {
             | "output.html"
             | "output.html.dir"
             | "output.pdf"
-            | "output.tex"
-            | "output.html.if" => {
+            | "output.tex" => {
                 // Translate according to output.base_path
                 let base = self.get_path("output.base_path").unwrap();
                 Path::new(&base).join(path)
@@ -978,7 +978,7 @@ impl BookOptions {
                 _ => unreachable!(),
             };
             let def = if let Some(value) = default {
-                value.to_owned()
+                Cow::Borrowed(value)
             } else {
                 t!("opt.not_set")
             };

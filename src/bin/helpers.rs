@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2023Élisabeth HENRY.
+// Copyright (C) 2016-2023, 2025 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -166,24 +166,24 @@ pub fn create_matches() -> ArgMatches {
 // in its own function for testing purpose
 fn app() -> clap::Command {
     lazy_static! {
-        static ref ABOUT: String = t!("cmd.about");
-        static ref SINGLE: String = t!("cmd.single");
-        static ref EMOJI: String = t!("cmd.emoji");
-        static ref VERBOSE: String = t!("cmd.verbose");
-        static ref QUIET: String = t!("cmd.quiet");
-        static ref CREATE: String = t!("cmd.create");
-        static ref AUTOGRAPH: String = t!("cmd.autograph");
-        static ref OUTPUT: String = t!("cmd.output");
-        static ref LANG: String = t!("cmd.lang");
-        static ref TO: String = t!("cmd.to");
-        static ref SET: String = t!("cmd.set");
-        static ref NO_FANCY: String = t!("cmd.no_fancy");
-        static ref LIST_OPTIONS: String = t!("cmd.list_options");
-        static ref LIST_OPTIONS_MD: String = t!("cmd.list_options_md");
-        static ref PRINT_TEMPLATE: String = t!("cmd.template");
-        static ref BOOK: String = t!("cmd.book");
-        static ref STATS: String = t!("cmd.stats");
-        static ref TEMPLATE: String = t!("clap.template");
+        static ref ABOUT: String = t!("cmd.about").into_owned();
+        static ref SINGLE: String = t!("cmd.single").into_owned();
+        static ref EMOJI: String = t!("cmd.emoji").into_owned();
+        static ref VERBOSE: String = t!("cmd.verbose").into_owned();
+        static ref QUIET: String = t!("cmd.quiet").into_owned();
+        static ref CREATE: String = t!("cmd.create").into_owned();
+        static ref AUTOGRAPH: String = t!("cmd.autograph").into_owned();
+        static ref OUTPUT: String = t!("cmd.output").into_owned();
+        static ref LANG: String = t!("cmd.lang").into_owned();
+        static ref TO: String = t!("cmd.to").into_owned();
+        static ref SET: String = t!("cmd.set").into_owned();
+        static ref NO_FANCY: String = t!("cmd.no_fancy").into_owned();
+        static ref LIST_OPTIONS: String = t!("cmd.list_options").into_owned();
+        static ref LIST_OPTIONS_MD: String = t!("cmd.list_options_md").into_owned();
+        static ref PRINT_TEMPLATE: String = t!("cmd.template").into_owned();
+        static ref BOOK: String = t!("cmd.book").into_owned();
+        static ref STATS: String = t!("cmd.stats").into_owned();
+        static ref TEMPLATE: String = t!("clap.template").into_owned();
     }
 
     let app = Command::new("crowbook")

@@ -42,7 +42,7 @@ binary = ["clap", "simplelog", "tempfile", "console", "indicatif", "textwrap"]
 nightly = ["punkt", "hyphenation"]
 
 [dependencies]
-rust-i18n = "2"
+rust-i18n = "3"
 html-escape = "0.2"
 mime_guess = "2"
 comrak = "0.39"
