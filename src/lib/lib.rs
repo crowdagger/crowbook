@@ -135,7 +135,6 @@ mod cleaner;
 mod epub;
 mod error;
 mod html_dir;
-mod html_if;
 mod html_single;
 mod lang;
 mod latex;
