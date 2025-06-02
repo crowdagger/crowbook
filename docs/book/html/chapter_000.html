@@ -545,11 +545,11 @@ document.addEventListener('DOMContentLoaded', function() {
       
       <h1 id = 'link-1'><span class = 'chapter-header'>Chapter 1</span><br />Crowbook</h1><p id = "para-1">Crowbook’s aim is to allow you to write a book in Markdown without worrying about formatting or typography, and let the program generate HTML, PDF and EPUB output for you. Its focus is novels and fiction, and the default settings should (hopefully) generate readable books with correct typography without requiring you to worry about it.</p>
 <h2 id = "link-2">1.1. Example</h2>
-<p id = "para-2">To see what Crowbook’s output looks like, you can read the Crowbook guide rendered in <a href = "http://lise-henry.github.io/crowbook/book/book.html">HTML</a>, <a href = "http://lise-henry.github.io/crowbook/book/book.pdf">PDF</a> or <a href = "http://lise-henry.github.io/crowbook/book/book.epub">EPUB</a>.</p>
+<p id = "para-2">To see what Crowbook’s output looks like, you can read the Crowbook guide rendered in <a href = "http://crowdagger.github.io/crowbook/book/book.html">HTML</a>, <a href = "http://crowdagger.github.io/crowbook/book/book.pdf">PDF</a> or <a href = "http://crowdagger.github.io/crowbook/book/book.epub">EPUB</a>.</p>
 <h2 id = "link-3">1.2. Installing</h2>
 <p id = "para-3">There are two ways to install Crowbook: either using precompiled binaries, or compiling it using <code>cargo</code>.</p>
 <h3 id = "link-4">1.2.1. Binaries</h3>
-<p id = "para-4">See <a href = "https://github.com/lise-henry/crowbook/releases">the releases page</a> to download a precompiled binary for your architecture. Just extract the archive and run <code>crowbook</code> (or <code>crowbook.exe</code> on Windows). You might also want to copy the binary somewhere in your <code>PATH</code> for later usage.</p>
+<p id = "para-4">See <a href = "https://github.com/crowdagger/crowbook/releases">the releases page</a> to download a precompiled binary for your architecture. Just extract the archive and run <code>crowbook</code> (or <code>crowbook.exe</code> on Windows). You might also want to copy the binary somewhere in your <code>PATH</code> for later usage.</p>
 <h3 id = "link-5">1.2.2. Using Cargo</h3>
 <p id = "para-5"><a href = "https://crates.io/">Cargo</a> is the package manager for <a href = "https://www.rust-lang.org/">Rust</a>. You can <a href = "https://www.rust-lang.org/downloads.html">install it here</a>. Once that is done:</p>
 <pre><span style="color:#b58900;">$</span><span style="color:#839496;"> cargo install crowbook</span>
@@ -574,12 +574,12 @@ document.addEventListener('DOMContentLoaded', function() {
 </pre><p id = "para-14">For more information, see the chapters on <a href = "chapter_001.html">the arguments supported by <code>crowbook</code></a> and on <a href = "chapter_002.html">the configuration file</a>.</p>
 <h2 id = "link-8">1.5. Current features</h2>
 <h3 id = "link-9">1.5.1. Output formats</h3>
-<p id = "para-15">Crowbook supports HTML, PDF and EPUB (either version 2 or 3) as output formats. See the Crowbook User Guide rendered in <a href = "http://lise-henry.github.io/crowbook/book/book.html">HTML</a>, <a href = "http://lise-henry.github.io/crowbook/book/book.epub">EPUB</a> and <a href = "http://lise-henry.github.io/crowbook/book.pdf">PDF</a>.</p>
+<p id = "para-15">Crowbook supports HTML, PDF and EPUB (either version 2 or 3) as output formats. See the Crowbook User Guide rendered in <a href = "http://crowdagger.github.io/crowbook/book/book.html">HTML</a>, <a href = "http://crowdagger.github.io/crowbook/book/book.epub">EPUB</a> and <a href = "http://crowdagger.github.io/crowbook/book.pdf">PDF</a>.</p>
 <h3 id = "link-10">1.5.2. Input format</h3>
 <p id = "para-16">Crowbook uses <a href = "https://crates.io/crates/pulldown-cmark">pulldown-cmark</a> and thus should support most of <a href = "http://commonmark.org/">CommonMark Markdown</a>. Inline HTML, however, is not implemented, and probably won’t be, as the goal is to have books that can also be generated in PDF (and maybe ODT).</p>
 <h3 id = "link-11">1.5.3. Typographic “cleaning”</h3>
 <p id = "para-17">Maybe the most specific “feature” of Crowbook is that it does its best to “clean” the input text before rendering it. By default, it removes superfluous spaces and tries to use curly quotes. If the book’s language is set to french, it also tries to respect french typography by replacing spaces with non-breaking ones when it is appropriate (e.g. before ‘?’, ‘!’, ‘;’ or ‘:’).</p>
-<blockquote><p id = "para-18">Please <a href = "https://github.com/lise-henry/crowbook/issues/new">open an issue</a> describing typographic rules if you want them to be implemented for other languages.</p>
+<blockquote><p id = "para-18">Please <a href = "https://github.com/crowdagger/crowbook/issues/new">open an issue</a> describing typographic rules if you want them to be implemented for other languages.</p>
 </blockquote>
 <h3 id = "link-12">1.5.4. Links handling</h3>
 <p id = "para-19">Crowbook tries to correctly translate local links in the input Markdown files: e.g. if you have a link to a Markdown file that is part of your book, it will be transformed into a link inside the document.</p>
@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <h3 id = "link-14">1.5.6. Customization</h3>
 <p id = "para-22">While the default settings will hopefully generate something that should look “good enough”, it is possible to customize the output, essentially by providing different <a href = "chapter_004.html">templates</a>.</p>
 <h3 id = "link-15">1.5.7. Bugs</h3>
-<p id = "para-23">See the <a href = "https://github.com/lise-henry/crowbook/issues">issue tracker on GitHub</a>.</p>
+<p id = "para-23">See the <a href = "https://github.com/crowdagger/crowbook/issues">issue tracker on GitHub</a>.</p>
 <h2 id = "link-16">1.6. Contributors</h2>
 &lt;!-- readme: contributors -start --&gt;
 &lt;table&gt;
@@ -628,20 +628,27 @@ document.addEventListener('DOMContentLoaded', function() {
  &lt;/a&gt;
  &lt;/td&gt;
  &lt;td align=“center”&gt;
+ &lt;a href=“https://github.com/seeseekey”&gt;
+ &lt;img src=“https://avatars.githubusercontent.com/u/1023818?v=4” width=“100;” alt=“seeseekey”/&gt;
+ &lt;br /&gt;
+ &lt;sub&gt;&lt;b&gt;Seeseekey&lt;/b&gt;&lt;/sub&gt;
+ &lt;/a&gt;
+ &lt;/td&gt;
+ &lt;td align=“center”&gt;
  &lt;a href=“https://github.com/jrappen”&gt;
  &lt;img src=“https://avatars.githubusercontent.com/u/8577450?v=4” width=“100;” alt=“jrappen”/&gt;
  &lt;br /&gt;
  &lt;sub&gt;&lt;b&gt;Johannes Rappen&lt;/b&gt;&lt;/sub&gt;
  &lt;/a&gt;
- &lt;/td&gt;
+ &lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
  &lt;td align=“center”&gt;
  &lt;a href=“https://github.com/dkotrada”&gt;
  &lt;img src=“https://avatars.githubusercontent.com/u/698296?v=4” width=“100;” alt=“dkotrada”/&gt;
  &lt;br /&gt;
  &lt;sub&gt;&lt;b&gt;Alfa&lt;/b&gt;&lt;/sub&gt;
  &lt;/a&gt;
- &lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
+ &lt;/td&gt;
  &lt;td align=“center”&gt;
  &lt;a href=“https://github.com/hfiguiere”&gt;
  &lt;img src=“https://avatars.githubusercontent.com/u/114441?v=4” width=“100;” alt=“hfiguiere”/&gt;
@@ -676,6 +683,14 @@ document.addEventListener('DOMContentLoaded', function() {
  &lt;br /&gt;
  &lt;sub&gt;&lt;b&gt;Martin Geisler&lt;/b&gt;&lt;/sub&gt;
  &lt;/a&gt;
+ &lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+ &lt;td align=“center”&gt;
+ &lt;a href=“https://github.com/kianmeng”&gt;
+ &lt;img src=“https://avatars.githubusercontent.com/u/134518?v=4” width=“100;” alt=“kianmeng”/&gt;
+ &lt;br /&gt;
+ &lt;sub&gt;&lt;b&gt;Kian-Meng Ang&lt;/b&gt;&lt;/sub&gt;
+ &lt;/a&gt;
  &lt;/td&gt;
  &lt;td align=“center”&gt;
  &lt;a href=“https://github.com/cuviper”&gt;
@@ -683,8 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
  &lt;br /&gt;
  &lt;sub&gt;&lt;b&gt;Josh Stone&lt;/b&gt;&lt;/sub&gt;
  &lt;/a&gt;
- &lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
+ &lt;/td&gt;
  &lt;td align=“center”&gt;
  &lt;a href=“https://github.com/Geobert”&gt;
  &lt;img src=“https://avatars.githubusercontent.com/u/72570?v=4” width=“100;” alt=“Geobert”/&gt;
@@ -713,6 +727,21 @@ document.addEventListener('DOMContentLoaded', function() {
  &lt;sub&gt;&lt;b&gt;Dmitry Valter&lt;/b&gt;&lt;/sub&gt;
  &lt;/a&gt;
  &lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+ &lt;td align=“center”&gt;
+ &lt;a href=“https://github.com/habi”&gt;
+ &lt;img src=“https://avatars.githubusercontent.com/u/1651235?v=4” width=“100;” alt=“habi”/&gt;
+ &lt;br /&gt;
+ &lt;sub&gt;&lt;b&gt;David Haberthür&lt;/b&gt;&lt;/sub&gt;
+ &lt;/a&gt;
+ &lt;/td&gt;
+ &lt;td align=“center”&gt;
+ &lt;a href=“https://github.com/AA-Turner”&gt;
+ &lt;img src=“https://avatars.githubusercontent.com/u/9087854?v=4” width=“100;” alt=“AA-Turner”/&gt;
+ &lt;br /&gt;
+ &lt;sub&gt;&lt;b&gt;Adam Turner&lt;/b&gt;&lt;/sub&gt;
+ &lt;/a&gt;
+ &lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
 &lt;!-- readme: contributors -end --&gt;
 <h2 id = "link-17">1.7. Acknowledgements</h2>
@@ -730,15 +759,15 @@ document.addEventListener('DOMContentLoaded', function() {
 <p id = "para-32">While the main purpose of Crowbook is to be run as a standalone program, the code is written as a library, so if you want to build on it you can use it as such. You can look at the generated documentation on <a href = "https://docs.rs/releases/search?query=crowbook">docs.rs</a>.</p>
 <p id = "para-33">Note that, in order to facilitate code reuse, some features have been split to separate libraries:</p>
 <ul>
-<li><p id = "para-34"><a href = "https://github.com/lise-henry/epub-builder">epub-builder</a> makes it easier to generate EPUB files.</p>
+<li><p id = "para-34"><a href = "https://github.com/crowdagger/epub-builder">epub-builder</a> makes it easier to generate EPUB files.</p>
 </li>
-<li><p id = "para-35"><a href = "https://github.com/lise-henry/crowbook-text-processing/">crowbook-text-processing</a> contains all the “typographic” functions (smart quotes, handling of non-breaking spaces in french, ...).</p>
+<li><p id = "para-35"><a href = "https://github.com/crowdagger/crowbook-text-processing/">crowbook-text-processing</a> contains all the “typographic” functions (smart quotes, handling of non-breaking spaces in french, ...).</p>
 </li>
 </ul>
 <h2 id = "link-21">1.11. License</h2>
 <p id = "para-36">Crowbook is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL), version 2.1 or (at your option) any later version. See <a href = "chapter_008.html">LICENSE</a> for more information.</p>
 <p id = "para-37">Crowbook’s logo is licensed under the <a href = "https://creativecommons.org/licenses/by/4.0/deed.en">Creative Commons Attribution 4.0 International license</a>, based on the <a href = "https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg">Rust logo</a> by Mozilla Corporation.</p>
-<p id = "para-38">Crowbook includes binary (minified) CSS and Javascript files from <a href = "https://highlightjs.org/">Highlight.js</a>, written by Ivan Sagalaev, see <a href = "https://raw.githubusercontent.com/lise-henry/crowbook/master/templates/highlight/LICENSE">license</a></p>
+<p id = "para-38">Crowbook includes binary (minified) CSS and Javascript files from <a href = "https://highlightjs.org/">Highlight.js</a>, written by Ivan Sagalaev, see <a href = "https://raw.githubusercontent.com/crowdagger/crowbook/master/templates/highlight/LICENSE">license</a></p>
 
       <p class = "next_chapter">
   <a href = "chapter_001.html">
