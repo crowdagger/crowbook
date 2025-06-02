@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2023 Élisabeth HENRY.
+// Copyright (C) 2016-2023, 2025 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -45,11 +45,6 @@ pub mod html_dir {
     pub static TEMPLATE: &str = include_str!("../../templates/html_dir/template.html");
 }
 
-pub mod html_if {
-    pub static JS: &str = include_str!("../../templates/html_if/script.js");
-    pub static NEW_GAME: &str = "";
-}
-
 pub mod latex {
     pub static TEMPLATE: &str = include_str!("../../templates/latex/template.tex");
 }
@@ -67,8 +62,3 @@ pub mod epub3 {
     pub static TITLE: &str = include_str!("../../templates/epub3/titlepage.xhtml");
 }
 
-#[cfg(feature = "odt")]
-pub mod odt {
-    pub static CONTENT: &str = include_str!("../../templates/odt/content.xml");
-    pub static ODT: &[u8] = include_bytes!("../../templates/odt/template.odt");
-}

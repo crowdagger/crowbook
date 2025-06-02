@@ -31,7 +31,7 @@ use crate::number::Number;
 use crate::parser::Features;
 use crate::parser::Parser;
 use crate::resource_handler::ResourceHandler;
-use crate::templates::{epub, epub3, highlight, html, html_dir, html_if, html_single, latex};
+use crate::templates::{epub, epub3, highlight, html, html_dir, html_single, latex};
 use crate::text_view::view_as_text;
 use crate::token::Token;
 
@@ -1091,8 +1091,6 @@ impl<'a> Book<'a> {
             "html.dir.template" => html_dir::TEMPLATE,
             "html.highlight.js" => highlight::JS,
             "html.highlight.css" => highlight::CSS,
-            "html.if.js" => html_if::JS,
-            "html.if.new_game" => html_if::NEW_GAME,
             "tex.template" => latex::TEMPLATE,
             _ => {
                 return Err(Error::config_parser(
