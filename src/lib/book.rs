@@ -341,9 +341,7 @@ impl<'a> Book<'a> {
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md
         let relative_path = Path::new(path.as_ref().components().last().unwrap().as_os_str());
-
-        // Update grammar checker according to options
-        self.add_chapter(Number::Hidden, &relative_path.to_string_lossy(), false)?;
+        self.add_chapter(Number::Default, &relative_path.to_string_lossy(), false)?;
 
         Ok(())
     }
@@ -373,9 +371,7 @@ impl<'a> Book<'a> {
     pub fn read_markdown_config<R: Read>(&mut self, source: R) -> Result<()> {
         self.options.set("tex.class", "article").unwrap();
         self.options.set("input.yaml_blocks", "true").unwrap();
-
-        // Update grammar checker according to options
-        self.add_chapter_from_source(Number::Hidden, source, false)?;
+        self.add_chapter_from_source(Number::Default, source, false)?;
 
         Ok(())
     }
