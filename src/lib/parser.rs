@@ -1,5 +1,4 @@
-
-// Copyright (C) 2016-2023 Élisabeth HENRY.
+// Copyright (C) 2016-2023, 2025 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -264,10 +263,11 @@ impl Parser {
 
         inner = match node.data.borrow().value {
             NodeValue::Document => inner,
-            NodeValue::BlockQuote => {
+            NodeValue::BlockQuote |
+            NodeValue::MultilineBlockQuote(_)  => {
                 self.features.blockquote = true;
                 vec![Token::BlockQuote(inner)]
-            }
+            },
             NodeValue::FrontMatter(ref v) => {
                 if let Some(yaml) = yaml_block {
                     // We can add the frontmatter to the yaml block
@@ -322,7 +322,7 @@ impl Parser {
             NodeValue::ThematicBreak => vec![Token::Rule],
             NodeValue::FootnoteDefinition(ref def) => {
                 let reference = def.clone();
-                vec![Token::FootnoteDefinition(reference, inner)]
+                vec![Token::FootnoteDefinition(reference.name, inner)]
             }
             NodeValue::Text(ref text) => {
                 let text = text.clone();
@@ -346,6 +346,7 @@ impl Parser {
                 vec![Token::Strikethrough(inner)]
             }
             NodeValue::Superscript => vec![Token::Superscript(inner)],
+            NodeValue::Subscript => vec![Token::Subscript(inner)],
             NodeValue::Link(ref link) => {
                 self.features.url = true;
                 let url = link.url.clone();
@@ -358,10 +359,8 @@ impl Parser {
                 let title = link.title.clone();
                 vec![Token::Image(url, title, inner)]
             }
-            NodeValue::FootnoteReference(ref name) => {
-                let name = name.clone();
-
-                vec![Token::FootnoteReference(name)]
+            NodeValue::FootnoteReference(ref fn_ref) => {
+                vec![Token::FootnoteReference(fn_ref.name.clone())]
             }
             NodeValue::TableCell => vec![Token::TableCell(inner)],
             NodeValue::TableRow(header) => {
@@ -374,7 +373,17 @@ impl Parser {
             NodeValue::Table(ref aligns) => {
                 self.features.table = true;
                 // TODO: actually use alignments)
-                vec![Token::Table(aligns.len() as i32, inner)]
+                vec![Token::Table(aligns.alignments.len() as i32, inner)]
+            }
+            NodeValue::Escaped |
+            NodeValue::WikiLink(_) |
+            NodeValue::Math(_) |
+            NodeValue::Underline |
+            NodeValue::SpoileredText |
+            NodeValue::EscapedTag(_) |
+            NodeValue::Alert(_) |
+            NodeValue::Raw(_) => {
+                todo!{"Unsupported markdown feature"};
             }
         };
         Ok(inner)
