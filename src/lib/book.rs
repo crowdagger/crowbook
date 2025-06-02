@@ -341,6 +341,7 @@ impl<'a> Book<'a> {
         // Add the file as chapter with hidden title
         // hideous line, but basically transforms foo/bar/baz.md to baz.md
         let relative_path = Path::new(path.as_ref().components().last().unwrap().as_os_str());
+        self.set_chapter_template()?;
         self.add_chapter(Number::Default, &relative_path.to_string_lossy(), false)?;
 
         Ok(())
@@ -371,6 +372,7 @@ impl<'a> Book<'a> {
     pub fn read_markdown_config<R: Read>(&mut self, source: R) -> Result<()> {
         self.options.set("tex.class", "article").unwrap();
         self.options.set("input.yaml_blocks", "true").unwrap();
+        self.set_chapter_template()?;
         self.add_chapter_from_source(Number::Default, source, false)?;
 
         Ok(())
@@ -405,6 +407,8 @@ impl<'a> Book<'a> {
                 }
             }
         }
+        // Update chapter templates if they have been modified
+        self.set_chapter_template()?;
         Ok(self)
     }
 
