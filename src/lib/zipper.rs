@@ -1,4 +1,4 @@
-// Copyright (C) 2016-2022 Élisabeth HENRY.
+// Copyright (C) 2016-2022, 2025 Élisabeth HENRY.
 //
 // This file is part of Crowbook.
 //
@@ -156,17 +156,6 @@ impl Zipper {
                 command = command_name
             )))
         }
-    }
-
-    /// zip all files in zipper's tmp dir to a given file name and write to odt file
-    #[cfg(feature = "odt")]
-    pub fn generate_odt(&mut self, command_name: &str, odt_file: &mut dyn Write) -> Result<String> {
-        let mut command = Command::new(command_name);
-        command.current_dir(&self.path);
-        command.arg("-r");
-        command.arg("result.odt");
-        command.arg(".");
-        self.run_command(command, command_name, "result.odt", odt_file)
     }
 
     /// generate a pdf file into given file name
