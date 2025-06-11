@@ -5,7 +5,7 @@ Its focus is novels and fiction, and the default settings should (hopefully) gen
 
 ## Example
 
-To see what Crowbook's output looks like, you can read the Crowbook guide rendered in
+To see a full example of what Crowbook's output looks like, you can read the Crowbook guide rendered in
 [HTML](http://crowdagger.github.io/crowbook/book/book.html),
 [PDF](http://crowdagger.github.io/crowbook/book/book.pdf)
 or
