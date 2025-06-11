@@ -182,37 +182,6 @@ crowbook -S <BOOK>
 
 Display some statistics (word and character counts) about the book.
 
-## `--autograph`
-
-**Usage**:
-
-```bash
-crowbook --autograph <BOOK>
-```
-
-or:
-
-```bash
-crowbook -a <BOOK>
-```
-
-Prompts for a an autograph execution.
-This is a Markdown block that will be inserted at the beginning of the book.
-
-### Example
-
-```text
-$ crowbook --autograph my.book
-CROWBOOK 0.14.0
-Enter autograph:
-To my dear friend John,
-
-Cheers, *Joan*
-^D
-```
-
-will add the block of text that was entered to all output files.
-
 ## `--verbose`
 
 **Usage**:
